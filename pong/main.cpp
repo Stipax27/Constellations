@@ -129,6 +129,7 @@ void ShowBitmap(HDC hDC, int x, int y, int x1, int y1, HBITMAP hBitmapBall, bool
     DeleteDC(hMemDC); // Удаляем контекст памяти
 }
 
+
 float getX(float x)
 {
     return x * window.width;
@@ -155,6 +156,22 @@ void ShowRacketAndBall()
     RECT rect;
     GetClientRect(window.hWnd, &rect);
     FillRect(window.context, &rect, CreateSolidBrush(RGB(0, 0, 0)));
+
+    srand(10);
+    for (int i = 0; i < 100; i++) {
+        float x = rand()% window.width;
+        float y = rand()% window.height;
+        float sz = 2;
+           
+        Ellipse(window.context,
+            x - sz,
+            y - sz,
+            x + sz,
+            y + sz
+        );
+    }
+
+
 
 
 
@@ -196,7 +213,7 @@ void ShowRacketAndBall()
         float dy = CenterY + getY(X[i * 2 + 1]) - p.y;
         float lenght = sqrt(dx * dx + dy * dy);
 
-        float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
+        float rad = saturate(1.2 - lenght * .05) *fabs(sin(timeGetTime() * .01));
 
         SelectObject(window.context, brush);
 
