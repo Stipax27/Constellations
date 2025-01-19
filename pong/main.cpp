@@ -5,12 +5,14 @@
 #include "windows.h"
 #include "vector"
 #include <stdexcept>
+#include "math.h"
 
 // секция данных игры  
 typedef struct {
     float x, y, width, height, rad, dx, dy, speed;
     HBITMAP hBitmap;//хэндл к спрайту шарика 
 } sprite;
+float starSize = 10;
 
 sprite racket;//ракетка игрока
 sprite enemy;//ракетка противника
@@ -136,19 +138,92 @@ float getY(float y)
 {
     return y * window.height;
 }
+
+float saturate(float x)
+{
+    return max(min(x, 1.), 0.);
+}
+
 void ShowRacketAndBall()
 {
+    POINT p;
+    GetCursorPos(&p);
+
+    //cursor position now in p.x and p.y
+    ScreenToClient(window.hWnd, &p);
+
+    RECT rect;
+    GetClientRect(window.hWnd, &rect);
+    FillRect(window.context, &rect, CreateSolidBrush(RGB(0, 0, 0)));
+
+
+
     std::vector <float> X = { -.25, -.25, -.1, -.2, -.05, .05, .25, .05, .35, .25, .05, .25, -.05, .05 };
     float CenterX = window.width / 2.;
     float CenterY = window.height / 2.;
     HPEN pen = CreatePen(PS_SOLID, 3, RGB(255, 0, 0));
+    HBRUSH brush = CreateSolidBrush(RGB(255, 0, 0));
+    HBRUSH brush2 = CreateSolidBrush(RGB(0, 255, 0));
     SelectObject(window.context, pen);
-    MoveToEx(window.context, CenterX + getX(X[0]), CenterY + getY(X[1]), NULL);
-    for (int i = 1; i < 7; i++)
+    SelectObject(window.context, brush);
+    
+    
+
+
+
+    for (int i = 0; i < 7; i++)
     {
-    LineTo(window.context, CenterX + getX(X[i*2]), CenterY + getY(X[i*2+1]));
+        if (i == 0)
+        {
+            MoveToEx(window.context, CenterX + getX(X[0]), CenterY + getY(X[1]), NULL);
+        }
+        else
+        {
+            LineTo(window.context, CenterX + getX(X[i * 2]), CenterY + getY(X[i * 2 + 1]));
+        }
+
+    
+
+
+
+
+
+    }
+    
+    for (int i = 0; i < 7; i++)
+    {
+        float dx = CenterX + getX(X[i * 2]) - p.x;
+        float dy = CenterY + getY(X[i * 2 + 1]) - p.y;
+        float lenght = sqrt(dx * dx + dy * dy);
+
+        float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
+
+        SelectObject(window.context, brush);
+
+        if (GetAsyncKeyState(VK_LBUTTON))
+        {
+            if (lenght < starSize)
+            {
+                SelectObject(window.context, brush2);
+            }
+
+        }
+
+        float sz = starSize + rad * 15;
+        Ellipse(window.context,
+            CenterX + getX(X[i * 2]) - sz,
+            CenterY + getY(X[i * 2 + 1]) - sz,
+            CenterX + getX(X[i * 2]) + sz,
+            CenterY + getY(X[i * 2 + 1]) + sz
+        );
     }
 
+    Ellipse(window.context,
+        p.x - starSize/2,
+        p.y - starSize/2,
+        p.x + starSize/2,
+        p.y + starSize/2
+    );
     return;
     
     ShowBitmap(window.context, 0, 0, window.width, window.height, hBack);//задний фон
@@ -282,7 +357,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     InitGame();//здесь инициализируем переменные игры
 
     //mciSendString(TEXT("play ..\\Debug\\music.mp3 repeat"), NULL, 0, NULL);
-    //ShowCursor(NULL);
+    ShowCursor(NULL);
     
     while (!GetAsyncKeyState(VK_ESCAPE))
     {
