@@ -3,6 +3,8 @@
 //linker::input::additional dependensies Msimg32.lib; Winmm.lib
 
 #include "windows.h"
+#include "vector"
+#include <stdexcept>
 
 // секция данных игры  
 typedef struct {
@@ -125,8 +127,30 @@ void ShowBitmap(HDC hDC, int x, int y, int x1, int y1, HBITMAP hBitmapBall, bool
     DeleteDC(hMemDC); // Удаляем контекст памяти
 }
 
+float getX(float x)
+{
+    return x * window.width;
+}
+
+float getY(float y)
+{
+    return y * window.height;
+}
 void ShowRacketAndBall()
 {
+    std::vector <float> X = { -.25, -.25, -.1, -.2, -.05, .05, .25, .05, .35, .25, .05, .25, -.05, .05 };
+    float CenterX = window.width / 2.;
+    float CenterY = window.height / 2.;
+    HPEN pen = CreatePen(PS_SOLID, 3, RGB(255, 0, 0));
+    SelectObject(window.context, pen);
+    MoveToEx(window.context, CenterX + getX(X[0]), CenterY + getY(X[1]), NULL);
+    for (int i = 1; i < 7; i++)
+    {
+    LineTo(window.context, CenterX + getX(X[i*2]), CenterY + getY(X[i*2+1]));
+    }
+
+    return;
+    
     ShowBitmap(window.context, 0, 0, window.width, window.height, hBack);//задний фон
     ShowBitmap(window.context, racket.x - racket.width / 2., racket.y, racket.width, racket.height, racket.hBitmap);// ракетка игрока
 
@@ -257,20 +281,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     InitWindow();//здесь инициализируем все что нужно для рисования в окне
     InitGame();//здесь инициализируем переменные игры
 
-    mciSendString(TEXT("play ..\\Debug\\music.mp3 repeat"), NULL, 0, NULL);
-    ShowCursor(NULL);
+    //mciSendString(TEXT("play ..\\Debug\\music.mp3 repeat"), NULL, 0, NULL);
+    //ShowCursor(NULL);
     
     while (!GetAsyncKeyState(VK_ESCAPE))
     {
         ShowRacketAndBall();//рисуем фон, ракетку и шарик
-        ShowScore();//рисуем очик и жизни
+        //ShowScore();//рисуем очик и жизни
         BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно
         Sleep(16);//ждем 16 милисекунд (1/количество кадров в секунду)
 
-        ProcessInput();//опрос клавиатуры
-        LimitRacket();//проверяем, чтобы ракетка не убежала за экран
-        ProcessBall();//перемещаем шарик
-        ProcessRoom();//обрабатываем отскоки от стен и каретки, попадание шарика в картетку
+        //ProcessInput();//опрос клавиатуры
+        //LimitRacket();//проверяем, чтобы ракетка не убежала за экран
+        //ProcessBall();//перемещаем шарик
+        //ProcessRoom();//обрабатываем отскоки от стен и каретки, попадание шарика в картетку
     }
 
 }
