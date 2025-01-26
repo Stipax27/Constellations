@@ -30,7 +30,7 @@ struct {
 } window;
 
 HBITMAP hBack;// хэндл для фонового изображения
-
+void rotateworld();
 //cекция кода
 
 void InitGame()
@@ -202,17 +202,32 @@ void project(point3d& p)
 
 }
 
+void genRandSphere(point3d& p)
+{
+    float amp = 1.25;
+    float angleX, angleY;
+    angleX = rand() % 360;
+    angleY = rand() % 360;
+    p.x = 0;
+    p.y = 0;
+    p.z = window.width/3;
+    rotateX(p, angleX);
+    rotateY(p, angleY);
+}
+
 void genRandCube(point3d& p)
 {
     float amp = 1.25;
-
     p.x = (rand() % window.width - window.width / 2) * amp;
     p.y = (rand() % window.width - window.width / 2) * amp;
     p.z = (rand() % window.width - window.width / 2) * amp;
 }
 
+
 void drawPoint(point3d& p, float sz = 2)
 {
+    if (p.z < 0) return;
+
     Ellipse(window.context,
         p.x - sz,
         p.y - sz,
@@ -220,14 +235,37 @@ void drawPoint(point3d& p, float sz = 2)
         p.y + sz
     );
 }
+point3d mouseAngle; 
+point3d oldmouse;
+point3d oldmouseAngle;
+bool rmb = false; //Правая кнопка мыши
+
 
 void ShowRacketAndBall()
 {
     POINT mouse;
     GetCursorPos(&mouse);
-
-    //cursor position now in p.x and p.y
     ScreenToClient(window.hWnd, &mouse);
+    
+
+    if (GetAsyncKeyState(VK_RBUTTON)) {
+
+        if (!rmb) {
+            rmb = true;
+            oldmouse.x = mouse.x;
+            oldmouse.y = mouse.y;
+            oldmouseAngle = mouseAngle;
+            
+        }
+        float dx, dy;
+        dx = mouse.x - oldmouse.x;
+        dy = mouse.y - oldmouse.y;
+
+        mouseAngle.x = oldmouseAngle.x + dx;
+        mouseAngle.y = oldmouseAngle.y + dy;
+
+    }
+    else { rmb = false; }
 
     RECT rect;
     GetClientRect(window.hWnd, &rect);
@@ -236,16 +274,9 @@ void ShowRacketAndBall()
     srand(10);
     for (int i = 0; i < 300; i++) {
 
-        genRandCube(point);
-          
-        float a = timeGetTime()*.01;
-        rotateX(point, a);
-        rotateY(point, a);
-        rotateZ(point, a);
-        
-
+        genRandSphere(point);
+        rotateworld();
         project(point);
-
         drawPoint(point);
     }
 
@@ -264,13 +295,10 @@ void ShowRacketAndBall()
     point.x = CenterX + getX(starArray[i * 2]);
     point.y = CenterY + getY(starArray[i * 2 + 1]);
     point.z = 0;
-
     point.x -= window.width / 2.;
     point.y -= window.height / 2.;
     float a = timeGetTime() * .01;
-    rotateX(point, a);
-    rotateY(point, a);
-    rotateZ(point, a);
+    rotateworld();
     point.z += 1000;
     project(point);
     
@@ -294,9 +322,7 @@ void ShowRacketAndBall()
         point.y -= window.height / 2.;
 
         float a = timeGetTime() * .01;
-        rotateX(point, a);
-        rotateY(point, a);
-        rotateZ(point, a);
+        rotateworld();
         point.z += 1000;
         project(point);
 
@@ -369,7 +395,12 @@ void CheckRoof()
 }
 
 bool tail = false;
-
+void rotateworld()
+{
+    rotateX(point, mouseAngle.y * 0.1);
+    rotateY(point, mouseAngle.x * 0.1);
+    rotateZ(point, timeGetTime() * 0.01);
+}
 void CheckFloor()
 {
     if (ball.y > window.height - ball.rad - racket.height)//шарик пересек линию отскока - горизонталь ракетки
