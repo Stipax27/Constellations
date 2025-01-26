@@ -145,37 +145,111 @@ float saturate(float x)
     return max(min(x, 1.), 0.);
 }
 
+typedef struct {
+    float x;
+    float y;
+    float z;
+} point3d;
+
+point3d point;
+void rotateX(point3d& p, float angle)
+{
+    float a = angle * 3.14 / 180.;
+
+    float x1 = p.x;
+    float y1 = p.y * cos(a) - p.z * sin(a);
+    float z1 = p.y * sin(a) + p.z * cos(a);
+
+    p.x = x1;
+    p.y = y1;
+    p.z = z1;
+}
+
+void rotateY(point3d &p, float angle)
+{
+    float a = angle * 3.14 / 180.;
+
+    float x1 = p.x * cos(a) - p.z * sin(a);
+    float y1 = p.y;
+    float z1 = p.x * sin(a) + p.z * cos(a);
+
+    p.x = x1;
+    p.y = y1;
+    p.z = z1;
+}
+
+void rotateZ(point3d& p, float angle)
+{
+    float a = angle * 3.14 / 180.;
+
+    float x1 = p.x * cos(a) - p.y * sin(a);
+    float y1 = p.x * sin(a) + p.y * cos(a);
+    float z1 = p.z;
+
+    p.x = x1;
+    p.y = y1;
+    p.z = z1;
+}// Добавили вращение в 3d пространстве.
+
+void project(point3d& p)
+{
+    float d = 400;
+    float x = window.width / 2. + point.x * d / (point.z + d);
+    float y = window.height / 2. + point.y * d / (point.z + d);
+    
+    p.x = x;
+    p.y = y;
+
+}
+
+void genRandCube(point3d& p)
+{
+    float amp = 1.25;
+
+    p.x = (rand() % window.width - window.width / 2) * amp;
+    p.y = (rand() % window.width - window.width / 2) * amp;
+    p.z = (rand() % window.width - window.width / 2) * amp;
+}
+
+void drawPoint(point3d& p, float sz = 2)
+{
+    Ellipse(window.context,
+        p.x - sz,
+        p.y - sz,
+        p.x + sz,
+        p.y + sz
+    );
+}
+
 void ShowRacketAndBall()
 {
-    POINT p;
-    GetCursorPos(&p);
+    POINT mouse;
+    GetCursorPos(&mouse);
 
     //cursor position now in p.x and p.y
-    ScreenToClient(window.hWnd, &p);
+    ScreenToClient(window.hWnd, &mouse);
 
     RECT rect;
     GetClientRect(window.hWnd, &rect);
     FillRect(window.context, &rect, CreateSolidBrush(RGB(0, 0, 0)));
 
     srand(10);
-    for (int i = 0; i < 100; i++) {
-        float x = rand()% window.width;
-        float y = rand()% window.height;
-        float sz = 2;
-           
-        Ellipse(window.context,
-            x - sz,
-            y - sz,
-            x + sz,
-            y + sz
-        );
+    for (int i = 0; i < 300; i++) {
+
+        genRandCube(point);
+          
+        float a = timeGetTime()*.01;
+        rotateX(point, a);
+        rotateY(point, a);
+        rotateZ(point, a);
+        
+
+        project(point);
+
+        drawPoint(point);
     }
 
-
-
-
-
-    std::vector <float> X = { -.25, -.25, -.1, -.2, -.05, .05, .25, .05, .35, .25, .05, .25, -.05, .05 };
+    std::vector <float> starArray = { -.25, -.25, -.1, -.2, -.05, .05, .25, .05, .35, .25, .05, .25, -.05, .05 };
     float CenterX = window.width / 2.;
     float CenterY = window.height / 2.;
     HPEN pen = CreatePen(PS_SOLID, 3, RGB(255, 0, 0));
@@ -185,32 +259,49 @@ void ShowRacketAndBall()
     SelectObject(window.context, brush);
     
     
-
-
-
     for (int i = 0; i < 7; i++)
-    {
+    { 
+    point.x = CenterX + getX(starArray[i * 2]);
+    point.y = CenterY + getY(starArray[i * 2 + 1]);
+    point.z = 0;
+
+    point.x -= window.width / 2.;
+    point.y -= window.height / 2.;
+    float a = timeGetTime() * .01;
+    rotateX(point, a);
+    rotateY(point, a);
+    rotateZ(point, a);
+    point.z += 1000;
+    project(point);
+    
         if (i == 0)
         {
-            MoveToEx(window.context, CenterX + getX(X[0]), CenterY + getY(X[1]), NULL);
+            MoveToEx(window.context, point.x, point.y, NULL);
         }
         else
         {
-            LineTo(window.context, CenterX + getX(X[i * 2]), CenterY + getY(X[i * 2 + 1]));
+            LineTo(window.context, point.x, point.y);
         }
-
-    
-
-
-
-
-
     }
     
     for (int i = 0; i < 7; i++)
     {
-        float dx = CenterX + getX(X[i * 2]) - p.x;
-        float dy = CenterY + getY(X[i * 2 + 1]) - p.y;
+        point.x = CenterX + getX(starArray[i * 2]);
+        point.y = CenterY + getY(starArray[i * 2 + 1]);
+        point.z = 0;
+
+        point.x -= window.width / 2.;
+        point.y -= window.height / 2.;
+
+        float a = timeGetTime() * .01;
+        rotateX(point, a);
+        rotateY(point, a);
+        rotateZ(point, a);
+        point.z += 1000;
+        project(point);
+
+        float dx = point.x - mouse.x;
+        float dy = point.y - mouse.y;
         float lenght = sqrt(dx * dx + dy * dy);
 
         float rad = saturate(1.2 - lenght * .05) *fabs(sin(timeGetTime() * .01));
@@ -223,23 +314,17 @@ void ShowRacketAndBall()
             {
                 SelectObject(window.context, brush2);
             }
-
         }
 
         float sz = starSize + rad * 15;
-        Ellipse(window.context,
-            CenterX + getX(X[i * 2]) - sz,
-            CenterY + getY(X[i * 2 + 1]) - sz,
-            CenterX + getX(X[i * 2]) + sz,
-            CenterY + getY(X[i * 2 + 1]) + sz
-        );
+        drawPoint(point,sz);
     }
 
     Ellipse(window.context,
-        p.x - starSize/2,
-        p.y - starSize/2,
-        p.x + starSize/2,
-        p.y + starSize/2
+        mouse.x - starSize/2,
+        mouse.y - starSize/2,
+        mouse.x + starSize/2,
+        mouse.y + starSize/2
     );
     return;
     
