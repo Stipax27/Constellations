@@ -193,7 +193,7 @@ void rotateZ(point3d& p, float angle)
 
 void project(point3d& p)
 {
-    float d = 400;
+    float d = 500; // Отдаление камеры.
     float x = window.width / 2. + point.x * d / (point.z + d);
     float y = window.height / 2. + point.y * d / (point.z + d);
     
@@ -212,7 +212,7 @@ void genRandSphere(point3d& p)
     p.y = 0;
     p.z = window.width/3;
     rotateX(p, angleX);
-    rotateY(p, angleY);
+    rotateY(p, angleY); // Сферообразное пространство.
 }
 
 void genRandCube(point3d& p)
@@ -245,8 +245,8 @@ void ShowRacketAndBall()
 {
     POINT mouse;
     GetCursorPos(&mouse);
-    ScreenToClient(window.hWnd, &mouse);
-    
+    ScreenToClient(window.hWnd, &mouse); // Управление мышью.
+
 
     if (GetAsyncKeyState(VK_RBUTTON)) {
 
@@ -255,7 +255,7 @@ void ShowRacketAndBall()
             oldmouse.x = mouse.x;
             oldmouse.y = mouse.y;
             oldmouseAngle = mouseAngle;
-            
+
         }
         float dx, dy;
         dx = mouse.x - oldmouse.x;
@@ -283,25 +283,25 @@ void ShowRacketAndBall()
     std::vector <float> starArray = { -.25, -.25, -.1, -.2, -.05, .05, .25, .05, .35, .25, .05, .25, -.05, .05 };
     float CenterX = window.width / 2.;
     float CenterY = window.height / 2.;
-    HPEN pen = CreatePen(PS_SOLID, 3, RGB(255, 0, 0));
-    HBRUSH brush = CreateSolidBrush(RGB(255, 0, 0));
-    HBRUSH brush2 = CreateSolidBrush(RGB(0, 255, 0));
+    HPEN pen = CreatePen(PS_SOLID, 3, RGB(0, 191, 255));
+    HBRUSH brush = CreateSolidBrush(RGB(0, 191, 255));
+    HBRUSH brush2 = CreateSolidBrush(RGB(255, 0, 0));
     SelectObject(window.context, pen);
     SelectObject(window.context, brush);
-    
-    
+
+
     for (int i = 0; i < 7; i++)
-    { 
-    point.x = CenterX + getX(starArray[i * 2]);
-    point.y = CenterY + getY(starArray[i * 2 + 1]);
-    point.z = 0;
-    point.x -= window.width / 2.;
-    point.y -= window.height / 2.;
-    float a = timeGetTime() * .01;
-    rotateworld();
-    point.z += 1000;
-    project(point);
-    
+    {
+        point.x = CenterX + getX(starArray[i * 2]);
+        point.y = CenterY + getY(starArray[i * 2 + 1]);
+        point.z = 0;
+        point.x -= window.width / 2.;
+        point.y -= window.height / 2.;
+        float a = timeGetTime() * .01;
+        rotateworld();
+        point.z += 1000;
+        project(point);
+
         if (i == 0)
         {
             MoveToEx(window.context, point.x, point.y, NULL);
@@ -311,7 +311,7 @@ void ShowRacketAndBall()
             LineTo(window.context, point.x, point.y);
         }
     }
-    
+
     for (int i = 0; i < 7; i++)
     {
         point.x = CenterX + getX(starArray[i * 2]);
@@ -330,7 +330,7 @@ void ShowRacketAndBall()
         float dy = point.y - mouse.y;
         float lenght = sqrt(dx * dx + dy * dy);
 
-        float rad = saturate(1.2 - lenght * .05) *fabs(sin(timeGetTime() * .01));
+        float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
 
         SelectObject(window.context, brush);
 
@@ -343,15 +343,71 @@ void ShowRacketAndBall()
         }
 
         float sz = starSize + rad * 15;
-        drawPoint(point,sz);
+        drawPoint(point, sz);
     }
 
     Ellipse(window.context,
-        mouse.x - starSize/2,
-        mouse.y - starSize/2,
-        mouse.x + starSize/2,
-        mouse.y + starSize/2
+        mouse.x - starSize / 2,
+        mouse.y - starSize / 2,
+        mouse.x + starSize / 2,
+        mouse.y + starSize / 2
     );
+}
+    float circleRadius = 100; 
+    float centerX = 400; 
+    float centerY = 300; 
+
+void drawColorCircle(HDC hdc) {
+        const COLORREF colors[] = {
+            RGB(255, 0, 0),    // Красный
+            RGB(255, 165, 0),  // Оранжевый
+            RGB(255, 255, 0),  // Желтый
+            RGB(0, 255, 0),    // Зеленый
+            RGB(0, 255, 255),  // Голубой
+            RGB(0, 0, 255),    // Синий
+            RGB(128, 0, 128)   // Фиолетовый
+        };
+
+        float numColors = sizeof(colors) / sizeof(colors[0]);
+        float angleStep = 2 * 3.14 / numColors;
+
+        for (int i = 0; i < numColors; ++i) {
+            
+            float angle1 = i * angleStep;
+            float angle2 = (i + 1) * angleStep;
+
+            
+            POINT p1 = {
+                static_cast<LONG>(centerX + circleRadius * cos(angle1)),
+                static_cast<LONG>(centerY + circleRadius * sin(angle1))
+            };
+            POINT p2 = {
+                static_cast<LONG>(centerX + circleRadius * cos(angle2)),
+                static_cast<LONG>(centerY + circleRadius * sin(angle2))
+            };
+
+            
+            HBRUSH brush = CreateSolidBrush(colors[i]);
+            SelectObject(hdc, brush);
+
+            
+            Pie(hdc,
+                centerX - circleRadius,
+                centerY - circleRadius,
+                centerX + circleRadius,
+                centerY + circleRadius,
+                p1.x, p1.y,
+                p2.x, p2.y);
+
+            DeleteObject(brush);
+        }
+    }
+// Отрисовка Цветового круга.
+    
+    void Render(HDC hdc) {
+        
+        drawColorCircle(hdc);
+   
     return;
     
     ShowBitmap(window.context, 0, 0, window.width, window.height, hBack);//задний фон
