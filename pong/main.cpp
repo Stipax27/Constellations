@@ -277,11 +277,11 @@ void ShowRacketAndBall()
     srand(10);
     for (int i = 0; i < 300; i++) {
 
-        //genRandSphere(point);
-        //rotateworld();
-       // project(point);
-        //drawPoint(point);
-
+        genRandSphere(point);
+        rotateworld();
+        project(point);
+        drawPoint(point);
+        
     }
 
     std::vector <float> starArray = { -.25, -.25, -.1, -.2, -.05, .05, .25, .05, .35, .25, .05, .25, -.05, .05 };
@@ -312,7 +312,7 @@ void ShowRacketAndBall()
         }
         else
         {
-            //LineTo(window.context, point.x, point.y);
+            LineTo(window.context, point.x, point.y);
         }
     }
 
@@ -347,7 +347,8 @@ void ShowRacketAndBall()
         }
 
         float sz = starSize + rad * 15;
-        //drawPoint(point, sz);
+        drawPoint(point, sz);
+      
     }
 
     Ellipse(window.context,
@@ -357,67 +358,57 @@ void ShowRacketAndBall()
         mouse.y + starSize / 2
     );
 }
-    float circleRadius = 100;
-    float centerX = window.width/2;
-    float centerY = window.height/2;
+void drawColorCircle(HDC hdc) {
+    const COLORREF colors[] = {
+        RGB(255, 0, 0),    // Красный
+        RGB(255, 165, 0),  // Оранжевый
+        RGB(255, 255, 0),  // Желтый
+        RGB(0, 255, 0),    // Зеленый
+        RGB(0, 255, 255),  // Голубой
+        RGB(0, 0, 255),    // Синий
+        RGB(128, 0, 128)   // Фиолетовый
+    };
 
-    void drawColorCircle(HDC hdc) {
-        const COLORREF colors[] = {
-            RGB(255, 0, 0),    // Красный
-            RGB(255, 165, 0),  // Оранжевый
-            RGB(255, 255, 0),  // Желтый
-            RGB(0, 255, 0),    // Зеленый
-            RGB(0, 255, 255),  // Голубой
-            RGB(0, 0, 255),    // Синий
-            RGB(128, 0, 128)   // Фиолетовый
-        };
+    float circleRadius = 75;
+    float centerX = window.width / 2;
+    float centerY = window.height / 2;
 
-        float numColors = sizeof(colors) / sizeof(colors[0]);
-        float angleStep = 2 * 3.14 / numColors;
+    int numColors = sizeof(colors) / sizeof(colors[0]);
+    float angleStep = 2 * 3.14 / (float)numColors;
 
-        for (int i = 0; i < numColors; ++i) {
+    for (int i = 0; i < numColors; ++i) {
 
-            float angle1 = i * angleStep;
-            float angle2 = (i + 1) * angleStep;
+        float angle1 = -i * angleStep;
+        float angle2 = -(i + 1) * angleStep;
 
+        POINT p1, p2;
+        p1.x = centerX + circleRadius * cos(angle1);
+        p1.y = centerY + circleRadius * sin(angle1);
 
-            POINT p1 = {
-                static_cast<LONG>(centerX + circleRadius * cos(angle1)),
-                static_cast<LONG>(centerY + circleRadius * sin(angle1))
-            };
-            POINT p2 = {
-                static_cast<LONG>(centerX + circleRadius * cos(angle2)),
-                static_cast<LONG>(centerY + circleRadius * sin(angle2))
-            };
+        p2.x = centerX + circleRadius * cos(angle2);
+        p2.y = centerY + circleRadius * sin(angle2);
 
 
-            HBRUSH brush = CreateSolidBrush(colors[i]);
-            SelectObject(hdc, brush);
+        HBRUSH brush = CreateSolidBrush(colors[i]);
+        SelectObject(hdc, brush);
 
 
-            Pie(hdc,
-                centerX - circleRadius,
-                centerY - circleRadius,
-                centerX + circleRadius,
-                centerY + circleRadius,
-                p1.x, p1.y,
-                p2.x, p2.y);
+        Pie(hdc,
+            centerX - circleRadius,
+            centerY - circleRadius,
+            centerX + circleRadius,
+            centerY + circleRadius,
+            p1.x, p1.y,
+            p2.x, p2.y);
 
-            DeleteObject(brush);
-        }
+        DeleteObject(brush);// Отрисовка цветового круга 
     }
-    // Отрисовка Цветового круга.
 
-    void Render(HDC hdc) {
-
-     drawColorCircle(hdc);
-     Render(hdc);
-     
     return;
 
 
-    //ShowBitmap(window.context, 0, 0, window.width, window.height, hBack);//задний фон
-    //ShowBitmap(window.context, racket.x - racket.width / 2., racket.y, racket.width, racket.height, racket.hBitmap);// ракетка игрока
+    ShowBitmap(window.context, 0, 0, window.width, window.height, hBack);//задний фон
+    ShowBitmap(window.context, racket.x - racket.width / 2., racket.y, racket.width, racket.height, racket.hBitmap);// ракетка игрока
 
     if (ball.dy < 0 && (enemy.x - racket.width / 4 > ball.x || ball.x > enemy.x + racket.width / 4))
     {
@@ -557,6 +548,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     while (!GetAsyncKeyState(VK_ESCAPE))
     {
         ShowRacketAndBall();//рисуем фон, ракетку и шарик
+        drawColorCircle(window.context);
         //ShowScore();//рисуем очик и жизни
         BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно
         Sleep(16);//ждем 16 милисекунд (1/количество кадров в секунду)
