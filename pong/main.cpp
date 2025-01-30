@@ -395,7 +395,7 @@ void ShowRacketAndBall()
     arrange—onstellation(Aries, 17, -50, 1 );
     arrange—onstellation(UrsaMajor, 0, 0, 0);
 
-    //show—onstellation(Aries);
+    show—onstellation(Aries);
     show—onstellation(UrsaMajor);
 
     HPEN pen = CreatePen(PS_SOLID, 3, RGB(0, 191, 255));
