@@ -140,6 +140,11 @@ float getY(float y)
     return y * window.height;
 }
 
+float getZ(float z)
+{
+    return z * window.width;
+}
+
 float saturate(float x)
 {
     return max(min(x, 1.), 0.);
@@ -152,6 +157,13 @@ typedef struct {
 } point3d;
 
 point3d point;
+void move(point3d& p, float x, float y, float z)
+{
+    p.x += x;
+    p.y += y;
+    p.z += z;
+}
+
 void rotateX(point3d& p, float angle)
 {
     float a = angle * 3.14 / 180.;
@@ -193,7 +205,7 @@ void rotateZ(point3d& p, float angle)
 
 void project(point3d& p)
 {
-    float d = 500; // Отдаление камеры.
+    float d = 1000; // Отдаление камеры.
     float x = window.width / 2. + point.x * d / (point.z + d);
     float y = window.height / 2. + point.y * d / (point.z + d);
     
@@ -236,17 +248,115 @@ void drawPoint(point3d& p, float sz = 2)
 }
 
 
-
+POINT mouse;
 point3d mouseAngle; 
 point3d oldmouse;
 point3d oldmouseAngle;
 bool rmb = false; //Правая кнопка мыши
 
+void showСonstellation(std::vector <float> &starArray)
+{
+    int starsCount = starArray.size()/3;
 
+    HPEN pen = CreatePen(PS_SOLID, 3, RGB(0, 191, 255));
+    HBRUSH brush = CreateSolidBrush(RGB(0, 191, 255));
+    HBRUSH brush2 = CreateSolidBrush(RGB(255, 0, 0));
+    SelectObject(window.context, pen);
+    SelectObject(window.context, brush);
+
+    for (int i = 0; i < starsCount; i++)
+   {
+        point.x = starArray[i * 3];
+        point.y = starArray[i * 3 + 1];
+        point.z = starArray[i * 3 + 2];
+
+        float a = timeGetTime() * .01;
+        rotateworld();
+        project(point);
+
+        if (i == 0)
+        {
+            MoveToEx(window.context, point.x, point.y, NULL);
+        }
+        else
+        {
+            LineTo(window.context, point.x, point.y);
+        }
+    }
+
+    for (int i = 0; i < starsCount; i++)
+    {
+        point.x = starArray[i * 3];
+        point.y = starArray[i * 3 + 1];
+        point.z = starArray[i * 3 + 2];
+
+        float a = timeGetTime() * .01;
+        rotateworld();
+        project(point);
+
+        float dx = point.x - mouse.x;
+        float dy = point.y - mouse.y;
+        float lenght = sqrt(dx * dx + dy * dy);
+
+        float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
+
+        SelectObject(window.context, brush);
+
+        if (GetAsyncKeyState(VK_LBUTTON))
+        {
+            if (lenght < starSize)
+            {
+                SelectObject(window.context, brush2);
+            }
+        }
+
+        float sz = starSize + rad * 15;
+        drawPoint(point, sz);
+
+    }
+
+
+    DeleteObject(pen);
+    DeleteObject(brush);
+    DeleteObject(brush2);
+}
+
+void arrangeСonstellation(std::vector <float>& starArray, float angleX, float angleY, float angleZ )
+{
+    int starsCount = starArray.size() / 3;
+    float scale = 1000;
+    for (int i = 0; i < starsCount; i++)
+    {
+        
+        point3d p = { starArray[i * 3 + 0], starArray[i * 3 + 1], starArray[i * 3 + 2] };
+
+        move(p, 0, 0, 1000./scale);
+        rotateX(p, angleX);
+        rotateY(p, angleY);
+        rotateZ(p, angleZ); 
+        
+        starArray[i * 3 + 0] = p.x * scale;
+        starArray[i * 3 + 1] = p.y * scale;
+        starArray[i * 3 + 2] = p.z * scale;
+    }
+}
+
+void showStarField()
+{
+    srand(10);
+    for (int i = 0; i < 300; i++) {
+
+        genRandSphere(point);
+        rotateworld();
+        project(point);
+        drawPoint(point);
+
+    }
+}
 
 void ShowRacketAndBall()
 {
-    POINT mouse;
+
     GetCursorPos(&mouse);
     ScreenToClient(window.hWnd, &mouse); // Управление мышью.
 
@@ -272,84 +382,26 @@ void ShowRacketAndBall()
 
     RECT rect;
     GetClientRect(window.hWnd, &rect);
-    FillRect(window.context, &rect, CreateSolidBrush(RGB(0, 0, 0)));
+    auto blackBrush = CreateSolidBrush(RGB(0, 0, 0));
+    FillRect(window.context, &rect, blackBrush);
+    DeleteObject(blackBrush);
 
-    srand(10);
-    for (int i = 0; i < 300; i++) {
+    showStarField();
 
-        genRandSphere(point);
-        rotateworld();
-        project(point);
-        drawPoint(point);
-        
-    }
+    std::vector <float> Aries = { 0, 0, 0., .21, .05, 0., .35, .12, 0., .43, .27, 0. };
+    std::vector <float> UrsaMajor = { -.25, -.25, 0., -.1, -.2, 0.,-.05, .05, 0.,.25, .05,0., .35, .25,0., .05, .25,0., -.05, .05,0. };
+    //std::vector <float> 
 
-    std::vector <float> starArray = { -.25, -.25, -.1, -.2, -.05, .05, .25, .05, .35, .25, .05, .25, -.05, .05 };
-    float CenterX = window.width / 2.;
-    float CenterY = window.height / 2.;
+    arrangeСonstellation(Aries, 17, -50, 1 );
+    arrangeСonstellation(UrsaMajor, 0, 0, 0);
+
+    showСonstellation(Aries);
+    showСonstellation(UrsaMajor);
+
     HPEN pen = CreatePen(PS_SOLID, 3, RGB(0, 191, 255));
     HBRUSH brush = CreateSolidBrush(RGB(0, 191, 255));
-    HBRUSH brush2 = CreateSolidBrush(RGB(255, 0, 0));
     SelectObject(window.context, pen);
     SelectObject(window.context, brush);
-
-
-    for (int i = 0; i < 7; i++)
-    {
-        point.x = CenterX + getX(starArray[i * 2]);
-        point.y = CenterY + getY(starArray[i * 2 + 1]);
-        point.z = 0;
-        point.x -= window.width / 2.;
-        point.y -= window.height / 2.;
-        float a = timeGetTime() * .01;
-        rotateworld();
-        point.z += 1000;
-        project(point);
-
-        if (i == 0)
-        {
-            MoveToEx(window.context, point.x, point.y, NULL);
-        }
-        else
-        {
-            LineTo(window.context, point.x, point.y);
-        }
-    }
-
-    for (int i = 0; i < 7; i++)
-    {
-        point.x = CenterX + getX(starArray[i * 2]);
-        point.y = CenterY + getY(starArray[i * 2 + 1]);
-        point.z = 0;
-
-        point.x -= window.width / 2.;
-        point.y -= window.height / 2.;
-
-        float a = timeGetTime() * .01;
-        rotateworld();
-        point.z += 1000;
-        project(point);
-
-        float dx = point.x - mouse.x;
-        float dy = point.y - mouse.y;
-        float lenght = sqrt(dx * dx + dy * dy);
-
-        float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
-
-        SelectObject(window.context, brush);
-
-        if (GetAsyncKeyState(VK_LBUTTON))
-        {
-            if (lenght < starSize)
-            {
-                SelectObject(window.context, brush2);
-            }
-        }
-
-        float sz = starSize + rad * 15;
-        drawPoint(point, sz);
-      
-    }
 
     Ellipse(window.context,
         mouse.x - starSize / 2,
@@ -357,6 +409,9 @@ void ShowRacketAndBall()
         mouse.x + starSize / 2,
         mouse.y + starSize / 2
     );
+
+    DeleteObject(pen);
+    DeleteObject(brush);
 }
 void drawColorCircle(HDC hdc) {
     const COLORREF colors[] = {
@@ -452,7 +507,7 @@ void rotateworld()
 {
     rotateX(point, mouseAngle.y * 0.1);
     rotateY(point, mouseAngle.x * 0.1);
-    rotateZ(point, timeGetTime() * 0.01);
+    //rotateZ(point, timeGetTime() * 0.01);
 }
 void CheckFloor()
 {
@@ -548,7 +603,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     while (!GetAsyncKeyState(VK_ESCAPE))
     {
         ShowRacketAndBall();//рисуем фон, ракетку и шарик
-        drawColorCircle(window.context);
+        //drawColorCircle(window.context);
         //ShowScore();//рисуем очик и жизни
         BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно
         Sleep(16);//ждем 16 милисекунд (1/количество кадров в секунду)
