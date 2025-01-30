@@ -193,7 +193,7 @@ void rotateZ(point3d& p, float angle)
 
 void project(point3d& p)
 {
-    float d = 500; // Отдаление камеры.
+    float d = 400; // Отдаление камеры.
     float x = window.width / 2. + point.x * d / (point.z + d);
     float y = window.height / 2. + point.y * d / (point.z + d);
     
@@ -358,6 +358,8 @@ void ShowRacketAndBall()
         mouse.y + starSize / 2
     );
 }
+bool lmb = false;
+
 void drawColorCircle(HDC hdc) {
     const COLORREF colors[] = {
         RGB(255, 0, 0),    // Красный
@@ -370,8 +372,8 @@ void drawColorCircle(HDC hdc) {
     };
 
     float circleRadius = 75;
-    float centerX = window.width / 2;
-    float centerY = window.height / 2;
+    float centerX = window.width / 4;
+    float centerY = window.height / 4;
 
     int numColors = sizeof(colors) / sizeof(colors[0]);
     float angleStep = 2 * 3.14 / (float)numColors;
@@ -392,6 +394,14 @@ void drawColorCircle(HDC hdc) {
         HBRUSH brush = CreateSolidBrush(colors[i]);
         SelectObject(hdc, brush);
 
+        
+        if (GetAsyncKeyState(VK_LBUTTON)) {
+            if (lmb = centerX,centerY) {
+
+                SelectObject(hdc, brush);// Отрисовка цвета мышы.
+            }
+        }
+        drawPoint(point);
 
         Pie(hdc,
             centerX - circleRadius,
@@ -401,7 +411,7 @@ void drawColorCircle(HDC hdc) {
             p1.x, p1.y,
             p2.x, p2.y);
 
-        DeleteObject(brush);// Отрисовка цветового круга 
+        DeleteObject(brush);
     }
 
     return;
