@@ -390,7 +390,7 @@ void ShowRacketAndBall()
 
     std::vector <float> Aries = { 0, 0, 0., .21, .05, 0., .35, .12, 0., .43, .27, 0. };
     std::vector <float> UrsaMajor = { -.25, -.25, 0., -.1, -.2, 0.,-.05, .05, 0.,.25, .05,0., .35, .25,0., .05, .25,0., -.05, .05,0. };
-    //std::vector <float> 
+    // std::vector 
 
     arrange—onstellation(Aries, 17, -50, 1 );
     arrange—onstellation(UrsaMajor, 0, 0, 0);
