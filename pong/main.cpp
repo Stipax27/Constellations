@@ -161,7 +161,7 @@ float getY(float y)
 
 float saturate(float x)
 {
-    return max(min(x, 1.), 0.);
+    return max(min(x, 1.), 0.);// размеры экрана.
 }
 
 
@@ -175,7 +175,7 @@ void move(point3d& p, float x, float y, float z)
     p.z += z;
 }
 
-void rotateX(point3d& p, float angle)
+void rotateX(point3d& p, float angle)// поворот по Оси X.
 {
     float a = angle * PI / 180.;
 
@@ -188,7 +188,7 @@ void rotateX(point3d& p, float angle)
     p.z = z1;
 }
 
-void rotateY(point3d &p, float angle)
+void rotateY(point3d &p, float angle)// поворот по Оси Y.
 {
     float a = angle * PI / 180.;
 
@@ -201,7 +201,7 @@ void rotateY(point3d &p, float angle)
     p.z = z1;
 }
 
-void rotateZ(point3d& p, float angle)
+void rotateZ(point3d& p, float angle)// поворот по Оси Z.
 {
     float a = angle * PI / 180.;
 
@@ -212,7 +212,7 @@ void rotateZ(point3d& p, float angle)
     p.x = x1;
     p.y = y1;
     p.z = z1;
-}// Добавили вращение в 3d пространстве.
+}
 
 float clamp(float x, float a, float b)
 {
@@ -238,16 +238,16 @@ void project(point3d& p)
         camDist = lerpCoef * (finCamDist - startCamDist) + startCamDist;
     }
     camDist = clamp(camDist, 100, 3000);
-    float x = window.width / 2. + point.x * camDist / (point.z + camDist);
-    float y = window.height / 2. + point.y * camDist / (point.z + camDist);
-
-    p.x = x;
-    p.y = y;
-
-}
-
-
-void genRandSphere(point3d& p)
+    float x = window.width / 2. + point.x * camDist / (point.z + camDist);    
+    float y = window.height / 2. + point.y * camDist / (point.z + camDist);   
+                                                                              
+    p.x = x;                                                                  
+    p.y = y;                                                                  
+                                                                              
+}                                                                             
+                                                                              
+                                                                              
+void genRandSphere(point3d& p)                                                
 {
     float amp = 1.25;
     float angleX, angleY;
@@ -277,7 +277,8 @@ void drawPoint(point3d& p, float sz = 2)
         p.y - sz,
         p.x + sz,
         p.y + sz
-    );
+    );// Рисование элипса.
+    
 }
 
 
@@ -292,6 +293,7 @@ void drawLine(point3d& p1, point3d& p2, int count)
 {
     for (int i = 0;i < count;i++)
     {
+        
         float dx = p2.x - p1.x;
         float dy = p2.y - p1.y;
         float dz = p2.z - p1.z;
@@ -309,6 +311,8 @@ void drawLine(point3d& p1, point3d& p2, int count)
 
         float sz = 1+ .5*sinf(i + timeGetTime() * .01);
         drawPoint(point,sz);
+        
+        // Рисование Линий.
     }
 }
 
@@ -320,10 +324,11 @@ void showСonstellation(std::vector <float>& starArray, std::vector <float>& star
     HBRUSH brush = CreateSolidBrush(RGB(0, 191, 255));
     HBRUSH brush2 = CreateSolidBrush(RGB(255, 0, 0));
     SelectObject(window.context, pen);
-    SelectObject(window.context, brush);
-
+    SelectObject(window.context, brush);// Цвета и кисти для рисвоание и расскашивания.
+    
     for (int i = 0; i < starsCount-1; i++)
     {
+        
         point3d point1, point2;
         point1.x = starArray[i * 3];
         point1.y = starArray[i * 3 + 1];
@@ -334,25 +339,14 @@ void showСonstellation(std::vector <float>& starArray, std::vector <float>& star
         point2.z = starArray[i * 3 + 3 + 2];
 
         float a = timeGetTime() * .01;
-        rotateworld(point1);
-        rotateworld(point2);
-
+        //rotateworld(point1);
+       // rotateworld(point2);
+        
         if (starHealth[i] > 0 && starHealth[i + 1] > 0)
         {
-            drawLine(point1, point2, 20);
+            drawLine(point1, point2, 20);// Рисование звёздных линий созвездия.
         }
-
-        /*if (i == 0)
-        {
-            MoveToEx(window.context, point.x, point.y, NULL);
-        }
-        else
-        {
-            if (point.z > 0)
-            {
-                LineTo(window.context, point.x, point.y);
-            }
-        }*/
+        
     }
 
     for (int i = 0; i < starsCount; i++)
@@ -362,7 +356,7 @@ void showСonstellation(std::vector <float>& starArray, std::vector <float>& star
         point.z = starArray[i * 3 + 2];
 
         float a = timeGetTime() * .01;
-        rotateworld();
+        //rotateworld();
         project(point);
 
         float dx = point.x - mouse.x;
@@ -371,7 +365,7 @@ void showСonstellation(std::vector <float>& starArray, std::vector <float>& star
 
         float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
 
-        SelectObject(window.context, brush);
+        SelectObject(window.context, brush);// Пульсирование Звёзд при наведение мыши.
 
         if (GetAsyncKeyState(VK_LBUTTON))
         {
@@ -403,8 +397,9 @@ void arrangeСonstellation(std::vector <float>& starArray, float angleX, float an
 
     int starsCount = starArray.size() / 3;
     float scale = 1000;
-    for (int i = 0; i < starsCount; i++)
+    for (int i = 0; i < starsCount; i++)// РАзмещение Линий.
     {
+        
 
         point3d p = { starArray[i * 3 + 0], starArray[i * 3 + 1], starArray[i * 3 + 2] };
 
@@ -416,6 +411,7 @@ void arrangeСonstellation(std::vector <float>& starArray, float angleX, float an
         starArray[i * 3 + 0] = p.x * scale;
         starArray[i * 3 + 1] = p.y * scale;
         starArray[i * 3 + 2] = p.z * scale;
+        
     }
 }
 
@@ -428,7 +424,7 @@ void showStarField()
         rotateworld();
         project(point);
         drawPoint(point);
-
+        // Звёзды на фоне их кол-во. и Кадр остановки.
     }
 }
 
@@ -483,7 +479,7 @@ void drawColorCircle() {
             p1.x, p1.y,
             p2.x, p2.y);
 
-        DeleteObject(brush);
+        DeleteObject(brush);// Данные для рисование цвет. круга.
     }
 
 }
@@ -497,7 +493,7 @@ class starData {
 
     void Draw()
     {
-
+        
     }
 };
 
@@ -509,7 +505,12 @@ std::vector <float> UrsaMajor = { -.25, -.25, 0., -.1, -.2, 0.,-.05, .05, 0.,.25
 std::vector <float> UrsaMajor_health = { 1,1,1,1,1,1,1 };
 std::vector <float> PieceOfCancer1 = { 0, 0, 0, .04, .25, 0, .08, .7, 0 };
 std::vector <float> PieceOfCancer1_health = { 1,1,1 };
-
+std::vector <float> Taurus = {0,0,0, .08, .7, .25, .04 };
+std::vector <float> Taurus_health = {1,1};
+std::vector <float> Gemini = {};
+std::vector <float> Gemini_health = {};
+std::vector <float> Leo = {};
+std::vector <float> Leo_health = {};                                            // Данные для созведий (Их координаты).
 bool starsInitFlag = false;
 
 void ShowRacketAndBall()
@@ -536,7 +537,7 @@ void ShowRacketAndBall()
         mouseAngle.y = oldmouseAngle.y + dy;
 
     }
-    else { rmb = false; }
+    else { rmb = false; }// При удержании ПКМ кручение простарнства.
 
     RECT rect;
     GetClientRect(window.hWnd, &rect);
@@ -551,13 +552,14 @@ void ShowRacketAndBall()
         arrangeСonstellation(Aries, 17, -50, 0);
         arrangeСonstellation(UrsaMajor, 0, 0, 0);
         arrangeСonstellation(PieceOfCancer1, -20, -20, 0);
-        starsInitFlag = true;
+        arrangeСonstellation(Taurus, 20, -30, 0);
+        starsInitFlag = true; // Координаты Постановки созвездий в пространстве.
     }
 
     showСonstellation(Aries, Aries_health);
     showСonstellation(UrsaMajor, UrsaMajor_health);
     showСonstellation(PieceOfCancer1, PieceOfCancer1_health);
-
+    showСonstellation(Taurus, Taurus_health);
     HPEN pen = CreatePen(PS_SOLID, 3, RGB(0, 191, 255));
     HBRUSH brush = CreateSolidBrush(RGB(0, 191, 255));
     SelectObject(window.context, pen);
@@ -568,6 +570,7 @@ void ShowRacketAndBall()
     for (int i = 0; i < 7;i++)
     {
         colorBrush[i] = CreateSolidBrush(colors[i]);
+        
     }
 
     if (GetAsyncKeyState(VK_LBUTTON)) {
@@ -577,7 +580,7 @@ void ShowRacketAndBall()
         float lenght = sqrt(dx * dx + dy * dy);
         if (lenght < circleRadius) {
             
-            currentColorIndex = min(7.*(atan2(dy, -dx) / (2. * PI) + .5),6);
+            currentColorIndex = min(7.*(atan2(dy, -dx) / (2. * PI) + .5),6);// При нажатии ЛКМ Перекрас мыши в цвет который мы выбррали на Цвет. круге.
 
             /*float s = atan2(dy, -dx) / (2. * PI) + .5;
             char sss[100];
@@ -591,13 +594,12 @@ void ShowRacketAndBall()
         }
 
 
-        //SelectObject(hdc, brush);// Отрисовка цвета мышы.
-
     }
 
     if (currentColorIndex == -1)
     {
         SelectObject(window.context, brush);
+        
     }
     else
     {
@@ -610,7 +612,7 @@ void ShowRacketAndBall()
         mouse.x + starSize ,
         mouse.y + starSize 
     );
-
+    
     DeleteObject(pen);
     DeleteObject(brush);
 
@@ -629,14 +631,14 @@ void rotateworld()
 {
     rotateX(point, mouseAngle.y * 0.1);
     rotateY(point, mouseAngle.x * 0.1);
-   // rotateZ(point, timeGetTime() * 0.01);
+    rotateZ(point, timeGetTime() * 0.01);
 }
 
 void rotateworld(point3d& p)
 {
     rotateX(p, mouseAngle.y * 0.1);
     rotateY(p, mouseAngle.x * 0.1);
-    // rotateZ(point, timeGetTime() * 0.01);
+     rotateZ(point, timeGetTime() * 0.01); // Кручение обьектов.
 }
 
 
