@@ -37,7 +37,7 @@ struct {
     HWND hWnd;//хэндл окна
     HDC device_context, context;// два контекста устройства (для буферизации)
     int width, height;//сюда сохраним размеры окна которое создаст программа
-} window;
+} window;   
 
 HBITMAP hBack;// хэндл для фонового изображения
 
@@ -414,6 +414,26 @@ void arrangeСonstellation(std::vector <float>& starArray, float angleX, float an
         
     }
 }
+void arrangePlayerConstallation(std::vector <float>& starArray, float angleX, float angleY, float angleZ) {
+    int starsCount = starArray.size() / 3;
+    float scale = 1000;
+    for (int i = 0; i < starsCount; i++)// РАзмещение Линий.
+    {
+
+
+        point3d p = { starArray[i * 3 + 0], starArray[i * 3 + 1], starArray[i * 3 + 2] };
+
+        move(p, 0, 0, 3000. / scale);
+        rotateX(p, angleX);
+        rotateY(p, angleY);
+        rotateZ(p, angleZ);
+
+        starArray[i * 3 + 0] = p.x * scale;
+        starArray[i * 3 + 1] = p.y * scale;
+        starArray[i * 3 + 2] = p.z * scale;
+
+    }
+}
 
 void showStarField()
 {
@@ -510,7 +530,7 @@ std::vector <float> Taurus_health = {1,1};
 std::vector <float> Gemini = {};
 std::vector <float> Gemini_health = {};
 std::vector <float> Leo = {};
-std::vector <float> Leo_health = {};                                            // Данные для созведий (Их координаты).
+std::vector <float> Leo_health = {};                                            // Данные для созведий (Их координаты).TEST
 bool starsInitFlag = false;
 
 void ShowRacketAndBall()
@@ -550,9 +570,10 @@ void ShowRacketAndBall()
     if (!starsInitFlag)
     {
         arrangeСonstellation(Aries, 17, -50, 0);
-        arrangeСonstellation(UrsaMajor, 0, 0, 0);
+        arrangeСonstellation(UrsaMajor, -15, -60, 0);
         arrangeСonstellation(PieceOfCancer1, -20, -20, 0);
         arrangeСonstellation(Taurus, 20, -30, 0);
+        arrangePlayerConstallation(Taurus, -30,80, 0);
         starsInitFlag = true; // Координаты Постановки созвездий в пространстве.
     }
 
@@ -560,6 +581,7 @@ void ShowRacketAndBall()
     showСonstellation(UrsaMajor, UrsaMajor_health);
     showСonstellation(PieceOfCancer1, PieceOfCancer1_health);
     showСonstellation(Taurus, Taurus_health);
+    
     HPEN pen = CreatePen(PS_SOLID, 3, RGB(0, 191, 255));
     HBRUSH brush = CreateSolidBrush(RGB(0, 191, 255));
     SelectObject(window.context, pen);
