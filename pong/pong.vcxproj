@@ -144,6 +144,14 @@
     <Media Include="..\Debug\fail.wav" />
     <Media Include="..\Debug\music.mp3" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="drawer.h" />
+    <ClInclude Include="MainGame.h" />
+    <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="MainWorld.h" />
+    <ClInclude Include="mouse.h" />
+    <ClInclude Include="utils.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

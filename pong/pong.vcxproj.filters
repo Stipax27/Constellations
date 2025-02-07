@@ -42,4 +42,24 @@
     </Media>
     <Media Include="..\Debug\music.mp3" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="drawer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mouse.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainWindow.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainGame.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainWorld.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>
