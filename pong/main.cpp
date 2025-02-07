@@ -22,9 +22,6 @@ typedef struct {
 } sprite;
 float starSize = 10;
 
-sprite racket;//ракетка игрока
-sprite enemy;//ракетка противника
-sprite ball;//шарик
 
 int startTime;
 
@@ -39,8 +36,6 @@ struct {
     int width, height;//сюда сохраним размеры окна которое создаст программа
 } window;   
 
-HBITMAP hBack;// хэндл для фонового изображения
-
 typedef struct {
     float x;
     float y;
@@ -52,35 +47,9 @@ void rotateworld(point3d& p);
 
 void InitGame()
 {
-    //в этой секции загружаем спрайты с помощью функций gdi
-    //пути относительные - файлы должны лежать рядом с .exe 
-    //результат работы LoadImageA сохраняет в хэндлах битмапов, рисование спрайтов будет произовдиться с помощью этих хэндлов
-    ball.hBitmap = (HBITMAP)LoadImageA(NULL, "ball.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-    racket.hBitmap = (HBITMAP)LoadImageA(NULL, "racket.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-    enemy.hBitmap = (HBITMAP)LoadImageA(NULL, "racket_enemy.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-    hBack = (HBITMAP)LoadImageA(NULL, "back.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-    //------------------------------------------------------
-
-    racket.width = 300;
-    racket.height = 50;
-    racket.speed = 30;//скорость перемещения ракетки
-    racket.x = window.width / 2.;//ракетка посередине окна
-    racket.y = window.height - racket.height;//чуть выше низа экрана - на высоту ракетки
-
-    enemy.x = racket.x;//х координату оппонета ставим в ту же точку что и игрока
-
-    ball.dy = (rand() % 65 + 35) / 100.;//формируем вектор полета шарика
-    ball.dx = -(1 - ball.dy);//формируем вектор полета шарика
-    ball.speed = 11;
-    ball.rad = 20;
-    ball.x = racket.x;//x координата шарика - на середие ракетки
-    ball.y = racket.y - ball.rad;//шарик лежит сверху ракетки
-
     game.score = 0;
     game.balls = 9;
-
     startTime = timeGetTime();
-   
 }
 
 void ProcessSound(const char* name)//проигрывание аудиофайла в формате .wav, файл должен лежать в той же папке где и программа
@@ -96,57 +65,14 @@ void ShowScore()
     SetBkMode(window.context, TRANSPARENT);
     auto hFont = CreateFont(70, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, "CALIBRI");
     auto hTmp = (HFONT)SelectObject(window.context, hFont);
-
     char txt[32];//буфер для текста
     _itoa_s(game.score, txt, 10);//преобразование числовой переменной в текст. текст окажется в переменной txt
     TextOutA(window.context, 10, 10, "Score", 5);
     TextOutA(window.context, 200, 10, (LPCSTR)txt, strlen(txt));
-
     _itoa_s(game.balls, txt, 10);
     TextOutA(window.context, 10, 100, "Balls", 5);
     TextOutA(window.context, 200, 100, (LPCSTR)txt, strlen(txt));
 }
-
-void ProcessInput()
-{
-    if (GetAsyncKeyState(VK_LEFT)) racket.x -= racket.speed;
-    if (GetAsyncKeyState(VK_RIGHT)) racket.x += racket.speed;
-
-    if (!game.action && GetAsyncKeyState(VK_SPACE))
-    {
-        game.action = true;
-        ProcessSound("bounce.wav");
-    }
-}
-
-void ShowBitmap(HDC hDC, int x, int y, int x1, int y1, HBITMAP hBitmapBall, bool alpha = false)
-{
-    HBITMAP hbm, hOldbm;
-    HDC hMemDC;
-    BITMAP bm;
-
-    hMemDC = CreateCompatibleDC(hDC); // Создаем контекст памяти, совместимый с контекстом отображения
-    hOldbm = (HBITMAP)SelectObject(hMemDC, hBitmapBall);// Выбираем изобра жение bitmap в контекст памяти
-     
-    if (hOldbm) // Если не было ошибок, продолжаем работу
-    {
-        GetObject(hBitmapBall, sizeof(BITMAP), (LPSTR)&bm); // Определяем размеры изображения
-
-        if (alpha)
-        {
-            TransparentBlt(window.context, x, y, x1, y1, hMemDC, 0, 0, x1, y1, RGB(0, 0, 0));//все пиксели черного цвета будут интепретированы как прозрачные
-        }
-        else
-        {
-            StretchBlt(hDC, x, y, x1, y1, hMemDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY); // Рисуем изображение bitmap
-        }
-
-        SelectObject(hMemDC, hOldbm);// Восстанавливаем контекст памяти
-    }
-
-    DeleteDC(hMemDC); // Удаляем контекст памяти
-}
-
 
 float getX(float x)
 {
@@ -162,10 +88,6 @@ float saturate(float x)
 {
     return max(min(x, 1.), 0.);// размеры экрана.
 }
-
-
-
-//point3d point;
 
 void move(point3d& p, float x, float y, float z)
 {
@@ -241,11 +163,9 @@ void project(point3d& p)
     float y = window.height / 2. + p.y * camDist / (p.z + camDist);   
                                                                               
     p.x = x;                                                                  
-    p.y = y;                                                                  
-                                                                              
+    p.y = y;                                                                                                                                           
 }                                                                             
-                                                                              
-                                                                              
+                                                                                                                                                      
 void genRandSphere(point3d& p)                                                
 {                                                                       
     float amp = 1.25;                                                   
@@ -258,14 +178,6 @@ void genRandSphere(point3d& p)
     rotateX(p, angleX);
     rotateY(p, angleY); // Сферообразное пространство.
 }
-
-//void genRandCube(point3d& p)
-//{
-//    float amp = 1.25;
-//    p.x = (rand() % window.width - window.width / 2) * amp;
-//    p.y = (rand() % window.width - window.width / 2) * amp;
-//    p.z = (rand() % window.width - window.width / 2) * amp; // Оброзование Кубического пространства.
-//}
 
 void drawPoint(point3d& p, float sz = 2)
 {
@@ -280,7 +192,6 @@ void drawPoint(point3d& p, float sz = 2)
     
 }
 
-
 POINT mouse;
 point3d mouseAngle; 
 point3d oldmouse;
@@ -292,7 +203,6 @@ void drawLine(point3d& p1, point3d& p2, int count)
 {
     for (int i = 0;i < count;i++)
     {
-
         float dx = p2.x - p1.x;
         float dy = p2.y - p1.y;
         float dz = p2.z - p1.z;
@@ -310,7 +220,6 @@ void drawLine(point3d& p1, point3d& p2, int count)
 
         float sz = 1 + .5 * sinf(i + timeGetTime() * .01);
         drawPoint(point, sz);
-
         // Рисование Линий.
     }
 }
@@ -318,7 +227,6 @@ void drawLine(point3d& p1, point3d& p2, int count)
 void showСonstellation(std::vector <float>& starArray, std::vector <float>& starHealth)
 {
     int starsCount = starArray.size() / 3;
-
     HPEN pen = CreatePen(PS_SOLID, 3, RGB(0, 0, 255));
     HBRUSH brush = CreateSolidBrush(RGB(0, 191, 255));
     HBRUSH brush2 = CreateSolidBrush(RGB(255, 0, 0));
@@ -327,7 +235,6 @@ void showСonstellation(std::vector <float>& starArray, std::vector <float>& star
     
     for (int i = 0; i < starsCount-1; i++)
     {
-        
         point3d point1, point2;
         point1.x = starArray[i * 3];
         point1.y = starArray[i * 3 + 1];
@@ -350,7 +257,6 @@ void showСonstellation(std::vector <float>& starArray, std::vector <float>& star
             int x = static_cast<int>(length) / 50;
             drawLine(point1, point2, x);// Рисование звёздных линий созвездия.
         }
-        
     }
 
     for (int i = 0; i < starsCount; i++)
@@ -395,17 +301,12 @@ void showСonstellation(std::vector <float>& starArray, std::vector <float>& star
     DeleteObject(brush2);
 }
 
-
-
 void arrangeСonstellation(std::vector <float>& starArray, float angleX, float angleY, float angleZ)
 {
-
     int starsCount = starArray.size() / 3;
     float scale = 1000;
     for (int i = 0; i < starsCount; i++)// РАзмещение Линий.
     {
-        
-
         point3d p = { starArray[i * 3 + 0], starArray[i * 3 + 1], starArray[i * 3 + 2] };
 
         move(p, 0, 0, 3000. / scale);
@@ -416,16 +317,14 @@ void arrangeСonstellation(std::vector <float>& starArray, float angleX, float an
         starArray[i * 3 + 0] = p.x * scale;
         starArray[i * 3 + 1] = p.y * scale;
         starArray[i * 3 + 2] = p.z * scale;
-        
     }
 }
-
 
 void showStarField()
 {
     srand(10);
-    for (int i = 0; i < 500; i++) {
-
+    for (int i = 0; i < 500; i++) 
+    {
         point3d point;
         genRandSphere(point);
         rotateworld(point);
@@ -438,7 +337,8 @@ void showStarField()
 float circleRadius;
 float centerX;
 float centerY;
-const COLORREF colors[] = {
+const COLORREF colors[] = 
+{
     RGB(255, 0, 0),    // Красный
     RGB(255, 165, 0),  // Оранжевый
     RGB(255, 255, 0),  // Желтый
@@ -451,8 +351,8 @@ const COLORREF colors[] = {
 HBRUSH colorBrush[7];
 int currentColorIndex = -1;
 
-void drawColorCircle() {
-
+void drawColorCircle() 
+{
     circleRadius = 75;
     centerX = window.width / 4;
     centerY = window.height / 4;
@@ -472,7 +372,6 @@ void drawColorCircle() {
         p2.x = centerX + circleRadius * cos(angle2);
         p2.y = centerY + circleRadius * sin(angle2);
 
-
         HBRUSH brush = CreateSolidBrush(colors[i]);
         SelectObject(window.context, brush);
                 
@@ -486,23 +385,7 @@ void drawColorCircle() {
 
         DeleteObject(brush);// Данные для рисование цвет. круга.
     }
-
 }
-
-class starData {
-
-    std::vector <float> x;
-    std::vector <float> y;
-    std::vector <float> z;
-    std::vector <float> health;
-
-    void Draw()
-    {
-        
-    }
-};
-
-starData Aries_;
 
 std::vector <float> Aries = { 0, 0, 0., .21, .05, 0., .35, .12, 0., .43, .27, 0. };
 std::vector <float> Aries_health = { 1,1,1,1 };
@@ -518,21 +401,19 @@ std::vector <float> Leo = {};
 std::vector <float> Leo_health = {};                                            // Данные для созведий (Их координаты).TEST
 bool starsInitFlag = false;
 
-void ShowRacketAndBall()
+void showWorld()
 {
-
     GetCursorPos(&mouse);
     ScreenToClient(window.hWnd, &mouse); // Управление мышью.
 
-
-    if (GetAsyncKeyState(VK_RBUTTON)) {
-
-        if (!rmb) {
+    if (GetAsyncKeyState(VK_RBUTTON)) 
+    {
+        if (!rmb) 
+        {
             rmb = true;
             oldmouse.x = mouse.x;
             oldmouse.y = mouse.y;
             oldmouseAngle = mouseAngle;
-
         }
         float dx, dy;
         dx = mouse.x - oldmouse.x;
@@ -540,7 +421,6 @@ void ShowRacketAndBall()
 
         mouseAngle.x = oldmouseAngle.x + dx;
         mouseAngle.y = oldmouseAngle.y + dy;
-
     }
     else { rmb = false; }// При удержании ПКМ кручение простарнства.
 
@@ -561,7 +441,6 @@ void ShowRacketAndBall()
 
         starsInitFlag = true; // Координаты Постановки созвездий в пространстве.
     }
-
     showСonstellation(Aries, Aries_health);
     showСonstellation(UrsaMajor, UrsaMajor_health);
     showСonstellation(PieceOfCancer1, PieceOfCancer1_health);
@@ -577,11 +456,10 @@ void ShowRacketAndBall()
     for (int i = 0; i < 7;i++)
     {
         colorBrush[i] = CreateSolidBrush(colors[i]);
-        
     }
 
-    if (GetAsyncKeyState(VK_LBUTTON)) {
-
+    if (GetAsyncKeyState(VK_LBUTTON)) 
+    {
         float dx = mouse.x - centerX;
         float dy = mouse.y - centerY;
         float lenght = sqrt(dx * dx + dy * dy);
@@ -599,20 +477,15 @@ void ShowRacketAndBall()
         {
             currentColorIndex=-1;
         }
-
-
     }
-
     if (currentColorIndex == -1)
     {
         SelectObject(window.context, brush);
-        
     }
     else
     {
         SelectObject(window.context, colorBrush[currentColorIndex]);
     }
-
     Ellipse(window.context,
         mouse.x - starSize ,
         mouse.y - starSize ,
@@ -627,13 +500,7 @@ void ShowRacketAndBall()
     {
         DeleteObject(colorBrush[i]);
     }
-
-    
 }
-
-
-
-
 
 void rotateworld(point3d& p)
 {
@@ -642,13 +509,9 @@ void rotateworld(point3d& p)
     rotateZ(p, timeGetTime() * 0.01); // Кручение обьектов.
 }
 
-
-
 void InitWindow()
 {
     SetProcessDPIAware();
-    //window.hWnd = CreateWindow("edit", 0, WS_POPUP | WS_VISIBLE | WS_MAXIMIZE, 0, 0, 0, 0, 0, 0, 0, 0);
-
 
     hInst = (HINSTANCE)GetModuleHandle(0);
     auto width = GetSystemMetrics(SM_CXSCREEN);
@@ -656,7 +519,7 @@ void InitWindow()
     HBRUSH brush = CreateSolidBrush(RGB(0, 0, 0));
     WNDCLASSEX wcex = { sizeof(WNDCLASSEX), CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS, WndProc, 0,0, hInst, NULL, LoadCursor(NULL, IDC_ARROW), brush, NULL, "fx", NULL };
     RegisterClassEx(&wcex);
-    window.hWnd = CreateWindow("fx", "fx", WS_OVERLAPPEDWINDOW, 0, 0, width, height, NULL, NULL, hInst, NULL);
+    window.hWnd = CreateWindow("fx", "fx", WS_POPUP | WS_VISIBLE | WS_MAXIMIZE, 0, 0, width, height, NULL, NULL, hInst, NULL);
     UpdateWindow(window.hWnd);
     ShowWindow(window.hWnd, SW_SHOW);
 
@@ -668,7 +531,6 @@ void InitWindow()
     window.context = CreateCompatibleDC(window.device_context);//второй буфер
     SelectObject(window.context, CreateCompatibleBitmap(window.device_context, window.width, window.height));//привязываем окно к контексту
     GetClientRect(window.hWnd, &r);
-
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -686,7 +548,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
-
     return 0;
 }
 
@@ -695,13 +556,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_ LPWSTR    lpCmdLine,
     _In_ int       nCmdShow)
 {
-    
     InitWindow();//здесь инициализируем все что нужно для рисования в окне
     InitGame();//здесь инициализируем переменные игры
-
     //mciSendString(TEXT("play ..\\Debug\\music.mp3 repeat"), NULL, 0, NULL);
     ShowCursor(NULL);
-    
     MSG msg = { 0 };
     //while (msg.message != WM_QUIT )
     while (!GetAsyncKeyState(VK_ESCAPE))
@@ -712,17 +570,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
-
-        ShowRacketAndBall();//рисуем фон, ракетку и шарик
-        
+        showWorld();//рисуем фон, ракетку и шарик
         //ShowScore();//рисуем очик и жизни
         BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно
         Sleep(16);//ждем 16 милисекунд (1/количество кадров в секунду)
-
-        //ProcessInput();//опрос клавиатуры
-        //LimitRacket();//проверяем, чтобы ракетка не убежала за экран
-        //ProcessBall();//перемещаем шарик
-        //ProcessRoom();//обрабатываем отскоки от стен и каретки, попадание шарика в картетку
     }
-
 }
