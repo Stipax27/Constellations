@@ -47,7 +47,6 @@ typedef struct {
     float z;
 } point3d;
 
-void rotateworld();
 void rotateworld(point3d& p);
 //cекция кода
 
@@ -166,7 +165,7 @@ float saturate(float x)
 
 
 
-point3d point;
+//point3d point;
 
 void move(point3d& p, float x, float y, float z)
 {
@@ -238,8 +237,8 @@ void project(point3d& p)
         camDist = lerpCoef * (finCamDist - startCamDist) + startCamDist;
     }
     camDist = clamp(camDist, 100, 3000);
-    float x = window.width / 2. + point.x * camDist / (point.z + camDist);    
-    float y = window.height / 2. + point.y * camDist / (point.z + camDist);   
+    float x = window.width / 2. + p.x * camDist / (p.z + camDist);    
+    float y = window.height / 2. + p.y * camDist / (p.z + camDist);   
                                                                               
     p.x = x;                                                                  
     p.y = y;                                                                  
@@ -248,10 +247,10 @@ void project(point3d& p)
                                                                               
                                                                               
 void genRandSphere(point3d& p)                                                
-{
-    float amp = 1.25;
-    float angleX, angleY;
-    angleX = rand() % 360;
+{                                                                       
+    float amp = 1.25;                                                   
+    float angleX, angleY;                                               
+    angleX = rand() % 360;                                              
     angleY = rand() % 360;
     p.x = 0;
     p.y = 0;
@@ -260,13 +259,13 @@ void genRandSphere(point3d& p)
     rotateY(p, angleY); // Сферообразное пространство.
 }
 
-void genRandCube(point3d& p)
-{
-    float amp = 1.25;
-    p.x = (rand() % window.width - window.width / 2) * amp;
-    p.y = (rand() % window.width - window.width / 2) * amp;
-    p.z = (rand() % window.width - window.width / 2) * amp; // Оброзование Кубического пространства.
-}
+//void genRandCube(point3d& p)
+//{
+//    float amp = 1.25;
+//    p.x = (rand() % window.width - window.width / 2) * amp;
+//    p.y = (rand() % window.width - window.width / 2) * amp;
+//    p.z = (rand() % window.width - window.width / 2) * amp; // Оброзование Кубического пространства.
+//}
 
 void drawPoint(point3d& p, float sz = 2)
 {
@@ -277,7 +276,7 @@ void drawPoint(point3d& p, float sz = 2)
         p.y - sz,
         p.x + sz,
         p.y + sz
-    );// Рисование элипса.
+    );// Рисование элипса. sz = Размер звезды.
     
 }
 
@@ -293,7 +292,7 @@ void drawLine(point3d& p1, point3d& p2, int count)
 {
     for (int i = 0;i < count;i++)
     {
-        
+
         float dx = p2.x - p1.x;
         float dy = p2.y - p1.y;
         float dz = p2.z - p1.z;
@@ -302,16 +301,16 @@ void drawLine(point3d& p1, point3d& p2, int count)
         float stepY = dy / (float)count;
         float stepZ = dz / (float)count;
 
-        
+        point3d point;
         point.x = p1.x + stepX * (float)i;
         point.y = p1.y + stepY * (float)i;
         point.z = p1.z + stepZ * (float)i;
 
         project(point);
 
-        float sz = 1+ .5*sinf(i + timeGetTime() * .01);
-        drawPoint(point,sz);
-        
+        float sz = 1 + .5 * sinf(i + timeGetTime() * .01);
+        drawPoint(point, sz);
+
         // Рисование Линий.
     }
 }
@@ -320,7 +319,7 @@ void showСonstellation(std::vector <float>& starArray, std::vector <float>& star
 {
     int starsCount = starArray.size() / 3;
 
-    HPEN pen = CreatePen(PS_SOLID, 3, RGB(0, 191, 255));
+    HPEN pen = CreatePen(PS_SOLID, 3, RGB(0, 0, 255));
     HBRUSH brush = CreateSolidBrush(RGB(0, 191, 255));
     HBRUSH brush2 = CreateSolidBrush(RGB(255, 0, 0));
     SelectObject(window.context, pen);
@@ -339,24 +338,30 @@ void showСonstellation(std::vector <float>& starArray, std::vector <float>& star
         point2.z = starArray[i * 3 + 3 + 2];
 
         float a = timeGetTime() * .01;
-        //rotateworld(point1);
-       // rotateworld(point2);
-        
+        rotateworld(point1);
+        rotateworld(point2);
         if (starHealth[i] > 0 && starHealth[i + 1] > 0)
         {
-            drawLine(point1, point2, 20);// Рисование звёздных линий созвездия.
+            
+            float dx = point2.x - point1.x;
+            float dy = point2.y - point1.y;
+            float dz = point2.z - point1.z;
+            float length = sqrt(dx * dx + dy * dy + dz * dz);
+            int x = static_cast<int>(length) / 50;
+            drawLine(point1, point2, x);// Рисование звёздных линий созвездия.
         }
         
     }
 
     for (int i = 0; i < starsCount; i++)
     {
+        point3d point;
         point.x = starArray[i * 3];
         point.y = starArray[i * 3 + 1];
         point.z = starArray[i * 3 + 2];
 
         float a = timeGetTime() * .01;
-        //rotateworld();
+        rotateworld(point);
         project(point);
 
         float dx = point.x - mouse.x;
@@ -414,34 +419,16 @@ void arrangeСonstellation(std::vector <float>& starArray, float angleX, float an
         
     }
 }
-void arrangePlayerConstallation(std::vector <float>& starArray, float angleX, float angleY, float angleZ) {
-    int starsCount = starArray.size() / 3;
-    float scale = 1000;
-    for (int i = 0; i < starsCount; i++)// РАзмещение Линий.
-    {
 
-
-        point3d p = { starArray[i * 3 + 0], starArray[i * 3 + 1], starArray[i * 3 + 2] };
-
-        move(p, 0, 0, 3000. / scale);
-        rotateX(p, angleX);
-        rotateY(p, angleY);
-        rotateZ(p, angleZ);
-
-        starArray[i * 3 + 0] = p.x * scale;
-        starArray[i * 3 + 1] = p.y * scale;
-        starArray[i * 3 + 2] = p.z * scale;
-
-    }
-}
 
 void showStarField()
 {
     srand(10);
-    for (int i = 0; i < 300; i++) {
+    for (int i = 0; i < 500; i++) {
 
+        point3d point;
         genRandSphere(point);
-        rotateworld();
+        rotateworld(point);
         project(point);
         drawPoint(point);
         // Звёзды на фоне их кол-во. и Кадр остановки.
@@ -489,8 +476,6 @@ void drawColorCircle() {
         HBRUSH brush = CreateSolidBrush(colors[i]);
         SelectObject(window.context, brush);
                 
-        drawPoint(point);
-
         Pie(window.context,
             centerX - circleRadius,
             centerY - circleRadius,
@@ -569,11 +554,11 @@ void ShowRacketAndBall()
 
     if (!starsInitFlag)
     {
-        arrangeСonstellation(Aries, 17, -50, 0);
+        arrangeСonstellation(Aries, -17, -25, 0);
         arrangeСonstellation(UrsaMajor, -15, -60, 0);
         arrangeСonstellation(PieceOfCancer1, -20, -20, 0);
         arrangeСonstellation(Taurus, 20, -30, 0);
-        arrangePlayerConstallation(Taurus, -30,80, 0);
+
         starsInitFlag = true; // Координаты Постановки созвездий в пространстве.
     }
 
@@ -649,18 +634,12 @@ void ShowRacketAndBall()
 
 
 
-void rotateworld()
-{
-    rotateX(point, mouseAngle.y * 0.1);
-    rotateY(point, mouseAngle.x * 0.1);
-    rotateZ(point, timeGetTime() * 0.01);
-}
 
 void rotateworld(point3d& p)
 {
     rotateX(p, mouseAngle.y * 0.1);
     rotateY(p, mouseAngle.x * 0.1);
-     rotateZ(point, timeGetTime() * 0.01); // Кручение обьектов.
+    rotateZ(p, timeGetTime() * 0.01); // Кручение обьектов.
 }
 
 
