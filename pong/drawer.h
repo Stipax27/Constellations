@@ -4,7 +4,7 @@ namespace drawer
     {
         rotateX(p, mouseAngle.y * 0.1);
         rotateY(p, mouseAngle.x * 0.1);
-        rotateZ(p, timeGetTime() * 0.01); // Êğó÷åíèå îáüåêòîâ.
+        //rotateZ(p, timeGetTime() * 0.01); // Êğó÷åíèå îáüåêòîâ.
     }
     
     void drawScore()
@@ -296,8 +296,13 @@ namespace drawer
 
         drawÑonstellation(Aries, Aries_health);
         drawÑonstellation(UrsaMajor, UrsaMajor_health);
-        drawÑonstellation(PieceOfCancer1, PieceOfCancer1_health);
+        drawÑonstellation(Cancer, Cancer_health);
         drawÑonstellation(Taurus, Taurus_health);
+        drawÑonstellation(Leo, Leo_health);
+        drawÑonstellation(Gemini, Gemini_health);
+        drawÑonstellation(Libra, Libra_health);
+        drawÑonstellation(Virgo, Virgo_health);
+        drawÑonstellation(Scorpius, Scorpius_health);
 
         drawColorCircle();
         drawGameCursor();
