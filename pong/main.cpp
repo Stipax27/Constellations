@@ -7,6 +7,8 @@ const float PI = 3.1415926535897;
 #include <stdexcept>
 #include "math.h"
 #include <stdlib.h>
+#include <iostream>
+#include <string>
 
 HINSTANCE hInst;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -32,6 +34,8 @@ float camDist = 0;
 #include "MainGame.h"
 #include "drawer.h"
 
+
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
     _In_ LPWSTR    lpCmdLine,
@@ -56,4 +60,5 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно
         Sleep(16);//ждем 16 милисекунд (1/количество кадров в секунду)
     }
+
 }
