@@ -97,8 +97,8 @@ namespace drawer
     void drawLinks(std::vector <point3d>& starArray, std::vector<std::vector<float>> starEdges, std::vector <float>& starHealth)
     {
 
-        int starsCount = starArray.size();
-        for (int i = 0; i < starsCount - 1; i++)
+        int starsEdgesCount = starEdges.size();
+        for (int i = 0; i < starsEdgesCount - 1; i++)
         {
             point3d point1, point2;
             point1.x = starArray[starEdges[i][0]].x;
@@ -385,8 +385,8 @@ namespace drawer
         //drawÑonstellation(Taurus, Taurus_health);
         //drawÑonstellation(Leo, Leo_health);
         //drawÑonstellation(Gemini, Gemini_health);
-        drawÑonstellation(LibraCopy1, Libra_edges, Libra_health);
-        drawHeroÑonstellation(LibraHeroCopy, Libra_edges, Libra_health);
+        drawÑonstellation(LibraCopy1, Libra_indices, Libra_health);
+        //drawHeroÑonstellation(LibraHeroCopy, Libra_indices, Libra_health);
 
         //drawÑonstellation(Libra, Libra_edges, Libra_health);
 
