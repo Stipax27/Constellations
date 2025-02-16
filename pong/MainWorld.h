@@ -282,8 +282,47 @@ enum MonthSign {
     January, February, March, April, May, June, July, August, September, October, November,December
 
 };
+enum DaySign {
+    one,
+    two,	    
+    three,	
+    four,	
+    five,	
+    six,	    
+    seven,	
+    eight,	
+    nine,	
+    ten,	    
+    eleven,	
+    twelve,	
+    thirteen,
+    fourteen,
+    fifteen,	
+    sixteen,	
+    seventeen,	
+    eighteen,
+    nineteen,
+    twenty,	
+    twentyone,
+    twentytwo,
+    twentythree,
+    twentyfour,
+    twentyfive,
+    twentysix,
+    twentyseven,
+    twentyeight,
+    twentynine,
+    thirty,	
+    thirtyone
+};
+
+bool monthIsSelected = false;
 MonthSign player_month = MonthSign::January;
-int player_daynumber = 1;
+
+bool dayIsSelected = false;
+int player_daynumber = one;
+
+DaySign player_day = DaySign::one;
 
 ZodiacSign player_sign = ZodiacSign::ARIES;
 
@@ -336,5 +375,41 @@ string mounthToString(MonthSign mounth) {
     case November: return "Ноябрь";
     case December: return "Декабрь";
     default: return "Неизвестный месяц";
+    }
+}
+string dayToString(DaySign day) {
+    switch (day) {
+    case one: return "1 ";
+    case two: return "2 ";
+    case three: return "3 ";
+    case four: return "4 ";
+    case five: return "5 ";
+    case six: return "6 ";
+    case seven: return "7 ";
+    case eight: return "8 ";
+    case nine: return "9 ";
+    case ten: return "10";
+    case eleven: return "11";
+    case twelve: return "12";
+    case thirteen: return "13";
+    case fourteen: return "14";
+    case fifteen: return "15";
+    case sixteen: return "16";
+    case seventeen: return "17";
+    case eighteen: return "18";
+    case nineteen: return "19";
+    case twenty: return "20";
+    case twentyone: return "21";
+    case twentytwo: return "22";
+    case twentythree: return "23";
+    case twentyfour: return "24";
+    case twentyfive: return "25";
+    case twentysix: return "26";
+    case twentyseven: return "27";
+    case twentyeight: return "28";
+    case twentynine: return "29";
+    case thirty: return "30";
+    case thirtyone: return "31";
+    default: return "Неизвестный день";
     }
 }

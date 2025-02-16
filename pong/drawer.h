@@ -275,25 +275,35 @@ namespace drawer
     void drawWorld()
     {
         drawBack();
-        drawStarField();
 
-        draw—onstellation(Aries, Aries_health);
-        draw—onstellation(UrsaMajor, UrsaMajor_health);
-        draw—onstellation(Cancer, Cancer_health);
-        draw—onstellation(Taurus, Taurus_health);
-        draw—onstellation(Leo, Leo_health);
-        draw—onstellation(Gemini, Gemini_health);
-        draw—onstellation(Libra, Libra_health);
-        draw—onstellation(Virgo, Virgo_health);
-        draw—onstellation(Scorpius, Scorpius_health);
-        draw—onstellation(Sagittarius, Sagittarius_health);
-        draw—onstellation(Capricornus, Capricornus_health);
-        draw—onstellation(Aquarius, Aquarius_health);
-        draw—onstellation(Pisces, Pisces_health);
+        if (dayIsSelected && monthIsSelected)
+        {
+            drawStarField();
 
-        drawColorCircle();
+            draw—onstellation(Aries, Aries_health);
+            draw—onstellation(UrsaMajor, UrsaMajor_health);
+            draw—onstellation(Cancer, Cancer_health);
+            draw—onstellation(Taurus, Taurus_health);
+            draw—onstellation(Leo, Leo_health);
+            draw—onstellation(Gemini, Gemini_health);
+            draw—onstellation(Libra, Libra_health);
+            draw—onstellation(Virgo, Virgo_health);
+            draw—onstellation(Scorpius, Scorpius_health);
+            draw—onstellation(Sagittarius, Sagittarius_health);
+            draw—onstellation(Capricornus, Capricornus_health);
+            draw—onstellation(Aquarius, Aquarius_health);
+            draw—onstellation(Pisces, Pisces_health);
 
-        ShowTXT();
+            drawColorCircle();
+
+            std::string curentSignstring = zodiacSignToString(player_sign);
+            TextOutA(window.context, window.width * 5 / 6, 0, curentSignstring.c_str(), curentSignstring.size());
+        }
+        else
+        {
+            SelectDates();
+            startTime = timeGetTime();
+        }
 
         drawGameCursor();
     }
