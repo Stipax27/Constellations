@@ -224,7 +224,7 @@ std::vector <std::vector <float>> Libra_indices =
 
 };
 
-std::vector <float> Libra_health = { 1,1,1,1,1.5,1,1,1,1,1 };
+
 
 std::vector <point3d> LibraCopy1 ={};
 std::vector <point3d> LibraHeroCopy = {};
