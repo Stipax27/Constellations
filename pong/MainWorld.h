@@ -257,19 +257,19 @@ void arrange—onstellation(std::vector <std::vector <float>>& starArray, float an
 
 void initWorld()
 {
-   arrange—onstellation(Aries, -17, -25, 0);
-   arrange—onstellation(UrsaMajor, -15, -60, 0);
-   arrange—onstellation(Cancer, -20, -20, 0);
-   arrange—onstellation(Taurus, -90, 40, 50);
-   arrange—onstellation(Leo, 400, -150, -100);
-   arrange—onstellation(Gemini, -200, 0, 0);
-   arrange—onstellation(Libra, -300, 0, 0);
-   arrange—onstellation(Virgo, 250, 250, 0);
-   arrange—onstellation(Scorpius, 50, 70, 0);
-   arrange—onstellation(Sagittarius, 600, 0, 0);
-   arrange—onstellation(Capricornus, 0, 600, 0);
-   arrange—onstellation(Aquarius, 200, 800, 0);
-   arrange—onstellation(Pisces, 0, 0, 0);
+   arrange—onstellation(Aries, 100, 0, 0);
+   arrange—onstellation(UrsaMajor, 100, -60, 0);
+   arrange—onstellation(Cancer, 100, -20, 0);
+   arrange—onstellation(Taurus, 100, 40, 50);
+   arrange—onstellation(Leo, 100, -150, -100);
+   arrange—onstellation(Gemini, 100, 0, 0);
+   arrange—onstellation(Libra, 100, 0, 0);
+   arrange—onstellation(Virgo, 100, 250, 0);
+   arrange—onstellation(Scorpius, 100, 70, 0);
+   arrange—onstellation(Sagittarius, 100, 0, 0);
+   arrange—onstellation(Capricornus, 100, 600, 0);
+   arrange—onstellation(Aquarius, 100, 800, 0);
+   arrange—onstellation(Pisces, 100, 0, 0);
 }
 
 using namespace std;
@@ -278,6 +278,14 @@ enum ZodiacSign {
     ARIES, TAURUS, GEMINI, CANCER, LEO, VIRGO,
     LIBRA, SCORPIO, SAGITTARIUS, CAPRICORN, AQUARIUS, PISCES
 };
+enum MonthSign {
+    January, February, March, April, May, June, July, August, September, October, November,December
+
+};
+MonthSign player_month = MonthSign::January;
+int player_daynumber = 1;
+
+ZodiacSign player_sign = ZodiacSign::ARIES;
 
 ZodiacSign getZodiacSign(int day, int month) {
     if ((month == 3 && day >= 21) || (month == 4 && day <= 19)) return ARIES;
@@ -311,5 +319,22 @@ string zodiacSignToString(ZodiacSign sign) {
     case AQUARIUS: return "¬Ó‰ÓÎÂÈ";
     case PISCES: return "–˚·˚";
     default: return "ÕÂËÁ‚ÂÒÚÌ˚È ÁÌ‡Í";
+    }
+}
+string mounthToString(MonthSign mounth) {
+    switch (mounth) {
+    case January: return "ﬂÌ‚‡¸";
+    case February: return "‘Â‚‡Î¸";
+    case March: return "Ã‡Ú";
+    case April: return "¿ÔÂÎ¸";
+    case May: return "Ã‡È";
+    case June: return "»˛Ì¸";
+    case July: return "»˛Î¸";
+    case August: return "¿‚„ÛÒÚ";
+    case September: return "—ÂÌÚˇ·¸";
+    case October: return "ŒÍÚˇ·¸";
+    case November: return "ÕÓˇ·¸";
+    case December: return "ƒÂÍ‡·¸";
+    default: return "ÕÂËÁ‚ÂÒÚÌ˚È ÏÂÒˇˆ";
     }
 }
