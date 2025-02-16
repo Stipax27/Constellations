@@ -42,7 +42,7 @@ void ShowTXT()
               SetTextColor(window.context, RGB(100, 100, 100));
               if (GetAsyncKeyState(VK_LBUTTON))
               {
-                  player_sign = (ZodiacSign)i;
+                  player_sign = (ZodiacSign)(i+1);
               }
           }
           else
@@ -85,7 +85,7 @@ void menuMonthprocessing()
             SetTextColor(window.context, RGB(100, 100, 100));
             if (GetAsyncKeyState(VK_LBUTTON))
             {
-             player_month = (MonthSign)i;
+             player_month = (MonthSign)(i+1);
              monthIsSelected = true;
             }
         }
@@ -128,7 +128,7 @@ void menuDayprocessing()
             SetTextColor(window.context, RGB(100, 100, 100));
             if (GetAsyncKeyState(VK_LBUTTON))
             {
-                player_day = (DaySign)i;
+                player_day = (DaySign)(i+1);
                 dayIsSelected = true;
             }
         }
