@@ -94,19 +94,20 @@ namespace drawer
         }
     }
 
-    void drawLinks(std::vector <std::vector <float>>& starArray, std::vector <float>& starHealth)
+    void drawLinks(std::vector <point3d>& starArray, std::vector<std::vector<float>> starEdges, std::vector <float>& starHealth)
     {
+
         int starsCount = starArray.size();
         for (int i = 0; i < starsCount - 1; i++)
         {
             point3d point1, point2;
-            point1.x = starArray[i][0];
-            point1.y = starArray[i][1];
-            point1.z = starArray[i][2];
+            point1.x = starArray[starEdges[i][0]].x;
+            point1.y = starArray[starEdges[i][0]].y;
+            point1.z = starArray[starEdges[i][0]].z;
 
-            point2.x = starArray[i + 1][0];
-            point2.y = starArray[i + 1][1];
-            point2.z = starArray[i + 1][2];
+            point2.x = starArray[starEdges[i][1]].x;
+            point2.y = starArray[starEdges[i][1]].y;
+            point2.z = starArray[starEdges[i][1]].z;
 
             float a = timeGetTime() * .01;
             rotateworld(point1);
@@ -124,7 +125,7 @@ namespace drawer
         }
     }
 
-    void drawStarPulse(std::vector <std::vector <float>>& starArray, std::vector <float>& starHealth)
+    void drawStarPulse(std::vector <point3d>& starArray, std::vector <float>& starHealth)
     {
         int starsCount = starArray.size();
         HBRUSH brush = CreateSolidBrush(RGB(0, 191, 255));
@@ -133,9 +134,9 @@ namespace drawer
         for (int i = 0; i < starsCount; i++)
         {
             point3d point;
-            point.x = starArray[i][0];
-            point.y = starArray[i][1];
-            point.z = starArray[i][2];
+            point.x = starArray[i].x;
+            point.y = starArray[i].y;
+            point.z = starArray[i].z;
 
             float a = timeGetTime() * .01;
             rotateworld(point);
@@ -169,10 +170,94 @@ namespace drawer
         DeleteObject(brush2);
     }
 
-    void draw—onstellation(std::vector <std::vector <float>>& starArray, std::vector <float>& starHealth)
+    ///
+    void drawHeroLinks(std::vector <point3d>& starArray, std::vector<std::vector<float>> starEdges, std::vector <float>& starHealth)
     {
-        drawLinks(starArray, starHealth);
+
+        int starsCount = starArray.size();
+        for (int i = 0; i < starsCount - 1; i++)
+        {
+            point3d point1, point2;
+            point1.x = starArray[starEdges[i][0]].x;
+            point1.y = starArray[starEdges[i][0]].y;
+            point1.z = starArray[starEdges[i][0]].z;
+
+            point2.x = starArray[starEdges[i][1]].x;
+            point2.y = starArray[starEdges[i][1]].y;
+            point2.z = starArray[starEdges[i][1]].z;
+
+            float a = timeGetTime() * .01;
+            //rotateworld(point1);
+            //rotateworld(point2);
+            if (starHealth[i] > 0 && starHealth[i + 1] > 0)
+            {
+
+                float dx = point2.x - point1.x;
+                float dy = point2.y - point1.y;
+                float dz = point2.z - point1.z;
+                float length = sqrt(dx * dx + dy * dy + dz * dz);
+                int x = static_cast<int>(length) / 50;
+                drawLine(point1, point2, x);// –ËÒÓ‚‡ÌËÂ Á‚∏Á‰Ì˚ı ÎËÌËÈ ÒÓÁ‚ÂÁ‰Ëˇ.
+            }
+        }
+    }
+
+    void drawHeroStarPulse(std::vector <point3d>& starArray, std::vector <float>& starHealth)
+    {
+        int starsCount = starArray.size();
+        HBRUSH brush = CreateSolidBrush(RGB(0, 191, 255));
+        HBRUSH brush2 = CreateSolidBrush(RGB(255, 0, 0));
+        SelectObject(window.context, brush);
+        for (int i = 0; i < starsCount; i++)
+        {
+            point3d point;
+            point.x = starArray[i].x;
+            point.y = starArray[i].y;
+            point.z = starArray[i].z;
+
+            float a = timeGetTime() * .01;
+            //rotateworld(point);
+            project(point);
+
+            float dx = point.x - mouse.x;
+            float dy = point.y - mouse.y;
+            float lenght = sqrt(dx * dx + dy * dy);
+
+            float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
+
+            SelectObject(window.context, brush);// œÛÎ¸ÒËÓ‚‡ÌËÂ «‚∏Á‰ ÔË Ì‡‚Â‰ÂÌËÂ Ï˚¯Ë.
+
+            if (GetAsyncKeyState(VK_LBUTTON))
+            {
+                if (lenght < starSize)
+                {
+                    SelectObject(window.context, brush2);
+                    starHealth[i] -= .1;
+                }
+            }
+
+            float sz = starSize * starHealth[i] + rad * 15;
+            if (starHealth[i] > 0) //¿Ú‡Í‡ ÔÓ ÒÓÁ‚ÂÁ‰ËˇÏ ÛÏÂÌ¸¯‡ÂÚ Á‚∏Á‰˚. 
+            {
+                drawPoint(point, sz);
+            }
+
+        }
+        DeleteObject(brush);
+        DeleteObject(brush2);
+    }
+    ///
+
+    void draw—onstellation(std::vector <point3d>& starArray, std::vector<std::vector<float>> starEdges, std::vector <float>& starHealth)
+    {
+        drawLinks(starArray, starEdges, starHealth);
         drawStarPulse(starArray, starHealth);
+    }
+
+    void drawHero—onstellation(std::vector <point3d>& starArray, std::vector<std::vector<float>> starEdges, std::vector <float>& starHealth)
+    {
+        drawHeroLinks(starArray, starEdges, starHealth);
+        drawHeroStarPulse(starArray, starHealth);
     }
 
     void drawStarField()
@@ -207,7 +292,7 @@ namespace drawer
 
     void drawColorCircle()
     {
-        circleRadius = 75;
+        circleRadius = 175;
         float centerX = window.width / 4;
         float centerY = window.height / 4;
 
@@ -294,19 +379,23 @@ namespace drawer
         drawBack();
         drawStarField();
 
-        draw—onstellation(Aries, Aries_health);
-        draw—onstellation(UrsaMajor, UrsaMajor_health);
-        draw—onstellation(Cancer, Cancer_health);
-        draw—onstellation(Taurus, Taurus_health);
-        draw—onstellation(Leo, Leo_health);
-        draw—onstellation(Gemini, Gemini_health);
-        draw—onstellation(Libra, Libra_health);
-        draw—onstellation(Virgo, Virgo_health);
-        draw—onstellation(Scorpius, Scorpius_health);
-        draw—onstellation(Sagittarius, Sagittarius_health);
-        draw—onstellation(Capricornus, Capricornus_health);
-        draw—onstellation(Aquarius, Aquarius_health);
-        draw—onstellation(Pisces, Pisces_health);
+        //draw—onstellation(Aries, Aries_health);
+        //draw—onstellation(UrsaMajor, UrsaMajor_health);
+        //draw—onstellation(Cancer, Cancer_health);
+        //draw—onstellation(Taurus, Taurus_health);
+        //draw—onstellation(Leo, Leo_health);
+        //draw—onstellation(Gemini, Gemini_health);
+        draw—onstellation(LibraCopy1, Libra_edges, Libra_health);
+        drawHero—onstellation(LibraHeroCopy, Libra_edges, Libra_health);
+
+        //draw—onstellation(Libra, Libra_edges, Libra_health);
+
+        //draw—onstellation(Virgo, Virgo_health);
+        //draw—onstellation(Scorpius, Scorpius_health);
+        //draw—onstellation(Sagittarius, Sagittarius_health);
+        //draw—onstellation(Capricornus, Capricornus_health);
+        //draw—onstellation(Aquarius, Aquarius_health);
+        //draw—onstellation(Pisces, Pisces_health);
 
         drawColorCircle();
         drawGameCursor();
