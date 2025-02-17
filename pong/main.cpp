@@ -9,6 +9,7 @@ const float PI = 3.1415926535897;
 #include <stdlib.h>
 #include <iostream>
 #include <string>
+#include <cmath>
 
 HINSTANCE hInst;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -23,6 +24,8 @@ typedef struct {
 const float starSize = 10;
 int startTime;
 float circleRadius;
+int currentDayIndex = -1;
+int currentMonthIndex = -1;
 int currentColorIndex = -1;
 const int numColors = 7;
 float camDist = 0;
