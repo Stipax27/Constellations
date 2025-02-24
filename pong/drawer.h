@@ -98,7 +98,7 @@ namespace drawer
     {
 
         int starsEdgesCount = starEdges.size();
-        for (int i = 0; i < starsEdgesCount - 1; i++)
+        for (int i = 0; i < starsEdgesCount; i++)
         {
             point3d point1, point2;
             point1.x = starArray[starEdges[i][0]].x;
@@ -112,7 +112,9 @@ namespace drawer
             float a = timeGetTime() * .01;
             rotateworld(point1);
             rotateworld(point2);
-            if (starHealth[i] > 0 && starHealth[i + 1] > 0)
+            //if (starHealth[i] > 0 && starHealth[i + 1] > 0) - ¡˚ÎÓ
+
+            if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0) // - —Ú‡ÎÓ
             {
 
                 float dx = point2.x - point1.x;
@@ -379,13 +381,13 @@ namespace drawer
         drawBack();
         drawStarField();
 
-        //draw—onstellation(Aries, Aries_health);
+        draw—onstellation(AriesCopy, Aries_indices, Aries_health);
         //draw—onstellation(UrsaMajor, UrsaMajor_health);
         //draw—onstellation(Cancer, Cancer_health);
         //draw—onstellation(Taurus, Taurus_health);
         //draw—onstellation(Leo, Leo_health);
         //draw—onstellation(Gemini, Gemini_health);
-        draw—onstellation(LibraCopy1, Libra_indices, Libra_health);
+        draw—onstellation(LibraCopy, Libra_indices, Libra_health);
         //drawHero—onstellation(LibraHeroCopy, Libra_indices, Libra_health);
 
         //draw—onstellation(Libra, Libra_edges, Libra_health);

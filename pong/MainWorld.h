@@ -10,6 +10,8 @@ std::vector <point3d> UrsaMajor =
     {-.05, .05, 0.}
 };
 std::vector <float> UrsaMajor_health = { 1,1,1,1,1,1,1 };
+std::vector <point3d> UrsaMajorCopy = {};
+
 
 std::vector <point3d> Aries =
 {
@@ -18,16 +20,16 @@ std::vector <point3d> Aries =
     {.35, .12, 0.},
     {.43, .27, 0.}
 };
-
 std::vector <std::vector <float>> Aries_indices =
 {
     {0, 1},
     {1, 2},
     {2, 3},
-    {3, 4}
+    //{3, 4}
 };
-
 std::vector <float> Aries_health = { 1,1,1,1 };
+std::vector <point3d> AriesCopy = {};
+
 
 std::vector <point3d> Taurus =
 {
@@ -199,6 +201,7 @@ std::vector <std::vector <float>> Virgo_indices =
 
 std::vector <float> Virgo_health{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.5, 1, 1, 1, 1, 1, 1 };
 
+
 std::vector <point3d> Libra =
 {
     {-.2,.7,0},
@@ -206,42 +209,23 @@ std::vector <point3d> Libra =
     {.3,-.1,0},
     {-.2,-.3,0},
     {0, 0, 0},
-    {.2,.3,0},
-    {-.2,-.3,0},
     {-.4,-.1,0},
     {-.6, -.05, 0}
 };
-
 std::vector <std::vector <float>> Libra_indices =
 {
-    {0, 1},
+    {1, 4},
     {1, 2},
+    {0, 1},
+    {4, 3},
     {2, 3},
-    {3, 4},
-    {4, 1},
-    {3, 8},
-    {8, 9}
-
+    {3, 5},
+    {5, 6},
 };
-
-
-
-std::vector <point3d> LibraCopy1 ={};
+std::vector <point3d> LibraCopy ={};
 std::vector <point3d> LibraHeroCopy = {};
 
-// Add edges
-std::vector<std::vector<float>> Libra_edges =
-{
-    {0, 1},
-    {0, 2},
-    {0, 3},
-    {0, 4},
-    {0, 5},
-    {0, 6},
-    {0, 7},
-    {0, 8},
-    {0, 9},
-};
+
 
 
 std::vector <float> Libra_health = { 1,1,1,1,1.5,1,1,1,1};
@@ -473,14 +457,14 @@ void arrange—onstellation(std::vector <point3d>& starArrayData, std::vector <poi
 
 void initWorld()
 {
-   //arrange—onstellation(Aries, -17, -25, 0);
+   arrange—onstellation(Aries, AriesCopy, -17, -25, 0);
    //arrange—onstellation(UrsaMajor, -15, -60, 0);
    //arrange—onstellation(Cancer, -20, -20, 0);
    //arrange—onstellation(Taurus, -90, 40, 50);
-   //arrange—onstellation(Leo, 400, -150, -100);
-   //arrange—onstellation(Gemini, -200, 0, 0);
-   arrange—onstellation(Libra, LibraCopy1, 0, 0, 0);
-   arrange—onstellation(Libra, LibraHeroCopy, -19, -55, -5);
+   //arrange—onstellation(Leo, LibraCopy1, 400, -150, -100);
+    //arrange—onstellation(Gemini, LibraCopy1, -200, 0, 0);
+   arrange—onstellation(Libra, LibraCopy, 0, 0, 0);
+   //arrange—onstellation(Libra, LibraHeroCopy, -19, -55, -5);
 
    //arrange—onstellation(Libra, 100, 250, 250);
    //arrange—onstellation(Virgo, 250, 250, 0);
