@@ -65,6 +65,7 @@ std::vector <std::vector <float>> Taurus_indices =
 };
 
 std::vector <float> Taurus_health = { 1, 1,1,1.5,1,1,1,1,1,1,1,1,1,1,1 };
+std::vector <point3d> TaurusCopy = {};
 
 std::vector <point3d> Gemini =
 {
@@ -110,6 +111,7 @@ std::vector <std::vector <float>> Gemini_indices =
 };
 
 std::vector <float> Gemini_health = { 1,1,1,1,1,1,1,1,1,1,1.5,1,1,1,1,1,1,1,1,1,1 };
+std::vector <point3d> GeminiCopy = {};
 
 std::vector <point3d> Cancer =
 {
@@ -131,6 +133,7 @@ std::vector <std::vector <float>> Cancer_indices =
 };
 
 std::vector <float> Cancer_health = { 1,1,1,1,1,1 };
+std::vector <point3d> CancerCopy = {};
 
 std::vector <point3d> Leo =
 {
@@ -147,6 +150,7 @@ std::vector <point3d> Leo =
     {.3, .01, 0}
 };
 
+
 std::vector <std::vector <float>> Leo_indices =
 {
     {0, 1},
@@ -162,6 +166,7 @@ std::vector <std::vector <float>> Leo_indices =
 };
 
 std::vector <float> Leo_health = { 1,1,1,1,1,1,1,1,1,1,1 };
+std::vector <point3d> LeoCopy = {};
 
 std::vector <point3d> Virgo =
 {
@@ -200,6 +205,7 @@ std::vector <std::vector <float>> Virgo_indices =
 };
 
 std::vector <float> Virgo_health{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.5, 1, 1, 1, 1, 1, 1 };
+std::vector <point3d> VirgoCopy = {};
 
 
 std::vector <point3d> Libra =
@@ -277,6 +283,7 @@ std::vector <std::vector <float>> Scorpius_indices =
 
 
 std::vector <float> Scorpius_health{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.5, 1, 1, 1, 1, 1, 1, 1, 1 };
+std::vector <point3d> ScorpiusCopy = {};
 
 std::vector <point3d> Sagittarius =
 {
@@ -326,6 +333,7 @@ std::vector <std::vector <float>> Sagittarius_indices =
 };
 
 std::vector <float> Sagittarius_health{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+std::vector <point3d> SagittariusCopy = {};
 
 std::vector <point3d> Capricornus =
 {
@@ -361,6 +369,7 @@ std::vector <std::vector <float>> Capricornus_indices =
 };
 
 std::vector <float> Capricornus_health{1,1,1,1,1,1,1,1,1,1,1,1,1};
+std::vector <point3d> CapricornusCopy = {};
 
 std::vector <point3d> Aquarius =
 {
@@ -397,6 +406,7 @@ std::vector <std::vector <float>> Aquarius_indices =
 };
 
 std::vector <float> Aquarius_health{1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+std::vector <point3d> AquariusCopy = {};
 
 std::vector<point3d> Pisces =
 {
@@ -434,6 +444,7 @@ std::vector <std::vector <float>> Pisces_indices =
 };
 
 std::vector <float> Pisces_health{1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+std::vector <point3d> PiscesCopy = {};
 
 void arrange—onstellation(std::vector <point3d>& starArrayData, std::vector <point3d>& starArrayRendering, float angleX, float angleY, float angleZ)
 {
@@ -457,22 +468,22 @@ void arrange—onstellation(std::vector <point3d>& starArrayData, std::vector <poi
 
 void initWorld()
 {
-   arrange—onstellation(Aries, AriesCopy, -17, -25, 0);
+   //arrange—onstellation(Aries, AriesCopy, -17, -25, 0);
    //arrange—onstellation(UrsaMajor, -15, -60, 0);
-   //arrange—onstellation(Cancer, -20, -20, 0);
-   //arrange—onstellation(Taurus, -90, 40, 50);
-   //arrange—onstellation(Leo, LibraCopy1, 400, -150, -100);
-    //arrange—onstellation(Gemini, LibraCopy1, -200, 0, 0);
-   arrange—onstellation(Libra, LibraCopy, 0, 0, 0);
+   //arrange—onstellation(Cancer, CancerCopy,  -20, -20, 0);
+   //arrange—onstellation(Taurus, TaurusCopy, -90, 40, 50);
+   //arrange—onstellation(Leo, LeoCopy, 40, 50, 0);
+   //arrange—onstellation(Gemini, GeminiCopy, -200, 0, 0);
+   //arrange—onstellation(Libra, LibraCopy, 0, 0, 0);
    //arrange—onstellation(Libra, LibraHeroCopy, -19, -55, -5);
 
+   //arrange—onstellation(Virgo, VirgoCopy, 250, 250, 0);
    //arrange—onstellation(Libra, 100, 250, 250);
-   //arrange—onstellation(Virgo, 250, 250, 0);
-   //arrange—onstellation(Scorpius, 50, 70, 0);
-   //arrange—onstellation(Sagittarius, 600, 0, 0);
-   //arrange—onstellation(Capricornus, 0, 600, 0);
-   //arrange—onstellation(Aquarius, 200, 800, 0);
-   //arrange—onstellation(Pisces, 0, 0, 0);
+   //arrange—onstellation(Scorpius, ScorpiusCopy, 50, 70, 0);
+   //arrange—onstellation(Sagittarius, SagittariusCopy, 600, 0, 0);
+   //arrange—onstellation(Capricornus, CapricornusCopy, 0, 600, 0);
+   arrange—onstellation(Aquarius, AquariusCopy, 0, 0, 0);
+   //arrange—onstellation(Pisces, PiscesCopy, 0, 0, 0);
 }
 
 using namespace std;

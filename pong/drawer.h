@@ -381,23 +381,23 @@ namespace drawer
         drawBack();
         drawStarField();
 
-        draw—onstellation(AriesCopy, Aries_indices, Aries_health);
-        //draw—onstellation(UrsaMajor, UrsaMajor_health);
-        //draw—onstellation(Cancer, Cancer_health);
-        //draw—onstellation(Taurus, Taurus_health);
-        //draw—onstellation(Leo, Leo_health);
-        //draw—onstellation(Gemini, Gemini_health);
+        /*draw—onstellation(AriesCopy, Aries_indices, Aries_health);
+        draw—onstellation(UrsaMajorCopy, UrsaMajor_indices, UrsaMajor_health);
+        draw—onstellation(CancerCopy, Cancer_indices, Cancer_health);
+        draw—onstellation(TaurusCopy, Taurus_indices, Taurus_health);
+        draw—onstellation(LeoCopy, Leo_indices, Leo_health);
+        draw—onstellation(GeminiCopy, Gemini_indices, Gemini_health);
+        
         draw—onstellation(LibraCopy, Libra_indices, Libra_health);
-        //drawHero—onstellation(LibraHeroCopy, Libra_indices, Libra_health);
+        drawHero—onstellation(LibraHeroCopy, Libra_indices, Libra_health);
+        draw—onstellation(Libra, Libra_indices, Libra_health);
 
-        //draw—onstellation(Libra, Libra_edges, Libra_health);
-
-        //draw—onstellation(Virgo, Virgo_health);
-        //draw—onstellation(Scorpius, Scorpius_health);
-        //draw—onstellation(Sagittarius, Sagittarius_health);
-        //draw—onstellation(Capricornus, Capricornus_health);
-        //draw—onstellation(Aquarius, Aquarius_health);
-        //draw—onstellation(Pisces, Pisces_health);
+        draw—onstellation(VirgoCopy, Virgo_indices, Virgo_health);
+        draw—onstellation(ScorpiusCopy, Scorpius_indices, Scorpius_health);
+        draw—onstellation(SagittariusCopy, Scorpius_indices, Sagittarius_health);
+        draw—onstellation(CapricornusCopy, Capricornus_indices, Capricornus_health);*/
+        draw—onstellation(AquariusCopy,Aquarius_indices, Aquarius_health);
+        //draw—onstellation(PiscesCopy, Pisces_indices, Pisces_health);
 
         drawColorCircle();
         drawGameCursor();
