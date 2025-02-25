@@ -314,22 +314,22 @@ std::vector <point3d> Sagittarius =
 
 std::vector <std::vector <float>> Sagittarius_indices =
 {
-    {0,1},
-    {1,2},
-    {2,3},
-    {3,4},
-    {2,7},
-    {7,8},
-    {7,10},
-    {10,11},
-    {11,12},
-    {12,13},
-    {13,10},
-    {12,17},
-    {17,18},
-    {18,19},
-    {19,20},
-    {19,22}
+    //{0,1},
+    //{1,2},
+    //{2,3},
+    //{3,4},
+    //{2,7},
+    //{7,8},
+    //{7,10},
+    //{10,11},
+    //{11,12},
+    //{12,13},
+    //{13,10},
+    //{12,17},
+    //{17,18},
+    //{18,19},
+    //{19,20},
+    //{19,22}
 };
 
 std::vector <float> Sagittarius_health{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
@@ -349,7 +349,6 @@ std::vector <point3d> Capricornus =
    {.3, 1.2, 0},
    {.4, 1.1, 0},
    {1.3, .1, 0},
-   {1.5, -.3 ,0},
 };
 
 std::vector <std::vector <float>> Capricornus_indices =
@@ -378,12 +377,9 @@ std::vector <point3d> Aquarius =
    {0,0,0},
    {-.2, .4, 0},
    {0, .7, 0},
-   {-.2, .4, 0},
-   {0,0,0},
    {-.3, .1, 0},
    {-1, .3, 0},
    {-1.3, .75, 0},
-   {-1, .3, 0},
    {-.8, .4, 0},
    {-.75, .7, 0},
    {-.9, .8, 0}
@@ -396,12 +392,12 @@ std::vector <std::vector <float>> Aquarius_indices =
     {1,2},
     {2,3},
     {3,4},
-    {2,7},
-    {7,8},
+    {2,5},
+    {5,6},
+    {6,7},
+    {6,8},
     {8,9},
-    {8,11},
-    {11,12},
-    {12,13}
+    {9,10}
 
 };
 
@@ -480,9 +476,9 @@ void initWorld()
    //arrange—onstellation(Virgo, VirgoCopy, 250, 250, 0);
    //arrange—onstellation(Libra, 100, 250, 250);
    //arrange—onstellation(Scorpius, ScorpiusCopy, 50, 70, 0);
-   //arrange—onstellation(Sagittarius, SagittariusCopy, 600, 0, 0);
-   //arrange—onstellation(Capricornus, CapricornusCopy, 0, 600, 0);
-   arrange—onstellation(Aquarius, AquariusCopy, 0, 0, 0);
+   arrange—onstellation(Sagittarius, SagittariusCopy, 0, 0, 0);
+   //arrange—onstellation(Capricornus, CapricornusCopy, 0, 0, 0);
+   //arrange—onstellation(Aquarius, AquariusCopy, 0, 0, 0);
    //arrange—onstellation(Pisces, PiscesCopy, 0, 0, 0);
 }
 

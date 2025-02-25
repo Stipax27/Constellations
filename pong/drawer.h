@@ -393,10 +393,10 @@ namespace drawer
         draw—onstellation(Libra, Libra_indices, Libra_health);
 
         draw—onstellation(VirgoCopy, Virgo_indices, Virgo_health);
-        draw—onstellation(ScorpiusCopy, Scorpius_indices, Scorpius_health);
+        draw—onstellation(ScorpiusCopy, Scorpius_indices, Scorpius_health);*/
         draw—onstellation(SagittariusCopy, Scorpius_indices, Sagittarius_health);
-        draw—onstellation(CapricornusCopy, Capricornus_indices, Capricornus_health);*/
-        draw—onstellation(AquariusCopy,Aquarius_indices, Aquarius_health);
+        //draw—onstellation(CapricornusCopy, Capricornus_indices, Capricornus_health);
+        //draw—onstellation(AquariusCopy,Aquarius_indices, Aquarius_health);
         //draw—onstellation(PiscesCopy, Pisces_indices, Pisces_health);
 
         drawColorCircle();
