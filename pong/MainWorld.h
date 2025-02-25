@@ -64,7 +64,7 @@ std::vector <std::vector <float>> Taurus_indices =
     {13, 14}
 };
 
-std::vector <float> Taurus_health = { 1, 1,1,1.5,1,1,1,1,1,1,1,1,1,1,1 };
+std::vector <float> Taurus_health = { 1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1 };
 std::vector <point3d> TaurusCopy = {};
 
 std::vector <point3d> Gemini =
@@ -110,7 +110,7 @@ std::vector <std::vector <float>> Gemini_indices =
     {19, 20}
 };
 
-std::vector <float> Gemini_health = { 1,1,1,1,1,1,1,1,1,1,1.5,1,1,1,1,1,1,1,1,1,1 };
+std::vector <float> Gemini_health = { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 };
 std::vector <point3d> GeminiCopy = {};
 
 std::vector <point3d> Cancer =
@@ -204,7 +204,7 @@ std::vector <std::vector <float>> Virgo_indices =
     {12, 13}
 };
 
-std::vector <float> Virgo_health{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.5, 1, 1, 1, 1, 1, 1 };
+std::vector <float> Virgo_health{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 std::vector <point3d> VirgoCopy = {};
 
 
@@ -234,7 +234,7 @@ std::vector <point3d> LibraHeroCopy = {};
 
 
 
-std::vector <float> Libra_health = { 1,1,1,1,1.5,1,1,1,1};
+std::vector <float> Libra_health = { 1,1,1,1,1,1,1,1,1};
 
 
 
@@ -282,7 +282,7 @@ std::vector <std::vector <float>> Scorpius_indices =
 };
 
 
-std::vector <float> Scorpius_health{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.5, 1, 1, 1, 1, 1, 1, 1, 1 };
+std::vector <float> Scorpius_health{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 std::vector <point3d> ScorpiusCopy = {};
 
 std::vector <point3d> Sagittarius =
@@ -436,7 +436,7 @@ std::vector <std::vector <float>> Pisces_indices =
 std::vector <float> Pisces_health{1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 std::vector <point3d> PiscesCopy = {};
 std::vector<point3d> MorphArray ={};
-std::vector <std::vector <int>> Morp_indices = {};
+std::vector <std::vector <float>> Morp_indices = {};
 std::vector <float> Morp_health{};
 
 void arrange—onstellation(std::vector <point3d>& starArrayData, std::vector <point3d>& starArrayRendering, float angleX, float angleY, float angleZ)

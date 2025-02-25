@@ -375,26 +375,22 @@ namespace drawer
         FillRect(window.context, &rect, blackBrush);
         DeleteObject(blackBrush);
     }
-    void morphWepon(std::vector <point3d>& starArray1, std::vector<std::vector<float>> starEdges1, std::vector <point3d>& starArray2, std::vector<std::vector<float>> starEdges2, std::vector <point3d>& morphArray, std::vector <std::vector <int>> Morp_indices, std::vector <float> Morp_health)
+    void morphWepon(std::vector <point3d>& starArray1, std::vector<std::vector<float>> starEdges1, std::vector <point3d>& starArray2, std::vector<std::vector<float>> starEdges2, std::vector <point3d>& morphArray, std::vector <std::vector <float>> Morp_indices, std::vector <float> Morp_health)
     {
         morphArray.clear();
         Morp_indices.clear();
         Morp_health.clear();
         int sz1 = starArray1.size();
         int sz2 = starArray2.size();
+        int sz3 = starEdges1.size();
+        int sz4 = starEdges2.size();
         if (sz1 < sz2)
         {
             for (int i = 0; i < sz1;i++)
             {
                 float morphSpeed = 0.01;
                 morphArray.push_back(lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(timeGetTime() * morphSpeed))));
-                Morp_health.push_back(1);
             }
-            for (int i = 0; i < 17;i++)
-            {
-                Morp_indices.push_back({ i, i + 1 });
-            }
-
         }
         else
         {
@@ -402,13 +398,28 @@ namespace drawer
             {
                 float morphSpeed = 0.01;
                 morphArray.push_back(lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(timeGetTime() * morphSpeed))));
-                Morp_health.push_back(1);
             }
-            for (int i = 0; i < 17;i++)
+        }
+        if (sz3 > sz4)
+        {
+            for (float i = 0; i < sz4;i++)
             {
                 Morp_indices.push_back({ i, i + 1 });
             }
         }
+        else
+        {
+            for (float i = 0; i < sz3;i++)
+            {
+                Morp_indices.push_back({ i, i + 1 });
+            }
+        }
+        for (int i = 0; i < 15;i++)
+        {
+            Morp_health.push_back(1);
+        }
+        
+        drawÑonstellation(morphArray, Morp_indices, Morp_health);
     }
     void drawWorld()
     {
@@ -432,6 +443,8 @@ namespace drawer
         drawÑonstellation(CapricornusCopy, Capricornus_indices, Capricornus_health);
         drawÑonstellation(AquariusCopy,Aquarius_indices, Aquarius_health);
         drawÑonstellation(PiscesCopy, Pisces_indices, Pisces_health);
+
+        morphWepon(PiscesCopy, Pisces_indices, AquariusCopy, Aquarius_indices, MorphArray, Morp_indices, Morp_health);
 
         drawColorCircle();
         drawGameCursor();
