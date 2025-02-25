@@ -9,6 +9,16 @@ std::vector <point3d> UrsaMajor =
     {.05, .25, 0.},
     {-.05, .05, 0.}
 };
+std::vector <std::vector <float>> UrsaMajor_indeces =
+{
+    {0,1},
+    {1,2},
+    {2,3},
+    {3,4},
+    {4,5},
+    {5,6},
+    {6,2},
+};
 std::vector <float> UrsaMajor_health = { 1,1,1,1,1,1,1 };
 std::vector <point3d> UrsaMajorCopy = {};
 
@@ -206,7 +216,6 @@ std::vector <std::vector <float>> Virgo_indices =
 
 std::vector <float> Virgo_health{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 std::vector <point3d> VirgoCopy = {};
-
 
 std::vector <point3d> Libra =
 {
@@ -485,20 +494,67 @@ enum ZodiacSign {
     ARIES, TAURUS, GEMINI, CANCER, LEO, VIRGO,
     LIBRA, SCORPIO, SAGITTARIUS, CAPRICORN, AQUARIUS, PISCES
 };
+enum MonthSign {
+    January, February, March, April, May, June, July, August, September, October, November,December
+
+};
+enum DaySign {
+    one,
+    two,	    
+    three,	
+    four,	
+    five,	
+    six,	    
+    seven,	
+    eight,	
+    nine,	
+    ten,	    
+    eleven,	
+    twelve,	
+    thirteen,
+    fourteen,
+    fifteen,	
+    sixteen,	
+    seventeen,	
+    eighteen,
+    nineteen,
+    twenty,	
+    twentyone,
+    twentytwo,
+    twentythree,
+    twentyfour,
+    twentyfive,
+    twentysix,
+    twentyseven,
+    twentyeight,
+    twentynine,
+    thirty,	
+    thirtyone
+};
+
+bool monthIsSelected = false;
+MonthSign player_month = MonthSign::January;
+
+bool dayIsSelected = false;
+int player_daynumber = one;
+
+DaySign player_day = DaySign::one;
+
+ZodiacSign player_sign = ZodiacSign::ARIES;
 
 ZodiacSign getZodiacSign(int day, int month) {
-    if ((month == 3 && day >= 21) || (month == 4 && day <= 19)) return ARIES;
-    if ((month == 4 && day >= 20) || (month == 5 && day <= 20)) return TAURUS;
-    if ((month == 5 && day >= 21) || (month == 6 && day <= 20)) return GEMINI;
-    if ((month == 6 && day >= 21) || (month == 7 && day <= 22)) return CANCER;
-    if ((month == 7 && day >= 23) || (month == 8 && day <= 22)) return LEO;
-    if ((month == 8 && day >= 23) || (month == 9 && day <= 22)) return VIRGO;
-    if ((month == 9 && day >= 23) || (month == 10 && day <= 22)) return LIBRA;
-    if ((month == 10 && day >= 23) || (month == 11 && day <= 21)) return SCORPIO;
-    if ((month == 11 && day >= 22) || (month == 12 && day <= 21)) return SAGITTARIUS;
-    if ((month == 12 && day >= 22) || (month == 1 && day <= 19)) return CAPRICORN;
-    if ((month == 1 && day >= 20) || (month == 2 && day <= 18)) return AQUARIUS;
-    if ((month == 2 && day >= 19) || (month == 3 && day <= 20)) return PISCES;
+    if ((month == March && day >= twentyone)       || (month == April && day <= nineteen))       return ARIES;
+    if ((month == April && day >= twenty)          || (month == May  && day <= twenty))          return TAURUS;
+    if ((month == May && day >= twentyone)         || (month == June  && day <= twenty))         return GEMINI;
+    if ((month == June && day >= twentyone)        || (month == July  && day <= twentytwo))      return CANCER;
+    if ((month == July && day >= twentythree)      || (month == August  && day <= twentytwo))    return LEO;
+    if ((month == August && day >= twentythree)    || (month == September  && day <= twentytwo)) return VIRGO;
+    if ((month == September && day >= twentythree) || (month == October && day <= twentytwo))    return LIBRA;
+    if ((month == October && day >= twentythree)   || (month == November && day <= twentyone))   return SCORPIO;
+    if ((month == November && day >= twentytwo)    || (month == December  && day <= twentyone))  return SAGITTARIUS;
+    if ((month == December && day >= twentytwo)    || (month == January && day <= nineteen))     return CAPRICORN;
+    if ((month == January && day >= twenty)        || (month == February && day <= eighteen))    return AQUARIUS;
+    if ((month == February && day >= nineteen)     || (month == March && day <= twenty))         return PISCES;
 
     throw invalid_argument("Invalid date");
 }
@@ -518,5 +574,58 @@ string zodiacSignToString(ZodiacSign sign) {
     case AQUARIUS: return "Водолей";
     case PISCES: return "Рыбы";
     default: return "Неизвестный знак";
+    }
+}
+string mounthToString(MonthSign mounth) {
+    switch (mounth) {
+    case January    : return "Январь";
+    case February   : return "Февраль";
+    case March      : return "Март";
+    case April      : return "Апрель";
+    case May        : return "Май";
+    case June       : return "Июнь";
+    case July       : return "Июль";
+    case August     : return "Август";
+    case September  : return "Сентябрь";
+    case October    : return "Октябрь";
+    case November   : return "Ноябрь";
+    case December   : return "Декабрь";
+    default: return "Неизвестный месяц";
+    }
+}
+string dayToString(DaySign day) {
+    switch (day) {
+    case one: return "1 ";
+    case two: return "2 ";
+    case three: return "3 ";
+    case four: return "4 ";
+    case five: return "5 ";
+    case six: return "6 ";
+    case seven: return "7 ";
+    case eight: return "8 ";
+    case nine: return "9 ";
+    case ten: return "10";
+    case eleven: return "11";
+    case twelve: return "12";
+    case thirteen: return "13";
+    case fourteen: return "14";
+    case fifteen: return "15";
+    case sixteen: return "16";
+    case seventeen: return "17";
+    case eighteen: return "18";
+    case nineteen: return "19";
+    case twenty:   return "20";
+    case twentyone: return "21";
+    case twentytwo: return "22";
+    case twentythree: return "23";
+    case twentyfour: return "24";
+    case twentyfive: return "25";
+    case twentysix: return "26";
+    case twentyseven: return "27";
+    case twentyeight: return "28";
+    case twentynine: return "29";
+    case thirty: return "30";
+    case thirtyone: return "31";
+    default: return "Неизвестный день";
     }
 }

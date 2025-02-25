@@ -7,23 +7,6 @@ namespace drawer
         //rotateZ(p, timeGetTime() * 0.01); // Кручение обьектов.
     }
     
-    void drawScore()
-    {
-        //поиграем шрифтами и цветами
-        SetTextColor(window.context, RGB(160, 160, 160));
-        SetBkColor(window.context, RGB(0, 0, 0));
-        SetBkMode(window.context, TRANSPARENT);
-        auto hFont = CreateFont(70, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, "CALIBRI");
-        auto hTmp = (HFONT)SelectObject(window.context, hFont);
-        char txt[32];//буфер для текста
-        _itoa_s(game.score, txt, 10);//преобразование числовой переменной в текст. текст окажется в переменной txt
-        TextOutA(window.context, 10, 10, "Score", 5);
-        TextOutA(window.context, 200, 10, (LPCSTR)txt, strlen(txt));
-        _itoa_s(game.balls, txt, 10);
-        TextOutA(window.context, 10, 100, "Balls", 5);
-        TextOutA(window.context, 200, 100, (LPCSTR)txt, strlen(txt));
-    }
-
     void project(point3d& p)
     {
         int currentTime = timeGetTime() - startTime;
@@ -424,7 +407,10 @@ namespace drawer
     void drawWorld()
     {
         drawBack();
-        drawStarField();
+
+        if (dayIsSelected && monthIsSelected)
+        {
+            drawStarField();
 
         drawСonstellation(AriesCopy, Aries_indices, Aries_health);
         //drawСonstellation(UrsaMajorCopy, UrsaMajor_indices, UrsaMajor_health);
@@ -447,6 +433,16 @@ namespace drawer
         morphWepon(PiscesCopy, Pisces_indices, AquariusCopy, Aquarius_indices, MorphArray, Morp_indices, Morp_health);
 
         drawColorCircle();
+
+        std::string curentSignstring = zodiacSignToString(player_sign);
+        TextOutA(window.context, window.width * 5 / 6, 0, curentSignstring.c_str(), curentSignstring.size());
+        }
+        else
+        {
+            SelectDates();
+            startTime = timeGetTime();
+        }
+
         drawGameCursor();
     }
 }
