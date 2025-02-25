@@ -385,6 +385,17 @@ namespace drawer
         draw—onstellation(AquariusCopy,Aquarius_indices, Aquarius_health);
         draw—onstellation(PiscesCopy, Pisces_indices, Pisces_health);
 
+        drawColorCircle();
+
+        std::string curentSignstring = zodiacSignToString(player_sign);
+        TextOutA(window.context, window.width * 5 / 6, 0, curentSignstring.c_str(), curentSignstring.size());
+        }
+        else
+        {
+            SelectDates();
+            startTime = timeGetTime();
+        }
+
         drawGameCursor();
     }
 }
