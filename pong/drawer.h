@@ -375,7 +375,28 @@ namespace drawer
         FillRect(window.context, &rect, blackBrush);
         DeleteObject(blackBrush);
     }
-
+    void morphWepon(std::vector <point3d>& starArray1, std::vector<std::vector<float>> starEdges1, std::vector <point3d>& starArray2, std::vector<std::vector<float>> starEdges2, std::vector <point3d>& morphArray)
+    {
+        morphArray.clear();
+        int sz1 = starArray1.size();
+        int sz2 = starArray2.size();
+        if (sz1 < sz2)
+        {
+            for (int i = 0; i < sz1;i++)
+            {
+                float morphSpeed = 0.01;
+                morphArray.push_back(lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(timeGetTime() * morphSpeed))));
+            }
+        }
+        else
+        {
+            for (int i = 0; i < sz2;i++)
+            {
+                float morphSpeed = 0.01;
+                morphArray.push_back(lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(timeGetTime() * morphSpeed))));
+            }
+        }
+    }
     void drawWorld()
     {
         drawBack();
@@ -394,10 +415,10 @@ namespace drawer
 
         drawÑonstellation(VirgoCopy, Virgo_indices, Virgo_health);
         drawÑonstellation(ScorpiusCopy, Scorpius_indices, Scorpius_health);*/
-        drawÑonstellation(SagittariusCopy, Scorpius_indices, Sagittarius_health);
-        //drawÑonstellation(CapricornusCopy, Capricornus_indices, Capricornus_health);
-        //drawÑonstellation(AquariusCopy,Aquarius_indices, Aquarius_health);
-        //drawÑonstellation(PiscesCopy, Pisces_indices, Pisces_health);
+        //drawÑonstellation(SagittariusCopy, Scorpius_indices, Sagittarius_health);
+        drawÑonstellation(CapricornusCopy, Capricornus_indices, Capricornus_health);
+        drawÑonstellation(AquariusCopy,Aquarius_indices, Aquarius_health);
+        drawÑonstellation(PiscesCopy, Pisces_indices, Pisces_health);
 
         drawColorCircle();
         drawGameCursor();

@@ -441,6 +441,8 @@ std::vector <std::vector <float>> Pisces_indices =
 
 std::vector <float> Pisces_health{1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 std::vector <point3d> PiscesCopy = {};
+std::vector<point3d> MorphArray ={};
+std::vector <std::vector <float>> Morp_indices = {};
 
 void arrange—onstellation(std::vector <point3d>& starArrayData, std::vector <point3d>& starArrayRendering, float angleX, float angleY, float angleZ)
 {
@@ -476,10 +478,10 @@ void initWorld()
    //arrange—onstellation(Virgo, VirgoCopy, 250, 250, 0);
    //arrange—onstellation(Libra, 100, 250, 250);
    //arrange—onstellation(Scorpius, ScorpiusCopy, 50, 70, 0);
-   arrange—onstellation(Sagittarius, SagittariusCopy, 0, 0, 0);
-   //arrange—onstellation(Capricornus, CapricornusCopy, 0, 0, 0);
-   //arrange—onstellation(Aquarius, AquariusCopy, 0, 0, 0);
-   //arrange—onstellation(Pisces, PiscesCopy, 0, 0, 0);
+   //arrange—onstellation(Sagittarius, SagittariusCopy, 0, 0, 0);
+   arrange—onstellation(Capricornus, CapricornusCopy, 0, 0, 0);
+   arrange—onstellation(Aquarius, AquariusCopy, 0, 0, 0);
+   arrange—onstellation(Pisces, PiscesCopy, 0, 0, 0);
 }
 
 using namespace std;
