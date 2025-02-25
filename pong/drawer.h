@@ -375,9 +375,11 @@ namespace drawer
         FillRect(window.context, &rect, blackBrush);
         DeleteObject(blackBrush);
     }
-    void morphWepon(std::vector <point3d>& starArray1, std::vector<std::vector<float>> starEdges1, std::vector <point3d>& starArray2, std::vector<std::vector<float>> starEdges2, std::vector <point3d>& morphArray)
+    void morphWepon(std::vector <point3d>& starArray1, std::vector<std::vector<float>> starEdges1, std::vector <point3d>& starArray2, std::vector<std::vector<float>> starEdges2, std::vector <point3d>& morphArray, std::vector <std::vector <int>> Morp_indices, std::vector <float> Morp_health)
     {
         morphArray.clear();
+        Morp_indices.clear();
+        Morp_health.clear();
         int sz1 = starArray1.size();
         int sz2 = starArray2.size();
         if (sz1 < sz2)
@@ -386,7 +388,13 @@ namespace drawer
             {
                 float morphSpeed = 0.01;
                 morphArray.push_back(lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(timeGetTime() * morphSpeed))));
+                Morp_health.push_back(1);
             }
+            for (int i = 0; i < 17;i++)
+            {
+                Morp_indices.push_back({ i, i + 1 });
+            }
+
         }
         else
         {
@@ -394,6 +402,11 @@ namespace drawer
             {
                 float morphSpeed = 0.01;
                 morphArray.push_back(lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(timeGetTime() * morphSpeed))));
+                Morp_health.push_back(1);
+            }
+            for (int i = 0; i < 17;i++)
+            {
+                Morp_indices.push_back({ i, i + 1 });
             }
         }
     }

@@ -436,7 +436,8 @@ std::vector <std::vector <float>> Pisces_indices =
 std::vector <float> Pisces_health{1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 std::vector <point3d> PiscesCopy = {};
 std::vector<point3d> MorphArray ={};
-std::vector <std::vector <float>> Morp_indices = {};
+std::vector <std::vector <int>> Morp_indices = {};
+std::vector <float> Morp_health{};
 
 void arrange—onstellation(std::vector <point3d>& starArrayData, std::vector <point3d>& starArrayRendering, float angleX, float angleY, float angleZ)
 {
