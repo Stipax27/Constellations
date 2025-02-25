@@ -368,22 +368,20 @@ namespace drawer
             drawStarField();
 
         draw—onstellation(AriesCopy, Aries_indices, Aries_health);
-        //draw—onstellation(UrsaMajor, UrsaMajor_health);
-        //draw—onstellation(Cancer, Cancer_health);
-        //draw—onstellation(Taurus, Taurus_health);
-        //draw—onstellation(Leo, Leo_health);
-        //draw—onstellation(Gemini, Gemini_health);
+        draw—onstellation(UrsaMajor, UrsaMajor_indeces, UrsaMajor_health);
+        draw—onstellation(Cancer,Cancer_indices, Cancer_health);
+        draw—onstellation(Taurus,Taurus_indices, Taurus_health);
+        draw—onstellation(Leo,Leo_indices, Leo_health);
+        draw—onstellation(Gemini,Gemini_indices, Gemini_health);
+        draw—onstellation(Libra, Libra_indices, Libra_health);
+        drawHero—onstellation(LibraHeroCopy, Libra_indices, Libra_health);
         draw—onstellation(LibraCopy, Libra_indices, Libra_health);
-        //drawHero—onstellation(LibraHeroCopy, Libra_indices, Libra_health);
-
-        //draw—onstellation(Libra, Libra_edges, Libra_health);
-
-        //draw—onstellation(Virgo, Virgo_health);
-        //draw—onstellation(Scorpius, Scorpius_health);
-        //draw—onstellation(Sagittarius, Sagittarius_health);
-        //draw—onstellation(Capricornus, Capricornus_health);
-        //draw—onstellation(Aquarius, Aquarius_health);
-        //draw—onstellation(Pisces, Pisces_health);
+        draw—onstellation(Virgo,Virgo_indices, Virgo_health);
+        draw—onstellation(Scorpius,Scorpius_indices, Scorpius_health);
+        draw—onstellation(Sagittarius,Sagittarius_indices, Sagittarius_health);
+        draw—onstellation(Capricornus,Capricornus_indices, Capricornus_health);
+        draw—onstellation(Aquarius,Aquarius_indices, Aquarius_health);
+        draw—onstellation(Pisces,Pisces_indices, Pisces_health);
 
             drawColorCircle();
 
