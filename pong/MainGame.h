@@ -78,7 +78,7 @@ void menuMonthprocessing()
     for (int i = 0; i < numMonth; i++)
     {
         
-        float angle = (2 * PI / numMonth) * i;
+        float angle = (2 * PI / numMonth) * i + timeGetTime() * 0.00015;
 
         
         float textX = centerX + circleRadius * cos(angle);
@@ -139,12 +139,12 @@ void menuDayprocessing()
     for (int i = 0;i < numDay;i++)
     {
 
-        float angle = (2 * PI / numDay) * i;
+        float angle = (2 * PI / numDay) * i - timeGetTime() * 0.00005;
 
         float textX = centerX + circleRadius * cos(angle);
         float textY = centerY + circleRadius * sin(angle);
 
-        std::string m = dayToString((DaySign)(i));
+        std::string m = std::to_string(i+1);
         SIZE textSize;
         GetTextExtentPoint32(window.context, m.c_str(), m.size(), &textSize);
 
@@ -158,7 +158,7 @@ void menuDayprocessing()
             SetTextColor(window.context, RGB(255, 0, 0));
             if (GetAsyncKeyState(VK_LBUTTON))
             {
-                player_day = (DaySign)(i);
+                player_day = i+1;
                 dayIsSelected = true;
                 currentDayIndex = i;
             }
@@ -171,7 +171,7 @@ void menuDayprocessing()
 
         TextOutA(window.context, static_cast<int>(textX - textWidth / 2), static_cast<int>(textY - textHeight / 2), m.c_str(), m.size());
 
-        std::string curentDaystring = dayToString(player_day);
+        std::string curentDaystring = std::to_string(player_day);
         TextOutA(window.context, window.width * 5 / 8 + 100, 0, curentDaystring.c_str(), curentDaystring.size());
     }
 }
