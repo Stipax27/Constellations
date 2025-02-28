@@ -102,7 +102,7 @@ void menuMonthprocessing()
             {
                 player_month = (MonthSign)(i);
                 monthIsSelected = true;
-                currentMonthIndex = i; 
+                currentMonthIndex = i;
             }
         }
         else
@@ -175,6 +175,43 @@ void menuDayprocessing()
         TextOutA(window.context, window.width * 5 / 8 + 100, 0, curentDaystring.c_str(), curentDaystring.size());
     }
 }
+
+void menuConfirmationButton()
+{
+    if (!fontInit)
+    {
+        hFont = CreateFont(70, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, "CALIBRI");
+        fontInit = true;
+    }
+
+    SetTextColor(window.context, RGB(160, 160, 160));
+    SetBkColor(window.context, RGB(0, 0, 0));
+    SetBkMode(window.context, TRANSPARENT);
+
+    std::string m = "Play";
+    SIZE textSize;
+    GetTextExtentPoint32(window.context, m.c_str(), m.size(), &textSize);
+
+    int textWidth = textSize.cx;
+    int textHeight = textSize.cy;
+
+    if (mouse.x > window.width / 2 - textWidth / 2 && mouse.x < window.width / 2 + textWidth / 2 &&
+        mouse.y > window.height / 2 - textHeight / 2 && mouse.y < window.height / 2 + textHeight / 2)
+    {
+        SetTextColor(window.context, RGB(255, 0, 0));
+        if (GetAsyncKeyState(VK_LBUTTON))
+        {
+            confirm = true;
+        }
+    }
+    else
+    {
+        SetTextColor(window.context, RGB(160, 160, 160));
+    }
+
+    TextOutA(window.context, static_cast<int>(window.width / 2 - textWidth / 2), static_cast<int>(window.height / 2 - textHeight / 2), m.c_str(), m.size());
+}
+
 void SelectDates()
 {
 
@@ -189,6 +226,7 @@ void SelectDates()
     if (dayIsSelected && monthIsSelected)
     {
         player_sign = getZodiacSign(player_day, player_month);
+        menuConfirmationButton();
     }
 
 }

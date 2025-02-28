@@ -448,6 +448,12 @@ std::vector<point3d> MorphArray ={};
 std::vector <std::vector <float>> Morp_indices = {};
 std::vector <float> Morp_health{};
 
+
+std::vector <point3d> *constStarArray = { &Aries };
+std::vector <float> *constHealthArray = { &Aries_health };
+std::vector <std::vector <float>> *constIndArray = { &Aries_indices };
+
+
 void arrange—onstellation(std::vector <point3d>& starArrayData, std::vector <point3d>& starArrayRendering, float angleX, float angleY, float angleZ)
 {
     starArrayRendering = starArrayData;
@@ -500,6 +506,7 @@ enum MonthSign {
 };
 
 
+bool confirm = false;
 bool monthIsSelected = false;
 MonthSign player_month = MonthSign::January;
 

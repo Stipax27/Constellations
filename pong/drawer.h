@@ -25,6 +25,17 @@ namespace drawer
         p.y = y;
     }
 
+    void projectSingleConst(point3d& p)
+    {
+        float camDist = 100;
+
+        float x = window.width / 2. + 1000*p.x * camDist / (p.z + camDist);
+        float y = window.height / 2. + 1000*p.y * camDist / (p.z + camDist);
+
+        p.x = x;
+        p.y = y;
+    }
+
     void genRandSphere(point3d& p)
     {
         float amp = 1.25;
@@ -156,7 +167,7 @@ namespace drawer
     }
 
     ///
-    void drawHeroLinks(std::vector <point3d>& starArray, std::vector<std::vector<float>> starEdges, std::vector <float>& starHealth)
+    void drawHeroLinks(std::vector <point3d>& starArray, std::vector<std::vector<float>>& starEdges, std::vector <float>& starHealth)
     {
 
         int starsCount = starArray.size();
@@ -174,6 +185,9 @@ namespace drawer
             float a = timeGetTime() * .01;
             //rotateworld(point1);
             //rotateworld(point2);
+            projectSingleConst(point1);
+            projectSingleConst(point2);
+
             if (starHealth[i] > 0 && starHealth[i + 1] > 0)
             {
 
@@ -181,7 +195,7 @@ namespace drawer
                 float dy = point2.y - point1.y;
                 float dz = point2.z - point1.z;
                 float length = sqrt(dx * dx + dy * dy + dz * dz);
-                int x = static_cast<int>(length) / 50;
+                int x = static_cast<int>(length*10) / 50;
                 drawLine(point1, point2, x);// –ËÒÓ‚‡ÌËÂ Á‚∏Á‰Ì˚ı ÎËÌËÈ ÒÓÁ‚ÂÁ‰Ëˇ.
             }
         }
@@ -201,8 +215,8 @@ namespace drawer
             point.z = starArray[i].z;
 
             float a = timeGetTime() * .01;
-            //rotateworld(point);
-            project(point);
+            rotateY(point, a);
+            projectSingleConst(point);
 
             float dx = point.x - mouse.x;
             float dy = point.y - mouse.y;
@@ -233,13 +247,13 @@ namespace drawer
     }
     ///
 
-    void draw—onstellation(std::vector <point3d>& starArray, std::vector<std::vector<float>> starEdges, std::vector <float>& starHealth)
+    void draw—onstellation(std::vector <point3d>& starArray, std::vector<std::vector<float>> &starEdges, std::vector <float>& starHealth)
     {
         drawLinks(starArray, starEdges, starHealth);
         drawStarPulse(starArray, starHealth);
     }
 
-    void drawHero—onstellation(std::vector <point3d>& starArray, std::vector<std::vector<float>> starEdges, std::vector <float>& starHealth)
+    void drawHero—onstellation(std::vector <point3d>& starArray, std::vector<std::vector<float>> &starEdges, std::vector <float>& starHealth)
     {
         drawHeroLinks(starArray, starEdges, starHealth);
         drawHeroStarPulse(starArray, starHealth);
@@ -408,7 +422,7 @@ namespace drawer
     {
         drawBack();
 
-        if (dayIsSelected && monthIsSelected)
+        if (confirm)
         {
             drawStarField();
 
@@ -441,6 +455,8 @@ namespace drawer
         {
             SelectDates();
             startTime = timeGetTime();
+            int i = 0;
+            drawer::drawHero—onstellation(constStarArray[i], constIndArray[i], constHealthArray[i]);
         }
 
         drawGameCursor();
