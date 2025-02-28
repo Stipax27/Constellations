@@ -7,23 +7,6 @@ namespace drawer
         //rotateZ(p, timeGetTime() * 0.01); // Êğó÷åíèå îáüåêòîâ.
     }
     
-    void drawScore()
-    {
-        //ïîèãğàåì øğèôòàìè è öâåòàìè
-        SetTextColor(window.context, RGB(160, 160, 160));
-        SetBkColor(window.context, RGB(0, 0, 0));
-        SetBkMode(window.context, TRANSPARENT);
-        auto hFont = CreateFont(70, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, "CALIBRI");
-        auto hTmp = (HFONT)SelectObject(window.context, hFont);
-        char txt[32];//áóôåğ äëÿ òåêñòà
-        _itoa_s(game.score, txt, 10);//ïğåîáğàçîâàíèå ÷èñëîâîé ïåğåìåííîé â òåêñò. òåêñò îêàæåòñÿ â ïåğåìåííîé txt
-        TextOutA(window.context, 10, 10, "Score", 5);
-        TextOutA(window.context, 200, 10, (LPCSTR)txt, strlen(txt));
-        _itoa_s(game.balls, txt, 10);
-        TextOutA(window.context, 10, 100, "Balls", 5);
-        TextOutA(window.context, 200, 100, (LPCSTR)txt, strlen(txt));
-    }
-
     void project(point3d& p)
     {
         int currentTime = timeGetTime() - startTime;
@@ -98,7 +81,7 @@ namespace drawer
     {
 
         int starsEdgesCount = starEdges.size();
-        for (int i = 0; i < starsEdgesCount - 1; i++)
+        for (int i = 0; i < starsEdgesCount; i++)
         {
             point3d point1, point2;
             point1.x = starArray[starEdges[i][0]].x;
@@ -112,7 +95,9 @@ namespace drawer
             float a = timeGetTime() * .01;
             rotateworld(point1);
             rotateworld(point2);
-            if (starHealth[i] > 0 && starHealth[i + 1] > 0)
+            //if (starHealth[i] > 0 && starHealth[i + 1] > 0) - Áûëî
+
+            if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0) // - Ñòàëî
             {
 
                 float dx = point2.x - point1.x;
@@ -373,31 +358,91 @@ namespace drawer
         FillRect(window.context, &rect, blackBrush);
         DeleteObject(blackBrush);
     }
-
+    void morphWepon(std::vector <point3d>& starArray1, std::vector<std::vector<float>> starEdges1, std::vector <point3d>& starArray2, std::vector<std::vector<float>> starEdges2, std::vector <point3d>& morphArray, std::vector <std::vector <float>> Morp_indices, std::vector <float> Morp_health)
+    {
+        morphArray.clear();
+        Morp_indices.clear();
+        Morp_health.clear();
+        int sz1 = starArray1.size();
+        int sz2 = starArray2.size();
+        int sz3 = starEdges1.size();
+        int sz4 = starEdges2.size();
+        if (sz1 < sz2)
+        {
+            for (int i = 0; i < sz1;i++)
+            {
+                float morphSpeed = 0.01;
+                morphArray.push_back(lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(timeGetTime() * morphSpeed))));
+            }
+        }
+        else
+        {
+            for (int i = 0; i < sz2;i++)
+            {
+                float morphSpeed = 0.01;
+                morphArray.push_back(lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(timeGetTime() * morphSpeed))));
+            }
+        }
+        if (sz3 > sz4)
+        {
+            for (float i = 0; i < sz4;i++)
+            {
+                Morp_indices.push_back({ i, i + 1 });
+            }
+        }
+        else
+        {
+            for (float i = 0; i < sz3;i++)
+            {
+                Morp_indices.push_back({ i, i + 1 });
+            }
+        }
+        for (int i = 0; i < 15;i++)
+        {
+            Morp_health.push_back(1);
+        }
+        
+        drawÑonstellation(morphArray, Morp_indices, Morp_health);
+    }
     void drawWorld()
     {
         drawBack();
-        drawStarField();
 
-        //drawÑonstellation(Aries, Aries_health);
-        //drawÑonstellation(UrsaMajor, UrsaMajor_health);
-        //drawÑonstellation(Cancer, Cancer_health);
-        //drawÑonstellation(Taurus, Taurus_health);
-        //drawÑonstellation(Leo, Leo_health);
-        //drawÑonstellation(Gemini, Gemini_health);
-        drawÑonstellation(LibraCopy1, Libra_indices, Libra_health);
+        if (dayIsSelected && monthIsSelected)
+        {
+            drawStarField();
+
+        drawÑonstellation(AriesCopy, Aries_indices, Aries_health);
+        //drawÑonstellation(UrsaMajorCopy, UrsaMajor_indices, UrsaMajor_health);
+        drawÑonstellation(CancerCopy, Cancer_indices, Cancer_health);
+        drawÑonstellation(TaurusCopy, Taurus_indices, Taurus_health);
+        drawÑonstellation(LeoCopy, Leo_indices, Leo_health);
+        drawÑonstellation(GeminiCopy, Gemini_indices, Gemini_health);
+        
+        //drawÑonstellation(LibraCopy, Libra_indices, Libra_health);
         //drawHeroÑonstellation(LibraHeroCopy, Libra_indices, Libra_health);
+        //drawÑonstellation(Libra, Libra_indices, Libra_health);
 
-        //drawÑonstellation(Libra, Libra_edges, Libra_health);
+        drawÑonstellation(VirgoCopy, Virgo_indices, Virgo_health);
+        drawÑonstellation(ScorpiusCopy, Scorpius_indices, Scorpius_health);
+        drawÑonstellation(SagittariusCopy, Sagittarius_indices, Sagittarius_health);
+        drawÑonstellation(CapricornusCopy, Capricornus_indices, Capricornus_health);
+        drawÑonstellation(AquariusCopy,Aquarius_indices, Aquarius_health);
+        drawÑonstellation(PiscesCopy, Pisces_indices, Pisces_health);
 
-        //drawÑonstellation(Virgo, Virgo_health);
-        //drawÑonstellation(Scorpius, Scorpius_health);
-        //drawÑonstellation(Sagittarius, Sagittarius_health);
-        //drawÑonstellation(Capricornus, Capricornus_health);
-        //drawÑonstellation(Aquarius, Aquarius_health);
-        //drawÑonstellation(Pisces, Pisces_health);
+        morphWepon(PiscesCopy, Pisces_indices, AquariusCopy, Aquarius_indices, MorphArray, Morp_indices, Morp_health);
 
         drawColorCircle();
+
+        std::string curentSignstring = zodiacSignToString(player_sign);
+        TextOutA(window.context, window.width * 5 / 6, 0, curentSignstring.c_str(), curentSignstring.size());
+        }
+        else
+        {
+            SelectDates();
+            startTime = timeGetTime();
+        }
+
         drawGameCursor();
     }
 }
