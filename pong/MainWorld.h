@@ -23,22 +23,43 @@ std::vector <float> UrsaMajor_health = { 1,1,1,1,1,1,1 };
 std::vector <point3d> UrsaMajorCopy = {};
 
 
-std::vector <point3d> Aries =
+//std::vector <point3d> Aries =
+//{
+//    {0, 0, 0.},
+//    {.21, .05, 0.},
+//    {.35, .12, 0.},
+//    {.43, .27, 0.}
+//};
+//std::vector <std::vector <float>> Aries_indices =
+//{
+//    {0, 1},
+//    {1, 2},
+//    {2, 3},
+//    //{3, 4}
+//};
+//std::vector <float> Aries_health = { 1,1,1,1 };
+//std::vector <point3d> AriesCopy = {};
+
+
+//Constellation Aries(
+//Aries,
+//    Aries_health, Aries_indices
+//);
+
+Constellation Aries(
 {
     {0, 0, 0.},
     {.21, .05, 0.},
     {.35, .12, 0.},
     {.43, .27, 0.}
-};
-std::vector <std::vector <float>> Aries_indices =
+},
+    { 1,1,1,1 },
 {
     {0, 1},
     {1, 2},
-    {2, 3},
-    //{3, 4}
-};
-std::vector <float> Aries_health = { 1,1,1,1 };
-std::vector <point3d> AriesCopy = {};
+    {2, 3}
+}
+);
 
 
 std::vector <point3d> Taurus =
@@ -444,54 +465,58 @@ std::vector <std::vector <float>> Pisces_indices =
 
 std::vector <float> Pisces_health{1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 std::vector <point3d> PiscesCopy = {};
-std::vector<point3d> MorphArray ={};
-std::vector <std::vector <float>> Morp_indices = {};
-std::vector <float> Morp_health{};
 
 
-std::vector <point3d> *constStarArray = { &Aries };
-std::vector <float> *constHealthArray = { &Aries_health };
-std::vector <std::vector <float>> *constIndArray = { &Aries_indices };
+//std::vector<point3d> MorphArray ={}; Îòêëş÷åíî
+//std::vector <std::vector <float>> Morp_indices = {}; Îòêëş÷åíî
+//std::vector <float> Morp_health{}; Îòêëş÷åíî
 
 
-void arrangeÑonstellation(std::vector <point3d>& starArrayData, std::vector <point3d>& starArrayRendering, float angleX, float angleY, float angleZ)
-{
-    starArrayRendering = starArrayData;
-    int starsCount = starArrayRendering.size();
-    float scale = 1000;
-    for (int i = 0; i < starsCount; i++)// ĞÀçìåùåíèå Ëèíèé.
-    {
-        point3d p = { starArrayRendering[i].x, starArrayRendering[i].y, starArrayRendering[i].z };
+//std::vector <point3d> *constStarArray = { &Aries }; Îòêëş÷åíî
+//std::vector <float> *constHealthArray = { &Aries_health }; Îòêëş÷åíî
+//std::vector <std::vector <float>> *constIndArray = { &Aries_indices }; Îòêëş÷åíî
 
-        move(p, 0, 0, 3000. / scale);
-        rotateX(p, angleX);
-        rotateY(p, angleY);
-        rotateZ(p, angleZ);
-
-        starArrayRendering[i].x = p.x * scale;
-        starArrayRendering[i].y = p.y * scale;
-        starArrayRendering[i].z = p.z * scale;
-    }
-}
+// Íàâåğíîå ìîæíî óäàëÿòü
+        //void arrangeÑonstellation(std::vector <point3d>& starArrayData, std::vector <point3d>& starArrayRendering, float angleX, float angleY, float angleZ) // 
+        //{
+        //    starArrayRendering = starArrayData;
+        //    int starsCount = starArrayRendering.size();
+        //    float scale = 1000;
+        //    for (int i = 0; i < starsCount; i++)// ĞÀçìåùåíèå Ëèíèé.
+        //    {
+        //        point3d p = { starArrayRendering[i].x, starArrayRendering[i].y, starArrayRendering[i].z };
+        //
+        //        move(p, 0, 0, 3000. / scale);
+        //        rotateX(p, angleX);
+        //        rotateY(p, angleY);
+        //        rotateZ(p, angleZ);
+        //
+        //        starArrayRendering[i].x = p.x * scale;
+        //        starArrayRendering[i].y = p.y * scale;
+        //        starArrayRendering[i].z = p.z * scale;
+        //    }
+        //}
+//
 
 void initWorld()
 {
-   arrangeÑonstellation(Aries, AriesCopy, -17, -25, 0);
+    Aries.setStarsRenderedCords(-17, -25, 0);
+   //arrangeÑonstellation(Aries, AriesCopy, -17, -25, 0);
    //arrangeÑonstellation(UrsaMajor, -15, -60, 0);
-   arrangeÑonstellation(Cancer, CancerCopy,  -20, -20, 0);
-   arrangeÑonstellation(Taurus, TaurusCopy, -90, 40, 50);
-   arrangeÑonstellation(Leo, LeoCopy, 40, 50, 0);
-   arrangeÑonstellation(Gemini, GeminiCopy, -200, 0, 0);
+   //arrangeÑonstellation(Cancer, CancerCopy,  -20, -20, 0);
+   //arrangeÑonstellation(Taurus, TaurusCopy, -90, 40, 50);
+   //arrangeÑonstellation(Leo, LeoCopy, 40, 50, 0);
+   //arrangeÑonstellation(Gemini, GeminiCopy, -200, 0, 0);
    //arrangeÑonstellation(Libra, LibraCopy, 0, 0, 0);
    //arrangeÑonstellation(Libra, LibraHeroCopy, -19, -55, -5);
 
-   arrangeÑonstellation(Virgo, VirgoCopy, 250, 250, 0);
+   //arrangeÑonstellation(Virgo, VirgoCopy, 250, 250, 0);
    //arrangeÑonstellation(Libra, 100, 250, 250);
-   arrangeÑonstellation(Scorpius, ScorpiusCopy, 400, 110, 0);
-   arrangeÑonstellation(Sagittarius, SagittariusCopy, 0, 400, 0);
-   arrangeÑonstellation(Capricornus, CapricornusCopy, 400, 0, 0);
-   arrangeÑonstellation(Aquarius, AquariusCopy, 100, 0, 0);
-   arrangeÑonstellation(Pisces, PiscesCopy, 0, 100, 0);
+   //arrangeÑonstellation(Scorpius, ScorpiusCopy, 400, 110, 0);
+   //arrangeÑonstellation(Sagittarius, SagittariusCopy, 0, 400, 0);
+   //arrangeÑonstellation(Capricornus, CapricornusCopy, 400, 0, 0);
+   //arrangeÑonstellation(Aquarius, AquariusCopy, 100, 0, 0);
+   //arrangeÑonstellation(Pisces, PiscesCopy, 0, 100, 0);
 }
 
 using namespace std;

@@ -87,9 +87,13 @@ namespace drawer
             // –ËÒÓ‚‡ÌËÂ ÀËÌËÈ.
         }
     }
+    //void drawLinks(std::vector <point3d>& starArray, std::vector<std::vector<float>> starEdges, std::vector <float>& starHealth)
 
-    void drawLinks(std::vector <point3d>& starArray, std::vector<std::vector<float>> starEdges, std::vector <float>& starHealth)
+    void drawLinks(Constellation& Constellation)
     {
+        std::vector <point3d>& starArray = Constellation.starsRenderedCords;
+        std::vector<std::vector<float>>& starEdges = Constellation.constellationEdges;
+        std::vector <float>& starHealth = Constellation.starsHealth;
 
         int starsEdgesCount = starEdges.size();
         for (int i = 0; i < starsEdgesCount; i++)
@@ -120,9 +124,13 @@ namespace drawer
             }
         }
     }
+    //void drawStarPulse(std::vector <point3d>& starArray, std::vector <float>& starHealth)
 
-    void drawStarPulse(std::vector <point3d>& starArray, std::vector <float>& starHealth)
+    void drawStarPulse(Constellation& Constellation)
     {
+        std::vector <point3d>& starArray = Constellation.starsRenderedCords;
+        std::vector <float>& starHealth = Constellation.starsHealth;
+
         int starsCount = starArray.size();
         HBRUSH brush = CreateSolidBrush(RGB(0, 191, 255));
         HBRUSH brush2 = CreateSolidBrush(RGB(255, 0, 0));
@@ -247,10 +255,11 @@ namespace drawer
     }
     ///
 
-    void draw—onstellation(std::vector <point3d>& starArray, std::vector<std::vector<float>> &starEdges, std::vector <float>& starHealth)
+    //void draw—onstellation(std::vector <point3d>& starArray, std::vector<std::vector<float>>& starEdges, std::vector <float>& starHealth)
+    void draw—onstellation(Constellation& Constellation)
     {
-        drawLinks(starArray, starEdges, starHealth);
-        drawStarPulse(starArray, starHealth);
+        drawLinks(Constellation);
+        drawStarPulse(Constellation);
     }
 
     void drawHero—onstellation(std::vector <point3d>& starArray, std::vector<std::vector<float>> &starEdges, std::vector <float>& starHealth)
@@ -416,7 +425,7 @@ namespace drawer
             Morp_health.push_back(1);
         }
         
-        draw—onstellation(morphArray, Morp_indices, Morp_health);
+        //draw—onstellation(morphArray, Morp_indices, Morp_health); ŒÚÍÎ˛˜ÂÌÓ
     }
     void drawWorld()
     {
@@ -426,25 +435,26 @@ namespace drawer
         {
             drawStarField();
 
-        draw—onstellation(AriesCopy, Aries_indices, Aries_health);
+
+        draw—onstellation(Aries);
         //draw—onstellation(UrsaMajorCopy, UrsaMajor_indices, UrsaMajor_health);
-        draw—onstellation(CancerCopy, Cancer_indices, Cancer_health);
-        draw—onstellation(TaurusCopy, Taurus_indices, Taurus_health);
-        draw—onstellation(LeoCopy, Leo_indices, Leo_health);
-        draw—onstellation(GeminiCopy, Gemini_indices, Gemini_health);
+        //draw—onstellation(CancerCopy, Cancer_indices, Cancer_health);
+        //draw—onstellation(TaurusCopy, Taurus_indices, Taurus_health);
+        //draw—onstellation(LeoCopy, Leo_indices, Leo_health);
+        //draw—onstellation(GeminiCopy, Gemini_indices, Gemini_health);
         
         //draw—onstellation(LibraCopy, Libra_indices, Libra_health);
         //drawHero—onstellation(LibraHeroCopy, Libra_indices, Libra_health);
         //draw—onstellation(Libra, Libra_indices, Libra_health);
 
-        draw—onstellation(VirgoCopy, Virgo_indices, Virgo_health);
-        draw—onstellation(ScorpiusCopy, Scorpius_indices, Scorpius_health);
-        draw—onstellation(SagittariusCopy, Sagittarius_indices, Sagittarius_health);
-        draw—onstellation(CapricornusCopy, Capricornus_indices, Capricornus_health);
-        draw—onstellation(AquariusCopy,Aquarius_indices, Aquarius_health);
-        draw—onstellation(PiscesCopy, Pisces_indices, Pisces_health);
+        //draw—onstellation(VirgoCopy, Virgo_indices, Virgo_health);
+        //draw—onstellation(ScorpiusCopy, Scorpius_indices, Scorpius_health);
+        //draw—onstellation(SagittariusCopy, Sagittarius_indices, Sagittarius_health);
+        //draw—onstellation(CapricornusCopy, Capricornus_indices, Capricornus_health);
+        //draw—onstellation(AquariusCopy,Aquarius_indices, Aquarius_health);
+        //draw—onstellation(PiscesCopy, Pisces_indices, Pisces_health);
 
-        morphWepon(PiscesCopy, Pisces_indices, AquariusCopy, Aquarius_indices, MorphArray, Morp_indices, Morp_health);
+        //morphWepon(PiscesCopy, Pisces_indices, AquariusCopy, Aquarius_indices, MorphArray, Morp_indices, Morp_health); ŒÚÍÎ˛˜ÂÌÓ
 
         drawColorCircle();
 
@@ -456,7 +466,7 @@ namespace drawer
             SelectDates();
             startTime = timeGetTime();
             int i = 0;
-            drawer::drawHero—onstellation(constStarArray[i], constIndArray[i], constHealthArray[i]);
+            //drawer::drawHero—onstellation(constStarArray[i], constIndArray[i], constHealthArray[i]); ŒÚÍÎ˛˜ÂÌÓ
         }
 
         drawGameCursor();

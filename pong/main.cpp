@@ -33,6 +33,7 @@ float camDist = 0;
 #include "utils.h"
 #include "MainWindow.h"
 #include "mouse.h"
+#include "Constellation.h"
 #include "MainWorld.h"
 #include "MainGame.h"
 #include "drawer.h"
