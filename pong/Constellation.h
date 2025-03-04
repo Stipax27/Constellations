@@ -38,4 +38,6 @@ public:
             starsRenderedCords[i].z = p.z * scale;
         }
     }
+
+
 };
