@@ -1,10 +1,45 @@
 namespace drawer
 {
+
+    //void (*modelTransform)(point3d& p);
+
+    void (*modelTransform)(point3d& p, Constellation& Constellation);
+
     void rotateworld(point3d& p)
     {
         rotateX(p, mouseAngle.y * 0.1);
         rotateY(p, mouseAngle.x * 0.1);
         //rotateZ(p, timeGetTime() * 0.01); // Кручение обьектов.
+    }
+
+    void placeConstToWorld(point3d& p, Constellation& Constellation)
+    {
+        move(p, 0, 0, 3000. / Constellation.scale);
+        rotateX(p, Constellation.angle.x);
+        rotateY(p, Constellation.angle.y);
+        rotateZ(p, Constellation.angle.z);
+        p.x *= Constellation.scale;
+        p.y *= Constellation.scale;
+        p.z *= Constellation.scale;
+
+        rotateX(p, mouseAngle.y * 0.1);
+        rotateY(p, mouseAngle.x * 0.1);
+    }
+
+    void placeConstToStartMenu(point3d& p, Constellation& Constellation)
+    {
+        p.x *= 300;
+        p.y *= 300;
+        p.z *= 300;
+        float a = timeGetTime();
+        rotateY(p, a * 0.1);
+        move(p, 0, 0, 100);
+    }
+
+    void placeToWorld(point3d& p, Constellation& Constellation)
+    {
+        rotateX(p, mouseAngle.y * 0.1);
+        rotateY(p, mouseAngle.x * 0.1);
     }
     
     void project(point3d& p)
@@ -91,7 +126,8 @@ namespace drawer
 
     void drawLinks(Constellation& Constellation)
     {
-        std::vector <point3d>& starArray = Constellation.starsRenderedCords;
+        //std::vector <point3d>& starArray = Constellation.starsRenderedCords;
+        std::vector <point3d>& starArray = Constellation.starsCords;
         std::vector<std::vector<float>>& starEdges = Constellation.constellationEdges;
         std::vector <float>& starHealth = Constellation.starsHealth;
 
@@ -108,8 +144,8 @@ namespace drawer
             point2.z = starArray[starEdges[i][1]].z;
 
             float a = timeGetTime() * .01;
-            rotateworld(point1);
-            rotateworld(point2);
+            modelTransform(point1, Constellation);
+            modelTransform(point2, Constellation);
             //if (starHealth[i] > 0 && starHealth[i + 1] > 0) - Было
 
             if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0) // - Стало
@@ -126,9 +162,12 @@ namespace drawer
     }
     //void drawStarPulse(std::vector <point3d>& starArray, std::vector <float>& starHealth)
 
+    
+
     void drawStarPulse(Constellation& Constellation)
     {
-        std::vector <point3d>& starArray = Constellation.starsRenderedCords;
+        //std::vector <point3d>& starArray = Constellation.starsRenderedCords;
+        std::vector <point3d>& starArray = Constellation.starsCords;
         std::vector <float>& starHealth = Constellation.starsHealth;
 
         int starsCount = starArray.size();
@@ -143,7 +182,7 @@ namespace drawer
             point.z = starArray[i].z;
 
             float a = timeGetTime() * .01;
-            rotateworld(point);
+            modelTransform(point, Constellation);
             project(point);
 
             float dx = point.x - mouse.x;
@@ -153,6 +192,7 @@ namespace drawer
             float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
 
             SelectObject(window.context, brush);// Пульсирование Звёзд при наведение мыши.
+
 
             if (GetAsyncKeyState(VK_LBUTTON))
             {
@@ -275,7 +315,7 @@ namespace drawer
         {
             point3d point;
             genRandSphere(point);
-            rotateworld(point);
+            modelTransform(point,Aries);
             project(point);
             drawPoint(point);
             // Звёзды на фоне их кол-во. и Кадр остановки.
@@ -429,31 +469,36 @@ namespace drawer
     }
     void drawWorld()
     {
+        
         drawBack();
 
         if (confirm)
         {
+            modelTransform = &placeToWorld;
             drawStarField();
 
+            modelTransform = &placeConstToWorld;
 
-        for (int i=0;i<starSet.size();i++)
-        {
-            drawСonstellation(*starSet[i]);
-        }
+            for (int i=0;i<starSet.size();i++)
+            {
+                drawСonstellation(*starSet[i]);
+            }
 
-        //drawСonstellation(UrsaMajorCopy, UrsaMajor_indices, UrsaMajor_health);
-        //morphWepon(PiscesCopy, Pisces_indices, AquariusCopy, Aquarius_indices, MorphArray, Morp_indices, Morp_health); Отключено
+            //drawСonstellation(UrsaMajorCopy, UrsaMajor_indices, UrsaMajor_health);
+            //morphWepon(PiscesCopy, Pisces_indices, AquariusCopy, Aquarius_indices, MorphArray, Morp_indices, Morp_health); Отключено
 
-        drawColorCircle();
+            drawColorCircle();
 
-        std::string curentSignstring = zodiacSignToString(player_sign);
-        TextOutA(window.context, window.width * 5 / 6, 0, curentSignstring.c_str(), curentSignstring.size());
+            std::string curentSignstring = zodiacSignToString(player_sign);
+            TextOutA(window.context, window.width * 5 / 6, 0, curentSignstring.c_str(), curentSignstring.size());
         }
         else
         {
             SelectDates();
             startTime = timeGetTime();
-            int i = 0;
+            int n = (timeGetTime() / 1000) % starSet.size();
+            modelTransform = &placeConstToStartMenu;
+            drawСonstellation(*starSet[n]);
             //drawer::drawHeroСonstellation(constStarArray[i], constIndArray[i], constHealthArray[i]); Отключено
         }
 

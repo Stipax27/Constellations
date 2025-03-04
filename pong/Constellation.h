@@ -10,6 +10,8 @@ public:
     std::vector<point3d> starsRenderedCords = {};
     float scale = 1000;
 
+    point3d angle;
+    float distance;
     //
 
     Constellation(std::vector<point3d> _starsCords, std::vector <float> _starsHealth, std::vector <std::vector <float>> _constellationEdges) {
@@ -20,6 +22,8 @@ public:
 
     void setStarsRenderedCords(float angleX, float angleY, float angleZ) // Подготавливаем данные[starArrayRendered] для отрисовки созвездия
     {
+        angle = { angleX,angleY,angleZ };
+        distance = 3000. / scale;
 
         starsRenderedCords = starsCords;
 

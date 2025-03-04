@@ -15,6 +15,11 @@ float smoothstep(float edge0, float edge1, float x) {
     return x * x * (3 - 2 * x);
 }
 
+float fract(float a)
+{
+    return a - floor(a);
+}
+
 void move(point3d& p, float x, float y, float z)
 {
     p.x += x;
