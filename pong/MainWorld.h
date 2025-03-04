@@ -531,17 +531,13 @@ enum MonthSign {
 };
 
 enum gameState_ {
-    MainMenu, MonthSelection, DaySelection, SelectionDates, Fight
+    MainMenu, MonthSelection, DaySelection, confirmSign, Fight
 };
 
 gameState_  gameState = gameState_::MainMenu;
 
-bool StartPlayButton = false;
-bool confirm = false;
-bool monthIsSelected = false;
 MonthSign player_month = MonthSign::January;
 
-bool dayIsSelected = false;
 int player_day = 1;
 
 ZodiacSign player_sign = ZodiacSign::ARIES;

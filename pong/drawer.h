@@ -447,7 +447,7 @@ namespace drawer
                 menuDayprocessing();
                 break;
 
-            case gameState_::SelectionDates:
+            case gameState_::confirmSign:
                 menuMonthprocessing();
                 menuDayprocessing();
                 menuConfirmationButton();
@@ -467,9 +467,7 @@ namespace drawer
 
         /*if (confirm)
             {
-                drawStarField();
-
-
+                
                 //drawÑonstellation(Aries);
                 //drawÑonstellation(UrsaMajorCopy, UrsaMajor_indices, UrsaMajor_health);
                 //drawÑonstellation(CancerCopy, Cancer_indices, Cancer_health);
@@ -490,10 +488,6 @@ namespace drawer
 
                 //morphWepon(PiscesCopy, Pisces_indices, AquariusCopy, Aquarius_indices, MorphArray, Morp_indices, Morp_health); Îòêëþ÷åíî
 
-                drawColorCircle();
-
-                std::string curentSignstring = zodiacSignToString(player_sign);
-                TextOutA(window.context, window.width * 5 / 6, 0, curentSignstring.c_str(), curentSignstring.size());
             }
             else
             {

@@ -74,6 +74,7 @@ void menuMonthprocessing()
     float centerX = window.width / 2;
     float centerY = window.height / 2;
     int numMonth = 12;
+    SIZE textSize;
 
     for (int i = 0; i < numMonth; i++)
     {
@@ -86,10 +87,8 @@ void menuMonthprocessing()
 
         
         std::string m = mounthToString((MonthSign)i);
-        SIZE textSize;
         GetTextExtentPoint32(window.context, m.c_str(), m.size(), &textSize);
 
-        
         int textWidth = textSize.cx;
         int textHeight = textSize.cy;
 
@@ -118,6 +117,10 @@ void menuMonthprocessing()
     
     std::string curentMounthstring = mounthToString(player_month);
     TextOutA(window.context, window.width * 5 / 8, 0, curentMounthstring.c_str(), curentMounthstring.size());
+
+    std::string b = "select your date of birth";
+    GetTextExtentPoint32(window.context, b.c_str(), b.size(), &textSize);
+    TextOutA(window.context, window.width / 2 - textSize.cx / 2, 100, b.c_str(), b.size());
 }
 void menuDayprocessing()
 {
@@ -160,7 +163,7 @@ void menuDayprocessing()
             {
                 player_day = i+1;
                 currentDayIndex = i;
-                gameState = gameState_::SelectionDates;
+                gameState = gameState_::confirmSign;
             }
         }
         else
@@ -202,6 +205,7 @@ void menuConfirmationButton()
         if (GetAsyncKeyState(VK_LBUTTON))
         {
             gameState = gameState_::Fight;
+            startTime = timeGetTime();
         }
     }
     else
@@ -224,17 +228,14 @@ void StartMenu()
     SetBkColor(window.context, RGB(0, 0, 0));
     SetBkMode(window.context, TRANSPARENT);
 
-    std::string m = "Play";
-    //std::string b = "Out";
     SIZE textSize;
+
+    std::string m = "Play";
+   
     GetTextExtentPoint32(window.context, m.c_str(), m.size(), &textSize);
-    //GetTextExtentPoint32(window.context, b.c_str(), b.size(), &textSize);
 
-    int textWidth = textSize.cx;
-    int textHeight = textSize.cy;
-
-    if (mouse.x > window.width / 2 - textWidth / 2 && mouse.x < window.width / 2 + textWidth / 2 &&
-        mouse.y > window.height / 2 - textHeight / 2 && mouse.y < window.height / 2 + textHeight / 2)
+    if (mouse.x > window.width / 2 - textSize.cx / 2 && mouse.x < window.width / 2 + textSize.cx / 2 &&
+        mouse.y > window.height / 2 - textSize.cy / 2 && mouse.y < window.height / 2 + textSize.cy / 2)
     {
         SetTextColor(window.context, RGB(255, 0, 0));
         if (GetAsyncKeyState(VK_LBUTTON))
@@ -247,26 +248,28 @@ void StartMenu()
         SetTextColor(window.context, RGB(160, 160, 160));
     }
 
-    TextOutA(window.context, static_cast<int>(window.width / 2 - textWidth / 2), static_cast<int>(window.height / 2 - textHeight / 2), m.c_str(), m.size());
-    //TextOutA(window.context, static_cast<int>(window.width / 2 - textWidth / 2), static_cast<int>((window.height / 2) + 100 - textHeight / 2), b.c_str(), b.size());
+    TextOutA(window.context, static_cast<int>(window.width / 2 - textSize.cx / 2), static_cast<int>(window.height / 2 - textSize.cy / 2), m.c_str(), m.size());
+
+    std::string b = "Quit";
+    GetTextExtentPoint32(window.context, b.c_str(), b.size(), &textSize);
+
+    if (mouse.x > window.width / 2 - textSize.cx / 2 && mouse.x < window.width / 2 + textSize.cx / 2 &&
+        mouse.y > (window.height / 2) + 100 - textSize.cy / 2 && mouse.y < (window.height / 2) + 100 + textSize.cy / 2)
+    {
+        SetTextColor(window.context, RGB(255, 0, 0));
+        if (GetAsyncKeyState(VK_LBUTTON))
+        {
+            ExitProcess(0);
+        }
+    }
+    else
+    {
+        SetTextColor(window.context, RGB(160, 160, 160));
+    }
+
+    TextOutA(window.context, static_cast<int>(window.width / 2 - textSize.cx / 2), static_cast<int>((window.height / 2) +100 - textSize.cy / 2), b.c_str(), b.size());
+
 
 }
 
-void SelectDates()
-{
 
-    menuMonthprocessing();
-
-    if (gameState_::MonthSelection)
-    {
-        menuDayprocessing();
-    }
-
-
-    if (gameState_::DaySelection && gameState_::MonthSelection)
-    {
-        player_sign = getZodiacSign(player_day, player_month);
-        menuConfirmationButton();
-    }
-
-}
