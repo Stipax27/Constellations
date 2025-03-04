@@ -436,20 +436,12 @@ namespace drawer
             drawStarField();
 
 
-        draw—onstellation(Aries);
-        draw—onstellation(Taurus);
-        draw—onstellation(Gemini);
-        draw—onstellation(Cancer);
-        draw—onstellation(Leo);
-        draw—onstellation(Virgo);
-        draw—onstellation(Libra);
-        draw—onstellation(Scorpius);
-        draw—onstellation(Sagittarius);
-        draw—onstellation(Capricornus);
-        draw—onstellation(Aquarius);
-        draw—onstellation(Pisces);
+        for (int i=0;i<starSet.size();i++)
+        {
+            draw—onstellation(*starSet[i]);
+        }
+
         //draw—onstellation(UrsaMajorCopy, UrsaMajor_indices, UrsaMajor_health);
-   
         //morphWepon(PiscesCopy, Pisces_indices, AquariusCopy, Aquarius_indices, MorphArray, Morp_indices, Morp_health); ŒÚÍÎ˛˜ÂÌÓ
 
         drawColorCircle();

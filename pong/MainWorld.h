@@ -23,29 +23,6 @@ std::vector <float> UrsaMajor_health = { 1,1,1,1,1,1,1 };
 std::vector <point3d> UrsaMajorCopy = {};
 
 
-//std::vector <point3d> Aries =
-//{
-//    {0, 0, 0.},
-//    {.21, .05, 0.},
-//    {.35, .12, 0.},
-//    {.43, .27, 0.}
-//};
-//std::vector <std::vector <float>> Aries_indices =
-//{
-//    {0, 1},
-//    {1, 2},
-//    {2, 3},
-//    //{3, 4}
-//};
-//std::vector <float> Aries_health = { 1,1,1,1 };
-//std::vector <point3d> AriesCopy = {};
-
-
-//Constellation Aries(
-//Aries,
-//    Aries_health, Aries_indices
-//);
-
 Constellation Aries(
 {
     {0, 0, 0.},//coords
@@ -428,6 +405,21 @@ Constellation Pisces(
 //std::vector <point3d> *constStarArray = { &Aries }; Отключено
 //std::vector <float> *constHealthArray = { &Aries_health }; Отключено
 //std::vector <std::vector <float>> *constIndArray = { &Aries_indices }; Отключено
+
+std::vector <Constellation*> starSet = {
+&Aries,
+&Taurus,
+&Gemini,
+&Cancer,
+&Leo,
+&Virgo,
+&Libra,
+&Scorpius,
+&Sagittarius,
+&Capricornus,
+&Aquarius,
+&Pisces
+};
 
 void initWorld()
 {
