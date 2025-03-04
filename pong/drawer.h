@@ -431,45 +431,79 @@ namespace drawer
     {
         drawBack();
 
-        if (confirm)
+
+        switch (gameState)
         {
-            drawStarField();
+            case gameState_::MainMenu:
+                StartMenu();
+                break;
 
+            case gameState_::MonthSelection:
+                menuMonthprocessing();
+                break;
 
-        draw—onstellation(Aries);
-        //draw—onstellation(UrsaMajorCopy, UrsaMajor_indices, UrsaMajor_health);
-        //draw—onstellation(CancerCopy, Cancer_indices, Cancer_health);
-        //draw—onstellation(TaurusCopy, Taurus_indices, Taurus_health);
-        //draw—onstellation(LeoCopy, Leo_indices, Leo_health);
-        //draw—onstellation(GeminiCopy, Gemini_indices, Gemini_health);
-        
-        //draw—onstellation(LibraCopy, Libra_indices, Libra_health);
-        //drawHero—onstellation(LibraHeroCopy, Libra_indices, Libra_health);
-        //draw—onstellation(Libra, Libra_indices, Libra_health);
+            case gameState_::DaySelection:
+                menuMonthprocessing();
+                menuDayprocessing();
+                break;
 
-        //draw—onstellation(VirgoCopy, Virgo_indices, Virgo_health);
-        //draw—onstellation(ScorpiusCopy, Scorpius_indices, Scorpius_health);
-        //draw—onstellation(SagittariusCopy, Sagittarius_indices, Sagittarius_health);
-        //draw—onstellation(CapricornusCopy, Capricornus_indices, Capricornus_health);
-        //draw—onstellation(AquariusCopy,Aquarius_indices, Aquarius_health);
-        //draw—onstellation(PiscesCopy, Pisces_indices, Pisces_health);
+            case gameState_::SelectionDates:
+                menuMonthprocessing();
+                menuDayprocessing();
+                menuConfirmationButton();
+                break;
 
-        //morphWepon(PiscesCopy, Pisces_indices, AquariusCopy, Aquarius_indices, MorphArray, Morp_indices, Morp_health); ŒÚÍÎ˛˜ÂÌÓ
+            case gameState_::Fight:
+                drawStarField();
+                draw—onstellation(Aries);
+                drawColorCircle();
+                std::string curentSignstring = zodiacSignToString(player_sign);
+                TextOutA(window.context, window.width * 5 / 6, 0, curentSignstring.c_str(), curentSignstring.size());
+                break;
 
-        drawColorCircle();
-
-        std::string curentSignstring = zodiacSignToString(player_sign);
-        TextOutA(window.context, window.width * 5 / 6, 0, curentSignstring.c_str(), curentSignstring.size());
-        }
-        else
-        {
-            SelectDates();
-            startTime = timeGetTime();
-            int i = 0;
-            //drawer::drawHero—onstellation(constStarArray[i], constIndArray[i], constHealthArray[i]); ŒÚÍÎ˛˜ÂÌÓ
         }
 
         drawGameCursor();
+
+        /*if (confirm)
+            {
+                drawStarField();
+
+
+                //draw—onstellation(Aries);
+                //draw—onstellation(UrsaMajorCopy, UrsaMajor_indices, UrsaMajor_health);
+                //draw—onstellation(CancerCopy, Cancer_indices, Cancer_health);
+                //draw—onstellation(TaurusCopy, Taurus_indices, Taurus_health);
+                //draw—onstellation(LeoCopy, Leo_indices, Leo_health);
+                //draw—onstellation(GeminiCopy, Gemini_indices, Gemini_health);
+
+                //draw—onstellation(LibraCopy, Libra_indices, Libra_health);
+                //drawHero—onstellation(LibraHeroCopy, Libra_indices, Libra_health);
+                //draw—onstellation(Libra, Libra_indices, Libra_health);
+
+                //draw—onstellation(VirgoCopy, Virgo_indices, Virgo_health);
+                //draw—onstellation(ScorpiusCopy, Scorpius_indices, Scorpius_health);
+                //draw—onstellation(SagittariusCopy, Sagittarius_indices, Sagittarius_health);
+                //draw—onstellation(CapricornusCopy, Capricornus_indices, Capricornus_health);
+                //draw—onstellation(AquariusCopy,Aquarius_indices, Aquarius_health);
+                //draw—onstellation(PiscesCopy, Pisces_indices, Pisces_health);
+
+                //morphWepon(PiscesCopy, Pisces_indices, AquariusCopy, Aquarius_indices, MorphArray, Morp_indices, Morp_health); ŒÚÍÎ˛˜ÂÌÓ
+
+                drawColorCircle();
+
+                std::string curentSignstring = zodiacSignToString(player_sign);
+                TextOutA(window.context, window.width * 5 / 6, 0, curentSignstring.c_str(), curentSignstring.size());
+            }
+            else
+            {
+                SelectDates();
+                startTime = timeGetTime();
+                int i = 0;
+                //drawer::drawHero—onstellation(constStarArray[i], constIndArray[i], constHealthArray[i]); ŒÚÍÎ˛˜ÂÌÓ
+            }
+
+        drawGameCursor();*/
     }
 }
 

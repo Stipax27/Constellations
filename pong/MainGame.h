@@ -101,7 +101,7 @@ void menuMonthprocessing()
             if (GetAsyncKeyState(VK_LBUTTON))
             {
                 player_month = (MonthSign)(i);
-                monthIsSelected = true;
+                gameState = gameState_::DaySelection;
                 currentMonthIndex = i;
             }
         }
@@ -159,8 +159,8 @@ void menuDayprocessing()
             if (GetAsyncKeyState(VK_LBUTTON))
             {
                 player_day = i+1;
-                dayIsSelected = true;
                 currentDayIndex = i;
+                gameState = gameState_::SelectionDates;
             }
         }
         else
@@ -201,7 +201,7 @@ void menuConfirmationButton()
         SetTextColor(window.context, RGB(255, 0, 0));
         if (GetAsyncKeyState(VK_LBUTTON))
         {
-            confirm = true;
+            gameState = gameState_::Fight;
         }
     }
     else
@@ -212,18 +212,58 @@ void menuConfirmationButton()
     TextOutA(window.context, static_cast<int>(window.width / 2 - textWidth / 2), static_cast<int>(window.height / 2 - textHeight / 2), m.c_str(), m.size());
 }
 
+void StartMenu()
+{
+    if (!fontInit)
+    {
+        hFont = CreateFont(70, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, "CALIBRI");
+        fontInit = true;
+    }
+
+    SetTextColor(window.context, RGB(160, 160, 160));
+    SetBkColor(window.context, RGB(0, 0, 0));
+    SetBkMode(window.context, TRANSPARENT);
+
+    std::string m = "Play";
+    //std::string b = "Out";
+    SIZE textSize;
+    GetTextExtentPoint32(window.context, m.c_str(), m.size(), &textSize);
+    //GetTextExtentPoint32(window.context, b.c_str(), b.size(), &textSize);
+
+    int textWidth = textSize.cx;
+    int textHeight = textSize.cy;
+
+    if (mouse.x > window.width / 2 - textWidth / 2 && mouse.x < window.width / 2 + textWidth / 2 &&
+        mouse.y > window.height / 2 - textHeight / 2 && mouse.y < window.height / 2 + textHeight / 2)
+    {
+        SetTextColor(window.context, RGB(255, 0, 0));
+        if (GetAsyncKeyState(VK_LBUTTON))
+        {
+            gameState = gameState_::MonthSelection;
+        }
+    }
+    else
+    {
+        SetTextColor(window.context, RGB(160, 160, 160));
+    }
+
+    TextOutA(window.context, static_cast<int>(window.width / 2 - textWidth / 2), static_cast<int>(window.height / 2 - textHeight / 2), m.c_str(), m.size());
+    //TextOutA(window.context, static_cast<int>(window.width / 2 - textWidth / 2), static_cast<int>((window.height / 2) + 100 - textHeight / 2), b.c_str(), b.size());
+
+}
+
 void SelectDates()
 {
 
     menuMonthprocessing();
 
-    if (monthIsSelected)
+    if (gameState_::MonthSelection)
     {
         menuDayprocessing();
     }
 
 
-    if (dayIsSelected && monthIsSelected)
+    if (gameState_::DaySelection && gameState_::MonthSelection)
     {
         player_sign = getZodiacSign(player_day, player_month);
         menuConfirmationButton();
