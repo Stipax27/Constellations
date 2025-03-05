@@ -130,8 +130,7 @@ namespace drawer
             // Рисование Линий.
         }
     }
-    //void drawLinks(std::vector <point3d>& starArray, std::vector<std::vector<float>> starEdges, std::vector <float>& starHealth)
-
+    
     float linksDivider = 25;
 
     void drawLinks(Constellation& Constellation)
@@ -170,8 +169,7 @@ namespace drawer
             }
         }
     }
-    //void drawStarPulse(std::vector <point3d>& starArray, std::vector <float>& starHealth)
-
+    
     HBRUSH brush;
     HBRUSH brush2;
     float finalStarRad = 0;
@@ -212,7 +210,6 @@ namespace drawer
 
     void drawStarPulse(Constellation& Constellation)
     {
-        //std::vector <point3d>& starArray = Constellation.starsRenderedCords;
         std::vector <point3d>& starArray = Constellation.starsCords;
         std::vector <float>& starHealth = Constellation.starsHealth;
 
@@ -365,6 +362,7 @@ namespace drawer
         FillRect(window.context, &rect, blackBrush);
         DeleteObject(blackBrush);
     }
+
     void morphWepon(std::vector <point3d>& starArray1, std::vector<std::vector<float>> starEdges1, std::vector <point3d>& starArray2, std::vector<std::vector<float>> starEdges2, std::vector <point3d>& morphArray, std::vector <std::vector <float>> Morp_indices, std::vector <float> Morp_health)
     {
         morphArray.clear();
