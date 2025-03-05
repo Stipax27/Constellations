@@ -74,6 +74,7 @@ void menuMonthprocessing()
     float centerX = window.width / 2;
     float centerY = window.height / 2;
     int numMonth = 12;
+    SIZE textSize;
 
     for (int i = 0; i < numMonth; i++)
     {
@@ -86,10 +87,8 @@ void menuMonthprocessing()
 
         
         std::string m = mounthToString((MonthSign)i);
-        SIZE textSize;
         GetTextExtentPoint32(window.context, m.c_str(), m.size(), &textSize);
 
-        
         int textWidth = textSize.cx;
         int textHeight = textSize.cy;
 
@@ -101,8 +100,8 @@ void menuMonthprocessing()
             if (GetAsyncKeyState(VK_LBUTTON))
             {
                 player_month = (MonthSign)(i);
-                monthIsSelected = true;
-                currentMonthIndex = i; 
+                gameState = gameState_::DaySelection;
+                currentMonthIndex = i;
             }
         }
         else
@@ -118,6 +117,10 @@ void menuMonthprocessing()
     
     std::string curentMounthstring = mounthToString(player_month);
     TextOutA(window.context, window.width * 5 / 8, 0, curentMounthstring.c_str(), curentMounthstring.size());
+
+    std::string b = "select your date of birth";
+    GetTextExtentPoint32(window.context, b.c_str(), b.size(), &textSize);
+    TextOutA(window.context, window.width / 2 - textSize.cx / 2, 100, b.c_str(), b.size());
 }
 void menuDayprocessing()
 {
@@ -159,8 +162,8 @@ void menuDayprocessing()
             if (GetAsyncKeyState(VK_LBUTTON))
             {
                 player_day = i+1;
-                dayIsSelected = true;
                 currentDayIndex = i;
+                gameState = gameState_::confirmSign;
             }
         }
         else
@@ -175,20 +178,98 @@ void menuDayprocessing()
         TextOutA(window.context, window.width * 5 / 8 + 100, 0, curentDaystring.c_str(), curentDaystring.size());
     }
 }
-void SelectDates()
+
+void menuConfirmationButton()
 {
-
-    menuMonthprocessing();
-
-    if (monthIsSelected)
+    if (!fontInit)
     {
-        menuDayprocessing();
+        hFont = CreateFont(70, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, "CALIBRI");
+        fontInit = true;
     }
 
+    SetTextColor(window.context, RGB(160, 160, 160));
+    SetBkColor(window.context, RGB(0, 0, 0));
+    SetBkMode(window.context, TRANSPARENT);
 
-    if (dayIsSelected && monthIsSelected)
+    std::string m = "Play";
+    SIZE textSize;
+    GetTextExtentPoint32(window.context, m.c_str(), m.size(), &textSize);
+
+    int textWidth = textSize.cx;
+    int textHeight = textSize.cy;
+
+    if (mouse.x > window.width / 2 - textWidth / 2 && mouse.x < window.width / 2 + textWidth / 2 &&
+        mouse.y > window.height / 1.2 - textHeight / 2 && mouse.y < window.height / 1.2 + textHeight / 2)
     {
-        player_sign = getZodiacSign(player_day, player_month);
+        SetTextColor(window.context, RGB(255, 0, 0));
+        if (GetAsyncKeyState(VK_LBUTTON))
+        {
+            gameState = gameState_::Fight;
+            startTime = timeGetTime();
+        }
     }
+    else
+    {
+        SetTextColor(window.context, RGB(160, 160, 160));
+    }
+
+    TextOutA(window.context, static_cast<int>(window.width / 2 - textWidth / 2), static_cast<int>(window.height / 1.2 - textHeight / 2), m.c_str(), m.size());
+}
+
+void StartMenu()
+{
+    if (!fontInit)
+    {
+        hFont = CreateFont(70, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, "CALIBRI");
+        fontInit = true;
+    }
+
+    SetTextColor(window.context, RGB(160, 160, 160));
+    SetBkColor(window.context, RGB(0, 0, 0));
+    SetBkMode(window.context, TRANSPARENT);
+
+    SIZE textSize;
+
+    std::string m = "Play";
+   
+    GetTextExtentPoint32(window.context, m.c_str(), m.size(), &textSize);
+
+    if (mouse.x > window.width / 2 - textSize.cx / 2 && mouse.x < window.width / 2 + textSize.cx / 2 &&
+        mouse.y > window.height / 2 - textSize.cy / 2 && mouse.y < window.height / 2 + textSize.cy / 2)
+    {
+        SetTextColor(window.context, RGB(255, 0, 0));
+        if (GetAsyncKeyState(VK_LBUTTON))
+        {
+            gameState = gameState_::MonthSelection;
+        }
+    }
+    else
+    {
+        SetTextColor(window.context, RGB(160, 160, 160));
+    }
+
+    TextOutA(window.context, static_cast<int>(window.width / 2 - textSize.cx / 2), static_cast<int>(window.height / 2 - textSize.cy / 2), m.c_str(), m.size());
+
+    std::string b = "Quit";
+    GetTextExtentPoint32(window.context, b.c_str(), b.size(), &textSize);
+
+    if (mouse.x > window.width / 2 - textSize.cx / 2 && mouse.x < window.width / 2 + textSize.cx / 2 &&
+        mouse.y > (window.height / 2) + 100 - textSize.cy / 2 && mouse.y < (window.height / 2) + 100 + textSize.cy / 2)
+    {
+        SetTextColor(window.context, RGB(255, 0, 0));
+        if (GetAsyncKeyState(VK_LBUTTON))
+        {
+            ExitProcess(0);
+        }
+    }
+    else
+    {
+        SetTextColor(window.context, RGB(160, 160, 160));
+    }
+
+    TextOutA(window.context, static_cast<int>(window.width / 2 - textSize.cx / 2), static_cast<int>((window.height / 2) +100 - textSize.cy / 2), b.c_str(), b.size());
+
 
 }
+
+
