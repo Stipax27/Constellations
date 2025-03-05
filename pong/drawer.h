@@ -4,13 +4,6 @@ namespace drawer
     void (*modelTransform)(point3d& p, Constellation& Constellation);
     void (*modelProject)(point3d& p);
 
-    void rotateworld(point3d& p)
-    {
-        rotateX(p, mouseAngle.y * 0.1);
-        rotateY(p, mouseAngle.x * 0.1);
-        //rotateZ(p, timeGetTime() * 0.01); // Êðó÷åíèå îáüåêòîâ.
-    }
-
     void placeConstToWorld(point3d& p, Constellation& Constellation)
     {
         move(p, 0, 0, 3000. / Constellation.scale);
@@ -25,11 +18,14 @@ namespace drawer
         rotateY(p, mouseAngle.x * 0.1);
     }
 
+    point3d offset;
+
     void placeConstToStartMenu(point3d& p, Constellation& Constellation)
     {
         p.x *= 200;
         p.y *= 200;
         p.z *= 200;
+        move(p, offset.x, offset.y, offset.z);
         float a = timeGetTime();
         rotateY(p, a * 0.1);
         move(p, 0, 0, 1300);
@@ -419,6 +415,12 @@ namespace drawer
         uiFunc = &menuUI;
         linksDivider = 15;
         if (gameState == gameState_::confirmSign) n = player_sign;
+        srand(n);
+        int amp = 100;
+        offset.x = (rand() % amp - amp/2)*0.5;
+        offset.y = (rand() % amp - amp/2)*2;
+        offset.z = (rand() % amp - amp/2)*0.5;
+
         drawÑonstellation(*starSet[n]);
     }
 
