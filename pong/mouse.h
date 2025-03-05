@@ -36,6 +36,7 @@ void selectWeapon()
         float dx = mouse.x - window.width / 2.;
         float dy = mouse.y - window.height / 2.;
         float lenght = sqrt(dx * dx + dy * dy);
+       
         if (lenght < circleRadius)
         {
             currentColorIndex = min(numColors * (atan2(dy, -dx) / (2. * PI) + .5), numColors - 1);// При нажатии ЛКМ Перекрас мыши в цвет который мы выбррали на Цвет. круге.

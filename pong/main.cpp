@@ -37,7 +37,7 @@ float camDist = 0;
 #include "MainWorld.h"
 #include "MainGame.h"
 #include "drawer.h"
-
+#include "Player.h"
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -61,6 +61,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         mouseInput();
         drawer::drawWorld();//рисуем фон, ракетку и шарик
+        Player USER; // —оздаем игрока
+        point3d p = { 1.0f, 2.0f, 3.0f }; // ѕример точки
+        drawInstruments(p, USER);
         BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно
         Sleep(16);//ждем 16 милисекунд (1/количество кадров в секунду)
     }
