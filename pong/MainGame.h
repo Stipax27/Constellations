@@ -15,49 +15,6 @@ void InitGame()
 HFONT hFont;
 bool fontInit = false;
 
-void ShowTXT()
-{
-    if (!fontInit)
-    {
-        hFont = CreateFont(70, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, "CALIBRI");
-        fontInit = true;
-    }
-
-    SetTextColor(window.context, RGB(160, 160, 160));
-    SetBkColor(window.context, RGB(0, 0, 0));
-    SetBkMode(window.context, TRANSPARENT);
-
-    int menu_x = 10;
-    int menu_y = 100;
-    int menu_lenght = 100;
-    for (int i = 0;i < 12;i++)
-    {
-    
-            int item_height = 40;
-            int menu_item_y = menu_y + i * item_height;
-
-          if (menu_x < mouse.x && mouse.x < menu_x+menu_lenght &&
-              mouse.y > menu_item_y && mouse.y < menu_item_y + item_height)
-          {
-              SetTextColor(window.context, RGB(100, 100, 100));
-              if (GetAsyncKeyState(VK_LBUTTON))
-              {
-                  player_sign = (ZodiacSign)(i+1);
-              }
-          }
-          else
-          {
-              SetTextColor(window.context, RGB(160, 160, 160));
-          }
-      
-        std::string m = zodiacSignToString((ZodiacSign)i);
-        TextOutA(window.context, menu_x, menu_y +i* item_height, m.c_str(), m.size());
-
-        std::string curentSignstring = zodiacSignToString(player_sign);
-        TextOutA(window.context, window.width * 5 / 6, 0, curentSignstring.c_str(), curentSignstring.size());
-    }
-}
-
 void menuMonthprocessing()
 {
     if (!fontInit)
@@ -74,6 +31,7 @@ void menuMonthprocessing()
     float centerX = window.width / 2;
     float centerY = window.height / 2;
     int numMonth = 12;
+    SIZE textSize;
 
     for (int i = 0; i < numMonth; i++)
     {
@@ -86,10 +44,8 @@ void menuMonthprocessing()
 
         
         std::string m = mounthToString((MonthSign)i);
-        SIZE textSize;
         GetTextExtentPoint32(window.context, m.c_str(), m.size(), &textSize);
 
-        
         int textWidth = textSize.cx;
         int textHeight = textSize.cy;
 
@@ -101,7 +57,7 @@ void menuMonthprocessing()
             if (GetAsyncKeyState(VK_LBUTTON))
             {
                 player_month = (MonthSign)(i);
-                monthIsSelected = true;
+                gameState = gameState_::DaySelection;
                 currentMonthIndex = i;
             }
         }
@@ -118,6 +74,10 @@ void menuMonthprocessing()
     
     std::string curentMounthstring = mounthToString(player_month);
     TextOutA(window.context, window.width * 5 / 8, 0, curentMounthstring.c_str(), curentMounthstring.size());
+
+    std::string b = "select your date of birth";
+    GetTextExtentPoint32(window.context, b.c_str(), b.size(), &textSize);
+    TextOutA(window.context, window.width / 2 - textSize.cx / 2, 100, b.c_str(), b.size());
 }
 void menuDayprocessing()
 {
@@ -159,8 +119,8 @@ void menuDayprocessing()
             if (GetAsyncKeyState(VK_LBUTTON))
             {
                 player_day = i+1;
-                dayIsSelected = true;
                 currentDayIndex = i;
+                gameState = gameState_::confirmSign;
             }
         }
         else
@@ -196,12 +156,13 @@ void menuConfirmationButton()
     int textHeight = textSize.cy;
 
     if (mouse.x > window.width / 2 - textWidth / 2 && mouse.x < window.width / 2 + textWidth / 2 &&
-        mouse.y > window.height / 2 - textHeight / 2 && mouse.y < window.height / 2 + textHeight / 2)
+        mouse.y > window.height / 1.2 - textHeight / 2 && mouse.y < window.height / 1.2 + textHeight / 2)
     {
         SetTextColor(window.context, RGB(255, 0, 0));
         if (GetAsyncKeyState(VK_LBUTTON))
         {
-            confirm = true;
+            gameState = gameState_::Fight;
+            startTime = timeGetTime();
         }
     }
     else
@@ -209,24 +170,63 @@ void menuConfirmationButton()
         SetTextColor(window.context, RGB(160, 160, 160));
     }
 
-    TextOutA(window.context, static_cast<int>(window.width / 2 - textWidth / 2), static_cast<int>(window.height / 2 - textHeight / 2), m.c_str(), m.size());
+    TextOutA(window.context, static_cast<int>(window.width / 2 - textWidth / 2), static_cast<int>(window.height / 1.2 - textHeight / 2), m.c_str(), m.size());
 }
 
-void SelectDates()
+void StartMenu()
 {
-
-    menuMonthprocessing();
-
-    if (monthIsSelected)
+    if (!fontInit)
     {
-        menuDayprocessing();
+        hFont = CreateFont(70, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, "CALIBRI");
+        fontInit = true;
     }
 
+    SetTextColor(window.context, RGB(160, 160, 160));
+    SetBkColor(window.context, RGB(0, 0, 0));
+    SetBkMode(window.context, TRANSPARENT);
 
-    if (dayIsSelected && monthIsSelected)
+    SIZE textSize;
+
+    std::string m = "Play";
+   
+    GetTextExtentPoint32(window.context, m.c_str(), m.size(), &textSize);
+
+    if (mouse.x > window.width / 2 - textSize.cx / 2 && mouse.x < window.width / 2 + textSize.cx / 2 &&
+        mouse.y > window.height / 2 - textSize.cy / 2 && mouse.y < window.height / 2 + textSize.cy / 2)
     {
-        player_sign = getZodiacSign(player_day, player_month);
-        menuConfirmationButton();
+        SetTextColor(window.context, RGB(255, 0, 0));
+        if (GetAsyncKeyState(VK_LBUTTON))
+        {
+            gameState = gameState_::MonthSelection;
+        }
     }
+    else
+    {
+        SetTextColor(window.context, RGB(160, 160, 160));
+    }
+
+    TextOutA(window.context, static_cast<int>(window.width / 2 - textSize.cx / 2), static_cast<int>(window.height / 2 - textSize.cy / 2), m.c_str(), m.size());
+
+    std::string b = "Quit";
+    GetTextExtentPoint32(window.context, b.c_str(), b.size(), &textSize);
+
+    if (mouse.x > window.width / 2 - textSize.cx / 2 && mouse.x < window.width / 2 + textSize.cx / 2 &&
+        mouse.y > (window.height / 2) + 100 - textSize.cy / 2 && mouse.y < (window.height / 2) + 100 + textSize.cy / 2)
+    {
+        SetTextColor(window.context, RGB(255, 0, 0));
+        if (GetAsyncKeyState(VK_LBUTTON))
+        {
+            ExitProcess(0);
+        }
+    }
+    else
+    {
+        SetTextColor(window.context, RGB(160, 160, 160));
+    }
+
+    TextOutA(window.context, static_cast<int>(window.width / 2 - textSize.cx / 2), static_cast<int>((window.height / 2) +100 - textSize.cy / 2), b.c_str(), b.size());
+
 
 }
+
+
