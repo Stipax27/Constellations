@@ -245,7 +245,7 @@ namespace drawer
         DeleteObject(brush2);
     }
 
-        void draw—onstellation(Constellation& Constellation)
+    void draw—onstellation(Constellation& Constellation)
     {
         drawLinks(Constellation);
         drawStarPulse(Constellation);
@@ -412,6 +412,18 @@ namespace drawer
         //draw—onstellation(morphArray, Morp_indices, Morp_health); ŒÚÍÎ˛˜ÂÌÓ
     }
 
+    void drawPlayer—onstellationToMenu()
+    {
+        startTime = timeGetTime();
+        int n = (timeGetTime() / 1000) % starSet.size();
+        modelTransform = &placeConstToStartMenu;
+        modelProject = &menuProject;
+        uiFunc = &menuUI;
+        linksDivider = 15;
+        if (gameState == gameState_::confirmSign) n = player_sign;
+        draw—onstellation(*starSet[n]);
+    }
+
     void drawWorld()
     {
         
@@ -425,67 +437,48 @@ namespace drawer
                 break;
 
             case gameState_::MonthSelection:
+                drawPlayer—onstellationToMenu();
                 menuMonthprocessing();
                 break;
 
             case gameState_::DaySelection:
+                drawPlayer—onstellationToMenu();
                 menuMonthprocessing();
                 menuDayprocessing();
                 break;
 
             case gameState_::confirmSign:
+                drawPlayer—onstellationToMenu();
                 menuMonthprocessing();
                 menuDayprocessing();
                 menuConfirmationButton();
                 break;
 
             case gameState_::Fight:
+                modelTransform = &placeToWorld;
+                modelProject = &fightProject;
+                uiFunc = &starUI;
+                linksDivider = 50;
                 drawStarField();
-                draw—onstellation(Aries);
-                drawColorCircle();
+
+                modelTransform = &placeConstToWorld;
+
+                for (int i = 0;i < starSet.size();i++)
+                {
+                    draw—onstellation(*starSet[i]);
+                }
+
                 std::string curentSignstring = zodiacSignToString(player_sign);
                 TextOutA(window.context, window.width * 5 / 6, 0, curentSignstring.c_str(), curentSignstring.size());
+
+                drawColorCircle();
+
                 break;
 
         }
 
         drawGameCursor();
 
-
-        draw—onstellation(Aries);
-        //draw—onstellation(UrsaMajorCopy, UrsaMajor_indices, UrsaMajor_health);
-        //draw—onstellation(CancerCopy, Cancer_indices, Cancer_health);
-        //draw—onstellation(TaurusCopy, Taurus_indices, Taurus_health);
-        //draw—onstellation(LeoCopy, Leo_indices, Leo_health);
-        //draw—onstellation(GeminiCopy, Gemini_indices, Gemini_health);
-        
-        //draw—onstellation(LibraCopy, Libra_indices, Libra_health);
-        //drawHero—onstellation(LibraHeroCopy, Libra_indices, Libra_health);
-        //draw—onstellation(Libra, Libra_indices, Libra_health);
-
-        //draw—onstellation(VirgoCopy, Virgo_indices, Virgo_health);
-        //draw—onstellation(ScorpiusCopy, Scorpius_indices, Scorpius_health);
-        //draw—onstellation(SagittariusCopy, Sagittarius_indices, Sagittarius_health);
-        //draw—onstellation(CapricornusCopy, Capricornus_indices, Capricornus_health);
-        //draw—onstellation(AquariusCopy,Aquarius_indices, Aquarius_health);
-        //draw—onstellation(PiscesCopy, Pisces_indices, Pisces_health);
-
-        //morphWepon(PiscesCopy, Pisces_indices, AquariusCopy, Aquarius_indices, MorphArray, Morp_indices, Morp_health); ŒÚÍÎ˛˜ÂÌÓ
-
-        drawColorCircle();
-
-        std::string curentSignstring = zodiacSignToString(player_sign);
-        TextOutA(window.context, window.width * 5 / 6, 0, curentSignstring.c_str(), curentSignstring.size());
-        }
-        else
-        {
-            SelectDates();
-            startTime = timeGetTime();
-            int i = 0;
-            //drawer::drawHero—onstellation(constStarArray[i], constIndArray[i], constHealthArray[i]); ŒÚÍÎ˛˜ÂÌÓ
-        }
-
-        drawGameCursor();*/
     }
 }
 
