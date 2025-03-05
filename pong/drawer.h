@@ -1,9 +1,8 @@
 namespace drawer
 {
-
-    //void (*modelTransform)(point3d& p);
-
+        
     void (*modelTransform)(point3d& p, Constellation& Constellation);
+    void (*modelProject)(point3d& p);
 
     void rotateworld(point3d& p)
     {
@@ -28,12 +27,12 @@ namespace drawer
 
     void placeConstToStartMenu(point3d& p, Constellation& Constellation)
     {
-        p.x *= 300;
-        p.y *= 300;
-        p.z *= 300;
+        p.x *= 200;
+        p.y *= 200;
+        p.z *= 200;
         float a = timeGetTime();
         rotateY(p, a * 0.1);
-        move(p, 0, 0, 100);
+        move(p, 0, 0, 1300);
     }
 
     void placeToWorld(point3d& p, Constellation& Constellation)
@@ -42,7 +41,7 @@ namespace drawer
         rotateY(p, mouseAngle.x * 0.1);
     }
     
-    void project(point3d& p)
+    void fightProject(point3d& p)
     {
         int currentTime = timeGetTime() - startTime;
         float startCamDist = 100;
@@ -56,6 +55,15 @@ namespace drawer
         float x = window.width / 2. + p.x * camDist / (p.z + camDist);
         float y = window.height / 2. + p.y * camDist / (p.z + camDist);
 
+        p.x = x;
+        p.y = y;
+    }
+
+    void menuProject(point3d& p)
+    {
+        float camDist = 30000;
+        float x = window.width / 2. + p.x * camDist / (p.z + camDist);
+        float y = window.height / 2. + p.y * camDist / (p.z + camDist);
         p.x = x;
         p.y = y;
     }
@@ -115,7 +123,7 @@ namespace drawer
             point.y = p1.y + stepY * (float)i;
             point.z = p1.z + stepZ * (float)i;
 
-            project(point);
+            modelProject(point);
 
             float sz = 1 + .5 * sinf(i + timeGetTime() * .01);
             drawPoint(point, sz);
@@ -123,6 +131,8 @@ namespace drawer
         }
     }
     //void drawLinks(std::vector <point3d>& starArray, std::vector<std::vector<float>> starEdges, std::vector <float>& starHealth)
+
+    float linksDivider = 25;
 
     void drawLinks(Constellation& Constellation)
     {
@@ -155,14 +165,50 @@ namespace drawer
                 float dy = point2.y - point1.y;
                 float dz = point2.z - point1.z;
                 float length = sqrt(dx * dx + dy * dy + dz * dz);
-                int x = static_cast<int>(length) / 50;
+                int x = static_cast<int>(length) / linksDivider;
                 drawLine(point1, point2, x);// Рисование звёздных линий созвездия.
             }
         }
     }
     //void drawStarPulse(std::vector <point3d>& starArray, std::vector <float>& starHealth)
 
-    
+    HBRUSH brush;
+    HBRUSH brush2;
+    float finalStarRad = 0;
+
+    void starUI(point3d& point, Constellation& Constellation, int i)
+    {
+        std::vector <float>& starHealth = Constellation.starsHealth;
+
+        float dx = point.x - mouse.x;
+        float dy = point.y - mouse.y;
+        float lenght = sqrt(dx * dx + dy * dy);
+
+        float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
+
+
+        if (GetAsyncKeyState(VK_LBUTTON))
+        {
+            if (lenght < starSize)
+            {
+                SelectObject(window.context, brush2);
+                starHealth[i] -= .1;
+            }
+        }
+        else
+        {
+            SelectObject(window.context, brush);
+        }
+
+        finalStarRad = starSize * starHealth[i] + rad * 15;
+    }
+
+    void menuUI(point3d& point, Constellation& Constellation, int i)
+    {
+        finalStarRad = 5;
+    }
+
+    void (*uiFunc)(point3d& point, Constellation& Constellation, int i);
 
     void drawStarPulse(Constellation& Constellation)
     {
@@ -171,8 +217,8 @@ namespace drawer
         std::vector <float>& starHealth = Constellation.starsHealth;
 
         int starsCount = starArray.size();
-        HBRUSH brush = CreateSolidBrush(RGB(0, 191, 255));
-        HBRUSH brush2 = CreateSolidBrush(RGB(255, 0, 0));
+        brush = CreateSolidBrush(RGB(0, 191, 255));
+        brush2 = CreateSolidBrush(RGB(255, 0, 0));
         SelectObject(window.context, brush);
         for (int i = 0; i < starsCount; i++)
         {
@@ -183,30 +229,15 @@ namespace drawer
 
             float a = timeGetTime() * .01;
             modelTransform(point, Constellation);
-            project(point);
+            modelProject(point);
 
-            float dx = point.x - mouse.x;
-            float dy = point.y - mouse.y;
-            float lenght = sqrt(dx * dx + dy * dy);
+            // Пульсирование Звёзд при наведение мыши.
+            finalStarRad = 1;
+            uiFunc(point, Constellation, i);
 
-            float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
-
-            SelectObject(window.context, brush);// Пульсирование Звёзд при наведение мыши.
-
-
-            if (GetAsyncKeyState(VK_LBUTTON))
+            if (finalStarRad > 0)
             {
-                if (lenght < starSize)
-                {
-                    SelectObject(window.context, brush2);
-                    starHealth[i] -= .1;
-                }
-            }
-
-            float sz = starSize * starHealth[i] + rad * 15;
-            if (starHealth[i] > 0) //Атака по созвездиям уменьшает звёзды. 
-            {
-                drawPoint(point, sz);
+                drawPoint(point, finalStarRad);
             }
 
         }
@@ -214,110 +245,23 @@ namespace drawer
         DeleteObject(brush2);
     }
 
-    ///
-    void drawHeroLinks(std::vector <point3d>& starArray, std::vector<std::vector<float>>& starEdges, std::vector <float>& starHealth)
-    {
-
-        int starsCount = starArray.size();
-        for (int i = 0; i < starsCount - 1; i++)
-        {
-            point3d point1, point2;
-            point1.x = starArray[starEdges[i][0]].x;
-            point1.y = starArray[starEdges[i][0]].y;
-            point1.z = starArray[starEdges[i][0]].z;
-
-            point2.x = starArray[starEdges[i][1]].x;
-            point2.y = starArray[starEdges[i][1]].y;
-            point2.z = starArray[starEdges[i][1]].z;
-
-            float a = timeGetTime() * .01;
-            //rotateworld(point1);
-            //rotateworld(point2);
-            projectSingleConst(point1);
-            projectSingleConst(point2);
-
-            if (starHealth[i] > 0 && starHealth[i + 1] > 0)
-            {
-
-                float dx = point2.x - point1.x;
-                float dy = point2.y - point1.y;
-                float dz = point2.z - point1.z;
-                float length = sqrt(dx * dx + dy * dy + dz * dz);
-                int x = static_cast<int>(length*10) / 50;
-                drawLine(point1, point2, x);// Рисование звёздных линий созвездия.
-            }
-        }
-    }
-
-    void drawHeroStarPulse(std::vector <point3d>& starArray, std::vector <float>& starHealth)
-    {
-        int starsCount = starArray.size();
-        HBRUSH brush = CreateSolidBrush(RGB(0, 191, 255));
-        HBRUSH brush2 = CreateSolidBrush(RGB(255, 0, 0));
-        SelectObject(window.context, brush);
-        for (int i = 0; i < starsCount; i++)
-        {
-            point3d point;
-            point.x = starArray[i].x;
-            point.y = starArray[i].y;
-            point.z = starArray[i].z;
-
-            float a = timeGetTime() * .01;
-            rotateY(point, a);
-            projectSingleConst(point);
-
-            float dx = point.x - mouse.x;
-            float dy = point.y - mouse.y;
-            float lenght = sqrt(dx * dx + dy * dy);
-
-            float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
-
-            SelectObject(window.context, brush);// Пульсирование Звёзд при наведение мыши.
-
-            if (GetAsyncKeyState(VK_LBUTTON))
-            {
-                if (lenght < starSize)
-                {
-                    SelectObject(window.context, brush2);
-                    starHealth[i] -= .1;
-                }
-            }
-
-            float sz = starSize * starHealth[i] + rad * 15;
-            if (starHealth[i] > 0) //Атака по созвездиям уменьшает звёзды. 
-            {
-                drawPoint(point, sz);
-            }
-
-        }
-        DeleteObject(brush);
-        DeleteObject(brush2);
-    }
-    ///
-
-    //void drawСonstellation(std::vector <point3d>& starArray, std::vector<std::vector<float>>& starEdges, std::vector <float>& starHealth)
-    void drawСonstellation(Constellation& Constellation)
+        void drawСonstellation(Constellation& Constellation)
     {
         drawLinks(Constellation);
         drawStarPulse(Constellation);
     }
 
-    void drawHeroСonstellation(std::vector <point3d>& starArray, std::vector<std::vector<float>> &starEdges, std::vector <float>& starHealth)
-    {
-        drawHeroLinks(starArray, starEdges, starHealth);
-        drawHeroStarPulse(starArray, starHealth);
-    }
-
+   
     void drawStarField()
     {
         srand(10);
-        for (int i = 0; i < 500; i++)
+        for (int i = 0; i < 2000; i++)
         {
             point3d point;
             genRandSphere(point);
             modelTransform(point,Aries);
-            project(point);
-            drawPoint(point);
+            modelProject(point);
+            drawPoint(point,.5);
             // Звёзды на фоне их кол-во. и Кадр остановки.
         }
     }
@@ -467,6 +411,7 @@ namespace drawer
         
         //drawСonstellation(morphArray, Morp_indices, Morp_health); Отключено
     }
+
     void drawWorld()
     {
         
@@ -475,6 +420,9 @@ namespace drawer
         if (confirm)
         {
             modelTransform = &placeToWorld;
+            modelProject = &fightProject;
+            uiFunc = &starUI;
+            linksDivider = 50;
             drawStarField();
 
             modelTransform = &placeConstToWorld;
@@ -498,6 +446,10 @@ namespace drawer
             startTime = timeGetTime();
             int n = (timeGetTime() / 1000) % starSet.size();
             modelTransform = &placeConstToStartMenu;
+            modelProject = &menuProject;
+            uiFunc = &menuUI;
+            linksDivider = 15;
+            if (dayIsSelected && monthIsSelected) n = player_sign;
             drawСonstellation(*starSet[n]);
             //drawer::drawHeroСonstellation(constStarArray[i], constIndArray[i], constHealthArray[i]); Отключено
         }
