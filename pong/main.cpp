@@ -10,6 +10,8 @@ const float PI = 3.1415926535897;
 #include <iostream>
 #include <string>
 #include <cmath>
+#include <functional>
+#include <array>
 
 HINSTANCE hInst;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -61,9 +63,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         mouseInput();
         drawer::drawWorld();//рисуем фон, ракетку и шарик
-        Player USER; // —оздаем игрока
-        point3d p = { 1.0f, 2.0f, 3.0f }; // ѕример точки
-        drawInstruments(p, USER);
+        Player user;
+        drawInstruments(user);
         BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно
         Sleep(16);//ждем 16 милисекунд (1/количество кадров в секунду)
     }

@@ -15,7 +15,12 @@ enum TimeWorld
 
 enum Colors
 {
-	Red, orange, yellow, green, blue, indigo, violet
+	Red, Orange, Yellow, Green, Blue, Indigo, Violet
+};
+
+enum Inventory
+{
+	gold, emotions, Stardust, Potion, 
 };
 
 class Player
@@ -23,13 +28,19 @@ class Player
 public:
 	int Weapon;
 	int Trap;
+	int Color;
+	int Hourglass;
+	int Inventory;
 
 
 
-	Player() : Trap(), Weapon() {
+	Player() : Trap(), Weapon(), Color(), Hourglass(), Inventory() {
+
 		std::cin >> this->Trap;
 		std::cin >> this->Weapon;
-
+		std::cin >> this->Color;
+		std::cin >> this->Hourglass;
+		std::cin >> this->Inventory;
 	}
 
 	Player(int a) : Weapon(a) {}
@@ -39,51 +50,85 @@ public:
 		std::cout << this->Weapon;
 	}
 
-	void Elements() {
-		point3d p = { 0.0f, 0.0f, 0.0f };
-		switch (this->Weapon)
-		{
-		case Fire:
-			 drawer::drawPoint(p);
-			break;
+	void drawElement() {
+		using FuncPtr = void(*)();
+		std::array<FuncPtr, 4> elementFunctions = {
+			[]() { std::cout << "Sword\n"; }, // Fire
+			[]() { std::cout << "Shield\n"; }, // Earth
+			[]() { std::cout << "Bow\n"; }, // Air
+			[]() { std::cout << "Book\n"; }  // Water
+		};
 
-		case Earth:
-			std::cout << "EARTH\n";
-			break;
-
-		case Air:
-			std::cout << "AIR\n";
-			break;
-
-		case Water:
-			std::cout << "WATER\n";
-			break;
+		if (this->Weapon >= 0 && this->Weapon < elementFunctions.size()) {
+			elementFunctions[this->Weapon]();
 		}
 	}
 
+	void drawTrap() {
+		using FuncPtr = void(*)();
+		std::array<FuncPtr, 3> trapFunctions = {
+			[]() { std::cout << "BlackHole\n"; }, // BlackHole
+			[]() { std::cout << "Quasar\n"; },    // Quasar
+			[]() { std::cout << "Nebula\n"; }      // Nebula Туманность
+		};
 
-	void Trups() {
-		switch (this->Trap)
-		{
-		case 0:
-			std::cout << "BlackHole\n";
-			break;
+		if (this->Trap >= 0 && this->Trap < trapFunctions.size()) {
+			trapFunctions[this->Trap]();
+		}
+	}
 
-		case 1:
-			std::cout << "Quasar\n";
-			break;
+	void drawColor() {
+		using FuncPtr = void(*)();
+		std::array<FuncPtr, 7> colorFunctions = {
+			[]() { std::cout << "Red\n"; },
+			[]() { std::cout << "Orange\n"; },
+			[]() { std::cout << "Yellow\n"; },
+			[]() { std::cout << "Green\n"; },
+			[]() { std::cout << "Blue\n"; },
+			[]() { std::cout << "Indigo\n"; },
+			[]() { std::cout << "Violet\n"; }
+		};
 
-		case 2:
-			std::cout << "Nebula\n";
-			break;
+		if (this->Color >= 0 && this->Color < colorFunctions.size()) {
+			colorFunctions[this->Color]();
+		}
+	}
+
+	void drawTimeWorld() {
+		using FuncPtr = void(*)();
+		std::array<FuncPtr, 4> timeFunctions = {
+			[]() { std::cout << "The 1st epoch\n"; },
+			[]() { std::cout << "The 2nd epoch\n"; },
+			[]() { std::cout << "The 3rd epoch\n"; },
+			[]() { std::cout << "The 4th epoch\n"; },
+		};
+
+		if (this->Hourglass >= 0 && this->Hourglass < timeFunctions.size()) {
+			timeFunctions[this->Hourglass]();
+		}
+	}
+
+	void drawInventory() {
+		using FuncPtr = void(*)();
+		std::array<FuncPtr, 4> inventoryFunctions = {
+			[]() { std::cout << "golden sparkles\n"; },
+			[]() { std::cout << "Skilset emotions\n"; },
+			[]() { std::cout << "Stardust baff emotions\n"; },
+			[]() { std::cout << "Potion(atk,hp,time)\n"; },
+		};
+
+		if (this->Inventory >= 0 && this->Inventory < inventoryFunctions.size()) {
+			inventoryFunctions[this->Inventory]();
 		}
 	}
 
 };
 
 
-void drowInstruments(point3d& p, Player& USER)
-{
-	USER.Elements();
-	USER.Trups();
+void drawInstruments(Player& USER) {
+	USER.drawElement();
+	USER.drawTrap();
+	USER.drawColor();
+	USER.drawTimeWorld();
+	USER.drawInventory();
 }
