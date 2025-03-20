@@ -121,6 +121,8 @@ void menuDayprocessing()
                 player_day = i+1;
                 currentDayIndex = i;
                 gameState = gameState_::confirmSign;
+
+                player_sign = getZodiacSign(player_day, player_month);
             }
         }
         else
@@ -161,7 +163,7 @@ void menuConfirmationButton()
         SetTextColor(window.context, RGB(255, 0, 0));
         if (GetAsyncKeyState(VK_LBUTTON))
         {
-            gameState = gameState_::Fight;
+            gameState = gameState_::selectEnemy;
             startTime = timeGetTime();
         }
     }
@@ -228,5 +230,27 @@ void StartMenu()
 
 
 }
+void positionCharacters(std::vector<Constellation>& constellation)
+{
+    int rad = 400;
+    int battlesize = rad * 2 + 1;
 
+    for (int i = 0; i < battlesize; ++i)
+    {
+        float angle = (2 * PI / battlesize) * i;
+       // std::vector<Constellation>& Aries = static_cast<int>(rad + rad * cos(angle));
+       // std::vector<Constellation>& Aries = static_cast<int>(rad + rad * sin(angle));
+    }
+}
+
+void timer()
+{
+    
+}
+
+void Battlefield()
+{
+ 
+
+}
 

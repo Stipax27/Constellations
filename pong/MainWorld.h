@@ -417,16 +417,18 @@ enum MonthSign {
 };
 
 enum gameState_ {
-    MainMenu, MonthSelection, DaySelection, confirmSign, Fight
+    MainMenu, MonthSelection, DaySelection, confirmSign, selectEnemy, Fight
 };
 
-gameState_  gameState = gameState_::MainMenu;
+gameState_  gameState = gameState_::selectEnemy;
+Constellation* currentEnemy = &Aries;
+ZodiacSign currentEnemyID = ZodiacSign::ARIES;
 
 MonthSign player_month = MonthSign::January;
 
 int player_day = 1;
 
-ZodiacSign player_sign = ZodiacSign::ARIES;
+ZodiacSign player_sign = ZodiacSign::SCORPIO;
 
 ZodiacSign getZodiacSign(int day, int month) {
     if ((month == March && day >= 21)       || (month == April && day <= 19))       return ARIES;

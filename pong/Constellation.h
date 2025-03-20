@@ -1,5 +1,7 @@
 //#include "Windows.h"
 
+int constellationsCounter = 0;
+
 class Constellation {
 public:
 
@@ -9,6 +11,8 @@ public:
 
     std::vector<point3d> starsRenderedCords = {};
     float scale = 1000;
+    int ID;
+    std::string name;
 
     point3d angle;
     float distance;
@@ -18,6 +22,9 @@ public:
         starsCords = _starsCords;
         starsHealth = _starsHealth;
         constellationEdges = _constellationEdges;
+        ID = constellationsCounter;
+        //name = zodiacSignToString((ZodiacSign)ID);
+        constellationsCounter++;
     }
 
     void setStarsRenderedCords(float angleX, float angleY, float angleZ) // Подготавливаем данные[starArrayRendered] для отрисовки созвездия

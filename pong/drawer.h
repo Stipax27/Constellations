@@ -40,6 +40,23 @@ namespace drawer
         rotateX(p, mouseAngle.y * 0.1);
         rotateY(p, mouseAngle.x * 0.1);
     }
+
+    void placeHeroToWorld(point3d& p, Constellation& Constellation)
+    {
+        move(p, 0, 0, 0. / Constellation.scale);
+        p.x *= .13;
+        p.y *= .13;
+        p.z *= .13;
+        //rotateX(p, Constellation.angle.x);
+        //rotateY(p, Constellation.angle.y);
+        //rotateZ(p, Constellation.angle.z);
+        p.x *= Constellation.scale;
+        p.y *= Constellation.scale;
+        p.z *= Constellation.scale;
+
+        rotateX(p, mouseAngle.y * 0.1);
+        rotateY(p, mouseAngle.x * 0.1);
+    }
     
     void fightProject(point3d& p)
     {
@@ -92,10 +109,11 @@ namespace drawer
         rotateY(p, angleY); // Ñôåðîîáðàçíîå ïðîñòðàíñòâî.
     }
 
+    float nearPlaneClip = 0;
 
     void drawPoint(point3d& p, float sz = 2)
     {
-        if (p.z < 0) return;
+        if (p.z < nearPlaneClip) return;
 
         Ellipse(window.context,
             p.x - sz,
@@ -174,6 +192,35 @@ namespace drawer
     HBRUSH brush2;
     float finalStarRad = 0;
 
+    void constSelectUI(point3d& point, Constellation& Constellation, int i)
+    {
+        std::vector <float>& starHealth = Constellation.starsHealth;
+
+        float dx = point.x - mouse.x;
+        float dy = point.y - mouse.y;
+        float lenght = sqrt(dx * dx + dy * dy);
+
+        float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
+
+
+        if (GetAsyncKeyState(VK_LBUTTON))
+        {
+            if (lenght < starSize)
+            {
+                SelectObject(window.context, brush2);
+                gameState = gameState_::Fight;
+                currentEnemy = &Constellation;
+                currentEnemyID = (ZodiacSign)(currentEnemy->ID);
+            }
+        }
+        else
+        {
+            SelectObject(window.context, brush);
+        }
+
+        finalStarRad = starSize * starHealth[i] + rad * 15;
+    }
+
     void starUI(point3d& point, Constellation& Constellation, int i)
     {
         std::vector <float>& starHealth = Constellation.starsHealth;
@@ -199,6 +246,32 @@ namespace drawer
         }
 
         finalStarRad = starSize * starHealth[i] + rad * 15;
+    }
+
+    void heroUI(point3d& point, Constellation& Constellation, int i)
+    {
+        std::vector <float>& starHealth = Constellation.starsHealth;
+
+        float dx = point.x - mouse.x;
+        float dy = point.y - mouse.y;
+        float lenght = sqrt(dx * dx + dy * dy);
+
+        float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
+
+
+        if (GetAsyncKeyState(VK_LBUTTON))
+        {
+            if (lenght < starSize)
+            {
+                SelectObject(window.context, brush2);
+            }
+        }
+        else
+        {
+            SelectObject(window.context, brush);
+        }
+
+        finalStarRad = 3 * starHealth[i] + rad * 15;
     }
 
     void menuUI(point3d& point, Constellation& Constellation, int i)
@@ -419,14 +492,15 @@ namespace drawer
         uiFunc = &menuUI;
         linksDivider = 15;
         if (gameState == gameState_::confirmSign) n = player_sign;
-        drawÑonstellation(*starSet[n]);
+        //drawÑonstellation(*starSet[n]);
+        drawÑonstellation(*starSet[player_sign]);
     }
 
     void drawWorld()
     {
         
         drawBack();
-
+        nearPlaneClip = 0;
 
         switch (gameState)
         {
@@ -435,12 +509,12 @@ namespace drawer
                 break;
 
             case gameState_::MonthSelection:
-                drawPlayerÑonstellationToMenu();
+                //drawPlayerÑonstellationToMenu();
                 menuMonthprocessing();
                 break;
 
             case gameState_::DaySelection:
-                drawPlayerÑonstellationToMenu();
+                //drawPlayerÑonstellationToMenu();
                 menuMonthprocessing();
                 menuDayprocessing();
                 break;
@@ -452,10 +526,11 @@ namespace drawer
                 menuConfirmationButton();
                 break;
 
-            case gameState_::Fight:
+            case gameState_::selectEnemy:
+            {
                 modelTransform = &placeToWorld;
                 modelProject = &fightProject;
-                uiFunc = &starUI;
+                uiFunc = &constSelectUI;
                 linksDivider = 50;
                 drawStarField();
 
@@ -467,11 +542,46 @@ namespace drawer
                 }
 
                 std::string curentSignstring = zodiacSignToString(player_sign);
-                TextOutA(window.context, window.width * 5 / 6, 0, curentSignstring.c_str(), curentSignstring.size());
+                TextOutA(window.context, window.width * 5 / 6, window.height-window.height/20., curentSignstring.c_str(), curentSignstring.size());
 
                 drawColorCircle();
 
                 break;
+            }
+
+            case gameState_::Fight:
+            {
+                modelTransform = &placeToWorld;
+                modelProject = &fightProject;
+                uiFunc = &starUI;
+                linksDivider = 50;
+                drawStarField();
+
+                modelTransform = &placeConstToWorld;
+
+
+                //drawÑonstellation(*currentEnemy);
+                nearPlaneClip = 0;
+                drawÑonstellation(*starSet[currentEnemyID]);
+
+                linksDivider = 15;
+                modelTransform = &placeHeroToWorld;
+                uiFunc = &heroUI;
+                nearPlaneClip = -2000;
+                drawÑonstellation(*starSet[player_sign]);
+
+
+                std::string curentSignstring = zodiacSignToString(currentEnemyID);
+                TextOutA(window.context, window.width / 2, window.height / 20., curentSignstring.c_str(), curentSignstring.size());
+
+                curentSignstring = zodiacSignToString(player_sign);
+                TextOutA(window.context, window.width / 2, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());
+
+
+                drawColorCircle();
+
+                break;
+            }
 
         }
 
