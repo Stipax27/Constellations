@@ -420,7 +420,7 @@ enum gameState_ {
     MainMenu, MonthSelection, DaySelection, confirmSign, Fight, dialogueScene
 };
 
-gameState_  gameState = gameState_::MainMenu;
+gameState_  gameState = gameState_::dialogueScene;
 
 MonthSign player_month = MonthSign::January;
 

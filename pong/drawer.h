@@ -454,6 +454,10 @@ namespace drawer
                 menuConfirmationButton();
                 break;
 
+            case gameState_::dialogueScene:
+                Dialogue();
+                break;
+
             case gameState_::Fight:
                 modelTransform = &placeToWorld;
                 modelProject = &fightProject;
@@ -472,10 +476,7 @@ namespace drawer
                 TextOutA(window.context, window.width * 5 / 6, 0, curentSignstring.c_str(), curentSignstring.size());
 
                 drawColorCircle();
-
                 break;
-
-            //case gameState_::dialogueScene:
 
         }
 

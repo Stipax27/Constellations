@@ -206,6 +206,50 @@ void StartMenu()
 
 void Dialogue()
 {
+    //MenuDrawer();
+    //
+    //Dialog dialog("Привет мир");
+    //SIZE textSize;
+    //GetTextExtentPoint32(window.context, d.c_str(), d.size(), &textSize);
+    //drawMenuItem(window.width / 2, window.height / 4, d);
+
+    /*std::string b = "I don't want meow!";
+    GetTextExtentPoint32(window.context, b.c_str(), b.size(), &textSize);
+
+    float textX = window.width / 2;
+    float textY = window.height / 2 - textSize.cy / 2 + 50;
+
+    if (drawMenuItem(textX, textY, b))
+    {
+        SetTextColor(window.context, RGB(255, 0, 0));
+        if (GetAsyncKeyState(VK_LBUTTON))
+        {
+            gameState = gameState_::Fight;
+            startTime = timeGetTime();
+        }
+    }
+    else
+    {
+        SetTextColor(window.context, RGB(160, 160, 160));
+    }
+    std::string c = "I like this meow-story!";
+    GetTextExtentPoint32(window.context, c.c_str(), c.size(), &textSize);
+
+    float textX1 = window.width / 2;
+    float textY1 = window.height / 2 - textSize.cy / 2 + 100 + textSize.cy;
+
+    if (drawMenuItem(textX1, textY1, c))
+    {
+        SetTextColor(window.context, RGB(255, 0, 0));
+        if (GetAsyncKeyState(VK_LBUTTON))
+        {
+            
+        }
+    }
+    else
+    {
+        SetTextColor(window.context, RGB(160, 160, 160));
+    }*/
 
 }
 
