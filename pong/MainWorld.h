@@ -417,10 +417,10 @@ enum MonthSign {
 };
 
 enum gameState_ {
-    MainMenu, MonthSelection, DaySelection, confirmSign, Fight
+    MainMenu, MonthSelection, DaySelection, confirmSign, Fight, dialogueScene
 };
 
-gameState_  gameState = gameState_::Fight;
+gameState_  gameState = gameState_::MainMenu;
 
 MonthSign player_month = MonthSign::January;
 

@@ -165,13 +165,13 @@ void StartMenu()
     MenuDrawer();
 
     SIZE textSize;
-
     std::string m = "Play";
-   
     GetTextExtentPoint32(window.context, m.c_str(), m.size(), &textSize);
 
-    if (mouse.x > window.width / 2 - textSize.cx / 2 && mouse.x < window.width / 2 + textSize.cx / 2 &&
-        mouse.y > window.height / 2 - textSize.cy / 2 && mouse.y < window.height / 2 + textSize.cy / 2)
+    float textX = window.width / 2 - textSize.cx / 2;
+    float textY = window.height / 2 - textSize.cy / 2;
+
+    if (drawMenuItem(textX, textY, m))
     {
         SetTextColor(window.context, RGB(255, 0, 0));
         if (GetAsyncKeyState(VK_LBUTTON))
@@ -184,13 +184,13 @@ void StartMenu()
         SetTextColor(window.context, RGB(160, 160, 160));
     }
 
-    TextOutA(window.context, static_cast<int>(window.width / 2 - textSize.cx / 2), static_cast<int>(window.height / 2 - textSize.cy / 2), m.c_str(), m.size());
-
     std::string b = "Quit";
     GetTextExtentPoint32(window.context, b.c_str(), b.size(), &textSize);
 
-    if (mouse.x > window.width / 2 - textSize.cx / 2 && mouse.x < window.width / 2 + textSize.cx / 2 &&
-        mouse.y > (window.height / 2) + 100 - textSize.cy / 2 && mouse.y < (window.height / 2) + 100 + textSize.cy / 2)
+    float textX1 = window.width / 2 - textSize.cx / 2;
+    float textY1 = window.height / 2 - textSize.cy / 2 + 100;
+
+    if (drawMenuItem(textX1, textY1, b))
     {
         SetTextColor(window.context, RGB(255, 0, 0));
         if (GetAsyncKeyState(VK_LBUTTON))
@@ -202,8 +202,11 @@ void StartMenu()
     {
         SetTextColor(window.context, RGB(160, 160, 160));
     }
+}
 
-    TextOutA(window.context, static_cast<int>(window.width / 2 - textSize.cx / 2), static_cast<int>((window.height / 2) +100 - textSize.cy / 2), b.c_str(), b.size());
+void Dialogue()
+{
+
 }
 
 

@@ -475,6 +475,8 @@ namespace drawer
 
                 break;
 
+            //case gameState_::dialogueScene:
+
         }
 
         drawGameCursor();
