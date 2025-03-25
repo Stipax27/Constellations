@@ -230,27 +230,44 @@ void StartMenu()
 
 
 }
-void positionCharacters(std::vector<Constellation>& constellation)
-{
-    int rad = 400;
-    int battlesize = rad * 2 + 1;
 
-    for (int i = 0; i < battlesize; ++i)
+void SelectVector()
+{
+
+
+    if (GetAsyncKeyState(VK_LBUTTON))
     {
-        float angle = (2 * PI / battlesize) * i;
-       // std::vector<Constellation>& Aries = static_cast<int>(rad + rad * cos(angle));
-       // std::vector<Constellation>& Aries = static_cast<int>(rad + rad * sin(angle));
+        /*float dx = mouse.x - window.width / 2.;
+        float dy = mouse.y - window.height / 2.;
+        float lenght = sqrt(dx * dx + dy * dy);*/
+        if (!lmb)
+        {
+            lmb = true;
+            oldmouse.x = mouse.x;
+            oldmouse.y = mouse.y;
+            oldmouseAngle = mouseAngle;
+        }
+        float dx, dy;
+        dx = mouse.x - oldmouse.x;
+        dy = mouse.y - oldmouse.y;
+
+        HPEN pen = CreatePen(PS_SOLID, 3, RGB(0, 191, 255));
+        SelectObject(window.context, pen);
+        MoveToEx(window.context, oldmouse.x, oldmouse.y, NULL);
+        LineTo(window.context, mouse.x, mouse.y);
+
+        //mouseAngle.x = oldmouseAngle.x + dx;
+        //mouseAngle.y = oldmouseAngle.y + dy;
     }
+    else
+    {
+    lmb = false;
+    }
+
 }
 
-void timer()
+void Attack() 
 {
-    
-}
-
-void Battlefield()
-{
- 
 
 }
 

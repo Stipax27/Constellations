@@ -544,13 +544,17 @@ namespace drawer
                 std::string curentSignstring = zodiacSignToString(player_sign);
                 TextOutA(window.context, window.width * 5 / 6, window.height-window.height/20., curentSignstring.c_str(), curentSignstring.size());
 
-                drawColorCircle();
+               // drawColorCircle();
 
                 break;
             }
 
             case gameState_::Fight:
             {
+                
+                SelectVector();
+
+
                 modelTransform = &placeToWorld;
                 modelProject = &fightProject;
                 uiFunc = &starUI;
@@ -578,7 +582,7 @@ namespace drawer
                 TextOutA(window.context, window.width / 2, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());
 
 
-                drawColorCircle();
+                //drawColorCircle();
 
                 break;
             }
