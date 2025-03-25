@@ -148,6 +148,9 @@ namespace drawer
             // Ðèñîâàíèå Ëèíèé.
         }
     }
+
+    
+
     
     float linksDivider = 25;
 
@@ -308,6 +311,48 @@ namespace drawer
             if (finalStarRad > 0)
             {
                 drawPoint(point, finalStarRad);
+            }
+
+        }
+        DeleteObject(brush);
+        DeleteObject(brush2);
+    }
+
+    void drawStarPulse22(Constellation& Constellation)
+    {
+        SelectVector();
+        std::vector <point3d>& starArray = Constellation.starsCords;
+        std::vector <float>& starHealth = Constellation.starsHealth;
+
+        int starsCount = starArray.size();
+        brush = CreateSolidBrush(RGB(0, 191, 255));
+        brush2 = CreateSolidBrush(RGB(255, 0, 0));
+        SelectObject(window.context, brush);
+        for (int i = 0; i < starsCount; i++)
+        {
+            point3d point;
+            point.x = starArray[i].x;
+            point.y = starArray[i].y;
+            point.z = starArray[i].z;
+
+            float a = timeGetTime() * .01;
+            modelTransform(point, Constellation);
+            modelProject(point);
+
+            // Ïóëüñèðîâàíèå Çâ¸çä ïðè íàâåäåíèå ìûøè.
+            finalStarRad = 1;
+            uiFunc(point, Constellation, i);
+
+            if (finalStarRad > 0)
+            {
+                drawPoint(point, finalStarRad);
+            }
+
+            if (point.x < mouse.x - oldmouse.x and point.y < mouse.x - oldmouse.y)
+            {
+
+                SelectObject(window.context, brush2);
+
             }
 
         }
@@ -496,6 +541,7 @@ namespace drawer
         drawÑonstellation(*starSet[player_sign]);
     }
 
+
     void drawWorld()
     {
         
@@ -553,7 +599,7 @@ namespace drawer
             {
                 
                 SelectVector();
-
+                
 
                 modelTransform = &placeToWorld;
                 modelProject = &fightProject;

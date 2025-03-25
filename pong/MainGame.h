@@ -231,6 +231,61 @@ void StartMenu()
 
 }
 
+/*HBRUSH brush;
+HBRUSH brush2;
+float finalStarRad = 0;
+void drawLine22(point3d& p1, point3d& p2, Constellation& Constellation, int count)
+{
+
+    for (int i = 0;i < count;i++)
+    {
+
+
+        float dx = p2.x - p1.x;
+        float dy = p2.y - p1.y;
+        float dz = p2.z - p1.z;
+        float length = sqrt(dx * dx + dy * dy + dz * dz);
+        float stepX = dx / (float)count;
+        float stepY = dy / (float)count;
+        float stepZ = dz / (float)count;
+
+        point3d point;
+        point.x = p1.x + stepX * (float)i;
+        point.y = p1.y + stepY * (float)i;
+        point.z = p1.z + stepZ * (float)i;
+
+        std::vector <float>& starHealth = Constellation.starsHealth;
+
+        float dx = point.x - mouse.x;
+        float dy = point.y - mouse.y;
+        float lenght = sqrt(dx * dx + dy * dy);
+
+        float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
+
+        if (dx > mouse.x - oldmouse.x and dy < mouse.y - oldmouse.y)
+        {
+            SelectObject(window.context, brush2);
+            starHealth[i] -= .1;
+        }
+
+        else
+        {
+            SelectObject(window.context, brush);
+        }
+
+        finalStarRad = starSize * starHealth[i] + rad * 15;
+
+    }
+
+
+
+    //modelProject(point);
+
+    //float sz = 1 + .5 * sinf(i + timeGetTime() * .01);
+    //drawPoint(point, sz);
+    // Рисование Линий.
+}*/
+
 void SelectVector()
 {
 
@@ -264,10 +319,20 @@ void SelectVector()
     lmb = false;
     }
 
+    //drawLine22();
+
 }
 
-void Attack() 
+/*void Attack()
 {
+    initWorld();
+    
+    if ()
+    {
 
+    
+
+    }
+    
 }
-
+*/
