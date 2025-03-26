@@ -30,6 +30,8 @@ int currentColorIndex = -1;
 const int numColors = 7;
 float camDist = 0;
 
+DWORD currentTime;
+
 #include "utils.h"
 #include "MainWindow.h"
 #include "mouse.h"
@@ -59,6 +61,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
+        currentTime = timeGetTime();
+
         mouseInput();
         drawer::drawWorld();//рисуем фон, ракетку и шарик
         BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно

@@ -336,3 +336,72 @@ void SelectVector()
     
 }
 */
+bool isBattleActive = false;
+    DWORD battleStartTime;  // Время начала боя
+
+// Функция начала боя
+void StartBattle() {
+
+    if (!isBattleActive) {
+
+    battleStartTime = timeGetTime();  // Запоминаем время старта
+    isBattleActive = true;
+    TextOutA(window.context, 400, 400, "Бой начался", 11);
+    
+    }
+    
+    
+}
+
+void UpdateGame() {
+
+    //if (!isBattleActive) return;
+    DWORD battleTime = 60 * 1000;
+    DWORD elapsedTime = currentTime - battleStartTime;  // Сколько прошло мс
+    DWORD finTime = battleStartTime + battleTime;
+    DWORD cur = finTime - battleStartTime;
+    DWORD lastTime = cur - elapsedTime;
+    char temp[7];
+        
+    
+
+    if (currentTime <= finTime) {  // 10 000 мс = 10 секунд
+
+        _ultoa_s(lastTime / 1000, temp, 10);//преобразование числовой переменной в текст. текст окажется в переменной txt
+        TextOutA(window.context, 10, 10, "Время ", 5);
+        TextOutA(window.context, 70, 10, (LPCSTR)temp, strlen(temp));
+        // Здесь можно добавить логику завершения боя
+        
+    }
+    else
+    {
+        isBattleActive = false;
+    }
+    
+}
+
+//void Timer() 
+//{
+//    if (!fontInit)
+//    {
+//        hFont = CreateFont(70, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, "CALIBRI");
+//        fontInit = true;
+//    }
+//
+//    SetTextColor(window.context, RGB(160, 160, 160));
+//    SetBkColor(window.context, RGB(0, 0, 0));
+//    SetBkMode(window.context, TRANSPARENT);
+//
+//    SIZE textSize;
+//    int time = TimeGetTime()*10;
+//    char temp[10];
+//  
+//        for (int i = time; i > 0;--i)
+//        {   
+//            _itoa_s(i, temp, 10);//преобразование числовой переменной в текст. текст окажется в переменной txt
+//            TextOutA(window.context, 10, 10, "Время ", 5);
+//            TextOutA(window.context, 70, 10, (LPCSTR)temp, strlen(temp));
+//        }
+//}
+//if (i < 0) cout;
+//    

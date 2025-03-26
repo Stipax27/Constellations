@@ -241,6 +241,7 @@ namespace drawer
             {
                 SelectObject(window.context, brush2);
                 starHealth[i] -= .1;
+
             }
         }
         else
@@ -591,7 +592,7 @@ namespace drawer
                 TextOutA(window.context, window.width * 5 / 6, window.height-window.height/20., curentSignstring.c_str(), curentSignstring.size());
 
                // drawColorCircle();
-
+                isBattleActive = false;
                 break;
             }
 
@@ -599,6 +600,8 @@ namespace drawer
             {
                 
                 SelectVector();
+
+                StartBattle();
                 
 
                 modelTransform = &placeToWorld;
@@ -627,7 +630,7 @@ namespace drawer
                 curentSignstring = zodiacSignToString(player_sign);
                 TextOutA(window.context, window.width / 2, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());
 
-
+                UpdateGame();
                 //drawColorCircle();
 
                 break;
