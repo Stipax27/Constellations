@@ -151,6 +151,7 @@
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="MainWorld.h" />
     <ClInclude Include="mouse.h" />
+    <ClInclude Include="Navigation.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

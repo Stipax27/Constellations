@@ -39,6 +39,7 @@ DWORD currentTime;
 #include "MainWorld.h"
 #include "MainGame.h"
 #include "drawer.h"
+#include "Navigation.h"
 
 
 

@@ -336,7 +336,7 @@ namespace drawer
             point.y = starArray[i].y;
             point.z = starArray[i].z;
 
-            float a = timeGetTime() * .01;
+            //float a = timeGetTime() * .01;
             modelTransform(point, Constellation);
             modelProject(point);
 
