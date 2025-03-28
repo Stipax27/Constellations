@@ -558,11 +558,11 @@ namespace drawer
 
     void enemyFight()
     {
-        float e = 10000;
+        float e = 1000;
         if (currentTime > attackTime + e)
         {
             attackTime = currentTime;
-            &enemyAttack;
+            enemyAttack(*starSet[player_sign]);
         }
     }
 
@@ -627,7 +627,7 @@ namespace drawer
                 StartBattle();
                 enemyFight();
 
-                enemyAttack(*starSet[player_sign]);
+                
 
                 modelTransform = &placeToWorld;
                 modelProject = &fightProject;
