@@ -263,7 +263,7 @@ namespace drawer
             {
                 SelectObject(window.context, brush2);
                 //finalStarRad = 0.;
-                starHealth[i] -= .4;
+                starHealth[i] -= weapon[(int)current_weapon].damage;
                 check_attack = true;
 
             }
@@ -372,6 +372,8 @@ namespace drawer
         DeleteObject(brush);
         DeleteObject(brush2);
     }
+
+    
 
     void draw—onstellation(Constellation& Constellation)
     {
@@ -612,7 +614,7 @@ namespace drawer
             {
                 
                 SelectVector();
-
+                SelectWeapon();
                 StartBattle();
                 
 
@@ -641,6 +643,9 @@ namespace drawer
 
                 curentSignstring = zodiacSignToString(player_sign);
                 TextOutA(window.context, window.width / 2, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());
+
+                curentSignstring = "current weapon: " + weapon[(int)current_weapon].name;
+                TextOutA(window.context, window.width / 2, window.height - window.height / 30., curentSignstring.c_str(), curentSignstring.size());
 
                 UpdateGame();
                 //drawColorCircle();

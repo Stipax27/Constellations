@@ -10,6 +10,8 @@ void InitGame()
     game.day = 32;
     game.month =  13;
     startTime = timeGetTime();
+
+    initWeapon();
 }
 
 HFONT hFont;
