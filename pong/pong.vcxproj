@@ -153,6 +153,7 @@
     <ClInclude Include="mouse.h" />
     <ClInclude Include="Navigation.h" />
     <ClInclude Include="utils.h" />
+    <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

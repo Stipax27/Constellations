@@ -38,6 +38,7 @@ DWORD currentTime;
 #include "Constellation.h"
 #include "MainWorld.h"
 #include "MainGame.h"
+#include "Weapon.h"
 #include "drawer.h"
 #include "Navigation.h"
 

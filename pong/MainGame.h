@@ -286,10 +286,15 @@ void drawLine22(point3d& p1, point3d& p2, Constellation& Constellation, int coun
     // Рисование Линий.
 }*/
 
+point3d attack[2];
+
+bool is_attack;
+
+
+
 void SelectVector()
 {
-
-
+   
     if (GetAsyncKeyState(VK_LBUTTON))
     {
         /*float dx = mouse.x - window.width / 2.;
@@ -306,10 +311,18 @@ void SelectVector()
         dx = mouse.x - oldmouse.x;
         dy = mouse.y - oldmouse.y;
 
+        
+
         HPEN pen = CreatePen(PS_SOLID, 3, RGB(0, 191, 255));
         SelectObject(window.context, pen);
         MoveToEx(window.context, oldmouse.x, oldmouse.y, NULL);
         LineTo(window.context, mouse.x, mouse.y);
+        attack[0].x = oldmouse.x;
+        attack[0].y = oldmouse.y;
+        attack[1].x = mouse.x;
+        attack[1].y = mouse.y;
+        is_attack = true;
+
 
         //mouseAngle.x = oldmouseAngle.x + dx;
         //mouseAngle.y = oldmouseAngle.y + dy;
@@ -317,6 +330,7 @@ void SelectVector()
     else
     {
     lmb = false;
+    is_attack = false;
     }
 
     //drawLine22();

@@ -224,6 +224,60 @@ namespace drawer
         finalStarRad = starSize * starHealth[i] + rad * 15;
     }
 
+    float get_lenghts(point3d& point1, point3d& point2)
+    {
+    
+        float a = point1.x - point2.x;
+        float b = point1.y - point2.y;
+        float c = sqrt(a * a + b * b);
+        return c;
+
+    }
+
+    float line_hit;
+    bool check_attack = false;
+
+    void starIntersectUI(point3d& point, Constellation& Constellation, int i)
+    {
+        std::vector <float>& starHealth = Constellation.starsHealth;
+
+        float dx = point.x - mouse.x;
+        float dy = point.y - mouse.y;
+        float lenght = sqrt(dx * dx + dy * dy);
+
+        float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
+        finalStarRad = starSize * starHealth[i] + rad * 15;
+
+        if (GetAsyncKeyState(VK_LBUTTON))
+        {
+                        
+            float line_x = get_lenghts(attack[0], attack[1]);
+            float line_y = get_lenghts(attack[0], point);
+            float line_z = get_lenghts(attack[1], point);
+            float line_yz = line_z + line_y;
+            line_hit = line_yz / line_x;
+
+
+
+            if (line_hit < 1.0001 and check_attack == false)
+            {
+                SelectObject(window.context, brush2);
+                //finalStarRad = 0.;
+                starHealth[i] -= .4;
+                check_attack = true;
+
+            }
+
+        }
+        else
+        {
+            SelectObject(window.context, brush);
+            check_attack = false;
+        }
+
+       
+    }
+
     void starUI(point3d& point, Constellation& Constellation, int i)
     {
         std::vector <float>& starHealth = Constellation.starsHealth;
@@ -312,48 +366,6 @@ namespace drawer
             if (finalStarRad > 0)
             {
                 drawPoint(point, finalStarRad);
-            }
-
-        }
-        DeleteObject(brush);
-        DeleteObject(brush2);
-    }
-
-    void drawStarPulse22(Constellation& Constellation)
-    {
-        SelectVector();
-        std::vector <point3d>& starArray = Constellation.starsCords;
-        std::vector <float>& starHealth = Constellation.starsHealth;
-
-        int starsCount = starArray.size();
-        brush = CreateSolidBrush(RGB(0, 191, 255));
-        brush2 = CreateSolidBrush(RGB(255, 0, 0));
-        SelectObject(window.context, brush);
-        for (int i = 0; i < starsCount; i++)
-        {
-            point3d point;
-            point.x = starArray[i].x;
-            point.y = starArray[i].y;
-            point.z = starArray[i].z;
-
-            //float a = timeGetTime() * .01;
-            modelTransform(point, Constellation);
-            modelProject(point);
-
-            // Пульсирование Звёзд при наведение мыши.
-            finalStarRad = 1;
-            uiFunc(point, Constellation, i);
-
-            if (finalStarRad > 0)
-            {
-                drawPoint(point, finalStarRad);
-            }
-
-            if (point.x < mouse.x - oldmouse.x and point.y < mouse.x - oldmouse.y)
-            {
-
-                SelectObject(window.context, brush2);
-
             }
 
         }
@@ -606,7 +618,7 @@ namespace drawer
 
                 modelTransform = &placeToWorld;
                 modelProject = &fightProject;
-                uiFunc = &starUI;
+                uiFunc = &starIntersectUI;
                 linksDivider = 50;
                 drawStarField();
 
