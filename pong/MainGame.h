@@ -334,9 +334,7 @@ void SelectVector()
     lmb = false;
     is_attack = false;
     }
-
-    //drawLine22();
-
+        
 }
 
 /*void Attack()
@@ -354,6 +352,7 @@ void SelectVector()
 */
 bool isBattleActive = false;
     DWORD battleStartTime;  // Время начала боя
+    DWORD attackTime;
 
 // Функция начала боя
 void StartBattle() {
@@ -361,6 +360,7 @@ void StartBattle() {
     if (!isBattleActive) {
 
     battleStartTime = timeGetTime();  // Запоминаем время старта
+    attackTime = battleStartTime;
     isBattleActive = true;
     TextOutA(window.context, 400, 400, "Бой начался", 11);
     

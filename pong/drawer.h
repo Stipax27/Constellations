@@ -556,6 +556,15 @@ namespace drawer
         draw—onstellation(*starSet[player_sign]);
     }
 
+    void enemyFight()
+    {
+        float e = 10000;
+        if (currentTime > attackTime + e)
+        {
+            attackTime = currentTime;
+            &enemyAttack;
+        }
+    }
 
     void drawWorld()
     {
@@ -616,7 +625,9 @@ namespace drawer
                 SelectVector();
                 SelectWeapon();
                 StartBattle();
-                
+                enemyFight();
+
+                enemyAttack(*starSet[player_sign]);
 
                 modelTransform = &placeToWorld;
                 modelProject = &fightProject;
@@ -630,6 +641,7 @@ namespace drawer
                 //draw—onstellation(*currentEnemy);
                 nearPlaneClip = 0;
                 draw—onstellation(*starSet[currentEnemyID]);
+                
 
                 linksDivider = 15;
                 modelTransform = &placeHeroToWorld;
@@ -647,7 +659,18 @@ namespace drawer
                 curentSignstring = "current weapon: " + weapon[(int)current_weapon].name;
                 TextOutA(window.context, window.width / 2, window.height - window.height / 30., curentSignstring.c_str(), curentSignstring.size());
 
+                curentSignstring = std::to_string(getConstellationHP(*starSet[currentEnemyID]));
+                TextOutA(window.context, window.width / 2,window.height / 40., curentSignstring.c_str(), curentSignstring.size());
+
+                curentSignstring = std::to_string(getConstellationHP(*starSet[player_sign]));
+                TextOutA(window.context, window.width / 2, window.height / 80., curentSignstring.c_str(), curentSignstring.size());
+
                 UpdateGame();
+                
+                
+
+
+
                 //drawColorCircle();
 
                 break;
