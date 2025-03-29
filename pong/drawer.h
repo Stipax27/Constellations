@@ -44,6 +44,9 @@ namespace drawer
     void placeHeroToWorld(point3d& p, Constellation& Constellation)
     {
         move(p, 0, 0, 0. / Constellation.scale);
+
+        fightMove(p);
+
         p.x *= .13;
         p.y *= .13;
         p.z *= .13;
@@ -621,7 +624,7 @@ namespace drawer
 
             case gameState_::Fight:
             {
-                
+                               
                 SelectVector();
                 SelectWeapon();
                 StartBattle();
@@ -667,8 +670,6 @@ namespace drawer
 
                 UpdateGame();
                 
-                
-
 
 
                 //drawColorCircle();

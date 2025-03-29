@@ -36,11 +36,11 @@ DWORD currentTime;
 #include "MainWindow.h"
 #include "mouse.h"
 #include "Constellation.h"
+#include "Navigation.h"
 #include "MainWorld.h"
 #include "Weapon.h"
 #include "MainGame.h"
 #include "drawer.h"
-#include "Navigation.h"
 
 
 
