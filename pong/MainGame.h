@@ -351,15 +351,15 @@ void SelectVector()
 }
 */
 bool isBattleActive = false;
-    DWORD battleStartTime;  // Время начала боя
+    DWORD battleStartTime;  
     DWORD attackTime;
 
-// Функция начала боя
+
 void StartBattle() {
 
     if (!isBattleActive) {
 
-    battleStartTime = timeGetTime();  // Запоминаем время старта
+    battleStartTime = timeGetTime();  
     attackTime = battleStartTime;
     isBattleActive = true;
     TextOutA(window.context, 400, 400, "Бой начался", 11);
@@ -370,30 +370,86 @@ void StartBattle() {
 }
 
 void UpdateGame() {
-
-    //if (!isBattleActive) return;
-    DWORD battleTime = 60 * 1000;
-    DWORD elapsedTime = currentTime - battleStartTime;  // Сколько прошло мс
-    DWORD finTime = battleStartTime + battleTime;
-    DWORD cur = finTime - battleStartTime;
-    DWORD lastTime = cur - elapsedTime;
-    char temp[7];
-        
     
+    static DWORD battleTime = 10 * 1000;  
+    static DWORD timeModifier = 0;        
 
-    if (currentTime <= finTime) {  // 10 000 мс = 10 секунд
+    bool q = false, e = false;
 
-        _ultoa_s(lastTime / 1000, temp, 10);//преобразование числовой переменной в текст. текст окажется в переменной txt
+    
+    if (GetAsyncKeyState('Q')) {
+        if (!q) {
+            timeModifier += 1000;
+            q = true;
+        }
+    }
+    else {
+        q = false;
+    }
+
+    
+    if (GetAsyncKeyState('E')) {
+        if (!e) {
+            timeModifier -= 1000;
+            e = true;
+        }
+    }
+    else {
+        e = false;
+    }
+
+    
+    DWORD currentTime = timeGetTime();
+    DWORD remainingTime = (battleStartTime + battleTime + timeModifier) - currentTime;
+
+    char temp[7];
+
+    if (remainingTime > 0) {
+        _ultoa_s(remainingTime / 1000, temp, 10);
         TextOutA(window.context, 10, 10, "Время ", 5);
         TextOutA(window.context, 70, 10, (LPCSTR)temp, strlen(temp));
-        // Здесь можно добавить логику завершения боя
-        
+    }
+    else {
+        isBattleActive = false;
+        gameState = gameState_::EndFight;
+
+        timeModifier = 0;
+    }
+}
+
+void endFight()
+{
+    if (!fontInit)
+    {
+        hFont = CreateFont(70, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, "CALIBRI");
+        fontInit = true;
+    }
+
+    SetTextColor(window.context, RGB(160, 160, 160));
+    SetBkColor(window.context, RGB(0, 0, 0));
+    SetBkMode(window.context, TRANSPARENT);
+
+    SIZE textSize;
+
+    std::string m = "You Lose";
+
+    GetTextExtentPoint32(window.context, m.c_str(), m.size(), &textSize);
+
+    if (mouse.x > window.width / 2 - textSize.cx / 2 && mouse.x < window.width / 2 + textSize.cx / 2 &&
+        mouse.y > window.height / 2 - textSize.cy / 2 && mouse.y < window.height / 2 + textSize.cy / 2)
+    {
+        SetTextColor(window.context, RGB(255, 0, 0));
+        if (GetAsyncKeyState(VK_LBUTTON))
+        {
+            gameState = gameState_::MainMenu;
+        }
     }
     else
     {
-        isBattleActive = false;
+        SetTextColor(window.context, RGB(160, 160, 160));
     }
-    
+
+    TextOutA(window.context, static_cast<int>(window.width / 2 - textSize.cx / 2), static_cast<int>(window.height / 2 - textSize.cy / 2), m.c_str(), m.size());
 }
 
 //void Timer() 

@@ -676,6 +676,12 @@ namespace drawer
 
                 break;
             }
+            case gameState_::EndFight:
+            { 
+                endFight();
+
+                break;
+            }
 
         }
 
