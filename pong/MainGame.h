@@ -370,50 +370,51 @@ void StartBattle() {
 }
 
 void UpdateGame() {
-    
-    static DWORD battleTime = 10 * 1000;  
-    static DWORD timeModifier = 0;        
+    static const DWORD MAX_BATTLE_TIME = 4 * 60 * 1000;// Ввёл константу максимального предела
+    static DWORD battleTime = 2 * 60 * 1000;
+    static DWORD timeModifier = 0;
+    static DWORD lastInputTime = 0;
+    const DWORD inputRepeatDelay = 100;
 
-    bool q = false, e = false;
-
-    
-    if (GetAsyncKeyState('Q')) {
-        if (!q) {
-            timeModifier += 1000;
-            q = true;
-        }
-    }
-    else {
-        q = false;
-    }
-
-    
-    if (GetAsyncKeyState('E')) {
-        if (!e) {
-            timeModifier -= 1000;
-            e = true;
-        }
-    }
-    else {
-        e = false;
-    }
-
-    
     DWORD currentTime = timeGetTime();
-    DWORD remainingTime = (battleStartTime + battleTime + timeModifier) - currentTime;
 
-    char temp[7];
 
-    if (remainingTime > 0) {
-        _ultoa_s(remainingTime / 1000, temp, 10);
-        TextOutA(window.context, 10, 10, "Время ", 5);
-        TextOutA(window.context, 70, 10, (LPCSTR)temp, strlen(temp));
+    if (GetAsyncKeyState('Q')) {
+        if (currentTime - lastInputTime > inputRepeatDelay) {
+
+            if (battleStartTime + battleTime + timeModifier + 1000 - currentTime <= MAX_BATTLE_TIME) {
+                timeModifier += 1000;
+                lastInputTime = currentTime;
+            }
+        }
     }
-    else {
-        isBattleActive = false;
-        gameState = gameState_::EndFight;
+    else if (GetAsyncKeyState('E')) {
+        if (currentTime - lastInputTime > inputRepeatDelay) {
+            timeModifier = std::max<DWORD>(0, timeModifier - 1000);
+            lastInputTime = currentTime;
+        }
+    }
 
-        timeModifier = 0;
+    if (isBattleActive) {
+        LONG remainingTime = (LONG)((battleStartTime + battleTime + timeModifier) - currentTime);// Привязал оставшаеся время к лонгу
+
+
+        DWORD totalBattleTime = battleTime + timeModifier;
+        if (totalBattleTime > MAX_BATTLE_TIME) {
+            timeModifier = MAX_BATTLE_TIME - battleTime;
+            remainingTime = (LONG)((battleStartTime + MAX_BATTLE_TIME) - currentTime);
+        }
+
+        if (remainingTime > 0) {
+            std::string timeStr = std::to_string(remainingTime / 1000);// Cтринг для вывода 
+            TextOutA(window.context, 10, 10, "Время ", 6);
+            TextOutA(window.context, 70, 10, timeStr.c_str(), timeStr.size());
+        }
+        else {
+            timeModifier = 0;
+            isBattleActive = false;
+            gameState = gameState_::EndFight;
+        }
     }
 }
 
@@ -451,29 +452,3 @@ void endFight()
 
     TextOutA(window.context, static_cast<int>(window.width / 2 - textSize.cx / 2), static_cast<int>(window.height / 2 - textSize.cy / 2), m.c_str(), m.size());
 }
-
-//void Timer() 
-//{
-//    if (!fontInit)
-//    {
-//        hFont = CreateFont(70, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, "CALIBRI");
-//        fontInit = true;
-//    }
-//
-//    SetTextColor(window.context, RGB(160, 160, 160));
-//    SetBkColor(window.context, RGB(0, 0, 0));
-//    SetBkMode(window.context, TRANSPARENT);
-//
-//    SIZE textSize;
-//    int time = TimeGetTime()*10;
-//    char temp[10];
-//  
-//        for (int i = time; i > 0;--i)
-//        {   
-//            _itoa_s(i, temp, 10);//преобразование числовой переменной в текст. текст окажется в переменной txt
-//            TextOutA(window.context, 10, 10, "Время ", 5);
-//            TextOutA(window.context, 70, 10, (LPCSTR)temp, strlen(temp));
-//        }
-//}
-//if (i < 0) cout;
-//    
