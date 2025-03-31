@@ -1,5 +1,9 @@
+
 int start;
 bool isMoveActive = false;
+
+float moveDistance;
+			
 
 void fightMove(point3d& p) {
 
@@ -27,19 +31,37 @@ void fightMove(point3d& p) {
 		}
 	}
 
+
 	if (isMoveActive) {
 
-		int time = (timeGetTime() - start);
-		if (time/1000 < 6) {
+		int time = timeGetTime() - start;
 
-			float currentMove = moveStep * time / 5000;
+		int moveTimer = 4;
 
-			move(p, 0, currentMove, 0);
+
+		if (time/1000 < moveTimer) {
+
+			bool isMoveStateBack = false;
+
+
+			float currentMove = moveStep * time / 1000;
+
+			if (time/1000 > (moveTimer / 2) -1 )
+			{
+				isMoveStateBack = true;
+			}
+
+			if (!isMoveStateBack) {
+				move(p, 0, currentMove, 0);
+				moveDistance = currentMove;
+			}
+			else {
+				move(p, 0, 2 * moveDistance - currentMove, 0);
+			}
 
 
 			//
-
-			char temp[7];
+			char temp[7] = {0};
 			_ultoa_s(time / 1000, temp, 10);//преобразование числовой переменной в текст. текст окажется в переменной txt
 			TextOutA(window.context, window.width / 2, window.height / 2., (LPCSTR)temp, strlen(temp));
 
