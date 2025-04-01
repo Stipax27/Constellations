@@ -337,40 +337,116 @@ void SelectVector()
         
 }
 
-/*void Attack()
-{
-    initWorld();
+struct GameSnapshot {
+    DWORD timestamp;
     
-    if ()
-    {
+    int playerX, playerY;
+    int playerHealth;
+    int enemyHealth;
+    
+};
+
+std::deque<GameSnapshot> gameHistory;
+const DWORD HISTORY_DEPTH = 10 * 1000; 
+const DWORD SAVE_INTERVAL = 100;
+
+void SaveGameState() {
+    GameSnapshot snapshot;
+    snapshot.timestamp = timeGetTime();
 
     
+    snapshot.playerX = player_sign;
+    snapshot.playerY = currentEnemyID;
+    snapshot.playerHealth = ;
+    snapshot.enemyHealth = ;
+   
 
+    gameHistory.push_back(snapshot);
+
+    
+    while (!gameHistory.empty() &&
+        (snapshot.timestamp - gameHistory.front().timestamp) > HISTORY_DEPTH) {
+        gameHistory.pop_front();
     }
-    
 }
-*/
+
+void RewindTime(DWORD milliseconds) {
+    if (gameHistory.empty()) return;
+
+    DWORD targetTime = timeGetTime() - milliseconds;
+
+    
+    auto bestMatch = gameHistory.begin();
+    for (auto it = gameHistory.begin(); it != gameHistory.end(); ++it) {
+        if (it->timestamp <= targetTime) {
+            bestMatch = it;
+        }
+        else {
+            break;
+        }
+    }
+
+    
+    if (bestMatch != gameHistory.end()) {
+        player.x = bestMatch->playerX;
+        player.y = bestMatch->playerY;
+        player.health = bestMatch->playerHealth;
+        enemy.health = bestMatch->enemyHealth;
+        
+
+        
+        DWORD timeDiff = timeGetTime() - bestMatch->timestamp;
+        battleStartTime += timeDiff;
+    }
+}
+
 bool isBattleActive = false;
     DWORD battleStartTime;  
     DWORD attackTime;
 
 
 void StartBattle() {
-
     if (!isBattleActive) {
-
-    battleStartTime = timeGetTime();  
-    attackTime = battleStartTime;
-    isBattleActive = true;
-    TextOutA(window.context, 400, 400, "Бой начался", 11);
-    
+        battleStartTime = timeGetTime();
+        attackTime = battleStartTime;
+        isBattleActive = true;
+        gameHistory.clear(); 
+        TextOutA(window.context, 400, 400, "Бой начался", 10);
     }
+}
     
+void RewindTime(DWORD rewindDuration) {
+    if (gameHistory.empty()) return;
+
+    DWORD targetTime = timeGetTime() - rewindDuration;
+
     
+    auto bestMatch = gameHistory.begin();
+    for (auto it = gameHistory.begin(); it != gameHistory.end(); ++it) {
+        if (it->timestamp <= targetTime) {
+            bestMatch = it;
+        }
+        else {
+            break;
+        }
+    }
+
+    
+    if (bestMatch != gameHistory.end()) {
+        player.x = bestMatch->playerX;
+        player.y = bestMatch->playerY;
+        
+
+        
+        battleStartTime += (timeGetTime() - bestMatch->timestamp);
+    }
 }
 
 void UpdateGame() {
+
     static const DWORD MAX_BATTLE_TIME = 4 * 60 * 1000;// Ввёл константу максимального предела
+    static const DWORD MAX_REWIND = 30 * 1000; // Максимум 30 секунд возврата
+    static DWORD lastSaveTime = 0;
     static DWORD battleTime = 2 * 60 * 1000;
     static DWORD timeModifier = 0;
     static DWORD lastInputTime = 0;
@@ -378,9 +454,15 @@ void UpdateGame() {
 
     DWORD currentTime = timeGetTime();
 
+    if (currentTime - lastSaveTime >= 100) { // Каждые 100 мс
+        SaveGameState();
+        lastSaveTime = currentTime;
+    }
 
     if (GetAsyncKeyState('Q')) {
         if (currentTime - lastInputTime > inputRepeatDelay) {
+            RewindTime(10 * 1000); 
+            lastInputTime = currentTime;
 
             if (battleStartTime + battleTime + timeModifier + 1000 - currentTime <= MAX_BATTLE_TIME) {
                 timeModifier += 1000;
@@ -394,10 +476,9 @@ void UpdateGame() {
             lastInputTime = currentTime;
         }
     }
-
+    
     if (isBattleActive) {
         LONG remainingTime = (LONG)((battleStartTime + battleTime + timeModifier) - currentTime);// Привязал оставшаеся время к лонгу
-
 
         DWORD totalBattleTime = battleTime + timeModifier;
         if (totalBattleTime > MAX_BATTLE_TIME) {
@@ -417,6 +498,7 @@ void UpdateGame() {
         }
     }
 }
+
 
 void endFight()
 {

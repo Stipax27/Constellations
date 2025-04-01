@@ -569,6 +569,8 @@ namespace drawer
         }
     }
 
+    
+
     void drawWorld()
     {
         

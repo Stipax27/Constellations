@@ -12,6 +12,7 @@ const float PI = 3.1415926535897;
 #include <cmath>
 #include <sstream>
 #include <algorithm>
+#include <deque>
 
 HINSTANCE hInst;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
