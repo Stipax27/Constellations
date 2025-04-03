@@ -43,7 +43,9 @@ DWORD currentTime;
 #include "MainWorld.h"
 #include "Weapon.h"
 #include "MainGame.h"
+#include "font.h"
 #include "drawer.h"
+
 
 
 

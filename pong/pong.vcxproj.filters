@@ -67,5 +67,11 @@
     <ClInclude Include="Navigation.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Weapon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="font.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

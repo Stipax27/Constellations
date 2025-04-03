@@ -621,6 +621,9 @@ namespace drawer
 
                // drawColorCircle();
                 isBattleActive = false;
+
+                drawString("Bla-Bla", 0, 0, 1);
+
                 break;
             }
 
@@ -669,6 +672,9 @@ namespace drawer
 
                 curentSignstring = std::to_string(getConstellationHP(*starSet[player_sign]));
                 TextOutA(window.context, window.width / 2, window.height / 80., curentSignstring.c_str(), curentSignstring.size());
+
+
+                
 
                 UpdateGame();
                 

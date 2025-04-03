@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="Constellation.h" />
     <ClInclude Include="drawer.h" />
+    <ClInclude Include="font.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="MainWorld.h" />
