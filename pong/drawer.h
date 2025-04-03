@@ -622,7 +622,7 @@ namespace drawer
                // drawColorCircle();
                 isBattleActive = false;
 
-                drawString("Bla-Bla", 0, 0, 1);
+                drawString("Bla-Bla-bla", window.width/2, window.height/2, 1, true);
 
                 break;
             }

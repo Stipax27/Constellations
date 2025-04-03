@@ -241,41 +241,23 @@ float drawLetter(int letter, float x, float y, float scale)
 }
 
 
-/*
-void drawAlphaBet()
+
+
+
+float drawString(const char* str,float x, float y, float scale, bool centered, bool draw = true)
 {
     preprocessFont();
 
-    HPEN pen = CreatePen(PS_SOLID, 3, RGB(255, 255, 255));
-    SelectObject(window.context, pen);
-
-    int letters_count = sizeof(font) / sizeof(std::vector<float>*);
-
-    float x = 0; float y = 0;
-    for (int i = 0; i < letters_count; i++)
+    float offset = 0;
+    
+    if (centered&&draw)
     {
-        auto s = std::to_string(i+1);
-        LPCSTR str = s.c_str();
-        int strl = strlen(str);
-        TextOutA(window.context, x, 50+(i%2)*50, str, strl);
-        x += drawLetter(i,x,y,)+10;
+        offset = drawString(str, x, y, scale, false, false)/2.;
     }
-
-
-
-    DeleteObject(pen);
-
-}*/
-
-
-
-void drawString(const char* str,float x, float y, float scale)
-{
-    preprocessFont();
 
     float space = 30;
     float tracking = 10;
-    float interline = 30;
+    float interline = 40;
 
     HPEN pen = CreatePen(PS_SOLID, 3, RGB(255, 255, 255));
     SelectObject(window.context, pen);
@@ -296,11 +278,20 @@ void drawString(const char* str,float x, float y, float scale)
             y += interline;
             break;
         default:
-            x += drawLetter(alpha - 34, x, y, scale) + tracking;
+            if (draw)
+            {
+                x += drawLetter(alpha - 34, x-offset, y, scale) + tracking;
+            }
+            else
+            {
+                x += letter_width[alpha-34] * scale + tracking;
+            }
             break;
         }
     }
 
     DeleteObject(pen);
+
+    return x - base_x;
 
 }
