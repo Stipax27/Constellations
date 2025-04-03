@@ -2,26 +2,20 @@
 int start;
 bool isMoveActive = false;
 
-float moveDistance;
+float finalS;
 			
 
 void fightMove(point3d& p) {
 
-	//int time = timeGetTime() - startTime;
-	//std::string str = "hi" + time;
-	//char temp[7];
 
+	float T;
+	float moveTimer = 4;
+	float currentV;
+	float currentS;
+	float currentA;
+	float F = -2.5;
+	bool isMoveStateBack;
 
-	//_ultoa_s(time / 1000, temp, 10);//преобразование числовой переменной в текст. текст окажется в переменной txt
-
-	//TextOutA(window.context, window.width / 2, window.height / 2., (LPCSTR)temp, strlen(temp));
-
-	//TextOutA(window.context, window.width / 2, window.height / 2., str.c_str(), str.size()); //Вывод текста
-
-
-	float moveStep = -1;
-
-	//if (isWPressed) {
 	if (GetAsyncKeyState('W') & 0x0001) // Проверка срабатывает если кнопка нажимается хотя бы один раз
 	{
 		if (!isMoveActive)
@@ -34,35 +28,45 @@ void fightMove(point3d& p) {
 
 	if (isMoveActive) {
 
-		int time = timeGetTime() - start;
+		T = timeGetTime() - start;
 
-		int moveTimer = 4;
+		currentA = F * (moveTimer / 2 - T / 1000);
+
+		currentV = currentA * T / 1000;
+		
+		currentS = currentV * T / 1000;
+
+		isMoveStateBack = false;
+
+		if (T/1000 < moveTimer) {
 
 
-		if (time/1000 < moveTimer) {
-
-			bool isMoveStateBack = false;
-
-
-			float currentMove = moveStep * time / 1000;
-
-			if (time/1000 > (moveTimer / 2) -1 )
+			if (T/1000 > (moveTimer / 2))
 			{
 				isMoveStateBack = true;
 			}
 
 			if (!isMoveStateBack) {
-				move(p, 0, currentMove, 0);
-				moveDistance = currentMove;
+				move(p, 0, currentS, 0);
+				finalS = currentS;
 			}
 			else {
-				move(p, 0, 2 * moveDistance - currentMove, 0);
+				currentA = F * (T / 1000 - moveTimer / 2);
+
+				//F = 1;
+				//currentA = -currentA;
+
+				//move(p, 0, 2 * finalS - currentS, 0);
 			}
 
 
 			//
 			char temp[7] = {0};
-			_ultoa_s(time / 1000, temp, 10);//преобразование числовой переменной в текст. текст окажется в переменной txt
+			//_ultoa_s(moveTimer - T / 1000, temp, 10);//преобразование числовой переменной в текст. текст окажется в переменной txt
+
+			//_ultoa_s(currentA / 1000, temp, 10);//преобразование числовой переменной в текст. текст окажется в переменной txt
+
+			_ultoa_s(moveTimer - T / 1000, temp, 10);//преобразование числовой переменной в текст. текст окажется в переменной txt
 			TextOutA(window.context, window.width / 2, window.height / 2., (LPCSTR)temp, strlen(temp));
 
 		}
@@ -81,18 +85,18 @@ void fightMove(point3d& p) {
 
 	if (GetAsyncKeyState('A'))
 	{
-		move(p, moveStep, 0, 0);
+		move(p, currentV, 0, 0);
 	};
 
 	if (GetAsyncKeyState('S'))
 	{
-		move(p, 0, -moveStep, 0);
+		move(p, 0, -currentV, 0);
 
 	};
 
 	if (GetAsyncKeyState('D'))
 	{
-		move(p, -moveStep, 0, 0);
+		move(p, -currentV, 0, 0);
 
 	};
 }
@@ -105,6 +109,16 @@ void fightMove(point3d& p) {
 
 
 
+	//int time = timeGetTime() - startTime;
+	//std::string str = "hi" + time;
+	//char temp[7];
+
+
+	//_ultoa_s(time / 1000, temp, 10);//преобразование числовой переменной в текст. текст окажется в переменной txt
+
+	//TextOutA(window.context, window.width / 2, window.height / 2., (LPCSTR)temp, strlen(temp));
+
+	//TextOutA(window.context, window.width / 2, window.height / 2., str.c_str(), str.size()); //Вывод текста
 
 
 
