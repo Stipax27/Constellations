@@ -403,18 +403,17 @@ void SelectVector()
 bool isBattleActive = false;
     DWORD battleStartTime;  
     DWORD attackTime;
-//
-//
-//void StartBattle() {
-//    if (!isBattleActive) {
-//        battleStartTime = timeGetTime();
-//        attackTime = battleStartTime;
-//        isBattleActive = true;
-//        //gameHistory.clear(); 
-//        TextOutA(window.context, 400, 400, "Бой начался", 10);
-//    }
-//}
-//    
+
+void StartBattle() {
+    if (!isBattleActive) {
+        battleStartTime = timeGetTime();
+        attackTime = battleStartTime;
+        isBattleActive = true;
+        //gameHistory.clear(); 
+        TextOutA(window.context, 400, 400, "Бой начался", 10);
+    }
+}
+    
 //void RewindTime(DWORD rewindDuration) {
 //    if (gameHistory.empty()) return;
 //

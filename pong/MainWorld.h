@@ -373,6 +373,19 @@ Constellation Pisces(
 }
 );
 
+//Constellation Sword(
+//{ { 1.2, 1.5, 0 },
+//    { 1, 1.3, 0 },
+//    { 0.9, 1, 0 },
+//    { 0.7, 1, 0 },
+//    {0.6, 0.6, 0 },
+//    {0.4, 0.5, 0 },
+//    {0.3, 0.3, 0 },
+//    {}
+//
+//},
+//);
+
 std::vector <Constellation*> starSet = {
 &Aries,
 &Taurus,
@@ -420,7 +433,7 @@ enum class gameState_ {
     MainMenu, MonthSelection, DaySelection, confirmSign, selectEnemy, Fight, EndFight
 };
 
-gameState_  gameState = gameState_::Fight;
+gameState_  gameState = gameState_::selectEnemy;
 Constellation* currentEnemy = &Aries;
 ZodiacSign currentEnemyID = ZodiacSign::ARIES;
 
