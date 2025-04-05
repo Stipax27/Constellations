@@ -25,6 +25,20 @@ namespace drawer
         rotateY(p, mouseAngle.x * 0.1);
     }
 
+    void placeWeaponToWorld(point3d& p, Constellation& Constellation)
+    {
+        move(p, 0, 0, 3000. / Constellation.scale);
+        rotateX(p, Constellation.angle.x);
+        rotateY(p, Constellation.angle.y);
+        rotateZ(p, Constellation.angle.z);
+        p.x *= Constellation.scale;
+        p.y *= Constellation.scale;
+        p.z *= Constellation.scale;
+
+        rotateX(p, mouseAngle.y * 0.1);
+        rotateY(p, mouseAngle.x * 0.1);
+    }
+
     void placeConstToStartMenu(point3d& p, Constellation& Constellation)
     {
         p.x *= 200;
@@ -643,9 +657,13 @@ namespace drawer
                 linksDivider = 50;
                 drawStarField();
 
+                
+                modelTransform = &placeWeaponToWorld;
+                nearPlaneClip = 0;
+                draw—onstellation(*weapon[(int)current_weapon].constellation);
+
+
                 modelTransform = &placeConstToWorld;
-
-
                 //draw—onstellation(*currentEnemy);
                 nearPlaneClip = 0;
                 draw—onstellation(*starSet[currentEnemyID]);

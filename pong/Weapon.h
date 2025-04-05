@@ -2,11 +2,9 @@ struct weapon_ {
     float damage;
     float defense;
     std::string name;
+    Constellation* constellation;
 
-    void attack() 
-    {
-
-        //weapon[(int)current_weapon].damage;
+    void attack() {
 
     }
 };
@@ -14,57 +12,40 @@ struct weapon_ {
 weapon_ weapon[4];
 
 enum class weapon_name {
-    sword, shield, bow, staff
+    Sword, Shield, Bow, Staff
 };
 
+Constellation* currentWeapon = &Sword;
+weapon_name current_weapon = weapon_name::Shield;
 
-weapon_name current_weapon = weapon_name::sword;
+void initWeapon() {
+    weapon[(int)weapon_name::Sword].damage = 0.4;
+    weapon[(int)weapon_name::Sword].defense = 0.4;
+    weapon[(int)weapon_name::Sword].name = "sword";
+    weapon[(int)weapon_name::Sword].constellation = &Sword;
 
-void initWeapon()
-{
-    weapon[(int)weapon_name::sword].damage = .4;
-    weapon[(int)weapon_name::sword].defense = .4;
-    weapon[(int)weapon_name::sword].name = "sword";
+    weapon[(int)weapon_name::Shield].damage = 0.2;
+    weapon[(int)weapon_name::Shield].defense = 0.5;
+    weapon[(int)weapon_name::Shield].name = "shield";
+    weapon[(int)weapon_name::Shield].constellation = &Shield;
 
-    weapon[(int)weapon_name::staff].damage = .4;
-    weapon[(int)weapon_name::staff].defense = .3;
-    weapon[(int)weapon_name::staff].name = "staff";
+    weapon[(int)weapon_name::Bow].damage = 0.5;
+    weapon[(int)weapon_name::Bow].defense = 0.2;
+    weapon[(int)weapon_name::Bow].name = "bow";
+    weapon[(int)weapon_name::Bow].constellation = &Bow;
 
-    weapon[(int)weapon_name::shield].damage = .2;
-    weapon[(int)weapon_name::shield].defense = .5;
-    weapon[(int)weapon_name::shield].name = "shield";
-
-    weapon[(int)weapon_name::bow].damage = .5;
-    weapon[(int)weapon_name::bow].defense = .2;
-    weapon[(int)weapon_name::bow].name = "bow";
-
+    weapon[(int)weapon_name::Staff].damage = 0.4;
+    weapon[(int)weapon_name::Staff].defense = 0.3;
+    weapon[(int)weapon_name::Staff].name = "staff";
+    weapon[(int)weapon_name::Staff].constellation = &Staff;
 }
 
-void SelectWeapon()
-{
-        
-    if (GetAsyncKeyState('1'))
-    {
-        current_weapon = weapon_name::sword;
-    }
+void SelectWeapon() {
 
-    if (GetAsyncKeyState('2'))
-    {
-        current_weapon = weapon_name::shield;
-    }
-
-    if (GetAsyncKeyState('3'))
-    {
-        current_weapon = weapon_name::bow;
-    }
-
-    if (GetAsyncKeyState('4'))
-    {
-        current_weapon = weapon_name::staff;
-    }
-
-
-
+    if (GetAsyncKeyState('1')) current_weapon = weapon_name::Sword;
+    if (GetAsyncKeyState('2')) current_weapon = weapon_name::Shield;
+    if (GetAsyncKeyState('3')) current_weapon = weapon_name::Bow;
+    if (GetAsyncKeyState('4')) current_weapon = weapon_name::Staff;
 }
 
 float getConstellationHP(Constellation& Constellation)
@@ -109,6 +90,5 @@ void enemyAttack(Constellation& Constellation)
     int attackedStar = rand() % starsCount;
 
     starHealth[attackedStar] -= .4;
-    
-}
 
+}
