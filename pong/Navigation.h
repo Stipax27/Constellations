@@ -97,11 +97,13 @@ void fightMove(point3d& p) {
 			//_ultoa_s(currentA, temp, 10);//преобразование числовой переменной в текст. текст окажется в переменной txt
 			//_ultoa_s(moveTimer - T / 1000, temp, 10);//преобразование числовой переменной в текст. текст окажется в переменной txt
 			//TextOutA(window.context, window.width / 2, window.height / 2., (LPCSTR)temp, strlen(temp));
+			/*SaveCurrentState();*/
 		}
 		else {
 			isMoveActive = false;
 		}
 	}
+	
 }
 
 //

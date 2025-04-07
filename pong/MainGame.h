@@ -1,3 +1,8 @@
+extern std::vector<Constellation*> starSet;
+extern ZodiacSign player_sign;
+extern ZodiacSign currentEnemyID;
+extern DWORD currentTime;
+
 struct {
     int day, month;//количество набранных очков и оставшихс€ "жизней"
     bool action = false;//состо€ние - ожидание (игрок должен нажать пробел) или игра
@@ -323,20 +328,74 @@ void SelectVector()
         attack[0].y = oldmouse.y;
         attack[1].x = mouse.x;
         attack[1].y = mouse.y;
-        is_attack = true;
+        
 
+        /*if (is_attack) {
+            SaveCurrentState();
+        }*/
 
-        //mouseAngle.x = oldmouseAngle.x + dx;
-        //mouseAngle.y = oldmouseAngle.y + dy;
     }
     else
     {
     lmb = false;
     is_attack = false;
     }
-        
+
+    
 }
 
+struct BattleState {
+    DWORD timestamp;
+    float playerHP;    
+    float enemyHP;     
+    std::vector<float> playerStarsHealth;  
+    std::vector<float> enemyStarsHealth;   
+    point3d playerPos;  
+    point3d enemyPos;   
+};
+
+std::vector<BattleState> battleHistory;
+BattleState lastSavedState;
+
+void SaveCurrentState() {
+    BattleState currentState;
+    currentState.timestamp = timeGetTime();
+
+    currentState.playerHP = getConstellationHP(*starSet[player_sign]);
+    currentState.playerStarsHealth = starSet[player_sign]->starsHealth;
+    currentState.playerPos = starSet[player_sign]->starsRenderedCords[0];
+
+    currentState.enemyHP = getConstellationHP(*starSet[currentEnemyID]);
+    currentState.enemyStarsHealth = starSet[currentEnemyID]->starsHealth;
+    currentState.enemyPos = starSet[currentEnemyID]->starsRenderedCords[0];
+
+    
+    if (battleHistory.empty() ||
+        currentState.playerHP != lastSavedState.playerHP ||
+        currentState.enemyHP != lastSavedState.enemyHP) {
+
+        battleHistory.push_back(currentState);
+        lastSavedState = currentState;
+
+        if (battleHistory.size() > 100) {
+            battleHistory.erase(battleHistory.begin());
+        }
+    }
+}
+
+
+void RewindTime(DWORD targetTime) {
+    if (battleHistory.empty()) return;
+
+    for (auto it = battleHistory.rbegin(); it != battleHistory.rend(); ++it) {
+        if (it->timestamp <= targetTime) {
+            
+            starSet[player_sign]->starsHealth = it->playerStarsHealth;
+            starSet[currentEnemyID]->starsHealth = it->enemyStarsHealth;
+            break;
+        }
+    }
+}
 
 bool isBattleActive = false;
 DWORD battleStartTime;
@@ -351,13 +410,9 @@ void StartBattle() {
     }
 }
 
-
-
 void UpdateGame() {
-
-    static const DWORD MAX_BATTLE_TIME = 4 * 60 * 1000;// ¬вЄл константу максимального предела
-    static const DWORD MAX_REWIND = 30 * 1000; // ћаксимум 30 секунд возврата
-    static DWORD lastSaveTime = 0;
+    static const DWORD MAX_BATTLE_TIME = 4 * 60 * 1000;
+    static const DWORD MAX_REWIND = 30 * 1000;
     static DWORD battleTime = 2 * 60 * 1000;
     static DWORD timeModifier = 0;
     static DWORD lastInputTime = 0;
@@ -365,25 +420,20 @@ void UpdateGame() {
 
     DWORD currentTime = timeGetTime();
 
-    if (currentTime - lastSaveTime >= 100) { //  аждые 100 мс
-
-        lastSaveTime = currentTime;
-    }
-
+    
+    
     if (GetAsyncKeyState('Q')) {
         if (currentTime - lastInputTime > inputRepeatDelay) {
-
             lastInputTime = currentTime;
-
             if (battleStartTime + battleTime + timeModifier + 1000 - currentTime <= MAX_BATTLE_TIME) {
                 timeModifier += 1000;
-                lastInputTime = currentTime;
             }
         }
     }
     else if (GetAsyncKeyState('E')) {
         if (currentTime - lastInputTime > inputRepeatDelay) {
             timeModifier = std::max<DWORD>(0, timeModifier - 1000);
+            RewindTime(currentTime - timeModifier);
             lastInputTime = currentTime;
         }
     }
@@ -409,6 +459,8 @@ void UpdateGame() {
         }
     }
 }
+
+
 
 
 void endFight()

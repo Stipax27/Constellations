@@ -46,6 +46,9 @@ void SelectWeapon() {
     if (GetAsyncKeyState('2')) current_weapon = weapon_name::Shield;
     if (GetAsyncKeyState('3')) current_weapon = weapon_name::Bow;
     if (GetAsyncKeyState('4')) current_weapon = weapon_name::Staff;
+
+    
+
 }
 
 float getConstellationHP(Constellation& Constellation)
@@ -61,6 +64,7 @@ float getConstellationHP(Constellation& Constellation)
 
     return health;
 
+    
 
 }
 
@@ -77,6 +81,7 @@ bool isConstellationDead(Constellation& Constellation)
 
     return health > 0 ? false : true;
 
+    
 
 }
 
@@ -90,5 +95,7 @@ void enemyAttack(Constellation& Constellation)
     int attackedStar = rand() % starsCount;
 
     starHealth[attackedStar] -= .4;
+
+    
 
 }
