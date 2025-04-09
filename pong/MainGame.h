@@ -1,7 +1,4 @@
-extern std::vector<Constellation*> starSet;
-extern ZodiacSign player_sign;
-extern ZodiacSign currentEnemyID;
-extern DWORD currentTime;
+
 
 struct {
     int day, month;//количество набранных очков и оставшихся "жизней"
@@ -238,60 +235,6 @@ void StartMenu()
 
 }
 
-/*HBRUSH brush;
-HBRUSH brush2;
-float finalStarRad = 0;
-void drawLine22(point3d& p1, point3d& p2, Constellation& Constellation, int count)
-{
-
-    for (int i = 0;i < count;i++)
-    {
-
-
-        float dx = p2.x - p1.x;
-        float dy = p2.y - p1.y;
-        float dz = p2.z - p1.z;
-        float length = sqrt(dx * dx + dy * dy + dz * dz);
-        float stepX = dx / (float)count;
-        float stepY = dy / (float)count;
-        float stepZ = dz / (float)count;
-
-        point3d point;
-        point.x = p1.x + stepX * (float)i;
-        point.y = p1.y + stepY * (float)i;
-        point.z = p1.z + stepZ * (float)i;
-
-        std::vector <float>& starHealth = Constellation.starsHealth;
-
-        float dx = point.x - mouse.x;
-        float dy = point.y - mouse.y;
-        float lenght = sqrt(dx * dx + dy * dy);
-
-        float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
-
-        if (dx > mouse.x - oldmouse.x and dy < mouse.y - oldmouse.y)
-        {
-            SelectObject(window.context, brush2);
-            starHealth[i] -= .1;
-        }
-
-        else
-        {
-            SelectObject(window.context, brush);
-        }
-
-        finalStarRad = starSize * starHealth[i] + rad * 15;
-
-    }
-
-
-
-    //modelProject(point);
-
-    //float sz = 1 + .5 * sinf(i + timeGetTime() * .01);
-    //drawPoint(point, sz);
-    // Рисование Линий.
-}*/
 
 point3d attack[2];
 
@@ -330,9 +273,9 @@ void SelectVector()
         attack[1].y = mouse.y;
         
 
-        /*if (is_attack) {
+        if (is_attack) {
             SaveCurrentState();
-        }*/
+        }
 
     }
     else
@@ -344,56 +287,28 @@ void SelectVector()
     
 }
 
-struct BattleState {
-    DWORD timestamp;
-    float playerHP;    
-    float enemyHP;     
-    std::vector<float> playerStarsHealth;  
-    std::vector<float> enemyStarsHealth;   
-    point3d playerPos;  
-    point3d enemyPos;   
-};
-
-std::vector<BattleState> battleHistory;
-BattleState lastSavedState;
-
-void SaveCurrentState() {
-    BattleState currentState;
-    currentState.timestamp = timeGetTime();
-
-    currentState.playerHP = getConstellationHP(*starSet[player_sign]);
-    currentState.playerStarsHealth = starSet[player_sign]->starsHealth;
-    currentState.playerPos = starSet[player_sign]->starsRenderedCords[0];
-
-    currentState.enemyHP = getConstellationHP(*starSet[currentEnemyID]);
-    currentState.enemyStarsHealth = starSet[currentEnemyID]->starsHealth;
-    currentState.enemyPos = starSet[currentEnemyID]->starsRenderedCords[0];
+void DrawStarsHP(HDC hdc) {
+    SetTextColor(hdc, RGB(255, 255, 255));
+    SetBkMode(hdc, TRANSPARENT);
 
     
-    if (battleHistory.empty() ||
-        currentState.playerHP != lastSavedState.playerHP ||
-        currentState.enemyHP != lastSavedState.enemyHP) {
+    SetTextColor(hdc, RGB(100, 150, 255));
+    for (size_t i = 0; i < starSet[player_sign]->starsRenderedCords.size(); ++i) {
+        const auto& pos = starSet[player_sign]->starsRenderedCords[i];
+        float hp = starSet[player_sign]->starsHealth[i];
 
-        battleHistory.push_back(currentState);
-        lastSavedState = currentState;
-
-        if (battleHistory.size() > 100) {
-            battleHistory.erase(battleHistory.begin());
-        }
+        std::string hpText = "HP: " + std::to_string(static_cast<int>(hp));
+        TextOutA(hdc, pos.x + 20, pos.y - 15, hpText.c_str(), hpText.size());
     }
-}
 
+    
+    SetTextColor(hdc, RGB(255, 100, 100));
+    for (size_t i = 0; i < starSet[currentEnemyID]->starsRenderedCords.size(); ++i) {
+        const auto& pos = starSet[currentEnemyID]->starsRenderedCords[i];
+        float hp = starSet[currentEnemyID]->starsHealth[i];
 
-void RewindTime(DWORD targetTime) {
-    if (battleHistory.empty()) return;
-
-    for (auto it = battleHistory.rbegin(); it != battleHistory.rend(); ++it) {
-        if (it->timestamp <= targetTime) {
-            
-            starSet[player_sign]->starsHealth = it->playerStarsHealth;
-            starSet[currentEnemyID]->starsHealth = it->enemyStarsHealth;
-            break;
-        }
+        std::string hpText = "HP: " + std::to_string(static_cast<int>(hp));
+        TextOutA(hdc, pos.x + 20, pos.y - 15, hpText.c_str(), hpText.size());
     }
 }
 
@@ -418,10 +333,11 @@ void UpdateGame() {
     static DWORD lastInputTime = 0;
     const DWORD inputRepeatDelay = 100;
 
+
     DWORD currentTime = timeGetTime();
 
-    
-    
+
+
     if (GetAsyncKeyState('Q')) {
         if (currentTime - lastInputTime > inputRepeatDelay) {
             lastInputTime = currentTime;
@@ -432,32 +348,45 @@ void UpdateGame() {
     }
     else if (GetAsyncKeyState('E')) {
         if (currentTime - lastInputTime > inputRepeatDelay) {
-            timeModifier = std::max<DWORD>(0, timeModifier - 1000);
-            RewindTime(currentTime - timeModifier);
             lastInputTime = currentTime;
+            
+
+            DWORD rewindAmount = 10000;
+            DWORD targetTime = currentTime - rewindAmount;
+
+
+            if (!battleHistory.empty() && targetTime < battleHistory.front().timestamp) {
+                targetTime = battleHistory.front().timestamp;
+            }
+
+            if (RewindTime(targetTime)) {
+
+                timeModifier = currentTime - targetTime;
+            }
         }
     }
 
-    if (isBattleActive) {
-        LONG remainingTime = (LONG)((battleStartTime + battleTime + timeModifier) - currentTime);// Привязал оставшаеся время к лонгу
+        if (isBattleActive) {
+            LONG remainingTime = (LONG)((battleStartTime + battleTime + timeModifier) - currentTime);// Привязал оставшаеся время к лонгу
 
-        DWORD totalBattleTime = battleTime + timeModifier;
-        if (totalBattleTime > MAX_BATTLE_TIME) {
-            timeModifier = MAX_BATTLE_TIME - battleTime;
-            remainingTime = (LONG)((battleStartTime + MAX_BATTLE_TIME) - currentTime);
-        }
+            DWORD totalBattleTime = battleTime + timeModifier;
+            if (totalBattleTime > MAX_BATTLE_TIME) {
+                timeModifier = MAX_BATTLE_TIME - battleTime;
+                remainingTime = (LONG)((battleStartTime + MAX_BATTLE_TIME) - currentTime);
+            }
 
-        if (remainingTime > 0) {
-            std::string timeStr = std::to_string(remainingTime / 1000);// Cтринг для вывода 
-            TextOutA(window.context, 10, 10, "Время ", 6);
-            TextOutA(window.context, 70, 10, timeStr.c_str(), timeStr.size());
+            if (remainingTime > 0) {
+                std::string timeStr = std::to_string(remainingTime / 1000);// Cтринг для вывода 
+                TextOutA(window.context, 10, 10, "Время ", 6);
+                TextOutA(window.context, 70, 10, timeStr.c_str(), timeStr.size());
+            }
+            else {
+                timeModifier = 0;
+                isBattleActive = false;
+                gameState = gameState_::EndFight;
+            }
         }
-        else {
-            timeModifier = 0;
-            isBattleActive = false;
-            gameState = gameState_::EndFight;
-        }
-    }
+    
 }
 
 

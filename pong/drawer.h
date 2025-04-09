@@ -648,7 +648,6 @@ namespace drawer
                 SelectWeapon();
                 StartBattle();
                 enemyFight();
-
                 
 
                 modelTransform = &placeToWorld;
@@ -675,6 +674,7 @@ namespace drawer
                 nearPlaneClip = -2000;
                 draw—onstellation(*starSet[player_sign]);
 
+                DrawStarsHP(window.context);
 
                 std::string curentSignstring = zodiacSignToString(currentEnemyID);
                 TextOutA(window.context, window.width / 2, window.height / 20., curentSignstring.c_str(), curentSignstring.size());

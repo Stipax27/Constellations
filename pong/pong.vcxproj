@@ -153,6 +153,7 @@
     <ClInclude Include="MainWorld.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="Navigation.h" />
+    <ClInclude Include="StatusGame.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="Weapon.h" />
   </ItemGroup>

@@ -47,8 +47,6 @@ void SelectWeapon() {
     if (GetAsyncKeyState('3')) current_weapon = weapon_name::Bow;
     if (GetAsyncKeyState('4')) current_weapon = weapon_name::Staff;
 
-    
-
 }
 
 float getConstellationHP(Constellation& Constellation)
@@ -78,7 +76,7 @@ bool isConstellationDead(Constellation& Constellation)
     {
         health += starHealth[i];
     }
-
+    
     return health > 0 ? false : true;
 
     

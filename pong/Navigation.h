@@ -102,6 +102,7 @@ void fightMove(point3d& p) {
 		else {
 			isMoveActive = false;
 		}
+		/*SaveCurrentState();*/
 	}
 	
 }
