@@ -252,7 +252,9 @@ namespace drawer
     }
 
     float line_hit;
+    float coub_hit;
     bool check_attack = false;
+    bool attack_collision = false;
 
     void starIntersectUI(point3d& point, Constellation& Constellation, int i)
     {
@@ -265,31 +267,39 @@ namespace drawer
         float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
         finalStarRad = starSize * starHealth[i] + rad * 15;
 
+        float line_x = get_lenghts(attack[0], attack[1]);
+        float line_y = get_lenghts(attack[0], point);
+        float line_z = get_lenghts(attack[1], point);
+        float line_yz = line_z + line_y;
+        line_hit = line_yz / line_x;
+
+
         if (GetAsyncKeyState(VK_LBUTTON))
         {
-                        
-            float line_x = get_lenghts(attack[0], attack[1]);
-            float line_y = get_lenghts(attack[0], point);
-            float line_z = get_lenghts(attack[1], point);
-            float line_yz = line_z + line_y;
-            line_hit = line_yz / line_x;
 
-
-
-            if (line_hit < 1.0001 and check_attack == false)
+            if (line_hit < 1.001)
             {
-                SelectObject(window.context, brush2);
-                //finalStarRad = 0.;
-                starHealth[i] -= weapon[(int)current_weapon].damage;
-                check_attack = true;
-
+                attack_collision = true;
             }
 
+
+            SelectObject(window.context, brush);
         }
         else
         {
-            SelectObject(window.context, brush);
-            check_attack = false;
+                
+            if (line_hit < 1.001 and check_attack == false)
+            {
+                SelectObject(window.context, brush2);
+                    //finalStarRad = 0.;
+
+                starHealth[i] -= weapon[(int)current_weapon].damage;
+
+
+            }
+            
+
+
         }
 
        
@@ -644,7 +654,7 @@ namespace drawer
             case gameState_::Fight:
             {
                                
-                SelectVector();
+                AttackSwordVector();
                 SelectWeapon();
                 StartBattle();
                 enemyFight();
@@ -662,10 +672,34 @@ namespace drawer
                 drawÑonstellation(*weapon[(int)current_weapon].constellation);
 
 
+
                 modelTransform = &placeConstToWorld;
                 //drawÑonstellation(*currentEnemy);
                 nearPlaneClip = 0;
-                drawÑonstellation(*starSet[currentEnemyID]);
+
+                if (!GetAsyncKeyState(VK_LBUTTON))
+                {
+                    if (attack_collision == true)
+                    {
+                        check_attack = false;
+                    }
+
+                    drawÑonstellation(*starSet[currentEnemyID]);
+
+                    if (attack_collision == true)
+                    {
+                        check_attack = true;
+                        attack_collision = false;
+                    }
+
+
+                }
+                else
+                {
+                    drawÑonstellation(*starSet[currentEnemyID]);
+                }
+
+
                 
 
                 linksDivider = 15;
