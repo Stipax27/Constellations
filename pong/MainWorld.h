@@ -1,3 +1,4 @@
+Constellation svg1;
 
 Constellation Aries(
 {

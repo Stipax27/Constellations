@@ -27,6 +27,11 @@ public:
         constellationsCounter++;
     }
 
+    Constellation() {
+    }
+
+
+
     void setStarsRenderedCords(float angleX, float angleY, float angleZ) // Подготавливаем данные[starArrayRendered] для отрисовки созвездия
     {
         angle = { angleX,angleY,angleZ };

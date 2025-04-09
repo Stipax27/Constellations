@@ -8,6 +8,7 @@ const float PI = 3.1415926535897;
 #include "math.h"
 #include <stdlib.h>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <cmath>
 

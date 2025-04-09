@@ -3,13 +3,53 @@ struct {
     bool action = false;//состояние - ожидание (игрок должен нажать пробел) или игра
 } game;
 
+bool readSvg(Constellation& svg, const string filename)
+{
+    
+    std::string line;
+    std::ifstream in;
+    in.open(filename);
+    string artCords;
+    string svgPointX;
+    string svgPointY;
+    
+    if (in.is_open())
+    {
+        while (std::getline(in, line))
+        {
+
+            if (line.find("poly"))
+            {
+                std::copy_if;
+
+                svg.starsCords.push_back({ svgPointX, svgPointY, 0 });
+            }
+        }
+    }
+
+    in.close();
+
+    
+    return true;
+}
+
+void readAllSVG()
+{
+    readSvg(svg1,"svg1.svg");
+
+}
+
 void InitGame()
 {
     initWorld();
 
+    readAllSVG();
+
     game.day = 32;
     game.month =  13;
     startTime = timeGetTime();
+
+
 }
 
 HFONT hFont;
