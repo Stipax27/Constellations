@@ -12,7 +12,7 @@ void InitGame()
     game.day = 32;
     game.month =  13;
     startTime = timeGetTime();
-
+    
     initWeapon();
 }
 
@@ -294,6 +294,7 @@ void UpdateGame() {
             lastInputTime = currentTime;
             if (battleStartTime + battleTime + timeModifier + 1000 - currentTime <= MAX_BATTLE_TIME) {
                 timeModifier += 1000;
+                
             }
         }
     }
@@ -310,8 +311,8 @@ void UpdateGame() {
                 targetTime = battleHistory.front().timestamp;
             }
 
-            if (RewindTime(targetTime)) {
-
+            if (RewindOneStepBack()) {
+                //fightMove(playerPosition, true);
                 timeModifier = currentTime - targetTime;
             }
         }

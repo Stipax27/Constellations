@@ -692,7 +692,7 @@ namespace drawer
                         attack_collision = false;
                     }
 
-
+                    
                 }
                 else
                 {
