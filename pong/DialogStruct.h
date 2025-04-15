@@ -18,40 +18,35 @@ struct Dialog {
 
 std::vector<Dialog> dialog;
 
-//void initDialogData()
-//{
-//	{
-//		Dialog Dialog();
-//		d.question = "blablablablablablablablablablabla";
-//		answer v;
-//
-//		v.text = "var1";
-//		v.dialogLink = 1;
-//		d.variants.push_back(v);
-//		v.text = "var2";
-//		v.dialogLink = 2;
-//		d.variants.push_back(v);
-//		v.text = "var3";
-//		v.dialogLink = 3;
-//		d.variants.push_back(v);
-//		dialog.push_back(d);
-//	}
-//
-//
-//	{
-//		Dialog s;
-//		s.question = "Meow meow meow meow meow meow";
-//		answer v;
-//
-//		v.text = "var1";
-//		v.dialogLink = 1222;
-//		s.variants.push_back(v);
-//		v.text = "var2";
-//		v.dialogLink = 1110;
-//		s.variants.push_back(v);
-//		dialog.push_back(s);
-//	}
-//
-//
-//	int a = 0;
-//}
+void initDialogData()
+{
+	{
+		Dialog d("blabla");
+		
+		answer v1;
+		v1.text = "var1";
+		v1.dialogLink = 1;
+		d.variants.push_back(v1);
+
+		answer v2;
+		v2.text = "var2";
+		v2.dialogLink = 2;
+		d.variants.push_back(v2);
+
+		answer v3;
+		v3.text = "...";
+		v3.dialogLink = 3;
+		d.variants.push_back(v3);
+
+		dialog.push_back(d);
+
+		Dialog d1("bfakjbfiajb00");
+
+	}
+
+
+
+	int a = 0;
+}
+
+

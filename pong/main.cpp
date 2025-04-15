@@ -30,13 +30,14 @@ int currentColorIndex = -1;
 const int numColors = 7;
 float camDist = 0;
 
-#include "DialogStruct.h"
 #include "utils.h"
 #include "MainWindow.h"
 #include "mouse.h"
 #include "Constellation.h"
 #include "MainWorld.h"
 #include "MainGame.h"
+
+#include "DialogStruct.h"
 #include "drawer.h"
 
 
