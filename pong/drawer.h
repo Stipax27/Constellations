@@ -455,7 +455,7 @@ namespace drawer
                 break;
 
             case gameState_::dialogueScene:
-                Dialogue();
+                renderContent();
                 break;
 
             case gameState_::Fight:
