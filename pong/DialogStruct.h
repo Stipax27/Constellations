@@ -57,26 +57,38 @@ void initContentData() {
 }
 
 
-void renderContent(HDC hdc) {
+void renderContent() {
+    
     MenuDrawer();
 
-    int yPos = 200;
+    SIZE textSize;
 
+    int yPos = 100; 
+
+    
     for (const auto& narrative : narratives) {
-        TextOutA(hdc, 100, yPos, narrative.text.c_str(), (int)narrative.text.length());
-        yPos += 20;
+        TextOutA(window.context, 100, yPos,
+            narrative.text.c_str(), (int)narrative.text.length());
+        yPos += 30; 
     }
 
+    
     if (!dialogs.empty()) {
-        yPos += 20;
-        const Dialog& d = dialogs[0];
-        TextOutA(hdc, 100, yPos, d.question.c_str(), (int)d.question.length());
-        yPos += 20;
+        yPos += 20; 
 
+        const Dialog& d = dialogs[0];
+        TextOutA(window.context, 100, yPos,
+            d.question.c_str(), (int)d.question.length());
+        yPos += 30;
+
+        
         for (size_t i = 0; i < d.variants.size(); ++i) {
             std::string variantText = std::to_string(i + 1) + ": " + d.variants[i].text;
-            TextOutA(hdc, 100, yPos, variantText.c_str(), (int)variantText.length());
-            yPos += 20;
+            TextOutA(window.context, 120, yPos,
+                variantText.c_str(), (int)variantText.length());
+            yPos += 30;
         }
     }
+
+
 }
