@@ -158,7 +158,10 @@ namespace drawer
             point.y = p1.y + stepY * (float)i;
             point.z = p1.z + stepZ * (float)i;
 
-            modelProject(point);
+            if (modelProject)
+            {
+                modelProject(point);
+            }
 
             float sz = 1 + .5 * sinf(i + timeGetTime() * .01);
             drawPoint(point, sz);
@@ -579,7 +582,217 @@ namespace drawer
         }
     }
 
-    
+    std::vector<point3d> lasso;
+
+    void setPointToArr(char* scrPtr,int x,int y, char v)
+    {
+        *(scrPtr + x + y * window.width) = v;
+    }
+
+    char getPointFromArr(char* scrPtr, int x, int y)
+    {
+        return *(scrPtr + x + y * window.width);
+    }
+
+    void drawLineBB(char* scrPtr, int x1, int y1, int x2, int y2) 
+    {
+              
+        int deltaX = abs(x2 - x1);
+        int deltaY = abs(y2 - y1);
+        int signX = x1 < x2 ? 1 : -1;
+        int signY = y1 < y2 ? 1 : -1;
+        int error = deltaX - deltaY;
+
+        for (;;)
+        {
+            *(scrPtr + x2 + y2 * window.width) = 1;
+
+            if (x1 == x2 && y1 == y2)
+                break;
+
+            int error2 = error * 2;
+
+            if (error2 > -deltaY)
+            {
+                error -= deltaY;
+                x1 += signX;
+            }
+
+            if (error2 < deltaX)
+            {
+                error += deltaX;
+                y1 += signY;
+            }
+        }
+
+    }
+
+    void drawLineBB2(char* s, int x1, int y1, int x2, int y2)
+    {
+        int deltaX = abs(x2 - x1);
+        int deltaY = abs(y2 - y1);
+        int signX = x1 < x2 ? 1 : -1;
+        int signY = y1 < y2 ? 1 : -1;
+        int error = deltaX - deltaY;
+
+        for (;;)
+        {
+            SetPixel(window.context,x1, y1, RGB(255,255,255));
+
+            if (x1 == x2 && y1 == y2)
+                break;
+
+            int error2 = error * 2;
+
+            if (error2 > -deltaY)
+            {
+                error -= deltaY;
+                x1 += signX;
+            }
+
+            if (error2 < deltaX)
+            {
+                error += deltaX;
+                y1 += signY;
+            }
+        }
+    }
+
+    void drawLasso()
+    {
+        int sz = lasso.size();
+        modelTransform = NULL;
+        modelProject = NULL;
+      
+        for (int i = 0; i < sz-1; i++)
+        {
+//            SetPixel(window.context,lasso[i].x, lasso[i].y, RGB(255, 255, 255));
+            float len = get_lenghts(lasso[i], lasso[i + 1]);
+            drawLine(lasso[i], lasso[i + 1], len/5 );
+
+            //drawLineBB2(NULL, lasso[i].x, lasso[i].y, lasso[i + 1].x, lasso[i + 1].y);
+
+        }
+        if (sz > 1)
+        {
+            //drawLineBB2(NULL, lasso[0].x, lasso[0].y, lasso[sz - 1].x, lasso[sz - 1].y);
+            float len = get_lenghts(lasso[0], lasso[sz-1]);
+            drawLine(lasso[0], lasso[sz - 1], len / 5);
+        }
+    }
+
+    void ApplyLassoDamage(char* ptr, Constellation & Constellation)
+    {
+        std::vector <point3d>& starArray = Constellation.starsCords;
+        std::vector <float>& starHealth = Constellation.starsHealth;
+
+        int starsCount = starArray.size();
+        for (int i = 0; i < starsCount; i++)
+        {
+            point3d point;
+            point.x = starArray[i].x;
+            point.y = starArray[i].y;
+            point.z = starArray[i].z;
+
+            float a = timeGetTime() * .01;
+            modelTransform(point, Constellation);
+            modelProject(point);
+
+            if (point.z > nearPlaneClip)
+            {
+                if (point.x >= 0 && point.x < window.width && point.y >= 0 && point.y < window.height)
+                {
+                    if (getPointFromArr(ptr, point.x, point.y) == 1)
+                    {
+                        starHealth[i] = 0;
+                    }
+                }
+
+            }
+
+        }
+        
+    }
+
+    void collectLassoPoints()
+    {
+        int lastPointIndex = 0;
+        if (!lasso.empty())
+        {
+            lastPointIndex = lasso.size()-1;
+        }
+
+        if (GetAsyncKeyState(VK_LBUTTON))
+        {
+            point3d mousePoint;
+            mousePoint.x = mouse.x;
+            mousePoint.y = mouse.y;
+            mousePoint.z = 0;
+
+            if (lasso.empty())
+            {
+                lasso.push_back(mousePoint);
+            }
+            else
+            {
+                point3d lastPoint = { lasso[lastPointIndex].x, lasso[lastPointIndex].y, lasso[lastPointIndex].z };
+
+                float lenght = get_lenghts(mousePoint, lastPoint);
+
+                if (lenght > 12)
+                {
+                    lasso.push_back(mousePoint);
+                }
+            }
+        }
+        else
+        {
+            if (!lasso.empty())
+            {
+                //do attack
+
+                char* backScreen = new char[window.width * window.height];
+                ZeroMemory(backScreen, window.width * window.height);
+
+                int sz = lasso.size();
+                if (sz < 2) return;
+
+                //draw
+                for (int i = 0; i < sz - 1; i++)
+                {
+                    drawLineBB(backScreen, lasso[i].x,lasso[i].y, lasso[i+1].x, lasso[i+1].y);
+                }
+                drawLineBB(backScreen, lasso[0].x, lasso[0].y, lasso[sz - 1].x, lasso[sz - 1].y);
+
+                //fill
+                for (int y = 0;y < window.height; y++)
+                {
+                    bool f = false;
+                    for (int x = 0;x < window.width; x++)
+                    {
+                        if (getPointFromArr(backScreen,x,y)==1)
+                        {
+                            f = !f;
+                        }
+                        else
+                        {
+                            setPointToArr(backScreen, x, y,1);
+                        }
+                    }
+                }
+
+                //check
+                modelTransform = &placeWeaponToWorld;
+                modelProject = &fightProject;
+                ApplyLassoDamage(backScreen,*starSet[currentEnemyID]);
+
+
+                delete(backScreen);
+
+                lasso.clear();
+            }
+        }
+    }
 
     void drawWorld()
     {
@@ -648,7 +861,8 @@ namespace drawer
 
                 modelTransform = &placeToWorld;
                 modelProject = &fightProject;
-                uiFunc = &starIntersectUI;
+                //uiFunc = &starIntersectUI;
+                uiFunc = &starUI;
                 linksDivider = 50;
                 drawStarField();
 
@@ -687,6 +901,8 @@ namespace drawer
                 }
                 
                 
+              
+
                
 
                 linksDivider = 15;
@@ -695,7 +911,13 @@ namespace drawer
                 nearPlaneClip = -2000;
                 drawÑonstellation(*starSet[player_sign]);
 
+
+                collectLassoPoints();
+                drawLasso();
+
                 DrawStarsHP(window.context);
+
+
 
                 std::string curentSignstring = zodiacSignToString(currentEnemyID);
                 TextOutA(window.context, window.width / 2, window.height / 20., curentSignstring.c_str(), curentSignstring.size());
