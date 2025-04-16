@@ -596,33 +596,23 @@
 
     void drawLineBB(char* scrPtr, int x1, int y1, int x2, int y2) 
     {
-              
-        int deltaX = abs(x2 - x1);
-        int deltaY = abs(y2 - y1);
-        int signX = x1 < x2 ? 1 : -1;
-        int signY = y1 < y2 ? 1 : -1;
-        int error = deltaX - deltaY;
+        int minY = min(y1, y2);
+        int maxY = max(y1, y2);
 
-        for (;;)
+        for (int y=minY;y<maxY;y++)
         {
-            *(scrPtr + x2 + y2 * window.width) = 1;
-
-            if (x1 == x2 && y1 == y2)
-                break;
-
-            int error2 = error * 2;
-
-            if (error2 > -deltaY)
+            int x;
+            if (y1 < y2)
             {
-                error -= deltaY;
-                x1 += signX;
+                x = lerp(x1, x2, (y - minY) / (float)(maxY - minY));
+            }
+            else
+            {
+                x = lerp(x2, x1, (y - minY) / (float)(maxY - minY));
             }
 
-            if (error2 < deltaX)
-            {
-                error += deltaX;
-                y1 += signY;
-            }
+            *(scrPtr + x + y * window.width) = 1;
+            
         }
 
     }
@@ -701,9 +691,13 @@
 
             if (point.z > nearPlaneClip)
             {
-                if (point.x >= 0 && point.x < window.width && point.y >= 0 && point.y < window.height)
+                if (point.x >= 0 && point.x < window.width && point.y >= 1 && point.y < window.height-1)
                 {
-                    if (getPointFromArr(ptr, point.x, point.y) == 1)
+                    auto sum = getPointFromArr(ptr, point.x, point.y) +
+                        getPointFromArr(ptr, point.x, point.y - 1) +
+                        getPointFromArr(ptr, point.x, point.y + 1);
+
+                    if (sum>=2)
                     {
                         starHealth[i] = 0;
                     }
@@ -715,6 +709,15 @@
         
     }
 
+    int sign(int x)
+    {
+        if (x > 0) return 1;
+        if (x < 0) return -1;
+        return 0;
+    }
+
+    point3d lastPoint;
+    
     void collectLassoPoints()
     {
         int lastPointIndex = 0;
@@ -723,12 +726,14 @@
             lastPointIndex = lasso.size()-1;
         }
 
+        point3d mousePoint;
+        mousePoint.x = mouse.x;
+        mousePoint.y = mouse.y;
+        mousePoint.z = 0;
+
         if (GetAsyncKeyState(VK_LBUTTON))
         {
-            point3d mousePoint;
-            mousePoint.x = mouse.x;
-            mousePoint.y = mouse.y;
-            mousePoint.z = 0;
+
 
             if (lasso.empty())
             {
@@ -736,13 +741,31 @@
             }
             else
             {
-                point3d lastPoint = { lasso[lastPointIndex].x, lasso[lastPointIndex].y, lasso[lastPointIndex].z };
+                lastPoint = { lasso[lastPointIndex].x, lasso[lastPointIndex].y, lasso[lastPointIndex].z };
 
                 float lenght = get_lenghts(mousePoint, lastPoint);
 
                 if (lenght > 12)
                 {
-                    lasso.push_back(mousePoint);
+                    if (lastPointIndex > 0)
+                    {
+                        int dy = mousePoint.y - lastPoint.y;
+                        int dyPrev = lastPoint.y - lasso[lastPointIndex - 1].y;
+                        if (sign(dy) + sign(dyPrev) == 0)
+                        {
+                            lastPoint.x += sign(mousePoint.x - lastPoint.x);
+                            lasso.push_back(lastPoint);
+                            lasso.push_back(mousePoint);
+                        }
+                        else
+                        {
+                            lasso.push_back(mousePoint);
+                        }
+                    }
+                    else
+                    {
+                        lasso.push_back(mousePoint);
+                    }
                 }
             }
         }
@@ -750,6 +773,35 @@
         {
             if (!lasso.empty())
             {
+                //close curve
+                if (lastPointIndex > 0)
+                {
+                    int dy = lasso[0].y - lastPoint.y;
+                    int dyPrev = lastPoint.y - lasso[lastPointIndex - 1].y;
+                    if (sign(dy) + sign(dyPrev) == 0)
+                    {
+                        lastPoint.x += sign(lasso[0].x - lastPoint.x);
+                        lasso.push_back(lastPoint);
+
+                        int dy = lasso[1].y - lasso[0].y;
+                        int dyPrev = lasso[0].y - lasso[lastPointIndex].y;
+
+                        if (sign(dy) + sign(dyPrev) == 0)
+                        {
+                            
+                            auto ofs = sign(lasso[0].x - lastPoint.x);
+                            lastPoint = lasso[0];
+                            lastPoint.x -= ofs;
+                            lasso.push_back(lastPoint);
+
+                            lasso.push_back(lasso[0]);
+                        }
+                    }
+                    else
+                    {
+                        lasso.push_back(lasso[0]);
+                    }
+                }
 
                 //do attack
 
@@ -764,27 +816,25 @@
                 {
                     drawLineBB(backScreen, lasso[i].x,lasso[i].y, lasso[i+1].x, lasso[i+1].y);
                 }
-                drawLineBB(backScreen, lasso[0].x, lasso[0].y, lasso[sz - 1].x, lasso[sz - 1].y);
 
                 //fill
                 for (int y = 0;y < window.height; y++)
                 {
-                    BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно
+                    //BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно
                     bool f = false;
-                    for (int x = 0;x < window.width; x++)
+                    for (int x = 0;x < window.width-1; x++)
                     {
-                        if (getPointFromArr(backScreen,x,y)==1)
+                        if (getPointFromArr(backScreen, x, y) == 1 )
                         {
                             f = !f;
                         }
-                        else
+
+                        if (f)
                         {
-                            if (f)
-                            {
-                                //setPointToArr(backScreen, x, y, 1);
-                            }
+                            setPointToArr(backScreen, x, y, 1);
                         }
 
+                        /*
                         if (getPointFromArr(backScreen, x, y) == 1)
                         {
                             SetPixel(window.context, x, y, RGB(255, 255, 255));
@@ -792,24 +842,23 @@
                         else
                         {
                             SetPixel(window.context, x, y, RGB(0, 0, 0));
-                        }
+                        }*/
                     }
                 }
 
-                //BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно
+                
 
-                while (!GetAsyncKeyState(VK_RETURN))
-                {
-                    Sleep(16);
-                }
+               // while (!GetAsyncKeyState(VK_RETURN))
+               // {
+               //  Sleep(16);
+               // }
 
                 //check
                 modelTransform = &placeWeaponToWorld;
                 modelProject = &fightProject;
-                //ApplyLassoDamage(backScreen,*starSet[currentEnemyID]);
+                ApplyLassoDamage(backScreen,*starSet[currentEnemyID]);
 
-
-                //delete(backScreen);
+                delete(backScreen);
 
                 lasso.clear();
             }
