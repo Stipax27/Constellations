@@ -776,9 +776,28 @@ namespace drawer
                         }
                         else
                         {
-                            setPointToArr(backScreen, x, y,1);
+                            if (f)
+                            {
+                                setPointToArr(backScreen, x, y, 1);
+                            }
+                        }
+
+                        if (getPointFromArr(backScreen, x, y) == 1)
+                        {
+                            SetPixel(window.context, x, y, RGB(255, 255, 255));
+                        }
+                        else
+                        {
+                            SetPixel(window.context, x, y, RGB(0, 0, 0));
                         }
                     }
+                }
+
+                BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно
+
+                while (!GetAsyncKeyState(VK_RETURN))
+                {
+                    Sleep(16);
                 }
 
                 //check
