@@ -1,4 +1,4 @@
-namespace drawer
+п»їnamespace drawer
 {
         
     void (*modelTransform)(point3d& p, Constellation& Constellation);
@@ -8,7 +8,7 @@ namespace drawer
     {
         rotateX(p, mouseAngle.y * 0.1);
         rotateY(p, mouseAngle.x * 0.1);
-        //rotateZ(p, timeGetTime() * 0.01); // Кручение обьектов.
+        //rotateZ(p, timeGetTime() * 0.01); // РљСЂСѓС‡РµРЅРёРµ РѕР±СЊРµРєС‚РѕРІ.
     }
 
     void placeConstToWorld(point3d& p, Constellation& Constellation)
@@ -123,7 +123,7 @@ namespace drawer
         p.y = 0;
         p.z = window.width;
         rotateX(p, angleX);
-        rotateY(p, angleY); // Сферообразное пространство.
+        rotateY(p, angleY); // РЎС„РµСЂРѕРѕР±СЂР°Р·РЅРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ.
     }
 
     float nearPlaneClip = 0;
@@ -137,7 +137,7 @@ namespace drawer
             p.y - sz,
             p.x + sz,
             p.y + sz
-        );// Рисование элипса. sz = Размер звезды.
+        );// Р РёСЃРѕРІР°РЅРёРµ СЌР»РёРїСЃР°. sz = Р Р°Р·РјРµСЂ Р·РІРµР·РґС‹.
 
     }
 
@@ -165,7 +165,7 @@ namespace drawer
 
             float sz = 1 + .5 * sinf(i + timeGetTime() * .01);
             drawPoint(point, sz);
-            // Рисование Линий.
+            // Р РёСЃРѕРІР°РЅРёРµ Р›РёРЅРёР№.
         }
     }
 
@@ -196,9 +196,9 @@ namespace drawer
             float a = timeGetTime() * .01;
             modelTransform(point1, Constellation);
             modelTransform(point2, Constellation);
-            //if (starHealth[i] > 0 && starHealth[i + 1] > 0) - Было
+            //if (starHealth[i] > 0 && starHealth[i + 1] > 0) - Р‘С‹Р»Рѕ
 
-            if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0) // - Стало
+            if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0) // - РЎС‚Р°Р»Рѕ
             {
 
                 float dx = point2.x - point1.x;
@@ -206,7 +206,7 @@ namespace drawer
                 float dz = point2.z - point1.z;
                 float length = sqrt(dx * dx + dy * dy + dz * dz);
                 int x = static_cast<int>(length) / linksDivider;
-                drawLine(point1, point2, x);// Рисование звёздных линий созвездия.
+                drawLine(point1, point2, x);// Р РёСЃРѕРІР°РЅРёРµ Р·РІС‘Р·РґРЅС‹С… Р»РёРЅРёР№ СЃРѕР·РІРµР·РґРёСЏ.
             }
         }
     }
@@ -375,7 +375,7 @@ namespace drawer
             modelTransform(point, Constellation);
             modelProject(point);
 
-            // Пульсирование Звёзд при наведение мыши.
+            // РџСѓР»СЊСЃРёСЂРѕРІР°РЅРёРµ Р—РІС‘Р·Рґ РїСЂРё РЅР°РІРµРґРµРЅРёРµ РјС‹С€Рё.
             finalStarRad = 1;
             uiFunc(point, Constellation, i);
 
@@ -391,7 +391,7 @@ namespace drawer
 
     
 
-    void drawСonstellation(Constellation& Constellation)
+    void drawРЎonstellation(Constellation& Constellation)
     {
         drawLinks(Constellation);
         drawStarPulse(Constellation);
@@ -408,19 +408,19 @@ namespace drawer
             modelTransform(point,Aries);
             modelProject(point);
             drawPoint(point,.5);
-            // Звёзды на фоне их кол-во. и Кадр остановки.
+            // Р—РІС‘Р·РґС‹ РЅР° С„РѕРЅРµ РёС… РєРѕР»-РІРѕ. Рё РљР°РґСЂ РѕСЃС‚Р°РЅРѕРІРєРё.
         }
     }
 
     const COLORREF colors[] =
     {
-        RGB(255, 0, 0),    // Красный
-        RGB(255, 165, 0),  // Оранжевый
-        RGB(255, 255, 0),  // Желтый
-        RGB(0, 255, 0),    // Зеленый
-        RGB(0, 255, 255),  // Голубой
-        RGB(0, 0, 255),    // Синий
-        RGB(128, 0, 128)   // Фиолетовый
+        RGB(255, 0, 0),    // РљСЂР°СЃРЅС‹Р№
+        RGB(255, 165, 0),  // РћСЂР°РЅР¶РµРІС‹Р№
+        RGB(255, 255, 0),  // Р–РµР»С‚С‹Р№
+        RGB(0, 255, 0),    // Р—РµР»РµРЅС‹Р№
+        RGB(0, 255, 255),  // Р“РѕР»СѓР±РѕР№
+        RGB(0, 0, 255),    // РЎРёРЅРёР№
+        RGB(128, 0, 128)   // Р¤РёРѕР»РµС‚РѕРІС‹Р№
     };
 
 
@@ -460,7 +460,7 @@ namespace drawer
                 p1.x, p1.y,
                 p2.x, p2.y);
 
-            DeleteObject(brush);// Данные для рисование цвет. круга.
+            DeleteObject(brush);// Р”Р°РЅРЅС‹Рµ РґР»СЏ СЂРёСЃРѕРІР°РЅРёРµ С†РІРµС‚. РєСЂСѓРіР°.
         }
     }
 
@@ -556,10 +556,10 @@ namespace drawer
             Morp_health.push_back(1);
         }
         
-        //drawСonstellation(morphArray, Morp_indices, Morp_health); Отключено
+        //drawРЎonstellation(morphArray, Morp_indices, Morp_health); РћС‚РєР»СЋС‡РµРЅРѕ
     }
 
-    void drawPlayerСonstellationToMenu()
+    void drawPlayerРЎonstellationToMenu()
     {
         startTime = timeGetTime();
         int n = (timeGetTime() / 1000) % starSet.size();
@@ -568,8 +568,8 @@ namespace drawer
         uiFunc = &menuUI;
         linksDivider = 15;
         if (gameState == gameState_::confirmSign) n = player_sign;
-        //drawСonstellation(*starSet[n]);
-        drawСonstellation(*starSet[player_sign]);
+        //drawРЎonstellation(*starSet[n]);
+        drawРЎonstellation(*starSet[player_sign]);
     }
 
     void enemyFight()
@@ -683,6 +683,7 @@ namespace drawer
 
     void ApplyLassoDamage(char* ptr, Constellation & Constellation)
     {
+
         std::vector <point3d>& starArray = Constellation.starsCords;
         std::vector <float>& starHealth = Constellation.starsHealth;
 
@@ -749,6 +750,7 @@ namespace drawer
         {
             if (!lasso.empty())
             {
+
                 //do attack
 
                 char* backScreen = new char[window.width * window.height];
@@ -767,6 +769,7 @@ namespace drawer
                 //fill
                 for (int y = 0;y < window.height; y++)
                 {
+                    BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//РєРѕРїРёСЂСѓРµРј Р±СѓС„РµСЂ РІ РѕРєРЅРѕ
                     bool f = false;
                     for (int x = 0;x < window.width; x++)
                     {
@@ -778,7 +781,7 @@ namespace drawer
                         {
                             if (f)
                             {
-                                setPointToArr(backScreen, x, y, 1);
+                                //setPointToArr(backScreen, x, y, 1);
                             }
                         }
 
@@ -793,7 +796,7 @@ namespace drawer
                     }
                 }
 
-                BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно
+                //BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//РєРѕРїРёСЂСѓРµРј Р±СѓС„РµСЂ РІ РѕРєРЅРѕ
 
                 while (!GetAsyncKeyState(VK_RETURN))
                 {
@@ -803,10 +806,10 @@ namespace drawer
                 //check
                 modelTransform = &placeWeaponToWorld;
                 modelProject = &fightProject;
-                ApplyLassoDamage(backScreen,*starSet[currentEnemyID]);
+                //ApplyLassoDamage(backScreen,*starSet[currentEnemyID]);
 
 
-                delete(backScreen);
+                //delete(backScreen);
 
                 lasso.clear();
             }
@@ -826,18 +829,18 @@ namespace drawer
                 break;
 
             case gameState_::MonthSelection:
-                //drawPlayerСonstellationToMenu();
+                //drawPlayerРЎonstellationToMenu();
                 menuMonthprocessing();
                 break;
 
             case gameState_::DaySelection:
-                //drawPlayerСonstellationToMenu();
+                //drawPlayerРЎonstellationToMenu();
                 menuMonthprocessing();
                 menuDayprocessing();
                 break;
 
             case gameState_::confirmSign:
-                drawPlayerСonstellationToMenu();
+                drawPlayerРЎonstellationToMenu();
                 menuMonthprocessing();
                 menuDayprocessing();
                 menuConfirmationButton();
@@ -855,7 +858,7 @@ namespace drawer
 
                 for (int i = 0;i < starSet.size();i++)
                 {
-                    drawСonstellation(*starSet[i]);
+                    drawРЎonstellation(*starSet[i]);
                 }
 
                 std::string curentSignstring = zodiacSignToString(player_sign);
@@ -888,12 +891,12 @@ namespace drawer
                 
                 modelTransform = &placeWeaponToWorld;
                 nearPlaneClip = 0;
-                drawСonstellation(*weapon[(int)current_weapon].constellation);
+                drawРЎonstellation(*weapon[(int)current_weapon].constellation);
 
 
 
                 modelTransform = &placeConstToWorld;
-                //drawСonstellation(*currentEnemy);
+                //drawРЎonstellation(*currentEnemy);
                 nearPlaneClip = 0;
 
                 if (!GetAsyncKeyState(VK_LBUTTON))
@@ -903,7 +906,7 @@ namespace drawer
                         check_attack = false;
                     }
 
-                    drawСonstellation(*starSet[currentEnemyID]);
+                    drawРЎonstellation(*starSet[currentEnemyID]);
 
                     if (attack_collision == true)
                     {
@@ -915,7 +918,7 @@ namespace drawer
                 }
                 else
                 {
-                    drawСonstellation(*starSet[currentEnemyID]);
+                    drawРЎonstellation(*starSet[currentEnemyID]);
                     //check_attack = false;
                 }
                 
@@ -928,7 +931,7 @@ namespace drawer
                 modelTransform = &placeHeroToWorld;
                 uiFunc = &heroUI;
                 nearPlaneClip = -2000;
-                drawСonstellation(*starSet[player_sign]);
+                drawРЎonstellation(*starSet[player_sign]);
 
 
                 collectLassoPoints();
