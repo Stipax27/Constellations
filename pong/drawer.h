@@ -660,9 +660,22 @@ namespace drawer
                 //draw—onstellation(*currentEnemy);
                 nearPlaneClip = 0;
 
-                if (GetAsyncKeyState(VK_LBUTTON))
+                if (!GetAsyncKeyState(VK_LBUTTON))
                 {
-                    check_attack = true;
+                    if (attack_collision == true)
+                    {
+                        check_attack = false;
+                    }
+
+                    draw—onstellation(*starSet[currentEnemyID]);
+
+                    if (attack_collision == true)
+                    {
+                        check_attack = true;
+                        attack_collision = false;
+                    }
+
+                    
                 }
                 else
                 {
