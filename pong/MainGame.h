@@ -307,14 +307,14 @@ void UpdateGame() {
             DWORD targetTime = currentTime - rewindAmount;
 
 
-            if (!battleHistory.empty() && targetTime < battleHistory.front().timestamp) {
-                targetTime = battleHistory.front().timestamp;
-            }
+            //if (!battleHistory.empty() && targetTime < battleHistory.front().timestamp) {
+            //    targetTime = battleHistory.front().timestamp;
+            //}
 
-            if (RewindOneStepBack()) {
-                //fightMove(playerPosition, true);
-                timeModifier = currentTime - targetTime;
-            }
+            //if (RewindOneStepBack()) {
+            //    //fightMove(playerPosition, true);
+            //    timeModifier = currentTime - targetTime;
+            //}
         }
     }
 

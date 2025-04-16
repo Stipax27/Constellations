@@ -273,14 +273,17 @@ namespace drawer
         float line_yz = line_z + line_y;
         line_hit = line_yz / line_x;
 
-
-        if (check_attack == true)
+        if (GetAsyncKeyState(VK_LBUTTON))
         {
+            if (line_hit < 1.001)
+            {
+                attack_collision = true;
+            }
             SelectObject(window.context, brush);
         }
         else
         {
-            if (line_hit < 1.001)
+            if (line_hit < 1.001 and check_attack ==false)
             {
                 SelectObject(window.context, brush2);
                 starHealth[i] -= weapon[(int)current_weapon].damage;
@@ -679,10 +682,11 @@ namespace drawer
                 }
                 else
                 {
-                    check_attack = false;
+                    drawÑonstellation(*starSet[currentEnemyID]);
+                    //check_attack = false;
                 }
                 
-                drawÑonstellation(*starSet[currentEnemyID]);
+                
                
 
                 linksDivider = 15;

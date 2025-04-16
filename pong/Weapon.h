@@ -148,3 +148,40 @@ void AttackSwordVector()
 
 
 }
+
+void AttackShieldVector()
+{
+
+    if (GetAsyncKeyState(VK_LBUTTON))
+    {        
+        if (!lmb)
+        {
+            lmb = true;
+            oldmouse.x = mouse.x;
+            oldmouse.y = mouse.y;
+            oldmouseAngle = mouseAngle;
+        }
+        float dx, dy;
+        dx = mouse.x - oldmouse.x;
+        dy = mouse.y - oldmouse.y;
+
+
+
+        HPEN pen = CreatePen(PS_SOLID, 3, RGB(0, 191, 255));
+        SelectObject(window.context, pen);
+        MoveToEx(window.context, oldmouse.x, oldmouse.y, NULL);
+        LineTo(window.context, mouse.x, mouse.y);
+        attack[0].x = oldmouse.x;
+        attack[0].y = oldmouse.y;
+        attack[1].x = mouse.x;
+        attack[1].y = mouse.y;
+
+    }
+    else
+    {
+        lmb = false;
+        is_attack = false;
+    }
+
+
+}

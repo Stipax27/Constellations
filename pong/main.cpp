@@ -22,7 +22,7 @@ struct point3d {
 
     float x, y, z;
 
-    bool operator==(const point3d& other) const {  
+    /*bool operator==(const point3d& other) const {
         return x == other.x && y == other.y && z == other.z;
     }
 
@@ -30,7 +30,7 @@ struct point3d {
         return fabs(x - other.x) < 0.001f &&
             fabs(y - other.y) < 0.001f &&
             fabs(z - other.z) < 0.001f;
-    }
+    }*/
 };
 
 const float starSize = 10;
@@ -88,7 +88,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
             static DWORD lastCombatSave = 0;
         
-            SaveCurrentState();
+           // SaveCurrentState();
             lastCombatSave = currentTime;
            
         }
