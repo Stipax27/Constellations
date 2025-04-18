@@ -617,34 +617,26 @@
 
     }
 
-    void drawLineBB2(char* s, int x1, int y1, int x2, int y2)
+    void drawLineBB2(char* scrPtr, int x1, int y1, int x2, int y2)
     {
-        int deltaX = abs(x2 - x1);
-        int deltaY = abs(y2 - y1);
-        int signX = x1 < x2 ? 1 : -1;
-        int signY = y1 < y2 ? 1 : -1;
-        int error = deltaX - deltaY;
+        int minY = min(y1, y2);
+        int maxY = max(y1, y2);
 
-        for (;;)
+        for (int y = minY; y < maxY; y++)
         {
-            SetPixel(window.context,x1, y1, RGB(255,255,255));
-
-            if (x1 == x2 && y1 == y2)
-                break;
-
-            int error2 = error * 2;
-
-            if (error2 > -deltaY)
+            int x;
+            if (y1 < y2)
             {
-                error -= deltaY;
-                x1 += signX;
+                x = lerp(x1, x2, (y - minY) / (float)(maxY - minY));
+            }
+            else
+            {
+                x = lerp(x2, x1, (y - minY) / (float)(maxY - minY));
             }
 
-            if (error2 < deltaX)
-            {
-                error += deltaX;
-                y1 += signY;
-            }
+            SetPixel(window.context, x, y, RGB(255, 255, 255));
+            *(scrPtr + x + y * window.width) = 1;
+
         }
     }
 
@@ -815,6 +807,7 @@
                 for (int i = 0; i < sz - 1; i++)
                 {
                     drawLineBB(backScreen, lasso[i].x,lasso[i].y, lasso[i+1].x, lasso[i+1].y);
+                    //drawLineBB2(backScreen, lasso[i].x, lasso[i].y, lasso[i + 1].x, lasso[i + 1].y);
                 }
 
                 //fill
@@ -848,10 +841,10 @@
 
                 
 
-               // while (!GetAsyncKeyState(VK_RETURN))
-               // {
-               //  Sleep(16);
-               // }
+                //while (!GetAsyncKeyState(VK_RETURN))
+                //{
+                 //Sleep(16);
+                //}
 
                 //check
                 modelTransform = &placeWeaponToWorld;
