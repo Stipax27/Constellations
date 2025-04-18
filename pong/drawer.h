@@ -4,13 +4,6 @@ namespace drawer
     void (*modelTransform)(point3d& p, Constellation& Constellation);
     void (*modelProject)(point3d& p);
 
-    void rotateworld(point3d& p)
-    {
-        rotateX(p, mouseAngle.y * 0.1);
-        rotateY(p, mouseAngle.x * 0.1);
-        //rotateZ(p, timeGetTime() * 0.01); // Кручение обьектов.
-    }
-
     void placeConstToWorld(point3d& p, Constellation& Constellation)
     {
         move(p, 0, 0, 3000. / Constellation.scale);
@@ -44,6 +37,7 @@ namespace drawer
         p.x *= 200;
         p.y *= 200;
         p.z *= 200;
+        move(p, offset.x, offset.y, offset.z);
         float a = timeGetTime();
         rotateY(p, a * 0.1);
         move(p, 0, 0, 1300);
