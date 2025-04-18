@@ -37,7 +37,7 @@ namespace drawer
         p.x *= 200;
         p.y *= 200;
         p.z *= 200;
-        move(p, offset.x, offset.y, offset.z);
+        //move(p, offset.x, offset.y, offset.z);
         float a = timeGetTime();
         rotateY(p, a * 0.1);
         move(p, 0, 0, 1300);
@@ -630,6 +630,12 @@ namespace drawer
 
                 break;
             }
+            case gameState_::DialogStruct:
+
+                renderContent();
+                handleInput();
+
+                break;
 
             case gameState_::Fight:
             {
