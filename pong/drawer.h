@@ -455,9 +455,9 @@ namespace drawer
                 break;
 
             case gameState_::dialogueScene:
-               
-                renderContent(); 
                 
+                
+                handleInput('1');
                 
                 break;
 
