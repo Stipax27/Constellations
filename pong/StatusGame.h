@@ -1,80 +1,104 @@
-
 extern std::vector<Constellation*> starSet;
 extern ZodiacSign player_sign;
 extern ZodiacSign currentEnemyID;
 extern DWORD currentTime;
 
-struct BattleState{
-    DWORD timestamp;
-    float playerHP;
-    float enemyHP;
-    std::vector<float> playerStarsHealth;
-    std::vector<float> enemyStarsHealth;
-    point3d playerPos;
-    point3d enemyPos;
-};
-
-std::vector<BattleState> battleHistory;
-BattleState lastSavedState;
-
-void SaveCurrentState() {
-    BattleState currentState;
-    currentState.timestamp = timeGetTime();
-
-    currentState.playerHP = getConstellationHP(*starSet[player_sign]);
-    currentState.playerStarsHealth = starSet[player_sign]->starsHealth;
-    /*currentState.playerPos = starSet[player_sign]->starsRenderedCords[0];*/
-
-    currentState.enemyHP = getConstellationHP(*starSet[currentEnemyID]);
-    currentState.enemyStarsHealth = starSet[currentEnemyID]->starsHealth;
-    /*currentState.enemyPos = starSet[currentEnemyID]->starsRenderedCords[0];*/
-
-
-    if (battleHistory.empty() ||
-        currentState.playerHP != lastSavedState.playerHP ||
-        currentState.enemyHP != lastSavedState.enemyHP ||
-
-        currentState.playerStarsHealth != lastSavedState.playerStarsHealth ||
-        currentState.enemyStarsHealth != lastSavedState.enemyStarsHealth)
-
-    {
-
-        battleHistory.push_back(currentState);
-        lastSavedState = currentState;
-
-        if (battleHistory.size() > 100) {
-            battleHistory.erase(battleHistory.begin());
-        }
-    }
-    
+float getConstellationHP(const Constellation& constellation) {
+    return constellation.hp;
 }
 
-
-bool RewindTime(DWORD targetTime) {
-    if (battleHistory.empty()) {
-        
-        return false;
-    }
-
-    for (auto it = battleHistory.rbegin(); it != battleHistory.rend(); ++it) {
-        if (it->timestamp <= targetTime) {
-            
-            starSet[player_sign]->starsHealth = it->playerStarsHealth;
-            starSet[currentEnemyID]->starsHealth = it->enemyStarsHealth;
-
-           
-            /*getConstellationHP(*starSet[player_sign], it->playerHP);
-            getConstellationHP(*starSet[currentEnemyID], it->enemyHP);
-
-            
-            starSet[player_sign]->starsRenderedCords[0] = it->playerPos;
-            starSet[currentEnemyID]->starsRenderedCords[0] = it->enemyPos;*/
-
-            
-          
-        }
-    }
-
-    
-    return true;
-}
+//struct BattleState {
+//    DWORD timestamp;
+//    float playerHP;
+//    float enemyHP;
+//    std::vector<float> playerStarsHealth;
+//    std::vector<float> enemyStarsHealth;
+//
+//    std::vector<point3d>playerstarCords;
+//    std::vector<point3d>enemystarCords;
+//
+//    point3d playerAngel;
+//    point3d enemyAngel;
+//
+//    bool operator!=(const BattleState& other) const {
+//        return timestamp != other.timestamp ||
+//            playerHP != other.playerHP ||
+//            enemyHP != other.enemyHP ||
+//            playerStarsHealth != other.playerStarsHealth ||
+//            enemyStarsHealth != other.enemyStarsHealth ||
+//            playerstarCords != other.playerstarCords ||
+//            enemystarCords != other.enemystarCords;
+//    }
+//};
+//
+//
+//std::vector<BattleState> battleHistory;
+//BattleState lastSavedState;
+//size_t currentStateIndex = 0;  
+//
+//void SaveCurrentState() {
+//
+//    if (!starSet[player_sign] || !starSet[currentEnemyID]) return;
+//
+//    BattleState currentState;
+//    currentState.timestamp = timeGetTime();
+//
+//    currentState.playerHP = getConstellationHP(*starSet[player_sign]);
+//    currentState.playerStarsHealth = starSet[player_sign]->starsHealth;
+//    currentState.playerstarCords = starSet[player_sign]->starsCords;
+//
+//    currentState.enemyHP = getConstellationHP(*starSet[currentEnemyID]);
+//    currentState.enemyStarsHealth = starSet[currentEnemyID]->starsHealth;
+//    currentState.enemystarCords = starSet[currentEnemyID]->starsCords;
+//
+//    if (battleHistory.empty()) {
+//        battleHistory.push_back(currentState);
+//        lastSavedState = currentState;
+//        currentStateIndex = 0;
+//        return;
+//    }
+//
+//    if (currentState != lastSavedState) {
+//        if (currentStateIndex < battleHistory.size() - 1) {
+//            battleHistory.erase(battleHistory.begin() + currentStateIndex + 1, battleHistory.end());
+//        }
+//
+//        battleHistory.push_back(currentState);
+//        lastSavedState = currentState;
+//        currentStateIndex = battleHistory.size() - 1;
+//
+//        if (battleHistory.size() > 18000) {
+//            battleHistory.erase(battleHistory.begin());
+//            currentStateIndex--;
+//        }
+//    }
+//}
+//bool RewindOneStepBack() {
+//    if (battleHistory.empty() || currentStateIndex == 0) {
+//        return false;
+//    }
+//
+//    currentStateIndex--;
+//    const BattleState& prevState = battleHistory[currentStateIndex];
+//
+//    starSet[player_sign]->starsHealth = prevState.playerStarsHealth;
+//    starSet[player_sign]->starsCords = prevState.playerstarCords;  
+//    starSet[player_sign]->hp = prevState.playerHP;
+//    starSet[player_sign]->setStarsRenderedCords(
+//        starSet[player_sign]->angle.x,
+//        starSet[player_sign]->angle.y,
+//        starSet[player_sign]->angle.z
+//    );
+//
+//    starSet[currentEnemyID]->starsHealth = prevState.enemyStarsHealth;
+//    starSet[currentEnemyID]->starsCords = prevState.enemystarCords;  
+//    starSet[currentEnemyID]->hp = prevState.enemyHP;
+//    starSet[currentEnemyID]->setStarsRenderedCords(
+//        starSet[currentEnemyID]->angle.x,
+//        starSet[currentEnemyID]->angle.y,
+//        starSet[currentEnemyID]->angle.z
+//    );
+//
+//    lastSavedState = prevState;
+//    return true;
+//}

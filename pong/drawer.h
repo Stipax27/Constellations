@@ -267,36 +267,22 @@ namespace drawer
         float line_yz = line_z + line_y;
         line_hit = line_yz / line_x;
 
-
         if (GetAsyncKeyState(VK_LBUTTON))
         {
-
             if (line_hit < 1.001)
             {
                 attack_collision = true;
             }
-
-
             SelectObject(window.context, brush);
         }
         else
         {
-                
-            if (line_hit < 1.001 and check_attack == false)
+            if (line_hit < 1.001 and check_attack ==false)
             {
                 SelectObject(window.context, brush2);
-                    //finalStarRad = 0.;
-
                 starHealth[i] -= weapon[(int)current_weapon].damage;
-
-
             }
-            
-
-
         }
-
-       
     }
 
     void starUI(point3d& point, Constellation& Constellation, int i)
@@ -686,15 +672,16 @@ namespace drawer
                         attack_collision = false;
                     }
 
-
+                    
                 }
                 else
                 {
                     drawÑonstellation(*starSet[currentEnemyID]);
+                    //check_attack = false;
                 }
-
-
                 
+                
+               
 
                 linksDivider = 15;
                 modelTransform = &placeHeroToWorld;
