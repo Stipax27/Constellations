@@ -117,17 +117,16 @@ void selectVariant(int variantIndex) {
 }
 
 
-void handleInput(int key)
+void handleInput()
 {
-    if GetAsyncKeyState(key == '1') {
-        selectVariant(2);
-    }
-    else if (key == '2') {
-        selectVariant(1);
-    }
-    else if (key == '3') {
+    if (GetAsyncKeyState('1') & 0x0001) {
         selectVariant(0);
     }
+    else if(GetAsyncKeyState('2') & 0x0001)
+    {
+        selectVariant(1);
+    }
+    
 }
 
 
