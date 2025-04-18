@@ -24,43 +24,52 @@ std::vector<Dialog> dialogs;
 std::vector<NarrativeText> narratives;
 std::vector<Dialog> currentDialogs;
 
+bool initDialogs = false;
+
 void initContentData() {
     
-    narratives.push_back({ "Вы просыпаетесь в темной комнате...", 2000 });
-    narratives.push_back({ "Где-то вдалеке слышны странные звуки.", 2000 });
+    if (initDialogs)
+    {
+        return;
+    }
+
+    initDialogs = true;
+
+    narratives.push_back({ "You wake up in a dark room...", 2000 });
+    narratives.push_back({ "Strange sounds can be heard somewhere in the distance.", 2000 });
     
-    Dialog d("Вы слышите голос: 'Ты меня слышишь?'");
+    Dialog d("You hear a voice: 'Can you hear me?'");
 
     answer v1;
-    v1.text = "Да, кто ты?";
+    v1.text = "Yes, who are you?";
     v1.dialogLink = 1;
     d.variants.push_back(v1);
 
     answer v2;
-    v2.text = "Нет, это галлюцинация";
+    v2.text = "No, it's a hallucination.";
     v2.dialogLink = 2;
     d.variants.push_back(v2);
 
     dialogs.push_back(d);
 
     
-    narratives.push_back({ "Вы пытаетесь встать, но чувствуете слабость.", 2000 });
+    narratives.push_back({ "You try to get up, but you feel weak.", 2000 });
 
     
-    Dialog d1("Голос продолжает: 'КАК КАКАТ!'");
+    Dialog d1("The voice continues: 'WHO'S HERE!'");
 
     answer v3;
-    v3.text = "Что происходит?";
+    v3.text = "What's happening?";
     v3.dialogLink = 3;
     d1.variants.push_back(v3);
 
     dialogs.push_back(d1);
 
-    Dialog d2("Голос продолжае'");
+    Dialog d2("The voice continues");
 
     answer v4;
-    v4.text = "Что происходит?";
-    v4.dialogLink = 3;
+    v4.text = "What";
+    v4.dialogLink = 4;
     d2.variants.push_back(v4);
 
     dialogs.push_back(d2);
@@ -70,32 +79,36 @@ void initContentData() {
 
 void renderContent() {
     
-    fontInit(isFontInit);
-
+   
     SIZE textSize;
 
-    int textX = 100;
-    int textY = 100; 
+    float textX = 100;
+    float textY = 100; 
 
-    for (const auto& narrative : narratives) {
-        TextOutA(window.context, textX, textY,
-            narrative.text.c_str(), (int)narrative.text.length());
+    if (!isFontInit) fontInit(isFontInit);
+
+    for (const auto& narrative : narratives) 
+    {
+        //TextOutA(window.context, textX, textY,narrative.text.c_str(), (int)narrative.text.length());
+        drawString(narrative.text, textX, textY, 1.f, false);
+
         textY += 30;
     }
 
-    
-    if (!currentDialogs.empty()) {
+    if (!currentDialogs.empty()) 
+    {
         textY += 20;
 
         const Dialog& d = currentDialogs.back(); 
-        TextOutA(window.context, 100, textY,
-            d.question.c_str(), (int)d.question.length());
+        TextOutA(window.context, 100, textY,d.question.c_str(), (int)d.question.length());
+
         textY += 30;
 
-        for (size_t i = 0; i < d.variants.size(); ++i) {
+        for (size_t i = 0; i < d.variants.size(); ++i) 
+        {
             std::string variantText = std::to_string(i + 1) + ": " + d.variants[i].text;
-            TextOutA(window.context, textX + 20, textY,
-                variantText.c_str(), (int)variantText.length());
+            TextOutA(window.context, textX + 20, textY,variantText.c_str(), (int)variantText.length());
+
             textY += 30;
         }
     }
@@ -104,6 +117,7 @@ void renderContent() {
 }
 
 void selectVariant(int variantIndex) {
+    
     if (!currentDialogs.empty()) {
         const Dialog& currentDialog = currentDialogs.back();
         if (variantIndex < currentDialog.variants.size()) {
@@ -124,7 +138,7 @@ void handleInput()
     }
     else if(GetAsyncKeyState('2') & 0x0001)
     {
-        selectVariant(1);
+        selectVariant(0);
     }
     
 }

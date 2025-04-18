@@ -13,7 +13,7 @@ enum menu_type {
 void InitGame()
 {
     initWorld();
-
+    
     game.day = 32;
     game.month = 13;
     startTime = timeGetTime();

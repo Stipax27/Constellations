@@ -337,7 +337,7 @@ float drawString(const char* str,float x, float y, float scale, bool centered)
 
         while (i < letters_count && str[i] != '\n')
         {
-            x += drawLetterFX(str[i] - 32, x - offset, y, scale,i) + tracking;
+            x += drawLetter(str[i] - 32, x - offset, y, scale) + tracking;
             i++;
         }
 
@@ -350,4 +350,9 @@ float drawString(const char* str,float x, float y, float scale, bool centered)
 
     return x - base_x;
 
+}
+
+void drawString(const std::string str, float x, float y, float scale, bool centered)
+{
+    drawString(str.c_str(), x, y, scale, centered);
 }
