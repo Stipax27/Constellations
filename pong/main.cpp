@@ -26,11 +26,11 @@ struct point3d {
         return x == other.x && y == other.y && z == other.z;
     }
 
-    bool operator==(const point3d& other) const {
-        return fabs(x - other.x) < 0.001f &&
-            fabs(y - other.y) < 0.001f &&
-            fabs(z - other.z) < 0.001f;
-    }*/
+    //bool operator==(const point3d& other) const {
+    //    return fabs(x - other.x) < 0.001f &&
+    //        fabs(y - other.y) < 0.001f &&
+    //        fabs(z - other.z) < 0.001f;
+    //}
 };
 
 const float starSize = 10;
