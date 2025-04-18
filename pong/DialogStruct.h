@@ -70,7 +70,7 @@ void initContentData() {
 
 void renderContent() {
     
-    MenuDrawer();
+    fontInit(isFontInit);
 
     SIZE textSize;
 

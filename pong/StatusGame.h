@@ -1,12 +1,12 @@
-extern std::vector<Constellation*> starSet;
-extern ZodiacSign player_sign;
-extern ZodiacSign currentEnemyID;
-extern DWORD currentTime;
-
-float getConstellationHP(const Constellation& constellation) {
-    return constellation.hp;
-}
-
+//extern std::vector<Constellation*> starSet;
+//extern ZodiacSign player_sign;
+//extern ZodiacSign currentEnemyID;
+//extern DWORD currentTime;
+//
+//float getConstellationHP(const Constellation& constellation) {
+//    return constellation.hp;
+//}
+//
 //struct BattleState {
 //    DWORD timestamp;
 //    float playerHP;
@@ -20,7 +20,7 @@ float getConstellationHP(const Constellation& constellation) {
 //    point3d playerAngel;
 //    point3d enemyAngel;
 //
-//    bool operator!=(const BattleState& other) const {
+//    /*bool operator!=(const BattleState& other) const {
 //        return timestamp != other.timestamp ||
 //            playerHP != other.playerHP ||
 //            enemyHP != other.enemyHP ||
@@ -28,7 +28,7 @@ float getConstellationHP(const Constellation& constellation) {
 //            enemyStarsHealth != other.enemyStarsHealth ||
 //            playerstarCords != other.playerstarCords ||
 //            enemystarCords != other.enemystarCords;
-//    }
+//    }*/
 //};
 //
 //

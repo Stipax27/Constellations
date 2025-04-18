@@ -8,16 +8,16 @@ struct {
 enum menu_type {
     first,
     second
-} ;
+};
 
 void InitGame()
 {
     initWorld();
 
     game.day = 32;
-    game.month =  13;
+    game.month = 13;
     startTime = timeGetTime();
-    
+
     initWeapon();
 }
 
@@ -38,11 +38,11 @@ void fontInit(bool& isInitialized) {
 
 
 bool drawClickableText(
-    const std::string text, 
+    const std::string text,
     bool center,
     COLORREF COLOR_HOVER,
     int x = 0, int y = 0
-    ) {
+) {
 
     COLORREF COLOR_REGULAR = RGB(160, 160, 160);
 
@@ -53,7 +53,7 @@ bool drawClickableText(
     int textY = static_cast<int>(center ? (window.height / 2) - (textSize.cy / 2) : y - (textSize.cy / 2));
 
     bool isHovered = (mouse.x > textX && mouse.x < textX + textSize.cx &&
-                      mouse.y > textY && mouse.y < textY + textSize.cy);
+        mouse.y > textY && mouse.y < textY + textSize.cy);
 
     SetTextColor(window.context, isHovered ? COLOR_HOVER : COLOR_REGULAR);
 
@@ -62,8 +62,8 @@ bool drawClickableText(
     return isHovered && GetAsyncKeyState(VK_LBUTTON);
 }
 
-void drawCircularMenu(float circleRadius, float speed, string *items, int size, menu_type selectedType) {
-  
+void drawCircularMenu(float circleRadius, float speed, string* items, int size, menu_type selectedType) {
+
 
     float centerX = window.width / 2;
     float centerY = window.height / 2;
@@ -75,38 +75,38 @@ void drawCircularMenu(float circleRadius, float speed, string *items, int size, 
 
         bool isClicked = drawClickableText(items[i], false, RGB(0, 0, 255), textX, textY);
         switch (selectedType) {
-            case first:
-                if (isClicked) {
-                    player_month = (MonthSign)(i);
-                    gameState = gameState_::DaySelection;
-                    currentMonthIndex = i;
-                }
-                else
-                {
-                    currentMonthIndex = -1;
-                }
-                break;
+        case first:
+            if (isClicked) {
+                player_month = (MonthSign)(i);
+                gameState = gameState_::DaySelection;
+                currentMonthIndex = i;
+            }
+            else
+            {
+                currentMonthIndex = -1;
+            }
+            break;
 
-            case second:
+        case second:
 
-                if (isClicked)
-                {
-                    player_day = i + 1;
-                    currentDayIndex = i;
-                    gameState = gameState_::confirmSign;
+            if (isClicked)
+            {
+                player_day = i + 1;
+                currentDayIndex = i;
+                gameState = gameState_::confirmSign;
 
-                    player_sign = getZodiacSign(player_day, player_month);
-                }
-                else
-                {
-                    currentDayIndex = -1;
-                }
+                player_sign = getZodiacSign(player_day, player_month);
+            }
+            else
+            {
+                currentDayIndex = -1;
+            }
 
-             /*   TextOutA(window.context, static_cast<int>(textX - textWidth / 2), static_cast<int>(textY - textHeight / 2), m.c_str(), m.size());
+            /*   TextOutA(window.context, static_cast<int>(textX - textWidth / 2), static_cast<int>(textY - textHeight / 2), m.c_str(), m.size());
 
-                std::string curentDaystring = std::to_string(player_day);
-                TextOutA(window.context, window.width * 5 / 8 + 100, 0, curentDaystring.c_str(), curentDaystring.size());*/
-                break;
+               std::string curentDaystring = std::to_string(player_day);
+               TextOutA(window.context, window.width * 5 / 8 + 100, 0, curentDaystring.c_str(), curentDaystring.size());*/
+            break;
         }
     }
 
@@ -135,50 +135,46 @@ void menuMonthprocessing()
 void menuDayprocessing()
 {
     fontInit(isFontInit);
-    {
-        hFont = CreateFont(70, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, "CALIBRI");
+
+    float circleRadius = 300;
     float centerX = window.width / 2;
     float centerY = window.height / 2;
-        fontInit = true;
-    }
+    int numDay = 31;
+
 
     std::string days[31];
     for (int i = 0; i < 31; i++)
     {
         days[i] = std::to_string(i + 1);
     }
-        {
+
     drawCircularMenu(300, 0.00005, days, 31, second);
 }
-        std::string curentDaystring = std::to_string(player_day);
-        TextOutA(window.context, window.width * 5 / 8 + 100, 0, curentDaystring.c_str(), curentDaystring.size());
-    }
+
+void menuConfirmationButton()
+{
     fontInit(isFontInit);
 
     if (drawClickableText("Play", false, RGB(0, 0, 255), window.width / 2, window.height / 1.2))
-    int textHeight = textSize.cy;
+    {
         gameState = gameState_::selectEnemy;
         startTime = timeGetTime();
     }
 }
 
-
-    TextOutA(window.context, static_cast<int>(window.width / 2 - textWidth / 2), static_cast<int>(window.height / 1.2 - textHeight / 2), m.c_str(), m.size());
+void StartMenu()
+{
     fontInit(isFontInit);
-    {
-    if (drawClickableText("Play" , true, RGB(255, 0, 0)))
-    GetTextExtentPoint32(window.context, m.c_str(), m.size(), &textSize);
 
-    if (mouse.x > window.width / 2 - textSize.cx / 2 && mouse.x < window.width / 2 + textSize.cx / 2 &&
-        mouse.y > window.height / 2 - textSize.cy / 2 && mouse.y < window.height / 2 + textSize.cy / 2)
+    if (drawClickableText("Play", true, RGB(255, 0, 0)))
+    {
+        gameState = gameState_::MonthSelection;
+    }
+
     if (drawClickableText("Quit", false, RGB(255, 0, 0), window.width / 2, window.height / 2 + 100))
     {
         ExitProcess(0);
     }
-    else
-
-    TextOutA(window.context, static_cast<int>(window.width / 2 - textSize.cx / 2), static_cast<int>((window.height / 2) +100 - textSize.cy / 2), b.c_str(), b.size());
-
 
 }
 
@@ -189,7 +185,7 @@ void DrawStarsHP(HDC hdc) {
     SetTextColor(hdc, RGB(255, 255, 255));
     SetBkMode(hdc, TRANSPARENT);
 
-    
+
     SetTextColor(hdc, RGB(100, 150, 255));
     for (size_t i = 0; i < starSet[player_sign]->starsRenderedCords.size(); ++i) {
         const auto& pos = starSet[player_sign]->starsRenderedCords[i];
@@ -199,7 +195,7 @@ void DrawStarsHP(HDC hdc) {
         TextOutA(hdc, pos.x + 20, pos.y - 15, hpText.c_str(), hpText.size());
     }
 
-    
+
     SetTextColor(hdc, RGB(255, 100, 100));
     for (size_t i = 0; i < starSet[currentEnemyID]->starsRenderedCords.size(); ++i) {
         const auto& pos = starSet[currentEnemyID]->starsRenderedCords[i];
@@ -241,51 +237,51 @@ void UpdateGame() {
             lastInputTime = currentTime;
             if (battleStartTime + battleTime + timeModifier + 1000 - currentTime <= MAX_BATTLE_TIME) {
                 timeModifier += 1000;
-                
+
             }
         }
     }
     else if (GetAsyncKeyState('E')) {
         if (currentTime - lastInputTime > inputRepeatDelay) {
             lastInputTime = currentTime;
-            
 
-            if (!battleHistory.empty() && targetTime < battleHistory.front().timestamp) {
-                targetTime = battleHistory.front().timestamp;
-            }
 
-            if (RewindOneStepBack()) {
-                //fightMove(playerPosition, true);
-                timeModifier = currentTime - targetTime;
-            }
-            //if (RewindOneStepBack()) {
+            DWORD rewindAmount = 10000;
+            DWORD targetTime = currentTime - rewindAmount;
+
+
+            //if (//!battleHistory.empty() && targetTime < battleHistory.front().timestamp) {
+            //    targetTime = battleHistory.front().timestamp;
+            //}
+
+            //if (//RewindOneStepBack()) {
             //    //fightMove(playerPosition, true);
             //    timeModifier = currentTime - targetTime;
             //}
         }
     }
 
-        if (isBattleActive) {
-            LONG remainingTime = (LONG)((battleStartTime + battleTime + timeModifier) - currentTime);// Привязал оставшаеся время к лонгу
+    if (isBattleActive) {
+        LONG remainingTime = (LONG)((battleStartTime + battleTime + timeModifier) - currentTime);// Привязал оставшаеся время к лонгу
 
-            DWORD totalBattleTime = battleTime + timeModifier;
-            if (totalBattleTime > MAX_BATTLE_TIME) {
-                timeModifier = MAX_BATTLE_TIME - battleTime;
-                remainingTime = (LONG)((battleStartTime + MAX_BATTLE_TIME) - currentTime);
-            }
-
-            if (remainingTime > 0) {
-                std::string timeStr = std::to_string(remainingTime / 1000);// Cтринг для вывода 
-                TextOutA(window.context, 10, 10, "Время ", 6);
-                TextOutA(window.context, 70, 10, timeStr.c_str(), timeStr.size());
-            }
-            else {
-                timeModifier = 0;
-                isBattleActive = false;
-                gameState = gameState_::EndFight;
-            }
+        DWORD totalBattleTime = battleTime + timeModifier;
+        if (totalBattleTime > MAX_BATTLE_TIME) {
+            timeModifier = MAX_BATTLE_TIME - battleTime;
+            remainingTime = (LONG)((battleStartTime + MAX_BATTLE_TIME) - currentTime);
         }
-    
+
+        if (remainingTime > 0) {
+            std::string timeStr = std::to_string(remainingTime / 1000);// Cтринг для вывода 
+            TextOutA(window.context, 10, 10, "Время ", 6);
+            TextOutA(window.context, 70, 10, timeStr.c_str(), timeStr.size());
+        }
+        else {
+            timeModifier = 0;
+            isBattleActive = false;
+            gameState = gameState_::EndFight;
+        }
+    }
+
 }
 
 
