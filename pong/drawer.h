@@ -106,6 +106,9 @@ namespace drawer
         p.x = x;
         p.y = y;
     }
+    void NullProject(point3d& p) {
+    
+    }
 
     void genRandSphere(point3d& p)
     {
@@ -582,6 +585,60 @@ namespace drawer
         }
     }
 
+    void drawShieldCircle() 
+    {
+
+        float dx = mouse.x - oldmouse.x;
+        float dy = mouse.y - oldmouse.y;
+        float shieldRadius = sqrt(dx * dx + dy * dy);
+
+        // Центр = oldmouse (круг растёт из этой точки)
+        float centerX = oldmouse.x;
+        float centerY = oldmouse.y;
+        modelProject = &NullProject;
+        if (GetAsyncKeyState(VK_LBUTTON)) {
+            for (int i = 0; i < 36; i++) {
+                float angle = i * (2 * PI / 36);  // 36 точек для гладкого круга
+                float nextAngle = (i + 1) * (2 * PI / 36);
+
+                point3d shield1, shield2;
+
+                shield1.x = centerX + shieldRadius * cos(angle);
+                shield1.y = centerY + shieldRadius * sin(angle);
+                shield1.z = 0;
+
+                shield2.x = centerX + shieldRadius * cos(nextAngle);
+                shield2.y = centerY + shieldRadius * sin(nextAngle);
+                shield2.z = 0;
+
+                drawLine(shield1, shield2, 5);
+            }
+        }
+    }
+
+
+    void SelectVectorAttack()
+    {
+
+        SelectWeapon();
+
+        if (current_weapon == weapon_name::Sword)
+        {
+
+            AttackSwordVector();
+
+        }
+
+        if (current_weapon == weapon_name::Shield)
+        {
+
+            AttackShieldVector();
+            drawShieldCircle();
+
+        }
+
+    }
+
     
 
     void drawWorld()
@@ -649,8 +706,8 @@ namespace drawer
             case gameState_::Fight:
             {
                                
-                AttackSwordVector();
                 SelectWeapon();
+                SelectVectorAttack();
                 StartBattle();
                 enemyFight();
                 
