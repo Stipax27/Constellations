@@ -357,9 +357,6 @@ namespace drawer
                 {
                     SelectObject(window.context, brush2);
                     starHealth[i] -= weapon[(int)current_weapon].damage;
-
-                    check_attack = true;
-                    attack_collision = false;
                 }
             }
         }
