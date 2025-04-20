@@ -51,8 +51,8 @@ DWORD currentTime;
 #include "Weapon.h"
 #include "Navigation.h"
 #include "StatusGame.h"
-#include "MainGame.h"
 #include "font.h"
+#include "MainGame.h"
 #include "DialogStruct.h"
 #include "drawer.h"
 

@@ -229,8 +229,14 @@ void preprocessFont()
 
 }
 
-float drawLetter(int letter, float x, float y, float scale)
+float drawLetter(int letter, float x, float y, float scale, bool getSize = false)
 {
+
+    if (getSize)
+    {
+        return letter_width[letter] * scale;
+    }
+
     if (letter == 0)
     {
         return letter_width[letter] * scale;
@@ -306,7 +312,7 @@ float drawLetterFX(int letter, float x, float y, float scale,int num=0)
     return letter_width[letter] * scale;
 }
 
-float drawString(const char* str,float x, float y, float scale, bool centered)
+point3d drawString(const char* str,float x, float y, float scale, bool centered, bool getSize = false)
 {
     preprocessFont();
 
@@ -318,6 +324,7 @@ float drawString(const char* str,float x, float y, float scale, bool centered)
 
     int letters_count = strlen(str);
     float base_x = x;
+    float base_y = y;
     int i = 0;
 
     while (i < letters_count)
@@ -337,7 +344,7 @@ float drawString(const char* str,float x, float y, float scale, bool centered)
 
         while (i < letters_count && str[i] != '\n')
         {
-            x += drawLetter(str[i] - 32, x - offset, y, scale) + tracking;
+            x += drawLetter(str[i] - 32, x - offset, y, scale, getSize) + tracking;
             i++;
         }
 
@@ -348,7 +355,7 @@ float drawString(const char* str,float x, float y, float scale, bool centered)
 
     DeleteObject(pen);
 
-    return x - base_x;
+    return { x - base_x ,y-base_y,0};
 
 }
 

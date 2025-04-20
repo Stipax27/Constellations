@@ -56,8 +56,13 @@ bool drawClickableText(
         mouse.y > textY && mouse.y < textY + textSize.cy);
 
     SetTextColor(window.context, isHovered ? COLOR_HOVER : COLOR_REGULAR);
-    //drawString(isHovered, textX, textY, 1.f, false);
-    TextOutA(window.context, textX, textY, text.c_str(), text.size());
+
+    point3d sz = drawString(text.c_str(), textX, textY, 1.f, false,true);
+    
+    drawString(text.c_str(), textX, textY, 1.f, false);
+
+
+    //TextOutA(window.context, textX, textY, text.c_str(), text.size());
 
     return isHovered && GetAsyncKeyState(VK_LBUTTON);
 }
@@ -124,11 +129,11 @@ void menuMonthprocessing()
     SIZE textSize;
 
     std::string curentMounthstring = mounthToString(player_month);
-    TextOutA(window.context, window.width * 5 / 8, 0, curentMounthstring.c_str(), curentMounthstring.size());
+    //TextOutA(window.context, window.width * 5 / 8, 0, curentMounthstring.c_str(), curentMounthstring.size());
 
     std::string b = "select your date of birth";
     GetTextExtentPoint32(window.context, b.c_str(), b.size(), &textSize);
-    TextOutA(window.context, window.width / 2 - textSize.cx / 2, 100, b.c_str(), b.size());
+    //TextOutA(window.context, window.width / 2 - textSize.cx / 2, 100, b.c_str(), b.size());
 }
 
 
