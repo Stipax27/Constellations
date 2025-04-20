@@ -18,19 +18,18 @@ HINSTANCE hInst;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 // секция данных игры  
-struct point3d {
-
+struct point3d{
     float x, y, z;
-
-    /*bool operator==(const point3d& other) const {
-        return x == other.x && y == other.y && z == other.z;
-    }
 
     bool operator==(const point3d& other) const {
         return fabs(x - other.x) < 0.001f &&
-            fabs(y - other.y) < 0.001f &&
-            fabs(z - other.z) < 0.001f;
-    }*/
+               fabs(y - other.y) < 0.001f &&
+               fabs(z - other.z) < 0.001f;
+    }
+
+    bool operator!=(const point3d& other) const {
+        return !(*this == other);
+    }
 };
 
 const float starSize = 10;
@@ -85,7 +84,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         mouseInput();
         drawer::drawWorld();//рисуем фон, ракетку и шарик
         BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно   
-        //SaveCurrentState();
+        SaveCurrentState();
+        
         Sleep(16);//ждем 16 милисекунд (1/количество кадров в секунду)
     }
 

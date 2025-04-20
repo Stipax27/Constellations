@@ -222,7 +222,7 @@ void StartBattle() {
 void UpdateGame() {
     static const DWORD MAX_BATTLE_TIME = 4 * 60 * 1000;
     static const DWORD MAX_REWIND = 30 * 1000;
-    static DWORD battleTime = 2 * 5 * 1000;
+    static DWORD battleTime = 60 * 5 * 1000;
     static DWORD timeModifier = 0;
     static DWORD lastInputTime = 0;
     const DWORD inputRepeatDelay = 100;
@@ -241,11 +241,12 @@ void UpdateGame() {
             }
         }
     }
-    else if (GetAsyncKeyState('E')) {
+    else if (GetAsyncKeyState('E') & 0x8000) {  
         if (currentTime - lastInputTime > inputRepeatDelay) {
             lastInputTime = currentTime;
-
-
+            RewindOneStepBack();  
+        }
+    }
             DWORD rewindAmount = 10000;
             DWORD targetTime = currentTime - rewindAmount;
 
@@ -258,9 +259,8 @@ void UpdateGame() {
             //    //fightMove(playerPosition, true);
             //    timeModifier = currentTime - targetTime;
             //}
-        }
-    }
-
+        
+    
     if (isBattleActive) {
         LONG remainingTime = (LONG)((battleStartTime + battleTime + timeModifier) - currentTime);// Привязал оставшаеся время к лонгу
 

@@ -100,15 +100,15 @@ void renderContent() {
         textY += 20;
 
         const Dialog& d = currentDialogs.back(); 
-        TextOutA(window.context, 100, textY,d.question.c_str(), (int)d.question.length());
-
+        //TextOutA(window.context, 100, textY,d.question.c_str(), (int)d.question.length());
+        drawString(d.question, textX, textY, 1.f, false);
         textY += 30;
 
         for (size_t i = 0; i < d.variants.size(); ++i) 
         {
             std::string variantText = std::to_string(i + 1) + ": " + d.variants[i].text;
-            TextOutA(window.context, textX + 20, textY,variantText.c_str(), (int)variantText.length());
-
+            //TextOutA(window.context, textX + 20, textY,variantText.c_str(), (int)variantText.length());
+            drawString(variantText, textX, textY, 1.f, false);
             textY += 30;
         }
     }
@@ -138,7 +138,7 @@ void handleInput()
     }
     else if(GetAsyncKeyState('2') & 0x0001)
     {
-        selectVariant(0);
+        selectVariant(1);
     }
     
 }
