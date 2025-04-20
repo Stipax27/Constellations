@@ -15,6 +15,7 @@ struct BattleState {
     std::vector<float> enemyStarsHealth;
     std::vector<point3d> playerstarCords;
     std::vector<point3d> enemystarCords;
+    point3d player_dodge_ofs;
     
 
 
@@ -24,7 +25,8 @@ struct BattleState {
             playerStarsHealth != other.playerStarsHealth ||
             enemyStarsHealth != other.enemyStarsHealth ||
             playerstarCords != other.playerstarCords ||
-            enemystarCords != other.enemystarCords;
+            enemystarCords != other.enemystarCords ||
+            player_dodge_ofs != other.player_dodge_ofs;;
            
     }
 };
@@ -48,6 +50,7 @@ void SaveCurrentState() {
     currentState.enemyHP = starSet[currentEnemyID]->hp;
     currentState.enemyStarsHealth = starSet[currentEnemyID]->starsHealth;
     currentState.enemystarCords = starSet[currentEnemyID]->starsCords;
+    currentState.player_dodge_ofs = player_dodge_ofs;
    
     if (battleHistory.empty()) {
         battleHistory.push_back(currentState);
@@ -56,7 +59,8 @@ void SaveCurrentState() {
     }
 
     
-    if (currentState != battleHistory[currentStateIndex]) {
+    //if (currentState != battleHistory[currentStateIndex]) 
+    {
         
         if (currentStateIndex < battleHistory.size() - 1) {
             battleHistory.erase(battleHistory.begin() + currentStateIndex + 1, battleHistory.end());
@@ -78,7 +82,8 @@ bool RewindOneStepBack() {
         return false;
     }
 
-    currentStateIndex--;
+    currentStateIndex-=2;
+    currentStateIndex = max(currentStateIndex, 0);
     const BattleState& prevState = battleHistory[currentStateIndex];
 
     starSet[player_sign]->hp = prevState.playerHP;
@@ -89,5 +94,7 @@ bool RewindOneStepBack() {
     starSet[currentEnemyID]->starsHealth = prevState.enemyStarsHealth;
     starSet[currentEnemyID]->starsCords = prevState.enemystarCords;
     
+    player_dodge_ofs = prevState.player_dodge_ofs;
+
     return true;
 }

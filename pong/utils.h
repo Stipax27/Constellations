@@ -27,6 +27,13 @@ void move(point3d& p, float x, float y, float z)
     p.z += z;
 }
 
+void move(point3d& p, point3d& ofs)
+{
+    p.x += ofs.x;
+    p.y += ofs.y;
+    p.z += ofs.z;
+}
+
 void rotateX(point3d& p, float angle)// поворот по Оси X.
 {
     float a = angle * PI / 180.;

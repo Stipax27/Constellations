@@ -242,10 +242,10 @@ void UpdateGame() {
         }
     }
     else if (GetAsyncKeyState('E') & 0x8000) {  
-        if (currentTime - lastInputTime > inputRepeatDelay) {
-            lastInputTime = currentTime;
+        //if (currentTime - lastInputTime > inputRepeatDelay) {
+          //  lastInputTime = currentTime;
             RewindOneStepBack();  
-        }
+       // }
     }
             DWORD rewindAmount = 10000;
             DWORD targetTime = currentTime - rewindAmount;

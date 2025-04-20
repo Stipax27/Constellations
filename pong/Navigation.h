@@ -21,7 +21,12 @@ char whatKeyPressed() {
 	return '\0';  // Если ничего не нажато, возвращаем пустой символ
 }
 
+point3d player_dodge_ofs = { 0,0,0 };
+
 void fightMove(point3d& p) {
+
+	
+	//player_dodge_ofs ;
 
 	float T;
 	float moveTimer = 4;
@@ -67,22 +72,26 @@ void fightMove(point3d& p) {
 			}
 			if (!isMoveStateBack) {
 				finalS = currentS;
+
+
+
 				switch (SYM[0]) {
 				case 'W':
-					move(p, 0, currentS, 0);
+					player_dodge_ofs = { 0, currentS, 0 };
 					break;
 				case 'A':
-					move(p, currentS, 0, 0);
+					player_dodge_ofs = { currentS, 0, 0 };
 					break;
 				case 'S':
-					move(p, 0, -currentS, 0);
+					player_dodge_ofs = { 0, -currentS, 0 };
 					break;
 				case 'D':
-					move(p, -currentS, 0, 0);
+					player_dodge_ofs = { -currentS, 0, 0 };
 					break;
 
-
+				
 				}
+				
 				//move(p, 0, currentS, 0);
 			}
 			else {
@@ -102,6 +111,8 @@ void fightMove(point3d& p) {
 		else {
 			isMoveActive = false;
 		}
+
+		move(p, player_dodge_ofs);
 		/*SaveCurrentState();*/
 	}
 	
