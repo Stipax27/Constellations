@@ -113,11 +113,14 @@ namespace drawer
         float angleX, angleY;
         angleX = rand() % 360;
         angleY = rand() % 360;
+
         p.x = 0;
         p.y = 0;
         p.z = window.width;
+
         rotateX(p, angleX);
         rotateY(p, angleY); // Сферообразное пространство.
+
     }
 
     float nearPlaneClip = 0;
@@ -396,8 +399,14 @@ namespace drawer
         {
             point3d point;
             genRandSphere(point);
+
+                
             modelTransform(point,Aries);
+            rotateZ(point, starfield_angles.z);
             modelProject(point);
+
+
+
             drawPoint(point,.5);
             // Звёзды на фоне их кол-во. и Кадр остановки.
         }

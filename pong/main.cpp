@@ -95,6 +95,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         */
 
+        starfield_angles.x += .05;
+        starfield_angles.y += .06;
+        starfield_angles.z += .07;
+
         if (!isRewind) SaveCurrentState();
         
         Sleep(16);//ждем 16 милисекунд (1/количество кадров в секунду)
