@@ -713,6 +713,10 @@ namespace drawer
             AttackBowVector();
 
         }
+        if (current_weapon == weapon_name::Staff)
+        {
+
+        }
 
     }
 

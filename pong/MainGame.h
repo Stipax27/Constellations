@@ -56,7 +56,7 @@ bool drawClickableText(
         mouse.y > textY && mouse.y < textY + textSize.cy);
 
     SetTextColor(window.context, isHovered ? COLOR_HOVER : COLOR_REGULAR);
-
+    //drawString(isHovered, textX, textY, 1.f, false);
     TextOutA(window.context, textX, textY, text.c_str(), text.size());
 
     return isHovered && GetAsyncKeyState(VK_LBUTTON);
