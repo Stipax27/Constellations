@@ -62,9 +62,9 @@ void SaveCurrentState() {
     //if (currentState != battleHistory[currentStateIndex]) 
     {
         
-        if (currentStateIndex < battleHistory.size() - 1) {
-            battleHistory.erase(battleHistory.begin() + currentStateIndex + 1, battleHistory.end());
-        }
+        //if (currentStateIndex < battleHistory.size() - 1) {
+         //   battleHistory.erase(battleHistory.begin() + currentStateIndex + 1, battleHistory.end());
+       // }
 
         
         battleHistory.push_back(currentState);
@@ -77,14 +77,19 @@ void SaveCurrentState() {
         }
     }
 }
+
+
+
 bool RewindOneStepBack() {
+
     if (battleHistory.empty() || currentStateIndex == 0) {
         return false;
     }
 
-    currentStateIndex-=2;
+    currentStateIndex-=1;
     currentStateIndex = max(currentStateIndex, 0);
-    const BattleState& prevState = battleHistory[currentStateIndex];
+    BattleState prevState = battleHistory[currentStateIndex];
+    battleHistory.pop_back();
 
     starSet[player_sign]->hp = prevState.playerHP;
     starSet[player_sign]->starsHealth = prevState.playerStarsHealth;

@@ -112,10 +112,13 @@ void fightMove(point3d& p) {
 			isMoveActive = false;
 		}
 
-		move(p, player_dodge_ofs);
+
+
+		
 		/*SaveCurrentState();*/
 	}
 	
+	move(p, player_dodge_ofs);
 }
 
 //

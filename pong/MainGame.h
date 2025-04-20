@@ -219,6 +219,8 @@ void StartBattle() {
     }
 }
 
+bool isRewind = false;
+
 void UpdateGame() {
     static const DWORD MAX_BATTLE_TIME = 4 * 60 * 1000;
     static const DWORD MAX_REWIND = 30 * 1000;
@@ -241,11 +243,26 @@ void UpdateGame() {
             }
         }
     }
-    else if (GetAsyncKeyState('E') & 0x8000) {  
+    
+    if (GetAsyncKeyState('E') & 0x8000) 
+    {  
         //if (currentTime - lastInputTime > inputRepeatDelay) {
-          //  lastInputTime = currentTime;
-            RewindOneStepBack();  
+           // lastInputTime = currentTime;
+        if (currentStateIndex > 0)
+        {
+
+            RewindOneStepBack();
+            isRewind = true;
+        }
+        else
+        {
+            isRewind = false;
+        }
        // }
+    }
+    else
+    {
+        isRewind = false;
     }
             DWORD rewindAmount = 10000;
             DWORD targetTime = currentTime - rewindAmount;

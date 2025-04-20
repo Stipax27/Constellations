@@ -84,7 +84,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         mouseInput();
         drawer::drawWorld();//рисуем фон, ракетку и шарик
         BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно   
-        SaveCurrentState();
+
+
+/*        int sz = starSet[currentEnemyID]->starsCords.size();
+        for (int i = 0; i < sz; i++)
+        {
+            starSet[currentEnemyID]->starsCords[i].x *= .999;
+            starSet[currentEnemyID]->starsCords[i].y *= .999;
+            starSet[currentEnemyID]->starsCords[i].z *= .999;
+        }
+        */
+
+        if (!isRewind) SaveCurrentState();
         
         Sleep(16);//ждем 16 милисекунд (1/количество кадров в секунду)
     }

@@ -581,7 +581,7 @@ enum class gameState_ {
 
 gameState_  gameState = gameState_::Fight;
 Constellation* currentEnemy = &Aries;
-ZodiacSign currentEnemyID = ZodiacSign::ARIES;
+ZodiacSign currentEnemyID = ZodiacSign::TAURUS;
 
 MonthSign player_month = MonthSign::January;
 
