@@ -253,7 +253,7 @@ namespace drawer
 
     float line_hit;
     float coub_hit;
-    bool check_attack = false;
+    bool check_attack = true;
     bool attack_collision = false;
 
     void starIntersectUI(point3d& point, Constellation& Constellation, int i)
@@ -267,28 +267,103 @@ namespace drawer
         float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
         finalStarRad = starSize * starHealth[i] + rad * 15;
 
-        float line_x = get_lenghts(attack[0], attack[1]);
-        float line_y = get_lenghts(attack[0], point);
-        float line_z = get_lenghts(attack[1], point);
-        float line_yz = line_z + line_y;
-        line_hit = line_yz / line_x;
 
-        if (GetAsyncKeyState(VK_LBUTTON))
+
+        if (current_weapon == weapon_name::Sword)
         {
-            if (line_hit < 1.001)
+
+            float line_x = get_lenghts(attack[0], attack[1]);
+            float line_y = get_lenghts(attack[0], point);
+            float line_z = get_lenghts(attack[1], point);
+            float line_yz = line_z + line_y;
+            line_hit = line_yz / line_x;
+
+            if (GetAsyncKeyState(VK_LBUTTON))
             {
-                attack_collision = true;
+                if (line_hit < 1.001)
+                {
+                    attack_collision = true;
+                }
+                SelectObject(window.context, brush);
             }
-            SelectObject(window.context, brush);
+            else
+            {
+                if (line_hit < 1.01 and check_attack == false)
+                {
+
+                    SelectObject(window.context, brush2);
+                    starHealth[i] -= weapon[(int)current_weapon].damage;
+
+                }
+            }
+
         }
-        else
+
+
+        if (current_weapon == weapon_name::Shield)
         {
-            if (line_hit < 1.001 and check_attack ==false)
+
+            float centerX = (mouse.x + oldmouse.x) / 2;
+            float centerY = (mouse.y + oldmouse.y) / 2;
+
+            float dx = mouse.x - oldmouse.x;
+            float dy = mouse.y - oldmouse.y;
+            float shieldRadius = sqrt(dx * dx + dy * dy);
+
+            float stardx = point.x - centerX;
+            float stardy = point.y - centerY;
+            float distToCenter = sqrt(stardx * stardx + stardy * stardy);
+
+            if (GetAsyncKeyState(VK_LBUTTON))
             {
-                SelectObject(window.context, brush2);
-                starHealth[i] -= weapon[(int)current_weapon].damage;
+                if (distToCenter <= shieldRadius)
+                {
+                    attack_collision = true;
+
+                }
+
+                SelectObject(window.context, brush);
+            }
+            else
+            {
+                if (distToCenter <= shieldRadius and check_attack == false)
+                {
+                    SelectObject(window.context, brush2);
+                    starHealth[i] -= weapon[(int)current_weapon].damage;
+                }
             }
         }
+
+        if (current_weapon == weapon_name::Bow)
+        {
+
+            float dx = point.x - oldmouse.x;
+            float dy = point.y - oldmouse.y;
+            float distToStart = sqrt(dx * dx + dy * dy);
+            float hitRadius = 20;
+
+            if (GetAsyncKeyState(VK_LBUTTON))
+            {
+                if (distToStart <= hitRadius)
+                {
+                    attack_collision = true;
+                }
+
+                SelectObject(window.context, brush);
+            }
+            else
+            {
+                if (distToStart <= hitRadius and check_attack == false)
+                {
+                    SelectObject(window.context, brush2);
+                    starHealth[i] -= weapon[(int)current_weapon].damage;
+
+                    check_attack = true;
+                    attack_collision = false;
+                }
+            }
+        }
+
     }
 
     void starUI(point3d& point, Constellation& Constellation, int i)
@@ -620,8 +695,6 @@ namespace drawer
     void SelectVectorAttack()
     {
 
-        SelectWeapon();
-
         if (current_weapon == weapon_name::Sword)
         {
 
@@ -634,6 +707,13 @@ namespace drawer
 
             AttackShieldVector();
             drawShieldCircle();
+
+        }
+
+        if (current_weapon == weapon_name::Bow)
+        {
+
+            AttackBowVector();
 
         }
 
