@@ -72,11 +72,11 @@ namespace drawer
     
     void fightProject(point3d& p)
     {
-        int currentTime = timeGetTime() - startTime;
+        int fadeInTime = timeGetTime() - startTime;
         float startCamDist = 100;
         float finCamDist = 3000;
 
-        float lerpCoef = smoothstep(0., 1, min(currentTime * 4, finCamDist) / (finCamDist - startCamDist));
+        float lerpCoef = smoothstep(0., 1, min(fadeInTime * 4, finCamDist) / (finCamDist - startCamDist));
         if (lerpCoef < .99) {
             camDist = lerpCoef * (finCamDist - startCamDist) + startCamDist;
         }
@@ -650,7 +650,7 @@ namespace drawer
 
     void enemyFight()
     {
-        float e = 1000;
+        float e = 10000;
         if (currentTime > attackTime + e)
         {
             attackTime = currentTime;
@@ -787,7 +787,7 @@ namespace drawer
 
 bool isBattleActive = false;
 DWORD battleStartTime;
-DWORD attackTime;
+
 
 void StartBattle() {
     if (!isBattleActive) {
@@ -798,7 +798,7 @@ void StartBattle() {
     }
 }
 
-bool isRewind = false;
+
 
 void UpdateGame() {
     static const DWORD MAX_BATTLE_TIME = 4 * 60 * 1000;
@@ -807,8 +807,6 @@ void UpdateGame() {
     static DWORD timeModifier = 0;
     static DWORD lastInputTime = 0;
     const DWORD inputRepeatDelay = 100;
-
-    DWORD currentTime = timeGetTime();
 
     if (GetAsyncKeyState('Q')) {
         if (currentTime - lastInputTime > inputRepeatDelay) {
@@ -987,6 +985,7 @@ void UpdateGame() {
 
                 DrawStarsHP(window.context);
 
+               
                 std::string curentSignstring = zodiacSignToString(currentEnemyID);
                 TextOutA(window.context, window.width / 2, window.height / 20., curentSignstring.c_str(), curentSignstring.size());
 
@@ -1001,7 +1000,7 @@ void UpdateGame() {
 
                 curentSignstring = std::to_string(getConstellationHP(*starSet[player_sign]));
                 TextOutA(window.context, window.width / 2, window.height / 80., curentSignstring.c_str(), curentSignstring.size());
-
+                
 
                 
 
