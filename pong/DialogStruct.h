@@ -90,7 +90,7 @@ void renderContent() {
     for (const auto& narrative : narratives) 
     {
         //TextOutA(window.context, textX, textY,narrative.text.c_str(), (int)narrative.text.length());
-        drawString(narrative.text, textX, textY, 1.f, false);
+        drawString(narrative.text.c_str(), textX, textY, 1.f, false);
 
         textY += 30;
     }
@@ -101,14 +101,14 @@ void renderContent() {
 
         const Dialog& d = currentDialogs.back(); 
         //TextOutA(window.context, 100, textY,d.question.c_str(), (int)d.question.length());
-        drawString(d.question, textX, textY, 1.f, false);
+        drawString(d.question.c_str(), textX, textY, 1.f, false);
         textY += 30;
 
         for (size_t i = 0; i < d.variants.size(); ++i) 
         {
             std::string variantText = std::to_string(i + 1) + ": " + d.variants[i].text;
             //TextOutA(window.context, textX + 20, textY,variantText.c_str(), (int)variantText.length());
-            drawString(variantText, textX, textY, 1.f, false);
+            drawString(variantText.c_str(), textX, textY, 1.f, false);
             textY += 30;
         }
     }

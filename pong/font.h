@@ -216,11 +216,12 @@ void preprocessFont()
         //scale
         float scale = .1;
 
-        for (int i = 0; i < font[letter]->size(); i += 2)
+        for (int i = 0; i < font[letter]->size(); i ++)
         {
             font[letter]->at(i) *= scale;
-            font[letter]->at(i + 1) *= scale;
         }
+
+
         float width = max_x - min_x;
 
         letter_width[letter] = width * scale;
@@ -242,7 +243,7 @@ float drawLetter(int letter, float x, float y, float scale, bool getSize = false
         return letter_width[letter] * scale;
     }
 
-    MoveToEx(window.context, x+font[letter]->at(0), y+font[letter]->at(1), NULL);
+    MoveToEx(window.context, x+font[letter]->at(0) * scale, y+font[letter]->at(1) * scale, NULL);
     
     for (int i = 2; i < font[letter]->size(); i+=2)
     {
@@ -312,7 +313,7 @@ float drawLetterFX(int letter, float x, float y, float scale,int num=0)
     return letter_width[letter] * scale;
 }
 
-point3d drawString(const char* str,float x, float y, float scale, bool centered, bool getSize = false)
+point3d drawString(const char* str,float x, float y, float scale, bool centered, bool getSize = false, int count = -1)
 {
     preprocessFont();
 
@@ -323,6 +324,9 @@ point3d drawString(const char* str,float x, float y, float scale, bool centered,
     SelectObject(window.context, pen);
 
     int letters_count = strlen(str);
+    if (count != -1) {
+        letters_count = count;
+    }
     float base_x = x;
     float base_y = y;
     int i = 0;
@@ -357,9 +361,4 @@ point3d drawString(const char* str,float x, float y, float scale, bool centered,
 
     return { x - base_x ,y-base_y,0};
 
-}
-
-void drawString(const std::string str, float x, float y, float scale, bool centered)
-{
-    drawString(str.c_str(), x, y, scale, centered);
 }

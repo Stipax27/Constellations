@@ -7,6 +7,7 @@ public:
 
     std::vector<point3d> starsCords;
     float hp;
+    float maxHP;
     std::vector <float> starsHealth;
     std::vector <std::vector <float>> constellationEdges;
 
@@ -29,6 +30,13 @@ public:
         constellationEdges = _constellationEdges;
         ID = constellationsCounter;
         //name = zodiacSignToString((ZodiacSign)ID);
+
+        maxHP = 0;
+        for (int i=0;i< starsHealth.size();i++)
+        { 
+            maxHP += starsHealth[i];
+        }
+
         constellationsCounter++;
     }
 

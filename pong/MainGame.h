@@ -187,31 +187,7 @@ void StartMenu()
 
 
 
-void DrawStarsHP(HDC hdc) {
-    SetTextColor(hdc, RGB(255, 255, 255));
-    SetBkMode(hdc, TRANSPARENT);
 
-    
-
-    SetTextColor(hdc, RGB(100, 150, 255));
-    for (size_t i = 0; i < starSet[player_sign]->starsRenderedCords.size(); ++i) {
-        const auto& pos = starSet[player_sign]->starsRenderedCords[i];
-        float hp = starSet[player_sign]->starsHealth[i];
-
-        std::string hpText = "HP: " + std::to_string(static_cast<int>(hp));
-        TextOutA(hdc, pos.x, pos.y, hpText.c_str(), hpText.size());
-    }
-
-
-    SetTextColor(hdc, RGB(255, 100, 100));
-    for (size_t i = 0; i < starSet[currentEnemyID]->starsRenderedCords.size(); ++i) {
-        const auto& pos = starSet[currentEnemyID]->starsRenderedCords[i];
-        float hp = starSet[currentEnemyID]->starsHealth[i];
-
-        std::string hpText = "HP: " + std::to_string(static_cast<int>(hp));
-        TextOutA(hdc, pos.x, pos.y, hpText.c_str(), hpText.size());
-    }
-}
 
 
 void endFight()

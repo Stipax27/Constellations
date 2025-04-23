@@ -606,19 +606,19 @@ ZodiacSign getZodiacSign(int day, int month) {
     throw invalid_argument("Invalid date");
 }
 
-std::string SignString[] = { "Овен" , "Телец","Близнецы", "Рак", "Лев", "Дева", "Весы", "Скорпион", "Стрелец", "Козерог", "Водолей", "Рыбы" };
+std::string SignString[] = { "ARIES" , "TAURUS","GEMINI", "CANCER", "LEO", "VIRGO", "LIBRA", "SCORPIO", "SAGITTARIUS", "CAPRICORN", "AQUARIUS", "PISCES" };
 
 string zodiacSignToString(ZodiacSign sign) {
 
-    if (sign<0 || sign >11) return "Неизвестный знак";
+    if (sign<0 || sign >11) return "Unknown sign";
     return SignString[(int)sign];
    
 }
-std::string mounthString[] = { "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" };
+std::string mounthString[] = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 
 string mounthToString(MonthSign mounth) {
 
-    if (mounth<0 || mounth>11) return "Неизвестный месяц";
+    if (mounth<0 || mounth>11) return "Unknown sign";
     return mounthString[(int)mounth];
 }
 
