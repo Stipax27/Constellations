@@ -104,11 +104,11 @@ void drawCircularMenu(float circleRadius, float speed, string* items, int size, 
 void menuMonthprocessing()
 {
 
-    drawCircularMenu(400, 0.00015, mounthString, 12, first);
+    drawCircularMenu(450, 0.00001, mounthString, 12, first);
 
-    drawString(mounthToString(player_month).c_str(), window.width * 5 / 8, 0,1,true);
+    drawString(mounthToString(player_month).c_str(), window.width / 2 -600, 50,1,true);
     
-    drawString("select your date of birth", window.width / 2, 100, 1, true);
+    drawString("select your date of birth", window.width / 2, 20, 1, true);
     
 }
 
@@ -129,33 +129,22 @@ void menuDayprocessing()
         days[i] = std::to_string(i + 1);
     }
 
-    drawCircularMenu(300, 0.00005, days, 31, second);
+    drawCircularMenu(300, 0.00002, days, 31, second);
+
+    drawString(days[0].c_str(), window.width / 2 + 600, 50, 1, true);// Вывод 1го числа 
 }
 
 void menuConfirmationButton()
 {
     
 
-    if (drawClickableText("Play", false, RGB(0, 0, 255), window.width / 2, window.height / 1.2))
+    if (drawClickableText("Play", false, RGB(0, 0, 255), window.width / 2, window.height / 1.6))
     {
         gameState = gameState_::selectEnemy;
         startTime = timeGetTime();
     }
 }
 
-void StartMenu()
-{
-    if (drawClickableText("Play", true, RGB(0, 191, 255),window.width/2,window.height/2))
-    {
-        gameState = gameState_::MonthSelection;
-    }
-
-    if (drawClickableText("Quit", false, RGB(0, 191, 255), window.width / 2, window.height / 2 + 100))
-    {
-        ExitProcess(0);
-    }
-
-}
 
 point3d winMessagePos;
 DWORD winFightStartTime;
@@ -170,6 +159,51 @@ void calcWinMessageCoords()
     winMessagePos.y = window.height / 2 + rand() % amp - amp / 2;
     winMessagePos.z = 0;
 
+}
+
+point3d exitButtonPos = { 0, 0, 0 }; 
+bool wasExitHovered = false;
+bool exitButtonInitialized = false;
+
+void StartMenu()
+{
+    
+    if (!exitButtonInitialized) {
+        exitButtonPos.x = window.width / 2;
+        exitButtonPos.y = window.height / 2 + 100;
+        exitButtonInitialized = true;
+    }
+
+    
+    if (drawClickableText("Play", true, RGB(0, 191, 255), window.width / 2, window.height / 2))
+    {
+        gameState = gameState_::MonthSelection;
+    }
+
+    std::string EXIT = "Quit ((";
+
+    
+    point3d textSize = drawString(EXIT.c_str(), exitButtonPos.x, exitButtonPos.y, 1.f, true, true);
+
+    
+    bool isHoveredNow = (mouse.x > exitButtonPos.x - textSize.x / 2 &&
+        mouse.x < exitButtonPos.x + textSize.x / 2 &&
+        mouse.y > exitButtonPos.y - textSize.y / 2 &&
+        mouse.y < exitButtonPos.y + textSize.y / 2);
+
+    
+    if (isHoveredNow && !wasExitHovered)
+    {
+        exitButtonPos.x = 100 + rand() % (window.width - 200);
+        exitButtonPos.y = 100 + rand() % (window.height - 200);
+    }
+    wasExitHovered = isHoveredNow;
+
+    
+    if (drawClickableText(EXIT, true, RGB(0, 191, 255), exitButtonPos.x, exitButtonPos.y))
+    {
+        ExitProcess(0);
+    }
 }
 
 void winFight() 
