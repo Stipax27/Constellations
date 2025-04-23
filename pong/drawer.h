@@ -908,7 +908,7 @@ void UpdateGame() {
 
     if (isBattleActive) {
         LONG remainingTime = (LONG)((battleStartTime + battleTime + timeModifier) - currentTime);
-        fontInit(isFontInit);
+       
         DWORD totalBattleTime = battleTime + timeModifier;
 
         if (totalBattleTime > MAX_BATTLE_TIME) {
@@ -921,11 +921,20 @@ void UpdateGame() {
             DrawTimeBar();
             std::string timeStr = "Time: " + std::to_string(remainingTime / 1000);
             drawString(timeStr.c_str(), window.width / 2, 10, 1.f, true);
+
+            if (getConstellationHP(*starSet[currentEnemyID]) < 0)
+            {
+                timeModifier = 0;
+                isBattleActive = false;
+                gameState = gameState_::WinFight;
+            }
         }
-        else {
-            timeModifier = 0;
-            isBattleActive = false;
-            gameState = gameState_::EndFight;
+        else 
+        {
+           timeModifier = 0;
+           isBattleActive = false;
+           gameState = gameState_::EndFight;
+          
         }
     }
 }
@@ -988,7 +997,7 @@ void UpdateGame() {
                // drawColorCircle();
                 isBattleActive = false;
 
-                drawString("Bla-Bla-bla\nbla\n\hello Stepan&Dmitry, how are you?", window.width/2, window.height/2, 1, true);
+                
 
                 break;
             }
@@ -1063,15 +1072,12 @@ void UpdateGame() {
                
                 std::string curentSignstring = zodiacSignToString(currentEnemyID);
                 drawString(curentSignstring.c_str(), window.width / 2, window.height / 20., 1, true);
-                //TextOutA(window.context, window.width / 2, window.height / 20., curentSignstring.c_str(), curentSignstring.size());
 
                 curentSignstring = zodiacSignToString(player_sign);
                 drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 15., 1, true);
-                //TextOutA(window.context, window.width / 2, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());
 
                 curentSignstring = "current weapon: " + weapon[(int)current_weapon].name;
                 drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 30., 1, true);
-                //TextOutA(window.context, window.width / 2, window.height - window.height / 30., curentSignstring.c_str(), curentSignstring.size());
 
 
                 UpdateGame();
@@ -1086,6 +1092,11 @@ void UpdateGame() {
             { 
                 endFight();
 
+                break;
+            }
+            case gameState_::WinFight:
+            {
+                winFight();
                 break;
             }
 
