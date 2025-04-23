@@ -129,11 +129,11 @@ void menuMonthprocessing()
     SIZE textSize;
 
     std::string curentMounthstring = mounthToString(player_month);
-    //TextOutA(window.context, window.width * 5 / 8, 0, curentMounthstring.c_str(), curentMounthstring.size());
+    TextOutA(window.context, window.width * 5 / 8, 0, curentMounthstring.c_str(), curentMounthstring.size());
 
     std::string b = "select your date of birth";
     GetTextExtentPoint32(window.context, b.c_str(), b.size(), &textSize);
-    //TextOutA(window.context, window.width / 2 - textSize.cx / 2, 100, b.c_str(), b.size());
+    TextOutA(window.context, window.width / 2 - textSize.cx / 2, 100, b.c_str(), b.size());
 }
 
 
@@ -185,11 +185,11 @@ void StartMenu()
 
 
 
-
 void DrawStarsHP(HDC hdc) {
     SetTextColor(hdc, RGB(255, 255, 255));
     SetBkMode(hdc, TRANSPARENT);
 
+    
 
     SetTextColor(hdc, RGB(100, 150, 255));
     for (size_t i = 0; i < starSet[player_sign]->starsRenderedCords.size(); ++i) {
@@ -197,7 +197,7 @@ void DrawStarsHP(HDC hdc) {
         float hp = starSet[player_sign]->starsHealth[i];
 
         std::string hpText = "HP: " + std::to_string(static_cast<int>(hp));
-        TextOutA(hdc, pos.x + 20, pos.y - 15, hpText.c_str(), hpText.size());
+        TextOutA(hdc, pos.x, pos.y, hpText.c_str(), hpText.size());
     }
 
 
@@ -207,103 +207,8 @@ void DrawStarsHP(HDC hdc) {
         float hp = starSet[currentEnemyID]->starsHealth[i];
 
         std::string hpText = "HP: " + std::to_string(static_cast<int>(hp));
-        TextOutA(hdc, pos.x + 20, pos.y - 15, hpText.c_str(), hpText.size());
+        TextOutA(hdc, pos.x, pos.y, hpText.c_str(), hpText.size());
     }
-}
-
-bool isBattleActive = false;
-DWORD battleStartTime;
-DWORD attackTime;
-
-void StartBattle() {
-    if (!isBattleActive) {
-        battleStartTime = timeGetTime();
-        attackTime = battleStartTime;
-        isBattleActive = true;
-        TextOutA(window.context, 400, 400, "Бой начался", 10);
-    }
-}
-
-bool isRewind = false;
-
-void UpdateGame() {
-    static const DWORD MAX_BATTLE_TIME = 4 * 60 * 1000;
-    static const DWORD MAX_REWIND = 30 * 1000;
-    static DWORD battleTime = 60 * 5 * 1000;
-    static DWORD timeModifier = 0;
-    static DWORD lastInputTime = 0;
-    const DWORD inputRepeatDelay = 100;
-
-
-    DWORD currentTime = timeGetTime();
-
-
-
-    if (GetAsyncKeyState('Q')) {
-        if (currentTime - lastInputTime > inputRepeatDelay) {
-            lastInputTime = currentTime;
-            if (battleStartTime + battleTime + timeModifier + 1000 - currentTime <= MAX_BATTLE_TIME) {
-                timeModifier += 1000;
-
-            }
-        }
-    }
-    
-    if (GetAsyncKeyState('E') & 0x8000) 
-    {  
-        //if (currentTime - lastInputTime > inputRepeatDelay) {
-           // lastInputTime = currentTime;
-        if (currentStateIndex > 0)
-        {
-
-            RewindOneStepBack();
-            isRewind = true;
-        }
-        else
-        {
-            isRewind = false;
-        }
-       // }
-    }
-    else
-    {
-        isRewind = false;
-    }
-            DWORD rewindAmount = 10000;
-            DWORD targetTime = currentTime - rewindAmount;
-
-
-            //if (//!battleHistory.empty() && targetTime < battleHistory.front().timestamp) {
-            //    targetTime = battleHistory.front().timestamp;
-            //}
-
-            //if (//RewindOneStepBack()) {
-            //    //fightMove(playerPosition, true);
-            //    timeModifier = currentTime - targetTime;
-            //}
-        
-    
-    if (isBattleActive) {
-        LONG remainingTime = (LONG)((battleStartTime + battleTime + timeModifier) - currentTime);// Привязал оставшаеся время к лонгу
-
-        DWORD totalBattleTime = battleTime + timeModifier;
-        if (totalBattleTime > MAX_BATTLE_TIME) {
-            timeModifier = MAX_BATTLE_TIME - battleTime;
-            remainingTime = (LONG)((battleStartTime + MAX_BATTLE_TIME) - currentTime);
-        }
-
-        if (remainingTime > 0) {
-            std::string timeStr = std::to_string(remainingTime / 1000);// Cтринг для вывода 
-            TextOutA(window.context, 10, 10, "Время ", 6);
-            TextOutA(window.context, 70, 10, timeStr.c_str(), timeStr.size());
-        }
-        else {
-            timeModifier = 0;
-            isBattleActive = false;
-            gameState = gameState_::EndFight;
-        }
-    }
-
 }
 
 

@@ -4,6 +4,7 @@ namespace drawer
     void (*modelTransform)(point3d& p, Constellation& Constellation);
     void (*modelProject)(point3d& p);
 
+
     void placeConstToWorld(point3d& p, Constellation& Constellation)
     {
         move(p, 0, 0, 3000. / Constellation.scale);
@@ -719,6 +720,148 @@ namespace drawer
         }
 
     }
+
+    void DrawTimeBar(float progress) {
+    // Параметры временного бара
+    const int barWidth = 400;
+    const int barHeight = 30;
+    const int barX = (window.width - barWidth) / 2;
+    const int barY = 50;
+    const int starCount = 20;
+    const float starSize = 4.0f;
+
+    // Создаем точки для рамки
+    point3d topLeft = { (float)barX, (float)barY, 0 };
+    point3d topRight = { (float)(barX + barWidth), (float)barY, 0 };
+    point3d bottomLeft = { (float)barX, (float)(barY + barHeight), 0 };
+    point3d bottomRight = { (float)(barX + barWidth), (float)(barY + barHeight), 0 };
+
+    // Рисуем рамку
+    drawer::drawLine(topLeft, topRight, 5);    // Верх
+    drawer::drawLine(bottomLeft, bottomRight, 5); // Низ
+    drawer::drawLine(topLeft, bottomLeft, 5);  // Лево
+    drawer::drawLine(topRight, bottomRight, 5); // Право
+
+    // Рисуем заполнение из звёзд
+    int activeStars = (int)(starCount * progress);
+    float starSpacing = barWidth / (float)(starCount + 1);
+
+    for (int i = 0; i < starCount; i++) {
+        point3d star = {
+            barX + (i + 1) * starSpacing,
+            barY + barHeight / 2,
+            0
+        };
+
+        float currentSize = (i < activeStars) ? starSize * 1.5f : starSize;
+
+        if (i < activeStars) {
+            float pulse = 0.5f + 0.5f * sinf(timeGetTime() * 0.005f);
+            currentSize += pulse * 2.0f;
+        }
+
+        drawer::drawPoint(star, currentSize);
+    }
+
+    // Соединяем звёзды
+    for (int i = 0; i < starCount - 1; i++) {
+        point3d star1 = {
+            barX + (i + 1) * starSpacing,
+            barY + barHeight / 2,
+            0
+        };
+
+        point3d star2 = {
+            barX + (i + 2) * starSpacing,
+            barY + barHeight / 2,
+            0
+        };
+
+        int lineSegments = (i < activeStars - 1) ? 10 : 5;
+        drawer::drawLine(star1, star2, lineSegments);
+    }
+}
+
+
+
+
+bool isBattleActive = false;
+DWORD battleStartTime;
+DWORD attackTime;
+
+void StartBattle() {
+    if (!isBattleActive) {
+        battleStartTime = timeGetTime();
+        attackTime = battleStartTime;
+        isBattleActive = true;
+        TextOutA(window.context, 400, 400, "Бой начался", 10);
+    }
+}
+
+bool isRewind = false;
+
+void UpdateGame() {
+    static const DWORD MAX_BATTLE_TIME = 4 * 60 * 1000;
+    static const DWORD MAX_REWIND = 30 * 1000;
+    static DWORD battleTime = 60 * 5 * 1000;
+    static DWORD timeModifier = 0;
+    static DWORD lastInputTime = 0;
+    const DWORD inputRepeatDelay = 100;
+
+    DWORD currentTime = timeGetTime();
+
+    if (GetAsyncKeyState('Q')) {
+        if (currentTime - lastInputTime > inputRepeatDelay) {
+            lastInputTime = currentTime;
+            if (battleStartTime + battleTime + timeModifier + 1000 - currentTime <= MAX_BATTLE_TIME) {
+                timeModifier += 1000;
+            }
+        }
+    }
+
+    if (GetAsyncKeyState('E') & 0x8000) {
+        if (currentStateIndex > 0) {
+            RewindOneStepBack();
+            isRewind = true;
+        }
+        else {
+            isRewind = false;
+        }
+    }
+    else {
+        isRewind = false;
+    }
+
+    if (isBattleActive) {
+        LONG remainingTime = (LONG)((battleStartTime + battleTime + timeModifier) - currentTime);
+        fontInit(isFontInit);
+        DWORD totalBattleTime = battleTime + timeModifier;
+
+        if (totalBattleTime > MAX_BATTLE_TIME) {
+            timeModifier = MAX_BATTLE_TIME - battleTime;
+            remainingTime = (LONG)((battleStartTime + MAX_BATTLE_TIME) - currentTime);
+        }
+
+        if (remainingTime > 0) {
+            
+            float progress = remainingTime / (float)(battleTime + timeModifier);
+            DrawTimeBar(progress);
+            std::string timeStr = std::to_string(remainingTime / 1000);
+            drawString("Time", 10, 10, 1.f, false);
+            drawString(timeStr.c_str(), 100, 10, 1.f, false);
+        }
+        else {
+            timeModifier = 0;
+            isBattleActive = false;
+            gameState = gameState_::EndFight;
+        }
+    }
+}
+
+
+
+
+    
 
     
 
