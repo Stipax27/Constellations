@@ -27,7 +27,7 @@ point3d starfield_angles = { 0,0,0 };
 void fightMove(point3d& p) {
 
 	
-	//player_dodge_ofs ;
+	//player_dodge_ofs ; 
 
 	float T;
 	float moveTimer = 4;
@@ -35,7 +35,7 @@ void fightMove(point3d& p) {
 	float currentS;
 	float currentA;
 	float F = -1.5;
-	bool isMoveStateBack;
+	bool isMoveStateBack; 
 
 	static char SYM[2] = {0};
 
@@ -53,14 +53,14 @@ void fightMove(point3d& p) {
 			SYM[1] = '\0';
 
 
-			start = timeGetTime();
+			start = currentTime;
 			isMoveActive = true;
 		}
 		//}
 	}
 
 	if (isMoveActive) {
-		T = timeGetTime() - start;
+		T = currentTime - start;
 		currentA = F * (moveTimer / 2 - T / 1000);
 		currentV = currentA * T / 1000;
 		

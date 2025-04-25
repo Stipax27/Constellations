@@ -18,7 +18,7 @@ void InitGame()
     
     game.day = 32;
     game.month = 13;
-    startTime = timeGetTime();
+    startTime = currentTime;
 
     initWeapon();
 }
@@ -56,11 +56,11 @@ void drawCircularMenu(float circleRadius, float speed, string* items, int size, 
     float centerY = window.height / 2;
     for (int i = 0; i < size; i++)
     {
-        float angle = (2 * PI / size) * i + timeGetTime() * speed;
+        float angle = (2 * PI / size) * i + currentTime * speed;
         float textX = centerX + circleRadius * cos(angle);
         float textY = centerY + circleRadius * sin(angle);
 
-        bool isClicked = drawClickableText(items[i], false, RGB(0, 0, 255), textX, textY);
+        bool isClicked = drawClickableText(items[i], false, RGB(0, 191, 255), textX, textY);
         switch (selectedType) {
         case first:
             if (isClicked) {
@@ -104,7 +104,8 @@ void drawCircularMenu(float circleRadius, float speed, string* items, int size, 
 void menuMonthprocessing()
 {
 
-    drawCircularMenu(450, 0.00001, mounthString, 12, first);
+    //drawCircularMenu(450, 0.00001, mounthString, 12, first);
+    drawCircularMenu(450, 0.0001, mounthString, 12, first);
 
     drawString(mounthToString(player_month).c_str(), window.width / 2 -600, 50,1,true);
     
@@ -138,10 +139,10 @@ void menuConfirmationButton()
 {
     
 
-    if (drawClickableText("Play", false, RGB(0, 0, 255), window.width / 2, window.height / 1.6))
+    if (drawClickableText("Play", false, RGB(0, 191, 255), window.width / 2, window.height / 1.6))
     {
-        gameState = gameState_::selectEnemy;
-        startTime = timeGetTime();
+        gameState = gameState_::DialogStruct;
+        
     }
 }
 
@@ -236,16 +237,9 @@ void winFight()
 
 void endFight()
 {
-    if (drawClickableText("You Lose (((", true, RGB(255, 0, 0)))
+    if (drawClickableText("You Lose (((", true, RGB(0, 191, 255)))
     {
         gameState = gameState_::MainMenu;
     }
 }
 
-//void Shaking() 
-//{
-//    if ()
-//    {
-//    
-//    }
-//}

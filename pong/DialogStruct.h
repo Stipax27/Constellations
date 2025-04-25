@@ -138,7 +138,11 @@ void handleInput()
     {
         selectVariant(1);
     }
-    
+    if (GetAsyncKeyState('E') & 0x0001) 
+    {
+        gameState = gameState_::selectEnemy;
+
+    }
 }
 
 

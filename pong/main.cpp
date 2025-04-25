@@ -13,6 +13,7 @@ const float PI = 3.1415926535897;
 #include <sstream>
 #include <algorithm>
 #include <deque>
+#include "timer.h"
 
 HINSTANCE hInst;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -53,6 +54,7 @@ DWORD currentTime;
 #include "StatusGame.h"
 #include "font.h"
 #include "MainGame.h"
+#include "DodgeEnemy.h"
 #include "DialogStruct.h"
 #include "drawer.h"
 
@@ -71,6 +73,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     ShowCursor(NULL);
     MSG msg = { 0 };
     //while (msg.message != WM_QUIT )
+    timer::StartCounter();
     while (!GetAsyncKeyState(VK_ESCAPE))
     {
         while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -79,7 +82,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
-        currentTime = timeGetTime();
+        currentTime = timer::GetCounter();
 
         mouseInput();
         drawer::drawWorld();//рисуем фон, ракетку и шарик

@@ -42,7 +42,7 @@ void SaveCurrentState() {
     if (!starSet[player_sign] || !starSet[currentEnemyID]) return;
 
     BattleState currentState;
-    currentState.timestamp = timeGetTime();
+    currentState.timestamp = currentTime;
 
     
     currentState.playerHP = starSet[player_sign]->hp;

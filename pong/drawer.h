@@ -39,7 +39,7 @@ namespace drawer
         p.y *= 200;
         p.z *= 200;
         //move(p, offset.x, offset.y, offset.z);
-        float a = timeGetTime();
+        float a = currentTime;
         rotateY(p, a * 0.1);
         move(p, 0, 0, 1300);
     }
@@ -92,7 +92,7 @@ namespace drawer
 
     void fightProject(point3d& p)
     {
-        int fadeInTime = timeGetTime() - startTime;
+        int fadeInTime = currentTime - startTime;
         float startCamDist = 100;
         float finCamDist = 3000;
 
@@ -180,7 +180,7 @@ namespace drawer
 
             modelProject(point);
 
-            float sz = 1 + .5 * sinf(i + timeGetTime() * .01);
+            float sz = 1 + .5 * sinf(i + currentTime * .01);
             drawPoint(point, sz);
             // –ËÒÓ‚‡ÌËÂ ÀËÌËÈ.
         }
@@ -210,7 +210,7 @@ namespace drawer
             point2.y = starArray[starEdges[i][1]].y;
             point2.z = starArray[starEdges[i][1]].z;
 
-            float a = timeGetTime() * .01;
+            float a = currentTime * .01;
             modelTransform(point1, Constellation);
             modelTransform(point2, Constellation);
             //if (starHealth[i] > 0 && starHealth[i + 1] > 0) - ¡˚ÎÓ
@@ -240,7 +240,7 @@ namespace drawer
         float dy = point.y - mouse.y;
         float lenght = sqrt(dx * dx + dy * dy);
 
-        float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
+        float rad = saturate(1.2 - lenght * .05) * fabs(sin(currentTime * .01));
 
 
         if (GetAsyncKeyState(VK_LBUTTON))
@@ -284,7 +284,7 @@ namespace drawer
         float dy = point.y - mouse.y;
         float lenght = sqrt(dx * dx + dy * dy);
 
-        float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
+        float rad = saturate(1.2 - lenght * .05) * fabs(sin(currentTime * .01));
         finalStarRad = starSize * starHealth[i] + rad * 15;
 
 
@@ -391,7 +391,7 @@ namespace drawer
         float dy = point.y - mouse.y;
         float lenght = sqrt(dx * dx + dy * dy);
 
-        float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
+        float rad = saturate(1.2 - lenght * .05) * fabs(sin(currentTime * .01));
 
 
         if (GetAsyncKeyState(VK_LBUTTON))
@@ -419,7 +419,7 @@ namespace drawer
         float dy = point.y - mouse.y;
         float lenght = sqrt(dx * dx + dy * dy);
 
-        float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
+        float rad = saturate(1.2 - lenght * .05) * fabs(sin(currentTime * .01));
 
 
         if (GetAsyncKeyState(VK_LBUTTON))
@@ -460,7 +460,7 @@ namespace drawer
             point.y = starArray[i].y;
             point.z = starArray[i].z;
 
-            float a = timeGetTime() * .01;
+            float a = currentTime * .01;
             modelTransform(point, Constellation);
             modelProject(point);
 
@@ -624,7 +624,7 @@ namespace drawer
             for (int i = 0; i < sz1;i++)
             {
                 float morphSpeed = 0.01;
-                morphArray.push_back(lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(timeGetTime() * morphSpeed))));
+                morphArray.push_back(lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(currentTime * morphSpeed))));
             }
         }
         else
@@ -632,7 +632,7 @@ namespace drawer
             for (int i = 0; i < sz2;i++)
             {
                 float morphSpeed = 0.01;
-                morphArray.push_back(lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(timeGetTime() * morphSpeed))));
+                morphArray.push_back(lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(currentTime * morphSpeed))));
             }
         }
         if (sz3 > sz4)
@@ -659,15 +659,17 @@ namespace drawer
 
     void drawPlayer—onstellationToMenu()
     {
-        startTime = timeGetTime();
-        int n = (timeGetTime() / 1000) % starSet.size();
+        startTime = currentTime;
+        int n = (currentTime / 1000) % starSet.size();
         modelTransform = &placeConstToStartMenu;
         modelProject = &menuProject;
         uiFunc = &menuUI;
         linksDivider = 15;
         if (gameState == gameState_::confirmSign) n = player_sign;
         //draw—onstellation(*starSet[n]);
+
         draw—onstellation(*starSet[player_sign]);
+        
     }
 
     void enemyFight()
@@ -820,7 +822,7 @@ namespace drawer
         float currentSize = (i < activeStars) ? starSize * 1.5f : starSize*.0;
 
         if (i < activeStars) {
-            float pulse = 0.5f + 0.5f * sinf(timeGetTime() * 0.005f);
+            float pulse = 0.5f + 0.5f * sinf(currentTime * 0.005f);
             currentSize += pulse * 2.0f;
         }
 
@@ -867,7 +869,7 @@ DWORD battleStartTime;
 
 void StartBattle() {
     if (!isBattleActive) {
-        battleStartTime = timeGetTime();
+        battleStartTime = currentTime;
         attackTime = battleStartTime;
         isBattleActive = true;
         TextOutA(window.context, 400, 400, "¡ÓÈ Ì‡˜‡ÎÒˇ", 10);
@@ -1039,7 +1041,9 @@ void UpdateGame() {
                     if (attack_collision == true)
                     {
                         check_attack = false;
+                        startShake();
                     }
+                    //updateConstellation(starsCords);
 
                     draw—onstellation(*starSet[currentEnemyID]);
 
