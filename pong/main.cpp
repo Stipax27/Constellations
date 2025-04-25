@@ -18,11 +18,19 @@ HINSTANCE hInst;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 // секция данных игры  
-typedef struct {
-    float x;
-    float y;
-    float z;
-} point3d;
+struct point3d{
+    float x, y, z;
+
+    bool operator==(const point3d& other) const {
+        return fabs(x - other.x) < 0.001f &&
+               fabs(y - other.y) < 0.001f &&
+               fabs(z - other.z) < 0.001f;
+    }
+
+    bool operator!=(const point3d& other) const {
+        return !(*this == other);
+    }
+};
 
 const float starSize = 10;
 int startTime;
@@ -39,11 +47,13 @@ DWORD currentTime;
 #include "MainWindow.h"
 #include "mouse.h"
 #include "Constellation.h"
-#include "Navigation.h"
 #include "MainWorld.h"
 #include "Weapon.h"
-#include "MainGame.h"
+#include "Navigation.h"
+#include "StatusGame.h"
 #include "font.h"
+#include "MainGame.h"
+#include "DialogStruct.h"
 #include "drawer.h"
 
 
@@ -56,6 +66,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
     InitWindow();//здесь инициализируем все что нужно для рисования в окне
     InitGame();//здесь инициализируем переменные игры
+    //initContentData();
     //mciSendString(TEXT("play ..\\Debug\\music.mp3 repeat"), NULL, 0, NULL);
     ShowCursor(NULL);
     MSG msg = { 0 };
@@ -72,7 +83,24 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         mouseInput();
         drawer::drawWorld();//рисуем фон, ракетку и шарик
-        BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно
+        BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно   
+
+
+/*        int sz = starSet[currentEnemyID]->starsCords.size();
+        for (int i = 0; i < sz; i++)
+        {
+            starSet[currentEnemyID]->starsCords[i].x *= .999;
+            starSet[currentEnemyID]->starsCords[i].y *= .999;
+            starSet[currentEnemyID]->starsCords[i].z *= .999;
+        }
+        */
+
+        starfield_angles.x += .05;
+        starfield_angles.y += .06;
+        starfield_angles.z += .07;
+
+        if (!isRewind) SaveCurrentState();
+        
         Sleep(16);//ждем 16 милисекунд (1/количество кадров в секунду)
     }
 

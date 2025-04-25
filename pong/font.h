@@ -216,11 +216,12 @@ void preprocessFont()
         //scale
         float scale = .1;
 
-        for (int i = 0; i < font[letter]->size(); i += 2)
+        for (int i = 0; i < font[letter]->size(); i ++)
         {
             font[letter]->at(i) *= scale;
-            font[letter]->at(i + 1) *= scale;
         }
+
+
         float width = max_x - min_x;
 
         letter_width[letter] = width * scale;
@@ -229,14 +230,20 @@ void preprocessFont()
 
 }
 
-float drawLetter(int letter, float x, float y, float scale)
+float drawLetter(int letter, float x, float y, float scale, bool getSize = false)
 {
+
+    if (getSize)
+    {
+        return letter_width[letter] * scale;
+    }
+
     if (letter == 0)
     {
         return letter_width[letter] * scale;
     }
 
-    MoveToEx(window.context, x+font[letter]->at(0), y+font[letter]->at(1), NULL);
+    MoveToEx(window.context, x+font[letter]->at(0) * scale, y+font[letter]->at(1) * scale, NULL);
     
     for (int i = 2; i < font[letter]->size(); i+=2)
     {
@@ -306,19 +313,29 @@ float drawLetterFX(int letter, float x, float y, float scale,int num=0)
     return letter_width[letter] * scale;
 }
 
-float drawString(const char* str,float x, float y, float scale, bool centered)
+struct {
+    COLORREF color;
+} textStyle;
+
+point3d drawString(const char* str,float x, float y, float scale, bool centered, bool getSize = false, int count = -1)
 {
     preprocessFont();
 
     float tracking = 10;
     float interline = 40;
 
-    HPEN pen = CreatePen(PS_SOLID, 3, RGB(255, 255, 255));
+    HPEN pen = CreatePen(PS_SOLID, 3, textStyle.color);
     SelectObject(window.context, pen);
 
     int letters_count = strlen(str);
+    if (count != -1) {
+        letters_count = count;
+    }
     float base_x = x;
+    float base_y = y;
     int i = 0;
+    float maxStringWidth = 0;
+    float stringWidth = 0;
 
     while (i < letters_count)
     {
@@ -337,9 +354,13 @@ float drawString(const char* str,float x, float y, float scale, bool centered)
 
         while (i < letters_count && str[i] != '\n')
         {
-            x += drawLetterFX(str[i] - 32, x - offset, y, scale,i) + tracking;
+            float sz = drawLetter(str[i] - 32, x - offset, y, scale, getSize) + tracking;
+            x += sz;
+            stringWidth += sz;
             i++;
         }
+
+        maxStringWidth = max(maxStringWidth, stringWidth);
 
         i++;
         x = base_x;
@@ -348,6 +369,6 @@ float drawString(const char* str,float x, float y, float scale, bool centered)
 
     DeleteObject(pen);
 
-    return x - base_x;
+    return { maxStringWidth ,y-base_y,0};
 
 }

@@ -1,499 +1,251 @@
-extern std::vector<Constellation*> starSet;
-extern ZodiacSign player_sign;
-extern ZodiacSign currentEnemyID;
-extern DWORD currentTime;
+bool isRewind = false;
+DWORD attackTime;
+
 
 struct {
     int day, month;//количество набранных очков и оставшихся "жизней"
     bool action = false;//состояние - ожидание (игрок должен нажать пробел) или игра
 } game;
 
+enum menu_type {
+    first,
+    second
+};
+
 void InitGame()
 {
     initWorld();
-
+    
     game.day = 32;
-    game.month =  13;
+    game.month = 13;
     startTime = timeGetTime();
 
     initWeapon();
 }
 
-HFONT hFont;
-bool fontInit = false;
 
-void menuMonthprocessing()
-{
-    if (!fontInit)
-    {
-        hFont = CreateFont(70, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, "CALIBRI");
-        fontInit = true;
-    }
+bool drawClickableText(
+    const std::string text,
+    bool center,
+    COLORREF COLOR_HOVER,
+    int x = 0, int y = 0
+) {
 
-    SetTextColor(window.context, RGB(160, 160, 160));
-    SetBkColor(window.context, RGB(0, 0, 0));
-    SetBkMode(window.context, TRANSPARENT);
+    COLORREF COLOR_REGULAR = RGB(160, 160, 160);
 
-    float circleRadius = 400;
+    point3d sz = drawString(text.c_str(), x, y, 1.f, true,true);
+
+    bool isHovered = (mouse.x > x-sz.x/2 && mouse.x < x + sz.x/2 &&
+        mouse.y > y && mouse.y < y + sz.y);
+
+    textStyle.color= isHovered ? COLOR_HOVER : COLOR_REGULAR;
+
+
+    drawString(text.c_str(), x, y, 1.f, true);
+
+
+    //TextOutA(window.context, textX, textY, text.c_str(), text.size());
+
+    return isHovered && GetAsyncKeyState(VK_LBUTTON);
+}
+
+void drawCircularMenu(float circleRadius, float speed, string* items, int size, menu_type selectedType) {
+
+
     float centerX = window.width / 2;
     float centerY = window.height / 2;
-    int numMonth = 12;
-    SIZE textSize;
-
-    for (int i = 0; i < numMonth; i++)
+    for (int i = 0; i < size; i++)
     {
-        
-        float angle = (2 * PI / numMonth) * i + timeGetTime() * 0.00015;
-
-        
+        float angle = (2 * PI / size) * i + timeGetTime() * speed;
         float textX = centerX + circleRadius * cos(angle);
         float textY = centerY + circleRadius * sin(angle);
 
-        
-        std::string m = mounthToString((MonthSign)i);
-        GetTextExtentPoint32(window.context, m.c_str(), m.size(), &textSize);
-
-        int textWidth = textSize.cx;
-        int textHeight = textSize.cy;
-
-       
-        if (mouse.x > textX - textWidth / 2 && mouse.x < textX + textWidth / 2 &&
-            mouse.y > textY - textHeight / 2 && mouse.y < textY + textHeight / 2)
-        {
-            SetTextColor(window.context, RGB(0, 0, 255));
-            if (GetAsyncKeyState(VK_LBUTTON))
-            {
+        bool isClicked = drawClickableText(items[i], false, RGB(0, 0, 255), textX, textY);
+        switch (selectedType) {
+        case first:
+            if (isClicked) {
                 player_month = (MonthSign)(i);
                 gameState = gameState_::DaySelection;
                 currentMonthIndex = i;
             }
-        }
-        else
-        {
-            SetTextColor(window.context, RGB(160, 160, 160));
-            currentMonthIndex = -1;
-        }
+            else
+            {
+                currentMonthIndex = -1;
+            }
+            break;
 
-        
-        TextOutA(window.context, static_cast<int>(textX - textWidth / 2), static_cast<int>(textY - textHeight / 2), m.c_str(), m.size());
+        case second:
+
+            if (isClicked)
+            {
+                player_day = i + 1;
+                currentDayIndex = i;
+                gameState = gameState_::confirmSign;
+
+                player_sign = getZodiacSign(player_day, player_month);
+            }
+            else
+            {
+                currentDayIndex = -1;
+            }
+
+            /*   TextOutA(window.context, static_cast<int>(textX - textWidth / 2), static_cast<int>(textY - textHeight / 2), m.c_str(), m.size());
+
+               std::string curentDaystring = std::to_string(player_day);
+               TextOutA(window.context, window.width * 5 / 8 + 100, 0, curentDaystring.c_str(), curentDaystring.size());*/
+            break;
+        }
     }
 
-    
-    std::string curentMounthstring = mounthToString(player_month);
-    TextOutA(window.context, window.width * 5 / 8, 0, curentMounthstring.c_str(), curentMounthstring.size());
-
-    std::string b = "select your date of birth";
-    GetTextExtentPoint32(window.context, b.c_str(), b.size(), &textSize);
-    TextOutA(window.context, window.width / 2 - textSize.cx / 2, 100, b.c_str(), b.size());
 }
+
+//
+
+void menuMonthprocessing()
+{
+
+    drawCircularMenu(450, 0.00001, mounthString, 12, first);
+
+    drawString(mounthToString(player_month).c_str(), window.width / 2 -600, 50,1,true);
+    
+    drawString("select your date of birth", window.width / 2, 20, 1, true);
+    
+}
+
+
 void menuDayprocessing()
 {
-    if (!fontInit)
-    {
-        hFont = CreateFont(70, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, "CALIBRI");
-        fontInit = true;
-    }
-
-    SetTextColor(window.context, RGB(160, 160, 160));
-    SetBkColor(window.context, RGB(0, 0, 0));
-    SetBkMode(window.context, TRANSPARENT);
+    
 
     float circleRadius = 300;
     float centerX = window.width / 2;
     float centerY = window.height / 2;
     int numDay = 31;
 
-    for (int i = 0;i < numDay;i++)
+
+    std::string days[31];
+    for (int i = 0; i < 31; i++)
     {
-
-        float angle = (2 * PI / numDay) * i - timeGetTime() * 0.00005;
-
-        float textX = centerX + circleRadius * cos(angle);
-        float textY = centerY + circleRadius * sin(angle);
-
-        std::string m = std::to_string(i+1);
-        SIZE textSize;
-        GetTextExtentPoint32(window.context, m.c_str(), m.size(), &textSize);
-
-
-        int textWidth = textSize.cx;
-        int textHeight = textSize.cy;
-
-        if (mouse.x > textX - textWidth / 2 && mouse.x < textX + textWidth / 2 &&
-            mouse.y > textY - textHeight / 2 && mouse.y < textY + textHeight / 2)
-        {
-            SetTextColor(window.context, RGB(255, 0, 0));
-            if (GetAsyncKeyState(VK_LBUTTON))
-            {
-                player_day = i+1;
-                currentDayIndex = i;
-                gameState = gameState_::confirmSign;
-
-                player_sign = getZodiacSign(player_day, player_month);
-            }
-        }
-        else
-        {
-            SetTextColor(window.context, RGB(160, 160, 160));
-            currentDayIndex = -1;
-        }
-
-        TextOutA(window.context, static_cast<int>(textX - textWidth / 2), static_cast<int>(textY - textHeight / 2), m.c_str(), m.size());
-
-        std::string curentDaystring = std::to_string(player_day);
-        TextOutA(window.context, window.width * 5 / 8 + 100, 0, curentDaystring.c_str(), curentDaystring.size());
+        days[i] = std::to_string(i + 1);
     }
+
+    drawCircularMenu(300, 0.00002, days, 31, second);
+
+    drawString(days[0].c_str(), window.width / 2 + 600, 50, 1, true);// Вывод 1го числа 
 }
 
 void menuConfirmationButton()
 {
-    if (!fontInit)
+    
+
+    if (drawClickableText("Play", false, RGB(0, 0, 255), window.width / 2, window.height / 1.6))
     {
-        hFont = CreateFont(70, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, "CALIBRI");
-        fontInit = true;
+        gameState = gameState_::selectEnemy;
+        startTime = timeGetTime();
     }
-
-    SetTextColor(window.context, RGB(160, 160, 160));
-    SetBkColor(window.context, RGB(0, 0, 0));
-    SetBkMode(window.context, TRANSPARENT);
-
-    std::string m = "Play";
-    SIZE textSize;
-    GetTextExtentPoint32(window.context, m.c_str(), m.size(), &textSize);
-
-    int textWidth = textSize.cx;
-    int textHeight = textSize.cy;
-
-    if (mouse.x > window.width / 2 - textWidth / 2 && mouse.x < window.width / 2 + textWidth / 2 &&
-        mouse.y > window.height / 1.2 - textHeight / 2 && mouse.y < window.height / 1.2 + textHeight / 2)
-    {
-        SetTextColor(window.context, RGB(255, 0, 0));
-        if (GetAsyncKeyState(VK_LBUTTON))
-        {
-            gameState = gameState_::selectEnemy;
-            startTime = timeGetTime();
-        }
-    }
-    else
-    {
-        SetTextColor(window.context, RGB(160, 160, 160));
-    }
-
-    TextOutA(window.context, static_cast<int>(window.width / 2 - textWidth / 2), static_cast<int>(window.height / 1.2 - textHeight / 2), m.c_str(), m.size());
 }
+
+
+point3d winMessagePos;
+DWORD winFightStartTime;
+
+bool winEnter = false;
+
+void calcWinMessageCoords()
+{
+    int amp = window.width / 2;
+
+    winMessagePos.x = window.width / 2 + rand() % amp- amp/2;
+    winMessagePos.y = window.height / 2 + rand() % amp - amp / 2;
+    winMessagePos.z = 0;
+
+}
+
+point3d exitButtonPos = { 0, 0, 0 }; 
+bool wasExitHovered = false;
+bool exitButtonInitialized = false;
 
 void StartMenu()
 {
-    if (!fontInit)
-    {
-        hFont = CreateFont(70, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, "CALIBRI");
-        fontInit = true;
+    
+    if (!exitButtonInitialized) {
+        exitButtonPos.x = window.width / 2;
+        exitButtonPos.y = window.height / 2 + 100;
+        exitButtonInitialized = true;
     }
 
-    SetTextColor(window.context, RGB(160, 160, 160));
-    SetBkColor(window.context, RGB(0, 0, 0));
-    SetBkMode(window.context, TRANSPARENT);
-
-    SIZE textSize;
-
-    std::string m = "Play";
-   
-    GetTextExtentPoint32(window.context, m.c_str(), m.size(), &textSize);
-
-    if (mouse.x > window.width / 2 - textSize.cx / 2 && mouse.x < window.width / 2 + textSize.cx / 2 &&
-        mouse.y > window.height / 2 - textSize.cy / 2 && mouse.y < window.height / 2 + textSize.cy / 2)
+    
+    if (drawClickableText("Play", true, RGB(0, 191, 255), window.width / 2, window.height / 2))
     {
-        SetTextColor(window.context, RGB(255, 0, 0));
-        if (GetAsyncKeyState(VK_LBUTTON))
-        {
-            gameState = gameState_::MonthSelection;
-        }
-    }
-    else
-    {
-        SetTextColor(window.context, RGB(160, 160, 160));
+        gameState = gameState_::MonthSelection;
     }
 
-    TextOutA(window.context, static_cast<int>(window.width / 2 - textSize.cx / 2), static_cast<int>(window.height / 2 - textSize.cy / 2), m.c_str(), m.size());
+    std::string EXIT = "Quit ((";
 
-    std::string b = "Quit";
-    GetTextExtentPoint32(window.context, b.c_str(), b.size(), &textSize);
+    
+    point3d textSize = drawString(EXIT.c_str(), exitButtonPos.x, exitButtonPos.y, 1.f, true, true);
 
-    if (mouse.x > window.width / 2 - textSize.cx / 2 && mouse.x < window.width / 2 + textSize.cx / 2 &&
-        mouse.y > (window.height / 2) + 100 - textSize.cy / 2 && mouse.y < (window.height / 2) + 100 + textSize.cy / 2)
+    
+    bool isHoveredNow = (mouse.x > exitButtonPos.x - textSize.x / 2 &&
+        mouse.x < exitButtonPos.x + textSize.x / 2 &&
+        mouse.y > exitButtonPos.y - textSize.y / 2 &&
+        mouse.y < exitButtonPos.y + textSize.y / 2);
+
+    
+    if (isHoveredNow && !wasExitHovered)
     {
-        SetTextColor(window.context, RGB(255, 0, 0));
-        if (GetAsyncKeyState(VK_LBUTTON))
-        {
-            ExitProcess(0);
-        }
+        exitButtonPos.x = 100 + rand() % (window.width - 200);
+        exitButtonPos.y = 100 + rand() % (window.height - 200);
     }
-    else
+    wasExitHovered = isHoveredNow;
+
+    
+    if (drawClickableText(EXIT, true, RGB(0, 191, 255), exitButtonPos.x, exitButtonPos.y))
     {
-        SetTextColor(window.context, RGB(160, 160, 160));
+        ExitProcess(0);
     }
-
-    TextOutA(window.context, static_cast<int>(window.width / 2 - textSize.cx / 2), static_cast<int>((window.height / 2) +100 - textSize.cy / 2), b.c_str(), b.size());
-
-
 }
 
-/*HBRUSH brush;
-HBRUSH brush2;
-float finalStarRad = 0;
-void drawLine22(point3d& p1, point3d& p2, Constellation& Constellation, int count)
+void winFight() 
 {
-
-    for (int i = 0;i < count;i++)
+    if (!winEnter)
     {
-
-
-        float dx = p2.x - p1.x;
-        float dy = p2.y - p1.y;
-        float dz = p2.z - p1.z;
-        float length = sqrt(dx * dx + dy * dy + dz * dz);
-        float stepX = dx / (float)count;
-        float stepY = dy / (float)count;
-        float stepZ = dz / (float)count;
-
-        point3d point;
-        point.x = p1.x + stepX * (float)i;
-        point.y = p1.y + stepY * (float)i;
-        point.z = p1.z + stepZ * (float)i;
-
-        std::vector <float>& starHealth = Constellation.starsHealth;
-
-        float dx = point.x - mouse.x;
-        float dy = point.y - mouse.y;
-        float lenght = sqrt(dx * dx + dy * dy);
-
-        float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
-
-        if (dx > mouse.x - oldmouse.x and dy < mouse.y - oldmouse.y)
-        {
-            SelectObject(window.context, brush2);
-            starHealth[i] -= .1;
-        }
-
-        else
-        {
-            SelectObject(window.context, brush);
-        }
-
-        finalStarRad = starSize * starHealth[i] + rad * 15;
-
+        winFightStartTime = currentTime;
+        winEnter = true;
+        calcWinMessageCoords();
     }
 
 
 
-    //modelProject(point);
+    if (currentTime > winFightStartTime + 1000)
+    {
+        calcWinMessageCoords();
+        winFightStartTime = currentTime;
+    }
 
-    //float sz = 1 + .5 * sinf(i + timeGetTime() * .01);
-    //drawPoint(point, sz);
-    // Рисование Линий.
-}*/
+    std::string w = ("You WIN !!!!");
+    drawString(w.c_str(), winMessagePos.x, winMessagePos.y, 1, true);
+    
 
-point3d attack[2];
-
-bool is_attack;
-
-
-
-void SelectVector()
-{
-   
     if (GetAsyncKeyState(VK_LBUTTON))
     {
-        /*float dx = mouse.x - window.width / 2.;
-        float dy = mouse.y - window.height / 2.;
-        float lenght = sqrt(dx * dx + dy * dy);*/
-        if (!lmb)
-        {
-            lmb = true;
-            oldmouse.x = mouse.x;
-            oldmouse.y = mouse.y;
-            oldmouseAngle = mouseAngle;
-        }
-        float dx, dy;
-        dx = mouse.x - oldmouse.x;
-        dy = mouse.y - oldmouse.y;
-
-        
-
-        HPEN pen = CreatePen(PS_SOLID, 3, RGB(0, 191, 255));
-        SelectObject(window.context, pen);
-        MoveToEx(window.context, oldmouse.x, oldmouse.y, NULL);
-        LineTo(window.context, mouse.x, mouse.y);
-        attack[0].x = oldmouse.x;
-        attack[0].y = oldmouse.y;
-        attack[1].x = mouse.x;
-        attack[1].y = mouse.y;
-        
-
-        /*if (is_attack) {
-            SaveCurrentState();
-        }*/
-
-    }
-    else
-    {
-    lmb = false;
-    is_attack = false;
+        gameState = gameState_::MainMenu;
     }
 
-    
 }
-
-struct BattleState {
-    DWORD timestamp;
-    float playerHP;    
-    float enemyHP;     
-    std::vector<float> playerStarsHealth;  
-    std::vector<float> enemyStarsHealth;   
-    point3d playerPos;  
-    point3d enemyPos;   
-};
-
-std::vector<BattleState> battleHistory;
-BattleState lastSavedState;
-
-void SaveCurrentState() {
-    BattleState currentState;
-    currentState.timestamp = timeGetTime();
-
-    currentState.playerHP = getConstellationHP(*starSet[player_sign]);
-    currentState.playerStarsHealth = starSet[player_sign]->starsHealth;
-    currentState.playerPos = starSet[player_sign]->starsRenderedCords[0];
-
-    currentState.enemyHP = getConstellationHP(*starSet[currentEnemyID]);
-    currentState.enemyStarsHealth = starSet[currentEnemyID]->starsHealth;
-    currentState.enemyPos = starSet[currentEnemyID]->starsRenderedCords[0];
-
-    
-    if (battleHistory.empty() ||
-        currentState.playerHP != lastSavedState.playerHP ||
-        currentState.enemyHP != lastSavedState.enemyHP) {
-
-        battleHistory.push_back(currentState);
-        lastSavedState = currentState;
-
-        if (battleHistory.size() > 100) {
-            battleHistory.erase(battleHistory.begin());
-        }
-    }
-}
-
-
-void RewindTime(DWORD targetTime) {
-    if (battleHistory.empty()) return;
-
-    for (auto it = battleHistory.rbegin(); it != battleHistory.rend(); ++it) {
-        if (it->timestamp <= targetTime) {
-            
-            starSet[player_sign]->starsHealth = it->playerStarsHealth;
-            starSet[currentEnemyID]->starsHealth = it->enemyStarsHealth;
-            break;
-        }
-    }
-}
-
-bool isBattleActive = false;
-DWORD battleStartTime;
-DWORD attackTime;
-
-void StartBattle() {
-    if (!isBattleActive) {
-        battleStartTime = timeGetTime();
-        attackTime = battleStartTime;
-        isBattleActive = true;
-        TextOutA(window.context, 400, 400, "Бой начался", 10);
-    }
-}
-
-void UpdateGame() {
-    static const DWORD MAX_BATTLE_TIME = 4 * 60 * 1000;
-    static const DWORD MAX_REWIND = 30 * 1000;
-    static DWORD battleTime = 2 * 60 * 1000;
-    static DWORD timeModifier = 0;
-    static DWORD lastInputTime = 0;
-    const DWORD inputRepeatDelay = 100;
-
-    DWORD currentTime = timeGetTime();
-
-    
-    
-    if (GetAsyncKeyState('Q')) {
-        if (currentTime - lastInputTime > inputRepeatDelay) {
-            lastInputTime = currentTime;
-            if (battleStartTime + battleTime + timeModifier + 1000 - currentTime <= MAX_BATTLE_TIME) {
-                timeModifier += 1000;
-            }
-        }
-    }
-    else if (GetAsyncKeyState('E')) {
-        if (currentTime - lastInputTime > inputRepeatDelay) {
-            timeModifier = std::max<DWORD>(0, timeModifier - 1000);
-            RewindTime(currentTime - timeModifier);
-            lastInputTime = currentTime;
-        }
-    }
-
-    if (isBattleActive) {
-        LONG remainingTime = (LONG)((battleStartTime + battleTime + timeModifier) - currentTime);// Привязал оставшаеся время к лонгу
-
-        DWORD totalBattleTime = battleTime + timeModifier;
-        if (totalBattleTime > MAX_BATTLE_TIME) {
-            timeModifier = MAX_BATTLE_TIME - battleTime;
-            remainingTime = (LONG)((battleStartTime + MAX_BATTLE_TIME) - currentTime);
-        }
-
-        if (remainingTime > 0) {
-            std::string timeStr = std::to_string(remainingTime / 1000);// Cтринг для вывода 
-            TextOutA(window.context, 10, 10, "Время ", 6);
-            TextOutA(window.context, 70, 10, timeStr.c_str(), timeStr.size());
-        }
-        else {
-            timeModifier = 0;
-            isBattleActive = false;
-            gameState = gameState_::EndFight;
-        }
-    }
-}
-
-
-
 
 void endFight()
 {
-    if (!fontInit)
+    if (drawClickableText("You Lose (((", true, RGB(255, 0, 0)))
     {
-        hFont = CreateFont(70, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, "CALIBRI");
-        fontInit = true;
+        gameState = gameState_::MainMenu;
     }
-
-    SetTextColor(window.context, RGB(160, 160, 160));
-    SetBkColor(window.context, RGB(0, 0, 0));
-    SetBkMode(window.context, TRANSPARENT);
-
-    SIZE textSize;
-
-    std::string m = "You Lose";
-
-    GetTextExtentPoint32(window.context, m.c_str(), m.size(), &textSize);
-
-    if (mouse.x > window.width / 2 - textSize.cx / 2 && mouse.x < window.width / 2 + textSize.cx / 2 &&
-        mouse.y > window.height / 2 - textSize.cy / 2 && mouse.y < window.height / 2 + textSize.cy / 2)
-    {
-        SetTextColor(window.context, RGB(255, 0, 0));
-        if (GetAsyncKeyState(VK_LBUTTON))
-        {
-            gameState = gameState_::MainMenu;
-        }
-    }
-    else
-    {
-        SetTextColor(window.context, RGB(160, 160, 160));
-    }
-
-    TextOutA(window.context, static_cast<int>(window.width / 2 - textSize.cx / 2), static_cast<int>(window.height / 2 - textSize.cy / 2), m.c_str(), m.size());
 }
+
+//void Shaking() 
+//{
+//    if ()
+//    {
+//    
+//    }
+//}

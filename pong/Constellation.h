@@ -6,6 +6,8 @@ class Constellation {
 public:
 
     std::vector<point3d> starsCords;
+    float hp;
+    float maxHP;
     std::vector <float> starsHealth;
     std::vector <std::vector <float>> constellationEdges;
 
@@ -16,7 +18,11 @@ public:
 
     point3d angle;
     float distance;
-    //
+
+    char currentMoveDirection; 
+    DWORD moveStartTime;
+    bool isMoveActive;
+    
 
     Constellation(std::vector<point3d> _starsCords, std::vector <float> _starsHealth, std::vector <std::vector <float>> _constellationEdges) {
         starsCords = _starsCords;
@@ -24,6 +30,13 @@ public:
         constellationEdges = _constellationEdges;
         ID = constellationsCounter;
         //name = zodiacSignToString((ZodiacSign)ID);
+
+        maxHP = 0;
+        for (int i=0;i< starsHealth.size();i++)
+        { 
+            maxHP += starsHealth[i];
+        }
+
         constellationsCounter++;
     }
 

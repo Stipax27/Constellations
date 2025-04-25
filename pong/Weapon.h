@@ -16,7 +16,7 @@ enum class weapon_name {
 };
 
 Constellation* currentWeapon = &Sword;
-weapon_name current_weapon = weapon_name::Shield;
+weapon_name current_weapon = weapon_name::Sword;
 
 void initWeapon() {
     weapon[(int)weapon_name::Sword].damage = 0.4;
@@ -47,8 +47,6 @@ void SelectWeapon() {
     if (GetAsyncKeyState('3')) current_weapon = weapon_name::Bow;
     if (GetAsyncKeyState('4')) current_weapon = weapon_name::Staff;
 
-    
-
 }
 
 float getConstellationHP(Constellation& Constellation)
@@ -78,7 +76,7 @@ bool isConstellationDead(Constellation& Constellation)
     {
         health += starHealth[i];
     }
-
+    
     return health > 0 ? false : true;
 
     
@@ -97,5 +95,121 @@ void enemyAttack(Constellation& Constellation)
     starHealth[attackedStar] -= .4;
 
     
+
+}
+
+point3d attack[2];
+
+bool is_attack;
+
+
+
+void AttackSwordVector()
+{
+
+    if (GetAsyncKeyState(VK_LBUTTON))
+    {
+        /*float dx = mouse.x - window.width / 2.;
+        float dy = mouse.y - window.height / 2.;
+        float lenght = sqrt(dx * dx + dy * dy);*/
+        if (!lmb)
+        {
+            lmb = true;
+            oldmouse.x = mouse.x;
+            oldmouse.y = mouse.y;
+            oldmouseAngle = mouseAngle;
+        }
+        float dx, dy;
+        dx = mouse.x - oldmouse.x;
+        dy = mouse.y - oldmouse.y;
+
+
+
+        HPEN pen = CreatePen(PS_SOLID, 3, RGB(0, 191, 255));
+        SelectObject(window.context, pen);
+        MoveToEx(window.context, oldmouse.x, oldmouse.y, NULL);
+        LineTo(window.context, mouse.x, mouse.y);
+        attack[0].x = oldmouse.x;
+        attack[0].y = oldmouse.y;
+        attack[1].x = mouse.x;
+        attack[1].y = mouse.y;
+
+
+        /*if (is_attack) {
+            SaveCurrentState();
+        }
+        */
+    }
+    else
+    {
+        lmb = false;
+        is_attack = false;
+    }
+
+
+}
+
+void AttackShieldVector()
+{
+
+    if (GetAsyncKeyState(VK_LBUTTON))
+    {
+        if (!lmb)
+        {
+            lmb = true;
+            oldmouse.x = mouse.x;
+            oldmouse.y = mouse.y;
+        }
+        float dx, dy;
+        dx = mouse.x - oldmouse.x;
+        dy = mouse.y - oldmouse.y;
+
+
+
+        HPEN pen = CreatePen(PS_SOLID, 3, RGB(0, 191, 255));
+        SelectObject(window.context, pen);
+        MoveToEx(window.context, oldmouse.x, oldmouse.y, NULL);
+        LineTo(window.context, mouse.x, mouse.y);
+
+    }
+    else
+    {
+        lmb = false;
+        is_attack = false;
+    }
+
+
+}
+
+
+void AttackBowVector()
+{
+
+    if (GetAsyncKeyState(VK_LBUTTON))
+    {
+        if (!lmb)
+        {
+            lmb = true;
+            oldmouse.x = mouse.x;
+            oldmouse.y = mouse.y;
+        }
+        float dx, dy;
+        dx = mouse.x - oldmouse.x;
+        dy = mouse.y - oldmouse.y;
+
+
+
+        HPEN pen = CreatePen(PS_SOLID, 3, RGB(0, 191, 255));
+        SelectObject(window.context, pen);
+        MoveToEx(window.context, oldmouse.x, oldmouse.y, NULL);
+        LineTo(window.context, mouse.x, mouse.y);
+
+    }
+    else
+    {
+        lmb = false;
+        is_attack = false;
+    }
+
 
 }

@@ -4,12 +4,6 @@ namespace drawer
     void (*modelTransform)(point3d& p, Constellation& Constellation);
     void (*modelProject)(point3d& p);
 
-    void rotateworld(point3d& p)
-    {
-        rotateX(p, mouseAngle.y * 0.1);
-        rotateY(p, mouseAngle.x * 0.1);
-        //rotateZ(p, timeGetTime() * 0.01); // Кручение обьектов.
-    }
 
     void placeConstToWorld(point3d& p, Constellation& Constellation)
     {
@@ -44,6 +38,7 @@ namespace drawer
         p.x *= 200;
         p.y *= 200;
         p.z *= 200;
+        //move(p, offset.x, offset.y, offset.z);
         float a = timeGetTime();
         rotateY(p, a * 0.1);
         move(p, 0, 0, 1300);
@@ -75,13 +70,33 @@ namespace drawer
         rotateY(p, mouseAngle.x * 0.1);
     }
     
+    void HeroUITransform(point3d& p, Constellation& Constellation)
+    {
+        move(p, 0, 0, 0.);
+
+        fightMove(p);
+
+        p.x *= .13;
+        p.y *= .13;
+        p.z *= .13;
+        //rotateX(p, Constellation.angle.x);
+        //rotateY(p, Constellation.angle.y);
+        //rotateZ(p, Constellation.angle.z);
+        p.x *= Constellation.scale;
+        p.y *= Constellation.scale;
+        p.z *= Constellation.scale;
+
+        //rotateX(p, mouseAngle.y * 0.1);
+        //rotateY(p, mouseAngle.x * 0.1);
+    }
+
     void fightProject(point3d& p)
     {
-        int currentTime = timeGetTime() - startTime;
+        int fadeInTime = timeGetTime() - startTime;
         float startCamDist = 100;
         float finCamDist = 3000;
 
-        float lerpCoef = smoothstep(0., 1, min(currentTime * 4, finCamDist) / (finCamDist - startCamDist));
+        float lerpCoef = smoothstep(0., 1, min(fadeInTime * 4, finCamDist) / (finCamDist - startCamDist));
         if (lerpCoef < .99) {
             camDist = lerpCoef * (finCamDist - startCamDist) + startCamDist;
         }
@@ -112,6 +127,9 @@ namespace drawer
         p.x = x;
         p.y = y;
     }
+    void NullProject(point3d& p) {
+    
+    }
 
     void genRandSphere(point3d& p)
     {
@@ -119,11 +137,14 @@ namespace drawer
         float angleX, angleY;
         angleX = rand() % 360;
         angleY = rand() % 360;
+
         p.x = 0;
         p.y = 0;
         p.z = window.width;
+
         rotateX(p, angleX);
         rotateY(p, angleY); // Сферообразное пространство.
+
     }
 
     float nearPlaneClip = 0;
@@ -143,20 +164,19 @@ namespace drawer
 
     void drawLine(point3d& p1, point3d& p2, int count)
     {
+        if (count < 1) return;
+
         for (int i = 0;i < count;i++)
         {
             float dx = p2.x - p1.x;
             float dy = p2.y - p1.y;
             float dz = p2.z - p1.z;
             float length = sqrt(dx * dx + dy * dy + dz * dz);
-            float stepX = dx / (float)count;
-            float stepY = dy / (float)count;
-            float stepZ = dz / (float)count;
 
             point3d point;
-            point.x = p1.x + stepX * (float)i;
-            point.y = p1.y + stepY * (float)i;
-            point.z = p1.z + stepZ * (float)i;
+            point.x = p1.x + dx * (float)i/(float)(count-1);
+            point.y = p1.y + dy * (float)i/(float)(count-1);
+            point.z = p1.z + dz * (float)i/(float)(count-1);
 
             modelProject(point);
 
@@ -252,7 +272,9 @@ namespace drawer
     }
 
     float line_hit;
-    bool check_attack = false;
+    float coub_hit;
+    bool check_attack = true;
+    bool attack_collision = false;
 
     void starIntersectUI(point3d& point, Constellation& Constellation, int i)
     {
@@ -265,34 +287,100 @@ namespace drawer
         float rad = saturate(1.2 - lenght * .05) * fabs(sin(timeGetTime() * .01));
         finalStarRad = starSize * starHealth[i] + rad * 15;
 
-        if (GetAsyncKeyState(VK_LBUTTON))
+
+
+        if (current_weapon == weapon_name::Sword)
         {
-                        
+
             float line_x = get_lenghts(attack[0], attack[1]);
             float line_y = get_lenghts(attack[0], point);
             float line_z = get_lenghts(attack[1], point);
             float line_yz = line_z + line_y;
             line_hit = line_yz / line_x;
 
-
-
-            if (line_hit < 1.0001 and check_attack == false)
+            if (GetAsyncKeyState(VK_LBUTTON))
             {
-                SelectObject(window.context, brush2);
-                //finalStarRad = 0.;
-                starHealth[i] -= weapon[(int)current_weapon].damage;
-                check_attack = true;
+                if (line_hit < 1.001)
+                {
+                    attack_collision = true;
+                }
+                SelectObject(window.context, brush);
+            }
+            else
+            {
+                if (line_hit < 1.01 and check_attack == false)
+                {
 
+                    SelectObject(window.context, brush2);
+                    starHealth[i] -= weapon[(int)current_weapon].damage;
+
+                }
             }
 
         }
-        else
+
+
+        if (current_weapon == weapon_name::Shield)
         {
-            SelectObject(window.context, brush);
-            check_attack = false;
+
+            float centerX = (mouse.x + oldmouse.x) / 2;
+            float centerY = (mouse.y + oldmouse.y) / 2;
+
+            float dx = mouse.x - oldmouse.x;
+            float dy = mouse.y - oldmouse.y;
+            float shieldRadius = sqrt(dx * dx + dy * dy);
+
+            float stardx = point.x - centerX;
+            float stardy = point.y - centerY;
+            float distToCenter = sqrt(stardx * stardx + stardy * stardy);
+
+            if (GetAsyncKeyState(VK_LBUTTON))
+            {
+                if (distToCenter <= shieldRadius)
+                {
+                    attack_collision = true;
+
+                }
+
+                SelectObject(window.context, brush);
+            }
+            else
+            {
+                if (distToCenter <= shieldRadius and check_attack == false)
+                {
+                    SelectObject(window.context, brush2);
+                    starHealth[i] -= weapon[(int)current_weapon].damage;
+                }
+            }
         }
 
-       
+        if (current_weapon == weapon_name::Bow)
+        {
+
+            float dx = point.x - oldmouse.x;
+            float dy = point.y - oldmouse.y;
+            float distToStart = sqrt(dx * dx + dy * dy);
+            float hitRadius = 20;
+
+            if (GetAsyncKeyState(VK_LBUTTON))
+            {
+                if (distToStart <= hitRadius)
+                {
+                    attack_collision = true;
+                }
+
+                SelectObject(window.context, brush);
+            }
+            else
+            {
+                if (distToStart <= hitRadius and check_attack == false)
+                {
+                    SelectObject(window.context, brush2);
+                    starHealth[i] -= weapon[(int)current_weapon].damage;
+                }
+            }
+        }
+
     }
 
     void starUI(point3d& point, Constellation& Constellation, int i)
@@ -378,7 +466,10 @@ namespace drawer
 
             // Пульсирование Звёзд при наведение мыши.
             finalStarRad = 1;
-            uiFunc(point, Constellation, i);
+            if (uiFunc)
+            {
+                uiFunc(point, Constellation, i);
+            }
 
             if (finalStarRad > 0)
             {
@@ -406,8 +497,14 @@ namespace drawer
         {
             point3d point;
             genRandSphere(point);
+
+                
             modelTransform(point,Aries);
+            rotateZ(point, starfield_angles.z);
             modelProject(point);
+
+
+
             drawPoint(point,.5);
             // Звёзды на фоне их кол-во. и Кадр остановки.
         }
@@ -575,13 +672,277 @@ namespace drawer
 
     void enemyFight()
     {
-        float e = 1000;
+        float e = 100;
         if (currentTime > attackTime + e)
         {
             attackTime = currentTime;
             enemyAttack(*starSet[player_sign]);
         }
     }
+
+    void drawShieldCircle() 
+    {
+
+        float dx = mouse.x - oldmouse.x;
+        float dy = mouse.y - oldmouse.y;
+        float shieldRadius = sqrt(dx * dx + dy * dy);
+
+        // Центр = oldmouse (круг растёт из этой точки)
+        float centerX = oldmouse.x;
+        float centerY = oldmouse.y;
+        modelProject = &NullProject;
+        if (GetAsyncKeyState(VK_LBUTTON)) {
+            for (int i = 0; i < 36; i++) {
+                float angle = i * (2 * PI / 36);  // 36 точек для гладкого круга
+                float nextAngle = (i + 1) * (2 * PI / 36);
+
+                point3d shield1, shield2;
+
+                shield1.x = centerX + shieldRadius * cos(angle);
+                shield1.y = centerY + shieldRadius * sin(angle);
+                shield1.z = 0;
+
+                shield2.x = centerX + shieldRadius * cos(nextAngle);
+                shield2.y = centerY + shieldRadius * sin(nextAngle);
+                shield2.z = 0;
+
+                drawLine(shield1, shield2, 5);
+            }
+        }
+    }
+
+
+    void SelectVectorAttack()
+    {
+
+        if (current_weapon == weapon_name::Sword)
+        {
+
+            AttackSwordVector();
+
+        }
+
+        if (current_weapon == weapon_name::Shield)
+        {
+
+            AttackShieldVector();
+            drawShieldCircle();
+
+        }
+
+        if (current_weapon == weapon_name::Bow)
+        {
+
+            AttackBowVector();
+
+        }
+        if (current_weapon == weapon_name::Staff)
+        {
+
+        }
+
+    }
+
+    void DrawStarsHP(HDC hdc) {
+        SetTextColor(hdc, RGB(255, 255, 255));
+        SetBkMode(hdc, TRANSPARENT);
+
+        SetTextColor(hdc, RGB(255, 100, 100));
+        for (size_t i = 0; i < starSet[currentEnemyID]->starsCords.size(); ++i) {
+            auto pos = starSet[currentEnemyID]->starsCords[i];
+            float hp = starSet[currentEnemyID]->starsHealth[i];
+
+            modelTransform(pos, *starSet[currentEnemyID]);
+            modelProject(pos);
+
+            if (hp>0)
+            {
+                std::string hpText = "HP: " + std::to_string(hp);
+                drawString(hpText.c_str(), pos.x, pos.y - 40, .5, true, false, 7);
+            }
+        }
+    }
+
+    void DrawTimeBar() 
+    {
+    auto player_const = *starSet[player_sign];
+    auto maxHP = player_const.maxHP;
+    auto progress = getConstellationHP(*starSet[player_sign])/ maxHP;
+    auto progressText = "HP: " + std::to_string(progress);
+
+
+    
+
+    linksDivider = 15;
+    modelTransform = &HeroUITransform;
+    uiFunc = NULL;
+    nearPlaneClip = -2000;
+    modelProject = &fightProject;;
+
+    // Параметры временного бара
+    const float barWidth = 4;
+    const float barHeight = .25;
+    const float barX = -barWidth/2;
+    const float barY = -barHeight/2+2.5;
+    const float starCount = 20;
+    const float starSize = 5.0f;
+    
+    // Создаем точки для рамки
+    point3d topLeft = { barX, barY, 0 };
+    point3d topRight = { barX + barWidth, barY, 0 };
+    point3d bottomLeft = { barX, barY + barHeight, 0 };
+    point3d bottomRight = { barX + barWidth, barY + barHeight, 0 };
+
+    modelTransform(topLeft, player_const);
+    modelTransform(topRight, player_const);
+    modelTransform(bottomLeft, player_const);
+    modelTransform(bottomRight, player_const);
+
+    // Рисуем рамку
+    drawer::drawLine(topLeft, topRight, 50);    // Верх
+    drawer::drawLine(bottomLeft, bottomRight, 50); // Низ
+    drawer::drawLine(topLeft, bottomLeft, 5);  // Лево
+    drawer::drawLine(bottomRight, topRight,  5); // Право
+
+    
+
+    // Рисуем заполнение из звёзд
+    int activeStars = (int)(starCount * progress);
+    float starSpacing = barWidth / (float)(starCount + 1);
+
+    for (int i = 0; i < starCount; i++) {
+        point3d star = {
+            barX + (i + 1) * starSpacing,
+            barY + barHeight / 2,
+            0
+        };
+
+        float currentSize = (i < activeStars) ? starSize * 1.5f : starSize*.0;
+
+        if (i < activeStars) {
+            float pulse = 0.5f + 0.5f * sinf(timeGetTime() * 0.005f);
+            currentSize += pulse * 2.0f;
+        }
+
+        modelTransform(star, player_const);
+        modelProject(star);
+
+        drawer::drawPoint(star, currentSize);
+    }
+
+    // Соединяем звёзды
+    for (int i = 0; i < starCount - 1; i++) {
+        point3d star1 = {
+            barX + (i + 1) * starSpacing,
+            barY + barHeight / 2,
+            0
+        };
+
+        point3d star2 = {
+            barX + (i + 2) * starSpacing,
+            barY + barHeight / 2,
+            0
+        };
+
+        modelTransform(star1, player_const);
+        modelTransform(star2, player_const);
+
+        int lineSegments = (i < activeStars - 1) ? 10 : 5;
+        drawer::drawLine(star1, star2, lineSegments);
+    }
+
+    point3d p = { 0,2,0 };
+    modelTransform(p, player_const);
+    modelProject(p);
+    drawString(progressText.c_str(), p.x, p.y, 1, true);
+
+}
+
+
+
+
+bool isBattleActive = false;
+DWORD battleStartTime;
+
+
+void StartBattle() {
+    if (!isBattleActive) {
+        battleStartTime = timeGetTime();
+        attackTime = battleStartTime;
+        isBattleActive = true;
+        TextOutA(window.context, 400, 400, "Бой начался", 10);
+    }
+}
+
+
+
+void UpdateGame() {
+    static const DWORD MAX_BATTLE_TIME = 4 * 60 * 1000;
+    static const DWORD MAX_REWIND = 30 * 1000;
+    static DWORD battleTime = 60 * 5 * 1000;
+    static DWORD timeModifier = 0;
+    static DWORD lastInputTime = 0;
+    const DWORD inputRepeatDelay = 100;
+
+    if (GetAsyncKeyState('Q')) {
+        if (currentTime - lastInputTime > inputRepeatDelay) {
+            lastInputTime = currentTime;
+            if (battleStartTime + battleTime + timeModifier + 1000 - currentTime <= MAX_BATTLE_TIME) {
+                timeModifier += 1000;
+            }
+        }
+    }
+
+    if (GetAsyncKeyState('E') & 0x8000) {
+        if (currentStateIndex > 0) {
+            RewindOneStepBack();
+            isRewind = true;
+        }
+        else {
+            isRewind = false;
+        }
+    }
+    else {
+        isRewind = false;
+    }
+
+    if (isBattleActive) {
+        LONG remainingTime = (LONG)((battleStartTime + battleTime + timeModifier) - currentTime);
+       
+        DWORD totalBattleTime = battleTime + timeModifier;
+
+        if (totalBattleTime > MAX_BATTLE_TIME) {
+            timeModifier = MAX_BATTLE_TIME - battleTime;
+            remainingTime = (LONG)((battleStartTime + MAX_BATTLE_TIME) - currentTime);
+        }
+
+        if (remainingTime > 0) {
+            
+            DrawTimeBar();
+            std::string timeStr = "Time: " + std::to_string(remainingTime / 1000);
+            drawString(timeStr.c_str(), window.width / 2, 10, 1.f, true);
+
+            if (getConstellationHP(*starSet[currentEnemyID]) < 0)
+            {
+                timeModifier = 0;
+                isBattleActive = false;
+                gameState = gameState_::WinFight;
+            }
+        }
+        else 
+        {
+           timeModifier = 0;
+           isBattleActive = false;
+           gameState = gameState_::EndFight;
+          
+        }
+    }
+}
+
+
+
+
+    
 
     
 
@@ -636,19 +997,24 @@ namespace drawer
                // drawColorCircle();
                 isBattleActive = false;
 
-                drawString("Bla-Bla-bla\nbla\n\hello Stepan&Dmitry, how are you?", window.width/2, window.height/2, 1, true);
+                
 
                 break;
             }
+            case gameState_::DialogStruct:
+                initContentData();
+                renderContent();
+                handleInput();
+
+                break;
 
             case gameState_::Fight:
             {
                                
-                SelectVector();
                 SelectWeapon();
+                SelectVectorAttack();
                 StartBattle();
                 enemyFight();
-
                 
 
                 modelTransform = &placeToWorld;
@@ -663,11 +1029,37 @@ namespace drawer
                 drawСonstellation(*weapon[(int)current_weapon].constellation);
 
 
+
                 modelTransform = &placeConstToWorld;
                 //drawСonstellation(*currentEnemy);
                 nearPlaneClip = 0;
-                drawСonstellation(*starSet[currentEnemyID]);
+
+                if (!GetAsyncKeyState(VK_LBUTTON))
+                {
+                    if (attack_collision == true)
+                    {
+                        check_attack = false;
+                    }
+
+                    drawСonstellation(*starSet[currentEnemyID]);
+
+                    if (attack_collision == true)
+                    {
+                        check_attack = true;
+                        attack_collision = false;
+                    }
+
+                    
+                }
+                else
+                {
+                    drawСonstellation(*starSet[currentEnemyID]);
+
+                    //check_attack = false;
+                }
                 
+                DrawStarsHP(window.context);
+               
 
                 linksDivider = 15;
                 modelTransform = &placeHeroToWorld;
@@ -675,24 +1067,18 @@ namespace drawer
                 nearPlaneClip = -2000;
                 drawСonstellation(*starSet[player_sign]);
 
+                
 
+               
                 std::string curentSignstring = zodiacSignToString(currentEnemyID);
-                TextOutA(window.context, window.width / 2, window.height / 20., curentSignstring.c_str(), curentSignstring.size());
+                drawString(curentSignstring.c_str(), window.width / 2, window.height / 20., 1, true);
 
                 curentSignstring = zodiacSignToString(player_sign);
-                TextOutA(window.context, window.width / 2, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());
+                drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 15., 1, true);
 
                 curentSignstring = "current weapon: " + weapon[(int)current_weapon].name;
-                TextOutA(window.context, window.width / 2, window.height - window.height / 30., curentSignstring.c_str(), curentSignstring.size());
+                drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 30., 1, true);
 
-                curentSignstring = std::to_string(getConstellationHP(*starSet[currentEnemyID]));
-                TextOutA(window.context, window.width / 2,window.height / 40., curentSignstring.c_str(), curentSignstring.size());
-
-                curentSignstring = std::to_string(getConstellationHP(*starSet[player_sign]));
-                TextOutA(window.context, window.width / 2, window.height / 80., curentSignstring.c_str(), curentSignstring.size());
-
-
-                
 
                 UpdateGame();
                 
@@ -706,6 +1092,11 @@ namespace drawer
             { 
                 endFight();
 
+                break;
+            }
+            case gameState_::WinFight:
+            {
+                winFight();
                 break;
             }
 
