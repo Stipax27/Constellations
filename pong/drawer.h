@@ -54,6 +54,7 @@ namespace drawer
 
     void placeHeroToWorld(point3d& p, Constellation& Constellation)
     {
+        ShakingHero(p);
         move(p, 0, 0, 0. / Constellation.scale);
 
         fightMove(p);
@@ -352,6 +353,7 @@ namespace drawer
                 {
                     SelectObject(window.context, brush2);
                     starHealth[i] -= weapon[(int)current_weapon].damage;
+                    isDamageTaken = true;
                 }
             }
         }
@@ -379,6 +381,7 @@ namespace drawer
                 {
                     SelectObject(window.context, brush2);
                     starHealth[i] -= weapon[(int)current_weapon].damage;
+                    isDamageTaken = true;
                 }
             }
         }
@@ -411,6 +414,7 @@ namespace drawer
         }
 
         finalStarRad = starSize * starHealth[i] + rad * 15;
+        
     }
 
     void heroUI(point3d& point, Constellation& Constellation, int i)
@@ -435,8 +439,9 @@ namespace drawer
         {
             SelectObject(window.context, brush);
         }
-
+        
         finalStarRad = 3 * starHealth[i] + rad * 15;
+        
     }
 
     void menuUI(point3d& point, Constellation& Constellation, int i)
@@ -494,6 +499,9 @@ namespace drawer
    
     void drawStarField()
     {
+        SelectObject(window.context, mainBrush);
+        SelectObject(window.context, mainPen);
+
         srand(10);
         for (int i = 0; i < 2000; i++)
         {
@@ -676,11 +684,17 @@ namespace drawer
 
     void enemyFight()
     {
-        float e = 100;
+                float e = 1000;
         if (currentTime > attackTime + e)
         {
             attackTime = currentTime;
             enemyAttack(*starSet[player_sign]);
+
+        }
+        
+    if (getConstellationHP(*starSet[player_sign]) <=0)
+        {
+            gameState == gameState_::EndFight;
         }
     }
 
@@ -1015,7 +1029,7 @@ void UpdateGame() {
 
             case gameState_::Fight:
             {
-                               
+                    
                 SelectWeapon();
                 SelectVectorAttack();
                 StartBattle();
@@ -1031,7 +1045,7 @@ void UpdateGame() {
                 
                 modelTransform = &placeWeaponToWorld;
                 nearPlaneClip = 0;
-                draw—onstellation(*weapon[(int)current_weapon].constellation);
+                //draw—onstellation(*weapon[(int)current_weapon].constellation);
 
 
                 srand(currentTime);
@@ -1091,6 +1105,19 @@ void UpdateGame() {
                 modelTransform = &placeHeroToWorld;
                 uiFunc = &heroUI;
                 nearPlaneClip = -2000;
+
+                if (isDamageHero)
+                {
+                    isDamageHero = false;
+                    isShakingHero = true;
+                    shakeStartTimeHero = currentTime;
+                }
+
+                if (currentTime > shakeStartTimeHero + shakeDurationHero)
+                {
+                    isShakingHero = false;
+                }
+
                 draw—onstellation(*starSet[player_sign]);
 
                 

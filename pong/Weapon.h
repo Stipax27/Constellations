@@ -85,16 +85,24 @@ bool isConstellationDead(Constellation& Constellation)
 
 void enemyAttack(Constellation& Constellation)
 {
-
-
     std::vector <float>& starHealth = Constellation.starsHealth;
 
     int starsCount = starHealth.size();
-    int attackedStar = rand() % starsCount;
-
-    starHealth[attackedStar] -= .4;
-
-    
+    auto player_const = *starSet[player_sign];
+    for ( int i = 0; i < starsCount; i++)
+    {
+        if (starHealth[i] > 0)
+        {
+            starHealth[i] -= 0.1;
+            
+            if (starHealth[i] < 0)
+            {
+                starHealth[i] = 0;
+            }
+        }
+    }
+     
+    isDamageHero = true;
 
 }
 
