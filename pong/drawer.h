@@ -305,6 +305,8 @@ namespace drawer
         float line_yz = line_z + line_y;
         line_hit = line_yz / line_x;
 
+
+
         float centerX = (attack[3].x + attack[2].x) / 2;
         float centerY = (attack[3].y + attack[2].y) / 2;
 
@@ -316,10 +318,14 @@ namespace drawer
         float stardy = point.y - centerY;
         float distToCenter = sqrt(stardx * stardx + stardy * stardy);
 
+
+
         float dxb = point.x - attack[4].x;
         float dyb = point.y - attack[4].y;
         float distToStart = sqrt(dxb * dxb + dyb * dyb);
         float hitRadius = 20;
+
+
 
         if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true)
         {
