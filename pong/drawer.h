@@ -7,6 +7,8 @@ namespace drawer
 
     void placeConstToWorld(point3d& p, Constellation& Constellation)
     {
+        Shaking(p);
+
         move(p, 0, 0, 3000. / Constellation.scale);
         rotateX(p, Constellation.angle.x);
         rotateY(p, Constellation.angle.y);
@@ -313,7 +315,7 @@ namespace drawer
 
                     SelectObject(window.context, brush2);
                     starHealth[i] -= weapon[(int)current_weapon].damage;
-
+                    isDamageTaken = true;
                 }
             }
 
@@ -746,10 +748,7 @@ namespace drawer
     }
 
     void DrawStarsHP(HDC hdc) {
-        SetTextColor(hdc, RGB(255, 255, 255));
-        SetBkMode(hdc, TRANSPARENT);
 
-        SetTextColor(hdc, RGB(255, 100, 100));
         for (size_t i = 0; i < starSet[currentEnemyID]->starsCords.size(); ++i) {
             auto pos = starSet[currentEnemyID]->starsCords[i];
             float hp = starSet[currentEnemyID]->starsHealth[i];
@@ -954,6 +953,10 @@ void UpdateGame() {
         drawBack();
         nearPlaneClip = 0;
 
+        SelectObject(window.context,mainBrush);
+        SelectObject(window.context, mainPen);
+        textStyle.color = RGB(0, 191, 255);
+
         switch (gameState)
         {
             case gameState_::MainMenu:
@@ -1031,18 +1034,33 @@ void UpdateGame() {
                 draw—onstellation(*weapon[(int)current_weapon].constellation);
 
 
+                srand(currentTime);
+
 
                 modelTransform = &placeConstToWorld;
                 //draw—onstellation(*currentEnemy);
                 nearPlaneClip = 0;
+
+                
+                if (isDamageTaken)
+                {
+                    isDamageTaken = false;
+                    isShaking = true;
+                    shakeStartTime = currentTime;
+                }
+
+                if (currentTime > shakeStartTime + shakeDuration)
+                {
+                    isShaking = false;
+                }
+
 
                 if (!GetAsyncKeyState(VK_LBUTTON))
                 {
                     if (attack_collision == true)
                     {
                         check_attack = false;
-                        startShake();
-                    }
+                     }
                     //updateConstellation(starsCords);
 
                     draw—onstellation(*starSet[currentEnemyID]);
@@ -1062,6 +1080,10 @@ void UpdateGame() {
                     //check_attack = false;
                 }
                 
+                SelectObject(window.context, mainBrush);
+                SelectObject(window.context, mainPen);
+
+
                 DrawStarsHP(window.context);
                
 

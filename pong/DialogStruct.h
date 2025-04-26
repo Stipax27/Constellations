@@ -141,7 +141,7 @@ void handleInput()
     if (GetAsyncKeyState('E') & 0x0001) 
     {
         gameState = gameState_::selectEnemy;
-
+        startTime = currentTime;
     }
 }
 

@@ -44,6 +44,10 @@ float camDist = 0;
 
 DWORD currentTime;
 
+HBRUSH mainBrush;
+HPEN mainPen;
+
+
 #include "utils.h"
 #include "MainWindow.h"
 #include "mouse.h"
@@ -60,13 +64,16 @@ DWORD currentTime;
 
 
 
-
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
     _In_ LPWSTR    lpCmdLine,
     _In_ int       nCmdShow)
 {
     InitWindow();//здесь инициализируем все что нужно для рисования в окне
+
+    mainBrush = CreateSolidBrush(RGB(0, 191, 255));
+    mainPen = CreatePen(PS_SOLID,2,RGB(255, 255, 255));
+
     InitGame();//здесь инициализируем переменные игры
     //initContentData();
     //mciSendString(TEXT("play ..\\Debug\\music.mp3 repeat"), NULL, 0, NULL);

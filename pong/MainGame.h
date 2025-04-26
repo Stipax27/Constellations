@@ -143,6 +143,7 @@ void menuConfirmationButton()
     {
         gameState = gameState_::DialogStruct;
         
+        
     }
 }
 
