@@ -330,7 +330,8 @@ namespace drawer
         if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true)
         {
 
-            if (line_hit < 1.01 or distToCenter <= shieldRadius or distToStart <= hitRadius)
+            if (current_weapon == weapon_name::Sword and line_hit < 1.01 or current_weapon == weapon_name::Shield and distToCenter <= shieldRadius
+                or current_weapon == weapon_name::Bow and distToStart <= hitRadius)
             {
                 starHealth[i] -= weapon[(int)current_weapon].damage;
             }
