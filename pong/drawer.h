@@ -278,7 +278,16 @@ namespace drawer
     float coub_hit;
     bool check_attack = true;
     bool attack_collision = false;
+    bool attack_speed = false;
+    bool attack_start = false;
+    float attackStartTime = 0;
+    float attackAmp;
+    float attack_time;
 
+
+
+
+    
     void starIntersectUI(point3d& point, Constellation& Constellation, int i)
     {
         std::vector <float>& starHealth = Constellation.starsHealth;
@@ -290,16 +299,51 @@ namespace drawer
         float rad = saturate(1.2 - lenght * .05) * fabs(sin(currentTime * .01));
         finalStarRad = starSize * starHealth[i] + rad * 15;
 
+        float line_x = get_lenghts(attack[0], attack[1]);
+        float line_y = get_lenghts(attack[0], point);
+        float line_z = get_lenghts(attack[1], point);
+        float line_yz = line_z + line_y;
+        line_hit = line_yz / line_x;
 
+
+
+        float centerX = (attack[3].x + attack[2].x) / 2;
+        float centerY = (attack[3].y + attack[2].y) / 2;
+
+        float dxs = attack[3].x - attack[2].x;
+        float dys = attack[3].y - attack[2].y;
+        float shieldRadius = sqrt(dxs * dxs + dys * dys);
+
+        float stardx = point.x - centerX;
+        float stardy = point.y - centerY;
+        float distToCenter = sqrt(stardx * stardx + stardy * stardy);
+
+
+
+        float dxb = point.x - attack[4].x;
+        float dyb = point.y - attack[4].y;
+        float distToStart = sqrt(dxb * dxb + dyb * dyb);
+        float hitRadius = 20;
+
+
+
+        if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true)
+        {
+
+            if (current_weapon == weapon_name::Sword and line_hit < 1.01 or current_weapon == weapon_name::Shield and distToCenter <= shieldRadius
+                or current_weapon == weapon_name::Bow and distToStart <= hitRadius)
+            {
+                starHealth[i] -= weapon[(int)current_weapon].damage;
+            }
+
+        }
 
         if (current_weapon == weapon_name::Sword)
         {
 
-            float line_x = get_lenghts(attack[0], attack[1]);
-            float line_y = get_lenghts(attack[0], point);
-            float line_z = get_lenghts(attack[1], point);
-            float line_yz = line_z + line_y;
-            line_hit = line_yz / line_x;
+
+
+
 
             if (GetAsyncKeyState(VK_LBUTTON))
             {
@@ -311,31 +355,24 @@ namespace drawer
             }
             else
             {
-                if (line_hit < 1.01 and check_attack == false)
-                {
+             
 
-                    SelectObject(window.context, brush2);
-                    starHealth[i] -= weapon[(int)current_weapon].damage;
-                    isDamageTaken = true;
-                }
+                if (line_hit < 1.01 and check_attack == false)
+                {   
+
+                    attack_start = true;
+                    attack_time = currentTime;
+                
+                }   
+                
             }
 
         }
 
-
         if (current_weapon == weapon_name::Shield)
         {
 
-            float centerX = (mouse.x + oldmouse.x) / 2;
-            float centerY = (mouse.y + oldmouse.y) / 2;
 
-            float dx = mouse.x - oldmouse.x;
-            float dy = mouse.y - oldmouse.y;
-            float shieldRadius = sqrt(dx * dx + dy * dy);
-
-            float stardx = point.x - centerX;
-            float stardy = point.y - centerY;
-            float distToCenter = sqrt(stardx * stardx + stardy * stardy);
 
             if (GetAsyncKeyState(VK_LBUTTON))
             {
@@ -351,20 +388,16 @@ namespace drawer
             {
                 if (distToCenter <= shieldRadius and check_attack == false)
                 {
-                    SelectObject(window.context, brush2);
-                    starHealth[i] -= weapon[(int)current_weapon].damage;
-                    isDamageTaken = true;
+                    attack_start = true;
+                    attack_time = currentTime;
                 }
             }
         }
 
         if (current_weapon == weapon_name::Bow)
         {
+            
 
-            float dx = point.x - oldmouse.x;
-            float dy = point.y - oldmouse.y;
-            float distToStart = sqrt(dx * dx + dy * dy);
-            float hitRadius = 20;
 
             if (GetAsyncKeyState(VK_LBUTTON))
             {
@@ -379,9 +412,8 @@ namespace drawer
             {
                 if (distToStart <= hitRadius and check_attack == false)
                 {
-                    SelectObject(window.context, brush2);
-                    starHealth[i] -= weapon[(int)current_weapon].damage;
-                    isDamageTaken = true;
+                    attack_start = true;
+                    attack_time = currentTime;
                 }
             }
         }
@@ -1127,15 +1159,18 @@ void FlightWeapons(point3d& p, Constellation& Constellations)
                     if (attack_collision == true)
                     {
                         check_attack = false;
+                        attackStartTime = currentTime;
                      }
                     //updateConstellation(starsCords);
 
+                    
                     drawÑonstellation(*starSet[currentEnemyID]);
 
                     if (attack_collision == true)
                     {
                         check_attack = true;
                         attack_collision = false;
+                        attack_speed = false;
                     }
 
                     
@@ -1144,8 +1179,16 @@ void FlightWeapons(point3d& p, Constellation& Constellations)
                 {
                     drawÑonstellation(*starSet[currentEnemyID]);
 
+
                     //check_attack = false;
                 }
+
+                if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true)
+                {
+                    isDamageTaken = true;
+                    attack_start = false;
+                }
+
                 
                 SelectObject(window.context, mainBrush);
                 SelectObject(window.context, mainPen);

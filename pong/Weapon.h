@@ -1,6 +1,7 @@
 struct weapon_ {
     float damage;
     float defense;
+    float attackSpeed;
     std::string name;
     Constellation* constellation;
 
@@ -21,21 +22,25 @@ weapon_name current_weapon = weapon_name::Sword;
 void initWeapon() {
     weapon[(int)weapon_name::Sword].damage = 0.4;
     weapon[(int)weapon_name::Sword].defense = 0.4;
+    weapon[(int)weapon_name::Sword].attackSpeed = 2000;
     weapon[(int)weapon_name::Sword].name = "sword";
     weapon[(int)weapon_name::Sword].constellation = &Sword;
 
     weapon[(int)weapon_name::Shield].damage = 0.2;
     weapon[(int)weapon_name::Shield].defense = 0.5;
+    weapon[(int)weapon_name::Shield].attackSpeed = 2000;
     weapon[(int)weapon_name::Shield].name = "shield";
     weapon[(int)weapon_name::Shield].constellation = &Shield;
 
     weapon[(int)weapon_name::Bow].damage = 0.5;
     weapon[(int)weapon_name::Bow].defense = 0.2;
+    weapon[(int)weapon_name::Bow].attackSpeed = 2000;
     weapon[(int)weapon_name::Bow].name = "bow";
     weapon[(int)weapon_name::Bow].constellation = &Bow;
 
     weapon[(int)weapon_name::Staff].damage = 0.4;
     weapon[(int)weapon_name::Staff].defense = 0.3;
+    weapon[(int)weapon_name::Staff].attackSpeed = 0.4;
     weapon[(int)weapon_name::Staff].name = "staff";
     weapon[(int)weapon_name::Staff].constellation = &Staff;
 }
@@ -106,8 +111,9 @@ void enemyAttack(Constellation& Constellation)
 
 }
 
-point3d attack[2];
-
+point3d attack[5];
+point3d mouseposWhenAttack;
+point3d mousePos;
 bool is_attack;
 
 
@@ -142,7 +148,7 @@ void AttackSwordVector()
         attack[1].x = mouse.x;
         attack[1].y = mouse.y;
 
-
+        
         /*if (is_attack) {
             SaveCurrentState();
         }
@@ -186,6 +192,10 @@ void AttackShieldVector()
         is_attack = false;
     }
 
+    attack[2].x = oldmouse.x;
+    attack[2].y = oldmouse.y;
+    attack[3].x = mouse.x;
+    attack[3].y = mouse.y;
 
 }
 
@@ -219,6 +229,10 @@ void AttackBowVector()
         is_attack = false;
     }
 
+    attack[4].x = oldmouse.x;
+    attack[4].y = oldmouse.y;
+    attack[5].x = mouse.x;
+    attack[5].y = mouse.y;
 
 }
 
