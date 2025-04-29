@@ -760,10 +760,54 @@ namespace drawer
             }
         }
     }
+    struct WeaponFlight {
+        point3d startPos;
+        point3d endPos;
+        point3d currentPos;
+        float progress;
+        float speed;
+        bool isFlying;
+    };
 
-    point3d startPoint;
+    WeaponFlight swordFlight;
 
-    void FlightWeapons(point3d& p, Constellation& Constellations, float speed)
+        point3d startPoint;
+
+    void InitWeaponFlight() {
+        if (!weapon[(int)current_weapon].constellation) return;
+
+        
+        startPoint = { 0, 0, 0 };
+        placeHeroToWorld(startPoint, *starSet[player_sign]);
+
+        point3d enemyPosition = { 0, 0, 0 };
+        placeConstToWorld(enemyPosition, *starSet[currentEnemyID]);
+
+        
+        swordFlight.startPos = startPoint;
+        swordFlight.endPos = enemyPosition;
+        swordFlight.currentPos = startPoint;
+        swordFlight.progress = 10;
+        swordFlight.speed = 10; 
+        swordFlight.isFlying = true;
+    }
+
+    void UpdateWeaponFlight() {
+        if (!swordFlight.isFlying) return;
+
+        
+        swordFlight.progress += swordFlight.speed;
+        if (swordFlight.progress > 10) {
+            swordFlight.progress = 10;
+            swordFlight.isFlying = false;
+        }
+
+        swordFlight.currentPos.x = swordFlight.startPos.x + (swordFlight.endPos.x - swordFlight.startPos.x) * swordFlight.progress;
+        swordFlight.currentPos.y = swordFlight.startPos.y + (swordFlight.endPos.y - swordFlight.startPos.y) * swordFlight.progress;
+        swordFlight.currentPos.z = swordFlight.startPos.z + (swordFlight.endPos.z - swordFlight.startPos.z) * swordFlight.progress;
+    }
+
+    void FlightWeapons(point3d& p, Constellation& Constellations)
     {
 
         point3d enemyPosition = { 0,0,0 };
@@ -1167,6 +1211,7 @@ void UpdateGame() {
                     {
                         check_attack = false;
                         attackStartTime = currentTime;
+                        InitWeaponFlight();
                      }
                     //updateConstellation(starsCords);
 
@@ -1190,8 +1235,14 @@ void UpdateGame() {
                     //check_attack = false;
                 }
 
-                if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true)
+                if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true and swordFlight.isFlying)
                 {
+                    UpdateWeaponFlight();
+                    point3d weaponPos;
+                    FlightWeapons(weaponPos, *weapon[(int)current_weapon].constellation);
+                    modelTransform = &placeWeaponToWorld;
+                    nearPlaneClip = 0;
+                    draw—onstellation(*weapon[(int)current_weapon].constellation);
                     isDamageTaken = true;
                     attack_start = false;
                 }
@@ -1202,6 +1253,9 @@ void UpdateGame() {
 
 
                 DrawStarsHP(window.context);
+                
+                modelTransform = &placeConstToWorld;
+                nearPlaneClip = 0;
                 
 
                 linksDivider = 15;
