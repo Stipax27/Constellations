@@ -761,15 +761,61 @@ namespace drawer
         }
     }
 
+    point3d startPoint;
+
+    void FlightWeapons(point3d& p, Constellation& Constellations, float speed)
+    {
+
+        point3d enemyPosition = { 0,0,0 };
+        //starSet[currentEnemyID]->getPosition();
+
+        if (weapon[(int)current_weapon].constellation)
+        {
+            p = weapon[(int)current_weapon].constellation->getPosition();
+
+            //drawÑonstellation(*weapon[(int)current_weapon].constellation);
+
+            /*point3d direction = enemyPosition - p;*/
+
+            startPoint = { 0, 0, 0 };
+            placeHeroToWorld(startPoint, *starSet[player_sign]);
+
+            int ñount = 100;
+            placeConstToWorld(enemyPosition, *starSet[currentEnemyID]);
+            modelProject = &fightProject;
+
+            drawLine(startPoint, enemyPosition, ñount);
+
+            /*float distance = direction.length();*/
+
+            /*if (distance > 0) {
+                direction = direction * (1.0f / distance);
+
+
+                p.x += direction.x * speed;
+                p.y += direction.y * speed;
+                p.z += direction.z * speed;
+
+
+                if (distance <= speed) {
+
+                }*/
+
+
+        }
+    }
+
+   // bool CoolDawn = true;
 
     void SelectVectorAttack()
     {
-
+      //if (currentTime < currentTime+1000)
+      //{
         if (current_weapon == weapon_name::Sword)
         {
 
             AttackSwordVector();
-
+            
         }
 
         if (current_weapon == weapon_name::Shield)
@@ -790,6 +836,9 @@ namespace drawer
         {
 
         }
+          
+      //}
+        FlightWeapons(startPoint, *starSet[currentEnemyID]);
 
     }
 
@@ -985,49 +1034,7 @@ void UpdateGame() {
         }
     }
 }
- point3d startPoint; 
-
-void FlightWeapons(point3d& p, Constellation& Constellations)
-{
-
-    point3d enemyPosition = { 0,0,0 };
-            //starSet[currentEnemyID]->getPosition();
-
-    if(weapon[(int)current_weapon].constellation)
-    {
-        p = weapon[(int)current_weapon].constellation->getPosition();
-        
-        //drawÑonstellation(*weapon[(int)current_weapon].constellation);
-         
-        /*point3d direction = enemyPosition - p;*/
-
-        startPoint = { 0, 0, 0 };
-        placeHeroToWorld(startPoint, *starSet[player_sign]);
-
-        int ñount = 100;
-        placeConstToWorld(enemyPosition, *starSet[currentEnemyID]);
-        modelProject = &fightProject;
-
-        drawLine(startPoint, enemyPosition, ñount); 
-
-        /*float distance = direction.length();*/
-        
-        /*if (distance > 0) {
-            direction = direction * (1.0f / distance);
-
-
-            p.x += direction.x * speed;
-            p.y += direction.y * speed;
-            p.z += direction.z * speed;
-
-
-            if (distance <= speed) {
-
-            }*/
-        
-
-    }
-}
+ 
 //void drawWeapon(point3d& p,Constellation& Constellations) 
 //{
 //    srand(10);
@@ -1130,7 +1137,7 @@ void FlightWeapons(point3d& p, Constellation& Constellations)
                 
                 modelTransform = &placeWeaponToWorld;
                 nearPlaneClip = 0;
-                //drawÑonstellation(*weapon[(int)current_weapon].constellation);
+                drawÑonstellation(*weapon[(int)current_weapon].constellation);
 
 
                 srand(currentTime);
@@ -1195,7 +1202,7 @@ void FlightWeapons(point3d& p, Constellation& Constellations)
 
 
                 DrawStarsHP(window.context);
-                FlightWeapons(startPoint,*starSet[currentEnemyID]);
+                
 
                 linksDivider = 15;
                 modelTransform = &placeHeroToWorld;

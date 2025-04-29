@@ -116,8 +116,6 @@ point3d mouseposWhenAttack;
 point3d mousePos;
 bool is_attack;
 
-
-
 void AttackSwordVector()
 {
 
