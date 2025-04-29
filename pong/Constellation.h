@@ -40,6 +40,25 @@ public:
         constellationsCounter++;
     }
 
+    void Arrange(point3d& p) 
+    {
+        move(p, 0, 0, 3000. / scale);
+        rotateX(p, angle.x);
+        rotateY(p, angle.y);
+        rotateZ(p, angle.z);
+
+        p.x *= scale;
+        p.y *= scale;
+        p.z *= scale;
+    }
+
+    point3d getPosition()
+    {
+        point3d p = { 0,0,0 };
+        Arrange(p);
+        return p;
+    }
+
     void setStarsRenderedCords(float angleX, float angleY, float angleZ) // Подготавливаем данные[starArrayRendered] для отрисовки созвездия
     {
         angle = { angleX,angleY,angleZ };
@@ -52,14 +71,11 @@ public:
         {
             point3d p = { starsRenderedCords[i].x, starsRenderedCords[i].y, starsRenderedCords[i].z };
 
-            move(p, 0, 0, 3000. / scale);
-            rotateX(p, angleX);
-            rotateY(p, angleY);
-            rotateZ(p, angleZ);
+            Arrange(p);
 
-            starsRenderedCords[i].x = p.x * scale;
-            starsRenderedCords[i].y = p.y * scale;
-            starsRenderedCords[i].z = p.z * scale;
+            starsRenderedCords[i].x = p.x;
+            starsRenderedCords[i].y = p.y;
+            starsRenderedCords[i].z = p.z;
         }
     }
 
