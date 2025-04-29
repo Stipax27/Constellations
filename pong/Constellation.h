@@ -22,9 +22,12 @@ public:
     char currentMoveDirection; 
     DWORD moveStartTime;
     bool isMoveActive;
+    point3d position;
     
 
-    Constellation(std::vector<point3d> _starsCords, std::vector <float> _starsHealth, std::vector <std::vector <float>> _constellationEdges) {
+    Constellation(std::vector<point3d> _starsCords, std::vector <float> _starsHealth, std::vector <std::vector <float>> _constellationEdges) : position{ 0,0,0 } 
+    {
+        
         starsCords = _starsCords;
         starsHealth = _starsHealth;
         constellationEdges = _constellationEdges;
@@ -40,8 +43,34 @@ public:
         constellationsCounter++;
     }
 
-    void Arrange(point3d& p) 
-    {
+    void setPosition(const point3d& newPos) {
+        
+        point3d offset = {
+            newPos.x - position.x,
+            newPos.y - position.y,
+            newPos.z - position.z
+        };
+
+       
+        for (auto& star : starsCords) {
+            star.x += offset.x;
+            star.y += offset.y;
+            star.z += offset.z;
+        }
+
+        position = newPos;
+    }
+
+    point3d getPosition() const {
+        return position; 
+    }
+
+    void Arrange(point3d& p) const {
+        
+        p.x -= position.x;
+        p.y -= position.y;
+        p.z -= position.z;
+
         move(p, 0, 0, 3000. / scale);
         rotateX(p, angle.x);
         rotateY(p, angle.y);
@@ -50,34 +79,22 @@ public:
         p.x *= scale;
         p.y *= scale;
         p.z *= scale;
+
+       
+        p.x += position.x;
+        p.y += position.y;
+        p.z += position.z;
     }
 
-    point3d getPosition()
-    {
-        point3d p = { 0,0,0 };
-        Arrange(p);
-        return p;
-    }
-
-    void setStarsRenderedCords(float angleX, float angleY, float angleZ) // Подготавливаем данные[starArrayRendered] для отрисовки созвездия
-    {
-        angle = { angleX,angleY,angleZ };
+    void setStarsRenderedCords(float angleX, float angleY, float angleZ) {
+        angle = { angleX, angleY, angleZ };
         distance = 3000. / scale;
-
         starsRenderedCords = starsCords;
 
-
-        for (int i = 0; i < starsCords.size(); i++)// РАзмещение Линий.
-        {
-            point3d p = { starsRenderedCords[i].x, starsRenderedCords[i].y, starsRenderedCords[i].z };
-
+        for (int i = 0; i < starsCords.size(); i++) {
+            point3d p = starsRenderedCords[i];
             Arrange(p);
-
-            starsRenderedCords[i].x = p.x;
-            starsRenderedCords[i].y = p.y;
-            starsRenderedCords[i].z = p.z;
+            starsRenderedCords[i] = p;
         }
     }
-
-
 };
