@@ -813,7 +813,7 @@ namespace drawer
             constellationFlight.endPos = enemyPos;
             constellationFlight.currentPos = heroPos;
             constellationFlight.progress = 0.0f;
-            constellationFlight.speed = 0.015f; 
+            constellationFlight.speed = 0.00015f; 
             constellationFlight.isFlying = true;
         }
 
@@ -834,6 +834,11 @@ namespace drawer
 
             constellationFlight.progress += constellationFlight.speed;
 
+            float steps = 1. / constellationFlight.speed;
+            float dx = (constellationFlight.endPos.x - constellationFlight.startPos.x) / steps;
+            float dy = (constellationFlight.endPos.y - constellationFlight.startPos.y) / steps;
+            float dz = (constellationFlight.endPos.z - constellationFlight.startPos.z) / steps;
+
             // Параболическая траектория
             float t = constellationFlight.progress;
             float height = 300.0f * sin(t * PI); // Высота дуги
@@ -844,9 +849,9 @@ namespace drawer
 
             // Перемещаем всё созвездие героя
             for (auto& star : starSet[player_sign]->starsCords) {
-                star.x += constellationFlight.currentPos.x - constellationFlight.startPos.x;
-                star.y += constellationFlight.currentPos.y - constellationFlight.startPos.y;
-                star.z += constellationFlight.currentPos.z - constellationFlight.startPos.z;
+                star.x += dx;
+                star.y += dy;
+                star.z += dz;
             }
 
             if (constellationFlight.progress >= 1.0f) {
