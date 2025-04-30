@@ -547,7 +547,7 @@ namespace drawer
 
 
 
-            drawPoint(point,.5);
+            drawPoint(point,2);
             // Çâ¸çäû íà ôîíå èõ êîë-âî. è Êàäð îñòàíîâêè.
         }
     }
@@ -768,59 +768,97 @@ namespace drawer
         float speed;
         bool isFlying;
     };
+    
+    WeaponFlight constellationFlight;
 
-    float lerp(float a, float b, float t) {
-        return a + t * (b - a);
-    }
+    point3d startPoint;
 
-    WeaponFlight swordFlight;
+        float lerp(float start, float end, float t) {
+            return start + (end - start) * t;
+        }
+        void VectorWeapons(point3d& p, Constellation& Constellations)
+        {
 
-        point3d startPoint;
+            point3d enemyPosition = { 0,0,0 };
+           
 
-        void InitWeaponFlight() {
-            if (!weapon[(int)current_weapon].constellation) return;
+            if (weapon[(int)current_weapon].constellation)
+            {
+                p = weapon[(int)current_weapon].constellation->getPosition();
 
+                startPoint = { 0, 0, 0 };
+                placeHeroToWorld(startPoint, *starSet[player_sign]);
 
-            startPoint = weapon[(int)current_weapon].constellation->getPosition();
+                int ñount = 100;
+                placeConstToWorld(enemyPosition, *starSet[currentEnemyID]);
+                modelProject = &fightProject;
+
+                drawLine(startPoint, enemyPosition, ñount);
+
+            }
+        }
+        
+        
+
+        void InitConstellationAttack() {
+            
+            point3d heroPos = { 0, 0, 0 };
+            placeHeroToWorld(heroPos, *starSet[player_sign]);
 
             
-            point3d enemyPosition = starSet[currentEnemyID]->getPosition();
+            point3d enemyPos = { 0, 0, 0 };
+            placeConstToWorld(enemyPos, *starSet[currentEnemyID]);
 
-            swordFlight.startPos = startPoint;
-            swordFlight.endPos = enemyPosition;
-            swordFlight.currentPos = startPoint;
-            swordFlight.progress = 0.0f;
-            swordFlight.speed = 0.02f;
-            swordFlight.isFlying = true;
+            constellationFlight.startPos = heroPos;
+            constellationFlight.endPos = enemyPos;
+            constellationFlight.currentPos = heroPos;
+            constellationFlight.progress = 0.0f;
+            constellationFlight.speed = 0.015f; 
+            constellationFlight.isFlying = true;
         }
 
-        void UpdateWeaponFlight() {
-            if (!swordFlight.isFlying) return;
-
-            swordFlight.progress += swordFlight.speed;
+        void ReturnHeroConstellation() {
+            point3d homePos = { 0, 0, 0 };
+            placeHeroToWorld(homePos, *starSet[player_sign]);
 
             
-            float t = swordFlight.progress;
-            swordFlight.currentPos.x = lerp(swordFlight.startPos.x, swordFlight.endPos.x, t);
-            swordFlight.currentPos.y = lerp(swordFlight.startPos.y, swordFlight.endPos.y, t) + sin(t * PI) * 100.0f;
-            swordFlight.currentPos.z = lerp(swordFlight.startPos.z, swordFlight.endPos.z, t);
+            for (auto& star : starSet[player_sign]->starsCords) {
+                star.x = homePos.x;
+                star.y = homePos.y;
+                star.z = homePos.z;
+            }
+        }
+        
+        void UpdateConstellationAttack() {
+            if (!constellationFlight.isFlying) return;
 
-            if (swordFlight.progress >= 1.0f) {
-                swordFlight.isFlying = false;
-                enemyAttack(*starSet[currentEnemyID]);
+            constellationFlight.progress += constellationFlight.speed;
+
+            // Ïàðàáîëè÷åñêàÿ òðàåêòîðèÿ
+            float t = constellationFlight.progress;
+            float height = 300.0f * sin(t * PI); // Âûñîòà äóãè
+
+            constellationFlight.currentPos.x = lerp(constellationFlight.startPos.x, constellationFlight.endPos.x, t);
+            constellationFlight.currentPos.y = lerp(constellationFlight.startPos.y, constellationFlight.endPos.y, t) + height;
+            constellationFlight.currentPos.z = lerp(constellationFlight.startPos.z, constellationFlight.endPos.z, t);
+
+            // Ïåðåìåùàåì âñ¸ ñîçâåçäèå ãåðîÿ
+            for (auto& star : starSet[player_sign]->starsCords) {
+                star.x += constellationFlight.currentPos.x - constellationFlight.startPos.x;
+                star.y += constellationFlight.currentPos.y - constellationFlight.startPos.y;
+                star.z += constellationFlight.currentPos.z - constellationFlight.startPos.z;
+            }
+
+            if (constellationFlight.progress >= 1.0f) {
+                constellationFlight.isFlying = false;
+                //enemyAttack(*starSet[currentEnemyID]);
+
+                // Âîçâðàùàåì ñîçâåçäèå íà ìåñòî
+                ReturnHeroConstellation();
             }
         }
 
-        void FlightWeapons(Constellation& constellation) {
-            if (!swordFlight.isFlying) return;
-
-            
-            constellation.setPosition(swordFlight.currentPos);
-
-            
-            drawLine(swordFlight.startPos, swordFlight.endPos, 30);
-        }
-
+        
    // bool CoolDawn = true;
 
     void SelectVectorAttack()
@@ -1153,7 +1191,7 @@ void UpdateGame() {
                 
                 modelTransform = &placeWeaponToWorld;
                 nearPlaneClip = 0;
-                drawÑonstellation(*weapon[(int)current_weapon].constellation);
+                //drawÑonstellation(*weapon[(int)current_weapon].constellation);
 
 
                 srand(currentTime);
@@ -1183,24 +1221,26 @@ void UpdateGame() {
                     {
                         check_attack = false;
                         attackStartTime = currentTime;
-
-                        if (!swordFlight.isFlying) {
-                            InitWeaponFlight();
-                        }
+                        InitConstellationAttack();
                      }
                     
 
                     
                     drawÑonstellation(*starSet[currentEnemyID]);
 
-                    if (swordFlight.isFlying) {
-                        UpdateWeaponFlight();
-                        FlightWeapons(*weapon[(int)current_weapon].constellation);
+                    if (constellationFlight.isFlying) {
+                        UpdateConstellationAttack();
+                        //VectorWeapons(startPoint, *starSet[player_sign]);
+                        
+                        drawLine(constellationFlight.startPos, constellationFlight.endPos, 50);
                     }
 
-                    modelTransform = &placeWeaponToWorld;
-                    nearPlaneClip = 0;
-                    drawÑonstellation(*weapon[(int)current_weapon].constellation);
+                    linksDivider = 15;
+                    modelTransform = &placeHeroToWorld;
+                    uiFunc = &heroUI;
+                    nearPlaneClip = -2000;
+                    drawÑonstellation(*starSet[player_sign]);
+
 
                     if (attack_collision == true)
                     {
@@ -1232,10 +1272,7 @@ void UpdateGame() {
 
 
                 DrawStarsHP(window.context);
-                
-                modelTransform = &placeConstToWorld;
-                nearPlaneClip = 0;
-                
+               
 
                 linksDivider = 15;
                 modelTransform = &placeHeroToWorld;

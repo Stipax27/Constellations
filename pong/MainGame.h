@@ -137,7 +137,7 @@ void menuDayprocessing()
 
 void menuConfirmationButton()
 {
-    
+   
 
     if (drawClickableText("Play", false, RGB(0, 191, 255), window.width / 2, window.height / 1.6))
     {
@@ -238,7 +238,8 @@ void winFight()
 
 void endFight()
 {
-    if (drawClickableText("You Lose (((", true, RGB(0, 191, 255)))
+    
+    if (drawClickableText("You Lose (((", true, RGB(0, 191, 255),window.width/2,window.height/2))
     {
         gameState = gameState_::MainMenu;
     }

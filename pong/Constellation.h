@@ -43,6 +43,8 @@ public:
         constellationsCounter++;
     }
 
+    
+
     void setPosition(const point3d& newPos) {
         
         point3d offset = {
@@ -51,7 +53,7 @@ public:
             newPos.z - position.z
         };
 
-       
+        
         for (auto& star : starsCords) {
             star.x += offset.x;
             star.y += offset.y;
@@ -62,7 +64,7 @@ public:
     }
 
     point3d getPosition() const {
-        return position; 
+        return position;
     }
 
     void Arrange(point3d& p) const {

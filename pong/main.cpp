@@ -59,6 +59,7 @@ HPEN mainPen;
 #include "font.h"
 #include "Weapon.h"
 #include "MainGame.h"
+#include "DiologTEXT.h"
 #include "DialogStruct.h"
 #include "drawer.h"
 
