@@ -27,7 +27,6 @@ public:
 
     Constellation(std::vector<point3d> _starsCords, std::vector <float> _starsHealth, std::vector <std::vector <float>> _constellationEdges) : position{ 0,0,0 } 
     {
-        
         starsCords = _starsCords;
         starsHealth = _starsHealth;
         constellationEdges = _constellationEdges;

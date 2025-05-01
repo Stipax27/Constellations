@@ -75,6 +75,7 @@ void rotateZ(point3d& p, float angle)// поворот по Оси Z.
 float lerp(float x1, float x2, float a) 
 {
     return x1 * (1 - a) + x2 * a;
+
 }
 point3d lerp(point3d p1, point3d p2, float a)
 {

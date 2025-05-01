@@ -58,6 +58,7 @@ namespace drawer
         move(p, 0, 0, 0. / Constellation.scale);
 
         fightMove(p);
+        morph(p, Constellation, *starSet[13]);
 
         p.x *= .13;
         p.y *= .13;
