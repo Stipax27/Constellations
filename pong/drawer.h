@@ -1192,7 +1192,7 @@ void UpdateGame() {
             
             DrawHpHeroBar();
             std::string timeStr = "Time: " + std::to_string(remainingTime / 1000);
-            drawString(timeStr.c_str(), window.width / 2, 10, 1.f, true);
+            drawString(timeStr.c_str(), window.width / 1.1, 45, 1.f, true);
 
             if (getConstellationHP(*starSet[currentEnemyID]) < 0)
             {
@@ -1446,17 +1446,17 @@ void UpdateGame() {
 
                
                 std::string curentSignstring = zodiacSignToString(currentEnemyID);
-                drawString(curentSignstring.c_str(), window.width / 2, window.height / 20., 1, true);
+                drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);
 
                 curentSignstring = zodiacSignToString(player_sign);
-                drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 15., 1, true);
+                drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 7., 1, true);
 
                 curentSignstring = "current weapon: " + weapon[(int)current_weapon].name;
-                drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 30., 1, true);
+                drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 10., 1, true);
 
-                drawString("Weapon selection:\nButton 1 - Sword \nButton 2 - Shield \nButton 3 - Bow ", (1700./2560)*window.width, (1100. / 1440)* window.height, .7f, false);
+                drawString("Weapon selection:\nButton 1 - Sword \nButton 2 - Shield \nButton 3 - Bow ", (1700. / 2560)* window.width, (1100. / 1440)* window.height, .7f, false);
                 drawString("Rewind time:\nbutton - E", (500. / 2560)* window.width, (1200. / 1440)* window.height, .7f, false);
-                drawString("TUTORIAL:\nTo hit an enemy with a sword,\npress LMB and draw a line along the enemy star\nTo hit with a shield,\npress LMB and draw a line that will draw a circle that attacks stars\nTo hit with a bow,\npress LMB on the star and draw a vector in any direction from the star.", (50. / 2560)* window.width, (50. / 1440)* window.height, .7f, false);
+                drawString("TUTORIAL:\nTo hit an enemy with a sword,\npress LMB and draw a line along the enemy star\nTo hit with a shield,\npress LMB and draw a line that will draw a circle that attacks stars\nTo hit with a bow,\npress LMB on the star and draw a vector in any direction from the star.", (60. / 2560)* window.width, (60. / 1440)* window.height, .7f, false);
 
                 UpdateGame();
                 
