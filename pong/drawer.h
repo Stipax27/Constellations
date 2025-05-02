@@ -986,8 +986,8 @@ namespace drawer
 
         for (int i = 0; i < starCount; i++) {
             point3d star = {
-                barX + (i + 1) * starSpacing,
-                barY + barHeight / 2,
+                Bar.x + (i + 1) * starSpacing -barWidth / 2,
+                Bar.y + barHeight / 2,
                 Bar.z
             };
 
@@ -998,8 +998,8 @@ namespace drawer
                 currentSize += pulse * 2.0f;
             }
 
-            modelTransform(star, enemy_const);
-            modelProject(star);
+            //modelTransform(star, enemy_const);
+            //modelProject(star);
 
             drawPoint(star, currentSize);
         }
@@ -1007,19 +1007,19 @@ namespace drawer
         // Соединяем звёзды
         for (int i = 0; i < starCount - 1; i++) {
             point3d star1 = {
-                barX + (i + 1) * starSpacing,
-                barY + barHeight / 2,
+                Bar.x + (i + 1) * starSpacing - barWidth / 2,
+                Bar.y + barHeight / 2,
                 Bar.z
             };
 
             point3d star2 = {
-                barX + (i + 2) * starSpacing,
-                barY + barHeight / 2,
+                Bar.x + (i + 2) * starSpacing - barWidth / 2,
+                Bar.y + barHeight / 2,
                 Bar.z
             };
 
-            modelTransform(star1, enemy_const);
-            modelTransform(star2, enemy_const);
+            //modelTransform(star1, enemy_const);
+            //modelTransform(star2, enemy_const);
            
 
             int lineSegments = (i < activeStars - 1) ? 10 : 5;
