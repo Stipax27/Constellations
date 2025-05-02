@@ -141,7 +141,7 @@ void menuConfirmationButton()
 
     if (drawClickableText("Play", false, RGB(0, 191, 255), window.width / 2, window.height / 1.6))
     {
-        gameState = gameState_::selectEnemy;
+        gameState = gameState_::DialogStruct;
         
         
     }

@@ -28,6 +28,7 @@ std::vector<Dialog> currentDialogs;
 
 bool initDialogs = false;
 
+
 void initContentData() {
     if (initDialogs) return;
     initDialogs = true;
@@ -154,48 +155,58 @@ void selectVariant(int variantIndex) {
     renderContent();
 }
 
+static double lastClickTime = 0.0;
+
 void renderContent() {
     float textX = window.width / 2;
-    float textY = 500;
+    float textY = (500. / 1440) * window.height;
     static int currentNarrative = 0;
+    static double lastClickTime = 0.0; 
 
     if (currentNarrative < narratives.size()) {
-        
         drawString(narratives[currentNarrative].text.c_str(), textX, textY, 1.f, true);
 
-        if (drawClickableText("Continue", true, RGB(0, 191, 255), textX, 1050 )& 0x0001) {
-            currentNarrative++; 
+        
+        bool canClick = (currentTime - lastClickTime) >= 1000;
+
+        if (drawClickableText("Continue", true, RGB(0, 191, 255), textX, (1050. / 1440) * window.height) && canClick & 0x0001) {
+            lastClickTime = currentTime;
+            currentNarrative++;
             if (currentNarrative >= narratives.size()) {
-                
                 currentDialogs.push_back(dialogs[0]);
             }
             return;
         }
     }
-    else 
-    {
+    else {
         if (!currentDialogs.empty()) {
-            textY += 50;
+            textY += (50. / 1440) * window.height;
             const Dialog& d = currentDialogs.back();
             drawString(d.question.c_str(), textX, textY, 1.f, true);
-            textY += 350;
+            textY += (500. / 1440) * window.height;
 
-            
-            for (size_t i = 0; i < d.variants.size(); ++i) 
-            {
-                if (drawClickableText(d.variants[i].text, true, RGB(0, 191, 255), textX, textY)) 
-                {
+            for (size_t i = 0; i < d.variants.size(); ++i) {
+                
+                bool canClick = (currentTime - lastClickTime) >= 1000;
+
+                if (drawClickableText(d.variants[i].text, true, RGB(0, 191, 255), textX, textY) && canClick & 0x0001) {
+                    lastClickTime = currentTime; 
                     selectVariant(i);
                 }
-                textY += 50;
+                textY += (50. / 1440) * window.height;
             }
         }
     }
 }
 
 void handleInput() {
+    static double lastClickTime = 0.0; 
 
-    if (drawClickableText("If you don't want to read \n Start Game", true, RGB(0, 191, 255),window.width/2,1200 )) {
+    
+    bool canClick = (currentTime - lastClickTime) >= 1.f;
+
+    if (drawClickableText("If you don't want to read \n Start Game", true, RGB(0, 191, 255), window.width / 2, (1200. / 1440) * window.height) && canClick) {
+        lastClickTime = currentTime; 
         gameState = gameState_::selectEnemy;
         startTime = currentTime;
     }
