@@ -47,6 +47,9 @@ DWORD currentTime;
 HBRUSH mainBrush;
 HPEN mainPen;
 
+HBRUSH heroBrush;
+HPEN heroPen;
+
 
 #include "utils.h"
 #include "MainWindow.h"
@@ -74,6 +77,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     mainBrush = CreateSolidBrush(RGB(0, 191, 255));
     mainPen = CreatePen(PS_SOLID,2,RGB(255, 255, 255));
+    heroBrush = CreateSolidBrush(RGB(225, 225, 255));
+    heroPen = CreatePen(PS_SOLID, 2, RGB(225, 225, 255));
+
 
     InitGame();//здесь инициализируем переменные игры
     //initContentData();

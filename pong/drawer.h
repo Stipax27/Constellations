@@ -194,7 +194,7 @@ namespace drawer
     
     float linksDivider = 25;
 
-    void drawLinks(Constellation& Constellation)
+    void drawLinks(Constellation& Constellation, bool colorOverride = false)
     {
         //std::vector <point3d>& starArray = Constellation.starsRenderedCords;
         std::vector <point3d>& starArray = Constellation.starsCords;
@@ -483,15 +483,18 @@ namespace drawer
 
     void (*uiFunc)(point3d& point, Constellation& Constellation, int i);
 
-    void drawStarPulse(Constellation& Constellation)
+    void drawStarPulse(Constellation& Constellation, bool colorOverride = false)
     {
         std::vector <point3d>& starArray = Constellation.starsCords;
         std::vector <float>& starHealth = Constellation.starsHealth;
 
         int starsCount = starArray.size();
-        brush = CreateSolidBrush(RGB(0, 191, 255));
-        brush2 = CreateSolidBrush(RGB(255, 0, 0));
-        SelectObject(window.context, brush);
+        if (!colorOverride) {
+            brush = CreateSolidBrush(RGB(0, 191, 255));
+            brush2 = CreateSolidBrush(RGB(255, 0, 0));
+            SelectObject(window.context, brush);
+        }
+
         for (int i = 0; i < starsCount; i++)
         {
             point3d point;
@@ -516,16 +519,20 @@ namespace drawer
             }
 
         }
-        DeleteObject(brush);
-        DeleteObject(brush2);
+
+        if (!colorOverride)
+        {
+            DeleteObject(brush);
+            DeleteObject(brush2);
+        }
     }
 
     
 
-    void draw—onstellation(Constellation& Constellation)
+    void draw—onstellation(Constellation& Constellation, bool colorOverride = false)
     {
-        drawLinks(Constellation);
-        drawStarPulse(Constellation);
+        drawLinks(Constellation, colorOverride);
+        drawStarPulse(Constellation, colorOverride);
     }
 
    
@@ -647,7 +654,7 @@ namespace drawer
     {
         RECT rect;
         GetClientRect(window.hWnd, &rect);
-        auto blackBrush = CreateSolidBrush(RGB(0, 0, 0));
+        auto blackBrush = CreateSolidBrush(RGB(0, 15, 30));
         FillRect(window.context, &rect, blackBrush);
         DeleteObject(blackBrush);
     }
@@ -802,7 +809,12 @@ namespace drawer
 
         void InitConstellationAttack() {
             
+            point3d mouseAngleBackup = mouseAngle;
+            mouseAngle.x = 0;
+            mouseAngle.y = 0;
+
             point3d heroPos = { 0, 0, 0 };
+            
             placeHeroToWorld(heroPos, *starSet[player_sign]);
 
             
@@ -813,8 +825,10 @@ namespace drawer
             constellationFlight.endPos = enemyPos;
             constellationFlight.currentPos = heroPos;
             constellationFlight.progress = 0.0f;
-            constellationFlight.speed = 0.00015f; 
+            constellationFlight.speed = 0.05f; 
             constellationFlight.isFlying = true;
+
+            mouseAngle = mouseAngleBackup;
         }
 
         void ReturnHeroConstellation() {
@@ -835,17 +849,18 @@ namespace drawer
             constellationFlight.progress += constellationFlight.speed;
 
             float steps = 1. / constellationFlight.speed;
-            float dx = (constellationFlight.endPos.x - constellationFlight.startPos.x) / steps;
-            float dy = (constellationFlight.endPos.y - constellationFlight.startPos.y) / steps;
-            float dz = (constellationFlight.endPos.z - constellationFlight.startPos.z) / steps;
+            float dx = .008*(constellationFlight.endPos.x - constellationFlight.startPos.x) / steps;
+            float dy = .008 * (constellationFlight.endPos.y - constellationFlight.startPos.y) / steps;
+            float dz = .008 * (constellationFlight.endPos.z - constellationFlight.startPos.z) / steps;
 
             // œ‡‡·ÓÎË˜ÂÒÍ‡ˇ Ú‡ÂÍÚÓËˇ
-            float t = constellationFlight.progress;
+            /*float t = constellationFlight.progress;
             float height = 300.0f * sin(t * PI); // ¬˚ÒÓÚ‡ ‰Û„Ë
 
             constellationFlight.currentPos.x = lerp(constellationFlight.startPos.x, constellationFlight.endPos.x, t);
-            constellationFlight.currentPos.y = lerp(constellationFlight.startPos.y, constellationFlight.endPos.y, t) + height;
+            constellationFlight.currentPos.y = lerp(constellationFlight.startPos.y, constellationFlight.endPos.y, t);// +height;
             constellationFlight.currentPos.z = lerp(constellationFlight.startPos.z, constellationFlight.endPos.z, t);
+            */
 
             // œÂÂÏÂ˘‡ÂÏ ‚Ò∏ ÒÓÁ‚ÂÁ‰ËÂ „ÂÓˇ
             for (auto& star : starSet[player_sign]->starsCords) {
@@ -859,7 +874,12 @@ namespace drawer
                 //enemyAttack(*starSet[currentEnemyID]);
 
                 // ¬ÓÁ‚‡˘‡ÂÏ ÒÓÁ‚ÂÁ‰ËÂ Ì‡ ÏÂÒÚÓ
-                ReturnHeroConstellation();
+                //ReturnHeroConstellation();
+                for (auto& star : starSet[player_sign]->starsCords) {
+                    star.x -= dx * steps;
+                    star.y -= dy * steps;
+                    star.z -= dz * steps;
+                }
             }
         }
 
@@ -1237,14 +1257,20 @@ void UpdateGame() {
                         UpdateConstellationAttack();
                         //VectorWeapons(startPoint, *starSet[player_sign]);
                         
-                        drawLine(constellationFlight.startPos, constellationFlight.endPos, 50);
+                        //drawLine(constellationFlight.startPos, constellationFlight.endPos, 50);
                     }
 
                     linksDivider = 15;
                     modelTransform = &placeHeroToWorld;
                     uiFunc = &heroUI;
                     nearPlaneClip = -2000;
-                    draw—onstellation(*starSet[player_sign]);
+                    SelectObject(window.context, heroBrush);
+                    SelectObject(window.context, heroPen);
+
+                    draw—onstellation(*starSet[player_sign],true);
+
+                    SelectObject(window.context, mainBrush);
+                    SelectObject(window.context, mainPen);
 
 
                     if (attack_collision == true)
@@ -1275,11 +1301,11 @@ void UpdateGame() {
                 SelectObject(window.context, mainBrush);
                 SelectObject(window.context, mainPen);
 
-
+                modelTransform = &placeConstToWorld;
                 DrawStarsHP(window.context);
                
 
-                linksDivider = 15;
+                linksDivider = 5;
                 modelTransform = &placeHeroToWorld;
                 uiFunc = &heroUI;
                 nearPlaneClip = -2000;
@@ -1296,7 +1322,15 @@ void UpdateGame() {
                     isShakingHero = false;
                 }
 
-                draw—onstellation(*starSet[player_sign]);
+                SelectObject(window.context, heroBrush);
+                SelectObject(window.context, heroPen);
+
+                draw—onstellation(*starSet[player_sign], true);
+
+                SelectObject(window.context, mainBrush);
+                SelectObject(window.context, mainPen);
+
+                //draw—onstellation(*starSet[player_sign]);
 
                 
 

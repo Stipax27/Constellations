@@ -22,7 +22,7 @@ weapon_name current_weapon = weapon_name::Sword;
 void initWeapon() {
     weapon[(int)weapon_name::Sword].damage = 0.4;
     weapon[(int)weapon_name::Sword].defense = 0.4;
-    weapon[(int)weapon_name::Sword].attackSpeed = 2000;
+    weapon[(int)weapon_name::Sword].attackSpeed = 750;
     weapon[(int)weapon_name::Sword].name = "sword";
     weapon[(int)weapon_name::Sword].constellation = &Sword;
 
