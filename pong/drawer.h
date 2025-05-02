@@ -983,7 +983,7 @@ namespace drawer
         drawLine(topLeft, bottomLeft, 5);  // Лево
         drawLine(bottomRight, topRight, 5); // Право
 
-        modelProject = &fightProject;
+        
 
         // Рисуем заполнение из звёзд
         int activeStars = (int)(starCount * progress);
@@ -1027,10 +1027,10 @@ namespace drawer
             //modelTransform(star2, enemy_const);
            
 
-            int lineSegments = (i < activeStars - 1) ? 10 : 5;
+            int lineSegments = ((i < activeStars - 1) ? 10 : 5);
             drawLine(star1, star2, lineSegments);
         }
-
+        modelProject = &fightProject;
         point3d p = { 0,.3,0 };
         modelTransform(p, enemy_const);
         modelProject(p);
