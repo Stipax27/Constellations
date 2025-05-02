@@ -321,6 +321,8 @@ point3d drawString(const char* str,float x, float y, float scale, bool centered,
 {
     preprocessFont();
 
+    scale = scale * window.width / 2560.;
+
     float tracking = 10;
     float interline = 40*scale;
 
