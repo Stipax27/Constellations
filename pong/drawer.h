@@ -284,6 +284,7 @@ namespace drawer
     float attackAmp;
     float attack_time;
     float attack_cooldown;
+    bool attackCooldown = true;
 
 
 
@@ -888,7 +889,7 @@ namespace drawer
 
     void SelectVectorAttack()
     {
-        if (currentTime < attack_cooldown + 5000) return;
+        if (attackCooldown == false) return;
         if (current_weapon == weapon_name::Sword)
         {
 
@@ -1249,12 +1250,18 @@ void UpdateGame() {
                     //drawLine(constellationFlight.startPos, constellationFlight.endPos, 50);
                 }
 
+                if (currentTime > attack_cooldown + 5000)
+                {
+                    attackCooldown = true;
+                }
+
 
                 if (!GetAsyncKeyState(VK_LBUTTON))
                 {
-                    if (attack_collision == true and currentTime > attack_cooldown + 5000)
+                    if (attack_collision == true and attackCooldown == true)
                     {
                         attack_cooldown = currentTime;
+                        attackCooldown = false;
                         check_attack = false;
                         attackStartTime = currentTime;
                         InitConstellationAttack();
