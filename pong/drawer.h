@@ -1029,7 +1029,7 @@ namespace drawer
         point3d p = { 0,.3,0 };
         modelTransform(p, enemy_const);
         modelProject(p);
-        drawString(progressText.c_str(), p.x, p.y, 1, true);
+        drawString(progressText.c_str(), p.x, p.y-50, 1, true);
 
     }
 
