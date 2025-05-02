@@ -932,22 +932,114 @@ namespace drawer
             }
         }
     }
+    void DrawHpEnemyBar()
+    {
+        auto enemy_const = *starSet[currentEnemyID];
+        auto maxHP = enemy_const.maxHP;
+        auto progress = getConstellationHP(*starSet[currentEnemyID]) / maxHP;
+        auto progressText = "HP: " + std::to_string(progress);
 
-    void DrawTimeBar() 
+
+        linksDivider = 15;
+        modelTransform = &placeConstToWorld;
+        uiFunc = starIntersectUI;
+        modelProject = &fightProject;
+
+        // Параметры временного бара
+        const float barWidth = 100;
+        const float barHeight = 50;
+        const float barX = 0;
+        const float barY = .3;
+        const float starCount = 10;
+        const float starSize = 5.0f;
+
+        point3d Bar = { barX, barY,0 };
+
+        modelTransform(Bar, *starSet[currentEnemyID]);
+
+        // Создаем точки для рамки
+        point3d topLeft = { Bar.x - barWidth/2, Bar.y, 0 };
+        point3d topRight = { Bar.x + barWidth / 2 + barWidth, Bar.y, 0 };
+        point3d bottomLeft = { Bar.x - barWidth / 2, Bar.y + barHeight, 0 };
+        point3d bottomRight = { Bar.x + barWidth /2, Bar.y + barHeight, 0 };
+
+        /*modelTransform(topLeft, enemy_const);
+        modelTransform(topRight, enemy_const);
+        modelTransform(bottomLeft, enemy_const);
+        modelTransform(bottomRight, enemy_const);*/
+
+        // Рисуем рамку
+        drawer::drawLine(topLeft, topRight, 50);    // Верх
+        drawer::drawLine(bottomLeft, bottomRight, 50); // Низ
+        drawer::drawLine(topLeft, bottomLeft, 5);  // Лево
+        drawer::drawLine(bottomRight, topRight, 5); // Право
+
+
+
+        // Рисуем заполнение из звёзд
+        int activeStars = (int)(starCount * progress);
+        float starSpacing = barWidth / (float)(starCount + 1);
+
+        for (int i = 0; i < starCount; i++) {
+            point3d star = {
+                barX + (i + 1) * starSpacing,
+                barY + barHeight / 2,
+                0
+            };
+
+            float currentSize = (i < activeStars) ? starSize * 1.5f : starSize * .0;
+
+            if (i < activeStars) {
+                float pulse = 0.5f + 0.5f * sinf(currentTime * 0.005f);
+                currentSize += pulse * 2.0f;
+            }
+
+            modelTransform(star, enemy_const);
+            modelProject(star);
+
+            drawer::drawPoint(star, currentSize);
+        }
+
+        // Соединяем звёзды
+        for (int i = 0; i < starCount - 1; i++) {
+            point3d star1 = {
+                barX + (i + 1) * starSpacing,
+                barY + barHeight / 2,
+                0
+            };
+
+            point3d star2 = {
+                barX + (i + 2) * starSpacing,
+                barY + barHeight / 2,
+                0
+            };
+
+            modelTransform(star1, enemy_const);
+            modelTransform(star2, enemy_const);
+
+            int lineSegments = (i < activeStars - 1) ? 10 : 5;
+            drawer::drawLine(star1, star2, lineSegments);
+        }
+
+        point3d p = { 0,.3,0 };
+        modelTransform(p, enemy_const);
+        modelProject(p);
+        drawString(progressText.c_str(), p.x, p.y, 1, true);
+
+    }
+
+    void DrawHpHeroBar() 
     {
     auto player_const = *starSet[player_sign];
     auto maxHP = player_const.maxHP;
     auto progress = getConstellationHP(*starSet[player_sign])/ maxHP;
     auto progressText = "HP: " + std::to_string(progress);
 
-
-    
-
     linksDivider = 15;
     modelTransform = &HeroUITransform;
     uiFunc = NULL;
     nearPlaneClip = -2000;
-    modelProject = &fightProject;;
+    modelProject = &fightProject;
 
     // Параметры временного бара
     const float barWidth = 4;
@@ -1088,7 +1180,7 @@ void UpdateGame() {
 
         if (remainingTime > 0) {
             
-            DrawTimeBar();
+            DrawHpHeroBar();
             std::string timeStr = "Time: " + std::to_string(remainingTime / 1000);
             drawString(timeStr.c_str(), window.width / 2, 10, 1.f, true);
 
@@ -1219,7 +1311,7 @@ void UpdateGame() {
 
                 srand(currentTime);
 
-
+                DrawHpEnemyBar();
                 modelTransform = &placeConstToWorld;
                 //drawСonstellation(*currentEnemy);
                 nearPlaneClip = 0;
