@@ -97,7 +97,7 @@ void enemyAttack(Constellation& Constellation)
     auto player_const = *starSet[player_sign];
     for ( int i = 0; i < starsCount; i++)
     {
-        starHealth[i] -= 0.005;
+        starHealth[i] -= 0.05;
         
         if (starHealth[i] < 0)
         {

@@ -730,7 +730,7 @@ namespace drawer
 
     void enemyFight()
     {
-                float e = 1000;
+                float e = 10000;
         if (currentTime > attackTime + e)
         {
             attackTime = currentTime;
@@ -1327,6 +1327,20 @@ void UpdateGame() {
                 nearPlaneClip = 0;
 
                 
+
+                if (isShakingHero) {
+                    for (int i = 0;i < starSet[currentEnemyID]->starsCords.size();i++)
+                    {
+                        auto p1 = starSet[currentEnemyID]->starsCords[i];
+                        point3d p2 = { 0,0,0 };
+
+                        placeConstToWorld(p1, *starSet[currentEnemyID]);
+                        placeHeroToWorld(p2, *starSet[currentEnemyID]);
+
+                        drawLine(p1, p2, 50);
+                    }
+                }
+
                 if (isDamageTaken)
                 {
                     isDamageTaken = false;
@@ -1401,6 +1415,7 @@ void UpdateGame() {
                     //check_attack = false;
                 }
 
+
                 if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true)
                 {
                     isDamageTaken = true;
@@ -1431,6 +1446,8 @@ void UpdateGame() {
                 {
                     isShakingHero = false;
                 }
+
+
 
                 SelectObject(window.context, heroBrush);
                 SelectObject(window.context, heroPen);
