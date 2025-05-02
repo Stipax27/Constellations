@@ -1458,6 +1458,16 @@ void UpdateGame() {
                 drawString("Rewind time:\nbutton - E", (500. / 2560)* window.width, (1200. / 1440)* window.height, .7f, false);
                 drawString("TUTORIAL:\nTo hit an enemy with a sword,\npress LMB and draw a line along the enemy star\nTo hit with a shield,\npress LMB and draw a line that will draw a circle that attacks stars\nTo hit with a bow,\npress LMB on the star and draw a vector in any direction from the star.", (60. / 2560)* window.width, (60. / 1440)* window.height, .7f, false);
 
+
+                float cdTimeOut =1.- (currentTime - attack_cooldown) / 5000.;
+                cdTimeOut *= 10;
+                std::string cdTimeOutText = std::to_string((int)cdTimeOut);
+                if (cdTimeOut > 0)
+                {
+                    drawString("recharge", window.width * .9, window.height * .85, 1., false);
+                    drawString(cdTimeOutText.c_str(), window.width * .9, window.height * .9, 3., false);
+                }
+
                 UpdateGame();
                 
 
