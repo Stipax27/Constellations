@@ -181,7 +181,10 @@ namespace drawer
             point.y = p1.y + dy * (float)i/(float)(count-1);
             point.z = p1.z + dz * (float)i/(float)(count-1);
 
+            if (modelProject)
+            {
             modelProject(point);
+            }
 
             float sz = 1 + .5 * sinf(i + currentTime * .01);
             drawPoint(point, sz);
@@ -946,8 +949,8 @@ namespace drawer
         modelProject = &fightProject;
 
         // Параметры временного бара
-        const float barWidth = 100;
-        const float barHeight = 50;
+        const float barWidth = 300;
+        const float barHeight = 60;
         const float barX = 0;
         const float barY = .3;
         const float starCount = 10;
@@ -956,10 +959,11 @@ namespace drawer
         point3d Bar = { barX, barY,0 };
 
         modelTransform(Bar, *starSet[currentEnemyID]);
+        modelProject(Bar);
 
         // Создаем точки для рамки
         point3d topLeft = { Bar.x - barWidth/2, Bar.y, 0 };
-        point3d topRight = { Bar.x + barWidth / 2 + barWidth, Bar.y, 0 };
+        point3d topRight = { Bar.x + barWidth / 2, Bar.y, 0 };
         point3d bottomLeft = { Bar.x - barWidth / 2, Bar.y + barHeight, 0 };
         point3d bottomRight = { Bar.x + barWidth /2, Bar.y + barHeight, 0 };
 
@@ -967,14 +971,14 @@ namespace drawer
         modelTransform(topRight, enemy_const);
         modelTransform(bottomLeft, enemy_const);
         modelTransform(bottomRight, enemy_const);*/
-
+        modelProject = NULL;
         // Рисуем рамку
-        drawer::drawLine(topLeft, topRight, 50);    // Верх
-        drawer::drawLine(bottomLeft, bottomRight, 50); // Низ
-        drawer::drawLine(topLeft, bottomLeft, 5);  // Лево
-        drawer::drawLine(bottomRight, topRight, 5); // Право
+        drawLine(topLeft, topRight, 50);    // Верх
+        drawLine(bottomLeft, bottomRight, 50); // Низ
+        drawLine(topLeft, bottomLeft, 5);  // Лево
+        drawLine(bottomRight, topRight, 5); // Право
 
-
+        modelProject = &fightProject;
 
         // Рисуем заполнение из звёзд
         int activeStars = (int)(starCount * progress);
@@ -984,7 +988,7 @@ namespace drawer
             point3d star = {
                 barX + (i + 1) * starSpacing,
                 barY + barHeight / 2,
-                0
+                Bar.z
             };
 
             float currentSize = (i < activeStars) ? starSize * 1.5f : starSize * .0;
@@ -997,7 +1001,7 @@ namespace drawer
             modelTransform(star, enemy_const);
             modelProject(star);
 
-            drawer::drawPoint(star, currentSize);
+            drawPoint(star, currentSize);
         }
 
         // Соединяем звёзды
@@ -1005,20 +1009,21 @@ namespace drawer
             point3d star1 = {
                 barX + (i + 1) * starSpacing,
                 barY + barHeight / 2,
-                0
+                Bar.z
             };
 
             point3d star2 = {
                 barX + (i + 2) * starSpacing,
                 barY + barHeight / 2,
-                0
+                Bar.z
             };
 
             modelTransform(star1, enemy_const);
             modelTransform(star2, enemy_const);
+           
 
             int lineSegments = (i < activeStars - 1) ? 10 : 5;
-            drawer::drawLine(star1, star2, lineSegments);
+            drawLine(star1, star2, lineSegments);
         }
 
         point3d p = { 0,.3,0 };
