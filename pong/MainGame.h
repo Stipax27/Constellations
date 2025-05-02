@@ -109,7 +109,7 @@ void menuMonthprocessing()
 
     drawString(mounthToString(player_month).c_str(), window.width / 2 -600, 50,1,true);
     
-    drawString("select your date of birth", window.width / 2, 20, 1, true);
+    drawString("select your date of birth.", window.width / 2, 20, 1, true);
     
 }
 
@@ -141,7 +141,7 @@ void menuConfirmationButton()
 
     if (drawClickableText("Play", false, RGB(0, 191, 255), window.width / 2, window.height / 1.6))
     {
-        gameState = gameState_::DialogStruct;
+        gameState = gameState_::selectEnemy;
         
         
     }

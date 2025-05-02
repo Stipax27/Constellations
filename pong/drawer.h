@@ -883,13 +883,8 @@ namespace drawer
             }
         }
 
-        
-   // bool CoolDawn = true;
-
     void SelectVectorAttack()
     {
-      //if (currentTime < currentTime+1000)
-      //{
         if (current_weapon == weapon_name::Sword)
         {
 
@@ -916,7 +911,7 @@ namespace drawer
 
         }
           
-      //}
+      
        
 
     }
@@ -1183,7 +1178,9 @@ void UpdateGame() {
 
                 std::string curentSignstring = zodiacSignToString(player_sign);
                 TextOutA(window.context, window.width * 5 / 6, window.height-window.height/20., curentSignstring.c_str(), curentSignstring.size());
-
+                //drawString(curentSignstring, window.width * 5 / 6, window.height - window.height / 20., 1, false);
+                drawString("Find Aries and click on him", window.width/2, 200, 1, true);
+                drawString("Features:\nMouse wheel to zoom in and out", 1700,1200 , 1, false);
                // drawColorCircle();
                 isBattleActive = false;
 
@@ -1344,6 +1341,9 @@ void UpdateGame() {
                 curentSignstring = "current weapon: " + weapon[(int)current_weapon].name;
                 drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 30., 1, true);
 
+                drawString("Weapon selection:\nButton 1 - Sword \nButton 2 - Shield \nButton 3 - Bow ", 1700, 1200, 1, false );
+                drawString("Rewind time:\nbutton - E", 500, 1200, 1, false);
+                drawString("TUTORIAL:\nTo hit an enemy with a sword,\npress LMB and draw a line along the enemy star\nTo hit with a shield,\npress LMB and draw a line that will draw a circle that attacks stars\nTo hit with a bow,\npress LMB on the star and draw a vector in any direction from the star.", 50, 50, .7f, false);
 
                 UpdateGame();
                 
