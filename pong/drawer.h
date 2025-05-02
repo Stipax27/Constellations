@@ -5,8 +5,32 @@ namespace drawer
     void (*modelProject)(point3d& p);
 
 
+    struct WeaponFlight {
+        point3d startPos;
+        point3d endPos;
+        point3d currentPos;
+        float progress;
+        float speed;
+        bool isFlying;
+    };
+
+    WeaponFlight constellationFlight;
+
+    point3d startPoint;
+
+
+
+
+
     void placeConstToWorld(point3d& p, Constellation& Constellation)
     {
+
+    /*    if (isShakingHero) {
+            p.x *= 3;
+            p.y *= 3;
+            p.z *= 3;
+        }*/
+
         Shaking(p);
 
         move(p, 0, 0, 3000. / Constellation.scale);
@@ -50,6 +74,9 @@ namespace drawer
     {
         rotateX(p, mouseAngle.y * 0.1);
         rotateY(p, mouseAngle.x * 0.1);
+
+        //isShakingHero = true;
+        ShakingWorld(p);
     }
 
     void placeHeroToWorld(point3d& p, Constellation& Constellation)
@@ -660,53 +687,6 @@ namespace drawer
         DeleteObject(blackBrush);
     }
 
-    void morphWepon(std::vector <point3d>& starArray1, std::vector<std::vector<float>> starEdges1, std::vector <point3d>& starArray2, std::vector<std::vector<float>> starEdges2, std::vector <point3d>& morphArray, std::vector <std::vector <float>> Morp_indices, std::vector <float> Morp_health)
-    {
-        morphArray.clear();
-        Morp_indices.clear();
-        Morp_health.clear();
-        int sz1 = starArray1.size();
-        int sz2 = starArray2.size();
-        int sz3 = starEdges1.size();
-        int sz4 = starEdges2.size();
-        if (sz1 < sz2)
-        {
-            for (int i = 0; i < sz1;i++)
-            {
-                float morphSpeed = 0.01;
-                morphArray.push_back(lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(currentTime * morphSpeed))));
-            }
-        }
-        else
-        {
-            for (int i = 0; i < sz2;i++)
-            {
-                float morphSpeed = 0.01;
-                morphArray.push_back(lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(currentTime * morphSpeed))));
-            }
-        }
-        if (sz3 > sz4)
-        {
-            for (float i = 0; i < sz4;i++)
-            {
-                Morp_indices.push_back({ i, i + 1 });
-            }
-        }
-        else
-        {
-            for (float i = 0; i < sz3;i++)
-            {
-                Morp_indices.push_back({ i, i + 1 });
-            }
-        }
-        for (int i = 0; i < 15;i++)
-        {
-            Morp_health.push_back(1);
-        }
-        
-        //drawСonstellation(morphArray, Morp_indices, Morp_health); Отключено
-    }
-
     void drawPlayerСonstellationToMenu()
     {
         startTime = currentTime;
@@ -722,14 +702,140 @@ namespace drawer
         
     }
 
+    WeaponFlight enemyConstellationFlight;
+
+    point3d enemyStartPoint;
+    
+
+ /*   void EnemyInitConstellationAttack() {
+
+        point3d mouseAngleBackup = mouseAngle;
+        mouseAngle.x = 0;
+        mouseAngle.y = 0;
+
+        point3d heroPos = { 0, 0, 0 };
+
+        placeHeroToWorld(heroPos, *starSet[player_sign]);
+
+
+        point3d enemyPos = { 0, 0, 0 };
+        placeConstToWorld(enemyPos, *starSet[currentEnemyID]);
+
+        enemyConstellationFlight.startPos = heroPos;
+        enemyConstellationFlight.endPos = enemyPos;
+        enemyConstellationFlight.currentPos = heroPos;
+        enemyConstellationFlight.progress = 0.0f;
+        enemyConstellationFlight.speed = 0.05f;
+        enemyConstellationFlight.isFlying = true;
+
+        mouseAngle = mouseAngleBackup;
+    }*/
+
+    void EnemyUpdateConstellationAttack() {
+        //if (!enemyConstellationFlight.isFlying) return;
+
+        //enemyConstellationFlight.progress += enemyConstellationFlight.speed;
+
+        //float steps = 1. / enemyConstellationFlight.speed;
+        //float dx = .008 * (enemyConstellationFlight.endPos.x - enemyConstellationFlight.startPos.x) / steps;
+        //float dy = .008 * (enemyConstellationFlight.endPos.y - enemyConstellationFlight.startPos.y) / steps;
+        //float dz = .008 * (enemyConstellationFlight.endPos.z - enemyConstellationFlight.startPos.z) / steps;
+        
+
+        // Перемещаем всё созвездие ВРАГА
+        //for (double i = 0; i < 100; i += 1) {
+     /*   float xmin = 100000;
+        float xmax = 0;
+        float ymin = 100000;
+        float ymax = 0;
+
+        for (auto& star : starSet[currentEnemyID]->starsCords) {
+            xmin = min(xmin, star.x);
+            ymin = min(ymin, star.y);
+            xmax = max(xmax, star.x);
+            ymax = max(ymax, star.y);
+       }
+
+        float hs = xmax - xmin;
+        float vs = ymax - ymin;*/
+
+        static float currentScale = 1.0f; // Текущий масштаб относительно оригинала
+
+        if (currentTime - shakeStartTimeHero < shakeDurationHero / 2) {
+            currentScale *= 1.14f;
+            for (auto& star : starSet[currentEnemyID]->starsCords) {
+                star.x *= 1.14f;
+                star.y *= 1.14f;
+            }
+        }
+        else {
+            currentScale /= 1.14f;
+            for (auto& star : starSet[currentEnemyID]->starsCords) {
+                star.x /= 1.14f;
+                star.y /= 1.14f;
+            }
+        }
+
+        // Принудительная коррекция масштаба в конце
+        if (currentTime - shakeStartTimeHero >= shakeDurationHero) {
+            float correction = 1.0f / currentScale; // Компенсируем все ошибки
+            for (auto& star : starSet[currentEnemyID]->starsCords) {
+                star.x *= correction;
+                star.y *= correction;
+            }
+            currentScale = 1.0f;
+        }
+
+
+        //}
+
+        //if (enemyConstellationFlight.progress >= 1.0f) {
+            //enemyConstellationFlight.isFlying = false;
+        //    //enemyAttack(*starSet[currentEnemyID]);
+
+        //    // Возвращаем созвездие на место
+            //ReturnHeroConstellation();
+ /*           for (auto& star : starSet[currentEnemyID]->starsCords) {
+                star.x /=  1.0005;
+                star.y /=  1.0005;
+                star.z /=  1.0005;
+            }*/
+        //}
+    }
+
+
     void enemyFight()
     {
-                float e = 1000;
+
+
+        float e = 1000;
         if (currentTime > attackTime + e)
         {
             attackTime = currentTime;
             enemyAttack(*starSet[player_sign]);
+            //enemyConstellationFlight.isFlying = true;
+            // EnemyInitConstellationAttack
 
+            // ???????????
+            //if (attack_collision == true)
+            {
+                //check_attack = false;
+                //attackStartTime = currentTime;
+                
+                //EnemyInitConstellationAttack();
+            }
+
+
+
+            //drawСonstellation(*starSet[currentEnemyID]);
+
+            //if (enemyConstellationFlight.isFlying) {
+                //EnemyUpdateConstellationAttack();
+                //VectorWeapons(startPoint, *starSet[player_sign]);
+
+                //drawLine(constellationFlight.startPos, constellationFlight.endPos, 50);
+            //}
+            // ????????????????
         }
         
     if (getConstellationHP(*starSet[player_sign]) <=0)
@@ -768,18 +874,7 @@ namespace drawer
             }
         }
     }
-    struct WeaponFlight {
-        point3d startPos;
-        point3d endPos;
-        point3d currentPos;
-        float progress;
-        float speed;
-        bool isFlying;
-    };
-    
-    WeaponFlight constellationFlight;
 
-    point3d startPoint;
 
         float lerp(float start, float end, float t) {
             return start + (end - start) * t;
@@ -883,6 +978,8 @@ namespace drawer
                 }
             }
         }
+
+
 
     void SelectVectorAttack()
     {
@@ -1295,6 +1392,8 @@ void UpdateGame() {
                 SelectWeapon();
                 SelectVectorAttack();
                 StartBattle();
+
+                //enemyConstellationFlight.isFlying = false;
                 enemyFight();
                 
 
@@ -1330,6 +1429,9 @@ void UpdateGame() {
                     isShaking = false;
                 }
 
+                if (isShakingHero) {
+                    EnemyUpdateConstellationAttack();
+                }
 
                 if (!GetAsyncKeyState(VK_LBUTTON))
                 {
@@ -1381,6 +1483,8 @@ void UpdateGame() {
 
                     //check_attack = false;
                 }
+
+
 
                 if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true)
                 {
@@ -1466,3 +1570,58 @@ void UpdateGame() {
     }
 }
 
+
+
+
+
+
+
+
+
+
+//void morphWepon(std::vector <point3d>& starArray1, std::vector<std::vector<float>> starEdges1, std::vector <point3d>& starArray2, std::vector<std::vector<float>> starEdges2, std::vector <point3d>& morphArray, std::vector <std::vector <float>> Morp_indices, std::vector <float> Morp_health)
+//{
+//    morphArray.clear();
+//    Morp_indices.clear();
+//    Morp_health.clear();
+//    int sz1 = starArray1.size();
+//    int sz2 = starArray2.size();
+//    int sz3 = starEdges1.size();
+//    int sz4 = starEdges2.size();
+//    if (sz1 < sz2)
+//    {
+//        for (int i = 0; i < sz1;i++)
+//        {
+//            float morphSpeed = 0.01;
+//            morphArray.push_back(lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(currentTime * morphSpeed))));
+//        }
+//    }
+//    else
+//    {
+//        for (int i = 0; i < sz2;i++)
+//        {
+//            float morphSpeed = 0.01;
+//            morphArray.push_back(lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(currentTime * morphSpeed))));
+//        }
+//    }
+//    if (sz3 > sz4)
+//    {
+//        for (float i = 0; i < sz4;i++)
+//        {
+//            Morp_indices.push_back({ i, i + 1 });
+//        }
+//    }
+//    else
+//    {
+//        for (float i = 0; i < sz3;i++)
+//        {
+//            Morp_indices.push_back({ i, i + 1 });
+//        }
+//    }
+//    for (int i = 0; i < 15;i++)
+//    {
+//        Morp_health.push_back(1);
+//    }
+//    
+//    //drawСonstellation(morphArray, Morp_indices, Morp_health); Отключено
+//}

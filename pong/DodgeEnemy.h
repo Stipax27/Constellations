@@ -42,6 +42,21 @@ void ShakingHero(point3d& p)
     }
 }
 
+void ShakingWorld(point3d& p)
+{   
+
+    if (isShakingHero) {
+
+
+            float shakeAmp = 1000*shakeIntensityHero * (1. - (currentTime - shakeStartTimeHero) / shakeDurationHero);
+
+            float shakeOffsetX =  sin(sin(currentTime) * sin(currentTime * 20)) * shakeAmp;
+            float shakeOffsetY = sin(currentTime * 20) * sin(currentTime * 23) * shakeAmp;
+            p.x += shakeOffsetX;
+            p.y += shakeOffsetY;
+    }
+}
+
 
 
 

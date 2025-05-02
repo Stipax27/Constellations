@@ -5,6 +5,9 @@ int constellationsCounter = 0;
 class Constellation {
 public:
 
+
+    std::vector<float> center;
+
     std::vector<point3d> starsCords;
     float hp;
     float maxHP;
@@ -24,9 +27,11 @@ public:
     bool isMoveActive;
     point3d position;
     
+    
 
     Constellation(std::vector<point3d> _starsCords, std::vector <float> _starsHealth, std::vector <std::vector <float>> _constellationEdges) : position{ 0,0,0 } 
     {
+
         starsCords = _starsCords;
         starsHealth = _starsHealth;
         constellationEdges = _constellationEdges;
@@ -40,9 +45,30 @@ public:
         }
 
         constellationsCounter++;
-    }
 
-    
+
+        float xmin = 100000;
+        float xmax = 0;
+        float ymin = 100000;
+        float ymax = 0;
+
+        for (auto& star : starsCords) {
+            xmin = min(xmin, star.x);
+            ymin = min(ymin, star.y);
+            xmax = max(xmax, star.x);
+            ymax = max(ymax, star.y);
+        }
+
+        float hs = xmax - xmin;
+        float vs = ymax - ymin;
+
+        //center = {hs, vs};
+
+        for (auto& star : starsCords) {
+            star.x -= hs / 2;
+            star.y -= vs / 2;
+        }
+    }
 
     void setPosition(const point3d& newPos) {
         
