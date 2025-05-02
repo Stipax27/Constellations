@@ -52,7 +52,7 @@ bool drawClickableText(
 
 void drawCircularMenu(float circleRadius, float speed, string* items, int size, menu_type selectedType) {
 
-
+    circleRadius *= window.width / 2560.;
     float centerX = window.width / 2;
     float centerY = window.height / 2;
     for (int i = 0; i < size; i++)
