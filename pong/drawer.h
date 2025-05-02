@@ -1329,13 +1329,21 @@ void UpdateGame() {
                 
 
                 if (isShakingHero) {
+
+                    float beamTime = 4.*(currentTime - shakeStartTimeHero) / shakeDurationHero;
+                    if (beamTime > 1.) beamTime = 1;
                     for (int i = 0;i < starSet[currentEnemyID]->starsCords.size();i++)
                     {
                         auto p1 = starSet[currentEnemyID]->starsCords[i];
-                        point3d p2 = { 0,0,0 };
+                        point3d p2 = starSet[player_sign]->starsCords[i% starSet[player_sign]->starsCords.size()];
 
                         placeConstToWorld(p1, *starSet[currentEnemyID]);
                         placeHeroToWorld(p2, *starSet[currentEnemyID]);
+
+                        p2.x = lerp(p1.x, p2.x, beamTime);
+                        p2.y = lerp(p1.y, p2.y, beamTime);
+                        p2.z = lerp(p1.z, p2.z, beamTime);
+
 
                         drawLine(p1, p2, 50);
                     }
