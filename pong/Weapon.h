@@ -59,7 +59,7 @@ float getConstellationHP(Constellation& Constellation)
     std::vector <float>& starHealth = Constellation.starsHealth;
 
     int starsCount = starHealth.size();
-    float health = 0;
+    float health = 0.f;
 
     for (int i = 0; i < starsCount; i++)
     {
@@ -97,7 +97,7 @@ void enemyAttack(Constellation& Constellation)
     auto player_const = *starSet[player_sign];
     for ( int i = 0; i < starsCount; i++)
     {
-        starHealth[i] -= 0.05;
+        starHealth[i] -= 0.005;
         
         if (starHealth[i] < 0)
         {

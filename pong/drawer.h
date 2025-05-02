@@ -443,7 +443,7 @@ namespace drawer
             if (lenght < starSize)
             {
                 SelectObject(window.context, brush2);
-                starHealth[i] -= .1;
+                starHealth[i] -= .1f;
 
             }
         }
