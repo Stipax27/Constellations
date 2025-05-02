@@ -321,8 +321,10 @@ point3d drawString(const char* str,float x, float y, float scale, bool centered,
 {
     preprocessFont();
 
+    scale = scale * window.width / 2560.;
+
     float tracking = 10;
-    float interline = 40;
+    float interline = 40*scale;
 
     HPEN pen = CreatePen(PS_SOLID, 3, textStyle.color);
     SelectObject(window.context, pen);

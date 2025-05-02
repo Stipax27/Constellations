@@ -28,13 +28,13 @@ void initWeapon() {
 
     weapon[(int)weapon_name::Shield].damage = 0.2;
     weapon[(int)weapon_name::Shield].defense = 0.5;
-    weapon[(int)weapon_name::Shield].attackSpeed = 2000;
+    weapon[(int)weapon_name::Shield].attackSpeed = 750;
     weapon[(int)weapon_name::Shield].name = "shield";
     weapon[(int)weapon_name::Shield].constellation = &Shield;
 
     weapon[(int)weapon_name::Bow].damage = 0.5;
     weapon[(int)weapon_name::Bow].defense = 0.2;
-    weapon[(int)weapon_name::Bow].attackSpeed = 2000;
+    weapon[(int)weapon_name::Bow].attackSpeed = 750;
     weapon[(int)weapon_name::Bow].name = "bow";
     weapon[(int)weapon_name::Bow].constellation = &Bow;
 
@@ -59,7 +59,8 @@ float getConstellationHP(Constellation& Constellation)
     std::vector <float>& starHealth = Constellation.starsHealth;
 
     int starsCount = starHealth.size();
-    float health = 0;
+    float health = 0.f;
+
     for (int i = 0; i < starsCount; i++)
     {
         health += starHealth[i];
@@ -96,15 +97,13 @@ void enemyAttack(Constellation& Constellation)
     auto player_const = *starSet[player_sign];
     for ( int i = 0; i < starsCount; i++)
     {
-        if (starHealth[i] > 0)
+        starHealth[i] -= 0.05;
+        
+        if (starHealth[i] < 0)
         {
-            starHealth[i] -= 0.1;
-            
-            if (starHealth[i] < 0)
-            {
-                starHealth[i] = 0;
-            }
+            starHealth[i] = 0;
         }
+    
     }
      
     isDamageHero = true;

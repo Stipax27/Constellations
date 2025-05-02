@@ -209,7 +209,10 @@ namespace drawer
             point.y = p1.y + dy * (float)i/(float)(count-1);
             point.z = p1.z + dz * (float)i/(float)(count-1);
 
+            if (modelProject)
+            {
             modelProject(point);
+            }
 
             float sz = 1 + .5 * sinf(i + currentTime * .01);
             drawPoint(point, sz);
@@ -311,6 +314,8 @@ namespace drawer
     float attackStartTime = 0;
     float attackAmp;
     float attack_time;
+    float attack_cooldown;
+    bool attackCooldown = true;
 
 
 
@@ -358,10 +363,12 @@ namespace drawer
         if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true)
         {
 
-            if (current_weapon == weapon_name::Sword and line_hit < 1.01 or current_weapon == weapon_name::Shield and distToCenter <= shieldRadius
+            if (current_weapon == weapon_name::Sword and line_hit < 1.01
+                or current_weapon == weapon_name::Shield and distToCenter <= shieldRadius
                 or current_weapon == weapon_name::Bow and distToStart <= hitRadius)
             {
                 starHealth[i] -= weapon[(int)current_weapon].damage;
+
             }
 
         }
@@ -464,7 +471,7 @@ namespace drawer
             if (lenght < starSize)
             {
                 SelectObject(window.context, brush2);
-                starHealth[i] -= .1;
+                starHealth[i] -= .1f;
 
             }
         }
@@ -806,9 +813,7 @@ namespace drawer
 
     void enemyFight()
     {
-
-
-        float e = 1000;
+                float e = 10000;
         if (currentTime > attackTime + e)
         {
             attackTime = currentTime;
@@ -838,9 +843,9 @@ namespace drawer
             // ????????????????
         }
         
-    if (getConstellationHP(*starSet[player_sign]) <=0)
+        if (getConstellationHP(*starSet[player_sign]) <= 0.f)
         {
-            gameState == gameState_::EndFight;
+            gameState = gameState_::EndFight;
         }
     }
 
@@ -983,6 +988,7 @@ namespace drawer
 
     void SelectVectorAttack()
     {
+        if (attackCooldown == false) return;
         if (current_weapon == weapon_name::Sword)
         {
 
@@ -1044,8 +1050,8 @@ namespace drawer
         modelProject = &fightProject;
 
         // Параметры временного бара
-        const float barWidth = 100;
-        const float barHeight = 50;
+        const float barWidth = 300;
+        const float barHeight = 60;
         const float barX = 0;
         const float barY = .3;
         const float starCount = 10;
@@ -1054,10 +1060,11 @@ namespace drawer
         point3d Bar = { barX, barY,0 };
 
         modelTransform(Bar, *starSet[currentEnemyID]);
+        modelProject(Bar);
 
         // Создаем точки для рамки
         point3d topLeft = { Bar.x - barWidth/2, Bar.y, 0 };
-        point3d topRight = { Bar.x + barWidth / 2 + barWidth, Bar.y, 0 };
+        point3d topRight = { Bar.x + barWidth / 2, Bar.y, 0 };
         point3d bottomLeft = { Bar.x - barWidth / 2, Bar.y + barHeight, 0 };
         point3d bottomRight = { Bar.x + barWidth /2, Bar.y + barHeight, 0 };
 
@@ -1065,14 +1072,14 @@ namespace drawer
         modelTransform(topRight, enemy_const);
         modelTransform(bottomLeft, enemy_const);
         modelTransform(bottomRight, enemy_const);*/
-
+        modelProject = NULL;
         // Рисуем рамку
-        drawer::drawLine(topLeft, topRight, 50);    // Верх
-        drawer::drawLine(bottomLeft, bottomRight, 50); // Низ
-        drawer::drawLine(topLeft, bottomLeft, 5);  // Лево
-        drawer::drawLine(bottomRight, topRight, 5); // Право
+        drawLine(topLeft, topRight, 50);    // Верх
+        drawLine(bottomLeft, bottomRight, 50); // Низ
+        drawLine(topLeft, bottomLeft, 5);  // Лево
+        drawLine(bottomRight, topRight, 5); // Право
 
-
+        
 
         // Рисуем заполнение из звёзд
         int activeStars = (int)(starCount * progress);
@@ -1080,9 +1087,9 @@ namespace drawer
 
         for (int i = 0; i < starCount; i++) {
             point3d star = {
-                barX + (i + 1) * starSpacing,
-                barY + barHeight / 2,
-                0
+                Bar.x + (i + 1) * starSpacing -barWidth / 2,
+                Bar.y + barHeight / 2,
+                Bar.z
             };
 
             float currentSize = (i < activeStars) ? starSize * 1.5f : starSize * .0;
@@ -1092,37 +1099,38 @@ namespace drawer
                 currentSize += pulse * 2.0f;
             }
 
-            modelTransform(star, enemy_const);
-            modelProject(star);
+            //modelTransform(star, enemy_const);
+            //modelProject(star);
 
-            drawer::drawPoint(star, currentSize);
+            drawPoint(star, currentSize);
         }
 
         // Соединяем звёзды
         for (int i = 0; i < starCount - 1; i++) {
             point3d star1 = {
-                barX + (i + 1) * starSpacing,
-                barY + barHeight / 2,
-                0
+                Bar.x + (i + 1) * starSpacing - barWidth / 2,
+                Bar.y + barHeight / 2,
+                Bar.z
             };
 
             point3d star2 = {
-                barX + (i + 2) * starSpacing,
-                barY + barHeight / 2,
-                0
+                Bar.x + (i + 2) * starSpacing - barWidth / 2,
+                Bar.y + barHeight / 2,
+                Bar.z
             };
 
-            modelTransform(star1, enemy_const);
-            modelTransform(star2, enemy_const);
+            //modelTransform(star1, enemy_const);
+            //modelTransform(star2, enemy_const);
+           
 
-            int lineSegments = (i < activeStars - 1) ? 10 : 5;
-            drawer::drawLine(star1, star2, lineSegments);
+            int lineSegments = ((i < activeStars - 1) ? 10 : 5);
+            drawLine(star1, star2, lineSegments);
         }
-
+        modelProject = &fightProject;
         point3d p = { 0,.3,0 };
         modelTransform(p, enemy_const);
         modelProject(p);
-        drawString(progressText.c_str(), p.x, p.y, 1, true);
+        drawString(progressText.c_str(), p.x, p.y-50, 1, true);
 
     }
 
@@ -1280,7 +1288,7 @@ void UpdateGame() {
             
             DrawHpHeroBar();
             std::string timeStr = "Time: " + std::to_string(remainingTime / 1000);
-            drawString(timeStr.c_str(), window.width / 2, 10, 1.f, true);
+            drawString(timeStr.c_str(), window.width / 1.1, 45, 1.f, true);
 
             if (getConstellationHP(*starSet[currentEnemyID]) < 0)
             {
@@ -1361,7 +1369,7 @@ void UpdateGame() {
 
                 modelTransform = &placeConstToWorld;
 
-                for (int i = 0;i < starSet.size();i++)
+                for (int i = 0;i < 12;i++)
                 {
                     drawСonstellation(*starSet[i]);
                 }
@@ -1370,7 +1378,7 @@ void UpdateGame() {
                 TextOutA(window.context, window.width * 5 / 6, window.height-window.height/20., curentSignstring.c_str(), curentSignstring.size());
                 //drawString(curentSignstring, window.width * 5 / 6, window.height - window.height / 20., 1, false);
 
-                drawString("Find Aries and click on him", window.width/2, (200./1440)*window.height, 1, true);
+                drawString("Find Constallations and click on him", window.width/2, (200./1440)*window.height, 1, true);
                 drawString("Features:\nMouse wheel to zoom in and out", (1700./2560)*window.width,(1200./1440)*window.height , .7f, false);
                // drawColorCircle();
                 isBattleActive = false;
@@ -1417,6 +1425,28 @@ void UpdateGame() {
                 nearPlaneClip = 0;
 
                 
+
+                if (isShakingHero) {
+
+                    float beamTime = 4.*(currentTime - shakeStartTimeHero) / shakeDurationHero;
+                    if (beamTime > 1.) beamTime = 1;
+                    for (int i = 0;i < starSet[currentEnemyID]->starsCords.size();i++)
+                    {
+                        auto p1 = starSet[currentEnemyID]->starsCords[i];
+                        point3d p2 = starSet[player_sign]->starsCords[i% starSet[player_sign]->starsCords.size()];
+
+                        placeConstToWorld(p1, *starSet[currentEnemyID]);
+                        placeHeroToWorld(p2, *starSet[currentEnemyID]);
+
+                        p2.x = lerp(p1.x, p2.x, beamTime);
+                        p2.y = lerp(p1.y, p2.y, beamTime);
+                        p2.z = lerp(p1.z, p2.z, beamTime);
+
+
+                        drawLine(p1, p2, 50);
+                    }
+                }
+
                 if (isDamageTaken)
                 {
                     isDamageTaken = false;
@@ -1433,10 +1463,25 @@ void UpdateGame() {
                     EnemyUpdateConstellationAttack();
                 }
 
+                if (constellationFlight.isFlying) {
+                    UpdateConstellationAttack();
+                    //VectorWeapons(startPoint, *starSet[player_sign]);
+
+                    //drawLine(constellationFlight.startPos, constellationFlight.endPos, 50);
+                }
+
+                if (currentTime > attack_cooldown + 5000)
+                {
+                    attackCooldown = true;
+                }
+
+
                 if (!GetAsyncKeyState(VK_LBUTTON))
                 {
-                    if (attack_collision == true)
+                    if (attack_collision == true and attackCooldown == true)
                     {
+                        attack_cooldown = currentTime;
+                        attackCooldown = false;
                         check_attack = false;
                         attackStartTime = currentTime;
                         InitConstellationAttack();
@@ -1446,12 +1491,7 @@ void UpdateGame() {
                     
                     drawСonstellation(*starSet[currentEnemyID]);
 
-                    if (constellationFlight.isFlying) {
-                        UpdateConstellationAttack();
-                        //VectorWeapons(startPoint, *starSet[player_sign]);
-                        
-                        //drawLine(constellationFlight.startPos, constellationFlight.endPos, 50);
-                    }
+
 
                     linksDivider = 15;
                     modelTransform = &placeHeroToWorld;
@@ -1517,6 +1557,8 @@ void UpdateGame() {
                     isShakingHero = false;
                 }
 
+
+
                 SelectObject(window.context, heroBrush);
                 SelectObject(window.context, heroPen);
 
@@ -1531,17 +1573,27 @@ void UpdateGame() {
 
                
                 std::string curentSignstring = zodiacSignToString(currentEnemyID);
-                drawString(curentSignstring.c_str(), window.width / 2, window.height / 20., 1, true);
+                drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);
 
                 curentSignstring = zodiacSignToString(player_sign);
-                drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 15., 1, true);
+                drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 7., 1, true);
 
                 curentSignstring = "current weapon: " + weapon[(int)current_weapon].name;
-                drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 30., 1, true);
+                drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 10., 1, true);
 
-                drawString("Weapon selection:\nButton 1 - Sword \nButton 2 - Shield \nButton 3 - Bow ", (1700./2560)*window.width, (1100. / 1440)* window.height, .7f, false);
+                drawString("Weapon selection:\nButton 1 - Sword \nButton 2 - Shield \nButton 3 - Bow ", (1700. / 2560)* window.width, (1100. / 1440)* window.height, .7f, false);
                 drawString("Rewind time:\nbutton - E", (500. / 2560)* window.width, (1200. / 1440)* window.height, .7f, false);
-                drawString("TUTORIAL:\nTo hit an enemy with a sword,\npress LMB and draw a line along the enemy star\nTo hit with a shield,\npress LMB and draw a line that will draw a circle that attacks stars\nTo hit with a bow,\npress LMB on the star and draw a vector in any direction from the star.", (50. / 2560)* window.width, (50. / 1440)* window.height, .7f, false);
+                drawString("TUTORIAL:\nTo hit an enemy with a sword,\npress LMB and draw a line along the enemy star\nTo hit with a shield,\npress LMB and draw a line that will draw a circle that attacks stars\nTo hit with a bow,\npress LMB on the star and draw a vector in any direction from the star.", (60. / 2560)* window.width, (60. / 1440)* window.height, .7f, false);
+
+
+                float cdTimeOut =1.- (currentTime - attack_cooldown) / 5000.;
+                cdTimeOut *= 10;
+                std::string cdTimeOutText = std::to_string((int)cdTimeOut);
+                if (cdTimeOut > 0)
+                {
+                    drawString("recharge", window.width * .9, window.height * .85, 1., false);
+                    drawString(cdTimeOutText.c_str(), window.width * .9, window.height * .9, 3., false);
+                }
 
                 UpdateGame();
                 
