@@ -59,14 +59,27 @@ namespace drawer
         rotateY(p, mouseAngle.x * 0.1);
     }
 
+    
+    float hs;
+    float vs;
+
     void placeConstToStartMenu(point3d& p, Constellation& Constellation)
     {
+        float ofs = -.5;
+        p.x -= hs;
+        p.y -= vs;
+
         p.x *= 200;
         p.y *= 200;
         p.z *= 200;
+
         //move(p, offset.x, offset.y, offset.z);
         float a = currentTime;
         rotateY(p, a * 0.1);
+
+        p.x += hs;
+        p.y += vs;
+
         move(p, 0, 0, 1300);
     }
 
@@ -704,6 +717,24 @@ namespace drawer
         linksDivider = 15;
         if (gameState == gameState_::confirmSign) n = player_sign;
         //draw—onstellation(*starSet[n]);
+
+
+        float xmin = 100000;
+        float xmax = 0;
+        float ymin = 100000;
+        float ymax = 0;
+
+        auto& starsCords = starSet[player_sign]->starsCords;
+
+        for (auto& star : starsCords) {
+            xmin = min(xmin, star.x);
+            ymin = min(ymin, star.y);
+            xmax = max(xmax, star.x);
+            ymax = max(ymax, star.y);
+        }
+
+         hs = -(xmax - xmin)/2;
+         vs = -(ymax - ymin)/2;
 
         draw—onstellation(*starSet[player_sign]);
         
