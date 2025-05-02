@@ -98,7 +98,7 @@ void enemyAttack(Constellation& Constellation)
     {
         if (starHealth[i] > 0)
         {
-            starHealth[i] -= 0.1;
+            starHealth[i] -= 0.05;
             
             if (starHealth[i] < 0)
             {

@@ -283,6 +283,7 @@ namespace drawer
     float attackStartTime = 0;
     float attackAmp;
     float attack_time;
+    float attack_cooldown;
 
 
 
@@ -330,10 +331,12 @@ namespace drawer
         if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true)
         {
 
-            if (current_weapon == weapon_name::Sword and line_hit < 1.01 or current_weapon == weapon_name::Shield and distToCenter <= shieldRadius
+            if (current_weapon == weapon_name::Sword and line_hit < 1.01
+                or current_weapon == weapon_name::Shield and distToCenter <= shieldRadius
                 or current_weapon == weapon_name::Bow and distToStart <= hitRadius)
             {
                 starHealth[i] -= weapon[(int)current_weapon].damage;
+
             }
 
         }
@@ -885,6 +888,7 @@ namespace drawer
 
     void SelectVectorAttack()
     {
+        if (currentTime < attack_cooldown + 5000) return;
         if (current_weapon == weapon_name::Sword)
         {
 
@@ -1238,10 +1242,19 @@ void UpdateGame() {
                 }
 
 
+                if (constellationFlight.isFlying) {
+                    UpdateConstellationAttack();
+                    //VectorWeapons(startPoint, *starSet[player_sign]);
+
+                    //drawLine(constellationFlight.startPos, constellationFlight.endPos, 50);
+                }
+
+
                 if (!GetAsyncKeyState(VK_LBUTTON))
                 {
-                    if (attack_collision == true)
+                    if (attack_collision == true and currentTime > attack_cooldown + 5000)
                     {
+                        attack_cooldown = currentTime;
                         check_attack = false;
                         attackStartTime = currentTime;
                         InitConstellationAttack();
@@ -1251,12 +1264,7 @@ void UpdateGame() {
                     
                     draw—onstellation(*starSet[currentEnemyID]);
 
-                    if (constellationFlight.isFlying) {
-                        UpdateConstellationAttack();
-                        //VectorWeapons(startPoint, *starSet[player_sign]);
-                        
-                        //drawLine(constellationFlight.startPos, constellationFlight.endPos, 50);
-                    }
+
 
                     linksDivider = 15;
                     modelTransform = &placeHeroToWorld;
