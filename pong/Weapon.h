@@ -60,6 +60,7 @@ float getConstellationHP(Constellation& Constellation)
 
     int starsCount = starHealth.size();
     float health = 0;
+
     for (int i = 0; i < starsCount; i++)
     {
         health += starHealth[i];
@@ -96,15 +97,13 @@ void enemyAttack(Constellation& Constellation)
     auto player_const = *starSet[player_sign];
     for ( int i = 0; i < starsCount; i++)
     {
-        if (starHealth[i] > 0)
+        starHealth[i] -= 0.05;
+        
+        if (starHealth[i] < 0)
         {
-            starHealth[i] -= 0.05;
-            
-            if (starHealth[i] < 0)
-            {
-                starHealth[i] = 0;
-            }
+            starHealth[i] = 0;
         }
+    
     }
      
     isDamageHero = true;

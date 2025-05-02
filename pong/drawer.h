@@ -738,9 +738,9 @@ namespace drawer
 
         }
         
-    if (getConstellationHP(*starSet[player_sign]) <=0)
+        if (getConstellationHP(*starSet[player_sign]) <= 0.f)
         {
-            gameState == gameState_::EndFight;
+            gameState = gameState_::EndFight;
         }
     }
 
