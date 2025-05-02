@@ -1273,7 +1273,7 @@ void UpdateGame() {
 
                 modelTransform = &placeConstToWorld;
 
-                for (int i = 0;i < starSet.size();i++)
+                for (int i = 0;i < 12;i++)
                 {
                     drawÑonstellation(*starSet[i]);
                 }
@@ -1282,7 +1282,7 @@ void UpdateGame() {
                 TextOutA(window.context, window.width * 5 / 6, window.height-window.height/20., curentSignstring.c_str(), curentSignstring.size());
                 //drawString(curentSignstring, window.width * 5 / 6, window.height - window.height / 20., 1, false);
 
-                drawString("Find Aries and click on him", window.width/2, (200./1440)*window.height, 1, true);
+                drawString("Find Constallations and click on him", window.width/2, (200./1440)*window.height, 1, true);
                 drawString("Features:\nMouse wheel to zoom in and out", (1700./2560)*window.width,(1200./1440)*window.height , .7f, false);
                // drawColorCircle();
                 isBattleActive = false;

@@ -36,12 +36,12 @@ void initContentData() {
     // Начальные нарративные тексты
     narratives.push_back({ "MC: \"Who... am I?\" "});
     narratives.push_back({ "MC: \"And where?\" "});
-    narratives.push_back({ "He instinctively tries to perform at least some action, '\n' as if wanting to wake up from a cold oblivion. '\n' A pleasant pulsation begins to spread through his being." });
-    narratives.push_back({ "A pair of palms slid off his face, opening his eyes and allowing him to see the space around him that filled with dim light sources. '\n' His mind was trying to assess the situation around him, creating even more questions that he didn't know the answers to. '\n' It was if a shadow had enveloped his mind, leaving only fragmented thoughts..."});
-    narratives.push_back({ "At this most desperate moment, he suddenly felt someone's powerful presence. '\n' A bright creature appeared in front of him, starting to resonate with his mind." });
+    narratives.push_back({ "He instinctively tries to perform at least some action, \n as if wanting to wake up from a cold oblivion. \n A pleasant pulsation begins to spread through his being." });
+    narratives.push_back({ "A pair of palms slid off his face,\n opening his eyes and allowing him to see the space around him that filled with dim light sources. \n His mind was trying to assess the situation around him,\n creating even more questions that he didn't know the answers to. \n It was if a shadow had enveloped his mind, leaving only fragmented thoughts..."});
+    narratives.push_back({ "At this most desperate moment, he suddenly felt someone's powerful presence. \n A bright creature appeared in front of him, starting to resonate with his mind." });
 
     // Основная цепочка диалогов
-    Dialog d0("Zenith: \"I can hear the questions in your tiny mind, and I have the answers. '\n' I am Zenith, the being who rules this world, and You are my creation, which  '\n'I have formed for a specific purpose. '\n' You have appeared in a place beyond your limited understanding. '\n' The boundless space around you is a canvas on which the world takes shape, and you are just a shell. '\n' But even such an insignificant creature has a reason to exist...  '\n'For example, to fulfill the will of your creator.\"");
+    Dialog d0("Zenith: \"I can hear the questions in your tiny mind, and I have the answers. \n I am Zenith, the being who rules this world, and You are my creation, which  '\n'I have formed for a specific purpose. '\n' You have appeared in a place beyond your limited understanding. \n The boundless space around you is a canvas on which the world takes shape, and you are just a shell. \n But even such an insignificant creature has a reason to exist...  \nFor example, to fulfill the will of your creator.\"");
 
     answer v0_1;
     v0_1.text = "What do you want from me?";
@@ -56,7 +56,7 @@ void initContentData() {
     dialogs.push_back(d0);
 
     // Ответ на первый вариант
-    Dialog d1("Zenith: \"My power is immense and can be destructive if I interfere with the delicate weaves of this world's destinies. '\n' But you... You are just a faint echo of my power, '\n' which is now responsible for the future fate of this universe. '\n' So open your mind and listen to my words!\"");
+    Dialog d1("Zenith: \"My power is immense and can be destructive if \nI interfere with the delicate weaves of this world's destinies. \n But you... You are just a faint echo of my power, \n which is now responsible for the future fate of this universe. \n So open your mind and listen to my words!\"");
 
     answer v1_1;
     v1_1.text = "Continue";
@@ -66,7 +66,7 @@ void initContentData() {
     dialogs.push_back(d1);
 
     // Ответ на второй вариант
-    Dialog d2("Zenith: \"You don't need to understand now. Just know that you were created for a great purpose, '\n' and in time all will become clear to you.\"");
+    Dialog d2("Zenith: \"You don't need to understand now. Just know that you were created for a great purpose, \n and in time all will become clear to you.\"");
 
     answer v2_1;
     v2_1.text = "Continue";
@@ -76,9 +76,9 @@ void initContentData() {
     dialogs.push_back(d2);
 
     // Продолжение сюжета
-    narratives.push_back({ "The star cluster is approaching and is beginning to take on clearer outlines, '\n' resembling a man that dressed in shimmering white robes.  '\n'He waves his hand and small lights begin to circle around, '\n' which line up to form the shapes of constellations." });
+    narratives.push_back({ "The star cluster is approaching and is beginning to take on clearer outlines, \n resembling a man that dressed in shimmering white robes.  \nHe waves his hand and small lights begin to circle around, \n which line up to form the shapes of constellations." });
 
-    Dialog d3("Zenith: \"Do you see these bizarre connections in front of you? These are constellations. '\n' They represent a fundamental aspect of the natural order of things that maintain a delicate balance in this world. '\n' Among them, I will single out the oldest constellation: Aries. '\n' I learned that Aries was shrouded in a fog of corruption, '\n' a malevolent force that threatens to disrupt the harmony of existence.\"");
+    Dialog d3("Zenith: \"Do you see these bizarre connections in front of you? These are constellations. \n They represent a fundamental aspect of the natural order of things that maintain\n a delicate balance in this world. \n Among them, I will single out the oldest constellation: Aries. \n I learned that Aries was shrouded in a fog of corruption, \n a malevolent force that threatens to disrupt the harmony of existence.\"");
 
     answer v3_1;
     v3_1.text = "What should I do?";
@@ -87,7 +87,7 @@ void initContentData() {
 
     dialogs.push_back(d3);
 
-    Dialog d4("Zenith: \"The domain of Aries is not far from us, and you must find and save it from the corruption that has consumed its being. '\n' He occupies a special place in the cosmic order '\n' and it is his absence that causes ripples in the fabric of reality.\"");
+    Dialog d4("Zenith: \"The domain of Aries is not far from us, and you must find and save it from the corruption that has consumed its being. \n He occupies a special place in the cosmic order \n and it is his absence that causes ripples in the fabric of reality.\"");
 
     answer v4_1;
     v4_1.text = "But I'm powerless... How could I save Aries?";
@@ -96,7 +96,7 @@ void initContentData() {
 
     dialogs.push_back(d4);
 
-    Dialog d5("Zenith: \"I see the fire in your eyes, my creature. '\n' But you doubt your abilities. Let me explain. '\n' You are not just a shell that is devoid of essence. '\n' I have given you the ability to take shape and change to adapt to any situation. '\n' The shell in which you see yourself is just a basic form, '\n' something like a template on the basis of which you can build and shape anything out of yourself.\"");
+    Dialog d5("Zenith: \"I see the fire in your eyes, my creature. \n But you doubt your abilities. Let me explain. \n You are not just a shell that is devoid of essence. \n I have given you the ability to take shape and change to adapt to any situation. \n The shell in which you see yourself is just a basic form, \n something like a template on the basis of which you can build and shape anything out of yourself.\"");
 
     answer v5_1;
     v5_1.text = "I understand... I'll try";
@@ -105,7 +105,7 @@ void initContentData() {
 
     dialogs.push_back(d5);
 
-    Dialog d6("Zenith: \"Your true strength lies not in your physical form, '\n' but in your ability to adapt, learn, and become what the situation requires of you. '\n' Your other ability is to purify constellations from corruption. '\n' You are my vessel, a flexible instrument with the ability to absorb filth and purify cosmic energy. '\n' By purifying Aries, you will draw out all the corruption from him '\n' and seal the negative energy inside yourself.\"");
+    Dialog d6("Zenith: \"Your true strength lies not in your physical form, \n but in your ability to adapt, learn, and become what the situation requires of you. \n Your other ability is to purify constellations from corruption. \n You are my vessel, a flexible instrument with the ability to absorb filth and purify cosmic energy. \n By purifying Aries, you will draw out all the corruption from him \n and seal the negative energy inside yourself.\"");
 
     answer v6_1;
     v6_1.text = "I accept this burden";
@@ -114,7 +114,7 @@ void initContentData() {
 
     dialogs.push_back(d6);
 
-    Dialog d7("Zenith: \"Beware, my creation, because the corruption you absorb will affect you as well.  '\n'You must be prepared to face the consequences of your actions '\n' and remain strong in the face of the darkness you seek to purify.  '\n'If you're ready to take on this assignment, I'll show you the way.\"");
+    Dialog d7("Zenith: \"Beware, my creation, because the corruption you absorb will affect you as well.  \nYou must be prepared to face the consequences of your actions \n and remain strong in the face of the darkness you seek to purify.  \nIf you're ready to take on this assignment, I'll show you the way.\"");
 
     answer v7_1;
     v7_1.text = "I'm ready";

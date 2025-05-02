@@ -28,12 +28,13 @@ bool drawClickableText(
     const std::string text,
     bool center,
     COLORREF COLOR_HOVER,
-    int x = 0, int y = 0
-) {
+    int x = 0, int y = 0,
+    float scale = 1.f) 
+{
 
     COLORREF COLOR_REGULAR = RGB(160, 160, 160);
 
-    point3d sz = drawString(text.c_str(), x, y, 1.f, true,true);
+    point3d sz = drawString(text.c_str(), x, y, scale, true,true);
 
     bool isHovered = (mouse.x > x-sz.x/2 && mouse.x < x + sz.x/2 &&
         mouse.y > y && mouse.y < y + sz.y);
@@ -41,7 +42,7 @@ bool drawClickableText(
     textStyle.color= isHovered ? COLOR_HOVER : COLOR_REGULAR;
 
 
-    drawString(text.c_str(), x, y, 1.f, true);
+    drawString(text.c_str(), x, y, scale, true);
 
 
     //TextOutA(window.context, textX, textY, text.c_str(), text.size());
@@ -107,9 +108,9 @@ void menuMonthprocessing()
     //drawCircularMenu(450, 0.00001, mounthString, 12, first);
     drawCircularMenu(450, 0.0001, mounthString, 12, first);
 
-    drawString(mounthToString(player_month).c_str(), window.width / 2 -600, 50,1,true);
+    drawString(mounthToString(player_month).c_str(), window.width *.1, window.height/2.,1,true);
     
-    drawString("select your date of birth.", window.width / 2, 20, 1, true);
+    drawString("select your date of birth.", window.width / 2, window.height*.05, 1, true);
     
 }
 
@@ -132,14 +133,14 @@ void menuDayprocessing()
 
     drawCircularMenu(300, 0.00002, days, 31, second);
 
-    drawString(days[0].c_str(), window.width / 2 + 600, 50, 1, true);// Вывод 1го числа 
+    drawString(days[player_day-1].c_str(), window.width / 2 + 800, window.height / 2., 1, true);// Вывод 1го числа 
 }
 
 void menuConfirmationButton()
 {
    
 
-    if (drawClickableText("Play", false, RGB(0, 191, 255), window.width / 2, window.height / 1.6))
+    if (drawClickableText("Play", false, RGB(0, 191, 255), window.width / 2, window.height - window.height*.1,2.5))
     {
         gameState = gameState_::DialogStruct;
         
@@ -238,7 +239,15 @@ void winFight()
 
 void endFight()
 {
-    
+    for (int i =0;i<12;i++) 
+    {
+        auto& currentConst = starSet[i];
+
+        for (int j = 0; j< currentConst->starsHealth.size(); j++)
+        {
+            currentConst->starsHealth[j] = 1;
+        }
+    }
     if (drawClickableText("You Lose (((", true, RGB(0, 191, 255),window.width/2,window.height/2))
     {
         gameState = gameState_::MainMenu;
