@@ -28,13 +28,13 @@ void initWeapon() {
 
     weapon[(int)weapon_name::Shield].damage = 0.2;
     weapon[(int)weapon_name::Shield].defense = 0.5;
-    weapon[(int)weapon_name::Shield].attackSpeed = 2000;
+    weapon[(int)weapon_name::Shield].attackSpeed = 750;
     weapon[(int)weapon_name::Shield].name = "shield";
     weapon[(int)weapon_name::Shield].constellation = &Shield;
 
     weapon[(int)weapon_name::Bow].damage = 0.5;
     weapon[(int)weapon_name::Bow].defense = 0.2;
-    weapon[(int)weapon_name::Bow].attackSpeed = 2000;
+    weapon[(int)weapon_name::Bow].attackSpeed = 750;
     weapon[(int)weapon_name::Bow].name = "bow";
     weapon[(int)weapon_name::Bow].constellation = &Bow;
 
