@@ -31,7 +31,56 @@ struct point3d{
     bool operator!=(const point3d& other) const {
         return !(*this == other);
     }
+
+    point3d operator+(const point3d& other) const {
+        return point3d{ x + other.x, y + other.y, z + other.z };
+    }
+
+    point3d& operator+=(const point3d& other) {
+        x += other.x;
+        y += other.y;
+        z += other.z;
+        return *this;
+    }
+
+    point3d operator-(const point3d& other) const {
+        return point3d{ x - other.x, y - other.y, z - other.z };
+    }
+
+    point3d& operator-=(const point3d& other) {
+        x -= other.x;
+        y -= other.y;
+        z -= other.z;
+        return *this;
+    }
+
+    point3d operator*(float scalar) const {
+        return point3d{ x * scalar, y * scalar, z * scalar };
+    }
+
+    point3d& operator*=(const point3d& other) {
+        x *= other.x;
+        y *= other.y;
+        z *= other.z;
+        return *this;
+    }
+
+    point3d operator/(float scalar) const {
+        return point3d{ x / scalar, y / scalar, z / scalar };
+    }
+
+    point3d& operator/=(const point3d& other) {
+        x /= other.x;
+        y /= other.y;
+        z /= other.z;
+        return *this;
+    }
 };
+
+point3d operator*(float scalar, const point3d& point) {
+    return point * scalar;
+};
+
 
 const float starSize = 10;
 int startTime;

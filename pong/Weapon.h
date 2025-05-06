@@ -1,3 +1,4 @@
+
 struct weapon_ {
     float damage;
     float defense;

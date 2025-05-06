@@ -1211,16 +1211,14 @@ void UpdateGame() {
     }
 }
  
-//void drawWeapon(point3d& p,Constellation& Constellations) 
-//{
-//    srand(10);
-//    for (int i = 0; i < 1; i++)
-//    {
-//       float rand()
-//        
-//    drawÑonstellation(*weapon[(int)current_weapon].constellation);
-//    }
-//}
+void cmath(point3d& p) 
+{
+    point3d Bla;
+    Bla.x / 10.;
+    Bla.y / 10.;
+    Bla.z / 10.;
+
+}
 
 
 
