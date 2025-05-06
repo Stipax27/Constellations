@@ -42,6 +42,12 @@ struct point3d{
         z += other.z;
         return *this;
     }
+    point3d& operator+=(float scalar) {
+        x += scalar;
+        y += scalar;
+        z += scalar;
+        return *this; 
+    }
 
     point3d operator-(const point3d& other) const {
         return point3d{ x - other.x, y - other.y, z - other.z };
@@ -54,8 +60,22 @@ struct point3d{
         return *this;
     }
 
+    point3d& operator-=(float scalar) {
+        x -= scalar;
+        y -= scalar;
+        z -= scalar;
+        return *this;
+    }
+
     point3d operator*(float scalar) const {
         return point3d{ x * scalar, y * scalar, z * scalar };
+    }
+
+    point3d& operator*=(float scalar) { 
+        x *= scalar;  
+        y *= scalar;
+        z *= scalar;
+        return *this; 
     }
 
     point3d& operator*=(const point3d& other) {
@@ -73,6 +93,13 @@ struct point3d{
         x /= other.x;
         y /= other.y;
         z /= other.z;
+        return *this;
+    }
+
+    point3d& operator/=(float scalar) {
+        x /= scalar;
+        y /= scalar;
+        z /= scalar;
         return *this;
     }
 };

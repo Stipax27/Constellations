@@ -13,9 +13,7 @@ namespace drawer
         rotateX(p, Constellation.angle.x);
         rotateY(p, Constellation.angle.y);
         rotateZ(p, Constellation.angle.z);
-        p.x *= Constellation.scale;
-        p.y *= Constellation.scale;
-        p.z *= Constellation.scale;
+        p *= Constellation.scale;
 
         rotateX(p, mouseAngle.y * 0.1);
         rotateY(p, mouseAngle.x * 0.1);
@@ -27,9 +25,7 @@ namespace drawer
         rotateX(p, Constellation.angle.x);
         rotateY(p, Constellation.angle.y);
         rotateZ(p, Constellation.angle.z);
-        p.x *= Constellation.scale;
-        p.y *= Constellation.scale;
-        p.z *= Constellation.scale;
+        p *= Constellation.scale;
 
         rotateX(p, mouseAngle.y * 0.1);
         rotateY(p, mouseAngle.x * 0.1);
@@ -37,9 +33,8 @@ namespace drawer
 
     void placeConstToStartMenu(point3d& p, Constellation& Constellation)
     {
-        p.x *= 200;
-        p.y *= 200;
-        p.z *= 200;
+        p *= 200;
+
         //move(p, offset.x, offset.y, offset.z);
         float a = currentTime;
         rotateY(p, a * 0.1);
@@ -59,16 +54,10 @@ namespace drawer
 
         fightMove(p);
 
-        p.x *= .13;
-        p.y *= .13;
-        p.z *= .13;
-        //rotateX(p, Constellation.angle.x);
-        //rotateY(p, Constellation.angle.y);
-        //rotateZ(p, Constellation.angle.z);
-        p.x *= Constellation.scale;
-        p.y *= Constellation.scale;
-        p.z *= Constellation.scale;
+        p *= .13;
 
+        p *= Constellation.scale;
+       
         rotateX(p, mouseAngle.y * 0.1);
         rotateY(p, mouseAngle.x * 0.1);
     }
@@ -79,18 +68,10 @@ namespace drawer
 
         fightMove(p);
 
-        p.x *= .13;
-        p.y *= .13;
-        p.z *= .13;
-        //rotateX(p, Constellation.angle.x);
-        //rotateY(p, Constellation.angle.y);
-        //rotateZ(p, Constellation.angle.z);
-        p.x *= Constellation.scale;
-        p.y *= Constellation.scale;
-        p.z *= Constellation.scale;
-
-        //rotateX(p, mouseAngle.y * 0.1);
-        //rotateY(p, mouseAngle.x * 0.1);
+        p *= .13;
+       
+        p *= Constellation.scale;
+       
     }
 
     void fightProject(point3d& p)
@@ -208,19 +189,15 @@ namespace drawer
         for (int i = 0; i < starsEdgesCount; i++)
         {
             point3d point1, point2;
-            point1.x = starArray[starEdges[i][0]].x;
-            point1.y = starArray[starEdges[i][0]].y;
-            point1.z = starArray[starEdges[i][0]].z;
-
-            point2.x = starArray[starEdges[i][1]].x;
-            point2.y = starArray[starEdges[i][1]].y;
-            point2.z = starArray[starEdges[i][1]].z;
+            point1 = starArray[starEdges[i][0]];
+            
+            point2 = starArray[starEdges[i][1]];
+           
 
             float a = currentTime * .01;
             modelTransform(point1, Constellation);
             modelTransform(point2, Constellation);
-            //if (starHealth[i] > 0 && starHealth[i + 1] > 0) - ¡˚ÎÓ
-
+            
             if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0) // - —Ú‡ÎÓ
             {
 
@@ -505,10 +482,8 @@ namespace drawer
         for (int i = 0; i < starsCount; i++)
         {
             point3d point;
-            point.x = starArray[i].x;
-            point.y = starArray[i].y;
-            point.z = starArray[i].z;
-
+            point = starArray[i];
+            
             float a = currentTime * .01;
             modelTransform(point, Constellation);
             modelProject(point);
@@ -844,9 +819,8 @@ namespace drawer
 
             
             for (auto& star : starSet[player_sign]->starsCords) {
-                star.x = homePos.x;
-                star.y = homePos.y;
-                star.z = homePos.z;
+                star = homePos;
+ 
             }
         }
         
@@ -1211,21 +1185,6 @@ void UpdateGame() {
     }
 }
  
-void cmath(point3d& p) 
-{
-    point3d Bla;
-    Bla.x / 10.;
-    Bla.y / 10.;
-    Bla.z / 10.;
-
-}
-
-
-
-
-    
-
-    
 
     void drawWorld()
     {
@@ -1244,12 +1203,10 @@ void cmath(point3d& p)
                 break;
 
             case gameState_::MonthSelection:
-                //drawPlayer—onstellationToMenu();
                 menuMonthprocessing();
                 break;
 
             case gameState_::DaySelection:
-                //drawPlayer—onstellationToMenu();
                 menuMonthprocessing();
                 menuDayprocessing();
                 break;
@@ -1306,7 +1263,7 @@ void cmath(point3d& p)
                 
 
                 modelTransform = &placeToWorld;
-                modelProject = &fightProject;
+                modelProject = &fightProject;  
                 uiFunc = &starIntersectUI;
                 linksDivider = 50;
                 drawStarField();

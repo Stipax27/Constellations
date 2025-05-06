@@ -15,8 +15,9 @@ void Shaking(point3d &p)
 
         float shakeOffsetX = ((rand() % 100 )/ 100. - .5) * shakeAmp;
         float shakeOffsetY = ((rand() % 100 )/ 100. - .5) * shakeAmp;
-        p.x += shakeOffsetX;
-        p.y += shakeOffsetY;
+
+        p += shakeOffsetX;
+        
     }
 }
 
@@ -37,8 +38,8 @@ void ShakingHero(point3d& p)
 
         float shakeOffsetX = ((rand() % 100) / 100. - .5) * shakeAmp;
         float shakeOffsetY = ((rand() % 100) / 100. - .5) * shakeAmp;
-        p.x += shakeOffsetX;
-        p.y += shakeOffsetY;
+
+        p += shakeOffsetX;
     }
 }
 
