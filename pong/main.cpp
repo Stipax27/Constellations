@@ -140,6 +140,8 @@ HPEN heroPen;
 #include "MainGame.h"
 #include "DiologTEXT.h"
 #include "DialogStruct.h"
+#include "Parametrics.h"
+#include "Player.h"
 #include "drawer.h"
 
 
@@ -174,7 +176,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         currentTime = timer::GetCounter();
 
-        mouseInput();
+        mouse.Input();
         drawer::drawWorld();//рисуем фон, ракетку и шарик
         BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно   
 

@@ -36,8 +36,8 @@ bool drawClickableText(
 
     point3d sz = drawString(text.c_str(), x, y, scale, true,true);
 
-    bool isHovered = (mouse.x > x-sz.x/2 && mouse.x < x + sz.x/2 &&
-        mouse.y > y && mouse.y < y + sz.y);
+    bool isHovered = (mouse.pos.x > x-sz.x/2 && mouse.pos.x < x + sz.x/2 &&
+        mouse.pos.y > y && mouse.pos.y < y + sz.y);
 
     textStyle.color= isHovered ? COLOR_HOVER : COLOR_REGULAR;
 
@@ -189,10 +189,10 @@ void StartMenu()
     point3d textSize = drawString(EXIT.c_str(), exitButtonPos.x, exitButtonPos.y, 1.f, true, true);
 
     
-    bool isHoveredNow = (mouse.x > exitButtonPos.x - textSize.x / 2 &&
-        mouse.x < exitButtonPos.x + textSize.x / 2 &&
-        mouse.y > exitButtonPos.y - textSize.y / 2 &&
-        mouse.y < exitButtonPos.y + textSize.y / 2);
+    bool isHoveredNow = (mouse.pos.x > exitButtonPos.x - textSize.x / 2 &&
+        mouse.pos.x < exitButtonPos.x + textSize.x / 2 &&
+        mouse.pos.y > exitButtonPos.y - textSize.y / 2 &&
+        mouse.pos.y < exitButtonPos.y + textSize.y / 2);
 
     
     if (isHoveredNow && !wasExitHovered)

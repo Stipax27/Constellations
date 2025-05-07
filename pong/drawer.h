@@ -1,8 +1,7 @@
 namespace drawer
 {
         
-    void (*modelTransform)(point3d& p, Constellation& Constellation);
-    void (*modelProject)(point3d& p);
+
 
 
     void placeConstToWorld(point3d& p, Constellation& Constellation)
@@ -15,8 +14,8 @@ namespace drawer
         rotateZ(p, Constellation.angle.z);
         p *= Constellation.scale;
 
-        rotateX(p, mouseAngle.y * 0.1);
-        rotateY(p, mouseAngle.x * 0.1);
+        rotateX(p, mouse.Angle.y * 0.1);
+        rotateY(p, mouse.Angle.x * 0.1);
     }
 
     void placeWeaponToWorld(point3d& p, Constellation& Constellation)
@@ -27,8 +26,8 @@ namespace drawer
         rotateZ(p, Constellation.angle.z);
         p *= Constellation.scale;
 
-        rotateX(p, mouseAngle.y * 0.1);
-        rotateY(p, mouseAngle.x * 0.1);
+        rotateX(p, mouse.Angle.y * 0.1);
+        rotateY(p, mouse.Angle.x * 0.1);
     }
 
     void placeConstToStartMenu(point3d& p, Constellation& Constellation)
@@ -43,8 +42,8 @@ namespace drawer
 
     void placeToWorld(point3d& p, Constellation& Constellation)
     {
-        rotateX(p, mouseAngle.y * 0.1);
-        rotateY(p, mouseAngle.x * 0.1);
+        rotateX(p, mouse.Angle.y * 0.1);
+        rotateY(p, mouse.Angle.x * 0.1);
     }
 
     void placeHeroToWorld(point3d& p, Constellation& Constellation)
@@ -58,8 +57,8 @@ namespace drawer
 
         p *= Constellation.scale;
        
-        rotateX(p, mouseAngle.y * 0.1);
-        rotateY(p, mouseAngle.x * 0.1);
+        rotateX(p, mouse.Angle.y * 0.1);
+        rotateY(p, mouse.Angle.x * 0.1);
     }
     
     void HeroUITransform(point3d& p, Constellation& Constellation)
@@ -219,8 +218,8 @@ namespace drawer
     {
         std::vector <float>& starHealth = Constellation.starsHealth;
 
-        float dx = point.x - mouse.x;
-        float dy = point.y - mouse.y;
+        float dx = point.x - mouse.pos.x;
+        float dy = point.y - mouse.pos.y;
         float lenght = sqrt(dx * dx + dy * dy);
 
         float rad = saturate(1.2 - lenght * .05) * fabs(sin(currentTime * .01));
@@ -274,8 +273,8 @@ namespace drawer
     {
         std::vector <float>& starHealth = Constellation.starsHealth;
 
-        float dx = point.x - mouse.x;
-        float dy = point.y - mouse.y;
+        float dx = point.x - mouse.pos.x;
+        float dy = point.y - mouse.pos.y;
         float lenght = sqrt(dx * dx + dy * dy);
 
         float rad = saturate(1.2 - lenght * .05) * fabs(sin(currentTime * .01));
@@ -408,8 +407,8 @@ namespace drawer
     {
         std::vector <float>& starHealth = Constellation.starsHealth;
 
-        float dx = point.x - mouse.x;
-        float dy = point.y - mouse.y;
+        float dx = point.x - mouse.pos.x;
+        float dy = point.y - mouse.pos.y;
         float lenght = sqrt(dx * dx + dy * dy);
 
         float rad = saturate(1.2 - lenght * .05) * fabs(sin(currentTime * .01));
@@ -437,8 +436,8 @@ namespace drawer
     {
         std::vector <float>& starHealth = Constellation.starsHealth;
 
-        float dx = point.x - mouse.x;
-        float dy = point.y - mouse.y;
+        float dx = point.x - mouse.pos.x;
+        float dy = point.y - mouse.pos.y;
         float lenght = sqrt(dx * dx + dy * dy);
 
         float rad = saturate(1.2 - lenght * .05) * fabs(sin(currentTime * .01));
@@ -616,10 +615,10 @@ namespace drawer
         }
 
         Ellipse(window.context,
-            mouse.x - starSize,
-            mouse.y - starSize,
-            mouse.x + starSize,
-            mouse.y + starSize
+            mouse.pos.x - starSize,
+            mouse.pos.y - starSize,
+            mouse.pos.x + starSize,
+            mouse.pos.y + starSize
         );
 
         for (int i = 0; i < numColors;i++)
@@ -722,13 +721,13 @@ namespace drawer
     void drawShieldCircle() 
     {
 
-        float dx = mouse.x - oldmouse.x;
-        float dy = mouse.y - oldmouse.y;
+        float dx = mouse.pos.x - mouse.oldPos.x;
+        float dy = mouse.pos.y - mouse.oldPos.y;
         float shieldRadius = sqrt(dx * dx + dy * dy);
 
         // Центр = oldmouse (круг растёт из этой точки)
-        float centerX = oldmouse.x;
-        float centerY = oldmouse.y;
+        float centerX = mouse.oldPos.x;
+        float centerY = mouse.oldPos.y;
         modelProject = &NullProject;
         if (GetAsyncKeyState(VK_LBUTTON)) {
             for (int i = 0; i < 36; i++) {
@@ -791,9 +790,9 @@ namespace drawer
 
         void InitConstellationAttack() {
             
-            point3d mouseAngleBackup = mouseAngle;
-            mouseAngle.x = 0;
-            mouseAngle.y = 0;
+            point3d mouseAngleBackup = mouse.Angle;
+            mouse.Angle.x = 0;
+            mouse.Angle.y = 0;
 
             point3d heroPos = { 0, 0, 0 };
             
@@ -810,7 +809,7 @@ namespace drawer
             constellationFlight.speed = 0.05f; 
             constellationFlight.isFlying = true;
 
-            mouseAngle = mouseAngleBackup;
+            mouse.Angle = mouseAngleBackup;
         }
 
         void ReturnHeroConstellation() {
@@ -862,41 +861,7 @@ namespace drawer
                     star.z -= dz * steps;
                 }
             }
-        }
-
-    void SelectVectorAttack()
-    {
-        if (attackCooldown == false) return;
-        if (current_weapon == weapon_name::Sword)
-        {
-
-            AttackSwordVector();
-            
-        }
-
-        if (current_weapon == weapon_name::Shield)
-        {
-
-            AttackShieldVector();
-            drawShieldCircle();
-
-        }
-
-        if (current_weapon == weapon_name::Bow)
-        {
-
-            AttackBowVector();
-
-        }
-        if (current_weapon == weapon_name::Staff)
-        {
-
-        }
-          
-      
-       
-
-    }
+        }    
 
     void DrawStarsHP(HDC hdc) {
 
@@ -1257,7 +1222,19 @@ void UpdateGame() {
             {
                     
                 SelectWeapon();
-                SelectVectorAttack();
+                if (attackCooldown == true) {
+
+                    AttackVector();
+
+                    if (current_weapon == weapon_name::Shield)
+                    {
+
+                        drawShieldCircle();
+
+                    }
+                }
+                
+                                
                 StartBattle();
                 enemyFight();
                 
