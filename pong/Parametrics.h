@@ -20,6 +20,7 @@ void (*uiFunc)(point3d& point, Constellation& Constellation, int i);
 
 void genRandSphere(point3d& p)
 {
+    
     float amp = 1.25;
     float angleX, angleY;
     angleX = rand() % 360;
