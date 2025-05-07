@@ -1,5 +1,5 @@
 bool isRewind = false;
-DWORD attackTime;
+
 
 
 struct {

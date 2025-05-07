@@ -1,4 +1,4 @@
-
+DWORD attackTime;
 struct weapon_ {
     float damage;
     float defense;
@@ -106,6 +106,22 @@ void enemyAttack(Constellation& Constellation)
      
     isDamageHero = true;
 
+}
+
+void enemyFight()
+{
+    float e = 10000;
+    if (currentTime > attackTime + e)
+    {
+        attackTime = currentTime;
+        enemyAttack(*starSet[player_sign]);
+
+    }
+
+    if (getConstellationHP(*starSet[player_sign]) <= 0.f)
+    {
+        gameState = gameState_::EndFight;
+    }
 }
 
 point3d attack[5];
