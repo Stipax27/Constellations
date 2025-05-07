@@ -311,7 +311,7 @@ void projectSingleConst(point3d& p)
     p.y = y;
 }
 
-/*void placeConstToWorld(point3d& p, Constellation& Constellation)
+void placeConstToWorld(point3d& p, Constellation& Constellation)
 {
     Shaking(p);
 
@@ -338,7 +338,7 @@ void placeHeroToWorld(point3d& p, Constellation& Constellation)
 
     rotateX(p, mouse.Angle.y * 0.1);
     rotateY(p, mouse.Angle.x * 0.1);
-}*/
+}
 
 void NullProject(point3d& p) {
 
