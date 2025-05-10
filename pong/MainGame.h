@@ -20,7 +20,11 @@ void InitGame()
     game.month = 13;
     startTime = currentTime;
 
+
     initWeapon();
+
+    initElements();
+    
 }
 
 

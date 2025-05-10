@@ -137,6 +137,7 @@ HPEN heroPen;
 #include "StatusGame.h"
 #include "font.h"
 #include "Weapon.h"
+#include "Elements.h"
 #include "MainGame.h"
 #include "DiologTEXT.h"
 #include "DialogStruct.h"

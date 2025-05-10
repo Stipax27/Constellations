@@ -8,6 +8,7 @@ public:
     std::vector<point3d> starsCords;
     float hp;
     float maxHP;
+    float defens;
     std::vector <float> starsHealth;
     std::vector <std::vector <float>> constellationEdges;
 

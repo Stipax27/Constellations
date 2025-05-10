@@ -150,6 +150,7 @@
     <ClInclude Include="DiologTEXT.h" />
     <ClInclude Include="DodgeEnemy.h" />
     <ClInclude Include="drawer.h" />
+    <ClInclude Include="Elements.h" />
     <ClInclude Include="font.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="MainGame.h" />

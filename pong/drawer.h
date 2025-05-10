@@ -820,6 +820,7 @@ void UpdateGame() {
             {
                     
                 SelectWeapon();
+                SelectElement();
                 if (attackCooldown == true) {
 
                     AttackVector();
@@ -1006,6 +1007,8 @@ void UpdateGame() {
 
                 curentSignstring = "current weapon: " + weapon[(int)current_weapon].name;
                 drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 10., 1, true);
+
+                drawCurrentElement();
 
                 drawString("Weapon selection:\nButton 1 - Sword \nButton 2 - Shield \nButton 3 - Bow ", (1700. / 2560)* window.width, (1100. / 1440)* window.height, .7f, false);
                 drawString("Rewind time:\nbutton - E", (500. / 2560)* window.width, (1200. / 1440)* window.height, .7f, false);
