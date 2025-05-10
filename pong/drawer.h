@@ -821,6 +821,10 @@ void UpdateGame() {
                     
                 SelectWeapon();
                 SelectElement();
+
+              
+                DrawCombatStats();
+               
                 if (attackCooldown == true) {
 
                     AttackVector();
@@ -908,11 +912,13 @@ void UpdateGame() {
                 {
                     if (attack_collision == true and attackCooldown == true)
                     {
+                        
                         attack_cooldown = currentTime;
                         attackCooldown = false;
                         check_attack = false;
                         attackStartTime = currentTime;
                         InitConstellationAttack();
+
                      }
                     
 
