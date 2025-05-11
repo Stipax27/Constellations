@@ -1,19 +1,8 @@
 namespace drawer
 { 
-    float nearPlaneClip = 0;
+    
 
-    void drawPoint(point3d& p, float sz = 2)
-    {
-        if (p.z < nearPlaneClip) return;
-
-        Ellipse(window.context,
-            p.x - sz,
-            p.y - sz,
-            p.x + sz,
-            p.y + sz
-        );// Рисование элипса. sz = Размер звезды.
-
-    }
+    
 
     void drawLine(point3d& p1, point3d& p2, int count)
     {
@@ -37,7 +26,7 @@ namespace drawer
             }
 
             float sz = 1 + .5 * sinf(i + currentTime * .01);
-            drawPoint(point, sz);
+            point.draw(point, sz);
             // Рисование Линий.
         }
     }
@@ -110,7 +99,7 @@ namespace drawer
 
             if (finalStarRad > 0)
             {
-                drawPoint(point, finalStarRad);
+                point.draw(point, finalStarRad);
             }
 
         }
@@ -144,12 +133,12 @@ namespace drawer
 
                 
             modelTransform(point,Aries);
-            rotateZ(point, starfield_angles.z);
+            point.rotateZ(point, starfield_angles.z);
             modelProject(point);
 
 
 
-            drawPoint(point,2);
+            point.draw(point,2);
             // Звёзды на фоне их кол-во. и Кадр остановки.
         }
     }
@@ -268,7 +257,7 @@ namespace drawer
             for (int i = 0; i < sz1;i++)
             {
                 float morphSpeed = 0.01;
-                morphArray.push_back(lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(currentTime * morphSpeed))));
+                morphArray.push_back(point3d::lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(currentTime * morphSpeed))));
             }
         }
         else
@@ -276,7 +265,7 @@ namespace drawer
             for (int i = 0; i < sz2;i++)
             {
                 float morphSpeed = 0.01;
-                morphArray.push_back(lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(currentTime * morphSpeed))));
+                morphArray.push_back(point3d::lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(currentTime * morphSpeed))));
             }
         }
         if (sz3 > sz4)
@@ -543,7 +532,7 @@ namespace drawer
             //modelTransform(star, enemy_const);
             //modelProject(star);
 
-            drawPoint(star, currentSize);
+            star.draw(star, currentSize);
         }
 
         // Соединяем звёзды
@@ -636,7 +625,7 @@ namespace drawer
         modelTransform(star, player_const);
         modelProject(star);
 
-        drawer::drawPoint(star, currentSize);
+        star.draw(star, currentSize);
     }
 
     // Соединяем звёзды

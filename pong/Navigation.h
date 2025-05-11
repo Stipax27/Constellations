@@ -119,7 +119,7 @@ void fightMove(point3d& p) {
 		/*SaveCurrentState();*/
 	}
 	
-	move(p, player_dodge_ofs);
+	p.move(p, player_dodge_ofs);
 }
 
 //

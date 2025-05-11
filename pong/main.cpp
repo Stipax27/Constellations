@@ -19,94 +19,7 @@ HINSTANCE hInst;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 // секция данных игры  
-struct point3d{
-    float x, y, z;
 
-    bool operator==(const point3d& other) const {
-        return fabs(x - other.x) < 0.001f &&
-               fabs(y - other.y) < 0.001f &&
-               fabs(z - other.z) < 0.001f;
-    }
-
-    bool operator!=(const point3d& other) const {
-        return !(*this == other);
-    }
-
-    point3d operator+(const point3d& other) const {
-        return point3d{ x + other.x, y + other.y, z + other.z };
-    }
-
-    point3d& operator+=(const point3d& other) {
-        x += other.x;
-        y += other.y;
-        z += other.z;
-        return *this;
-    }
-    point3d& operator+=(float scalar) {
-        x += scalar;
-        y += scalar;
-        z += scalar;
-        return *this; 
-    }
-
-    point3d operator-(const point3d& other) const {
-        return point3d{ x - other.x, y - other.y, z - other.z };
-    }
-
-    point3d& operator-=(const point3d& other) {
-        x -= other.x;
-        y -= other.y;
-        z -= other.z;
-        return *this;
-    }
-
-    point3d& operator-=(float scalar) {
-        x -= scalar;
-        y -= scalar;
-        z -= scalar;
-        return *this;
-    }
-
-    point3d operator*(float scalar) const {
-        return point3d{ x * scalar, y * scalar, z * scalar };
-    }
-
-    point3d& operator*=(float scalar) { 
-        x *= scalar;  
-        y *= scalar;
-        z *= scalar;
-        return *this; 
-    }
-
-    point3d& operator*=(const point3d& other) {
-        x *= other.x;
-        y *= other.y;
-        z *= other.z;
-        return *this;
-    }
-
-    point3d operator/(float scalar) const {
-        return point3d{ x / scalar, y / scalar, z / scalar };
-    }
-
-    point3d& operator/=(const point3d& other) {
-        x /= other.x;
-        y /= other.y;
-        z /= other.z;
-        return *this;
-    }
-
-    point3d& operator/=(float scalar) {
-        x /= scalar;
-        y /= scalar;
-        z /= scalar;
-        return *this;
-    }
-};
-
-point3d operator*(float scalar, const point3d& point) {
-    return point * scalar;
-};
 
 
 const float starSize = 10;
@@ -129,6 +42,9 @@ HPEN heroPen;
 
 #include "utils.h"
 #include "MainWindow.h"
+
+#include "Point3d.h"
+
 #include "mouse.h"
 #include "Constellation.h"
 #include "MainWorld.h"

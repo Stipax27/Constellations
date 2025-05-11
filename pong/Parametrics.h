@@ -30,15 +30,15 @@ void genRandSphere(point3d& p)
     p.y = 0;
     p.z = window.width;
 
-    rotateX(p, angleX);
-    rotateY(p, angleY); // —ферообразное пространство.
+    p.rotateX(p, angleX);
+    p.rotateY(p, angleY); // —ферообразное пространство.
 
 }
 
 void placeToWorld(point3d& p, Constellation& Constellation)
 {
-    rotateX(p, mouse.Angle.y * 0.1);
-    rotateY(p, mouse.Angle.x * 0.1);
+    p.rotateX(p, mouse.Angle.y * 0.1);
+    p.rotateY(p, mouse.Angle.x * 0.1);
 }
 
 void fightProject(point3d& p)
@@ -284,13 +284,13 @@ void placeConstToStartMenu(point3d& p, Constellation& Constellation)
 
     //move(p, offset.x, offset.y, offset.z);
     float a = currentTime;
-    rotateY(p, a * 0.1);
-    move(p, 0, 0, 1300);
+    p.rotateY(p, a * 0.1);
+    p.move(0, 0, 1300);
 }
 
 void HeroUITransform(point3d& p, Constellation& Constellation)
 {
-    move(p, 0, 0, 0.);
+    p.move(0, 0, 0.);
 
     fightMove(p);
 
@@ -315,20 +315,20 @@ void placeConstToWorld(point3d& p, Constellation& Constellation)
 {
     Shaking(p);
 
-    move(p, 0, 0, 3000. / Constellation.scale);
-    rotateX(p, Constellation.angle.x);
-    rotateY(p, Constellation.angle.y);
-    rotateZ(p, Constellation.angle.z);
+    p.move( 0, 0, 3000. / Constellation.scale);
+    p.rotateX(p, Constellation.angle.x);
+    p.rotateY(p, Constellation.angle.y);
+    p.rotateZ(p, Constellation.angle.z);
     p *= Constellation.scale;
 
-    rotateX(p, mouse.Angle.y * 0.1);
-    rotateY(p, mouse.Angle.x * 0.1);
+    p.rotateX(p, mouse.Angle.y * 0.1);
+    p.rotateY(p, mouse.Angle.x * 0.1);
 }
 
 void placeHeroToWorld(point3d& p, Constellation& Constellation)
 {
     ShakingHero(p);
-    move(p, 0, 0, 0. / Constellation.scale);
+    p.move( 0, 0, 0. / Constellation.scale);
 
     fightMove(p);
 
@@ -336,8 +336,8 @@ void placeHeroToWorld(point3d& p, Constellation& Constellation)
 
     p *= Constellation.scale;
 
-    rotateX(p, mouse.Angle.y * 0.1);
-    rotateY(p, mouse.Angle.x * 0.1);
+    p.rotateX(p, mouse.Angle.y * 0.1);
+    p.rotateY(p, mouse.Angle.x * 0.1);
 }
 
 void NullProject(point3d& p) {

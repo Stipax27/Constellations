@@ -67,11 +67,11 @@ public:
         
         p -= position;
        
-
-        move(p, 0, 0, 3000. / scale);
-        rotateX(p, angle.x);
-        rotateY(p, angle.y);
-        rotateZ(p, angle.z);
+        p.move(0, 0, 3000. / scale);
+        
+        p.rotateX(p, angle.x);
+        p.rotateY(p, angle.y);
+        p.rotateZ(p, angle.z);
 
         p *= scale;
         

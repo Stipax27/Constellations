@@ -1,6 +1,7 @@
 using namespace std;
 
 struct Element_ {
+public:
     float damageMod;
     float defenseMod;
     std::string name;

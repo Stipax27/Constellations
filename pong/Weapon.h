@@ -1,5 +1,6 @@
 DWORD attackTime;
 struct weapon_ {
+public:
     float damage;
     float defense;
     float attackSpeed;
