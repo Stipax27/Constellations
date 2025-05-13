@@ -18,8 +18,6 @@ struct BattleState {
     point3d player_dodge_ofs;
     point3d starfield_angles;
     
-
-
     bool operator!=(const BattleState& other) const {
         return playerHP != other.playerHP ||
             enemyHP != other.enemyHP ||
@@ -28,11 +26,9 @@ struct BattleState {
             playerstarCords != other.playerstarCords ||
             enemystarCords != other.enemystarCords ||
             player_dodge_ofs != other.player_dodge_ofs ||
-            starfield_angles != other.starfield_angles;
-           
+            starfield_angles != other.starfield_angles;  
     }
 };
-
 
 std::vector<BattleState> battleHistory;
 BattleState lastSavedState;
@@ -44,7 +40,6 @@ void SaveCurrentState() {
     BattleState currentState;
     currentState.timestamp = currentTime;
 
-    
     currentState.playerHP = starSet[player_sign]->hp;
     currentState.playerStarsHealth = starSet[player_sign]->starsHealth;
     currentState.playerstarCords = starSet[player_sign]->starsCords;
@@ -61,27 +56,15 @@ void SaveCurrentState() {
         return;
     }
 
-    
-    //if (currentState != battleHistory[currentStateIndex]) 
-    {
-        
-        //if (currentStateIndex < battleHistory.size() - 1) {
-         //   battleHistory.erase(battleHistory.begin() + currentStateIndex + 1, battleHistory.end());
-       // }
+    battleHistory.push_back(currentState);
+    currentStateIndex = battleHistory.size() - 1;
 
-        
-        battleHistory.push_back(currentState);
-        currentStateIndex = battleHistory.size() - 1;
-
-        
-        if (battleHistory.size() > 18000) {
-            battleHistory.erase(battleHistory.begin());
-            currentStateIndex--;
-        }
+    if (battleHistory.size() > 18000) {
+        battleHistory.erase(battleHistory.begin());
+        currentStateIndex--;
     }
+    
 }
-
-
 
 bool RewindOneStepBack() {
 

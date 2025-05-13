@@ -13,14 +13,12 @@ bool attack_speed = false;
 bool attack_start = false;
 bool attackCooldown = true;
 
-
 void (*modelTransform)(point3d& p, Constellation& Constellation);
 void (*modelProject)(point3d& p);
 void (*uiFunc)(point3d& point, Constellation& Constellation, int i);
 
 void genRandSphere(point3d& p)
 {
-    
     float amp = 1.25;
     float angleX, angleY;
     angleX = rand() % 360;
@@ -32,7 +30,6 @@ void genRandSphere(point3d& p)
 
     p.rotateX(p, angleX);
     p.rotateY(p, angleY); // —ферообразное пространство.
-
 }
 
 void placeToWorld(point3d& p, Constellation& Constellation)
@@ -68,9 +65,6 @@ void menuProject(point3d& p)
     p.y = y;
 }
 
-
-
-
 void constSelectUI(point3d& point, Constellation& Constellation, int i)
 {
     std::vector <float>& starHealth = Constellation.starsHealth;
@@ -80,7 +74,6 @@ void constSelectUI(point3d& point, Constellation& Constellation, int i)
     float lenght = sqrt(dx * dx + dy * dy);
 
     float rad = saturate(1.2 - lenght * .05) * fabs(sin(currentTime * .01));
-
 
     if (GetAsyncKeyState(VK_LBUTTON))
     {
@@ -102,7 +95,6 @@ void constSelectUI(point3d& point, Constellation& Constellation, int i)
 
 float get_lenghts(point3d& point1, point3d& point2)
 {
-
     float a = point1.x - point2.x;
     float b = point1.y - point2.y;
     float c = sqrt(a * a + b * b);
@@ -127,8 +119,6 @@ void starIntersectUI(point3d& point, Constellation& Constellation, int i)
     float line_yz = line_z + line_y;
     line_hit = line_yz / line_x;
 
-
-
     float centerX = (attack[3].x + attack[2].x) / 2;
     float centerY = (attack[3].y + attack[2].y) / 2;
 
@@ -140,8 +130,6 @@ void starIntersectUI(point3d& point, Constellation& Constellation, int i)
     float stardy = point.y - centerY;
     float distToCenter = sqrt(stardx * stardx + stardy * stardy);
 
-
-
     float dxb = point.x - attack[4].x;
     float dyb = point.y - attack[4].y;
     float distToStart = sqrt(dxb * dxb + dyb * dyb);
@@ -151,7 +139,6 @@ void starIntersectUI(point3d& point, Constellation& Constellation, int i)
 
     if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true)
     {
-
         if (current_weapon == weapon_name::Sword and line_hit < 1.01
             or current_weapon == weapon_name::Shield and distToCenter <= shieldRadius
             or current_weapon == weapon_name::Bow and distToStart <= hitRadius)
@@ -159,16 +146,10 @@ void starIntersectUI(point3d& point, Constellation& Constellation, int i)
             starHealth[i] -= weapon[(int)current_weapon].damage;
 
         }
-
     }
 
     if (current_weapon == weapon_name::Sword)
     {
-
-
-
-
-
         if (GetAsyncKeyState(VK_LBUTTON))
         {
             if (line_hit < 1.001)
@@ -179,8 +160,6 @@ void starIntersectUI(point3d& point, Constellation& Constellation, int i)
         }
         else
         {
-
-
             if (line_hit < 1.01 and check_attack == false)
             {
 
@@ -188,16 +167,11 @@ void starIntersectUI(point3d& point, Constellation& Constellation, int i)
                 attack_time = currentTime;
 
             }
-
         }
-
     }
 
     if (current_weapon == weapon_name::Shield)
     {
-
-
-
         if (GetAsyncKeyState(VK_LBUTTON))
         {
             if (distToCenter <= shieldRadius)
@@ -205,7 +179,6 @@ void starIntersectUI(point3d& point, Constellation& Constellation, int i)
                 attack_collision = true;
 
             }
-
             SelectObject(window.context, brush);
         }
         else
@@ -220,16 +193,12 @@ void starIntersectUI(point3d& point, Constellation& Constellation, int i)
 
     if (current_weapon == weapon_name::Bow)
     {
-
-
-
         if (GetAsyncKeyState(VK_LBUTTON))
         {
             if (distToStart <= hitRadius)
             {
                 attack_collision = true;
             }
-
             SelectObject(window.context, brush);
         }
         else
@@ -254,7 +223,6 @@ void heroUI(point3d& point, Constellation& Constellation, int i)
 
     float rad = saturate(1.2 - lenght * .05) * fabs(sin(currentTime * .01));
 
-
     if (GetAsyncKeyState(VK_LBUTTON))
     {
         if (lenght < starSize)
@@ -266,9 +234,7 @@ void heroUI(point3d& point, Constellation& Constellation, int i)
     {
         SelectObject(window.context, brush);
     }
-
     finalStarRad = 3 * starHealth[i] + rad * 15;
-
 }
 
 void menuUI(point3d& point, Constellation& Constellation, int i)
@@ -276,13 +242,10 @@ void menuUI(point3d& point, Constellation& Constellation, int i)
     finalStarRad = 5;
 }
 
-
-
 void placeConstToStartMenu(point3d& p, Constellation& Constellation)
 {
     p *= 200;
 
-    //move(p, offset.x, offset.y, offset.z);
     float a = currentTime;
     p.rotateY(p, a * 0.1);
     p.move(0, 0, 1300);
@@ -297,7 +260,6 @@ void HeroUITransform(point3d& p, Constellation& Constellation)
     p *= .13;
 
     p *= Constellation.scale;
-
 }
 
 void projectSingleConst(point3d& p)
@@ -341,12 +303,5 @@ void placeHeroToWorld(point3d& p, Constellation& Constellation)
 }
 
 void NullProject(point3d& p) {
-
-}
-
-void parametrics() 
-{
-
-
 
 }

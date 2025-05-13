@@ -18,10 +18,6 @@ const float PI = 3.1415926535897;
 HINSTANCE hInst;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-// секция данных игры  
-
-
-
 const float starSize = 10;
 int startTime;
 float circleRadius;
@@ -42,9 +38,7 @@ HPEN heroPen;
 
 #include "utils.h"
 #include "MainWindow.h"
-
 #include "Point3d.h"
-
 #include "mouse.h"
 #include "Constellation.h"
 #include "MainWorld.h"

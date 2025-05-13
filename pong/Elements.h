@@ -7,7 +7,6 @@ public:
     std::string name;
     COLORREF color;
 
-    
     float swordMod = 1.0f;
     float shieldMod = 1.0f;
     float bowMod = 1.0f;
@@ -16,14 +15,12 @@ public:
 
 Element_ elements[4];
 
-
 enum class element_name 
 {
     Fire, Earth, Air, Water
 };
 
 element_name current_element = element_name::Fire;
-
 
 void initElements() {
     
@@ -34,21 +31,18 @@ void initElements() {
     elements[(int)element_name::Fire].swordMod = 1.5f;  // Меч + Огонь = +50% урона
     elements[(int)element_name::Fire].bowMod = 1.3f;    // Лук + Огонь = +30% урона
 
-   
     elements[(int)element_name::Earth].damageMod = 0.9f;
     elements[(int)element_name::Earth].defenseMod = 1.4f;
     elements[(int)element_name::Earth].name = "Earth";
     elements[(int)element_name::Earth].color = RGB(139, 69, 19);
     elements[(int)element_name::Earth].shieldMod = 1.6f; // Щит + Земля = +60% защиты
 
- 
     elements[(int)element_name::Air].damageMod = 1.1f;
     elements[(int)element_name::Air].defenseMod = 0.9f;
     elements[(int)element_name::Air].name = "Air";
     elements[(int)element_name::Air].color = RGB(173, 216, 230);
     elements[(int)element_name::Air].bowMod = 1.4f;     // Лук + Воздух = +40% урона
 
- 
     elements[(int)element_name::Water].damageMod = 1.0f;
     elements[(int)element_name::Water].defenseMod = 1.2f;
     elements[(int)element_name::Water].name = "Water";
@@ -60,8 +54,8 @@ float CalculateCombinedDamage() {
     float baseDamage = weapon[(int)current_weapon].damage;
     float elementDamage = elements[(int)current_element].damageMod;
 
-
     float weaponElementMod = 1.0f;
+
     switch (current_weapon) {
     case weapon_name::Sword:
         weaponElementMod = elements[(int)current_element].swordMod;
@@ -201,7 +195,6 @@ void enemyAttack(Constellation& Constellation) {
 
     isDamageHero = true;
 }
-
 
 void enemyFight()
 {

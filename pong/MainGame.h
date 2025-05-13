@@ -1,7 +1,5 @@
 bool isRewind = false;
 
-
-
 struct {
     int day, month;//количество набранных очков и оставшихся "жизней"
     bool action = false;//состояние - ожидание (игрок должен нажать пробел) или игра
@@ -24,7 +22,6 @@ void InitGame()
 
 }
 
-
 bool drawClickableText(
     const std::string text,
     bool center,
@@ -32,7 +29,6 @@ bool drawClickableText(
     int x = 0, int y = 0,
     float scale = 1.f) 
 {
-
     COLORREF COLOR_REGULAR = RGB(160, 160, 160);
 
     point3d sz = drawString(text.c_str(), x, y, scale, true,true);
@@ -42,11 +38,7 @@ bool drawClickableText(
 
     textStyle.color= isHovered ? COLOR_HOVER : COLOR_REGULAR;
 
-
     drawString(text.c_str(), x, y, scale, true);
-
-
-    //TextOutA(window.context, textX, textY, text.c_str(), text.size());
 
     return isHovered && GetAsyncKeyState(VK_LBUTTON);
 }
@@ -91,10 +83,6 @@ void drawCircularMenu(float circleRadius, float speed, string* items, int size, 
                 currentDayIndex = -1;
             }
 
-            /*   TextOutA(window.context, static_cast<int>(textX - textWidth / 2), static_cast<int>(textY - textHeight / 2), m.c_str(), m.size());
-
-               std::string curentDaystring = std::to_string(player_day);
-               TextOutA(window.context, window.width * 5 / 8 + 100, 0, curentDaystring.c_str(), curentDaystring.size());*/
             break;
         }
     }
@@ -105,26 +93,20 @@ void drawCircularMenu(float circleRadius, float speed, string* items, int size, 
 
 void menuMonthprocessing()
 {
-
-    //drawCircularMenu(450, 0.00001, mounthString, 12, first);
     drawCircularMenu(450, 0.0001, mounthString, 12, first);
 
     drawString(mounthToString(player_month).c_str(), window.width *.1, window.height/2.,1,true);
     
     drawString("select your date of birth.", window.width / 2, window.height*.05, 1, true);
-    
 }
 
 
 void menuDayprocessing()
 {
-    
-
     float circleRadius = 300;
     float centerX = window.width / 2;
     float centerY = window.height / 2;
     int numDay = 31;
-
 
     std::string days[31];
     for (int i = 0; i < 31; i++)
@@ -139,16 +121,12 @@ void menuDayprocessing()
 
 void menuConfirmationButton()
 {
-   
-
     if (drawClickableText("Play", false, RGB(0, 191, 255), window.width / 2, window.height - window.height*.1,2.5))
     {
         gameState = gameState_::DialogStruct;
         
-        
     }
 }
-
 
 point3d winMessagePos;
 DWORD winFightStartTime;
@@ -162,7 +140,6 @@ void calcWinMessageCoords()
     winMessagePos.x = window.width / 2 + rand() % amp- amp/2;
     winMessagePos.y = window.height / 2 + rand() % amp - amp / 2;
     winMessagePos.z = 0;
-
 }
 
 point3d exitButtonPos = { 0, 0, 0 }; 
@@ -171,14 +148,12 @@ bool exitButtonInitialized = false;
 
 void StartMenu()
 {
-    
     if (!exitButtonInitialized) {
         exitButtonPos.x = window.width / 2;
         exitButtonPos.y = window.height / 2 + 100;
         exitButtonInitialized = true;
     }
 
-    
     if (drawClickableText("Play", true, RGB(0, 191, 255), window.width / 2, window.height / 2))
     {
         gameState = gameState_::MonthSelection;
@@ -186,16 +161,13 @@ void StartMenu()
 
     std::string EXIT = "Quit ((";
 
-    
     point3d textSize = drawString(EXIT.c_str(), exitButtonPos.x, exitButtonPos.y, 1.f, true, true);
 
-    
     bool isHoveredNow = (mouse.pos.x > exitButtonPos.x - textSize.x / 2 &&
         mouse.pos.x < exitButtonPos.x + textSize.x / 2 &&
         mouse.pos.y > exitButtonPos.y - textSize.y / 2 &&
         mouse.pos.y < exitButtonPos.y + textSize.y / 2);
 
-    
     if (isHoveredNow && !wasExitHovered)
     {
         exitButtonPos.x = 100 + rand() % (window.width - 200);
@@ -203,7 +175,6 @@ void StartMenu()
     }
     wasExitHovered = isHoveredNow;
 
-    
     if (drawClickableText(EXIT, true, RGB(0, 191, 255), exitButtonPos.x, exitButtonPos.y))
     {
         ExitProcess(0);
@@ -219,8 +190,6 @@ void winFight()
         calcWinMessageCoords();
     }
 
-
-
     if (currentTime > winFightStartTime + 1000)
     {
         calcWinMessageCoords();
@@ -230,12 +199,10 @@ void winFight()
     std::string w = ("You WIN !!!!");
     drawString(w.c_str(), winMessagePos.x, winMessagePos.y, 1, true);
     
-
     if (GetAsyncKeyState(VK_LBUTTON))
     {
         gameState = gameState_::MainMenu;
     }
-
 }
 
 void endFight()
