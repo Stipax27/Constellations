@@ -2,49 +2,23 @@
 
 int constellationsCounter = 0;
 
+
 class Constellation {
 public:
-
-    std::vector<point3d> starsCords;
-    float hp;
-    float maxHP;
-    float defens;
-    std::vector <float> starsHealth;
-    std::vector <std::vector <float>> constellationEdges;
-
-    std::vector<point3d> starsRenderedCords = {};
     float scale = 1000;
-    int ID;
-    std::string name;
-
-    point3d angle;
     float distance;
 
-    char currentMoveDirection; 
-    DWORD moveStartTime;
-    bool isMoveActive;
+    std::vector<point3d> starsCords;
+    std::vector <std::vector <float>> constellationEdges;
+    std::vector<point3d> starsRenderedCords = {};
+    point3d angle;
     point3d position;
     
-
-    Constellation(std::vector<point3d> _starsCords, std::vector <float> _starsHealth, std::vector <std::vector <float>> _constellationEdges) : position{ 0,0,0 } 
+    Constellation(std::vector<point3d> _starsCords, std::vector <std::vector <float>> _constellationEdges) : position{ 0,0,0 } 
     {
-        
         starsCords = _starsCords;
-        starsHealth = _starsHealth;
         constellationEdges = _constellationEdges;
-        ID = constellationsCounter;
-        //name = zodiacSignToString((ZodiacSign)ID);
-
-        maxHP = 0;
-        for (int i=0;i< starsHealth.size();i++)
-        { 
-            maxHP += starsHealth[i];
-        }
-
-        constellationsCounter++;
     }
-
-    
 
     void setPosition(const point3d& newPos) {
         
@@ -91,3 +65,60 @@ public:
         }
     }
 };
+
+class Entity {
+public:
+    float starHP;
+    float maxHP;
+    float defens;
+    char currentMoveDirection;
+    int ID;
+    Constellation* constellation; 
+
+    std::vector<float> starsHealth;  
+    std::string name;
+    DWORD moveStartTime;
+    bool isMoveActive;
+
+    
+    Entity(Constellation* _constellation) : constellation(_constellation) {
+       
+        int starCount = constellation->starsCords.size();
+
+        starsHealth = std::vector<float>(starCount, 1.0f);
+
+        maxHP = starCount;
+        starHP = maxHP;
+
+        ID = constellationsCounter++;
+    }
+
+    void updateStarsHP() {
+        starHP = 0;
+        for (float health : starsHealth) {
+            starHP += health;
+        }
+    }
+
+    void damageStar(int starIndex, float damage) {
+        if (starIndex >= 0 && starIndex < starsHealth.size()) {
+            starsHealth[starIndex] -= damage;
+            if (starsHealth[starIndex] < 0) starsHealth[starIndex] = 0;
+            updateStarsHP();
+        }
+
+    }
+  float ariesHP = AriesEntity.starHP;
+  float taurusHP = TaurusEntity.starHP;
+  float geminiHP = GeminiEntity.starHP;
+  float cencerHP = CancerEntity.starHP;
+  float leoHP = LeoEntity.starHP;
+  float virgoHP = VirgoEntity.starHP;
+  float libraHP = LibraEntity.starHP;
+  float scorpiusHP = ScorpiusEntity.starHP;
+  float sagittariusHP = SagittariusEntity.starHP;
+  float capricornusHP = CapricornusEntity.starHP;
+  float aquariusHP = AquariusEntity.starHP;
+  float piscesHP = PiscesEntity.starHP;
+};
+

@@ -6,7 +6,7 @@ Constellation Aries(
     {.35, .12, 0.},
     {.43, .27, 0.}
 },
-    { 1,1,1,1 },//health
+
 {
     {0, 1},//indicies
     {1, 2},
@@ -33,7 +33,7 @@ Constellation Taurus(
     {.75, .05, 0},
     {.9, .25,0}
 },
-    { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 },//health
+   
 {
     {0, 1},//indicies
     {1, 2},
@@ -72,7 +72,7 @@ Constellation Gemini(
    {.5, 1, 0},
    {.65, 1.1, 0}
 },
-    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },//health
+
 {
     {0, 1},//indicies
     {1, 2},
@@ -101,7 +101,7 @@ Constellation Cancer(
     {.4, .3, 0}
 
 },
-    { 1, 1, 1, 1, 1, 1 },
+    
 {
     {0,1},
     {1,2},
@@ -124,7 +124,7 @@ Constellation Leo(
     {.5, .2, 0},
     {.3, .01, 0}
 },
-    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    
 {
     {0, 1},
     {1, 2},
@@ -157,7 +157,7 @@ Constellation Virgo(
     {-1.4, .01, 0},
     {-1.85, 0, 0}
 },
-    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    
 {
     {0, 1},
     {1, 2},
@@ -183,7 +183,7 @@ Constellation Libra(
     {-.4,-.1,0},
     {-.6, -.05, 0}
 },
-    { 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    
 {
     {1, 4},
     {1, 2},
@@ -216,7 +216,7 @@ Constellation Scorpius(
     {.25, -.28, 0},
     {.1, -.15, 0}
 },
-    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    
 {
     {0,1},
     {1,2},
@@ -257,7 +257,7 @@ Constellation Sagittarius(
     {-.5, 1.3, 0},
     {-.4, 1.6, 0},
 },
-    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    
 {
     {0,1},
     {1,2},
@@ -292,7 +292,7 @@ Constellation Capricornus(
    {.4, 1.1, 0},
    {1.3, .1, 0},
 },
-    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    
 {
     {0,1},
     {1,2},
@@ -323,7 +323,7 @@ Constellation Aquarius(
    {-.9, .8, 0}
 
 },
-    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    
 {
     {0,1},
     {1,2},
@@ -355,7 +355,7 @@ Constellation Pisces(
     { -1, -1, 0 },
     { -.8, -1.2, 0 }
 },
-    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    
 {
     {0,1},
     {1,2},
@@ -390,7 +390,7 @@ Constellation Sword(
     {-.3,-.4, 0},
     {-.5,-.7,0}
 },
-{ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 },
+
 {
     {0,1},
     {1,2},
@@ -432,7 +432,7 @@ Constellation Shield(
     {-.4,1,0},
     {0,1.2,0}
 },
-{ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 },
+
 {
     {0,1},
     {1,2},
@@ -477,7 +477,7 @@ Constellation Bow(
     {-.9,-.5,0},
 
 },
-{ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 },
+
 {
     {0,1},
     {1,2},
@@ -510,7 +510,7 @@ Constellation Staff(
     {-.3,-.7,0},
     {-.2,-.5,0}
 },
-{ 1,1,1,1,1,1,1,1,1,1,1 },
+
 {
     {0,1},
     {1,2},
@@ -524,6 +524,34 @@ Constellation Staff(
     {4,10},
 }
 );
+
+Entity AriesEntity(&Aries);             // 4
+Entity TaurusEntity(&Taurus);           //15
+Entity GeminiEntity(&Gemini);           //20
+Entity CancerEntity(&Cancer);           // 5
+Entity LeoEntity(&Leo);                 // 9
+Entity VirgoEntity(&Virgo);             //13
+Entity LibraEntity(&Libra);             // 6
+Entity ScorpiusEntity(&Scorpius);       //16
+Entity SagittariusEntity(&Sagittarius); //16
+Entity CapricornusEntity(&Capricornus); //11
+Entity AquariusEntity(&Aquarius);       //10
+Entity PiscesEntity(&Pisces);           //13
+
+std::vector<Entity*> entities = {
+    &AriesEntity,
+    &TaurusEntity,
+    &GeminiEntity,
+    &CancerEntity,
+    &LeoEntity,
+    &VirgoEntity,
+    &LibraEntity,
+    &ScorpiusEntity,
+    &SagittariusEntity,
+    &CapricornusEntity,
+    &AquariusEntity,
+    &PiscesEntity
+};
 
 std::vector <Constellation*> starSet = {
 &Aries,
