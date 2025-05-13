@@ -1,11 +1,11 @@
 extern std::vector<Constellation*> starSet;
-extern std::vector<Entity*>entities;
+extern std::vector<Entity*> entities;
 extern ZodiacSign player_sign;
 extern ZodiacSign currentEnemyID;
 extern DWORD currentTime;
 
 float getConstellationHP(const Entity& Entity) {
-    return Entity.starHP;
+    return Entity.entity.starHP;
 }
 
 struct BattleState {
@@ -41,8 +41,8 @@ void SaveCurrentState() {
     BattleState currentState;
     currentState.timestamp = currentTime;
 
-    currentState.playerHP = entities[player_sign]->starsHealth;
-    currentState.playerStarsHealth = starSet[player_sign]->starsHealth;
+    currentState.playerHP = entity.starHP[player_sign]->starsHealth;
+    currentState.playerStarsHealth = starSet[player_sign]->entity.starHP;
     currentState.playerstarCords = starSet[player_sign]->starsCords;
      
     currentState.enemyHP = starSet[currentEnemyID]->hp;
