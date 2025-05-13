@@ -3,7 +3,7 @@ struct {
     bool action = false;//состояние - ожидание (игрок должен нажать пробел) или игра
 } game;
 
-bool readSvg(Constellation& svg, const string filename)
+bool readSvg(Constellation& svg, const string filename)// ОН ТУТАВА
 {
     
     std::string line;
