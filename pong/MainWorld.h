@@ -525,57 +525,46 @@ Constellation Staff(
 }
 );
 
-Entity AriesEntity(&Aries);             // 4
-Entity TaurusEntity(&Taurus);           //15
-Entity GeminiEntity(&Gemini);           //20
-Entity CancerEntity(&Cancer);           // 5
-Entity LeoEntity(&Leo);                 // 9
-Entity VirgoEntity(&Virgo);             //13
-Entity LibraEntity(&Libra);             // 6
-Entity ScorpiusEntity(&Scorpius);       //16
-Entity SagittariusEntity(&Sagittarius); //16
-Entity CapricornusEntity(&Capricornus); //11
-Entity AquariusEntity(&Aquarius);       //10
-Entity PiscesEntity(&Pisces);           //13
 
-std::vector<Entity*> entities = {
-    &AriesEntity,
-    &TaurusEntity,
-    &GeminiEntity,
-    &CancerEntity,
-    &LeoEntity,
-    &VirgoEntity,
-    &LibraEntity,
-    &ScorpiusEntity,
-    &SagittariusEntity,
-    &CapricornusEntity,
-    &AquariusEntity,
-    &PiscesEntity
+std::vector<Entity> entities = {
+    Entity(&Aries),
+    Entity(&Taurus),
+    Entity(&Gemini),
+    Entity(&Cancer),
+    Entity(&Leo),
+    Entity(&Virgo),
+    Entity(&Libra),
+    Entity(&Scorpius),
+    Entity(&Sagittarius),
+    Entity(&Capricornus),
+    Entity(&Aquarius),
+    Entity(&Pisces)
 };
 
 std::vector <Constellation*> starSet = {
-&Aries,
-&Taurus,
-&Gemini,
-&Cancer,
-&Leo,
-&Virgo,
-&Libra,
-&Scorpius,
-&Sagittarius,
-&Capricornus,
-&Aquarius,
-&Pisces,
-&Sword,
-&Shield,
-&Bow,
-&Staff
+    &Aries,
+    &Taurus,
+    &Gemini,
+    &Cancer,
+    &Leo,
+    &Virgo,
+    &Libra,
+    &Scorpius,
+    &Sagittarius,
+    &Capricornus,
+    &Aquarius,
+    &Pisces,
+    &Sword,
+    &Shield,
+    &Bow,
+    &Staff
 };
+
 
 void initWorld()
 {
     Aries.setStarsRenderedCords(-17, -25, 0);
-    Taurus.setStarsRenderedCords( - 170, -25, 0);
+    Taurus.setStarsRenderedCords(-170, -25, 0);
     Gemini.setStarsRenderedCords(-200, 0, 0);
     Cancer.setStarsRenderedCords(-20, -20, 0);
     Leo.setStarsRenderedCords(40, 50, 0);

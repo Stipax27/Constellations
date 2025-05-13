@@ -5,6 +5,8 @@ int constellationsCounter = 0;
 
 class Constellation {
 public:
+
+    Entity* linkedEntity = nullptr;
     float scale = 1000;
     float distance;
 
@@ -13,8 +15,11 @@ public:
     std::vector<point3d> starsRenderedCords = {};
     point3d angle;
     point3d position;
+    std::vector<point3d>posEnemy;
+
     
-    Constellation(std::vector<point3d> _starsCords, std::vector <std::vector <float>> _constellationEdges) : position{ 0,0,0 } 
+    
+    Constellation(std::vector<point3d> _starsCords, std::vector <std::vector <float>> _constellationEdges) : position{ 0,0,0 }, linkedEntity(nullptr)
     {
         starsCords = _starsCords;
         constellationEdges = _constellationEdges;
@@ -23,7 +28,7 @@ public:
     void setPosition(const point3d& newPos) {
         
         point3d offset = {
-            newPos - position
+            newPos - position 
         };
 
         for (auto& star : starsCords) {
@@ -64,6 +69,32 @@ public:
             starsRenderedCords[i] = p;
         }
     }
+    std::vector <Constellation*> starSet = {
+    &Aries,
+    &Taurus,
+    &Gemini,
+    &Cancer,
+    &Leo,
+    &Virgo,
+    &Libra,
+    &Scorpius,
+    &Sagittarius,
+    &Capricornus,
+    &Aquarius,
+    &Pisces,
+    &Sword,
+    &Shield,
+    &Bow,
+    &Staff
+    };
+     
+     void enemyPosConstallations()
+     {
+         posEnemy = *starSet[currentEnemyID].setStarsRenderedCords(10,10,10);
+     
+     }
+    
+
 };
 
 class Entity {
@@ -81,8 +112,11 @@ public:
     bool isMoveActive;
 
     
-    Entity(Constellation* _constellation) : constellation(_constellation) {
-       
+    Entity(Constellation* constellation) : constellation(constellation) {
+
+        constellation->linkedEntity = this;
+
+
         int starCount = constellation->starsCords.size();
 
         starsHealth = std::vector<float>(starCount, 1.0f);
@@ -108,17 +142,6 @@ public:
         }
 
     }
-  float ariesHP = AriesEntity.starHP;
-  float taurusHP = TaurusEntity.starHP;
-  float geminiHP = GeminiEntity.starHP;
-  float cencerHP = CancerEntity.starHP;
-  float leoHP = LeoEntity.starHP;
-  float virgoHP = VirgoEntity.starHP;
-  float libraHP = LibraEntity.starHP;
-  float scorpiusHP = ScorpiusEntity.starHP;
-  float sagittariusHP = SagittariusEntity.starHP;
-  float capricornusHP = CapricornusEntity.starHP;
-  float aquariusHP = AquariusEntity.starHP;
-  float piscesHP = PiscesEntity.starHP;
+
 };
 
