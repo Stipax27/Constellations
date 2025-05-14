@@ -88,5 +88,11 @@
     <ClInclude Include="DiologTEXT.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ConverterSVGto3D.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="point3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

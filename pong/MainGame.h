@@ -1,10 +1,16 @@
+#include <vector>
+#include "ConverterSVGto3D.h"
+
 bool isRewind = false;
 DWORD attackTime;
 
-
 struct {
-    int day, month;//количество набранных очков и оставшихся "жизней"
-    bool action = false;//состояние - ожидание (игрок должен нажать пробел) или игра
+    int day, month;
+    bool action = false;
+    std::vector<point3d> skeletonVertices;
+    std::vector<std::pair<int, int>> skeletonEdges;
+    float skeletonScale = 1.0f;
+    float boneRotation = 0.0f;
 } game;
 
 enum menu_type {
@@ -12,13 +18,18 @@ enum menu_type {
     second
 };
 
+
 void InitGame()
 {
     initWorld();
-    
+
     game.day = 32;
     game.month = 13;
-    startTime = currentTime;
+    startTime = timeGetTime();
+
+    ConverterSVGto3D::Convert("assets/character.svg", //SVG файл для конвертации кидать сюда, позже нужно будет развить эту историю для добавления большего количества сущностей в игре TODO
+        game.skeletonVertices,
+        game.skeletonEdges);
 
     initWeapon();
 }
@@ -252,5 +263,48 @@ void endFight()
     {
         gameState = gameState_::MainMenu;
     }
+}
+
+void draw3DLine(const point3d& start, const point3d& end, COLORREF color) {
+    // Проекция с учетом перспективы
+    float depthScale = 1.0f / (1.0f + start.z * 0.01f);
+    int x1 = static_cast<int> (window.width / 2 + (start.x - window.width / 2) * depthScale);
+    int y1 = static_cast<int> (window.height / 2 + (start.y - window.height / 2) * depthScale);
+
+    depthScale = 1.0f / (1.0f + end.z * 0.01f);
+    int x2 = static_cast<int> (window.width / 2 + (end.x - window.width / 2) * depthScale);
+    int y2 = static_cast<int> (window.height / 2 + (end.y - window.height / 2) * depthScale);
+
+    // Рисуем линию через GDI (да да винапи)
+    HPEN hPen = CreatePen(PS_SOLID, 2, color);
+    HPEN hOldPen = (HPEN)SelectObject(window.context, hPen);
+
+    MoveToEx(window.context, x1, y1, NULL);
+    LineTo(window.context, x2, y2);
+
+    SelectObject(window.context, hOldPen);
+    DeleteObject(hPen);
+}
+
+void RenderSkeleton() {
+    for (auto& edge : game.skeletonEdges) {
+        point3d start = {
+            game.skeletonVertices[edge.first].x * game.skeletonScale,
+            game.skeletonVertices[edge.first].y * game.skeletonScale,
+            0
+        };
+
+        point3d end = {
+            game.skeletonVertices[edge.second].x * game.skeletonScale,
+            game.skeletonVertices[edge.second].y * game.skeletonScale,
+            0
+        };
+        draw3DLine(start, end, RGB(255, 0, 0));
+    }
+}
+
+void TransformCharacter() {
+    game.skeletonScale = 1.0f + 0.2f * sin(currentTime * 0.001f);
+    game.boneRotation = currentTime * 0.0005f;
 }
 

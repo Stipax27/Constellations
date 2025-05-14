@@ -19,19 +19,7 @@ HINSTANCE hInst;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 // секция данных игры  
-struct point3d{
-    float x, y, z;
-
-    bool operator==(const point3d& other) const {
-        return fabs(x - other.x) < 0.001f &&
-               fabs(y - other.y) < 0.001f &&
-               fabs(z - other.z) < 0.001f;
-    }
-
-    bool operator!=(const point3d& other) const {
-        return !(*this == other);
-    }
-};
+#include "point3d.h"
 
 const float starSize = 10;
 int startTime;

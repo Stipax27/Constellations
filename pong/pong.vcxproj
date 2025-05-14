@@ -151,11 +151,13 @@
     <ClInclude Include="DodgeEnemy.h" />
     <ClInclude Include="drawer.h" />
     <ClInclude Include="font.h" />
+    <ClInclude Include="ConverterSVGto3D.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="MainWorld.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="Navigation.h" />
+    <ClInclude Include="point3d.h" />
     <ClInclude Include="StatusGame.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="utils.h" />
