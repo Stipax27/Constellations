@@ -93,7 +93,7 @@ namespace drawer
             finalStarRad = 1;
             if (uiFunc)
             {
-                uiFunc(point, Constellation, i);
+                uiFunc(point, Constellation, Entity, i);
             }
 
             if (finalStarRad > 0)

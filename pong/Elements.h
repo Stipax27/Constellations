@@ -149,7 +149,7 @@ void DrawCombatStats() {
 
 float getConstellationHP(Constellation& Constellation)
 {
-    std::vector <float>& starHealth = Constellation.starsHealth;
+    std::vector <float>& starHealth = Constellation.healthSystem->starsHealth;
 
     int starsCount = starHealth.size();
     float health = 0.f;
@@ -168,7 +168,7 @@ float getConstellationHP(Constellation& Constellation)
 
 bool isConstellationDead(Constellation& Constellation)
 {
-    std::vector <float>& starHealth = Constellation.starsHealth;
+    std::vector <float>& starHealth = Constellation.healthSystem->starsHealth;
 
     int starsCount = starHealth.size();
     float health = 0;
@@ -185,7 +185,7 @@ bool isConstellationDead(Constellation& Constellation)
 }
 
 void enemyAttack(Constellation& Constellation) {
-    std::vector<float>& starHealth = Constellation.starsHealth;
+    std::vector<float>& starHealth = Constellation.healthSystem->starsHealth;
     float combinedDamage = CalculateCombinedDamage() * 0.05f;
 
     for (int i = 0; i < starHealth.size(); i++) {

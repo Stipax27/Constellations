@@ -214,9 +214,9 @@ void endFight()
     {
         auto& currentConst = starSet[i];
           
-        for (int j = 0; j< currentConst->starsHealth.size(); j++)
+        for (int j = 0; j< currentConst->healthSystem->starsHealth.size(); j++)
         {
-            currentConst->starsHealth[j] = 1;
+            currentConst->healthSystem->starsHealth[j] = 1;
         }
     }
     if (drawClickableText("You Lose (((", true, RGB(0, 191, 255),window.width/2,window.height/2))
