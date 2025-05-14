@@ -546,22 +546,15 @@ std::vector <Constellation*> starSet = {
 
 void initWorld()
 {
-    Aries.setStarsRenderedCords(-17, -25, 0);
-    Taurus.setStarsRenderedCords( - 170, -25, 0);
-    Gemini.setStarsRenderedCords(-200, 0, 0);
-    Cancer.setStarsRenderedCords(-20, -20, 0);
-    Leo.setStarsRenderedCords(40, 50, 0);
-    Virgo.setStarsRenderedCords(250, 250, 0);
-    Libra.setStarsRenderedCords(-19, -55, -5);
-    Scorpius.setStarsRenderedCords(300, -110, 0);
-    Sagittarius.setStarsRenderedCords(0, 400, 0);
-    Capricornus.setStarsRenderedCords(400, 0, 0);
-    Aquarius.setStarsRenderedCords(100, 0, 0);
-    Pisces.setStarsRenderedCords(0, 100, 0);
-    Sword.setStarsRenderedCords(0, 0, 0);
-    Shield.setStarsRenderedCords(0, 0, 0);
-    Bow.setStarsRenderedCords(0, 0, 0);
-    Staff.setStarsRenderedCords(0, 0, 0);
+    
+    for (int i = 0; i < 15; i++)
+    {
+        int x = rand() % 100-50;
+        int y = rand() % 50-25;
+        int z = 0;
+        starSet[i]->setStarsRenderedCords(x, y, z);
+    }
+
 }
 
 using namespace std;
@@ -579,7 +572,7 @@ enum class gameState_ {
     MainMenu, MonthSelection, DaySelection, confirmSign, selectEnemy, Fight, EndFight, DialogStruct,WinFight
 };
 
-gameState_  gameState = gameState_::Fight;
+gameState_  gameState = gameState_::MainMenu;
 Constellation* currentEnemy = &Aries;
 ZodiacSign currentEnemyID = ZodiacSign::ARIES;
 

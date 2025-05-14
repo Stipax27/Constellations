@@ -77,7 +77,7 @@ public:
         
         p += position;
        
-    }
+    }    
 
     void setStarsRenderedCords(float angleX, float angleY, float angleZ) {
         angle = { angleX, angleY, angleZ };
@@ -90,4 +90,6 @@ public:
             starsRenderedCords[i] = p;
         }
     }
+    
+    
 };
