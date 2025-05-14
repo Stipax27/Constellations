@@ -43,12 +43,10 @@ void SaveCurrentState() {
     BattleState currentState;
     currentState.timestamp = currentTime;
 
-    // Сохраняем состояние игрока
     currentState.playerHP = playerEntity->getHP();
     currentState.playerStarsHealth = playerEntity->constellation->healthSystem->starsHealth;
     currentState.playerstarCords = playerEntity->constellation->starsCords;
 
-    // Сохраняем состояние врага
     currentState.enemyHP = enemyEntity->getHP();
     currentState.enemyStarsHealth = enemyEntity->constellation->healthSystem->starsHealth;
     currentState.enemystarCords = enemyEntity->constellation->starsCords;
@@ -56,12 +54,10 @@ void SaveCurrentState() {
     currentState.player_dodge_ofs = player_dodge_ofs;
     currentState.starfield_angles = starfield_angles;
 
-    // Если история пуста или состояние изменилось
     if (battleHistory.empty() || battleHistory.back() != currentState) {
         battleHistory.push_back(currentState);
         currentStateIndex = battleHistory.size() - 1;
 
-        // Ограничиваем размер истории
         if (battleHistory.size() > 18000) {
             battleHistory.erase(battleHistory.begin());
             currentStateIndex--;
@@ -74,21 +70,21 @@ bool RewindOneStepBack() {
         return false;
     }
 
-    // Получаем указатели на текущие сущности
+    
     Entity* playerEntity = &entities[static_cast<int>(player_sign)];
     Entity* enemyEntity = &entities[static_cast<int>(currentEnemyID)];
 
-    // Перемещаемся на несколько шагов назад
+  
     int stepsToRewind = min(4, static_cast<int>(currentStateIndex));
     currentStateIndex -= stepsToRewind;
     const BattleState& prevState = battleHistory[currentStateIndex];
 
-    // Восстанавливаем состояние игрока
+    
     playerEntity->constellation->healthSystem->starsHealth = prevState.playerStarsHealth;
     playerEntity->constellation->healthSystem->updateStarsHP();
     playerEntity->constellation->starsCords = prevState.playerstarCords;
 
-    // Восстанавливаем состояние врага
+    
     enemyEntity->constellation->healthSystem->starsHealth = prevState.enemyStarsHealth;
     enemyEntity->constellation->healthSystem->updateStarsHP();
     enemyEntity->constellation->starsCords = prevState.enemystarCords;

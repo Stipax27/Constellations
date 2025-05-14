@@ -2,7 +2,7 @@ namespace drawer
 { 
     void drawLine(point3d& p1, point3d& p2, int count)
     {
-        if (count < 1) return;
+        if (count < 1) return;  
 
         for (int i = 0;i < count;i++)
         {
@@ -33,7 +33,11 @@ namespace drawer
     {
         std::vector <point3d>& starArray = Constellation.starsCords;
         std::vector<std::vector<float>>& starEdges = Constellation.constellationEdges;
-        std::vector <float>& starHealth = Constellation.starsHealth;
+
+        Entity* entity = Constellation.linkedEntity;
+        if (!entity) return;
+
+        std::vector<float>& starHealth = entity->constellation->healthSystem->starsHealth;
 
         int starsEdgesCount = starEdges.size();
         for (int i = 0; i < starsEdgesCount; i++)
@@ -61,8 +65,13 @@ namespace drawer
 
     void drawStarPulse(Constellation& Constellation, bool colorOverride = false)
     {
+
         std::vector <point3d>& starArray = Constellation.starsCords;
-        std::vector <float>& starHealth = Constellation.starsHealth;
+
+        Entity* entity = Constellation.linkedEntity;
+        if (!entity) return;
+
+        std::vector<float>& starHealth = entity->constellation->healthSystem->starsHealth;
 
         int starsCount = starArray.size();
         if (!colorOverride) {
@@ -424,10 +433,13 @@ namespace drawer
     }    
 
     void DrawStarsHP(HDC hdc) {
+        Entity* enemyEntity = starSet[currentEnemyID]->linkedEntity;
+        if (!enemyEntity) return;
 
         for (size_t i = 0; i < starSet[currentEnemyID]->starsCords.size(); ++i) {
+
             auto pos = starSet[currentEnemyID]->starsCords[i];
-            float hp = starSet[currentEnemyID]->starsHealth[i];
+            float hp = enemyEntity->constellation->healthSystem->starsHealth[i];
 
             modelTransform(pos, *starSet[currentEnemyID]);
             modelProject(pos);
@@ -441,8 +453,12 @@ namespace drawer
     }
     void DrawHpEnemyBar()
     {
-        auto enemy_const = *starSet[currentEnemyID];
-        auto maxHP = enemy_const.maxHP;
+        Entity* enemyEntity = starSet[currentEnemyID]->linkedEntity;
+        if (!enemyEntity) return;
+
+        auto maxHP = enemyEntity->getMaxHP();
+        auto currentHP = enemyEntity->getHP();
+
         auto progress = getConstellationHP(*starSet[currentEnemyID]) / maxHP;
         auto progressText = "HP: " + std::to_string(progress);
 
@@ -525,8 +541,12 @@ namespace drawer
 
     void DrawHpHeroBar() 
     {
-        auto player_const = *starSet[player_sign];
-        auto maxHP = player_const.maxHP;
+        Entity* playerEntity = starSet[player_sign]->linkedEntity;
+        if (!playerEntity) return;
+
+        auto maxHP = playerEntity->getMaxHP();
+        auto currentHP = playerEntity->getHP();
+
         auto progress = getConstellationHP(*starSet[player_sign])/ maxHP;
         auto progressText = "HP: " + std::to_string(progress);
 
