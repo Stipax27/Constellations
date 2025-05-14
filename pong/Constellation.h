@@ -48,8 +48,8 @@ public:
     std::vector<point3d> posEnemy;
     HealthSystem* healthSystem;
 
-    Constellation(std::vector<point3d> _starsCords, std::vector<std::vector<float>> _constellationEdges)
-        : position{ 0,0,0 }, linkedEntity(nullptr) {
+    Constellation(std::vector<point3d> _starsCords, std::vector<std::vector<float>> _constellationEdges): position{ 0,0,0 }, linkedEntity(nullptr) 
+    {
         starsCords = _starsCords;
         constellationEdges = _constellationEdges;
         healthSystem = new HealthSystem(starsCords.size());

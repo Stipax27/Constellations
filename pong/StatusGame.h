@@ -1,11 +1,11 @@
 extern std::vector<Constellation*> starSet;
-extern std::vector<Entity*> entities;
+extern std::vector<Entity> entities;  // Изменил на vector<Entity>
 extern ZodiacSign player_sign;
 extern ZodiacSign currentEnemyID;
 extern DWORD currentTime;
 
-float getConstellationHP(const Entity& Entity) {
-    return Entity.entity.starHP;
+float getConstellationHP(const Entity& entity) {
+    return entity.getHP();
 }
 
 struct BattleState {
@@ -18,7 +18,7 @@ struct BattleState {
     std::vector<point3d> enemystarCords;
     point3d player_dodge_ofs;
     point3d starfield_angles;
-    
+
     bool operator!=(const BattleState& other) const {
         return playerHP != other.playerHP ||
             enemyHP != other.enemyHP ||
@@ -27,72 +27,72 @@ struct BattleState {
             playerstarCords != other.playerstarCords ||
             enemystarCords != other.enemystarCords ||
             player_dodge_ofs != other.player_dodge_ofs ||
-            starfield_angles != other.starfield_angles;  
+            starfield_angles != other.starfield_angles;
     }
 };
 
 std::vector<BattleState> battleHistory;
 BattleState lastSavedState;
-size_t currentStateIndex = 0;  
+size_t currentStateIndex = 0;
 
 void SaveCurrentState() {
-    if (!starSet[player_sign] || !starSet[currentEnemyID]) return;
+    // Получаем указатели на враг и игрока
+    Entity* playerEntity = &entities[static_cast<int>(player_sign)];
+    Entity* enemyEntity = &entities[static_cast<int>(currentEnemyID)];
 
     BattleState currentState;
     currentState.timestamp = currentTime;
 
-    currentState.playerHP = entity.starHP[player_sign]->starsHealth;
-    currentState.playerStarsHealth = starSet[player_sign]->entity.starHP;
-    currentState.playerstarCords = starSet[player_sign]->starsCords;
-     
-    currentState.enemyHP = starSet[currentEnemyID]->hp;
-    currentState.enemyStarsHealth = starSet[currentEnemyID]->starsHealth;
-    currentState.enemystarCords = starSet[currentEnemyID]->starsCords;
+    // Сохраняем состояние игрока
+    currentState.playerHP = playerEntity->getHP();
+    currentState.playerStarsHealth = playerEntity->constellation->healthSystem->starsHealth;
+    currentState.playerstarCords = playerEntity->constellation->starsCords;
+
+    // Сохраняем состояние врага
+    currentState.enemyHP = enemyEntity->getHP();
+    currentState.enemyStarsHealth = enemyEntity->constellation->healthSystem->starsHealth;
+    currentState.enemystarCords = enemyEntity->constellation->starsCords;
+
     currentState.player_dodge_ofs = player_dodge_ofs;
     currentState.starfield_angles = starfield_angles;
-   
-    if (battleHistory.empty()) {
+
+    // Если история пуста или состояние изменилось
+    if (battleHistory.empty() || battleHistory.back() != currentState) {
         battleHistory.push_back(currentState);
-        currentStateIndex = 0;
-        return;
-    }
+        currentStateIndex = battleHistory.size() - 1;
 
-    battleHistory.push_back(currentState);
-    currentStateIndex = battleHistory.size() - 1;
-
-    if (battleHistory.size() > 18000) {
-        battleHistory.erase(battleHistory.begin());
-        currentStateIndex--;
+        // Ограничиваем размер истории
+        if (battleHistory.size() > 18000) {
+            battleHistory.erase(battleHistory.begin());
+            currentStateIndex--;
+        }
     }
-    
 }
 
 bool RewindOneStepBack() {
-
     if (battleHistory.empty() || currentStateIndex == 0) {
         return false;
     }
 
-    BattleState prevState;
-    for (int i = 0; i < 4; i++)
-    {
-        
-        if (currentStateIndex > 0)
-        {
-            currentStateIndex -= 1;
-            prevState = battleHistory[currentStateIndex];
-            battleHistory.pop_back();
-        }
-    }
+    // Получаем указатели на текущие сущности
+    Entity* playerEntity = &entities[static_cast<int>(player_sign)];
+    Entity* enemyEntity = &entities[static_cast<int>(currentEnemyID)];
 
-    starSet[player_sign]->hp = prevState.playerHP;
-    starSet[player_sign]->starsHealth = prevState.playerStarsHealth;
-    starSet[player_sign]->starsCords = prevState.playerstarCords;
-     
-    starSet[currentEnemyID]->hp = prevState.enemyHP;
-    starSet[currentEnemyID]->starsHealth = prevState.enemyStarsHealth;
-    starSet[currentEnemyID]->starsCords = prevState.enemystarCords;
-    
+    // Перемещаемся на несколько шагов назад
+    int stepsToRewind = min(4, static_cast<int>(currentStateIndex));
+    currentStateIndex -= stepsToRewind;
+    const BattleState& prevState = battleHistory[currentStateIndex];
+
+    // Восстанавливаем состояние игрока
+    playerEntity->constellation->healthSystem->starsHealth = prevState.playerStarsHealth;
+    playerEntity->constellation->healthSystem->updateStarsHP();
+    playerEntity->constellation->starsCords = prevState.playerstarCords;
+
+    // Восстанавливаем состояние врага
+    enemyEntity->constellation->healthSystem->starsHealth = prevState.enemyStarsHealth;
+    enemyEntity->constellation->healthSystem->updateStarsHP();
+    enemyEntity->constellation->starsCords = prevState.enemystarCords;
+
     player_dodge_ofs = prevState.player_dodge_ofs;
     starfield_angles = prevState.starfield_angles;
 
