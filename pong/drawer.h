@@ -34,8 +34,7 @@ namespace drawer
         std::vector <point3d>& starArray = Constellation.starsCords;
         std::vector<std::vector<float>>& starEdges = Constellation.constellationEdges;
 
-        Entity* entity = Constellation.linkedEntity;
-        if (!entity) return;
+        
 
         std::vector<float>& starHealth = entity->constellation->healthSystem->starsHealth;
 
@@ -68,8 +67,7 @@ namespace drawer
 
         std::vector <point3d>& starArray = Constellation.starsCords;
 
-        Entity* entity = Constellation.linkedEntity;
-        if (!entity) return;
+        
 
         std::vector<float>& starHealth = entity->constellation->healthSystem->starsHealth;
 
@@ -570,7 +568,7 @@ namespace drawer
         point3d bottomLeft = { barX, barY + barHeight, 0 };
         point3d bottomRight = { barX + barWidth, barY + barHeight, 0 };
 
-        modelTransform(topLeft, player_const);
+        modelTransformEntity(topLeft, *starSet[player_sign]->linkedEntity);
         modelTransform(topRight, player_const);
         modelTransform(bottomLeft, player_const);
         modelTransform(bottomRight, player_const);

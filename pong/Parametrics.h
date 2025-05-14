@@ -14,8 +14,9 @@ bool attack_start = false;
 bool attackCooldown = true;
 
 void (*modelTransform)(point3d& p, Constellation& Constellation);
+void (*modelTransformEntity)(point3d& p, Entity& Entity);
 void (*modelProject)(point3d& p);
-void (*uiFunc)(point3d& point, Constellation& Constellation,Entity& Entity, int i);
+void (*uiFunc)(point3d& point, Constellation& Constellation, Entity& Entity, int i);
 
 void genRandSphere(point3d& p) {
     float amp = 1.25;

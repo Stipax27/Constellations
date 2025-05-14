@@ -36,7 +36,7 @@ public:
 
 class Constellation {
 public:
-    Entity* linkedEntity = nullptr;
+
     float scale = 1000;
     float distance;
 
@@ -48,7 +48,7 @@ public:
     std::vector<point3d> posEnemy;
     HealthSystem* healthSystem;
 
-    Constellation(std::vector<point3d> _starsCords, std::vector<std::vector<float>> _constellationEdges): position{ 0,0,0 }, linkedEntity(nullptr) 
+    Constellation(std::vector<point3d> _starsCords, std::vector<std::vector<float>> _constellationEdges): position{ 0,0,0 } 
     {
         starsCords = _starsCords;
         constellationEdges = _constellationEdges;
@@ -114,8 +114,9 @@ public:
     DWORD moveStartTime;
     bool isMoveActive;
 
-    Entity(Constellation* constellation) : constellation(constellation) {
-        constellation->linkedEntity = this;
+    Entity(Constellation& src_constellation) {
+        //constellation->linkedEntity = this;
+        constellation = &src_constellation;
         ID = constellationsCounter++;
     }
 
