@@ -207,9 +207,6 @@ void winFight()
 
 void endFight()
 {
-    Entity* enemyEntity = starSet[currentEnemyID]->linkedEntity;
-    if (!enemyEntity) return;
-
     for (int i =0;i<12;i++) 
     {
         auto& currentConst = starSet[i];

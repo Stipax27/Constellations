@@ -525,22 +525,6 @@ Constellation Staff(
 }
 );
 
-
-std::vector<Entity> entities = {
-    Entity(&Aries),
-    Entity(&Taurus),
-    Entity(&Gemini),
-    Entity(&Cancer),
-    Entity(&Leo),
-    Entity(&Virgo),
-    Entity(&Libra),
-    Entity(&Scorpius),
-    Entity(&Sagittarius),
-    Entity(&Capricornus),
-    Entity(&Aquarius),
-    Entity(&Pisces)
-};
-
 std::vector <Constellation*> starSet = {
     &Aries,
     &Taurus,

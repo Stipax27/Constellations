@@ -36,6 +36,7 @@ public:
 
 class Constellation {
 public:
+    
 
     float scale = 1000;
     float distance;
@@ -93,15 +94,9 @@ public:
         }
     }
 
-    std::vector<Constellation*> starSet = {
-        &Aries, &Taurus, &Gemini, &Cancer, &Leo, &Virgo,
-        &Libra, &Scorpius, &Sagittarius, &Capricornus, &Aquarius, &Pisces,
-        &Sword, &Shield, &Bow, &Staff
-    };
-
-    void enemyPosConstallations() {
-        posEnemy = starSet[currentEnemyID]->starsRenderedCords;
-    }
+   /* void enemyPosConstallations() {
+        posEnemy = starSet[currentEnemyID]->starsCords;
+    }*/
 };
 
 class Entity {

@@ -29,14 +29,11 @@ namespace drawer
 
     float linksDivider = 25;
 
-    void drawLinks(Constellation& Constellation, Entity& Entity, bool colorOverride = false)
+    void drawLinks(Constellation& Constellation,  bool colorOverride = false)
     {
         std::vector <point3d>& starArray = Constellation.starsCords;
         std::vector<std::vector<float>>& starEdges = Constellation.constellationEdges;
-
-        
-
-        std::vector<float>& starHealth = entity->constellation->healthSystem->starsHealth;
+        std::vector<float>& starHealth = Constellation.healthSystem->starsHealth;
 
         int starsEdgesCount = starEdges.size();
         for (int i = 0; i < starsEdgesCount; i++)
@@ -62,14 +59,11 @@ namespace drawer
         }
     }
 
-    void drawStarPulse(Constellation& Constellation, Entity& Entity, bool colorOverride = false)
+    void drawStarPulse(Constellation& Constellation, bool colorOverride = false)
     {
 
         std::vector <point3d>& starArray = Constellation.starsCords;
-
-        
-
-        std::vector<float>& starHealth = entity->constellation->healthSystem->starsHealth;
+        std::vector<float>& star_Health = Constellation.healthSystem->starsHealth;
 
         int starsCount = starArray.size();
         if (!colorOverride) {
@@ -89,9 +83,9 @@ namespace drawer
 
             // Пульсирование Звёзд при наведение мыши.
             finalStarRad = 1;
-            if (uiFunc)
+            if (uiFunc && Constellation.healthSystem && !star_Health.empty() && i < star_Health.size())
             {
-                uiFunc(point, Constellation, i);
+                uiFunc(point, Constellation,star_Health, i);
             }
 
             if (finalStarRad > 0)
