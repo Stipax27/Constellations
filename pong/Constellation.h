@@ -115,11 +115,11 @@ public:
     bool isMoveActive;
 
     Entity(Constellation& src_constellation) {
-        //constellation->linkedEntity = this;
         constellation = &src_constellation;
         ID = constellationsCounter++;
     }
 
+    
     float getHP() const {
         return constellation->healthSystem->starHP;
     }

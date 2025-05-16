@@ -29,7 +29,7 @@ namespace drawer
 
     float linksDivider = 25;
 
-    void drawLinks(Constellation& Constellation, bool colorOverride = false)
+    void drawLinks(Constellation& Constellation, Entity& Entity, bool colorOverride = false)
     {
         std::vector <point3d>& starArray = Constellation.starsCords;
         std::vector<std::vector<float>>& starEdges = Constellation.constellationEdges;
@@ -62,7 +62,7 @@ namespace drawer
         }
     }
 
-    void drawStarPulse(Constellation& Constellation, bool colorOverride = false)
+    void drawStarPulse(Constellation& Constellation, Entity& Entity, bool colorOverride = false)
     {
 
         std::vector <point3d>& starArray = Constellation.starsCords;
@@ -91,7 +91,7 @@ namespace drawer
             finalStarRad = 1;
             if (uiFunc)
             {
-                uiFunc(point, Constellation, Entity, i);
+                uiFunc(point, Constellation, i);
             }
 
             if (finalStarRad > 0)
@@ -431,19 +431,18 @@ namespace drawer
     }    
 
     void DrawStarsHP(HDC hdc) {
-        Entity* enemyEntity = starSet[currentEnemyID]->linkedEntity;
-        if (!enemyEntity) return;
+        Constellation* enemyConstellation = starSet[currentEnemyID];
+        if (!enemyConstellation || !enemyConstellation->healthSystem) return;
 
-        for (size_t i = 0; i < starSet[currentEnemyID]->starsCords.size(); ++i) {
+        for (size_t i = 0; i < enemyConstellation->starsCords.size(); ++i) {
 
-            auto pos = starSet[currentEnemyID]->starsCords[i];
-            float hp = enemyEntity->constellation->healthSystem->starsHealth[i];
+            auto pos = enemyConstellation->starsCords[i];
+            float hp = enemyConstellation->healthSystem->starsHealth[i];
 
-            modelTransform(pos, *starSet[currentEnemyID]);
+            modelTransform(pos, *enemyConstellation);
             modelProject(pos);
 
-            if (hp>0)
-            {
+            if (hp > 0) {
                 std::string hpText = "HP: " + std::to_string(hp);
                 drawString(hpText.c_str(), pos.x, pos.y - 40, .5, true, false, 7);
             }
@@ -451,14 +450,14 @@ namespace drawer
     }
     void DrawHpEnemyBar()
     {
-        Entity* enemyEntity = starSet[currentEnemyID]->linkedEntity;
-        if (!enemyEntity) return;
+        Constellation* enemyConstellation = starSet[currentEnemyID];
+        if (!enemyConstellation || !enemyConstellation->healthSystem) return;
 
-        auto maxHP = enemyEntity->getMaxHP();
-        auto currentHP = enemyEntity->getHP();
+        auto maxHP = enemyConstellation->healthSystem->maxHP;
+        auto currentHP = enemyConstellation->healthSystem->starHP;
 
-        auto progress = getConstellationHP(*starSet[currentEnemyID]) / maxHP;
-        auto progressText = "HP: " + std::to_string(progress);
+        auto progress = currentHP / maxHP;
+        auto progressText = "HP: " + std::to_string(currentHP) + "/" + std::to_string(maxHP);
 
         linksDivider = 15;
         modelTransform = &placeConstToWorld;
@@ -531,7 +530,7 @@ namespace drawer
         }
         modelProject = &fightProject;
         point3d p = { 0,.3,0 };
-        modelTransform(p, enemy_const);
+        modelTransform(p, *enemyConstellation);
         modelProject(p);
         drawString(progressText.c_str(), p.x, p.y-50, 1, true);
 
@@ -539,14 +538,14 @@ namespace drawer
 
     void DrawHpHeroBar() 
     {
-        Entity* playerEntity = starSet[player_sign]->linkedEntity;
-        if (!playerEntity) return;
+        Constellation* playerConstellation = starSet[player_sign];
+        if (!playerConstellation || !playerConstellation->healthSystem) return;
 
-        auto maxHP = playerEntity->getMaxHP();
-        auto currentHP = playerEntity->getHP();
+        auto maxHP = playerConstellation->healthSystem->maxHP;
+        auto currentHP = playerConstellation->healthSystem->starHP;
 
-        auto progress = getConstellationHP(*starSet[player_sign])/ maxHP;
-        auto progressText = "HP: " + std::to_string(progress);
+        auto progress = currentHP / maxHP;
+        auto progressText = "HP: " + std::to_string(currentHP) + "/" + std::to_string(maxHP);
 
         linksDivider = 15;
         modelTransform = &HeroUITransform;
@@ -568,10 +567,10 @@ namespace drawer
         point3d bottomLeft = { barX, barY + barHeight, 0 };
         point3d bottomRight = { barX + barWidth, barY + barHeight, 0 };
 
-        modelTransformEntity(topLeft, *starSet[player_sign]->linkedEntity);
-        modelTransform(topRight, player_const);
-        modelTransform(bottomLeft, player_const);
-        modelTransform(bottomRight, player_const);
+        modelTransform(topLeft, *playerConstellation);
+        modelTransform(topRight, *playerConstellation);
+        modelTransform(bottomLeft, *playerConstellation);
+        modelTransform(bottomRight, *playerConstellation);
 
         // Рисуем рамку
         drawer::drawLine(topLeft, topRight, 50);    // Верх
@@ -597,7 +596,7 @@ namespace drawer
                 currentSize += pulse * 2.0f;
             }
 
-            modelTransform(star, player_const);
+            modelTransform(star, *playerConstellation);
             modelProject(star);
 
             star.draw(star, currentSize);
@@ -617,15 +616,15 @@ namespace drawer
                 0
             };
 
-            modelTransform(star1, player_const);
-            modelTransform(star2, player_const);
+            modelTransform(star1, *playerConstellation);
+            modelTransform(star2, *playerConstellation);
 
             int lineSegments = (i < activeStars - 1) ? 10 : 5;
             drawer::drawLine(star1, star2, lineSegments);
         }
 
         point3d p = { 0,2,0 };
-        modelTransform(p, player_const);
+        modelTransform(p, *playerConstellation);
         modelProject(p);
         drawString(progressText.c_str(), p.x, p.y, 1, true);
     }
@@ -690,8 +689,9 @@ namespace drawer
                 std::string timeStr = "Time: " + std::to_string(remainingTime / 1000);
                 drawString(timeStr.c_str(), window.width / 1.1, 45, 1.f, true);
     
-                if (getConstellationHP(*starSet[currentEnemyID]) < 0)
-                {
+                Constellation* enemyConstellation = starSet[currentEnemyID];
+                if (enemyConstellation && enemyConstellation->healthSystem &&
+                    enemyConstellation->healthSystem->starHP <= 0) {
                     timeModifier = 0;
                     isBattleActive = false;
                     gameState = gameState_::WinFight;
