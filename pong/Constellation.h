@@ -32,11 +32,22 @@ public:
         std::fill(starsHealth.begin(), starsHealth.end(), 1.0f);
         starHP = maxHP;
     }
+
+    bool operator==(const HealthSystem& other) const {
+        return starHP == other.starHP &&
+            maxHP == other.maxHP &&
+            defens == other.defens &&
+            starsHealth == other.starsHealth;
+    }
+
+    bool operator!=(const HealthSystem& other) const {
+        return !(*this == other);
+    }
+
 };
 
 class Constellation {
 public:
-    
 
     float scale = 1000;
     float distance;
@@ -94,6 +105,19 @@ public:
         }
     }
 
+    bool operator==(const Constellation& other) const {
+        return scale == other.scale &&
+            distance == other.distance &&
+            starsCords == other.starsCords &&
+            constellationEdges == other.constellationEdges &&
+            angle == other.angle &&
+            position == other.position &&
+            (*healthSystem) == (*other.healthSystem);
+    }
+
+    bool operator!=(const Constellation& other) const {
+        return !(*this == other);
+    }
    /* void enemyPosConstallations() {
         posEnemy = starSet[currentEnemyID]->starsCords;
     }*/
@@ -129,5 +153,14 @@ public:
 
     void resetHealth() {
         constellation->healthSystem->resetHealth();
+    }
+
+    bool operator==(const Entity& other) const {
+        return ID == other.ID &&
+            constellation == other.constellation;
+    }
+
+    bool operator!=(const Entity& other) const {
+        return !(*this == other);
     }
 };
