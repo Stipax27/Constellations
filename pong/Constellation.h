@@ -34,14 +34,22 @@ public:
     }
 
     bool operator==(const HealthSystem& other) const {
-        return starHP == other.starHP &&
-            maxHP == other.maxHP &&
-            defens == other.defens &&
-            starsHealth == other.starsHealth;
-    }
+        
+        if (starsHealth.size() != other.starsHealth.size()) return false;
 
-    bool operator!=(const HealthSystem& other) const {
-        return !(*this == other);
+       
+        const float epsilon = 0.0001f;
+        if (fabs(starHP - other.starHP) > epsilon) return false;
+        if (fabs(maxHP - other.maxHP) > epsilon) return false;
+        if (fabs(defens - other.defens) > epsilon) return false;
+
+       
+        for (size_t i = 0; i < starsHealth.size(); ++i) {
+            if (fabs(starsHealth[i] - other.starsHealth[i]) > epsilon) {
+                return false;
+            }
+        }
+        return true;
     }
 
 };
@@ -106,18 +114,24 @@ public:
     }
 
     bool operator==(const Constellation& other) const {
-        return scale == other.scale &&
-            distance == other.distance &&
-            starsCords == other.starsCords &&
-            constellationEdges == other.constellationEdges &&
-            angle == other.angle &&
-            position == other.position &&
-            (*healthSystem) == (*other.healthSystem);
+        const float epsilon = 0.0001f;
+        if (fabs(scale - other.scale) > epsilon) return false;
+        if (fabs(distance - other.distance) > epsilon) return false;
+
+        if (starsCords.size() != other.starsCords.size()) return false;
+        if (constellationEdges.size() != other.constellationEdges.size()) return false;
+
+        if (angle != other.angle) return false;
+        if (position != other.position) return false;
+
+        if (healthSystem == nullptr || other.healthSystem == nullptr) {
+            return healthSystem == other.healthSystem;
+        }
+        return (*healthSystem) == (*other.healthSystem); 
     }
 
-    bool operator!=(const Constellation& other) const {
-        return !(*this == other);
-    }
+
+
    /* void enemyPosConstallations() {
         posEnemy = starSet[currentEnemyID]->starsCords;
     }*/
@@ -156,11 +170,12 @@ public:
     }
 
     bool operator==(const Entity& other) const {
-        return ID == other.ID &&
-            constellation == other.constellation;
-    }
+        if (ID != other.ID) return false;
 
-    bool operator!=(const Entity& other) const {
-        return !(*this == other);
+       
+        if (!constellation || !other.constellation) {
+            return constellation == other.constellation;
+        }
+        return *constellation == *other.constellation;
     }
 };

@@ -29,41 +29,38 @@ namespace drawer
 
     float linksDivider = 25;
 
-    void drawLinks(Constellation& Constellation,  bool colorOverride = false)
-    {
-        std::vector <point3d>& starArray = Constellation.starsCords;
-        std::vector<std::vector<float>>& starEdges = Constellation.constellationEdges;
-        std::vector<float>& starHealth = Constellation.healthSystem->starsHealth;
+    void drawLinks(Constellation& constellation, bool colorOverride = false) {
+        if (constellation.healthSystem == nullptr) return; 
+
+        std::vector<point3d>& starArray = constellation.starsCords;
+        std::vector<std::vector<float>>& starEdges = constellation.constellationEdges;
+        std::vector<float>& starHealth = constellation.healthSystem->starsHealth;
 
         int starsEdgesCount = starEdges.size();
-        for (int i = 0; i < starsEdgesCount; i++)
-        {
-            point3d point1, point2;
-            point1 = starArray[starEdges[i][0]];
-            
-            point2 = starArray[starEdges[i][1]];
-           
+        for (int i = 0; i < starsEdgesCount; i++) {
+            point3d point1 = starArray[starEdges[i][0]];
+            point3d point2 = starArray[starEdges[i][1]];
+
             float a = currentTime * .01;
-            modelTransform(point1, Constellation);
-            modelTransform(point2, Constellation);
-            
-            if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0) // - Стало
-            {
+            modelTransform(point1, constellation);
+            modelTransform(point2, constellation);
+
+            if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0) {
                 float dx = point2.x - point1.x;
                 float dy = point2.y - point1.y;
                 float dz = point2.z - point1.z;
                 float length = sqrt(dx * dx + dy * dy + dz * dz);
                 int x = static_cast<int>(length) / linksDivider;
-                drawLine(point1, point2, x);// Рисование звёздных линий созвездия.
+                drawLine(point1, point2, x); 
             }
         }
     }
 
-    void drawStarPulse(Constellation& Constellation, bool colorOverride = false)
-    {
+    void drawStarPulse(Constellation& constellation, bool colorOverride = false) {
+        if (constellation.healthSystem == nullptr) return;
 
-        std::vector <point3d>& starArray = Constellation.starsCords;
-        std::vector<float>& star_Health = Constellation.healthSystem->starsHealth;
+        std::vector<point3d>& starArray = constellation.starsCords;
+        std::vector<float>& star_Health = constellation.healthSystem->starsHealth;
 
         int starsCount = starArray.size();
         if (!colorOverride) {
@@ -72,30 +69,27 @@ namespace drawer
             SelectObject(window.context, brush);
         }
 
-        for (int i = 0; i < starsCount; i++)
-        {
-            point3d point;
-            point = starArray[i];
-            
+        for (int i = 0; i < starsCount; i++) {
+            point3d point = starArray[i];
+
             float a = currentTime * .01;
-            modelTransform(point, Constellation);
+            modelTransform(point, constellation);
             modelProject(point);
 
-            // Пульсирование Звёзд при наведение мыши.
+            // Пульсирование Звёзд при наведении мыши.
             finalStarRad = 1;
-            if (uiFunc && Constellation.healthSystem && !star_Health.empty() && i < star_Health.size())
-            {
-                uiFunc(point, Constellation,star_Health, i);
+            if (uiFunc && i < star_Health.size()) {
+                Entity* entityPtr = new Entity(constellation);
+                uiFunc(point, constellation, entityPtr, i);
+                delete entityPtr;
             }
 
-            if (finalStarRad > 0)
-            {
+            if (finalStarRad > 0) {
                 point.draw(point, finalStarRad);
             }
         }
 
-        if (!colorOverride)
-        {
+        if (!colorOverride) {
             DeleteObject(brush);
             DeleteObject(brush2);
         }

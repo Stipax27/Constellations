@@ -15,7 +15,7 @@ bool attackCooldown = true;
 
 void (*modelTransform)(point3d& p, Constellation& Constellation);
 void (*modelProject)(point3d& p);
-void (*uiFunc)(point3d& point, Constellation& Constellation, std::vector<float>& starHealth, int i);
+void (*uiFunc)(point3d& point, Constellation& Constellation, Entity* entity, int i);
 
 void genRandSphere(point3d& p) {
     float amp = 1.25;
@@ -61,28 +61,40 @@ void menuProject(point3d& p) {
     p.y = y;
 }
 
-void constSelectUI(point3d& point, Constellation& Constellation, std::vector<float>& starHealth, int i) {
-    if (!Constellation.healthSystem) return;
+
+void constSelectUI(point3d& point, Constellation& constellation, Entity* entity, int i) {
+    if (!constellation.healthSystem) return;
 
     float dx = point.x - mouse.pos.x;
     float dy = point.y - mouse.pos.y;
-    float lenght = sqrt(dx * dx + dy * dy);
+    float length = sqrt(dx * dx + dy * dy);
 
-    float rad = saturate(1.2 - lenght * .05) * fabs(sin(currentTime * .01));
+    float rad = saturate(1.2 - length * .05) * fabs(sin(currentTime * .01));
 
     if (GetAsyncKeyState(VK_LBUTTON)) {
-        if (lenght < starSize) {
+        if (length < starSize) {
             SelectObject(window.context, brush2);
             gameState = gameState_::Fight;
-            currentEnemy = &Constellation;
-            currentEnemyID = static_cast<ZodiacSign>(std::distance(starSet.begin(), std::find(starSet.begin(), starSet.end(), Constellation)));
+            currentEnemy = &constellation;
+
+           
+            auto id = std::find_if(starSet.begin(), starSet.end(),
+                [&constellation](Constellation* c) { return c && *c == constellation; });
+
+            if (id != starSet.end()) {
+                currentEnemyID = static_cast<ZodiacSign>(std::distance(starSet.begin(), id));
+            }
+            else {
+                
+                currentEnemyID = ZodiacSign::ARIES; 
+            }
         }
     }
     else {
         SelectObject(window.context, brush);
     }
 
-    finalStarRad = starSize * Constellation.healthSystem->starsHealth[i] + rad * 15;
+    finalStarRad = starSize * constellation.healthSystem->starsHealth[i] + rad * 15;
 }
 
 float get_lenghts(point3d& point1, point3d& point2) {
@@ -92,8 +104,9 @@ float get_lenghts(point3d& point1, point3d& point2) {
 }
 
 
-void starIntersectUI(point3d& point, Constellation& constellation, std::vector<float>& starHealth, int i) {
-    if (!constellation.healthSystem) return;
+void starIntersectUI(point3d& point, Constellation& constellation, Entity* entity, int i) {
+    if (!constellation.healthSystem || i >= constellation.healthSystem->starsHealth.size())
+        return;
 
     float dx = point.x - mouse.pos.x;
     float dy = point.y - mouse.pos.y;
@@ -166,7 +179,7 @@ void starIntersectUI(point3d& point, Constellation& constellation, std::vector<f
     }
 }
 
-void heroUI(point3d& point, Constellation& Constellation, std::vector<float>& starHealth,int i)
+void heroUI(point3d& point, Constellation& Constellation, Entity* entity,int i)
 {   if (!Constellation.healthSystem) return;
 
     float dx = point.x - mouse.pos.x;
@@ -188,7 +201,7 @@ void heroUI(point3d& point, Constellation& Constellation, std::vector<float>& st
     finalStarRad = 3 * Constellation.healthSystem->starsHealth[i] + rad * 15;
 }
 
-void menuUI(point3d& point, Constellation& Constellation, std::vector<float>& starHealth, int i) {
+void menuUI(point3d& point, Constellation& Constellation, Entity* entity, int i) {
     finalStarRad = 5;
 }
 
