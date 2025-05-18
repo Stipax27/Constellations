@@ -39,6 +39,7 @@ HPEN heroPen;
 #include "utils.h"
 #include "MainWindow.h"
 #include "Point3d.h"
+#include "Line.h"
 #include "mouse.h"
 #include "Constellation.h"
 std::vector<Entity> entities;

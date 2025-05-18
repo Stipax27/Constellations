@@ -186,10 +186,9 @@ bool isConstellationDead(Constellation& Constellation)
 
 void enemyAttack(Constellation& Constellation) {
     std::vector<float>& starHealth = Constellation.healthSystem->starsHealth;
-    float combinedDamage = CalculateCombinedDamage() * 0.05f;
-
+    
     for (int i = 0; i < starHealth.size(); i++) {
-        starHealth[i] -= combinedDamage;
+        starHealth[i] -= .1f;
         if (starHealth[i] < 0) starHealth[i] = 0;
     }
 
@@ -198,15 +197,15 @@ void enemyAttack(Constellation& Constellation) {
 
 void enemyFight()
 {
-    float e = 10000;
+    float e = 1000;
     if (currentTime > attackTime + e)
     {
         attackTime = currentTime;
-        enemyAttack(*starSet[player_sign]);
+        enemyAttack(*entities[player_sign].constellation);
 
     }
 
-    if (getConstellationHP(*starSet[player_sign]) <= 0.f)
+    if (getConstellationHP(*entities[player_sign].constellation) <= 0.f)
     {
         gameState = gameState_::EndFight;
     }
@@ -219,6 +218,7 @@ bool is_attack;
 
 void AttackVector()
 {
+    CalculateCombinedDamage();
 
     if (GetAsyncKeyState(VK_LBUTTON))
     {

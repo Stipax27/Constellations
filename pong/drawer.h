@@ -763,8 +763,6 @@ namespace drawer
             { 
                 SelectWeapon();
                 SelectElement();
-
-              
                 DrawCombatStats();
                
                 if (attackCooldown == true) {
@@ -851,7 +849,6 @@ namespace drawer
                         InitConstellationAttack();
                     }
                     
-                    //draw—onstellation(*starSet[currentEnemyID]);
                     draw—onstellation(*entities[currentEnemyID].constellation);
 
                     linksDivider = 15;
@@ -861,7 +858,7 @@ namespace drawer
                     SelectObject(window.context, heroBrush);
                     SelectObject(window.context, heroPen);
 
-                    draw—onstellation(*starSet[player_sign],true);//»„ÓÍ
+                    draw—onstellation(*entities[player_sign].constellation,true);//»„ÓÍ
 
                     SelectObject(window.context, mainBrush);
                     SelectObject(window.context, mainPen);
@@ -875,7 +872,7 @@ namespace drawer
                 }
                 else
                 {
-                    draw—onstellation(*starSet[currentEnemyID]);
+                    draw—onstellation(*entities[currentEnemyID].constellation);
                 }
 
                 if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true)
@@ -910,7 +907,7 @@ namespace drawer
                 SelectObject(window.context, heroBrush);
                 SelectObject(window.context, heroPen);
 
-                draw—onstellation(*starSet[player_sign], true);
+                draw—onstellation(*entities[player_sign].constellation, true);
 
                 SelectObject(window.context, mainBrush);
                 SelectObject(window.context, mainPen);

@@ -103,5 +103,8 @@
     <ClInclude Include="Point3d.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
