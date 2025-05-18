@@ -274,8 +274,8 @@ namespace drawer
         linksDivider = 15;
         if (gameState == gameState_::confirmSign) n = player_sign;
         //draw—onstellation(*starSet[n]);
-
-        draw—onstellation(*starSet[player_sign]);
+        draw—onstellation(*entities[player_sign].constellation);
+        //draw—onstellation(*starSet[player_sign]);
     }
 
     void drawShieldCircle() 
@@ -738,12 +738,12 @@ namespace drawer
 
                 for (int i = 0;i < 12;i++)
                 {
-                    draw—onstellation(*starSet[i]);
+                    draw—onstellation(*entities[i].constellation);
                 }
 
                 std::string curentSignstring = zodiacSignToString(player_sign);
-                TextOutA(window.context, window.width * 5 / 6, window.height-window.height/20., curentSignstring.c_str(), curentSignstring.size());
-                //drawString(curentSignstring, window.width * 5 / 6, window.height - window.height / 20., 1, false);
+                //TextOutA(window.context, window.width * 5 / 6, window.height-window.height/20., curentSignstring.c_str(), curentSignstring.size());
+                drawString(curentSignstring.c_str(), window.width * 5 / 6, window.height - window.height / 20., 1, false);
 
                 drawString("Find Constallations and click on him", window.width/2, (200./1440)*window.height, 1, true);
                 drawString("Features:\nMouse wheel to zoom in and out", (1700./2560)*window.width,(1200./1440)*window.height , .7f, false);
@@ -851,7 +851,8 @@ namespace drawer
                         InitConstellationAttack();
                     }
                     
-                    draw—onstellation(*starSet[currentEnemyID]);
+                    //draw—onstellation(*starSet[currentEnemyID]);
+                    draw—onstellation(*entities[currentEnemyID].constellation);
 
                     linksDivider = 15;
                     modelTransform = &placeHeroToWorld;

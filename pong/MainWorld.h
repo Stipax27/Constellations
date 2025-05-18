@@ -563,6 +563,19 @@ void initWorld()
     Shield.setStarsRenderedCords(0, 0, 0);
     Bow.setStarsRenderedCords(0, 0, 0);
     Staff.setStarsRenderedCords(0, 0, 0);
+
+    entities.push_back(Aries);
+    entities.push_back(Taurus);
+    entities.push_back(Gemini);
+    entities.push_back(Cancer);
+    entities.push_back(Leo);
+    entities.push_back(Virgo);
+    entities.push_back(Libra);
+    entities.push_back(Scorpius);
+    entities.push_back(Sagittarius);
+    entities.push_back(Capricornus);
+    entities.push_back(Aquarius);
+    entities.push_back(Pisces);
 }
 
 using namespace std;
@@ -580,7 +593,7 @@ enum class gameState_ {
     MainMenu, MonthSelection, DaySelection, confirmSign, selectEnemy, Fight, EndFight, DialogStruct,WinFight
 };
 
-gameState_  gameState = gameState_::Fight;
+gameState_  gameState = gameState_::selectEnemy;
 Constellation* currentEnemy = &Aries;
 ZodiacSign currentEnemyID = ZodiacSign::ARIES;
 

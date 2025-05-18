@@ -1,5 +1,5 @@
 extern std::vector<Constellation*> starSet;
-std::vector<Entity> entities; 
+
 extern ZodiacSign player_sign;
 extern ZodiacSign currentEnemyID;
 extern DWORD currentTime;
