@@ -6,7 +6,6 @@ public:
     float defenseMod;
     std::string name;
     COLORREF color;
-
     float swordMod = 1.0f;
     float shieldMod = 1.0f;
     float bowMod = 1.0f;
@@ -22,32 +21,32 @@ enum class element_name
 
 element_name current_element = element_name::Fire;
 
+
 void initElements() {
-    
     elements[(int)element_name::Fire].damageMod = 1.3f;
     elements[(int)element_name::Fire].defenseMod = 0.8f;
     elements[(int)element_name::Fire].name = "Fire";
-    elements[(int)element_name::Fire].color = RGB(255, 100, 0);
-    elements[(int)element_name::Fire].swordMod = 1.5f;  // Меч + Огонь = +50% урона
-    elements[(int)element_name::Fire].bowMod = 1.3f;    // Лук + Огонь = +30% урона
+    elements[(int)element_name::Fire].color = RGB(255, 100, 0); // Установите цвет
+    elements[(int)element_name::Fire].swordMod = 1.5f;
+    elements[(int)element_name::Fire].bowMod = 1.3f;
 
     elements[(int)element_name::Earth].damageMod = 0.9f;
     elements[(int)element_name::Earth].defenseMod = 1.4f;
     elements[(int)element_name::Earth].name = "Earth";
     elements[(int)element_name::Earth].color = RGB(139, 69, 19);
-    elements[(int)element_name::Earth].shieldMod = 1.6f; // Щит + Земля = +60% защиты
+    elements[(int)element_name::Earth].shieldMod = 1.6f;
 
     elements[(int)element_name::Air].damageMod = 1.1f;
     elements[(int)element_name::Air].defenseMod = 0.9f;
     elements[(int)element_name::Air].name = "Air";
     elements[(int)element_name::Air].color = RGB(173, 216, 230);
-    elements[(int)element_name::Air].bowMod = 1.4f;     // Лук + Воздух = +40% урона
+    elements[(int)element_name::Air].bowMod = 1.4f;
 
     elements[(int)element_name::Water].damageMod = 1.0f;
     elements[(int)element_name::Water].defenseMod = 1.2f;
     elements[(int)element_name::Water].name = "Water";
     elements[(int)element_name::Water].color = RGB(0, 105, 148);
-    elements[(int)element_name::Water].staffMod = 1.3f;  // Посох + Вода = +30% урона
+    elements[(int)element_name::Water].staffMod = 1.3f;
 }
 
 float CalculateCombinedDamage() {
@@ -120,6 +119,7 @@ void SelectElement() {
 
 
 void drawCurrentElement() {
+
     std::string elementText = "Current element: " + elements[(int)current_element].name;
 
     
@@ -127,9 +127,22 @@ void drawCurrentElement() {
     int oldBkMode = SetBkMode(window.context, TRANSPARENT);
 
     
-    drawString(elementText.c_str(), window.width / 2, window.height - window.height / 5., 1, true);
+    HBRUSH currentBrush = CreateSolidBrush(elements[(int)current_element].color);
 
-  
+    
+    HBRUSH oldBrush = (HBRUSH)SelectObject(window.context, currentBrush);
+
+    
+    RECT rect;
+    rect.left = window.width / 2 - 50; 
+    rect.top = window.height - window.height / 5 - 20; 
+    rect.right = window.width / 2 + 50;
+    rect.bottom = window.height - window.height / 5 + 20; 
+    FillRect(window.context, &rect, currentBrush); 
+
+    drawString(elementText.c_str(), window.width / 2, window.height - window.height / 4, 1, true);
+
+    SelectObject(window.context, oldBrush);
     SetTextColor(window.context, oldColor);
     SetBkMode(window.context, oldBkMode);
 }
@@ -141,9 +154,14 @@ void DrawCombatStats() {
     std::string damageText = "Damage: " + std::to_string(combinedDamage);
     drawString(damageText.c_str(), window.width / 4, window.height - 400, 1, true);
 
+    // Установка цвета текста на цвет стихии
     COLORREF oldColor = SetTextColor(window.context, elements[(int)current_element].color);
+
+    // Текст элемента и оружия
     std::string elementText = elements[(int)current_element].name + " " + weapon[(int)current_weapon].name;
     drawString(elementText.c_str(), window.width / 4, window.height - 180, 1.2f, true);
+
+    // Восстановление старого цвета текста
     SetTextColor(window.context, oldColor);
 }
 
@@ -195,9 +213,22 @@ void enemyAttack(Constellation& Constellation) {
     isDamageHero = true;
 }
 
+//void TakeDamage(Constellation& Constellation,float damage) {
+//    std::vector<float>& starHealth = Constellation.healthSystem->starsHealth;
+//
+//    if (starSet[player_sign].constellation && starSet[player_sign]->healthSystem) {
+//        starSet[player_sign]->healthSystem->starHP -= damage;
+//        if (starSet[player_sign]->healthSystem->starHP < 0) {
+//            starSet[player_sign]->healthSystem->starHP = 0; 
+//        }
+//    }
+//}
+
 void enemyFight()
 {
     float e = 1000;
+    std::string timedamage = "Time: " + std::to_string(e/1000);
+    drawString(timedamage.c_str(), window.width / 6, window.height / 4, 1, true);
     if (currentTime > attackTime + e)
     {
         attackTime = currentTime;

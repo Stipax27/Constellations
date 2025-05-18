@@ -702,6 +702,8 @@ namespace drawer
 
         SelectObject(window.context,mainBrush);
         SelectObject(window.context, mainPen);
+
+        
         textStyle.color = RGB(0, 191, 255);
 
         switch (gameState)
@@ -760,10 +762,14 @@ namespace drawer
                 break;
 
             case gameState_::Fight:
-            { 
+            {
+                
                 SelectWeapon();
                 SelectElement();
+                
+                textStyle.color = elements[(int)current_element].color;
                 DrawCombatStats();
+                textStyle.color = RGB(0, 191, 255);
                
                 if (attackCooldown == true) {
 

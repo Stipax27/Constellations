@@ -35,6 +35,17 @@ HPEN mainPen;
 HBRUSH heroBrush;
 HPEN heroPen;
 
+HBRUSH fireBrush;
+HPEN firePen;
+
+HBRUSH earthBrush;
+HPEN earthPen;
+
+HBRUSH airBrush;
+HPEN airPen;
+
+HBRUSH waterBrush;
+HPEN waterPen;
 
 #include "utils.h"
 #include "MainWindow.h"
@@ -69,8 +80,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     mainBrush = CreateSolidBrush(RGB(0, 191, 255));
     mainPen = CreatePen(PS_SOLID,2,RGB(255, 255, 255));
+
     heroBrush = CreateSolidBrush(RGB(225, 225, 255));
     heroPen = CreatePen(PS_SOLID, 2, RGB(225, 225, 255));
+
+    fireBrush = CreateSolidBrush(RGB(255, 100, 0));
+    firePen   = CreatePen(PS_SOLID, 2, RGB(255, 100, 0));
+
+    earthBrush = CreateSolidBrush(RGB(139, 69, 19));
+    earthPen   = CreatePen(PS_SOLID, 2, RGB(139, 69, 19));
+
+    airBrush  = CreateSolidBrush(RGB(173, 216, 230));
+    airPen    = CreatePen(PS_SOLID, 2, RGB(173, 216, 230));
+
+    waterBrush = CreateSolidBrush(RGB(0, 105, 148));
+    waterPen  = CreatePen(PS_SOLID, 2, RGB(0, 105, 148));
 
 
     InitGame();//здесь инициализируем переменные игры
