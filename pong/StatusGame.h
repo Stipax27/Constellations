@@ -44,11 +44,11 @@ void SaveCurrentState() {
     currentState.timestamp = currentTime;
 
     currentState.playerHP = playerEntity->getHP();
-    currentState.playerStarsHealth = playerEntity->constellation->healthSystem->starsHealth;
+    currentState.playerStarsHealth = playerEntity->healthSystem->starsHealth;
     currentState.playerstarCords = playerEntity->constellation->starsCords;
 
     currentState.enemyHP = enemyEntity->getHP();
-    currentState.enemyStarsHealth = enemyEntity->constellation->healthSystem->starsHealth;
+    currentState.enemyStarsHealth = enemyEntity->healthSystem->starsHealth;
     currentState.enemystarCords = enemyEntity->constellation->starsCords;
 
     currentState.player_dodge_ofs = player_dodge_ofs;
@@ -80,13 +80,13 @@ bool RewindOneStepBack() {
     const BattleState& prevState = battleHistory[currentStateIndex];
 
     
-    playerEntity->constellation->healthSystem->starsHealth = prevState.playerStarsHealth;
-    playerEntity->constellation->healthSystem->updateStarsHP();
+    playerEntity->healthSystem->starsHealth = prevState.playerStarsHealth;
+    playerEntity->healthSystem->updateStarsHP();
     playerEntity->constellation->starsCords = prevState.playerstarCords;
 
     
-    enemyEntity->constellation->healthSystem->starsHealth = prevState.enemyStarsHealth;
-    enemyEntity->constellation->healthSystem->updateStarsHP();
+    enemyEntity->healthSystem->starsHealth = prevState.enemyStarsHealth;
+    enemyEntity->healthSystem->updateStarsHP();
     enemyEntity->constellation->starsCords = prevState.enemystarCords;
 
     player_dodge_ofs = prevState.player_dodge_ofs;

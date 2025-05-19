@@ -165,9 +165,11 @@ void DrawCombatStats() {
     SetTextColor(window.context, oldColor);
 }
 
-float getConstellationHP(Constellation& Constellation)
+float getConstellationHP()
 {
-    std::vector <float>& starHealth = Constellation.healthSystem->starsHealth;
+    Entity* playerEntity = &entities[static_cast<int>(player_sign)];
+
+    std::vector <float>& starHealth = playerEntity->healthSystem->starsHealth;
 
     int starsCount = starHealth.size();
     float health = 0.f;
@@ -184,9 +186,11 @@ float getConstellationHP(Constellation& Constellation)
 
 }
 
-bool isConstellationDead(Constellation& Constellation)
+bool isConstellationDead()
 {
-    std::vector <float>& starHealth = Constellation.healthSystem->starsHealth;
+    Entity* playerEntity = &entities[static_cast<int>(player_sign)];
+
+    std::vector <float>& starHealth = playerEntity->healthSystem->starsHealth;
 
     int starsCount = starHealth.size();
     float health = 0;
@@ -202,8 +206,10 @@ bool isConstellationDead(Constellation& Constellation)
 
 }
 
-void enemyAttack(Constellation& Constellation) {
-    std::vector<float>& starHealth = Constellation.healthSystem->starsHealth;
+void enemyAttack() {
+
+    Entity* playerEntity = &entities[static_cast<int>(player_sign)];
+    std::vector<float>& starHealth = playerEntity->healthSystem->starsHealth;
     
     for (int i = 0; i < starHealth.size(); i++) {
         starHealth[i] -= .1f;
@@ -232,7 +238,7 @@ void enemyFight()
     if (currentTime > attackTime + e)
     {
         attackTime = currentTime;
-        enemyAttack(*entities[player_sign].constellation);
+        enemyAttack();
 
     }
 

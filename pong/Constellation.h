@@ -66,18 +66,15 @@ public:
     point3d angle;
     point3d position;
     std::vector<point3d> posEnemy;
-    HealthSystem* healthSystem;
+    
 
     Constellation(std::vector<point3d> _starsCords, std::vector<std::vector<float>> _constellationEdges): position{ 0,0,0 } 
     {
         starsCords = _starsCords;
         constellationEdges = _constellationEdges;
-        healthSystem = new HealthSystem(starsCords.size());
     }
 
-    ~Constellation() {
-        delete healthSystem;
-    }
+    
 
     void setPosition(const point3d& newPos) {
         point3d offset = { newPos - position };
@@ -124,10 +121,7 @@ public:
         if (angle != other.angle) return false;
         if (position != other.position) return false;
 
-        if (healthSystem == nullptr || other.healthSystem == nullptr) {
-            return healthSystem == other.healthSystem;
-        }
-        return (*healthSystem) == (*other.healthSystem); 
+         
     }
 
 
@@ -142,7 +136,8 @@ public:
     char currentMoveDirection;
     int ID;
     Constellation* constellation;
-
+    
+    HealthSystem* healthSystem;
     std::string name;
     DWORD moveStartTime;
     bool isMoveActive;
@@ -150,23 +145,27 @@ public:
     Entity(Constellation& src_constellation) {
         constellation = &src_constellation;
         ID = constellationsCounter++;
+        healthSystem = new HealthSystem(constellation->starsCords.size());
+    }
+    ~Entity() {
+        delete healthSystem;
     }
 
     
     float getHP() const {
-        return constellation->healthSystem->starHP;
+        return healthSystem->starHP;
     }
 
     float getMaxHP() const {
-        return constellation->healthSystem->maxHP;
+        return healthSystem->maxHP;
     }
 
     void damageStar(int starIndex, float damage) {
-        constellation->healthSystem->damageStar(starIndex, damage);
+        healthSystem->damageStar(starIndex, damage);
     }
 
     void resetHealth() {
-        constellation->healthSystem->resetHealth();
+        healthSystem->resetHealth();
     }
 
     bool operator==(const Entity& other) const {
@@ -177,5 +176,10 @@ public:
             return constellation == other.constellation;
         }
         return *constellation == *other.constellation;
+
+        if (healthSystem == nullptr || other.healthSystem == nullptr) {
+            return healthSystem == other.healthSystem;
+        }
+        return (*healthSystem) == (*other.healthSystem);
     }
 };

@@ -526,7 +526,7 @@ namespace drawer
 
     void DrawHpHeroBar() 
     {
-        Constellation* playerConstellation = starSet[player_sign];
+        Constellation* playerConstellation = *entities[player_sign].constellation;
         if (!playerConstellation || !playerConstellation->healthSystem) return;
 
         auto maxHP = playerConstellation->healthSystem->maxHP;

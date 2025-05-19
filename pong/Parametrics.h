@@ -62,8 +62,8 @@ void menuProject(point3d& p) {
 }
 
 
-void constSelectUI(point3d& point, Constellation& constellation, Entity* entity, int i) {
-    if (!constellation.healthSystem) return;
+void constSelectUI(point3d& point, Entity* entity, int i) {
+    Entity* enemyEntity = &entities[static_cast<int>(currentEnemyID)];
 
     float dx = point.x - mouse.pos.x;
     float dy = point.y - mouse.pos.y;
@@ -75,7 +75,7 @@ void constSelectUI(point3d& point, Constellation& constellation, Entity* entity,
         if (length < starSize) {
             SelectObject(window.context, brush2);
             gameState = gameState_::Fight;
-            currentEnemy = &constellation;
+            currentEnemy = entities[currentEnemyID].constellation;
 
            
             auto id = std::find_if(starSet.begin(), starSet.end(),
@@ -94,7 +94,7 @@ void constSelectUI(point3d& point, Constellation& constellation, Entity* entity,
         SelectObject(window.context, brush);
     }
 
-    finalStarRad = starSize * constellation.healthSystem->starsHealth[i] + rad * 15;
+    finalStarRad = starSize * enemyEntity->healthSystem->starsHealth[i] + rad * 15;
 }
 
 float get_lenghts(point3d& point1, point3d& point2) {
@@ -104,7 +104,7 @@ float get_lenghts(point3d& point1, point3d& point2) {
 }
 
 
-void starIntersectUI(point3d& point, Constellation& constellation, Entity* entity, int i) {
+void starIntersectUI(point3d& point, Entity* entity, int i) {
     if (!constellation.healthSystem || i >= constellation.healthSystem->starsHealth.size())
         return;
 
