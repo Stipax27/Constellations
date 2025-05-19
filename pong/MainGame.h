@@ -205,17 +205,24 @@ void winFight()
     }
 }
 
-void endFight()
+void restoreHP()
 {
-    for (int i =0;i<12;i++) 
+    Entity* enemyEntity = &entities[static_cast<int>(currentEnemyID)];
+
+    for (int i = 0;i < 12;i++)
     {
-        auto& currentConst = starSet[i];
-          
-        for (int j = 0; j< currentConst->healthSystem->starsHealth.size(); j++)
+        for (int j = 0; j < enemyEntity->healthSystem->starsHealth.size(); j++)
         {
-            currentConst->healthSystem->starsHealth[j] = 1;
+            enemyEntity->healthSystem->starsHealth[j] = 1;
         }
     }
+}
+
+void loseFight()
+{
+    
+
+
     if (drawClickableText("You Lose (((", true, RGB(0, 191, 255),window.width/2,window.height/2))
     {
         gameState = gameState_::MainMenu;

@@ -62,7 +62,7 @@ void menuProject(point3d& p) {
 }
 
 
-void constSelectUI(point3d& point, Entity* entity, int i) {
+void constSelectUI(point3d& point, Constellation& Constellation, Entity* entity, int i) {
     Entity* enemyEntity = &entities[static_cast<int>(currentEnemyID)];
 
     float dx = point.x - mouse.pos.x;
@@ -75,19 +75,8 @@ void constSelectUI(point3d& point, Entity* entity, int i) {
         if (length < starSize) {
             SelectObject(window.context, brush2);
             gameState = gameState_::Fight;
-            currentEnemy = entities[currentEnemyID].constellation;
+            entities[currentEnemyID].constellation;
 
-           
-            auto id = std::find_if(starSet.begin(), starSet.end(),
-                [&constellation](Constellation* c) { return c && *c == constellation; });
-
-            if (id != starSet.end()) {
-                currentEnemyID = static_cast<ZodiacSign>(std::distance(starSet.begin(), id));
-            }
-            else {
-                
-                currentEnemyID = ZodiacSign::ARIES; 
-            }
         }
     }
     else {
@@ -104,9 +93,8 @@ float get_lenghts(point3d& point1, point3d& point2) {
 }
 
 
-void starIntersectUI(point3d& point, Entity* entity, int i) {
-    if (!constellation.healthSystem || i >= constellation.healthSystem->starsHealth.size())
-        return;
+void starIntersectUI(point3d& point,Constellation& Constellation,Entity* entity, int i) {
+    Entity* enemyEntity = &entities[static_cast<int>(currentEnemyID)];
 
     float dx = point.x - mouse.pos.x;
     float dy = point.y - mouse.pos.y;
@@ -114,7 +102,7 @@ void starIntersectUI(point3d& point, Entity* entity, int i) {
 
     float rad = saturate(1.2 - lenght * .05) * fabs(sin(currentTime * .01));
 
-    finalStarRad = starSize * constellation.healthSystem->starsHealth[i] + rad * 15;
+    finalStarRad = starSize * enemyEntity->healthSystem->starsHealth[i] + rad * 15;
 
     float line_x = get_lenghts(attack[0], attack[1]);
     float line_y = get_lenghts(attack[0], point);
@@ -141,7 +129,7 @@ void starIntersectUI(point3d& point, Entity* entity, int i) {
         if ((current_weapon == weapon_name::Sword && line_hit < 1.01) ||
             (current_weapon == weapon_name::Shield && distToCenter <= shieldRadius) ||
             (current_weapon == weapon_name::Bow && distToStart <= hitRadius)) {
-            constellation.healthSystem->damageStar(i, weapon[(int)current_weapon].damage);
+            enemyEntity->healthSystem->damageStar(i, weapon[(int)current_weapon].damage);
         }
     }
 
@@ -179,8 +167,9 @@ void starIntersectUI(point3d& point, Entity* entity, int i) {
     }
 }
 
-void heroUI(point3d& point, Constellation& Constellation, Entity* entity,int i)
-{   if (!Constellation.healthSystem) return;
+void heroUI(point3d& point, Constellation& Constellation,Entity* entity,int i)
+{
+    Entity* playerEntity = &entities[static_cast<int>(player_sign)];
 
     float dx = point.x - mouse.pos.x;
     float dy = point.y - mouse.pos.y;
@@ -198,7 +187,7 @@ void heroUI(point3d& point, Constellation& Constellation, Entity* entity,int i)
         SelectObject(window.context, brush);
     }
     //finalStarRad = 3 * constellation.healthSystem->getHP() + rad * 15;
-    finalStarRad = 3 * Constellation.healthSystem->starsHealth[i] + rad * 15;
+    finalStarRad = 3 * playerEntity->healthSystem->starsHealth[i] + rad * 15;
 }
 
 void menuUI(point3d& point, Constellation& Constellation, Entity* entity, int i) {
