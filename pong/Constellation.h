@@ -142,7 +142,7 @@ public:
     DWORD moveStartTime;
     bool isMoveActive;
 
-    // Конструктор
+    
     Entity(Constellation& src_constellation)
         : constellation(&src_constellation),
         healthSystem(new HealthSystem(src_constellation.starsCords.size())),
@@ -153,16 +153,16 @@ public:
     {
     }
 
-    // Деструктор
+    
     ~Entity() {
         delete healthSystem;
     }
 
-    // Запрещаем копирование (или реализуем правильно)
+    
     Entity(const Entity&) = delete;
     Entity& operator=(const Entity&) = delete;
 
-    // Перемещающий конструктор
+   
     Entity(Entity&& other) noexcept
         : constellation(other.constellation),
         healthSystem(other.healthSystem),
@@ -176,7 +176,7 @@ public:
         other.constellation = nullptr;
     }
 
-    // Перемещающее присваивание
+    
     Entity& operator=(Entity&& other) noexcept {
         if (this != &other) {
             delete healthSystem;

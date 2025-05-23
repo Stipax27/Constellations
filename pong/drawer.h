@@ -30,19 +30,17 @@ namespace drawer
     float linksDivider = 25;
 
     void drawLinks(Entity& entity, bool colorOverride = false) {
-        // Проверка на валидность constellation и healthSystem
         if (!entity.constellation || !entity.healthSystem) return;
 
         std::vector<point3d>& starArray = entity.constellation->starsCords;
         std::vector<std::vector<float>>& starEdges = entity.constellation->constellationEdges;
         std::vector<float>& starHealth = entity.healthSystem->starsHealth;
 
-        // Проверка соответствия размеров массивов
         if (starArray.size() < starEdges.size() || starHealth.size() < starArray.size()) return;
 
         int starsEdgesCount = static_cast<int>(starEdges.size());
         for (int i = 0; i < starsEdgesCount; i++) {
-            // Проверка индексов в starEdges
+           
             if (starEdges[i].size() < 2 ||
                 starEdges[i][0] >= starArray.size() ||
                 starEdges[i][1] >= starArray.size()) continue;
@@ -66,13 +64,12 @@ namespace drawer
     }
 
     void drawStarPulse(Entity& entity, bool colorOverride = false) {
-        // Проверка на валидность constellation и healthSystem
         if (!entity.constellation || !entity.healthSystem) return;
 
         std::vector<point3d>& starArray = entity.constellation->starsCords;
         std::vector<float>& starHealth = entity.healthSystem->starsHealth;
 
-        // Проверка соответствия размеров массивов
+        
         if (starArray.size() != starHealth.size()) return;
 
         int starsCount = static_cast<int>(starArray.size());
@@ -89,10 +86,10 @@ namespace drawer
             modelTransform(point, *entity.constellation);
             modelProject(point);
 
-            // Пульсирование Звёзд при наведении мыши.
+           
             finalStarRad = 1;
             if (uiFunc) {
-                // Избегаем создания нового Entity - передаем текущий
+               
                 uiFunc(point, *entity.constellation, &entity, i);
             }
 
