@@ -242,7 +242,7 @@ void enemyFight()
 
     }
 
-    if (getConstellationHP(*entities[player_sign].constellation) <= 0.f)
+    if (getConstellationHP(entities[player_sign]) <= 0.f)
     {
         gameState = gameState_::EndFight;
     }

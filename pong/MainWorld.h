@@ -544,6 +544,7 @@ std::vector <Constellation*> starSet = {
     &Staff
 };
 
+std::vector<Entity> entities;
 
 void initWorld()
 {
@@ -564,18 +565,25 @@ void initWorld()
     Bow.setStarsRenderedCords(0, 0, 0);
     Staff.setStarsRenderedCords(0, 0, 0);
 
-    entities_.push_back(Aries);
-    entities_.push_back(Taurus);
-    entities_.push_back(Gemini);
-    entities_.push_back(Cancer);
-    entities_.push_back(Leo);
-    entities_.push_back(Virgo);
-    entities_.push_back(Libra);
-    entities_.push_back(Scorpius);
-    entities_.push_back(Sagittarius);
-    entities_.push_back(Capricornus);
-    entities_.push_back(Aquarius);
-    entities_.push_back(Pisces);
+    entities.clear();
+    entities.reserve(16);
+
+    entities.push_back(Entity(Aries));
+    entities.push_back(Entity(Taurus));
+    entities.push_back(Entity(Gemini));
+    entities.push_back(Entity(Cancer));
+    entities.push_back(Entity(Leo));
+    entities.push_back(Entity(Virgo));
+    entities.push_back(Entity(Libra));
+    entities.push_back(Entity(Scorpius));
+    entities.push_back(Entity(Sagittarius));
+    entities.push_back(Entity(Capricornus));
+    entities.push_back(Entity(Aquarius));
+    entities.push_back(Entity(Pisces));
+    entities.push_back(Entity(Sword));
+    entities.push_back(Entity(Shield));
+    entities.push_back(Entity(Bow));
+    entities.push_back(Entity(Staff));
 }
 
 using namespace std;

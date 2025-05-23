@@ -133,24 +133,67 @@ public:
 
 class Entity {
 public:
+
     char currentMoveDirection;
     int ID;
     Constellation* constellation;
-    
     HealthSystem* healthSystem;
     std::string name;
     DWORD moveStartTime;
     bool isMoveActive;
 
-    Entity(Constellation& src_constellation) {
-        constellation = &src_constellation;
-        ID = constellationsCounter++;
-        healthSystem = new HealthSystem(constellation->starsCords.size());
+    // Конструктор
+    Entity(Constellation& src_constellation)
+        : constellation(&src_constellation),
+        healthSystem(new HealthSystem(src_constellation.starsCords.size())),
+        ID(constellationsCounter++),
+        currentMoveDirection(0),
+        moveStartTime(0),
+        isMoveActive(false)
+    {
     }
-    /*~Entity() {
-        delete healthSystem;
-    }*/
 
+    // Деструктор
+    ~Entity() {
+        delete healthSystem;
+    }
+
+    // Запрещаем копирование (или реализуем правильно)
+    Entity(const Entity&) = delete;
+    Entity& operator=(const Entity&) = delete;
+
+    // Перемещающий конструктор
+    Entity(Entity&& other) noexcept
+        : constellation(other.constellation),
+        healthSystem(other.healthSystem),
+        ID(other.ID),
+        name(std::move(other.name)),
+        currentMoveDirection(other.currentMoveDirection),
+        moveStartTime(other.moveStartTime),
+        isMoveActive(other.isMoveActive)
+    {
+        other.healthSystem = nullptr;
+        other.constellation = nullptr;
+    }
+
+    // Перемещающее присваивание
+    Entity& operator=(Entity&& other) noexcept {
+        if (this != &other) {
+            delete healthSystem;
+
+            constellation = other.constellation;
+            healthSystem = other.healthSystem;
+            ID = other.ID;
+            name = std::move(other.name);
+            currentMoveDirection = other.currentMoveDirection;
+            moveStartTime = other.moveStartTime;
+            isMoveActive = other.isMoveActive;
+
+            other.healthSystem = nullptr;
+            other.constellation = nullptr;
+        }
+        return *this;
+    }
     
     float getHP() const {
         return healthSystem->starHP;

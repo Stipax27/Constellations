@@ -53,8 +53,6 @@ HPEN waterPen;
 #include "Line.h"
 #include "mouse.h"
 #include "Constellation.h"
-std::vector<Entity* > entities;
-std::vector<Entity> entities_;
 #include "MainWorld.h"
 #include "DodgeEnemy.h"
 #include "Navigation.h"

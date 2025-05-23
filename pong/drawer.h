@@ -29,20 +29,30 @@ namespace drawer
 
     float linksDivider = 25;
 
-    void drawLinks(Entity& entities, bool colorOverride = false) {
+    void drawLinks(Entity& entity, bool colorOverride = false) {
+        // Ïğîâåğêà íà âàëèäíîñòü constellation è healthSystem
+        if (!entity.constellation || !entity.healthSystem) return;
 
-        std::vector<point3d>& starArray = entities.constellation->starsCords;
-        std::vector<std::vector<float>>& starEdges = entities.constellation->constellationEdges;
-        std::vector<float>& starHealth = entities.healthSystem->starsHealth;
+        std::vector<point3d>& starArray = entity.constellation->starsCords;
+        std::vector<std::vector<float>>& starEdges = entity.constellation->constellationEdges;
+        std::vector<float>& starHealth = entity.healthSystem->starsHealth;
 
-        int starsEdgesCount = starEdges.size();
+        // Ïğîâåğêà ñîîòâåòñòâèÿ ğàçìåğîâ ìàññèâîâ
+        if (starArray.size() < starEdges.size() || starHealth.size() < starArray.size()) return;
+
+        int starsEdgesCount = static_cast<int>(starEdges.size());
         for (int i = 0; i < starsEdgesCount; i++) {
+            // Ïğîâåğêà èíäåêñîâ â starEdges
+            if (starEdges[i].size() < 2 ||
+                starEdges[i][0] >= starArray.size() ||
+                starEdges[i][1] >= starArray.size()) continue;
+
             point3d point1 = starArray[starEdges[i][0]];
             point3d point2 = starArray[starEdges[i][1]];
 
-            float a = currentTime * .01;
-            modelTransform(point1, *entities.constellation);
-            modelTransform(point2, *entities.constellation);
+            float a = currentTime * 0.01f;
+            modelTransform(point1, *entity.constellation);
+            modelTransform(point2, *entity.constellation);
 
             if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0) {
                 float dx = point2.x - point1.x;
@@ -50,17 +60,22 @@ namespace drawer
                 float dz = point2.z - point1.z;
                 float length = sqrt(dx * dx + dy * dy + dz * dz);
                 int x = static_cast<int>(length) / linksDivider;
-                drawLine(point1, point2, x); 
+                drawLine(point1, point2, x);
             }
         }
     }
 
-    void drawStarPulse(Entity& entities, bool colorOverride = false) {
+    void drawStarPulse(Entity& entity, bool colorOverride = false) {
+        // Ïğîâåğêà íà âàëèäíîñòü constellation è healthSystem
+        if (!entity.constellation || !entity.healthSystem) return;
 
-        std::vector<point3d>& starArray = entities.constellation->starsCords;
-        std::vector<float>& star_Health = entities.healthSystem->starsHealth;
+        std::vector<point3d>& starArray = entity.constellation->starsCords;
+        std::vector<float>& starHealth = entity.healthSystem->starsHealth;
 
-        int starsCount = starArray.size();
+        // Ïğîâåğêà ñîîòâåòñòâèÿ ğàçìåğîâ ìàññèâîâ
+        if (starArray.size() != starHealth.size()) return;
+
+        int starsCount = static_cast<int>(starArray.size());
         if (!colorOverride) {
             brush = CreateSolidBrush(RGB(0, 191, 255));
             brush2 = CreateSolidBrush(RGB(255, 0, 0));
@@ -70,16 +85,15 @@ namespace drawer
         for (int i = 0; i < starsCount; i++) {
             point3d point = starArray[i];
 
-            float a = currentTime * .01;
-            modelTransform(point, *entities.constellation);
+            float a = currentTime * 0.01f;
+            modelTransform(point, *entity.constellation);
             modelProject(point);
 
             // Ïóëüñèğîâàíèå Çâ¸çä ïğè íàâåäåíèè ìûøè.
             finalStarRad = 1;
-            if (uiFunc && i < star_Health.size()) {
-                Entity* entityPtr = new Entity(*entities.constellation);
-                uiFunc(point, *entities.constellation, entityPtr, i);
-                delete entityPtr;
+            if (uiFunc) {
+                // Èçáåãàåì ñîçäàíèÿ íîâîãî Entity - ïåğåäàåì òåêóùèé
+                uiFunc(point, *entity.constellation, &entity, i);
             }
 
             if (finalStarRad > 0) {
@@ -676,7 +690,7 @@ namespace drawer
     
             if (remainingTime > 0) {
                 
-                DrawHpHeroBar(*entities[player_sign]);
+                DrawHpHeroBar(entities[player_sign]);
                 std::string timeStr = "Time: " + std::to_string(remainingTime / 1000);
                 drawString(timeStr.c_str(), window.width / 1.1, 45, 1.f, true);
     
@@ -726,7 +740,7 @@ namespace drawer
                 break;
 
             case gameState_::confirmSign:
-                drawPlayerÑonstellationToMenu(*entities[player_sign]);
+                drawPlayerÑonstellationToMenu(entities[player_sign]);
                 menuMonthprocessing();
                 menuDayprocessing();
                 menuConfirmationButton();
@@ -744,7 +758,7 @@ namespace drawer
 
                 for (int i = 0; i < 12; i++)
                 {
-                    drawÑonstellation(*entities[i]);
+                    drawÑonstellation(entities[i]);
                 }
 
                 std::string curentSignstring = zodiacSignToString(player_sign);
@@ -800,7 +814,7 @@ namespace drawer
                 
                 srand(currentTime);
 
-                DrawHpEnemyBar(*entities[currentEnemyID]);
+                DrawHpEnemyBar(entities[currentEnemyID]);
                 modelTransform = &placeConstToWorld;//Âğàã
                 
                 nearPlaneClip = 0;
@@ -859,7 +873,7 @@ namespace drawer
                         InitConstellationAttack();
                     }
                     
-                    drawÑonstellation(*entities[currentEnemyID]);
+                    drawÑonstellation(entities[currentEnemyID]);
 
                     linksDivider = 15;
                     modelTransform = &placeHeroToWorld;
@@ -868,7 +882,7 @@ namespace drawer
                     SelectObject(window.context, heroBrush);
                     SelectObject(window.context, heroPen);
 
-                    drawÑonstellation(*entities[player_sign], true);//Èãğîê
+                    drawÑonstellation(entities[player_sign], true);//Èãğîê
 
                     SelectObject(window.context, mainBrush);
                     SelectObject(window.context, mainPen);
@@ -882,7 +896,7 @@ namespace drawer
                 }
                 else
                 {
-                    drawÑonstellation(*entities[currentEnemyID]);
+                    drawÑonstellation(entities[currentEnemyID]);
                 }
 
                 if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true)
@@ -895,7 +909,7 @@ namespace drawer
                 SelectObject(window.context, mainPen);
 
                 modelTransform = &placeConstToWorld;
-                DrawStarsHP(window.context, *entities[currentEnemyID]);
+                DrawStarsHP(window.context, entities[currentEnemyID]);
                
                 linksDivider = 5;
                 modelTransform = &placeHeroToWorld;
@@ -917,7 +931,7 @@ namespace drawer
                 SelectObject(window.context, heroBrush);
                 SelectObject(window.context, heroPen);
 
-                drawÑonstellation(*entities[player_sign], true);
+                drawÑonstellation(entities[player_sign], true);
 
                 SelectObject(window.context, mainBrush);
                 SelectObject(window.context, mainPen);
