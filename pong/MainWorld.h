@@ -564,18 +564,18 @@ void initWorld()
     Bow.setStarsRenderedCords(0, 0, 0);
     Staff.setStarsRenderedCords(0, 0, 0);
 
-    entities.push_back(Aries);
-    entities.push_back(Taurus);
-    entities.push_back(Gemini);
-    entities.push_back(Cancer);
-    entities.push_back(Leo);
-    entities.push_back(Virgo);
-    entities.push_back(Libra);
-    entities.push_back(Scorpius);
-    entities.push_back(Sagittarius);
-    entities.push_back(Capricornus);
-    entities.push_back(Aquarius);
-    entities.push_back(Pisces);
+    entities_.push_back(Aries);
+    entities_.push_back(Taurus);
+    entities_.push_back(Gemini);
+    entities_.push_back(Cancer);
+    entities_.push_back(Leo);
+    entities_.push_back(Virgo);
+    entities_.push_back(Libra);
+    entities_.push_back(Scorpius);
+    entities_.push_back(Sagittarius);
+    entities_.push_back(Capricornus);
+    entities_.push_back(Aquarius);
+    entities_.push_back(Pisces);
 }
 
 using namespace std;

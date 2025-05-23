@@ -262,9 +262,9 @@ namespace drawer
         //draw—onstellation(morphArray, Morp_indices, Morp_health); ŒÚÍÎ˛˜ÂÌÓ
     }
 
-    void drawPlayer—onstellationToMenu()
+    void drawPlayer—onstellationToMenu(Entity& entities)
     {
-        Entity* playerEntity = &entities[static_cast<int>(player_sign)];
+        //Entity* playerEntity = &entities[static_cast<int>(player_sign)];
 
         startTime = currentTime;
         int n = (currentTime / 1000) % starSet.size();
@@ -274,7 +274,7 @@ namespace drawer
         linksDivider = 15;
         if (gameState == gameState_::confirmSign) n = player_sign;
         //draw—onstellation(*starSet[n]);
-        draw—onstellation(*playerEntity);
+        draw—onstellation(entities);
         //draw—onstellation(*starSet[player_sign]);
     }
 
@@ -418,16 +418,16 @@ namespace drawer
         }
     }    
 
-    void DrawStarsHP(HDC hdc) {
+    void DrawStarsHP(HDC hdc, Entity& entities) {
 
         Constellation* enemyConstellation = starSet[currentEnemyID];
 
-        Entity* enemyEntity = &entities[static_cast<int>(currentEnemyID)];
+        //Entity* enemyEntity = &entities[static_cast<int>(currentEnemyID)];
 
         for (size_t i = 0; i < enemyConstellation->starsCords.size(); ++i) {
 
             auto pos = enemyConstellation->starsCords[i];
-            float hp = enemyEntity->healthSystem->starsHealth[i];
+            float hp = entities.healthSystem->starsHealth[i];
 
             modelTransform(pos, *enemyConstellation);
             modelProject(pos);
@@ -438,14 +438,14 @@ namespace drawer
             }
         }
     }
-    void DrawHpEnemyBar()
+    void DrawHpEnemyBar(Entity& entities)
     {
         Constellation* enemyConstellation = starSet[currentEnemyID];
 
-        Entity* enemyEntity = &entities[static_cast<int>(currentEnemyID)];
+        //Entity* enemyEntity = &entities[static_cast<int>(currentEnemyID)];
 
-        auto maxHP = enemyEntity->healthSystem->maxHP;
-        auto currentHP = enemyEntity->healthSystem->starHP;
+        auto maxHP = entities.healthSystem->maxHP;
+        auto currentHP = entities.healthSystem->starHP;
 
         auto progress = currentHP / maxHP;
         auto progressText = "HP: " + std::to_string(currentHP) + "/" + std::to_string(maxHP);
@@ -527,13 +527,13 @@ namespace drawer
 
     }
 
-    void DrawHpHeroBar() 
+    void DrawHpHeroBar(Entity& entities)
     {
         Constellation* playerConstellation = starSet[player_sign];
-        Entity* playerEntity = &entities[static_cast<int>(player_sign)];
+        //Entity* playerEntity = &entities[static_cast<int>(player_sign)];
 
-        auto maxHP = playerEntity->healthSystem->maxHP;
-        auto currentHP = playerEntity->healthSystem->starHP;
+        auto maxHP = entities.healthSystem->maxHP;
+        auto currentHP = entities.healthSystem->starHP;
 
         auto progress = currentHP / maxHP;
         auto progressText = "HP: " + std::to_string(currentHP) + "/" + std::to_string(maxHP);
@@ -676,18 +676,18 @@ namespace drawer
     
             if (remainingTime > 0) {
                 
-                DrawHpHeroBar();
+                DrawHpHeroBar(*entities[player_sign]);
                 std::string timeStr = "Time: " + std::to_string(remainingTime / 1000);
                 drawString(timeStr.c_str(), window.width / 1.1, 45, 1.f, true);
     
-                Entity* enemyEntity = &entities[static_cast<int>(currentEnemyID)];
+                //Entity* enemyEntity = entities;
 
-                if (enemyEntity && enemyEntity->healthSystem &&
-                    enemyEntity->healthSystem->starHP <= 0) {
+                /*if (entities && entities->healthSystem &&
+                    Entity.healthSystem->starHP <= 0) {
                     timeModifier = 0;
                     isBattleActive = false;
                     gameState = gameState_::WinFight;
-                }
+                }*/
             }
             else 
             {
@@ -726,7 +726,7 @@ namespace drawer
                 break;
 
             case gameState_::confirmSign:
-                drawPlayer—onstellationToMenu();
+                drawPlayer—onstellationToMenu(*entities[player_sign]);
                 menuMonthprocessing();
                 menuDayprocessing();
                 menuConfirmationButton();
@@ -744,7 +744,7 @@ namespace drawer
 
                 for (int i = 0; i < 12; i++)
                 {
-                    draw—onstellation(entities[i]);
+                    draw—onstellation(*entities[i]);
                 }
 
                 std::string curentSignstring = zodiacSignToString(player_sign);
@@ -800,7 +800,7 @@ namespace drawer
                 
                 srand(currentTime);
 
-                DrawHpEnemyBar();
+                DrawHpEnemyBar(*entities[currentEnemyID]);
                 modelTransform = &placeConstToWorld;//¬‡„
                 
                 nearPlaneClip = 0;
@@ -859,7 +859,7 @@ namespace drawer
                         InitConstellationAttack();
                     }
                     
-                    draw—onstellation(entities[currentEnemyID]);
+                    draw—onstellation(*entities[currentEnemyID]);
 
                     linksDivider = 15;
                     modelTransform = &placeHeroToWorld;
@@ -868,7 +868,7 @@ namespace drawer
                     SelectObject(window.context, heroBrush);
                     SelectObject(window.context, heroPen);
 
-                    draw—onstellation(entities[player_sign], true);//»„ÓÍ
+                    draw—onstellation(*entities[player_sign], true);//»„ÓÍ
 
                     SelectObject(window.context, mainBrush);
                     SelectObject(window.context, mainPen);
@@ -882,7 +882,7 @@ namespace drawer
                 }
                 else
                 {
-                    draw—onstellation(entities[currentEnemyID]);
+                    draw—onstellation(*entities[currentEnemyID]);
                 }
 
                 if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true)
@@ -895,7 +895,7 @@ namespace drawer
                 SelectObject(window.context, mainPen);
 
                 modelTransform = &placeConstToWorld;
-                DrawStarsHP(window.context);
+                DrawStarsHP(window.context, *entities[currentEnemyID]);
                
                 linksDivider = 5;
                 modelTransform = &placeHeroToWorld;
@@ -917,7 +917,7 @@ namespace drawer
                 SelectObject(window.context, heroBrush);
                 SelectObject(window.context, heroPen);
 
-                draw—onstellation(entities[player_sign], true);
+                draw—onstellation(*entities[player_sign], true);
 
                 SelectObject(window.context, mainBrush);
                 SelectObject(window.context, mainPen);
