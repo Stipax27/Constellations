@@ -147,9 +147,9 @@ public:
         ID = constellationsCounter++;
         healthSystem = new HealthSystem(constellation->starsCords.size());
     }
-    ~Entity() {
+    /*~Entity() {
         delete healthSystem;
-    }
+    }*/
 
     
     float getHP() const {
