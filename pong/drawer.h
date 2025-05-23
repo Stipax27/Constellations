@@ -688,6 +688,31 @@ namespace drawer
             }
         }
     }
+    void drawBook()
+    {
+        const float barWidth = 1200;
+        const float barHeight = 650;
+        const float barX = 10;
+        const float barY = 10;
+        const float starCount = 10;
+        const float starSize = 10.0f;
+
+        point3d Bar = { barX, barY,0 };
+
+        // Создаем точки для рамки
+        point3d topLeft = { Bar.x - barWidth , Bar.y - barHeight, 0 };
+        point3d topRight = { Bar.x + barWidth , Bar.y - barHeight, 0 };
+        point3d bottomLeft = { Bar.x - barWidth, Bar.y + barHeight, 0 };
+        point3d bottomRight = { Bar.x + barWidth, Bar.y + barHeight, 0 };
+
+        
+        // Рисуем рамку
+        drawLine(topLeft, topRight, 50);    // Верх
+        drawLine(bottomLeft, bottomRight, 50); // Низ
+        drawLine(topLeft, bottomLeft, 20);  // Лево
+        drawLine(bottomRight, topRight, 20); // Право
+
+    }
  
     void drawWorld()
     {
@@ -730,7 +755,7 @@ namespace drawer
 
                 modelTransform = &placeConstToWorld;
 
-                for (int i = 0;i < 12;i++)
+                for (int i = 0;i < 1;i++)
                 {
                     drawСonstellation(*starSet[i]);
                 }
@@ -899,7 +924,10 @@ namespace drawer
                 {
                     isShakingHero = false;
                 }
-
+                if (!GetAsyncKeyState(VK_LBUTTON)) 
+                {
+                
+                }
                 SelectObject(window.context, heroBrush);
                 SelectObject(window.context, heroPen);
 
@@ -909,21 +937,7 @@ namespace drawer
                 SelectObject(window.context, mainPen);
 
 
-                std::string curentSignstring = zodiacSignToString(currentEnemyID);
-                drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);
-
-                curentSignstring = zodiacSignToString(player_sign);
-                drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 7., 1, true);
-
-                curentSignstring = "current weapon: " + weapon[(int)current_weapon].name;
-                drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 10., 1, true);
-
-                drawCurrentElement();
-
-                drawString("Weapon selection:\nButton 1 - Sword \nButton 2 - Shield \nButton 3 - Bow ", (1700. / 2560)* window.width, (1100. / 1440)* window.height, .7f, false);
-                drawString("Rewind time:\nbutton - E", (500. / 2560)* window.width, (1200. / 1440)* window.height, .7f, false);
-                drawString("TUTORIAL:\nTo hit an enemy with a sword,\npress LMB and draw a line along the enemy star\nTo hit with a shield,\npress LMB and draw a line that will draw a circle that attacks stars\nTo hit with a bow,\npress LMB on the star and draw a vector in any direction from the star.", (60. / 2560)* window.width, (60. / 1440)* window.height, .7f, false);
-
+                
                 float cdTimeOut =1.- (currentTime - attack_cooldown) / 5000.;
                 cdTimeOut *= 10;
                 std::string cdTimeOutText = std::to_string((int)cdTimeOut);
@@ -935,6 +949,12 @@ namespace drawer
 
                 UpdateGame();
                 
+                break;
+            }
+            case gameState_::Helper:
+            {
+                drawBook();
+                Helpers();
                 break;
             }
             case gameState_::EndFight:

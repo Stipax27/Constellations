@@ -153,6 +153,7 @@
     <ClInclude Include="Elements.h" />
     <ClInclude Include="font.h" />
     <ClInclude Include="Header.h" />
+    <ClInclude Include="Helper.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="MainWorld.h" />

@@ -198,7 +198,7 @@ void enemyAttack(Constellation& Constellation) {
 
 void enemyFight()
 {
-    float e = 10000;
+    float e = 5000;
     if (currentTime > attackTime + e)
     {
         attackTime = currentTime;
