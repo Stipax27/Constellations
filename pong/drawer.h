@@ -687,7 +687,7 @@ namespace drawer
     
             if (remainingTime > 0) {
                 
-                DrawHpHeroBar(entities[player_sign]);
+                
                 std::string timeStr = "Time: " + std::to_string(remainingTime / 1000);
                 drawString(timeStr.c_str(), window.width / 1.1, 45, 1.f, true);
     
@@ -798,7 +798,8 @@ namespace drawer
                              
                 StartBattle();
                 enemyFight();
-                
+
+                DrawHpHeroBar(entities[player_sign]);
                 modelTransform = &placeToWorld;
                 modelProject = &fightProject;  
                 uiFunc = &starIntersectUI;
@@ -907,11 +908,13 @@ namespace drawer
 
                 modelTransform = &placeConstToWorld;
                 DrawStarsHP(window.context, entities[currentEnemyID]);
-               
+
+                
                 linksDivider = 5;
                 modelTransform = &placeHeroToWorld;
                 uiFunc = &heroUI;
                 nearPlaneClip = -2000;
+                
 
                 if (isDamageHero)
                 {
@@ -957,6 +960,8 @@ namespace drawer
                     drawString("recharge", window.width * .9, window.height * .85, 1., false);
                     drawString(cdTimeOutText.c_str(), window.width * .9, window.height * .9, 3., false);
                 }
+
+
 
                 UpdateGame();
                 

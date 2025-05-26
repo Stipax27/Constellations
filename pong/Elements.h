@@ -232,9 +232,20 @@ void enemyAttack() {
 
 void enemyFight()
 {
-    float e = 1000;
-    std::string timedamage = "Time: " + std::to_string(e/1000);
-    drawString(timedamage.c_str(), window.width / 6, window.height / 4, 1, true);
+    
+    float e = 5000.;
+
+    float progressTimeAttack = 1. - (currentTime - attackTime) / e;
+    progressTimeAttack *= 5;
+    std::string cdTimeOutText = std::to_string((int)progressTimeAttack);
+    if (progressTimeAttack > 0)
+    {
+        drawString("recharge Attack", window.width / 6 - 150, window.height / 4, 1, true);
+        drawString(cdTimeOutText.c_str(), window.width / 6 + 50, window.height / 4, 1, true);
+    }
+
+
+
     if (currentTime > attackTime + e)
     {
         attackTime = currentTime;

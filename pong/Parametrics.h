@@ -239,3 +239,4 @@ void placeHeroToWorld(point3d& p, Constellation& Constellation) {
 }
 
 void NullProject(point3d& p) {}
+
