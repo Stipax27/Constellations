@@ -130,6 +130,31 @@ namespace drawer
         }
     }
 
+    void drawMilkyWay()
+    {
+        SelectObject(window.context, mainBrush);
+        SelectObject(window.context, mainPen);
+
+        srand(time(0)); 
+        for (int i = 0; i < 600; i++)
+        {
+            point3d point;
+            genWaySphere(point);
+            modelTransform(point, Aries);
+            point.rotateZ(point, milkyway_angles.z);
+            modelProject(point);
+
+           
+            int starSize = rand() % 3 + 1; 
+
+            
+            COLORREF color = RGB(rand() % 256, rand() % 256, rand() % 256);
+            SetDCBrushColor(window.context, color);
+
+            point.draw(point, starSize);
+        }
+    }
+
     const COLORREF colors[] =
     {
         RGB(255, 0, 0),    // Красный
@@ -750,7 +775,7 @@ namespace drawer
                 uiFunc = &constSelectUI;
                 linksDivider = 50;
                 drawStarField();
-
+                drawMilkyWay();
                 modelTransform = &placeConstToWorld;
 
                 for (int i = 0; i < 1; i++)
@@ -773,6 +798,7 @@ namespace drawer
                 initContentData();
                 renderContent();
                 handleInput();
+               
 
                 break;
 

@@ -19,6 +19,8 @@ char whatKeyPressed() {
 
 point3d player_dodge_ofs = { 0,0,0 };
 point3d starfield_angles = { 0,0,0 };
+point3d milkyway_angles = { 0,0,100 };
+
 
 void fightMove(point3d& p) {
 

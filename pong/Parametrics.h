@@ -31,6 +31,20 @@ void genRandSphere(point3d& p) {
     p.rotateY(p, angleY);
 }
 
+void genWaySphere(point3d& p) {
+    float amp = 1.25;
+    float angleX, angleY;
+    angleX = rand() % 360;
+    angleY = rand() % 360;
+
+    p.x = window.width;
+    p.y = 0;
+    p.z = 0;
+
+    p.rotateX(p, angleX);
+    p.rotateY(p, angleY);
+}
+
 void placeToWorld(point3d& p, Constellation& Constellation) {
     p.rotateX(p, mouse.Angle.y * 0.1);
     p.rotateY(p, mouse.Angle.x * 0.1);
