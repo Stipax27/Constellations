@@ -753,7 +753,7 @@ namespace drawer
 
                 modelTransform = &placeConstToWorld;
 
-                for (int i = 0; i < 12; i++)
+                for (int i = 0; i < 1; i++)
                 {
                     drawÑonstellation(entities[i]);
                 }
