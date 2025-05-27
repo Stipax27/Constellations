@@ -135,8 +135,8 @@ namespace drawer
         SelectObject(window.context, mainBrush);
         SelectObject(window.context, mainPen);
 
-        srand(time(0)); 
-        for (int i = 0; i < 600; i++)
+        srand(10); 
+        for (int i = 0; i < 1000; i++)
         {
             point3d point;
             genWaySphere(point);

@@ -37,9 +37,9 @@ void genWaySphere(point3d& p) {
     angleX = rand() % 360;
     angleY = rand() % 360;
 
-    p.x = window.width;
-    p.y = 0;
-    p.z = 0;
+    p.x = window.width/2;
+    p.y = window.height / 2;
+    p.z = 100;
 
     p.rotateX(p, angleX);
     p.rotateY(p, angleY);
