@@ -141,7 +141,7 @@ namespace drawer
             point3d point;
             genWaySphere(point);
             modelTransform(point, Aries);
-            point.rotateZ(point, milkyway_angles.z);
+            
             modelProject(point);
 
            
