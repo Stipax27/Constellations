@@ -733,7 +733,7 @@ namespace drawer
             }
         }
     }
-    void drawKvest()
+    void drawQest()
     {
         srand(10);
         for (int i = 0; i < 5; i++)
@@ -742,9 +742,18 @@ namespace drawer
             genWaySphere(point);
             modelTransform(point, Aries);
             modelProject(point);
-
             int starSize = 10;
 
+            if (GetAsyncKeyState(VK_LBUTTON))
+            {
+                if (length < starSize) {
+                    SelectObject(window.context, brush2);
+                    gameState = gameState_::Qest;
+                    entities[currentEnemyID].constellation;
+
+                }
+               
+            }
             point.draw(point, starSize);
         }
     
@@ -791,7 +800,7 @@ namespace drawer
                 linksDivider = 50;
                 drawStarField();
                 drawMilkyWay();
-                drawKvest();
+                drawQest();
                 modelTransform = &placeConstToWorld;
 
                 for (int i = 0; i < 1; i++)
@@ -1012,6 +1021,13 @@ namespace drawer
             case gameState_::EndFight:
             { 
                 loseFight();
+
+                break;
+            }
+            case gameState_::Qest:
+            {
+                drawStarField();
+
 
                 break;
             }
