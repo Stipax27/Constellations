@@ -204,6 +204,27 @@ void heroUI(point3d& point, Constellation& Constellation,Entity* entities,int i)
     finalStarRad = 3 * entities->healthSystem->starsHealth[i] + rad * 15;
 }
 
+void StarQuestUi(point3d& point)
+{
+    float dx = point.x - mouse.pos.x;
+    float dy = point.y - mouse.pos.y;
+    float length = sqrt(dx * dx + dy * dy);
+
+    float rad = saturate(1.2 - length * .05) * fabs(sin(currentTime * .01));
+
+    if (GetAsyncKeyState(VK_LBUTTON)) {
+        if (length < starSize) {
+            SelectObject(window.context, brush2);
+            gameState = gameState_::Quest;
+            
+        }
+    }
+    else {
+        SelectObject(window.context, brush);
+    }
+
+}
+
 void menuUI(point3d& point, Constellation& Constellation, Entity* entity, int i) {
     finalStarRad = 5;
 }

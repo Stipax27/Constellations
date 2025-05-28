@@ -733,7 +733,7 @@ namespace drawer
             }
         }
     }
-    void drawQest()
+    void drawQuest()
     {
         srand(10);
         for (int i = 0; i < 5; i++)
@@ -743,17 +743,7 @@ namespace drawer
             modelTransform(point, Aries);
             modelProject(point);
             int starSize = 10;
-
-            if (GetAsyncKeyState(VK_LBUTTON))
-            {
-                if (length < starSize) {
-                    SelectObject(window.context, brush2);
-                    gameState = gameState_::Qest;
-                    entities[currentEnemyID].constellation;
-
-                }
-               
-            }
+            StarQuestUi(point);
             point.draw(point, starSize);
         }
     
@@ -800,7 +790,7 @@ namespace drawer
                 linksDivider = 50;
                 drawStarField();
                 drawMilkyWay();
-                drawQest();
+                drawQuest();
                 modelTransform = &placeConstToWorld;
 
                 for (int i = 0; i < 1; i++)
@@ -1024,11 +1014,11 @@ namespace drawer
 
                 break;
             }
-            case gameState_::Qest:
+            case gameState_::Quest:
             {
                 drawStarField();
-
-
+                drawString("Hello, I am the cosmic Aries Flea: Solve my riddle:\nThe thick grasses are entwined,\nThe meadows are curled,\nAnd I myself am all curly,\nEven the curl of my horn.", window.width/2, window.height/2,1.,true);
+                
                 break;
             }
             case gameState_::WinFight:

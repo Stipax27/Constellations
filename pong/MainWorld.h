@@ -598,7 +598,7 @@ enum MonthSign {
 };
 
 enum class gameState_ {
-    MainMenu, MonthSelection, DaySelection, confirmSign, selectEnemy, Fight, EndFight, DialogStruct,WinFight,Qest
+    MainMenu, MonthSelection, DaySelection, confirmSign, selectEnemy, Fight, EndFight, DialogStruct,WinFight,Quest
 };
 
 gameState_  gameState = gameState_::selectEnemy;
