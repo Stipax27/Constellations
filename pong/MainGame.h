@@ -1,8 +1,8 @@
 bool isRewind = false;
 
 struct {
-    int day, month;//количество набранных очков и оставшихся "жизней"
-    bool action = false;//состояние - ожидание (игрок должен нажать пробел) или игра
+    int day, month;
+    bool action = false;
 } game;
 
 enum menu_type {
@@ -19,7 +19,6 @@ void InitGame()
     game.day = 32;
     game.month = 13;
     startTime = currentTime;
-
 }
 
 bool drawClickableText(
@@ -89,8 +88,6 @@ void drawCircularMenu(float circleRadius, float speed, string* items, int size, 
 
 }
 
-//
-
 void menuMonthprocessing()
 {
     drawCircularMenu(450, 0.0001, mounthString, 12, first);
@@ -99,7 +96,6 @@ void menuMonthprocessing()
     
     drawString("select your date of birth.", window.width / 2, window.height*.05, 1, true);
 }
-
 
 void menuDayprocessing()
 {
@@ -220,9 +216,6 @@ void restoreHP()
 
 void loseFight()
 {
-    
-
-
     if (drawClickableText("You Lose (((", true, RGB(0, 191, 255),window.width/2,window.height/2))
     {
         gameState = gameState_::MainMenu;

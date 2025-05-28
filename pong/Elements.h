@@ -21,12 +21,11 @@ enum class element_name
 
 element_name current_element = element_name::Fire;
 
-
 void initElements() {
     elements[(int)element_name::Fire].damageMod = 1.3f;
     elements[(int)element_name::Fire].defenseMod = 0.8f;
     elements[(int)element_name::Fire].name = "Fire";
-    elements[(int)element_name::Fire].color = RGB(255, 100, 0); // Установите цвет
+    elements[(int)element_name::Fire].color = RGB(255, 100, 0); 
     elements[(int)element_name::Fire].swordMod = 1.5f;
     elements[(int)element_name::Fire].bowMod = 1.3f;
 

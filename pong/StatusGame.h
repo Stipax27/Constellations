@@ -70,21 +70,17 @@ bool RewindOneStepBack() {
         return false;
     }
 
-    
     Entity* playerEntity = &entities[static_cast<int>(player_sign)];
     Entity* enemyEntity = &entities[static_cast<int>(currentEnemyID)];
 
-  
     int stepsToRewind = min(4, static_cast<int>(currentStateIndex));
     currentStateIndex -= stepsToRewind;
     const BattleState& prevState = battleHistory[currentStateIndex];
 
-    
     playerEntity->healthSystem->starsHealth = prevState.playerStarsHealth;
     playerEntity->healthSystem->updateStarsHP();
     playerEntity->constellation->starsCords = prevState.playerstarCords;
 
-    
     enemyEntity->healthSystem->starsHealth = prevState.enemyStarsHealth;
     enemyEntity->healthSystem->updateStarsHP();
     enemyEntity->constellation->starsCords = prevState.enemystarCords;

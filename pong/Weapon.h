@@ -7,7 +7,6 @@ public:
     float attackSpeed;
     std::string name;
     Constellation* constellation;
-
 };
 
 weapon_ weapon[4];
