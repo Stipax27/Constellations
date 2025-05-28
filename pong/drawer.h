@@ -132,8 +132,13 @@ namespace drawer
 
     void drawMilkyWay()
     {
-        SelectObject(window.context, mainBrush);
-        SelectObject(window.context, mainPen);
+        HBRUSH brashStar;
+        HPEN penStar;
+        srand(time(0));
+        brashStar = CreateSolidBrush(RGB(rand() % 256, rand() % 256, rand() % 256));
+        penStar = CreatePen(PS_SOLID, 2, RGB(rand() % 256, rand() % 256, rand() % 256));
+        SelectObject(window.context, brashStar);
+        SelectObject(window.context, penStar);
 
         srand(10); 
         for (int i = 0; i < 1000; i++)
@@ -141,15 +146,9 @@ namespace drawer
             point3d point;
             genWaySphere(point);
             modelTransform(point, Aries);
-            
             modelProject(point);
 
-           
             int starSize = rand() % 3 + 1; 
-
-            
-            COLORREF color = RGB(rand() % 256, rand() % 256, rand() % 256);
-            SetDCBrushColor(window.context, color);
 
             point.draw(point, starSize);
         }
@@ -734,6 +733,22 @@ namespace drawer
             }
         }
     }
+    void drawKvest()
+    {
+        srand(10);
+        for (int i = 0; i < 5; i++)
+        {
+            point3d point;
+            genWaySphere(point);
+            modelTransform(point, Aries);
+            modelProject(point);
+
+            int starSize = 10;
+
+            point.draw(point, starSize);
+        }
+    
+    }
  
     void drawWorld()
     {
@@ -776,6 +791,7 @@ namespace drawer
                 linksDivider = 50;
                 drawStarField();
                 drawMilkyWay();
+                drawKvest();
                 modelTransform = &placeConstToWorld;
 
                 for (int i = 0; i < 1; i++)
