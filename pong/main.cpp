@@ -47,12 +47,16 @@ HPEN airPen;
 HBRUSH waterBrush;
 HPEN waterPen;
 
+
 #include "utils.h"
 #include "MainWindow.h"
 #include "Point3d.h"
-#include "Line.h"
 #include "mouse.h"
 #include "Constellation.h"
+void (*modelTransform)(point3d& p, Constellation& Constellation);
+void (*modelProject)(point3d& p);
+void (*uiFunc)(point3d& point, Constellation& Constellation, Entity* entity, int i);
+#include "Line.h"
 #include "MainWorld.h"
 #include "DodgeEnemy.h"
 #include "Navigation.h"

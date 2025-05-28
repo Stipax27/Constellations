@@ -1,32 +1,5 @@
 namespace drawer
 { 
-    void drawLine(point3d& p1, point3d& p2, int count)
-    {
-        if (count < 1) return;  
-
-        for (int i = 0;i < count;i++)
-        {
-            float dx = p2.x - p1.x;
-            float dy = p2.y - p1.y;
-            float dz = p2.z - p1.z;
-            float length = sqrt(dx * dx + dy * dy + dz * dz);
-
-            point3d point;
-            point.x = p1.x + dx * (float)i/(float)(count-1);
-            point.y = p1.y + dy * (float)i/(float)(count-1);
-            point.z = p1.z + dz * (float)i/(float)(count-1);
-
-            if (modelProject)
-            {
-            modelProject(point);
-            }
-
-            float sz = 1 + .5 * sinf(i + currentTime * .01);
-            point.draw(point, sz);
-            // Рисование Линий.
-        }
-    }
-
     float linksDivider = 25;
 
     void drawLinks(Entity& entity, bool colorOverride = false) {
@@ -599,10 +572,10 @@ namespace drawer
         modelTransform(bottomRight, *playerConstellation);
 
         // Рисуем рамку
-        drawer::drawLine(topLeft, topRight, 50);    // Верх
-        drawer::drawLine(bottomLeft, bottomRight, 50); // Низ
-        drawer::drawLine(topLeft, bottomLeft, 5);  // Лево
-        drawer::drawLine(bottomRight, topRight,  5); // Право
+        drawLine(topLeft, topRight, 50);    // Верх
+        drawLine(bottomLeft, bottomRight, 50); // Низ
+        drawLine(topLeft, bottomLeft, 5);  // Лево
+        drawLine(bottomRight, topRight,  5); // Право
 
         // Рисуем заполнение из звёзд
         int activeStars = (int)(starCount * progress);
@@ -646,7 +619,7 @@ namespace drawer
             modelTransform(star2, *playerConstellation);
 
             int lineSegments = (i < activeStars - 1) ? 10 : 5;
-            drawer::drawLine(star1, star2, lineSegments);
+           drawLine(star1, star2, lineSegments);
         }
 
         point3d p = { 0,2,0 };

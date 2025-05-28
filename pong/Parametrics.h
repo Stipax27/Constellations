@@ -13,9 +13,7 @@ bool attack_speed = false;
 bool attack_start = false;
 bool attackCooldown = true;
 
-void (*modelTransform)(point3d& p, Constellation& Constellation);
-void (*modelProject)(point3d& p);
-void (*uiFunc)(point3d& point, Constellation& Constellation, Entity* entity, int i);
+
 
 void genRandSphere(point3d& p) {
     float amp = 1.25;
@@ -38,7 +36,7 @@ void genWaySphere(point3d& p) {
     angleY = rand() % 360;
 
     p.x = window.width/2;
-    p.y = window.height / 2;
+    p.y = window.height/2;
     p.z = 100;
 
     p.rotateX(p, angleX);
@@ -74,29 +72,35 @@ void menuProject(point3d& p) {
     p.x = x;
     p.y = y;
 }
-
-
-void constSelectUI(point3d& point, Constellation& Constellation, Entity* entities, int i) {
-    //Entity* enemyEntity = &entities[static_cast<int>(currentEnemyID)];
-
+float getDistanceToMouse(point3d& point)
+{
     float dx = point.x - mouse.pos.x;
     float dy = point.y - mouse.pos.y;
-    float length = sqrt(dx * dx + dy * dy);
+    return sqrt(dx * dx + dy * dy);
+   
+}
 
-    float rad = saturate(1.2 - length * .05) * fabs(sin(currentTime * .01));
+float calcStarRad(float length)
+{
+    return saturate(1.2 - length * .05) * fabs(sin(currentTime * .01));
+    
+}
+
+void constSelectUI(point3d& point, Constellation& Constellation, Entity* entities, int i) {
+    
+    float lenght = getDistanceToMouse(point);
+    float rad = calcStarRad(lenght);
 
     if (GetAsyncKeyState(VK_LBUTTON)) {
-        if (length < starSize) {
+        if (lenght < starSize) {
             SelectObject(window.context, brush2);
             gameState = gameState_::Fight;
             entities[currentEnemyID].constellation;
-
         }
     }
     else {
         SelectObject(window.context, brush);
     }
-
     finalStarRad = starSize * entities[currentEnemyID].healthSystem->starsHealth[i] + rad * 15;
 }
 
@@ -110,11 +114,8 @@ float get_lenghts(point3d& point1, point3d& point2) {
 void starIntersectUI(point3d& point,Constellation& Constellation,Entity* entities, int i) {
     //Entity* enemyEntity = &entities[static_cast<int>(currentEnemyID)];
 
-    float dx = point.x - mouse.pos.x;
-    float dy = point.y - mouse.pos.y;
-    float lenght = sqrt(dx * dx + dy * dy);
-
-    float rad = saturate(1.2 - lenght * .05) * fabs(sin(currentTime * .01));
+    float lenght = getDistanceToMouse(point);
+    float rad = calcStarRad(lenght);
 
     finalStarRad = starSize * entities->healthSystem->starsHealth[i] + rad * 15;
 
@@ -183,13 +184,8 @@ void starIntersectUI(point3d& point,Constellation& Constellation,Entity* entitie
 
 void heroUI(point3d& point, Constellation& Constellation,Entity* entities,int i)
 {
-    //Entity* playerEntity = &entities[static_cast<int>(player_sign)];
-
-    float dx = point.x - mouse.pos.x;
-    float dy = point.y - mouse.pos.y;
-    float lenght = sqrt(dx * dx + dy * dy);
-
-    float rad = saturate(1.2 - lenght * .05) * fabs(sin(currentTime * .01));
+    float lenght = getDistanceToMouse(point);
+    float rad = calcStarRad(lenght);
 
     if (GetAsyncKeyState(VK_LBUTTON)) 
     {
