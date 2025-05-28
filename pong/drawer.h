@@ -1,3 +1,5 @@
+typedef void(*PVFN)(point3d& point);
+
 namespace drawer
 { 
     float linksDivider = 25;
@@ -706,20 +708,32 @@ namespace drawer
             }
         }
     }
+
+    
+
     void drawQuest()
     {
+        point3d point[4];
+
+        PVFN Quest[4][4] = {
+            {&StarQuestUi, NULL, NULL, NULL},
+            {&StarFightUi, NULL, NULL, NULL},
+            {&StarRiddleUi, NULL, NULL, NULL},
+            {&StarQuestUi, NULL, NULL, NULL}
+        };
+        
         srand(10);
-        for (int i = 0; i < 5; i++)
-        {
-            point3d point;
-            genWaySphere(point);
-            modelTransform(point, Aries);
-            modelProject(point);
+        for (int i = 0; i < 4; i++)
+        {            
+            genWaySphere(point[i]);
+            modelTransform(point[i], Aries);
+            modelProject(point[i]);
             int starSize = 10;
-            StarQuestUi(point);
-            point.draw(point, starSize);
+            
+            point[i].draw(point[i], starSize);
+            Quest[i][0](point[i]);
         }
-    
+        
     }
  
     void drawWorld()
@@ -991,7 +1005,21 @@ namespace drawer
             {
                 drawStarField();
                 drawString("Hello, I am the cosmic Aries Flea: Solve my riddle:\nThe thick grasses are entwined,\nThe meadows are curled,\nAnd I myself am all curly,\nEven the curl of my horn.", window.width/2, window.height/2,1.,true);
-                
+                QuestExit();
+                break;
+            }
+            case gameState_::Riddle:
+            {
+                drawStarField();
+                QuestExit();
+
+                break;
+            }
+            case gameState_::StarFight: 
+            {
+                drawStarField();
+                QuestExit();
+
                 break;
             }
             case gameState_::WinFight:
