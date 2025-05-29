@@ -11,7 +11,8 @@ struct {
     std::vector<std::pair<int, int>> skeletonEdges;
     float skeletonScale = 1.0f;
     float boneRotation = 0.0f;
-} game;
+} 
+game;
 
 enum menu_type {
     first,
