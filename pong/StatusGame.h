@@ -12,8 +12,8 @@ struct BattleState {
     DWORD timestamp;
     float playerHP;
     float enemyHP;
-    std::vector<float> playerStarsHealth;
-    std::vector<float> enemyStarsHealth;
+    std::vector<int> playerStarsHealth;
+    std::vector<int> enemyStarsHealth;
     std::vector<point3d> playerstarCords;
     std::vector<point3d> enemystarCords;
     point3d player_dodge_ofs;

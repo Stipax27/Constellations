@@ -49,8 +49,9 @@ void initElements() {
 }
 
 float CalculateCombinedDamage() {
+    
     float baseDamage = weapon[(int)current_weapon].damage;
-    float elementDamage = elements[(int)current_element].damageMod;
+    float elementDamageMod = elements[(int)current_element].damageMod;
 
     float weaponElementMod = 1.0f;
 
@@ -69,7 +70,7 @@ float CalculateCombinedDamage() {
         break;
     }
 
-    return baseDamage * elementDamage * weaponElementMod;
+    return baseDamage * elementDamageMod * weaponElementMod;
 }
 
 void SelectElement() {
@@ -168,7 +169,7 @@ float getConstellationHP()
 {
     Entity* playerEntity = &entities[static_cast<int>(player_sign)];
 
-    std::vector <float>& starHealth = playerEntity->healthSystem->starsHealth;
+    std::vector <int>& starHealth = playerEntity->healthSystem->starsHealth;
 
     int starsCount = starHealth.size();
     float health = 0.f;
@@ -189,7 +190,7 @@ bool isConstellationDead()
 {
     Entity* playerEntity = &entities[static_cast<int>(player_sign)];
 
-    std::vector <float>& starHealth = playerEntity->healthSystem->starsHealth;
+    std::vector <int>& starHealth = playerEntity->healthSystem->starsHealth;
 
     int starsCount = starHealth.size();
     float health = 0;
@@ -208,10 +209,10 @@ bool isConstellationDead()
 void enemyAttack() {
 
     Entity* playerEntity = &entities[static_cast<int>(player_sign)];
-    std::vector<float>& starHealth = playerEntity->healthSystem->starsHealth;
+    std::vector<int>& starHealth = playerEntity->healthSystem->starsHealth;
     
     for (int i = 0; i < starHealth.size(); i++) {
-        starHealth[i] -= .1f;
+        starHealth[i] -= 1;
         if (starHealth[i] < 0) starHealth[i] = 0;
     }
 

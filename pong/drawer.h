@@ -9,7 +9,7 @@ namespace drawer
 
         std::vector<point3d>& starArray = entity.constellation->starsCords;
         std::vector<std::vector<float>>& starEdges = entity.constellation->constellationEdges;
-        std::vector<float>& starHealth = entity.healthSystem->starsHealth;
+        std::vector<int>& starHealth = entity.healthSystem->starsHealth;
 
         if (starArray.size() < starEdges.size() || starHealth.size() < starArray.size()) return;
 
@@ -42,7 +42,7 @@ namespace drawer
         if (!entity.constellation || !entity.healthSystem) return;
 
         std::vector<point3d>& starArray = entity.constellation->starsCords;
-        std::vector<float>& starHealth = entity.healthSystem->starsHealth;
+        std::vector<int>& starHealth = entity.healthSystem->starsHealth;
 
         
         if (starArray.size() != starHealth.size()) return;

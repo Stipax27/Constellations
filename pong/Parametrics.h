@@ -101,7 +101,7 @@ void constSelectUI(point3d& point, Constellation& Constellation, Entity* entitie
     else {
         SelectObject(window.context, brush);
     }
-    finalStarRad = starSize * entities[currentEnemyID].healthSystem->starsHealth[i] + rad * 15;
+    finalStarRad = starSize/5 * entities[currentEnemyID].healthSystem->starsHealth[i] + rad * 15;
 }
 
 float get_lenghts(point3d& point1, point3d& point2) {
@@ -117,7 +117,7 @@ void starIntersectUI(point3d& point,Constellation& Constellation,Entity* entitie
     float lenght = getDistanceToMouse(point);
     float rad = calcStarRad(lenght);
 
-    finalStarRad = starSize * entities->healthSystem->starsHealth[i] + rad * 15;
+    finalStarRad = starSize / 5 * entities->healthSystem->starsHealth[i] + rad * 15;
 
     float line_x = get_lenghts(attack[0], attack[1]);
     float line_y = get_lenghts(attack[0], point);
@@ -141,10 +141,15 @@ void starIntersectUI(point3d& point,Constellation& Constellation,Entity* entitie
     float hitRadius = 20;
 
     if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed && attack_start) {
+       
+        float totalDamage = CalculateCombinedDamage();
+
         if ((current_weapon == weapon_name::Sword && line_hit < 1.01) ||
             (current_weapon == weapon_name::Shield && distToCenter <= shieldRadius) ||
             (current_weapon == weapon_name::Bow && distToStart <= hitRadius)) {
-            entities->healthSystem->damageStar(i, weapon[(int)current_weapon].damage);
+
+           
+            entities->healthSystem->damageStar(i, totalDamage);
         }
     }
 
@@ -197,7 +202,7 @@ void heroUI(point3d& point, Constellation& Constellation,Entity* entities,int i)
         SelectObject(window.context, brush);
     }
     //finalStarRad = 3 * constellation.healthSystem->getHP() + rad * 15;
-    finalStarRad = 3 * entities->healthSystem->starsHealth[i] + rad * 15;
+    finalStarRad = starSize / 5 * entities->healthSystem->starsHealth[i] + rad * 15;
 }
 
 void StarQuestUi(point3d& point)

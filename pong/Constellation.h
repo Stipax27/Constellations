@@ -2,14 +2,14 @@ int constellationsCounter = 0;
 
 class HealthSystem {
 public:
-    float starHP;
-    float maxHP;
-    float defens;
-    std::vector<float> starsHealth;
+    int starHP;
+    int maxHP;
+    int defens;
+    std::vector<int> starsHealth;
 
     HealthSystem(int starCount) {
-        starsHealth = std::vector<float>(starCount, 1.0f);
-        maxHP = starCount;
+        starsHealth = std::vector<int>(starCount, 5);
+        maxHP = starCount * 5;
         starHP = maxHP;
     }
 
@@ -20,7 +20,7 @@ public:
         }
     }
 
-    void damageStar(int starIndex, float damage) {
+    void damageStar(int starIndex, int damage) {
         if (starIndex >= 0 && starIndex < starsHealth.size()) {
             starsHealth[starIndex] -= damage;
             if (starsHealth[starIndex] < 0) starsHealth[starIndex] = 0;
@@ -51,7 +51,7 @@ public:
         }
         return true;
     }
-
+     
 };
 
 class Constellation {
@@ -195,11 +195,11 @@ public:
         return *this;
     }
     
-    float getHP() const {
+    int getHP() const {
         return healthSystem->starHP;
     }
 
-    float getMaxHP() const {
+    int getMaxHP() const {
         return healthSystem->maxHP;
     }
 
