@@ -8,8 +8,8 @@ public:
     std::vector<int> starsHealth;
 
     HealthSystem(int starCount) {
-        starsHealth = std::vector<int>(starCount, 5);
-        maxHP = starCount * 5;
+        starsHealth = std::vector<int>(starCount, 50);
+        maxHP = starCount * 50;
         starHP = maxHP;
     }
 

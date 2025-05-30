@@ -22,30 +22,30 @@ enum class element_name
 element_name current_element = element_name::Fire;
 
 void initElements() {
-    elements[(int)element_name::Fire].damageMod = 1.3f;
-    elements[(int)element_name::Fire].defenseMod = 0.8f;
+    elements[(int)element_name::Fire].damageMod = 2;
+    elements[(int)element_name::Fire].defenseMod = 1;
     elements[(int)element_name::Fire].name = "Fire";
     elements[(int)element_name::Fire].color = RGB(255, 100, 0); 
-    elements[(int)element_name::Fire].swordMod = 1.5f;
-    elements[(int)element_name::Fire].bowMod = 1.3f;
+    elements[(int)element_name::Fire].swordMod = 2;
+    elements[(int)element_name::Fire].bowMod = 1;
 
-    elements[(int)element_name::Earth].damageMod = 0.9f;
-    elements[(int)element_name::Earth].defenseMod = 1.4f;
+    elements[(int)element_name::Earth].damageMod = 1;
+    elements[(int)element_name::Earth].defenseMod = 1;
     elements[(int)element_name::Earth].name = "Earth";
     elements[(int)element_name::Earth].color = RGB(139, 69, 19);
-    elements[(int)element_name::Earth].shieldMod = 1.6f;
+    elements[(int)element_name::Earth].shieldMod = 2;
 
-    elements[(int)element_name::Air].damageMod = 1.1f;
-    elements[(int)element_name::Air].defenseMod = 0.9f;
+    elements[(int)element_name::Air].damageMod = 1;
+    elements[(int)element_name::Air].defenseMod = 1;
     elements[(int)element_name::Air].name = "Air";
     elements[(int)element_name::Air].color = RGB(173, 216, 230);
-    elements[(int)element_name::Air].bowMod = 1.4f;
+    elements[(int)element_name::Air].bowMod = 1;
 
-    elements[(int)element_name::Water].damageMod = 1.0f;
-    elements[(int)element_name::Water].defenseMod = 1.2f;
+    elements[(int)element_name::Water].damageMod = 1;
+    elements[(int)element_name::Water].defenseMod = 1;
     elements[(int)element_name::Water].name = "Water";
     elements[(int)element_name::Water].color = RGB(0, 105, 148);
-    elements[(int)element_name::Water].staffMod = 1.3f;
+    elements[(int)element_name::Water].staffMod = 2;
 }
 
 float CalculateCombinedDamage() {
@@ -53,7 +53,7 @@ float CalculateCombinedDamage() {
     float baseDamage = weapon[(int)current_weapon].damage;
     float elementDamageMod = elements[(int)current_element].damageMod;
 
-    float weaponElementMod = 1.0f;
+    float weaponElementMod = 1;
 
     switch (current_weapon) {
     case weapon_name::Sword:
@@ -172,7 +172,7 @@ float getConstellationHP()
     std::vector <int>& starHealth = playerEntity->healthSystem->starsHealth;
 
     int starsCount = starHealth.size();
-    float health = 0.f;
+    int health = 0;
 
     for (int i = 0; i < starsCount; i++)
     {
@@ -193,7 +193,7 @@ bool isConstellationDead()
     std::vector <int>& starHealth = playerEntity->healthSystem->starsHealth;
 
     int starsCount = starHealth.size();
-    float health = 0;
+    int health = 0;
     for (int i = 0; i < starsCount; i++)
     {
         health += starHealth[i];

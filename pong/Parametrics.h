@@ -101,7 +101,7 @@ void constSelectUI(point3d& point, Constellation& Constellation, Entity* entitie
     else {
         SelectObject(window.context, brush);
     }
-    finalStarRad = starSize/5 * entities[currentEnemyID].healthSystem->starsHealth[i] + rad * 15;
+    finalStarRad = starSize/50 * entities[currentEnemyID].healthSystem->starsHealth[i] + rad * 15;
 }
 
 float get_lenghts(point3d& point1, point3d& point2) {
@@ -117,7 +117,7 @@ void starIntersectUI(point3d& point,Constellation& Constellation,Entity* entitie
     float lenght = getDistanceToMouse(point);
     float rad = calcStarRad(lenght);
 
-    finalStarRad = starSize / 5 * entities->healthSystem->starsHealth[i] + rad * 15;
+    finalStarRad = starSize / 50 * entities->healthSystem->starsHealth[i] + rad * 15;
 
     float line_x = get_lenghts(attack[0], attack[1]);
     float line_y = get_lenghts(attack[0], point);
@@ -202,7 +202,7 @@ void heroUI(point3d& point, Constellation& Constellation,Entity* entities,int i)
         SelectObject(window.context, brush);
     }
     //finalStarRad = 3 * constellation.healthSystem->getHP() + rad * 15;
-    finalStarRad = starSize / 5 * entities->healthSystem->starsHealth[i] + rad * 15;
+    finalStarRad = starSize / 50 * entities->healthSystem->starsHealth[i] + rad * 15;
 }
 
 void StarQuestUi(point3d& point)
