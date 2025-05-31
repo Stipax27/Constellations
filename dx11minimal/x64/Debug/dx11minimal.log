@@ -1,0 +1,1561 @@
+﻿  dx11minimal.cpp
+C:\Users\artem\source\repos\Constellations001\dx11minimal\dx11minimal.cpp(3,18): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\artem\source\repos\Constellations001\dx11minimal\utils.h(3,12): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Point3d.h(87,17): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Point3d.h(86,17): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Point3d.h(85,17): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Point3d.h(84,17): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Point3d.h(114,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Point3d.h(127,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Point3d.h(140,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\mouse.h(60,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\mouse.h(61,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\mouse.h(65,33): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Constellation.h(70,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Constellation.h(84,26): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(5,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(5,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(6,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(6,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(7,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(7,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(20,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(21,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(21,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(22,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(22,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(24,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(24,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(25,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(25,16): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(26,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(26,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(28,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(28,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(29,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(29,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(30,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(31,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(31,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(32,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(32,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(33,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(34,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(53,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(53,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(54,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(54,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(55,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(55,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(56,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(56,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(57,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(57,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(58,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(59,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(60,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(61,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(62,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(64,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(64,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(65,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(65,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(66,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(66,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(67,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(67,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(68,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(68,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(69,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(69,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(70,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(70,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(71,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(71,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(73,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(73,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(96,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(96,16): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(97,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(97,16): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(99,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(101,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(101,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(115,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(115,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(116,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(117,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(117,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(118,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(118,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(120,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(120,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(121,16): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(122,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(122,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(123,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(124,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(125,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(125,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(143,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(143,16): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(144,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(144,16): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(145,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(146,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(147,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(147,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(148,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(149,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(150,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(151,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(153,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(153,16): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(154,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(155,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(155,16): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(156,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(156,16): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(157,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(157,16): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(158,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(178,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(178,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(179,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(179,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(180,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(180,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(181,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(181,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(183,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(183,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(184,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(184,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(200,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(200,16): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(201,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(202,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(202,17): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(203,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(203,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(204,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(205,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(206,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(206,16): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(207,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(207,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(208,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(208,16): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(210,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(210,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(211,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(211,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(212,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(212,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(213,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(213,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(214,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(214,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(215,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(215,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(216,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(217,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(217,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(243,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(243,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(244,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(244,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(245,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(246,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(246,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(247,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(247,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(248,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(250,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(250,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(251,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(252,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(252,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(253,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(253,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(254,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(255,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(255,16): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(256,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(257,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(258,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(258,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(282,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(283,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(285,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(286,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(287,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(287,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(288,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(288,16): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(289,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(289,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(291,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(291,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(292,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(292,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(293,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(293,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(313,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(313,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(314,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(314,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(316,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(316,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(317,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(318,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(318,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(319,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(320,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(321,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(321,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(322,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(323,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(323,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(343,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(344,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(344,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(345,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(346,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(347,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(347,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(350,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(351,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(352,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(353,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(353,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(354,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(354,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(356,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(356,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(377,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(377,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(378,11): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(378,16): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(379,11): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(379,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(380,11): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(380,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(382,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(382,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(383,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(383,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(385,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(385,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(386,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(387,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(387,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(388,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(389,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(389,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(390,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(390,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(391,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(414,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(415,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(416,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(416,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(417,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(418,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(418,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(419,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(419,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(420,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(421,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(421,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(422,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(424,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(425,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(425,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(426,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(427,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(427,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(428,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(428,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(429,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(430,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(430,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(431,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(432,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(433,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(463,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(464,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(465,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(465,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(466,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(466,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(467,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(467,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(468,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(468,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(469,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(471,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(472,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(472,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(473,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(473,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(474,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(474,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(475,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(475,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(476,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(477,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(501,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(501,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(502,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(503,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(503,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(505,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(505,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(506,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(507,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(507,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(508,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(508,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(509,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(509,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(510,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(510,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(511,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(555,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(555,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainWorld.h(555,43): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\DodgeEnemy.h(4,22): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\DodgeEnemy.h(14,24): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\DodgeEnemy.h(16,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\DodgeEnemy.h(17,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\DodgeEnemy.h(27,26): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\DodgeEnemy.h(37,24): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\DodgeEnemy.h(39,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\DodgeEnemy.h(40,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Navigation.h(50,19): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\font.h(217,21): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\font.h(227,38): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\font.h(245,65): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\font.h(245,32): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\font.h(251,36): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\font.h(251,32): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\font.h(273,25): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\font.h(273,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\font.h(286,18): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\font.h(287,18): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\font.h(288,18): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\font.h(294,49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\font.h(294,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\font.h(298,47): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\font.h(298,38): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\font.h(323,34): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\font.h(331,23): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Weapon.h(23,46): warning C4305: '=': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Weapon.h(24,47): warning C4305: '=': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Weapon.h(29,47): warning C4305: '=': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Weapon.h(36,45): warning C4305: '=': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Weapon.h(41,46): warning C4305: '=': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Weapon.h(42,47): warning C4305: '=': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Weapon.h(43,51): warning C4305: '=': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Elements.h(130,69): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Elements.h(130,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Elements.h(142,68): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Elements.h(142,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Elements.h(146,69): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Elements.h(146,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Elements.h(154,20): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Elements.h(173,20): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Elements.h(237,62): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Elements.h(237,46): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Elements.h(238,54): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Elements.h(238,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(34,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(34,43): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(41,33): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(41,30): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(48,34): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(49,19): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(50,19): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(57,86): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(57,79): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(96,27): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(98,87): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(98,67): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(100,78): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(100,59): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(107,19): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(108,19): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(117,27): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(119,84): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(119,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(124,92): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(140,55): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(141,56): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(152,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(153,45): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(173,31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(174,31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(178,87): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\MainGame.h(178,70): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\DialogStruct.h(160,17): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\DialogStruct.h(161,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\DialogStruct.h(171,89): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\DialogStruct.h(171,67): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\DialogStruct.h(182,35): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\DialogStruct.h(185,36): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\DialogStruct.h(191,90): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\DialogStruct.h(191,83): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\DialogStruct.h(193,35): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\DialogStruct.h(195,39): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\DialogStruct.h(206,127): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(24,21): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(25,21): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(29,17): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(37,32): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(38,32): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(52,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(53,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(62,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(63,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(76,30): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(76,15): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(113,30): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(113,15): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(167,31): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(189,31): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(209,31): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(224,30): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(224,15): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(249,13): warning C4244: 'initializing': conversion from 'DWORD' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(250,20): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(260,10): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(269,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(270,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(280,24): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(286,32): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(287,32): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(293,21): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(297,10): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(301,32): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\Parametrics.h(302,32): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(24,40): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(24,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(38,29): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(42,46): warning C4244: 'argument': conversion from '_Ty' to 'const unsigned __int64', possible loss of data
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(42,46): warning C4244:         with
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(42,46): warning C4244:         [
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(42,46): warning C4244:             _Ty=float
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(42,46): warning C4244:         ]
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(44,46): warning C4244: 'argument': conversion from '_Ty' to 'const unsigned __int64', possible loss of data
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(44,46): warning C4244:         with
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(44,46): warning C4244:         [
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(44,46): warning C4244:             _Ty=float
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(44,46): warning C4244:         ]
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(46,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(50,42): warning C4244: 'argument': conversion from '_Ty' to 'const unsigned __int64', possible loss of data
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(50,42): warning C4244:         with
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(50,42): warning C4244:         [
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(50,42): warning C4244:             _Ty=float
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(50,42): warning C4244:         ]
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(50,77): warning C4244: 'argument': conversion from '_Ty' to 'const unsigned __int64', possible loss of data
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(50,77): warning C4244:         with
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(50,77): warning C4244:         [
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(50,77): warning C4244:             _Ty=float
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(50,77): warning C4244:         ]
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(56,23): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(67,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(79,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(145,23): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(146,23): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(157,28): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(158,28): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(160,28): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(161,28): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(170,25): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(169,25): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(168,25): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(167,25): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(203,25): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(202,25): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(201,25): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(200,25): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(223,17): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(224,17): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(225,17): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(226,17): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(231,34): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(232,82): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(239,34): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(240,82): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(384,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(385,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(386,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(387,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(451,28): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(484,31): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(512,25): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(568,31): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(666,58): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(731,144): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(731,74): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(734,96): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(734,77): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(735,115): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(735,84): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(788,32): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(811,34): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(833,39): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(836,39): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(887,38): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(905,84): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(905,63): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(908,82): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(908,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(911,82): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(911,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(915,147): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(915,116): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(916,97): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(916,66): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(917,344): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(917,315): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(919,29): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(924,73): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(924,53): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(925,84): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\drawer.h(925,64): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\dx11.h(858,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\dx11.h(858,77): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\dx11.h(918,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\dx11.h(945,19): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+C:\Users\artem\source\repos\Constellations001\dx11minimal\dx11.h(945,25): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'dx11minimal.cpp')
+  
+  dx11minimal.vcxproj -> C:\Users\artem\Source\Repos\Constellations001\x64\Debug\dx11minimal.exe
