@@ -457,7 +457,7 @@ namespace drawer
         auto maxHP = entities.healthSystem->maxHP;
         auto currentHP = entities.healthSystem->starHP;
 
-        auto progress = currentHP / maxHP;
+        float progress = (float)currentHP / (float)maxHP;
         auto progressText = "HP: " + std::to_string(currentHP) + "/" + std::to_string(maxHP);
 
         linksDivider = 15;
@@ -470,8 +470,8 @@ namespace drawer
         const float barHeight = 60;
         const float barX = 0;
         const float barY = .3;
-        const float starCount = 10;
-        const float starSize = 5.0f;
+        const int starCount = 10;
+        const int starSize = 5;
 
         point3d Bar = { barX, barY,0 };
 
@@ -545,7 +545,7 @@ namespace drawer
         auto maxHP = entities.healthSystem->maxHP;
         auto currentHP = entities.healthSystem->starHP;
 
-        auto progress = currentHP / maxHP;
+        float progress = (float)currentHP / (float)maxHP;
         auto progressText = "HP: " + std::to_string(currentHP) + "/" + std::to_string(maxHP);
 
         linksDivider = 15;
@@ -559,8 +559,8 @@ namespace drawer
         const float barHeight = .25;
         const float barX = -barWidth/2;
         const float barY = -barHeight/2+2.5;
-        const float starCount = 20;
-        const float starSize = 5.0f;
+        const int starCount = 20;
+        const int starSize = 5;
         
         // Создаем точки для рамки
         point3d topLeft = { barX, barY, 0 };
