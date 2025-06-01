@@ -206,14 +206,14 @@ bool isConstellationDead()
 
 }
 
-void enemyAttack() {
+void enemyAttack()
+{
+    Entity& playerEntity = entities[static_cast<size_t>(player_sign)];  // Предполагая, что entities — std::vector
 
-    Entity* playerEntity = &entities[static_cast<int>(player_sign)];
-    std::vector<int>& starHealth = playerEntity->healthSystem->starsHealth;
-    
-    for (int i = 0; i < starHealth.size(); i++) {
-        starHealth[i] -= 1;
-        if (starHealth[i] < 0) starHealth[i] = 0;
+    for (int& health : playerEntity.healthSystem->starsHealth)
+    {
+        health -= 1;
+        if (health < 0) health = 0;
     }
 
     isDamageHero = true;

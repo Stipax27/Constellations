@@ -537,13 +537,19 @@ namespace drawer
 
     }
 
-    void DrawHpHeroBar(Entity& entities)
+    void DrawHpHeroBar(Entity& entity)
     {
         Constellation* playerConstellation = starSet[player_sign];
-        //Entity* playerEntity = &entities[static_cast<int>(player_sign)];
 
-        auto maxHP = entities.healthSystem->maxHP;
-        auto currentHP = entities.healthSystem->starHP;
+        // Синхронизируем starHP с суммарным здоровьем из starsHealth
+        int totalStarsHealth = 0;
+        for (int health : entity.healthSystem->starsHealth) {
+            totalStarsHealth += health;
+        }
+        entity.healthSystem->starHP = totalStarsHealth;  // Обновляем starHP
+
+        auto maxHP = entity.healthSystem->maxHP;
+        auto currentHP = entity.healthSystem->starHP;
 
         float progress = (float)currentHP / (float)maxHP;
         auto progressText = "HP: " + std::to_string(currentHP) + "/" + std::to_string(maxHP);
