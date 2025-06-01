@@ -546,7 +546,7 @@ namespace drawer
         for (int health : entity.healthSystem->starsHealth) {
             totalStarsHealth += health;
         }
-        entity.healthSystem->starHP = totalStarsHealth;  // Обновляем starHP
+        entity.healthSystem->starHP = totalStarsHealth;  
 
         auto maxHP = entity.healthSystem->maxHP;
         auto currentHP = entity.healthSystem->starHP;
@@ -560,7 +560,7 @@ namespace drawer
         nearPlaneClip = -2000;
         modelProject = &fightProject;
 
-        // Параметры временного бара
+        
         const float barWidth = 4;
         const float barHeight = .25;
         const float barX = -barWidth/2;
@@ -568,7 +568,7 @@ namespace drawer
         const int starCount = 20;
         const int starSize = 5;
         
-        // Создаем точки для рамки
+       
         point3d topLeft = { barX, barY, 0 };
         point3d topRight = { barX + barWidth, barY, 0 };
         point3d bottomLeft = { barX, barY + barHeight, 0 };
@@ -579,7 +579,7 @@ namespace drawer
         modelTransform(bottomLeft, *playerConstellation);
         modelTransform(bottomRight, *playerConstellation);
 
-        // Рисуем рамку
+       
         drawLine(topLeft, topRight, 50);    // Верх
         drawLine(bottomLeft, bottomRight, 50); // Низ
         drawLine(topLeft, bottomLeft, 5);  // Лево
@@ -696,14 +696,6 @@ namespace drawer
                 std::string timeStr = "Time: " + std::to_string(remainingTime / 1000);
                 drawString(timeStr.c_str(), window.width / 1.1, 45, 1.f, true);
     
-                //Entity* enemyEntity = entities;
-
-                /*if (entities && entities->healthSystem &&
-                    Entity.healthSystem->starHP <= 0) {
-                    timeModifier = 0;
-                    isBattleActive = false;
-                    gameState = gameState_::WinFight;
-                }*/
             }
             else 
             {

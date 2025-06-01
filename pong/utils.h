@@ -24,3 +24,19 @@ float lerp(float x1, float x2, float a)
 {
     return x1 * (1 - a) + x2 * a;
 }
+
+float smoothstep(float x) 
+{
+    return (1 - cos(saturate(x) * PI)) / 2;
+}
+
+float u_shape(float x) 
+{
+    return pow(smoothstep(saturate(abs(.65 - x) * 3 - .0)), 3) * 100;
+}
+
+float slope(float x) 
+{
+    return u_shape(x) / (1 + u_shape(x));
+}
+

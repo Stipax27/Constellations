@@ -41,56 +41,67 @@ bool drawClickableText(
 
     return isHovered && GetAsyncKeyState(VK_LBUTTON);
 }
+float angle = 0;
+float scale = .001;
+float speed = 0;
+float get_lenghts(point3d& point1, point3d& point2);
 
-void drawCircularMenu(float circleRadius, float speed, string* items, int size, menu_type selectedType) {
+void drawCircularMenu(float circleRadius, float scale, string* items, int size, menu_type selectedType) {
 
-    circleRadius *= window.width / 2560.;
+    circleRadius *= window.height / 1440.;
     float centerX = window.width / 2;
     float centerY = window.height / 2;
+    point3d c = point3d{ centerX,centerY,0 };
+    speed = scale *slope(get_lenghts(c,mouse.pos)/ (window.height/2.));
+    
+    bool anyHovered = false; 
     for (int i = 0; i < size; i++)
     {
-        float angle = (2 * PI / size) * i + currentTime * speed;
-        float textX = centerX + circleRadius * cos(angle);
-        float textY = centerY + circleRadius * sin(angle);
+         angle += speed;
+        float textX = centerX + circleRadius * cos(angle+ PI *2 * i/ size);
+        float textY = centerY + circleRadius * sin(angle+ PI *2 * i/ size);
 
+        point3d sz = drawString(items[i].c_str(), textX, textY, 1, true, true);
+
+        bool isHovered = (mouse.pos.x > textX - sz.x / 2 && mouse.pos.x < textX + sz.x / 2 &&
+            mouse.pos.y > textY && mouse.pos.y < textY + sz.y);
+
+        if (isHovered) {
+            anyHovered = true;
+        }
+        
         bool isClicked = drawClickableText(items[i], false, RGB(0, 191, 255), textX, textY);
         switch (selectedType) {
         case first:
+            
             if (isClicked) {
+
                 player_month = (MonthSign)(i);
                 gameState = gameState_::DaySelection;
                 currentMonthIndex = i;
             }
-            else
-            {
-                currentMonthIndex = -1;
-            }
             break;
 
         case second:
-
-            if (isClicked)
-            {
+            if (isClicked) {
+                
                 player_day = i + 1;
                 currentDayIndex = i;
                 gameState = gameState_::confirmSign;
-
                 player_sign = getZodiacSign(player_day, player_month);
             }
-            else
-            {
-                currentDayIndex = -1;
-            }
-
             break;
         }
     }
 
+    
 }
 
 void menuMonthprocessing()
 {
-    drawCircularMenu(450, 0.0001, mounthString, 12, first);
+    scale = .001;
+    
+    drawCircularMenu(450, scale, mounthString, 12, first);
 
     drawString(mounthToString(player_month).c_str(), window.width *.1, window.height/2.,1,true);
     
@@ -99,18 +110,19 @@ void menuMonthprocessing()
 
 void menuDayprocessing()
 {
-    float circleRadius = 300;
+    scale = .0001;
+    circleRadius = 300;
     float centerX = window.width / 2;
     float centerY = window.height / 2;
     int numDay = 31;
-
+     
     std::string days[31];
     for (int i = 0; i < 31; i++)
     {
         days[i] = std::to_string(i + 1);
     }
 
-    drawCircularMenu(300, 0.00002, days, 31, second);
+    drawCircularMenu(300, scale, days, 31, second);
 
     drawString(days[player_day-1].c_str(), window.width / 2 + 800, window.height / 2., 1, true);// Вывод 1го числа 
 }
