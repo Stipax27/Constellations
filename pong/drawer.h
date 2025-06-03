@@ -980,7 +980,7 @@ namespace drawer
                 }
                 if (!GetAsyncKeyState(VK_LBUTTON)) 
                 {
-                
+                    
                 }
                 SelectObject(window.context, heroBrush);
                 SelectObject(window.context, heroPen);
@@ -1011,6 +1011,7 @@ namespace drawer
             {
                 drawBook();
                 Helpers();
+
                 break;
             }
             case gameState_::EndFight:
