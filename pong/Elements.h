@@ -6,10 +6,10 @@ public:
     float defenseMod;
     std::string name;
     COLORREF color;
-    float swordMod = 1.0f;
-    float shieldMod = 1.0f;
-    float bowMod = 1.0f;
-    float staffMod = 1.0f;
+    int swordMod = 1;
+    int shieldMod = 1;
+    int bowMod = 1;
+    int staffMod = 1;
 };
 
 Element_ elements[4];
@@ -149,7 +149,7 @@ void drawCurrentElement() {
 
 
 void DrawCombatStats() {
-    float combinedDamage = CalculateCombinedDamage();
+    int combinedDamage = CalculateCombinedDamage();
 
     std::string damageText = "Damage: " + std::to_string(combinedDamage);
     drawString(damageText.c_str(), window.width / 4, window.height - 400, 1, true);
