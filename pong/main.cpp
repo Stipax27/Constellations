@@ -65,6 +65,7 @@ void (*uiFunc)(point3d& point, Constellation& Constellation, Entity* entity, int
 #include "Weapon.h"
 #include "Elements.h"
 #include "MainGame.h"
+#include "Helper.h"
 #include "DiologTEXT.h"
 #include "DialogStruct.h"
 #include "Parametrics.h"

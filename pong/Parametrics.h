@@ -196,6 +196,9 @@ void heroUI(point3d& point, Constellation& Constellation,Entity* entities,int i)
     {
         if (lenght < starSize) {
             SelectObject(window.context, brush2);
+            gameState = gameState_::Helper;
+            
+            
         }
     }
     else {
