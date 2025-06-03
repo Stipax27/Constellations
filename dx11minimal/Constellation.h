@@ -1,0 +1,95 @@
+//#include "Windows.h"
+
+int constellationsCounter = 0;
+
+class Constellation {
+public:
+
+    std::vector<point3d> starsCords;
+    float hp;
+    float maxHP;
+    float defens;
+    std::vector <float> starsHealth;
+    std::vector <std::vector <float>> constellationEdges;
+
+    std::vector<point3d> starsRenderedCords = {};
+    float scale = 1000;
+    int ID;
+    std::string name;
+
+    point3d angle;
+    float distance;
+
+    char currentMoveDirection;
+    DWORD moveStartTime;
+    bool isMoveActive;
+    point3d position;
+
+
+    Constellation(std::vector<point3d> _starsCords, std::vector <float> _starsHealth, std::vector <std::vector <float>> _constellationEdges) : position{ 0,0,0 }
+    {
+
+        starsCords = _starsCords;
+        starsHealth = _starsHealth;
+        constellationEdges = _constellationEdges;
+        ID = constellationsCounter;
+        //name = zodiacSignToString((ZodiacSign)ID);
+
+        maxHP = 0;
+        for (int i = 0;i < starsHealth.size();i++)
+        {
+            maxHP += starsHealth[i];
+        }
+
+        constellationsCounter++;
+    }
+
+
+
+    void setPosition(const point3d& newPos) {
+
+        point3d offset = {
+            newPos - position
+        };
+
+        for (auto& star : starsCords) {
+            star += offset;
+        }
+
+        position = newPos;
+    }
+
+    point3d getPosition() const {
+        return position;
+    }
+
+    void Arrange(point3d& p) const {
+
+        p -= position;
+
+        p.move(0, 0, 3000. / scale);
+
+        p.rotateX(p, angle.x);
+        p.rotateY(p, angle.y);
+        p.rotateZ(p, angle.z);
+
+        p *= scale;
+
+        p += position;
+
+    }
+
+    void setStarsRenderedCords(float angleX, float angleY, float angleZ) {
+        angle = { angleX, angleY, angleZ };
+        distance = 3000. / scale;
+        starsRenderedCords = starsCords;
+
+        for (int i = 0; i < starsCords.size(); i++) {
+            point3d p = starsRenderedCords[i];
+            Arrange(p);
+            starsRenderedCords[i] = p;
+        }
+    }
+
+
+};
