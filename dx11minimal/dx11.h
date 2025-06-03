@@ -50,6 +50,26 @@ static inline int32 _log2(float x)
 		counterStart = li.QuadPart;
 	}
 
+
+
+
+	void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+	// Normalized pixel coordinates (from 0 to 1)
+	vec2 uv = fragCoord/iResolution.x-.5;
+
+	// Time varying pixel color
+	float x= length(uv);
+	vec3 col = (abs(1./(abs(x*115.))*1.6*(1.-abs(x))))*(1.-abs(x))*vec3(1.,1.,1.);
+	col=pow(col,vec3(.4));
+
+	// Output to screen
+	fragColor = vec4(col,1.0);
+}
+
+
+
+
 	double GetCounter()
 	{
 		LARGE_INTEGER li;
@@ -550,7 +570,7 @@ namespace ConstBuf
 {
 	ID3D11Buffer* buffer[6];
 
-#define constCount 32000
+#define constCount 32
 
 	//b0 - use "params" label in shader
 	float drawerV[constCount];//update per draw call
