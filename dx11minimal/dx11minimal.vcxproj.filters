@@ -90,6 +90,12 @@
     <ClInclude Include="loop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PSS.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VSS.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dx11minimal.cpp">

@@ -102,12 +102,14 @@ namespace drawer
 
     void draw—onstellation(Constellation& Constellation, bool colorOverride = false)
     {
+
         drawLinks(Constellation, colorOverride);
         drawStarPulse(Constellation, colorOverride);
     }
 
     void drawStarField()
     {
+
         SelectObject(window.context, mainBrush);
         SelectObject(window.context, mainPen);
 
@@ -264,6 +266,8 @@ namespace drawer
 
     void drawPlayer—onstellationToMenu()
     {
+        Shaders::vShader(1);
+        Shaders::pShader(1);
         startTime = currentTime;
         int n = (currentTime / 1000) % starSet.size();
         modelTransform = &placeConstToStartMenu;
@@ -719,6 +723,8 @@ namespace drawer
 
         case gameState_::selectEnemy:
         {
+            Shaders::vShader(1);
+            Shaders::pShader(1);
             modelTransform = &placeToWorld;
             modelProject = &fightProject;
             uiFunc = &constSelectUI;

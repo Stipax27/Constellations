@@ -80,12 +80,21 @@ public:
     {
         if (p.z < nearPlaneClip) return;
 
-        Ellipse(window.context,
-            p.x - sz,
-            p.y - sz,
-            p.x + sz,
-            p.y + sz
-        );// Рисование элипса. sz = Размер звезды.
+        ConstBuf::ConstToVertex(4);
+        ConstBuf::ConstToPixel(4);
+       // Camera::Camera();
+
+        
+        ConstBuf::global[0] = XMFLOAT4(p.x, p.y, sz, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
+        ConstBuf::ConstToVertex(5);
+
+       Draw::elipse(1);
+
+        //Shaders::vShader(0);
+        //Shaders::pShader(0);
+        //Draw::NullDrawer(0, 1);
+        // Рисование элипса. sz = Размер звезды.
 
     }
 

@@ -463,6 +463,8 @@ namespace Shaders {
 	{
 		CreateVS(0, nameToPatchLPCWSTR("VS.h"));
 		CreatePS(0, nameToPatchLPCWSTR("PS.h"));
+		CreateVS(1, nameToPatchLPCWSTR("VSS.h"));
+		CreatePS(1, nameToPatchLPCWSTR("PSS.h"));
 	}
 
 	void vShader(unsigned int n)
@@ -878,7 +880,7 @@ void Dx11Init()
 	
 	//main RT
 	Textures::Create(0, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), false, true);
-
+	Textures::Create(1, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), false, true);
 
 }
 
@@ -911,6 +913,15 @@ namespace Draw
 		ConstBuf::ConstToPixel(1);
 
 		context->DrawInstanced(quadCount*50 , instances, 0, 0);
+	}
+	void elipse(int quadCount, unsigned int instances = 1)
+	{
+		ConstBuf::Update(0, ConstBuf::drawerV);
+		ConstBuf::ConstToVertex(0);
+		ConstBuf::Update(1, ConstBuf::drawerP);
+		ConstBuf::ConstToPixel(1);
+
+		context->DrawInstanced(quadCount*6 , instances, 0, 0);
 	}
 
 	void Present()

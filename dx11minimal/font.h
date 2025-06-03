@@ -2,9 +2,6 @@
 #include <vector>
 #include <wrl/client.h>
 
-extern ID2D1Factory* d2dFactory;
-extern ID2D1HwndRenderTarget* d2dRenderTarget;
-extern ID2D1SolidColorBrush* d2dBrush;
 std::vector<float> letter_01 = { 16409.33f,400.93f,16412.6f,126.78f,16267.9f,223.6f,16385.4f,308.46f };
 std::vector<float> letter_02 = { 16074.25f,398.76f,16074.25f,135.48f,16218.95f,222.51f,16094.92f,298.67f };
 std::vector<float> letter_03 = { 15919.77f,123.51f,16010.06f,220.34f,15936.09f,325.84f,15842.53f,220.34f,15908.89f,138.74f };
@@ -284,7 +281,8 @@ void letterProject(point3d& p)
 point3d drawString(const char* str, float x, float y, float scale, bool centered, bool getSize = false, int count = -1)
 {
     preprocessFont();
-
+    Shaders::vShader(0);
+    Shaders::pShader(0);
     scale = scale * window.width / 2560.;
 
     float tracking = 10;

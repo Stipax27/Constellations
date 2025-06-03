@@ -27,20 +27,6 @@ cbuffer objParams : register(b0)
     float drawerV[32];
 };
 
-void GenerateRoundedCap(float2 center, float2 direction, float halfWidth, out float2 arc[8])
-{
-    float2 perp = float2(-direction.y, direction.x);
-    float angleStep = 3.14159 / 6.0;
-
-    for (int i = 0; i < 8; ++i)
-    {
-        float angle = angleStep * i;
-        float cs = cos(angle);
-        float sn = sin(angle);
-        float2 rotated = direction * cs + perp * sn;
-        arc[i] = center + rotated * halfWidth;
-    }
-}
 #define PI 3.1415926535897932384626433832795
 
 struct VS_OUTPUT
@@ -53,7 +39,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output;
 
-    const int arcSteps = 5;
+    const int arcSteps = 7;
     float angleStep = PI / (arcSteps - 1);
     const int vertsPerRoundedRect = (arcSteps - 1) * 3 * 2 + 6;
     uint rectIndex = vID / vertsPerRoundedRect;
