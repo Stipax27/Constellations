@@ -32,7 +32,8 @@ float smoothstep(float x)
 
 float u_shape(float x) 
 {
-    return pow(smoothstep(saturate(abs(.65 - x) * 3 - .0)), 3) * 100;
+    
+    return pow(smoothstep(saturate(abs(.6 - x) * 1.2 - .0)), 3) * 100;
 }
 
 float slope(float x) 

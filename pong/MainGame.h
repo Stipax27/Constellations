@@ -42,7 +42,7 @@ bool drawClickableText(
     return isHovered && GetAsyncKeyState(VK_LBUTTON);
 }
 float angle = 0;
-float scale = .001;
+float scale ;
 float speed = 0;
 float get_lenghts(point3d& point1, point3d& point2);
 
@@ -51,6 +51,7 @@ void drawCircularMenu(float circleRadius, float scale, string* items, int size, 
     circleRadius *= window.height / 1440.;
     float centerX = window.width / 2;
     float centerY = window.height / 2;
+     
     point3d c = point3d{ centerX,centerY,0 };
     speed = scale *slope(get_lenghts(c,mouse.pos)/ (window.height/2.));
     
@@ -99,9 +100,9 @@ void drawCircularMenu(float circleRadius, float scale, string* items, int size, 
 
 void menuMonthprocessing()
 {
-    scale = .001;
     
-    drawCircularMenu(450, scale, mounthString, 12, first);
+    
+    drawCircularMenu(450, .001, mounthString, 12, first);
 
     drawString(mounthToString(player_month).c_str(), window.width *.1, window.height/2.,1,true);
     
@@ -110,19 +111,19 @@ void menuMonthprocessing()
 
 void menuDayprocessing()
 {
-    scale = .0001;
+    
     circleRadius = 300;
     float centerX = window.width / 2;
     float centerY = window.height / 2;
     int numDay = 31;
-     
+
     std::string days[31];
     for (int i = 0; i < 31; i++)
     {
         days[i] = std::to_string(i + 1);
     }
 
-    drawCircularMenu(300, scale, days, 31, second);
+    drawCircularMenu(300, .001, days, 31, second);
 
     drawString(days[player_day-1].c_str(), window.width / 2 + 800, window.height / 2., 1, true);// Вывод 1го числа 
 }
