@@ -52,6 +52,7 @@ HPEN waterPen;
 #include "MainWindow.h"
 #include "Point3d.h"
 #include "mouse.h"
+#include "Camer.h"
 #include "Constellation.h"
 void (*modelTransform)(point3d& p, Constellation& Constellation);
 void (*modelProject)(point3d& p);
@@ -99,6 +100,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     waterBrush = CreateSolidBrush(RGB(0, 105, 148));
     waterPen  = CreatePen(PS_SOLID, 2, RGB(0, 105, 148));
 
+    initStars(1000); 
 
     InitGame();//здесь инициализируем переменные игры
     //initContentData();
@@ -116,7 +118,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             DispatchMessage(&msg);
         }
         currentTime = timer::GetCounter();
-
+        handleInput(camera);
+        renderScene(camera);
         mouse.Input();
         drawer::drawWorld();//рисуем фон, ракетку и шарик
         BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно   

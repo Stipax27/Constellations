@@ -149,6 +149,7 @@
     <Media Include="..\Debug\music.mp3" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camer.h" />
     <ClInclude Include="Constellation.h" />
     <ClInclude Include="DialogStruct.h" />
     <ClInclude Include="DiologTEXT.h" />

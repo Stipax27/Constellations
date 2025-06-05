@@ -331,3 +331,14 @@ void placeHeroToWorld(point3d& p, Constellation& Constellation) {
 
 void NullProject(point3d& p) {}
 
+std::vector<point3d> stars;
+
+void initStars(int count) {
+    stars.resize(count);
+    for (auto& star : stars) {
+        genRandSphere(star);
+        
+        star *= 1000.0f; 
+    }
+}
+
