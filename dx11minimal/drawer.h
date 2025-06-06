@@ -109,23 +109,9 @@ namespace drawer
 
     void drawStarField()
     {
+        Draw::Starfield(1);
 
-        SelectObject(window.context, mainBrush);
-        SelectObject(window.context, mainPen);
 
-        srand(10);
-        for (int i = 0; i < 2000; i++)
-        {
-            point3d point;
-            genRandSphere(point);
-
-            modelTransform(point, Aries);
-            point.rotateZ(point, starfield_angles.z);
-            modelProject(point);
-
-            point.draw(point, 2);
-            // Звёзды на фоне их кол-во. и Кадр остановки.
-        }
     }
 
     const COLORREF colors[] =

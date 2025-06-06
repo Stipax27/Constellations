@@ -485,6 +485,8 @@ namespace Shaders {
 		CreatePS(0, nameToPatchLPCWSTR("PS.h"));
 		CreateVS(1, nameToPatchLPCWSTR("VSS.h"));
 		CreatePS(1, nameToPatchLPCWSTR("PSS.h"));
+		CreateVS(2, nameToPatchLPCWSTR("SFS.h"));
+		CreatePS(2, nameToPatchLPCWSTR("SFPS.h"));
 	}
 
 	void vShader(unsigned int n)
@@ -942,6 +944,15 @@ namespace Draw
 		ConstBuf::ConstToPixel(1);
 
 		context->DrawInstanced(quadCount*6 , instances, 0, 0);
+	}
+	void Starfield(int quadCount, unsigned int instances = 1)
+	{
+		ConstBuf::Update(0, ConstBuf::drawerV);
+		ConstBuf::ConstToVertex(0);
+		ConstBuf::Update(1, ConstBuf::drawerP);
+		ConstBuf::ConstToPixel(1);
+
+		context->DrawInstanced(quadCount * 6000000, instances, 0, 0);
 	}
 
 	void Present()

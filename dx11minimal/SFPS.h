@@ -22,6 +22,12 @@ cbuffer drawMat : register(b2)
     float hilight;
 };
 
+float random(float2 st) {
+    return fract(sin(dot(st.xy,
+        float2(12.9898, 78.233))) *
+        43758.5453123);
+}
+
 cbuffer objParams : register(b0)
 {
     float drawerV[32];
@@ -38,24 +44,22 @@ struct VS_OUTPUT
 VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output;
-    float sz = gConst[0].z / 2;
-    float2 C = gConst[0].xy;
     float2 quad[6] = {
-        float2(-1- sz, -1- sz), float2(1+ sz, -1- sz), float2(-1- sz, 1+ sz),
-        float2(1+ sz, -1- sz), float2(1+ sz, 1+ sz), float2(-1- sz, 1+ sz)
+        float2(-1 - sz, -1 - sz), float2(1 + sz, -1 - sz), float2(-1 - sz, 1 + sz),
+        float2(1 + sz, -1 - sz), float2(1 + sz, 1 + sz), float2(-1 - sz, 1 + sz)
     };
 
     int i = 0;
-    float2 pos = quad[vID]+ C;
+    float2 pos = quad[vID] + C;
 
-    float width = aspect.z;   
-    float height = aspect.w;  
+    float width = aspect.z;
+    float height = aspect.w;
 
     float2 normalizedPos = float2(pos.x / width, pos.y / height) * 2.0f;
 
     float2 ndc;
     ndc.x = normalizedPos.x - 1.0f;
     ndc.y = 1.0f - normalizedPos.y;
-    output.pos = float4(ndc,0,1);
+    output.pos = float4(ndc, 0, 1);
     return output;
 }
