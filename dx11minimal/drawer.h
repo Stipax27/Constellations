@@ -107,11 +107,11 @@ namespace drawer
         drawStarPulse(Constellation, colorOverride);
     }
 
-    void drawStarField()
+    void(drawStarField())
     {
+        Shaders::vShader(2);
+        Shaders::pShader(2);
         Draw::Starfield(1);
-
-
     }
 
     const COLORREF colors[] =
@@ -709,14 +709,14 @@ namespace drawer
 
         case gameState_::selectEnemy:
         {
-            Shaders::vShader(1);
-            Shaders::pShader(1);
+            
             modelTransform = &placeToWorld;
             modelProject = &fightProject;
             uiFunc = &constSelectUI;
             linksDivider = 50;
             drawStarField();
-
+            Shaders::vShader(1);
+            Shaders::pShader(1);
             modelTransform = &placeConstToWorld;
 
             for (int i = 0;i < 12;i++)
@@ -767,6 +767,7 @@ namespace drawer
             modelProject = &fightProject;
             uiFunc = &starIntersectUI;
             linksDivider = 50;
+
             drawStarField();
 
 

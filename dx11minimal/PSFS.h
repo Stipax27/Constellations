@@ -35,6 +35,14 @@ struct VS_OUTPUT
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-    return float4(1, 1, 1, 1.);
+    float2 uv = input.uv;
 
+    float dist = length(uv);         // расстояние до центра
+    float intensity = (1.0 - dist);  // простая линейная маска
+
+    intensity = pow(saturate(intensity), 2.0); // экспоненциальное затухание
+
+    float3 color = float3(1,1,1) * intensity;
+
+    return float4(color, intensity); // альфа тоже по интенсивности
 }

@@ -96,6 +96,12 @@
     <ClInclude Include="VSS.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="PSFS.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VSFS.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dx11minimal.cpp">

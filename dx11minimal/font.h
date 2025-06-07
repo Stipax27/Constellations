@@ -236,6 +236,8 @@ void preprocessFont()
 
 float drawLetter(int letter, float x, float y, float scale, bool getSize = false)
 {
+
+    memset(ConstBuf::global, 0, sizeof(ConstBuf::global));
     if (getSize)
     {
         return letter_width[letter] * scale;

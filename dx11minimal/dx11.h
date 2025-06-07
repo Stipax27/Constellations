@@ -485,8 +485,8 @@ namespace Shaders {
 		CreatePS(0, nameToPatchLPCWSTR("PS.h"));
 		CreateVS(1, nameToPatchLPCWSTR("VSS.h"));
 		CreatePS(1, nameToPatchLPCWSTR("PSS.h"));
-		CreateVS(2, nameToPatchLPCWSTR("SFS.h"));
-		CreatePS(2, nameToPatchLPCWSTR("SFPS.h"));
+		CreateVS(2, nameToPatchLPCWSTR("VSFS.h"));
+		CreatePS(2, nameToPatchLPCWSTR("PSFS.h"));
 	}
 
 	void vShader(unsigned int n)
@@ -981,17 +981,16 @@ namespace Camera
 
 	void Camera()
 	{
-		float t = timer::frameBeginTime*.001;
+		float t = timer::frameBeginTime*.0001;
 		float angle = 100;
 		float a = 3.5;
-		XMVECTOR Eye = XMVectorSet(sin(t)*a, 0, cos(t)*a, 0.0f);
+		XMVECTOR Eye = XMVectorSet(sin(t)*a, sin(t) * a, cos(t)*a, 0);
 		XMVECTOR At = XMVectorSet(0, 0, 0, 0.0f);
 		XMVECTOR Up = XMVectorSet(0, 1, 0, 0.0f);
 
 		ConstBuf::camera.world[0] = XMMatrixIdentity();
 		ConstBuf::camera.view[0] = XMMatrixTranspose(XMMatrixLookAtLH(Eye, At, Up));
-		ConstBuf::camera.proj[0] = XMMatrixTranspose(XMMatrixPerspectiveFovLH(DegreesToRadians(angle), iaspect, 0.01f, 100.0f));
-
+		ConstBuf::camera.proj[0] = XMMatrixTranspose(XMMatrixPerspectiveFovLH(DegreesToRadians(angle), iaspect, 0.01f, 1000.0f));
 		ConstBuf::UpdateCamera();
 		ConstBuf::ConstToVertex(3);
 		ConstBuf::ConstToPixel(3);

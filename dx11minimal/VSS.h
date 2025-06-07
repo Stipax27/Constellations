@@ -32,21 +32,22 @@ cbuffer objParams : register(b0)
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
+    float2 uv : TEXCOORD0;
 };
 
 
 VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output;
-    float sz = gConst[0].z / 2;
+    float sz = gConst[0].z*1 ;
     float2 C = gConst[0].xy;
     float2 quad[6] = {
-        float2(-1- sz, -1- sz), float2(1+ sz, -1- sz), float2(-1- sz, 1+ sz),
-        float2(1+ sz, -1- sz), float2(1+ sz, 1+ sz), float2(-1- sz, 1+ sz)
+        float2(-1, -1), float2(1, -1), float2(-1, 1),
+        float2(1, -1), float2(1, 1), float2(-1, 1)
     };
 
     int i = 0;
-    float2 pos = quad[vID]+ C;
+    float2 pos = quad[vID]*sz+C;
 
     float width = aspect.z;   
     float height = aspect.w;  
@@ -57,5 +58,6 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     ndc.x = normalizedPos.x - 1.0f;
     ndc.y = 1.0f - normalizedPos.y;
     output.pos = float4(ndc,0,1);
+    output.uv = quad[vID];
     return output;
 }

@@ -146,8 +146,8 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Point3d.h" />
     <ClInclude Include="PSS.h" />
-    <ClInclude Include="SFPS.h" />
-    <ClInclude Include="SFS.h" />
+    <ClInclude Include="PSFS.h" />
+    <ClInclude Include="VSFS.h" />
     <ClInclude Include="StatusGame.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="utils.h" />
