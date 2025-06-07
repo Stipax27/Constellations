@@ -37,12 +37,12 @@ float4 PS(VS_OUTPUT input) : SV_Target
 {
     float2 uv = input.uv;
 
-    float dist = length(uv);         // расстояние до центра
-    float intensity = (1.0 - dist);  // простая линейная маска
+    float dist = length(uv);        
+    float intensity = (1.0 - dist); 
 
-    intensity = pow(saturate(intensity), 2.0); // экспоненциальное затухание
+    intensity = pow(saturate(intensity), 2.0); 
 
     float3 color = float3(1,1,1) * intensity;
 
-    return float4(color, intensity); // альфа тоже по интенсивности
+    return float4(color, intensity); 
 }
