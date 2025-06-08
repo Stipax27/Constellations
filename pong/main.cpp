@@ -118,8 +118,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             DispatchMessage(&msg);
         }
         currentTime = timer::GetCounter();
-        handleInput(camera);
-        renderScene(camera);
+        /*CamerhandleInput(camera);
+        renderScene(camera);*/
         mouse.Input();
         drawer::drawWorld();//рисуем фон, ракетку и шарик
         BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно   
