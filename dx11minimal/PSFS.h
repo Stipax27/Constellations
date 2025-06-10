@@ -35,13 +35,13 @@ struct VS_OUTPUT
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-    return float4(1,1,1,1);
+    //return float4(1,1,1,1);
     float2 uv = input.uv;
 
     float dist = length(uv);        
     float intensity = (1.0 - dist); 
 
-    intensity = pow(saturate(intensity), 2.0); 
+    intensity = pow(saturate(intensity), 1.0); 
 
     float3 color = float3(1,1,1) * intensity;
 

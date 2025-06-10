@@ -1,3 +1,5 @@
+bool Camerainit = false;
+
 void mainLoop()
 {
 	frameConst();
@@ -11,7 +13,11 @@ void mainLoop()
 	Shaders::pShader(0);
 	ConstBuf::ConstToVertex(4);
 	ConstBuf::ConstToPixel(4);
-	Camera::Camera();
+	if (!Camerainit)
+	{
+		Camerainit = true;
+		Camera::Camera();
+	}
 
 
 	drawer::drawWorld();

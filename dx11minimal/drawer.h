@@ -721,7 +721,7 @@ namespace drawer
 
             for (int i = 0;i < 12;i++)
             {
-                drawÑonstellation(*starSet[i]);
+               // drawÑonstellation(*starSet[i]);
             }
 
             std::string curentSignstring = zodiacSignToString(player_sign);

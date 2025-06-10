@@ -65,7 +65,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     float3 cameraPos = float3(-(view[0]._m02_m12_m22) * view[0]._m32);
 
     float3 forward = normalize(cameraPos - starPos);
-    float3 worldUp = float3(view[0]._21, view[0]._22, view[0]._23);
+    float3 worldUp = float3(0,1,0);
 
     if (abs(dot(forward, worldUp)) > 0.99f)
         worldUp = float3(0, 0, 1);

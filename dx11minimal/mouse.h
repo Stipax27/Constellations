@@ -44,11 +44,18 @@ void navigationByMouse()
         dx = mouse.pos.x - mouse.oldPos.x;
         dy = mouse.pos.y - mouse.oldPos.y;
 
+        auto rm = XMMatrixRotationRollPitchYaw(dy * 0.01, dx * 0.01, 0);
+
+       
+        ConstBuf::camera.view[0]=XMMatrixMultiply(rm, ConstBuf::camera.view[1]);
+        ConstBuf::UpdateCamera();
         mouse.Angle.x = mouse.oldAngle.x + dx;
         mouse.Angle.y = mouse.oldAngle.y + dy;
+
     }
     else
     {
+        ConstBuf::camera.view[1] = ConstBuf::camera.view[0];
         rmb = false;
     }// При удержании ПКМ кручение простарнства.
 }
