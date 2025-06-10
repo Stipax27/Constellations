@@ -56,32 +56,44 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     uint vertexInQuad = vID % 6;
 
 
-    float2 quad[6] = {
+    float2 quadUV[6] = {
+        float2(0, 0), float2(1, 0), float2(0, 1),
+        float2(1, 0), float2(1, 1), float2(0, 1)
+    };
+
+    // Позиции вершин в локальном пространстве квада (от -1 до 1)
+    float2 quadPos[6] = {
         float2(-1, -1), float2(1, -1), float2(-1, 1),
         float2(1, -1), float2(1, 1), float2(-1, 1)
     };
 
     float3 starPos = randomPosition(starID);
 
-    float3 cameraPos = -(view[0]._m02_m12_m22) * view[0]._m32;
+    float3 cameraPos = float3(-(view[0]._m02_m12_m22) * view[0]._m32);
 
     float3 forward = normalize(cameraPos - starPos);
-    float3 worldUp = float3(0, 1, 0);
+    float3 worldUp = float3(view[0]._21, view[0]._22, view[0]._23);
+
     if (abs(dot(forward, worldUp)) > 0.99f)
-        worldUp = float3(1, 0, 0);
+        worldUp = float3(0, 0, 1);
 
     float3 right = normalize(cross(worldUp, forward));
     float3 up = cross(forward, right);
 
     float size = 0.95;
-    float2 offset2D = quad[vertexInQuad] * size;
-    float3 offset3D = right * offset2D.x + up * offset2D.y;
+
+    float widthScale = size / aspect.x;  
+    float heightScale = size;
+
+    float2 vertexOffset = quadPos[vertexInQuad];
+    float3 offset3D = (right * vertexOffset.x * widthScale) + (up * vertexOffset.y * heightScale);
 
     float3 worldPos = starPos + offset3D;
 
     float4 viewPos = mul(float4(worldPos, 1.0f), view[0]);
     float4 projPos = mul(viewPos, proj[0]);
-    output.uv = quad[vertexInQuad];
+
+    output.uv = quadPos[vertexInQuad];
     output.pos = projPos;
     return output;
 }

@@ -35,6 +35,7 @@ struct VS_OUTPUT
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
+    return float4(1,1,1,1);
     float2 uv = input.uv;
 
     float dist = length(uv);        
