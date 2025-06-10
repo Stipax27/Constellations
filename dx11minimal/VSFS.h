@@ -55,13 +55,6 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     uint starID = vID / 6;
     uint vertexInQuad = vID % 6;
 
-
-    float2 quadUV[6] = {
-        float2(0, 0), float2(1, 0), float2(0, 1),
-        float2(1, 0), float2(1, 1), float2(0, 1)
-    };
-
-    // Позиции вершин в локальном пространстве квада (от -1 до 1)
     float2 quadPos[6] = {
         float2(-1, -1), float2(1, -1), float2(-1, 1),
         float2(1, -1), float2(1, 1), float2(-1, 1)
