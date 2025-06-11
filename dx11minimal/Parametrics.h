@@ -45,7 +45,6 @@ void placeConstToWorld(point3d& p, Constellation& Constellation)
     p.move(0, 0, 3000. / Constellation.scale);
     p.rotateX(p, Constellation.angle.x);
     p.rotateY(p, Constellation.angle.y);
-    p.rotateZ(p, Constellation.angle.z);
     p *= Constellation.scale;
 
     p.rotateX(p, mouse.Angle.y * 0.1);

@@ -42,8 +42,8 @@ void navigationByMouse()
             mouse.oldAngle = mouse.Angle;
         }
 
-        float dx = (mouse.pos.x - mouse.oldPos.x) ;
-        float dy = (mouse.pos.y - mouse.oldPos.y);
+        float dx = (mouse.pos.x - mouse.oldPos.x)*0.01 ;
+        float dy = (mouse.pos.y - mouse.oldPos.y)*0.01;
 
         // —оздаем кватернионы дл€ вращений вокруг осей Y (yaw) и X (pitch)
         XMVECTOR qPitch = XMQuaternionRotationAxis(XMVectorSet(1, 0, 0, 0), dy);

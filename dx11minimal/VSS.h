@@ -40,23 +40,26 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output;
     float sz = gConst[0].z ;
-    float2 C = gConst[0].xy;
+    float3 starPos = float3(float2(gConst[0].xy),500);
     float2 quad[6] = {
         float2(-1, -1), float2(1, -1), float2(-1, 1),
         float2(1, -1), float2(1, 1), float2(-1, 1)
     };
 
-    float2 pos = quad[vID]*sz+C;
+    float3 right = normalize(view[0]._m00_m10_m20); // X column
+    float3 up = normalize(view[0]._m01_m11_m21); // Y column
 
-    float width = aspect.z;   
-    float height = aspect.w;  
+    float size = 0.95;
 
-    float2 normalizedPos = float2(pos.x / width, pos.y / height) * 2.0f;
+    float2 vertexOffset = quad[vID];
+    float3 offset3D = right * vertexOffset.x * size + up * vertexOffset.y * size;
 
-    float2 ndc;
-    ndc.x = normalizedPos.x - 1.0f;
-    ndc.y = 1.0f - normalizedPos.y;
-    output.pos = float4(ndc,0,1);
+    float3 worldPos = starPos + offset3D;
+
+    float4 viewPos = mul(float4(worldPos, 1.0f), view[0]);
+    float4 projPos = mul(viewPos, proj[0]);
+
     output.uv = quad[vID];
+    output.pos = projPos;
     return output;
 }
