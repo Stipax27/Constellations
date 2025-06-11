@@ -952,7 +952,7 @@ namespace Draw
 		ConstBuf::Update(1, ConstBuf::drawerP);
 		ConstBuf::ConstToPixel(1);
 
-		context->DrawInstanced(quadCount * 6000000, instances, 0, 0);
+		context->DrawInstanced(quadCount * 60000, instances, 0, 0);
 	}
 
 	void Present()

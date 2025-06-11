@@ -710,18 +710,17 @@ namespace drawer
         case gameState_::selectEnemy:
         {
             
-            modelTransform = &placeToWorld;
-            modelProject = &fightProject;
             uiFunc = &constSelectUI;
             linksDivider = 50;
             drawStarField();
             Shaders::vShader(1);
             Shaders::pShader(1);
+            modelProject = &fightProject;
             modelTransform = &placeConstToWorld;
 
             for (int i = 0;i < 12;i++)
             {
-               // drawÑonstellation(*starSet[i]);
+               drawÑonstellation(*starSet[i]);
             }
 
             std::string curentSignstring = zodiacSignToString(player_sign);

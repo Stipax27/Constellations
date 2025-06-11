@@ -38,6 +38,20 @@ void placeToWorld(point3d& p, Constellation& Constellation)
     p.rotateY(p, mouse.Angle.x * 0.1);
 }
 
+void placeConstToWorld(point3d& p, Constellation& Constellation)
+{
+    Shaking(p);
+
+    p.move(0, 0, 3000. / Constellation.scale);
+    p.rotateX(p, Constellation.angle.x);
+    p.rotateY(p, Constellation.angle.y);
+    p.rotateZ(p, Constellation.angle.z);
+    p *= Constellation.scale;
+
+    p.rotateX(p, mouse.Angle.y * 0.1);
+    p.rotateY(p, mouse.Angle.x * 0.1);
+}
+
 void fightProject(point3d& p)
 {
     int fadeInTime = currentTime - startTime;
@@ -271,20 +285,6 @@ void projectSingleConst(point3d& p)
 
     p.x = x;
     p.y = y;
-}
-
-void placeConstToWorld(point3d& p, Constellation& Constellation)
-{
-    Shaking(p);
-
-    p.move(0, 0, 3000. / Constellation.scale);
-    p.rotateX(p, Constellation.angle.x);
-    p.rotateY(p, Constellation.angle.y);
-    p.rotateZ(p, Constellation.angle.z);
-    p *= Constellation.scale;
-
-    p.rotateX(p, mouse.Angle.y * 0.1);
-    p.rotateY(p, mouse.Angle.x * 0.1);
 }
 
 void placeHeroToWorld(point3d& p, Constellation& Constellation)

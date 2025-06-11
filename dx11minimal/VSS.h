@@ -39,14 +39,13 @@ struct VS_OUTPUT
 VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output;
-    float sz = gConst[0].z*1 ;
+    float sz = gConst[0].z ;
     float2 C = gConst[0].xy;
     float2 quad[6] = {
         float2(-1, -1), float2(1, -1), float2(-1, 1),
         float2(1, -1), float2(1, 1), float2(-1, 1)
     };
 
-    int i = 0;
     float2 pos = quad[vID]*sz+C;
 
     float width = aspect.z;   

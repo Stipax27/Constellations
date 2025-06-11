@@ -39,10 +39,11 @@ void navigationByMouse()
             rmb = true;
             mouse.oldPos.x = mouse.pos.x;
             mouse.oldPos.y = mouse.pos.y;
+            mouse.oldAngle = mouse.Angle;
         }
 
-        float dx = (mouse.pos.x - mouse.oldPos.x) * 0.01f;
-        float dy = (mouse.pos.y - mouse.oldPos.y) * 0.01f;
+        float dx = (mouse.pos.x - mouse.oldPos.x) ;
+        float dy = (mouse.pos.y - mouse.oldPos.y);
 
         // —оздаем кватернионы дл€ вращений вокруг осей Y (yaw) и X (pitch)
         XMVECTOR qPitch = XMQuaternionRotationAxis(XMVectorSet(1, 0, 0, 0), dy);
@@ -59,7 +60,8 @@ void navigationByMouse()
         ConstBuf::camera.view[0] = XMMatrixRotationQuaternion(currentRotation);
 
         ConstBuf::UpdateCamera();
-
+        mouse.Angle.x = mouse.oldAngle.x + dx;
+        mouse.Angle.y = mouse.oldAngle.y + dy;
         mouse.oldPos.x = mouse.pos.x;
         mouse.oldPos.y = mouse.pos.y;
     }
