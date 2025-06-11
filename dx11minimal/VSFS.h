@@ -45,6 +45,7 @@ struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
     float2 uv : TEXCOORD0;
+    uint   starID : TEXCOORD1;
 };
 
 
@@ -61,17 +62,19 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     };
 
     float3 starPos = randomPosition(starID);
+    float3 dir = normalize(starPos);
+    float r = pow(hash11(starID + 123u), 1.0f / 3.0f) * 1000;
 
+    starPos = dir * r;
     float3 cameraPos = float3(-(view[0]._m02_m12_m22) * view[0]._m32);
-
     float3 forward = normalize(cameraPos - starPos);
     float3 worldUp = float3(0,1,0);
 
     if (abs(dot(forward, worldUp)) > 0.99f)
         worldUp = float3(0, 0, 1);
 
-    float3 right = normalize(cross(worldUp, forward));
-    float3 up = cross(forward, right);
+    float3 right = normalize(view[0]._m00_m10_m20); // X column
+    float3 up = normalize(view[0]._m01_m11_m21); // Y column
 
     float size = 0.95;
 
@@ -79,7 +82,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     float heightScale = size;
 
     float2 vertexOffset = quadPos[vertexInQuad];
-    float3 offset3D = (right * vertexOffset.x * widthScale) + (up * vertexOffset.y * heightScale);
+    float3 offset3D = right * vertexOffset.x * size + up * vertexOffset.y * size;
 
     float3 worldPos = starPos + offset3D;
 

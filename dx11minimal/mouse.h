@@ -27,10 +27,11 @@ Mouse mouse;
 
 bool rmb = false;
 bool lmb = false;
-//Mouse::mouse;
-//POINT& mouse, point3d& mouseAngle, point3d& oldmouse, point3d& oldmouseAngle
+
 void navigationByMouse()
 {
+    static XMVECTOR currentRotation = XMQuaternionIdentity();
+
     if (GetAsyncKeyState(VK_RBUTTON))
     {
         if (!rmb)
@@ -38,26 +39,35 @@ void navigationByMouse()
             rmb = true;
             mouse.oldPos.x = mouse.pos.x;
             mouse.oldPos.y = mouse.pos.y;
-            mouse.oldAngle = mouse.Angle;
         }
-        float dx, dy;
-        dx = mouse.pos.x - mouse.oldPos.x;
-        dy = mouse.pos.y - mouse.oldPos.y;
 
-        auto rm = XMMatrixRotationRollPitchYaw(dy * 0.01, dx * 0.01, 0);
+        float dx = (mouse.pos.x - mouse.oldPos.x) * 0.01f;
+        float dy = (mouse.pos.y - mouse.oldPos.y) * 0.01f;
 
-       
-        ConstBuf::camera.view[0]=XMMatrixMultiply(rm, ConstBuf::camera.view[1]);
+        // Создаем кватернионы для вращений вокруг осей Y (yaw) и X (pitch)
+        XMVECTOR qPitch = XMQuaternionRotationAxis(XMVectorSet(1, 0, 0, 0), dy);
+        XMVECTOR qYaw = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), dx);
+
+        // Комбинируем вращения
+        XMVECTOR qNewRotation = XMQuaternionMultiply(qPitch, qYaw);
+
+        // Обновляем текущий кватернион вращения
+        currentRotation = XMQuaternionMultiply(qNewRotation, currentRotation);
+        currentRotation = XMQuaternionNormalize(currentRotation);
+
+        // Преобразуем кватернион в матрицу вида
+        ConstBuf::camera.view[0] = XMMatrixRotationQuaternion(currentRotation);
+
         ConstBuf::UpdateCamera();
-        mouse.Angle.x = mouse.oldAngle.x + dx;
-        mouse.Angle.y = mouse.oldAngle.y + dy;
 
+        mouse.oldPos.x = mouse.pos.x;
+        mouse.oldPos.y = mouse.pos.y;
     }
     else
     {
         ConstBuf::camera.view[1] = ConstBuf::camera.view[0];
         rmb = false;
-    }// При удержании ПКМ кручение простарнства.
+    }
 }
 
 void selectWeapon()

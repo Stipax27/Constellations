@@ -27,23 +27,21 @@ cbuffer params : register(b1)
     float r, g, b;
 };
 
+float hash11(uint n) {
+    n = (n << 13u) ^ n;
+    return frac((n * (n * n * 15731u + 789221u) + 1376312589u) * 0.000000000931322574615478515625f);
+}
+
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
     float2 uv : TEXCOORD0;
+    uint   starID : TEXCOORD1;
 };
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-    //return float4(1,1,1,1);
     float2 uv = input.uv;
-
-    float dist = length(uv);        
-    float intensity = (1.0 - dist); 
-
-    intensity = pow(saturate(intensity), 1.0); 
-
-    float3 color = float3(1,1,1) * intensity;
-
-    return float4(color, intensity); 
+float brightness = exp(-dot(uv, uv) * 20);
+return float4(brightness, brightness, brightness, 1);
 }
