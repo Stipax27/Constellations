@@ -1,4 +1,5 @@
 bool isRewind = false;
+bool needSetAnchor = true;
 
 struct {
     int day, month;
