@@ -27,6 +27,11 @@ int currentColorIndex = -1;
 const int numColors = 7;
 float camDist = 0;
 
+bool isRewindActive = false;
+bool needInitialAnchor = true;
+DWORD lastSaveTime = 0;
+const DWORD SAVE_INTERVAL = 16; // ~60 FPS
+
 DWORD currentTime;
 
 HBRUSH mainBrush;
@@ -138,8 +143,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         starfield_angles.y += .06;
         starfield_angles.z += .07;
 
-        if (!isRewind) SaveCurrentState();
-        
+        if (!isRewindActive && currentTime - lastSaveTime >= SAVE_INTERVAL) {
+            if (needInitialAnchor) {
+                SaveCurrentState(true, true); // Якорное сохранение
+                needInitialAnchor = false;
+            }
+            else {
+                SaveCurrentState(); // Обычное сохранение
+            }
+            lastSaveTime = currentTime;
+        }
+        printf("State: %s | Index: %zu | Anchor: %zu\n",
+            isRewindActive ? "Rewind" : "Normal",
+            currentStateIndex,
+            anchorIndex);
+
         Sleep(16);//ждем 16 милисекунд (1/количество кадров в секунду)
     }
 

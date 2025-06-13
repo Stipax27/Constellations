@@ -721,16 +721,25 @@ namespace drawer
         }
     
         if (GetAsyncKeyState('E') & 0x8000) {
-            if (currentStateIndex > 0) {
-                RewindOneStepBack();
-                isRewind = true;
+            if (!isRewindActive) {
+                // Начинаем откат только если есть куда откатываться
+                if (currentStateIndex > (hasAnchorPoint ? anchorIndex : 0)) {
+                    isRewindActive = true;
+                    RewindOneStepBack();
+                }
             }
             else {
-                isRewind = false;
+                // Продолжаем откат
+                if (currentStateIndex > (hasAnchorPoint ? anchorIndex : 0)) {
+                    RewindOneStepBack();
+                }
             }
         }
-        else {
-            isRewind = false;
+        else if (isRewindActive) {
+            // Завершаем откат
+            isRewindActive = false;
+            ResetTimeAnchor();
+            needInitialAnchor = true; // Готовимся к новому якорю
         }
     
         if (isBattleActive) {
