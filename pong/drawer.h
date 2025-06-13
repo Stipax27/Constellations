@@ -325,8 +325,22 @@ namespace drawer
         float progress;
         float speed;
         bool isFlying;
+        
     };
+
+    struct EnemyFlight 
+    {
+        point3d startEnemyPos;
+        point3d endEnemyPos;
+        point3d currentEnemyPos;
+        float progressEnemy;
+        float speedEnemy;
+        bool isFlyingEnemy;
     
+    };
+
+    EnemyFlight constellationEnemyFlight;
+
     WeaponFlight constellationFlight;
 
     point3d startPoint;
@@ -426,7 +440,46 @@ namespace drawer
                 star.z -= dz * steps;
             }
         }
-    }    
+    }
+    
+    void EnemyMove()
+    {
+        
+        const float radius = 100.0f;          // Радиус окружности
+        const float angleSpeedRad = 0.05f;    // Скорость вращения (рад/кадр)
+        
+        // Получаем позицию героя в мире
+        point3d heroPos = { 0, 0, 0 };
+        placeHeroToWorld(heroPos, *starSet[player_sign]);
+
+        // Получаем текущую позицию врага
+        point3d enemyPos = { 0, 0, 0 };
+        placeConstToWorld(enemyPos, *starSet[currentEnemyID]);
+
+        // Инициализация угла при первом вызове
+        static float enemyAngleRad = atan2(enemyPos.z - heroPos.z, enemyPos.x - heroPos.x);
+
+        // Обновляем угол (в радианах)
+        enemyAngleRad += angleSpeedRad;
+        if (enemyAngleRad > 2 * PI) enemyAngleRad -= 2 * PI;
+
+        // Вычисляем новую позицию на окружности (XZ-плоскость)
+        point3d targetPos;
+        targetPos.x = heroPos.x + radius * cos(enemyAngleRad);
+        targetPos.y = heroPos.y + 30.0f * sin(enemyAngleRad * 2.0f);
+        targetPos.z = heroPos.z + radius * sin(enemyAngleRad);
+
+        // Настраиваем плавное перемещение
+        constellationEnemyFlight.startEnemyPos = enemyPos;      // Текущая позиция
+        constellationEnemyFlight.endEnemyPos = targetPos;// Целевая позиция
+        constellationEnemyFlight.progressEnemy = 0.00f;
+        constellationEnemyFlight.speedEnemy = 0.05f;           // Скорость перемещения
+        constellationEnemyFlight.isFlyingEnemy = true;     // Активируем движение
+
+        // Прогресс не сбрасываем для плавности!
+        
+
+    }
 
     void DrawStarsHP(HDC hdc, Entity& entities) {
 
@@ -867,7 +920,7 @@ namespace drawer
                 modelTransform = &placeConstToWorld;//Враг
                 
                 nearPlaneClip = 0;
-
+                EnemyMove();
                 if (isShakingHero) {
 
                     float beamTime = 4.*(currentTime - shakeStartTimeHero) / shakeDurationHero;
