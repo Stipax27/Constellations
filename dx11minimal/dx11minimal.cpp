@@ -27,7 +27,7 @@ int currentDayIndex = -1;
 int currentMonthIndex = -1;
 int currentColorIndex = -1;
 const int numColors = 7;
-float camDist = 0;
+float camDist = 100;
 DWORD currentTime;
 ID2D1SolidColorBrush* d2dBrush = nullptr;
 HBRUSH mainBrush;
@@ -37,10 +37,9 @@ HBRUSH heroBrush;
 HPEN heroPen;
 
 HWND hWnd;
+#include "utils.h"
 #include "dx11.h"
 
-
-#include "utils.h"
 #include "MainWindow.h"
 #include "Point3d.h"
 #include "mouse.h"
@@ -235,7 +234,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_MOUSEWHEEL:
     {
         float zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
-        camDist += zDelta;
+        Camera::HandleMouseWheel(zDelta);
         break;
     }
     case WM_COMMAND:

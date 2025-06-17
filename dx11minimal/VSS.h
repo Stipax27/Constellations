@@ -40,7 +40,10 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output;
     float sz = gConst[0].z ;
-    float3 starPos = float3(float2(gConst[0].xy),500);
+    float3 starPos = float3(gConst[0].xyz);
+     starPos.x = float(gConst[0].x)-600;
+     starPos.y = float(gConst[0].y)-1000;
+     starPos.z = 0;
     float2 quad[6] = {
         float2(-1, -1), float2(1, -1), float2(-1, 1),
         float2(1, -1), float2(1, 1), float2(-1, 1)

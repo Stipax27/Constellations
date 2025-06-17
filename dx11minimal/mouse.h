@@ -45,19 +45,18 @@ void navigationByMouse()
         float dx = (mouse.pos.x - mouse.oldPos.x)*0.01 ;
         float dy = (mouse.pos.y - mouse.oldPos.y)*0.01;
 
-        // Создаем кватернионы для вращений вокруг осей Y (yaw) и X (pitch)
         XMVECTOR qPitch = XMQuaternionRotationAxis(XMVectorSet(1, 0, 0, 0), dy);
         XMVECTOR qYaw = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), dx);
 
-        // Комбинируем вращения
-        XMVECTOR qNewRotation = XMQuaternionMultiply(qPitch, qYaw);
+        XMVECTOR qNewRotation = XMQuaternionMultiply(qYaw, qPitch);
+        Camera::state.currentRotation = XMQuaternionMultiply(qNewRotation, Camera::state.currentRotation);
+        Camera::state.currentRotation = XMQuaternionNormalize(Camera::state.currentRotation);
 
-        // Обновляем текущий кватернион вращения
-        currentRotation = XMQuaternionMultiply(qNewRotation, currentRotation);
-        currentRotation = XMQuaternionNormalize(currentRotation);
+        XMVECTOR rotatedForward = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), Camera::state.currentRotation);
+        XMVECTOR rotatedUp = XMVector3Rotate(XMVectorSet(0, 1, 0, 0), Camera::state.currentRotation);
+        XMVECTOR eye = XMVectorScale(rotatedForward, -Camera::state.camDist);
 
-        // Преобразуем кватернион в матрицу вида
-        ConstBuf::camera.view[0] = XMMatrixRotationQuaternion(currentRotation);
+        ConstBuf::camera.view[0] = XMMatrixTranspose(XMMatrixLookAtLH(eye, XMVectorZero(), rotatedUp));
 
         ConstBuf::UpdateCamera();
         mouse.Angle.x = mouse.oldAngle.x + dx;
@@ -67,7 +66,6 @@ void navigationByMouse()
     }
     else
     {
-        ConstBuf::camera.view[1] = ConstBuf::camera.view[0];
         rmb = false;
     }
 }

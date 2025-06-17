@@ -591,6 +591,7 @@ namespace ConstBuf
 		XMMATRIX world[2];
 		XMMATRIX view[2];
 		XMMATRIX proj[2];
+		float    camDist;
 	} camera;//update per camera set
 
 	//b4
@@ -978,22 +979,44 @@ float DegreesToRadians(float degrees)
 
 namespace Camera
 {
+	struct State
+	{
+		float camDist = 500.0f;      
+		float minDist = 100.0f;      
+		float maxDist = 3000.0f;     
+		float fovAngle = 60.0f;      
+		XMVECTOR currentRotation = XMQuaternionIdentity();
+		XMVECTOR defaultForward = XMVectorSet(0, 0, 1, 0); 
+		XMVECTOR defaultUp = XMVectorSet(0, 1, 0, 0);      
+	} static state;
 
 	void Camera()
 	{
-		float t = timer::frameBeginTime*.0001;
-		float angle = 100;
-		float a = 3.5;
-		XMVECTOR Eye = XMVectorSet(0, 0, 1, 0);
-		XMVECTOR At = XMVectorSet(0, 0, 0, 0.0f);
-		XMVECTOR Up = XMVectorSet(0, 1, 0, 0.0f);
+		XMVECTOR rotatedForward = XMVector3Rotate(state.defaultForward, state.currentRotation);
+		XMVECTOR rotatedUp = XMVector3Rotate(state.defaultUp, state.currentRotation);
 
-		ConstBuf::camera.world[0] = XMMatrixIdentity();
-		ConstBuf::camera.view[0] = XMMatrixTranspose(XMMatrixLookAtLH(Eye, At, Up));
-		ConstBuf::camera.proj[0] = XMMatrixTranspose(XMMatrixPerspectiveFovLH(DegreesToRadians(angle), iaspect, 0.01f, 10000.0f));
+		XMVECTOR eye = XMVectorScale(rotatedForward, -state.camDist);
+		XMVECTOR at = XMVectorZero();  
+
+		ConstBuf::camera.view[0] = XMMatrixTranspose(XMMatrixLookAtLH(eye, at, rotatedUp));
+
+		ConstBuf::camera.proj[0] = XMMatrixTranspose(
+			XMMatrixPerspectiveFovLH(DegreesToRadians(state.fovAngle),ConstBuf::frame.aspect.y,0.01f,10000.0f));
+
 		ConstBuf::UpdateCamera();
 		ConstBuf::ConstToVertex(3);
 		ConstBuf::ConstToPixel(3);
+	}
+	void HandleMouseWheel(int delta)
+	{
+		
+		state.camDist -= delta ;
+
+		
+		state.camDist = clamp(state.camDist, state.minDist, state.maxDist);
+
+		
+		Camera();
 	}
 }
 
