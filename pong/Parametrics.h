@@ -257,6 +257,7 @@ void StarFightUi(point3d& point)
     if (GetAsyncKeyState(VK_LBUTTON)) {
         if (length < starSize) {
             SelectObject(window.context, brush2);
+            currentEnemyID = (ZodiacSign)12;
             gameState = gameState_::Fight;
 
         }

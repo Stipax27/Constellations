@@ -375,12 +375,11 @@ Constellation Pisces(
 
 Constellation StarEnemy(
     {
-        {0, 0, 0},
-        {.1, .1, 0}
+        {0, 0, 0}
     },
 
     {
-        {0, 1}
+        {0, 0}
     }
 
 );
@@ -650,11 +649,11 @@ ZodiacSign getZodiacSign(int day, int month) {
     throw invalid_argument("Invalid date");
 }
 
-std::string SignString[] = { "ARIES" , "TAURUS","GEMINI", "CANCER", "LEO", "VIRGO", "LIBRA", "SCORPIO", "SAGITTARIUS", "CAPRICORN", "AQUARIUS", "PISCES" };
+std::string SignString[] = { "ARIES" , "TAURUS","GEMINI", "CANCER", "LEO", "VIRGO", "LIBRA", "SCORPIO", "SAGITTARIUS", "CAPRICORN", "AQUARIUS", "PISCES", "FLASH"};
 
 string zodiacSignToString(ZodiacSign sign) {
 
-    if (sign<0 || sign >11) return "Unknown sign";
+    if (sign<0 || sign >12) return "Unknown sign";
     return SignString[(int)sign];
    
 }
