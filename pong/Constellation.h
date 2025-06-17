@@ -145,12 +145,13 @@ public:
     
     Entity(Constellation& src_constellation)
         : constellation(&src_constellation),
-        healthSystem(new HealthSystem(src_constellation.starsCords.size())),
+        
         ID(constellationsCounter++),
         currentMoveDirection(0),
         moveStartTime(0),
         isMoveActive(false)
     {
+        healthSystem = new HealthSystem(src_constellation.starsCords.size());
     }
 
     

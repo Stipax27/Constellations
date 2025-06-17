@@ -95,13 +95,14 @@ void constSelectUI(point3d& point, Constellation& Constellation, Entity* entitie
         if (lenght < starSize) {
             SelectObject(window.context, brush2);
             gameState = gameState_::Fight;
-            entities[currentEnemyID].constellation;
+            currentEnemyID = (ZodiacSign)entities->ID;
+            //entities[currentEnemyID].constellation;
         }
     }
     else {
         SelectObject(window.context, brush);
     }
-    finalStarRad = starSize/50 * entities[currentEnemyID].healthSystem->starsHealth[i] + rad * 15;
+    finalStarRad = starSize/50 * entities->healthSystem->starsHealth[i] + rad * 15;
 }
 
 float get_lenghts(point3d& point1, point3d& point2) {
