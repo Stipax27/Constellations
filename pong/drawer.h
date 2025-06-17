@@ -396,7 +396,7 @@ namespace drawer
         constellationFlight.progress += constellationFlight.speed;
 
         float steps = 1. / constellationFlight.speed;
-        float dx = .008*(constellationFlight.endPos.x - constellationFlight.startPos.x) / steps;
+        float dx = .008 * (constellationFlight.endPos.x - constellationFlight.startPos.x) / steps;
         float dy = .008 * (constellationFlight.endPos.y - constellationFlight.startPos.y) / steps;
         float dz = .008 * (constellationFlight.endPos.z - constellationFlight.startPos.z) / steps;
 
@@ -430,7 +430,7 @@ namespace drawer
         }
     }
 
-
+    //Полёт врага вокруг героя(Надо фиксить)
     void UpdateEnemyOrbitPosition();
     void InitEnemyOrbit();
     // Глобальная переменная для хранения состояния полёта врага
@@ -458,10 +458,11 @@ namespace drawer
         enemyOrbit.angle = 0.0f;
         enemyOrbit.speed = 0.03f;
         enemyOrbit.isActive = true;
-
+        
         // Сохраняем оригинальные смещения звёзд относительно центра
-        enemyOrbit.starOffsets.clear();
-        for (const auto& star : starSet[currentEnemyID]->starsCords) {
+        //enemyOrbit.starOffsets.clear();
+        for (auto& star : starSet[currentEnemyID]->starsCords) {
+            
             point3d offset = star - enemyOrbit.centerPos;
             enemyOrbit.starOffsets.push_back(offset);
         }
