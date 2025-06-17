@@ -62,10 +62,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     };
 
     float3 starPos = randomPosition(starID);
-    float3 dir = normalize(starPos);
-    float r = pow(hash11(starID + 123u), 1.0f / 3.0f) * 1000;
 
-    starPos = dir * r;
 
     float3 right = normalize(view[0]._m00_m10_m20); // X column
     float3 up = normalize(view[0]._m01_m11_m21); // Y column

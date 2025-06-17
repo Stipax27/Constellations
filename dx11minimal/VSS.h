@@ -41,16 +41,15 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     VS_OUTPUT output;
     float sz = gConst[0].z ;
     float3 starPos = float3(gConst[0].xyz);
-     starPos.x = float(gConst[0].x)-600;
-     starPos.y = float(gConst[0].y)-1000;
-     starPos.z = 0;
+     starPos.x = float(gConst[0].x);
+     starPos.y = float(gConst[0].y);
     float2 quad[6] = {
-        float2(-1, -1), float2(1, -1), float2(-1, 1),
-        float2(1, -1), float2(1, 1), float2(-1, 1)
+        float2(-sz, -sz), float2(sz, -sz), float2(-sz, sz),
+        float2(sz, -sz), float2(sz, sz), float2(-sz, sz)
     };
 
-    float3 right = normalize(view[0]._m00_m10_m20); // X column
-    float3 up = normalize(view[0]._m01_m11_m21); // Y column
+    float3 right = normalize(view[0]._m00_m10_m20); 
+    float3 up = normalize(view[0]._m01_m11_m21); 
 
     float size = 0.95;
 

@@ -262,7 +262,7 @@ namespace drawer
         linksDivider = 15;
         if (gameState == gameState_::confirmSign) n = player_sign;
         //draw—onstellation(*starSet[n]);
-
+        Constellation::Transform
         draw—onstellation(*starSet[player_sign]);
     }
 
@@ -680,7 +680,7 @@ namespace drawer
         SelectObject(window.context, mainBrush);
         SelectObject(window.context, mainPen);
         textStyle.color = RGB(0, 191, 255);
-
+        bool n = true;
         Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
         Draw::ClearDepth();
 
@@ -701,6 +701,10 @@ namespace drawer
             break;
 
         case gameState_::confirmSign:
+            if (n) {
+                Camera::Start();
+                n = false;
+            }
             drawPlayer—onstellationToMenu();
             menuMonthprocessing();
             menuDayprocessing();
@@ -709,6 +713,7 @@ namespace drawer
 
         case gameState_::selectEnemy:
         {
+            
             
             uiFunc = &constSelectUI;
             linksDivider = 50;

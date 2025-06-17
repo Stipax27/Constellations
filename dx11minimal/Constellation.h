@@ -5,6 +5,8 @@ int constellationsCounter = 0;
 class Constellation {
 public:
 
+    XMMATRIX Transform;
+
     std::vector<point3d> starsCords;
     float hp;
     float maxHP;
