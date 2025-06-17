@@ -328,19 +328,7 @@ namespace drawer
         
     };
 
-    struct EnemyFlight 
-    {
-        point3d startEnemyPos;
-        point3d endEnemyPos;
-        point3d currentEnemyPos;
-        float progressEnemy;
-        float speedEnemy;
-        bool isFlyingEnemy;
     
-    };
-
-    EnemyFlight constellationEnemyFlight;
-
     WeaponFlight constellationFlight;
 
     point3d startPoint;
@@ -441,45 +429,67 @@ namespace drawer
             }
         }
     }
-    
-    void EnemyMove()
-    {
-        
-        const float radius = 100.0f;          // Радиус окружности
-        const float angleSpeedRad = 0.05f;    // Скорость вращения (рад/кадр)
-        
-        // Получаем позицию героя в мире
-        point3d heroPos = { 0, 0, 0 };
-        placeHeroToWorld(heroPos, *starSet[player_sign]);
 
-        // Получаем текущую позицию врага
-        point3d enemyPos = { 0, 0, 0 };
-        placeConstToWorld(enemyPos, *starSet[currentEnemyID]);
 
-        // Инициализация угла при первом вызове
-        static float enemyAngleRad = atan2(enemyPos.z - heroPos.z, enemyPos.x - heroPos.x);
+    void UpdateEnemyOrbitPosition();
+    void InitEnemyOrbit();
+    // Глобальная переменная для хранения состояния полёта врага
+    struct EnemyOrbit {
+        point3d centerPos;    // Центр созвездия врага
+        float radius;         // Радиус орбиты
+        float angle;          // Текущий угол
+        float speed;          // Скорость движения
+        bool isActive;
 
-        // Обновляем угол (в радианах)
-        enemyAngleRad += angleSpeedRad;
-        if (enemyAngleRad > 2 * PI) enemyAngleRad -= 2 * PI;
+        // Добавляем оригинальные смещения звёзд
+        std::vector<point3d> starOffsets;
+    };
 
-        // Вычисляем новую позицию на окружности (XZ-плоскость)
-        point3d targetPos;
-        targetPos.x = heroPos.x + radius * cos(enemyAngleRad);
-        targetPos.y = heroPos.y + 30.0f * sin(enemyAngleRad * 2.0f);
-        targetPos.z = heroPos.z + radius * sin(enemyAngleRad);
+    EnemyOrbit enemyOrbit;
 
-        // Настраиваем плавное перемещение
-        constellationEnemyFlight.startEnemyPos = enemyPos;      // Текущая позиция
-        constellationEnemyFlight.endEnemyPos = targetPos;// Целевая позиция
-        constellationEnemyFlight.progressEnemy = 0.00f;
-        constellationEnemyFlight.speedEnemy = 0.05f;           // Скорость перемещения
-        constellationEnemyFlight.isFlyingEnemy = true;     // Активируем движение
+    // 2. Функция инициализации орбиты с сохранением структуры созвездия
+    void InitEnemyOrbit() {
+        // Получаем центр созвездия врага
+        enemyOrbit.centerPos = { 0, 0, 0 };
+        placeConstToWorld(enemyOrbit.centerPos, *starSet[currentEnemyID]);
 
-        // Прогресс не сбрасываем для плавности!
-        
+        // Параметры орбиты
+        enemyOrbit.radius = 300.0f;
+        enemyOrbit.angle = 0.0f;
+        enemyOrbit.speed = 0.03f;
+        enemyOrbit.isActive = true;
 
+        // Сохраняем оригинальные смещения звёзд относительно центра
+        enemyOrbit.starOffsets.clear();
+        for (const auto& star : starSet[currentEnemyID]->starsCords) {
+            point3d offset = star - enemyOrbit.centerPos;
+            enemyOrbit.starOffsets.push_back(offset);
+        }
+
+        UpdateEnemyOrbitPosition();
     }
+
+    // 3. Обновленная функция движения с сохранением структуры созвездия
+    void UpdateEnemyOrbitPosition() {
+        if (!enemyOrbit.isActive) return;
+
+        // Обновляем угол
+        enemyOrbit.angle += enemyOrbit.speed;
+        if (enemyOrbit.angle > 2 * PI) enemyOrbit.angle -= 2 * PI;
+
+        // Вычисляем новую позицию центра созвездия
+        point3d newCenter;
+        newCenter.x = enemyOrbit.centerPos.x + enemyOrbit.radius * cos(enemyOrbit.angle);
+        newCenter.y = enemyOrbit.centerPos.y + 50.0f * sin(enemyOrbit.angle * 2.0f); // Добавляем "восьмёрку"
+        newCenter.z = enemyOrbit.centerPos.z + enemyOrbit.radius * sin(enemyOrbit.angle);
+
+        // Обновляем позиции всех звёзд, сохраняя их относительные смещения
+        for (size_t i = 0; i < starSet[currentEnemyID]->starsCords.size(); i++) {
+            starSet[currentEnemyID]->starsCords[i] = newCenter + enemyOrbit.starOffsets[i];
+        }
+    }
+
+    
 
     void DrawStarsHP(HDC hdc, Entity& entities) {
 
@@ -698,6 +708,7 @@ namespace drawer
             battleStartTime = currentTime;
             attackTime = battleStartTime;
             isBattleActive = true;
+            InitEnemyOrbit();
             //TextOutA(window.context, 400, 400, "Бой начался", 10);
             drawString("Start Fight", 400, 400, 1 ,true);
         }
@@ -919,6 +930,7 @@ namespace drawer
                 linksDivider = 50;
                 drawStarField();
 
+                UpdateEnemyOrbitPosition();
                 
                 modelTransform = &placeConstToWorld;
                 nearPlaneClip = 0;
@@ -929,7 +941,6 @@ namespace drawer
                 modelTransform = &placeConstToWorld;//Враг
                 
                 nearPlaneClip = 0;
-                EnemyMove();
                 if (isShakingHero) {
 
                     float beamTime = 4.*(currentTime - shakeStartTimeHero) / shakeDurationHero;
