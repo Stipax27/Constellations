@@ -225,19 +225,6 @@ void StarQuestUi(point3d& point)
     }
 }
 
-void QuestExit() 
-{
-    if (GetAsyncKeyState('T')) {
-
-        SelectObject(window.context, brush2);
-        gameState = gameState_::selectEnemy;
-
-    }
-    else {
-        SelectObject(window.context, brush);
-    }
-}
-
 void StarRiddleUi(point3d& point)
 {
     float dx = point.x - mouse.pos.x;
@@ -269,9 +256,22 @@ void StarFightUi(point3d& point)
     if (GetAsyncKeyState(VK_LBUTTON)) {
         if (length < starSize) {
             SelectObject(window.context, brush2);
-            gameState = gameState_::StarFight;
+            gameState = gameState_::Fight;
 
         }
+    }
+    else {
+        SelectObject(window.context, brush);
+    }
+}
+
+void QuestExit()
+{
+    if (GetAsyncKeyState('T')) {
+
+        SelectObject(window.context, brush2);
+        gameState = gameState_::selectEnemy;
+
     }
     else {
         SelectObject(window.context, brush);

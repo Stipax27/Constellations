@@ -14,7 +14,6 @@ Constellation Aries(
 }
 );
 
-
 Constellation Taurus(
 {
     {-1, -.7, 0},//coords
@@ -373,6 +372,19 @@ Constellation Pisces(
 }
 );
 
+
+Constellation StarEnemy(
+    {
+        {0, 0, 0},
+        {.1, .1, 0}
+    },
+
+    {
+        {0, 1}
+    }
+
+);
+
 Constellation Sword(
 { { 1.3, 1.4, 0 },
     { 1.1, 1.2, 0 },
@@ -525,6 +537,9 @@ Constellation Staff(
 }
 );
 
+
+
+
 std::vector <Constellation*> starSet = {
     &Aries,
     &Taurus,
@@ -538,10 +553,12 @@ std::vector <Constellation*> starSet = {
     &Capricornus,
     &Aquarius,
     &Pisces,
+    &StarEnemy,
     &Sword,
     &Shield,
     &Bow,
     &Staff
+    
 };
 
 std::vector<Entity> entities;
@@ -560,13 +577,15 @@ void initWorld()
     Capricornus.setStarsRenderedCords(400, 0, 0);
     Aquarius.setStarsRenderedCords(100, 0, 0);
     Pisces.setStarsRenderedCords(0, 100, 0);
+    StarEnemy.setStarsRenderedCords(0, 0, 0);
     Sword.setStarsRenderedCords(0, 0, 0);
     Shield.setStarsRenderedCords(0, 0, 0);
     Bow.setStarsRenderedCords(0, 0, 0);
     Staff.setStarsRenderedCords(0, 0, 0);
+    
 
     entities.clear();
-    entities.reserve(16);
+    entities.reserve(17);
 
     entities.push_back(Entity(Aries));
     entities.push_back(Entity(Taurus));
@@ -580,17 +599,19 @@ void initWorld()
     entities.push_back(Entity(Capricornus));
     entities.push_back(Entity(Aquarius));
     entities.push_back(Entity(Pisces));
+    entities.push_back(Entity(StarEnemy));
     entities.push_back(Entity(Sword));
     entities.push_back(Entity(Shield));
     entities.push_back(Entity(Bow));
     entities.push_back(Entity(Staff));
+    
 }
 
 using namespace std;
 
 enum ZodiacSign {
     ARIES, TAURUS, GEMINI, CANCER, LEO, VIRGO,
-    LIBRA, SCORPIO, SAGITTARIUS, CAPRICORN, AQUARIUS, PISCES
+    LIBRA, SCORPIO, SAGITTARIUS, CAPRICORN, AQUARIUS, PISCES, STARENEMY
 };
 enum MonthSign {
     January, February, March, April, May, June, July, August, September, October, November,December
@@ -601,7 +622,7 @@ enum class gameState_ {
     MainMenu, MonthSelection, DaySelection, confirmSign, selectEnemy, Fight, EndFight, DialogStruct,WinFight,Quest,Riddle,StarFight
 };
 
-gameState_  gameState = gameState_::MainMenu;
+gameState_  gameState = gameState_::selectEnemy;
 Constellation* currentEnemy = &Aries;
 ZodiacSign currentEnemyID = ZodiacSign::ARIES;
 
@@ -624,6 +645,7 @@ ZodiacSign getZodiacSign(int day, int month) {
     if ((month == December && day >= 22)    || (month == January && day <= 19))     return CAPRICORN;
     if ((month == January && day >= 20)        || (month == February && day <= 18))    return AQUARIUS;
     if ((month == February && day >= 19)     || (month == March && day <= 20))         return PISCES;
+
 
     throw invalid_argument("Invalid date");
 }
