@@ -732,16 +732,21 @@ namespace drawer
         }
     
         if (GetAsyncKeyState('E') & 0x8000) {
+            DWORD currentTime = timeGetTime();
+
             if (!isRewindActive) {
-                // Начинаем откат только если есть куда откатываться
+                // Начинаем откат, если есть куда откатываться
                 if (currentStateIndex > (hasAnchorPoint ? anchorIndex : 0)) {
                     isRewindActive = true;
+                    lastRewindTime = currentTime;
                     RewindOneStepBack();
                 }
             }
             else {
-                // Продолжаем откат
-                if (currentStateIndex > (hasAnchorPoint ? anchorIndex : 0)) {
+                // Продолжаем откат с интервалом
+                if (currentTime - lastRewindTime >= REWIND_INTERVAL &&
+                    currentStateIndex > (hasAnchorPoint ? anchorIndex : 0)) {
+                    lastRewindTime = currentTime;
                     RewindOneStepBack();
                 }
             }
@@ -750,8 +755,8 @@ namespace drawer
             // Завершаем откат
             isRewindActive = false;
             ResetTimeAnchor();
-            needInitialAnchor = true; // Готовимся к новому якорю
         }
+    
     
         if (isBattleActive) {
             LONG remainingTime = (LONG)((battleStartTime + battleTime + timeModifier) - currentTime);

@@ -1,17 +1,12 @@
 extern std::vector<Constellation*> starSet;
-
 extern ZodiacSign player_sign;
 extern ZodiacSign currentEnemyID;
 extern DWORD currentTime;
 
-float getConstellationHP(const Entity& entity) {
-    return entity.getHP();
-}
-
 struct BattleState {
     DWORD timestamp;
-    float playerHP;
-    float enemyHP;
+    int playerHP;
+    int enemyHP;
     std::vector<int> playerStarsHealth;
     std::vector<int> enemyStarsHealth;
     std::vector<point3d> playerstarCords;
@@ -21,7 +16,7 @@ struct BattleState {
     bool isAnchorPoint = false;
 
     bool operator==(const BattleState& other) const {
-        return timestamp == other.timestamp &&  
+        return timestamp == other.timestamp &&
             playerHP == other.playerHP &&
             enemyHP == other.enemyHP &&
             player_dodge_ofs == other.player_dodge_ofs &&
@@ -34,88 +29,83 @@ struct BattleState {
 };
 
 const size_t MAX_HISTORY_STATES = 18000;
-std::vector <BattleState> battleHistory;
-size_t historyStart = 0;
-size_t historyEnd = 0;
+std::vector<BattleState> battleHistory;
 size_t currentStateIndex = 0;
 size_t anchorIndex = 0;
 bool hasAnchorPoint = false;
 
-bool isHistoryFull() {
-    return (historyEnd + 1) % MAX_HISTORY_STATES == historyStart;
-}
-
-void SetAnchorPoint() {
-    if (!battleHistory.empty()) {
-        battleHistory[currentStateIndex].isAnchorPoint = true;
-        hasAnchorPoint = true;
-        anchorIndex = currentStateIndex;
-    }
-}
+DWORD lastRewindTime = 0;
+const DWORD REWIND_INTERVAL = 50; // 50ms между шагами перемотки
 
 void SaveCurrentState(bool forceSave = false, bool asAnchorPoint = false) {
-    // Получаем указатели на враг и игрока
     Entity* playerEntity = &entities[static_cast<int>(player_sign)];
     Entity* enemyEntity = &entities[static_cast<int>(currentEnemyID)];
 
     BattleState currentState;
     currentState.timestamp = currentTime;
-
     currentState.playerHP = playerEntity->getHP();
+    currentState.enemyHP = enemyEntity->getHP();
+
+    // Сохраняем только если состояние изменилось или принудительно
+    if (!forceSave && !battleHistory.empty()) {
+        const BattleState& lastState = battleHistory.back();
+        if (lastState == currentState) {
+            return; // Пропускаем идентичные состояния
+        }
+    }
+
+    // Сохраняем остальные параметры
     currentState.playerStarsHealth = playerEntity->healthSystem->starsHealth;
     currentState.playerstarCords = playerEntity->constellation->starsCords;
-
-    currentState.enemyHP = enemyEntity->getHP();
     currentState.enemyStarsHealth = enemyEntity->healthSystem->starsHealth;
     currentState.enemystarCords = enemyEntity->constellation->starsCords;
-
     currentState.player_dodge_ofs = player_dodge_ofs;
     currentState.starfield_angles = starfield_angles;
 
     if (asAnchorPoint) {
         currentState.isAnchorPoint = true;
         hasAnchorPoint = true;
-        anchorIndex = battleHistory.size();  // Будет последним элементом после push_back
+        anchorIndex = battleHistory.size();
     }
 
-    if (forceSave || battleHistory.empty() || battleHistory.back() != currentState) {
-        battleHistory.push_back(currentState);
-        currentStateIndex = battleHistory.size() - 1;
+    battleHistory.push_back(currentState);
+    currentStateIndex = battleHistory.size() - 1;
 
-        if (battleHistory.size() > MAX_HISTORY_STATES) {
-            if (hasAnchorPoint && anchorIndex == 0) {
-                // Не удаляем якорную точку (первый элемент)
-                battleHistory.erase(battleHistory.begin() + 1);
-                anchorIndex--;  // Смещаем индекс, так как удалили элемент перед ним
-            }
-            else {
-                battleHistory.erase(battleHistory.begin());
-                if (hasAnchorPoint) anchorIndex--;
-            }
-            currentStateIndex--;
+    // Ограничиваем размер истории
+    if (battleHistory.size() > MAX_HISTORY_STATES) {
+        if (hasAnchorPoint && anchorIndex == 0) {
+            battleHistory.erase(battleHistory.begin() + 1);
+            anchorIndex--;
         }
+        else {
+            battleHistory.erase(battleHistory.begin());
+            if (hasAnchorPoint) anchorIndex--;
+        }
+        currentStateIndex--;
     }
 }
 
 bool RewindToState(size_t targetIndex) {
-    if (historyEnd == historyStart || targetIndex >= (historyEnd - historyStart) % MAX_HISTORY_STATES) {
+    if (targetIndex >= battleHistory.size()) {
         return false;
     }
 
     Entity* playerEntity = &entities[static_cast<int>(player_sign)];
     Entity* enemyEntity = &entities[static_cast<int>(currentEnemyID)];
 
-    const BattleState& targetState = battleHistory[(historyStart + targetIndex) % MAX_HISTORY_STATES];
+    const BattleState& targetState = battleHistory[targetIndex];
 
-    // Восстановление состояния
+    // Восстановление состояния игрока
     playerEntity->healthSystem->starsHealth = targetState.playerStarsHealth;
     playerEntity->healthSystem->updateStarsHP();
     playerEntity->constellation->starsCords = targetState.playerstarCords;
 
+    // Восстановление состояния врага
     enemyEntity->healthSystem->starsHealth = targetState.enemyStarsHealth;
     enemyEntity->healthSystem->updateStarsHP();
     enemyEntity->constellation->starsCords = targetState.enemystarCords;
 
+    // Восстановление других параметров
     player_dodge_ofs = targetState.player_dodge_ofs;
     starfield_angles = targetState.starfield_angles;
 
@@ -124,26 +114,24 @@ bool RewindToState(size_t targetIndex) {
 }
 
 bool RewindOneStepBack() {
-    if (currentStateIndex == 0 || (hasAnchorPoint && currentStateIndex == anchorIndex)) {
+    if (currentStateIndex == 0 || (hasAnchorPoint && currentStateIndex <= anchorIndex)) {
         return false;
     }
 
-    size_t stepsBack = min(4, currentStateIndex - (hasAnchorPoint ? anchorIndex : 0));
-    return RewindToState(currentStateIndex - stepsBack);
+    return RewindToState(currentStateIndex - 1);
 }
 
 void ResetTimeAnchor() {
     if (!battleHistory.empty()) {
-        // Делаем текущее состояние новой якорной точкой
-        BattleState anchorState = battleHistory[currentStateIndex];
-        anchorState.isAnchorPoint = true;
+        BattleState newAnchor = battleHistory[currentStateIndex];
+        newAnchor.isAnchorPoint = true;
 
-        // Очищаем историю и добавляем только якорное состояние
-        battleHistory.clear();
-        battleHistory.push_back(anchorState);
+        // Очищаем историю после текущего состояния
+        battleHistory.resize(currentStateIndex + 1);
 
-        currentStateIndex = 0;
-        anchorIndex = 0;
+        // Обновляем якорь
+        battleHistory[currentStateIndex] = newAnchor;
+        anchorIndex = currentStateIndex;
         hasAnchorPoint = true;
     }
 }

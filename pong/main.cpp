@@ -143,16 +143,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         starfield_angles.y += .06;
         starfield_angles.z += .07;
 
-        if (!isRewindActive && currentTime - lastSaveTime >= SAVE_INTERVAL) {
-            if (needInitialAnchor) {
-                SaveCurrentState(true, true); // якорное сохранение
-                needInitialAnchor = false;
+            if (!isRewindActive) {
+                SaveCurrentState();
             }
-            else {
-                SaveCurrentState(); // ќбычное сохранение
-            }
-            lastSaveTime = currentTime;
-        }
+
         printf("State: %s | Index: %zu | Anchor: %zu\n",
             isRewindActive ? "Rewind" : "Normal",
             currentStateIndex,
