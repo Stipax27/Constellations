@@ -3,6 +3,10 @@ extern ZodiacSign player_sign;
 extern ZodiacSign currentEnemyID;
 extern DWORD currentTime;
 
+float getConstellationHP(const Entity& entity) {
+    return entity.getHP();
+}
+
 struct BattleState {
     DWORD timestamp;
     int playerHP;
