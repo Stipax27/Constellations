@@ -733,29 +733,21 @@ namespace drawer
         }
     
         if (GetAsyncKeyState('E') & 0x8000) {
-            DWORD currentTime = timeGetTime();
-
             if (!isRewindActive) {
-                // Начинаем откат, если есть куда откатываться
-                if (currentStateIndex > (hasAnchorPoint ? anchorIndex : 0)) {
+                
+                if (currentStateIndex > (hasAnchorPoint ? anchorIndex : 0)) { // Откат работает , если есть куда откатываться
                     isRewindActive = true;
-                    lastRewindTime = currentTime;
-                    RewindOneStepBack();
-                }
-            }
-            else {
-                // Продолжаем откат с интервалом
-                if (currentTime - lastRewindTime >= REWIND_INTERVAL &&
-                    currentStateIndex > (hasAnchorPoint ? anchorIndex : 0)) {
-                    lastRewindTime = currentTime;
-                    RewindOneStepBack();
                 }
             }
         }
         else if (isRewindActive) {
-            // Завершаем откат
+            
             isRewindActive = false;
-            ResetTimeAnchor();
+            ResetTimeAnchor();  // Остановка 
+        }
+
+        if (isRewindActive) {
+            UpdateRewind();
         }
     
     

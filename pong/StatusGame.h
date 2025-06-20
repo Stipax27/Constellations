@@ -3,7 +3,7 @@ extern ZodiacSign player_sign;
 extern ZodiacSign currentEnemyID;
 extern DWORD currentTime;
 
-float getConstellationHP(const Entity& entity) {
+float getConstellationHP(const Entity& entity) { // Возвращаем ХП
     return entity.getHP();
 }
 
@@ -32,14 +32,15 @@ struct BattleState {
     }
 };
 
-const size_t MAX_HISTORY_STATES = 18000;
-std::vector<BattleState> battleHistory;
+std::vector<BattleState> battleHistory; // Вектор истории
+const size_t MAX_HISTORY_STATES = 18000; // Максимальное ограничение на запись истории
 size_t currentStateIndex = 0;
 size_t anchorIndex = 0;
 bool hasAnchorPoint = false;
 
 DWORD lastRewindTime = 0;
-const DWORD REWIND_INTERVAL = 50; // 50ms между шагами перемотки
+const DWORD REWIND_INTERVAL = 1; // 1ms между шагами перемотки
+const int REWIND_SPEED_MULTIPLIER = 2; // Во сколько раз быстрее будет отмотка
 
 void SaveCurrentState(bool forceSave = false, bool asAnchorPoint = false) {
     Entity* playerEntity = &entities[static_cast<int>(player_sign)];
@@ -50,15 +51,15 @@ void SaveCurrentState(bool forceSave = false, bool asAnchorPoint = false) {
     currentState.playerHP = playerEntity->getHP();
     currentState.enemyHP = enemyEntity->getHP();
 
-    // Сохраняем только если состояние изменилось или принудительно
-    if (!forceSave && !battleHistory.empty()) {
+    
+    if (!forceSave && !battleHistory.empty()) {// Сохранение состояния только если оно изменилось 
         const BattleState& lastState = battleHistory.back();
         if (lastState == currentState) {
-            return; // Пропускаем идентичные состояния
+            return; // Пропускаем одинаковые состояния
         }
     }
 
-    // Сохраняем остальные параметры
+    
     currentState.playerStarsHealth = playerEntity->healthSystem->starsHealth;
     currentState.playerstarCords = playerEntity->constellation->starsCords;
     currentState.enemyStarsHealth = enemyEntity->healthSystem->starsHealth;
@@ -75,8 +76,8 @@ void SaveCurrentState(bool forceSave = false, bool asAnchorPoint = false) {
     battleHistory.push_back(currentState);
     currentStateIndex = battleHistory.size() - 1;
 
-    // Ограничиваем размер истории
-    if (battleHistory.size() > MAX_HISTORY_STATES) {
+    
+    if (battleHistory.size() > MAX_HISTORY_STATES) {// Ограничиваем размер истории
         if (hasAnchorPoint && anchorIndex == 0) {
             battleHistory.erase(battleHistory.begin() + 1);
             anchorIndex--;
@@ -99,17 +100,17 @@ bool RewindToState(size_t targetIndex) {
 
     const BattleState& targetState = battleHistory[targetIndex];
 
-    // Восстановление состояния игрока
+    // Игрок откат
     playerEntity->healthSystem->starsHealth = targetState.playerStarsHealth;
     playerEntity->healthSystem->updateStarsHP();
     playerEntity->constellation->starsCords = targetState.playerstarCords;
 
-    // Восстановление состояния врага
+    // Враг откат
     enemyEntity->healthSystem->starsHealth = targetState.enemyStarsHealth;
     enemyEntity->healthSystem->updateStarsHP();
     enemyEntity->constellation->starsCords = targetState.enemystarCords;
 
-    // Восстановление других параметров
+    // Уклонение и Угол откат 
     player_dodge_ofs = targetState.player_dodge_ofs;
     starfield_angles = targetState.starfield_angles;
 
@@ -117,12 +118,25 @@ bool RewindToState(size_t targetIndex) {
     return true;
 }
 
-bool RewindOneStepBack() {
+bool RewindOneStepBack() {// Установка точки за которую нельзя отмататься 
     if (currentStateIndex == 0 || (hasAnchorPoint && currentStateIndex <= anchorIndex)) {
         return false;
     }
 
-    return RewindToState(currentStateIndex - 1);
+    
+    size_t newIndex = currentStateIndex;// Пропускаем несколько состояний для ускорения отмотки
+    if (currentStateIndex > REWIND_SPEED_MULTIPLIER) {
+        newIndex -= REWIND_SPEED_MULTIPLIER;
+        
+        if (hasAnchorPoint && newIndex <= anchorIndex) {// Проверка на пропуск точки 
+            newIndex = anchorIndex + 1;
+        }
+    }
+    else {
+        newIndex = 0;
+    }
+
+    return RewindToState(newIndex);
 }
 
 void ResetTimeAnchor() {
@@ -130,12 +144,21 @@ void ResetTimeAnchor() {
         BattleState newAnchor = battleHistory[currentStateIndex];
         newAnchor.isAnchorPoint = true;
 
-        // Очищаем историю после текущего состояния
-        battleHistory.resize(currentStateIndex + 1);
+       
+        battleHistory.resize(currentStateIndex + 1); // Очистка истории после текущего состояния
 
-        // Обновляем якорь
-        battleHistory[currentStateIndex] = newAnchor;
+        
+        battleHistory[currentStateIndex] = newAnchor; // Постановка точки заново
         anchorIndex = currentStateIndex;
         hasAnchorPoint = true;
+    }
+}
+
+void UpdateRewind() { // Установка скорости для отката
+    DWORD currentTick = GetTickCount();
+    if (currentTick - lastRewindTime >= REWIND_INTERVAL) {
+        if (RewindOneStepBack()) {
+            lastRewindTime = currentTick;
+        }
     }
 }
