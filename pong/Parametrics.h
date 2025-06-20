@@ -109,81 +109,135 @@ float get_lenghts(point3d& point1, point3d& point2) {
     float b = point1.y - point2.y;
     return sqrt(a * a + b * b);
 }
+point3d getPlayerPosition();
+float getDistance(const point3d& a, const point3d& b);
+
+point3d getPlayerPosition() {
+    // Возвращаем позицию игрока - например, центр экрана
+    return { window.width / 2.0f, window.height / 2.0f, 0 };
+}
+
+float getDistance(const point3d& a, const point3d& b) {
+    float dx = a.x - b.x;
+    float dy = a.y - b.y;
+    return sqrtf(dx * dx + dy * dy);
+}
+
+point3d normalize(const point3d& v) {
+    float length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+    if (length > 0) {
+        return { v.x / length, v.y / length, v.z / length };
+    }
+    return { 0, 0, 0 };
+}
+
+float distanceToLine(const point3d& point, const point3d& lineStart, const point3d& lineEnd) {
+    float A = point.x - lineStart.x;
+    float B = point.y - lineStart.y;
+    float C = lineEnd.x - lineStart.x;
+    float D = lineEnd.y - lineStart.y;
+
+    float dot = A * C + B * D;
+    float len_sq = C * C + D * D;
+    float param = (len_sq != 0) ? dot / len_sq : -1;
+
+    point3d projection;
+    if (param < 0) {
+        projection = lineStart;
+    }
+    else if (param > 1) {
+        projection = lineEnd;
+    }
+    else {
+        projection = { lineStart.x + param * C, lineStart.y + param * D, 0 };
+    }
+
+    float dx = point.x - projection.x;
+    float dy = point.y - projection.y;
+    return sqrt(dx * dx + dy * dy);
+}
+
+float getDistance(const point3d& a, const point3d& b) {
+    float dx = a.x - b.x;
+    float dy = a.y - b.y;
+    return sqrt(dx * dx + dy * dy);
+}
 
 
-void starIntersectUI(point3d& point,Constellation& Constellation,Entity* entities, int i) {
-    //Entity* enemyEntity = &entities[static_cast<int>(currentEnemyID)];
+void starIntersectUI(point3d& point, Constellation& Constellation, Entity* entities, int i) {
+    // Получаем позицию курсора
+    POINT cursorPos;
+    GetCursorPos(&cursorPos);
+    ScreenToClient(window.hWnd, &cursorPos);
+    point3d cursorPoint = { (float)cursorPos.x, (float)cursorPos.y, 0 };
 
+    // Обновляем радиус звезды (ваша оригинальная логика)
     float lenght = getDistanceToMouse(point);
     float rad = calcStarRad(lenght);
-
     finalStarRad = starSize / 50 * entities->healthSystem->starsHealth[i] + rad * 15;
 
-    float line_x = get_lenghts(attack[0], attack[1]);
-    float line_y = get_lenghts(attack[0], point);
-    float line_z = get_lenghts(attack[1], point);
-    line_hit = (line_z + line_y) / line_x;
-
-    float centerX = (attack[3].x + attack[2].x) / 2;
-    float centerY = (attack[3].y + attack[2].y) / 2;
-
-    float dxs = attack[3].x - attack[2].x;
-    float dys = attack[3].y - attack[2].y;
-    float shieldRadius = sqrt(dxs * dxs + dys * dys);
-
-    float stardx = point.x - centerX;
-    float stardy = point.y - centerY;
-    float distToCenter = sqrt(stardx * stardx + stardy * stardy);
-
-    float dxb = point.x - attack[4].x;
-    float dyb = point.y - attack[4].y;
-    float distToStart = sqrt(dxb * dxb + dyb * dyb);
-    float hitRadius = 20;
-
+    // Проверяем атаку только если прошло достаточно времени
     if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed && attack_start) {
-       
         float totalDamage = CalculateCombinedDamage();
+        bool isHit = false;
 
-        if ((current_weapon == weapon_name::Sword && line_hit < 1.01) ||
-            (current_weapon == weapon_name::Shield && distToCenter <= shieldRadius) ||
-            (current_weapon == weapon_name::Bow && distToStart <= hitRadius)) {
+        switch (current_weapon) {
+        case weapon_name::Sword: {
+            // Меч - линия длиной 100 пикселей от игрока к курсору
+            point3d playerPos = getPlayerPosition();
+            point3d attackVector = normalize(cursorPoint - playerPos);
+            attackVector.x *= 100;
+            attackVector.y *= 100;
+            point3d attackEnd = { playerPos.x + attackVector.x, playerPos.y + attackVector.y, 0 };
 
-           
+            // Сохраняем точки атаки для отрисовки
+            attack[0] = playerPos;
+            attack[1] = attackEnd;
+
+            // Проверяем попадание
+            float distToLine = distanceToLine(point, playerPos, attackEnd);
+            isHit = (distToLine < 20.0f); // 20 пикселей - ширина удара мечом
+            line_hit = distToLine / 20.0f; // Нормализованное значение для совместимости
+            break;
+        }
+
+        case weapon_name::Shield: {
+            // Щит - круг радиусом 100 пикселей вокруг курсора
+            float distToCursor = getDistance(point, cursorPoint);
+            isHit = (distToCursor <= 100.0f);
+
+            // Сохраняем параметры щита для отрисовки
+            attack[2] = { cursorPoint.x - 100, cursorPoint.y, 0 };
+            attack[3] = { cursorPoint.x + 100, cursorPoint.y, 0 };
+            break;
+        }
+
+        case weapon_name::Bow: {
+            // Лук - точечная атака с небольшим радиусом
+            float distToCursor = getDistance(point, cursorPoint);
+            isHit = (distToCursor <= 5.0f);
+
+            // Сохраняем точку атаки для отрисовки
+            attack[4] = cursorPoint;
+            break;
+        }
+        }
+
+        if (isHit) {
             entities->healthSystem->damageStar(i, totalDamage);
+            attack_collision = true;
+            SelectObject(window.context, brush2);
+        }
+        else {
+            attack_collision = false;
+            SelectObject(window.context, brush);
         }
     }
 
-    if (current_weapon == weapon_name::Sword) {
-        if (GetAsyncKeyState(VK_LBUTTON)) {
-            if (line_hit < 1.001) attack_collision = true;
-            SelectObject(window.context, brush);
-        }
-        else if (line_hit < 1.01 && !check_attack) {
-            attack_start = true;
-            attack_time = currentTime;
-        }
-    }
-
-    if (current_weapon == weapon_name::Shield) {
-        if (GetAsyncKeyState(VK_LBUTTON)) {
-            if (distToCenter <= shieldRadius) attack_collision = true;
-            SelectObject(window.context, brush);
-        }
-        else if (distToCenter <= shieldRadius && !check_attack) {
-            attack_start = true;
-            attack_time = currentTime;
-        }
-    }
-
-    if (current_weapon == weapon_name::Bow) {
-        if (GetAsyncKeyState(VK_LBUTTON)) {
-            if (distToStart <= hitRadius) attack_collision = true;
-            SelectObject(window.context, brush);
-        }
-        else if (distToStart <= hitRadius && !check_attack) {
-            attack_start = true;
-            attack_time = currentTime;
-        }
+    // Обработка ввода для начала атаки
+    if (GetAsyncKeyState(VK_LBUTTON) && !check_attack) {
+        attack_start = true;
+        attack_time = currentTime;
     }
 }
 

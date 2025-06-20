@@ -219,17 +219,6 @@ void enemyAttack()
     isDamageHero = true;
 }
 
-//void TakeDamage(Constellation& Constellation,float damage) {
-//    std::vector<float>& starHealth = Constellation.healthSystem->starsHealth;
-//
-//    if (starSet[player_sign].constellation && starSet[player_sign]->healthSystem) {
-//        starSet[player_sign]->healthSystem->starHP -= damage;
-//        if (starSet[player_sign]->healthSystem->starHP < 0) {
-//            starSet[player_sign]->healthSystem->starHP = 0; 
-//        }
-//    }
-//}
-
 void enemyFight()
 {
     
@@ -263,51 +252,87 @@ point3d attack[5];
 point3d mouseposWhenAttack;
 point3d mousePos;
 bool is_attack;
+bool isAttacking = false;
+point3d attackStartPos;
+float attackStartTime;
 
-void AttackVector()
+void AttackVector() 
 {
-    CalculateCombinedDamage();
+    static bool lmb = false;
 
     if (GetAsyncKeyState(VK_LBUTTON))
     {
-
-        if (!lmb)
+        if (!lmb) 
         {
-
+            // Начало атаки
             lmb = true;
-            mouse.oldPos.x = mouse.pos.x;
-            mouse.oldPos.y = mouse.pos.y;
+            isAttacking = true;
+            attackStartTime = currentTime;
+            attackStartPos = { (float)mouse.pos.x, (float)mouse.pos.y, 0 };
 
+            // Инициализация точек атаки в зависимости от оружия
+                point3d playerPos = getPlayerPosition();
+                switch (current_weapon) 
+                {
+                case weapon_name::Sword:
+                    attack[0] = playerPos;
+                    attack[1] = playerPos;
+                    break;
+                case weapon_name::Shield:
+                    attack[2] = attackStartPos;
+                    attack[3] = attackStartPos;
+                    break;
+                case weapon_name::Bow:
+                    attack[4] = playerPos;
+                    break;
+                }
         }
 
+        // Отрисовка атаки
         HPEN pen = CreatePen(PS_SOLID, 3, RGB(0, 191, 255));
         SelectObject(window.context, pen);
-        MoveToEx(window.context, mouse.oldPos.x, mouse.oldPos.y, NULL);
-        LineTo(window.context, mouse.pos.x, mouse.pos.y);
 
+        switch (current_weapon) {
+        case weapon_name::Sword: {
+            point3d playerPos = getPlayerPosition();
+            MoveToEx(window.context, (int)playerPos.x, (int)playerPos.y, NULL);
+            LineTo(window.context, mouse.pos.x, mouse.pos.y);
+            attack[1] = { (float)mouse.pos.x, (float)mouse.pos.y, 0 };
+            break;
+        }
+        case weapon_name::Shield: {
+            float radius = getDistance(attackStartPos, { (float)mouse.pos.x, (float)mouse.pos.y, 0 });
+            attack[3] = { attackStartPos.x + radius, attackStartPos.y, 0 };
 
+            // Рисуем круг
+            for (int i = 0; i < 36; i++) {
+                float angle = i * (2 * 3.14159f / 36);
+                int x = (int)(attackStartPos.x + radius * cos(angle));
+                int y = (int)(attackStartPos.y + radius * sin(angle));
+                if (i == 0) MoveToEx(window.context, x, y, NULL);
+                else LineTo(window.context, x, y);
+            }
+            break;
+        }
+        case weapon_name::Bow: {
+            int crossSize = 15;
+            MoveToEx(window.context, mouse.pos.x - crossSize, mouse.pos.y, NULL);
+            LineTo(window.context, mouse.pos.x + crossSize, mouse.pos.y);
+            MoveToEx(window.context, mouse.pos.x, mouse.pos.y - crossSize, NULL);
+            LineTo(window.context, mouse.pos.x, mouse.pos.y + crossSize);
+            attack[4] = { (float)mouse.pos.x, (float)mouse.pos.y, 0 };
+            break;
+        }
+        }
+        DeleteObject(pen);
     }
-    else
-    {
+    else if (lmb) {
+        // Завершение атаки
         lmb = false;
-        is_attack = false;
+        isAttacking = false;
+        attack_start = true;
+        attack_time = currentTime;
     }
-
-    attack[0].x = mouse.oldPos.x;
-    attack[0].y = mouse.oldPos.y;
-    attack[1].x = mouse.pos.x;
-    attack[1].y = mouse.pos.y;
-
-    attack[2].x = mouse.oldPos.x;
-    attack[2].y = mouse.oldPos.y;
-    attack[3].x = mouse.pos.x;
-    attack[3].y = mouse.pos.y;
-
-    attack[4].x = mouse.oldPos.x;
-    attack[4].y = mouse.oldPos.y;
-    attack[5].x = mouse.pos.x;
-    attack[5].y = mouse.pos.y;
-
 }
 
 
