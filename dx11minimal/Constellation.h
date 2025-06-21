@@ -2,6 +2,7 @@
 
 int constellationsCounter = 0;
 
+
 class Constellation {
 public:
 
@@ -26,7 +27,17 @@ public:
     DWORD moveStartTime;
     bool isMoveActive;
     point3d position;
+    friend XMMATRIX CreateConstToWorldMatrix(const Constellation& c)
+    {
+        float zOffset = 1000.0f / c.scale;
+        XMMATRIX translateZ = XMMatrixTranslation(0, 0, zOffset);
+        XMMATRIX rotateX = XMMatrixRotationX(c.angle.x);
+        XMMATRIX rotateY = XMMatrixRotationY(c.angle.y);
+        XMMATRIX rotateZ = XMMatrixRotationZ(c.angle.z);
+        XMMATRIX scale = XMMatrixScaling(c.scale, c.scale, c.scale);
 
+        return translateZ * rotateX * rotateY * rotateZ * scale;
+    }
 
     Constellation(std::vector<point3d> _starsCords, std::vector <float> _starsHealth, std::vector <std::vector <float>> _constellationEdges) : position{ 0,0,0 }
     {

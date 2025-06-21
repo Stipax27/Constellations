@@ -51,6 +51,19 @@ void placeConstToWorld(point3d& p, Constellation& Constellation)
     p.rotateY(p, mouse.Angle.x * 0.1);
 }
 
+XMMATRIX CreateFightProjectionMatrix(float camDist, float width, float height)
+{
+    // Простая перспективная проекция вручную (без FOV)
+    float nearZ = 0.1f;
+    float farZ = 10000.f;
+
+    // 2D-подобная матрица с проекцией "на экран"
+    float aspect = width / height;
+
+    // Вручную задаём перспективную матрицу (приближённая логика fightProject)
+    XMMATRIX proj = XMMatrixPerspectiveFovLH(XM_PIDIV4, aspect, nearZ, farZ);
+    return proj;
+}
 void fightProject(point3d& p)
 {
     int fadeInTime = currentTime - startTime;

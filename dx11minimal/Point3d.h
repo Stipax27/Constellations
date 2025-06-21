@@ -168,6 +168,16 @@ public:
     }
 };
 
+point3d TransformPoint(const point3d& p, const XMMATRIX& m) {
+    XMVECTOR v = XMVectorSet(p.x, p.y, p.z, 1.0f);
+    v = XMVector3Transform(v, m);
+    return {
+        XMVectorGetX(v),
+        XMVectorGetY(v),
+        XMVectorGetZ(v)
+    };
+}
+
 point3d operator*(float scalar, const point3d& point) {
     return point * scalar;
 };

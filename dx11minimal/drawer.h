@@ -1,3 +1,4 @@
+
 namespace drawer
 {
     void drawLine(point3d& p1, point3d& p2, int count)
@@ -38,14 +39,9 @@ namespace drawer
         int starsEdgesCount = starEdges.size();
         for (int i = 0; i < starsEdgesCount; i++)
         {
-            point3d point1, point2;
-            point1 = starArray[starEdges[i][0]];
 
-            point2 = starArray[starEdges[i][1]];
-
-            float a = currentTime * .01;
-            modelTransform(point1, Constellation);
-            modelTransform(point2, Constellation);
+            point3d point1 = TransformPoint(starArray[starEdges[i][0]], Constellation.Transform);
+            point3d point2 = TransformPoint(starArray[starEdges[i][1]], Constellation.Transform);
 
             if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0) // - —Ú‡ÎÓ
             {
@@ -77,9 +73,7 @@ namespace drawer
             point = starArray[i];
 
             float a = currentTime * .01;
-            modelTransform(point, Constellation);
-            modelProject(point);
-
+             point = TransformPoint(point, Constellation.Transform);
             // œÛÎ¸ÒËÓ‚‡ÌËÂ «‚∏Á‰ ÔË Ì‡‚Â‰ÂÌËÂ Ï˚¯Ë.
             finalStarRad = 1;
             if (uiFunc)
@@ -256,13 +250,12 @@ namespace drawer
         Shaders::pShader(1);
         startTime = currentTime;
         int n = (currentTime / 1000) % starSet.size();
-        modelTransform = &placeConstToStartMenu;
-        modelProject = &menuProject;
         uiFunc = &menuUI;
         linksDivider = 15;
         if (gameState == gameState_::confirmSign) n = player_sign;
-        //draw—onstellation(*starSet[n]);
-        Constellation::Transform
+        Constellation& c = *starSet[n];
+        float t = currentTime * 0.001;
+        c.Transform = XMMatrixScaling(90, 90, 90) * XMMatrixRotationY(t) * XMMatrixTranslation(0, 0, 1300);
         draw—onstellation(*starSet[player_sign]);
     }
 
@@ -680,7 +673,6 @@ namespace drawer
         SelectObject(window.context, mainBrush);
         SelectObject(window.context, mainPen);
         textStyle.color = RGB(0, 191, 255);
-        bool n = true;
         Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
         Draw::ClearDepth();
 
@@ -701,10 +693,6 @@ namespace drawer
             break;
 
         case gameState_::confirmSign:
-            if (n) {
-                Camera::Start();
-                n = false;
-            }
             drawPlayer—onstellationToMenu();
             menuMonthprocessing();
             menuDayprocessing();
@@ -720,11 +708,14 @@ namespace drawer
             drawStarField();
             Shaders::vShader(1);
             Shaders::pShader(1);
-            modelProject = &fightProject;
-            modelTransform = &placeConstToWorld;
+            //modelProject = &fightProject;
+           // modelTransform = &placeConstToWorld;
+            
 
             for (int i = 0;i < 12;i++)
             {
+                Constellation& c = *starSet[i];
+                c.Transform = CreateConstToWorldMatrix(c);
                draw—onstellation(*starSet[i]);
             }
 
