@@ -982,8 +982,8 @@ namespace Camera
 	struct State
 	{
 		float camDist = 500.0f;      
-		float minDist = 100.0f;      
-		float maxDist = 3000.0f;     
+		float minDist = 1000.0f;      
+		float maxDist = 30000.0f;     
 		float fovAngle = 60.0f;      
 		XMVECTOR currentRotation = XMQuaternionIdentity();
 		XMVECTOR defaultForward = XMVectorSet(0, 0, 1, 0); 

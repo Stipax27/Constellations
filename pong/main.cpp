@@ -18,22 +18,7 @@ const float PI = 3.1415926535897;
 HINSTANCE hInst;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-// секция данных игры  
-struct point3d{
-    float x, y, z;
-
-    bool operator==(const point3d& other) const {
-        return fabs(x - other.x) < 0.001f &&
-               fabs(y - other.y) < 0.001f &&
-               fabs(z - other.z) < 0.001f;
-    }
-
-    bool operator!=(const point3d& other) const {
-        return !(*this == other);
-    }
-};
-
-const float starSize = 10;
+const float starSize = 8;
 int startTime;
 float circleRadius;
 int currentDayIndex = -1;
@@ -41,6 +26,11 @@ int currentMonthIndex = -1;
 int currentColorIndex = -1;
 const int numColors = 7;
 float camDist = 0;
+
+bool isRewindActive = false;
+bool needInitialAnchor = true;
+DWORD lastSaveTime = 0;
+const DWORD SAVE_INTERVAL = 16; // ~60 FPS
 
 DWORD currentTime;
 
@@ -50,20 +40,42 @@ HPEN mainPen;
 HBRUSH heroBrush;
 HPEN heroPen;
 
+HBRUSH fireBrush;
+HPEN firePen;
+
+HBRUSH earthBrush;
+HPEN earthPen;
+
+HBRUSH airBrush;
+HPEN airPen;
+
+HBRUSH waterBrush;
+HPEN waterPen;
+
 
 #include "utils.h"
 #include "MainWindow.h"
+#include "Point3d.h"
 #include "mouse.h"
+#include "Camer.h"
 #include "Constellation.h"
+void (*modelTransform)(point3d& p, Constellation& Constellation);
+void (*modelProject)(point3d& p);
+void (*uiFunc)(point3d& point, Constellation& Constellation, Entity* entity, int i);
+#include "Line.h"
 #include "MainWorld.h"
 #include "DodgeEnemy.h"
 #include "Navigation.h"
 #include "StatusGame.h"
 #include "font.h"
 #include "Weapon.h"
+#include "Elements.h"
 #include "MainGame.h"
+#include "Helper.h"
 #include "DiologTEXT.h"
 #include "DialogStruct.h"
+#include "Parametrics.h"
+#include "Player.h"
 #include "drawer.h"
 
 
@@ -77,9 +89,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     mainBrush = CreateSolidBrush(RGB(0, 191, 255));
     mainPen = CreatePen(PS_SOLID,2,RGB(255, 255, 255));
+
     heroBrush = CreateSolidBrush(RGB(225, 225, 255));
     heroPen = CreatePen(PS_SOLID, 2, RGB(225, 225, 255));
 
+    fireBrush = CreateSolidBrush(RGB(255, 100, 0));
+    firePen   = CreatePen(PS_SOLID, 2, RGB(255, 100, 0));
+
+    earthBrush = CreateSolidBrush(RGB(139, 69, 19));
+    earthPen   = CreatePen(PS_SOLID, 2, RGB(139, 69, 19));
+
+    airBrush  = CreateSolidBrush(RGB(173, 216, 230));
+    airPen    = CreatePen(PS_SOLID, 2, RGB(173, 216, 230));
+
+    waterBrush = CreateSolidBrush(RGB(0, 105, 148));
+    waterPen  = CreatePen(PS_SOLID, 2, RGB(0, 105, 148));
+
+    initStars(1000); 
 
     InitGame();//здесь инициализируем переменные игры
     //initContentData();
@@ -97,8 +123,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             DispatchMessage(&msg);
         }
         currentTime = timer::GetCounter();
-
-        mouseInput();
+        /*CamerhandleInput(camera);
+        renderScene(camera);*/
+        mouse.Input();
         drawer::drawWorld();//рисуем фон, ракетку и шарик
         BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно   
 
@@ -116,8 +143,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         starfield_angles.y += .06;
         starfield_angles.z += .07;
 
-        if (!isRewind) SaveCurrentState();
-        
+        if (!isRewindActive && currentTime - lastSaveTime >= SAVE_INTERVAL) {
+            if (needInitialAnchor) {
+                SaveCurrentState(true, true); // Якорное сохранение
+                needInitialAnchor = false;
+            }
+            else {
+                SaveCurrentState(); // Обычное сохранение
+            }
+            lastSaveTime = currentTime;
+        }
+        printf("State: %s | Index: %zu | Anchor: %zu\n",
+            isRewindActive ? "Rewind" : "Normal",
+            currentStateIndex,
+            anchorIndex);
+
         Sleep(16);//ждем 16 милисекунд (1/количество кадров в секунду)
     }
 

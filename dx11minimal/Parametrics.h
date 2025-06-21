@@ -38,6 +38,7 @@ void placeToWorld(point3d& p, Constellation& Constellation)
     p.rotateY(p, mouse.Angle.x * 0.1);
 }
 
+
 void placeConstToWorld(point3d& p, Constellation& Constellation)
 {
     Shaking(p);
@@ -50,6 +51,8 @@ void placeConstToWorld(point3d& p, Constellation& Constellation)
     p.rotateX(p, mouse.Angle.y * 0.1);
     p.rotateY(p, mouse.Angle.x * 0.1);
 }
+
+
 
 XMMATRIX CreateFightProjectionMatrix(float camDist, float width, float height)
 {

@@ -35,10 +35,24 @@ public:
         XMMATRIX rotateY = XMMatrixRotationY(c.angle.y);
         XMMATRIX rotateZ = XMMatrixRotationZ(c.angle.z);
         XMMATRIX scale = XMMatrixScaling(c.scale, c.scale, c.scale);
-
-        return translateZ * rotateX * rotateY * rotateZ * scale;
+       // XMMATRIX rotateX1 = XMMatrixRotationX( mouse.Angle.y * 0.1);
+       // XMMATRIX rotateY1 = XMMatrixRotationY(mouse.Angle.x * 0.1);
+        return translateZ * rotateX*  rotateY*  rotateZ * scale;
     }
+    friend XMMATRIX CreatefightProjectMatrix(const Constellation& c)
+    {
+        int fadeInTime = currentTime - startTime;
+        float startCamDist = 100;
+        float finCamDist = 3000;
 
+        float lerpCoef = smoothstep(0., 1, min(fadeInTime * 4, finCamDist) / (finCamDist - startCamDist));
+        if (lerpCoef < .99) {
+            camDist = lerpCoef * (finCamDist - startCamDist) + startCamDist;
+        }
+        camDist = clamp(camDist, 1000, 30000);
+
+
+    }
     Constellation(std::vector<point3d> _starsCords, std::vector <float> _starsHealth, std::vector <std::vector <float>> _constellationEdges) : position{ 0,0,0 }
     {
 

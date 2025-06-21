@@ -72,15 +72,20 @@ namespace drawer
             point3d point;
             point = starArray[i];
 
-            float a = currentTime * .01;
-             point = TransformPoint(point, Constellation.Transform);
+            point = TransformPoint(point, Constellation.Transform);
+             if (modelProject)
+             {
+                 modelProject(point);
+             }
             // Пульсирование Звёзд при наведение мыши.
             finalStarRad = 1;
+            point = TransformPoint(point, ConstBuf::camera.view[0]);
             if (uiFunc)
             {
                 uiFunc(point, Constellation, i);
             }
 
+            
             if (finalStarRad > 0)
             {
                 point.draw(point, finalStarRad);
@@ -701,7 +706,6 @@ namespace drawer
 
         case gameState_::selectEnemy:
         {
-            
             
             uiFunc = &constSelectUI;
             linksDivider = 50;
