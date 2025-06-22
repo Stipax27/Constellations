@@ -1,7 +1,12 @@
 ﻿typedef void(*PVFN)(point3d& point);
 
 namespace drawer
-{ 
+{
+    float lerp(float x1, float x2, float a)
+    {
+        return x1 * (1 - a) + x2 * a;
+    }
+
     float linksDivider = 25;
 
     void drawLinks(Entity& entity, bool colorOverride = false) {
@@ -296,7 +301,7 @@ namespace drawer
         float centerX = mouse.pos.x;
         float centerY = mouse.pos.y;
         modelProject = &NullProject;
-        if (GetAsyncKeyState(VK_LBUTTON)) {
+        
             for (int i = 0; i < 36; i++) {
                 float angle = i * (2 * PI / 36);  // 36 точек для гладкого круга
                 float nextAngle = (i + 1) * (2 * PI / 36);
@@ -313,27 +318,84 @@ namespace drawer
 
                 drawLine(shield1, shield2, 5);
             }
-        }
+        
     }
 
-    /*void drawSwordLine(point3d& point) 
+    void drawSwordLine() 
     {
+        float Length = 100 ;
+
         float centerX = mouse.pos.x;
         float centerY = mouse.pos.y;
         modelProject = &NullProject;
 
 
-        point3d left = mous;
-        point3d right = mouse.oldPos;
+        point3d Sword1, Sword2;
 
+        Sword1.x = centerX + Length;
+        Sword1.y = centerY + Length;
+        Sword1.z = 0;
 
-        float lenght = getDistanceToMouse(point);
-        float line_x = get_lenghts();
-        float line_y = get_lenghts();
-        float line_z = get_lenghts();
-        line_hit = (line_z + line_y) / line_x;
+        Sword2.x = centerX - Length;
+        Sword2.y = centerY - Length;
+        Sword2.z = 0;
+
         
-    }*/
+        drawLine(Sword1, Sword2, 20);
+        
+    }
+
+    void drawBowLine()
+    {
+        float shieldRadius = 20;
+        
+        // Центр = oldmouse (круг растёт из этой точки)
+        float centerX = mouse.pos.x;
+        float centerY = mouse.pos.y;
+        modelProject = &NullProject;
+
+        for (int i = 0; i < 36; i++) {
+            float angle = i * (2 * PI / 36);  // 36 точек для гладкого круга
+            float nextAngle = (i + 1) * (2 * PI / 36);
+
+            point3d shield1, shield2;
+
+            shield1.x = centerX + shieldRadius * cos(angle);
+            shield1.y = centerY + shieldRadius * sin(angle);
+            shield1.z = 0;
+
+            shield2.x = centerX + shieldRadius * cos(nextAngle);
+            shield2.y = centerY + shieldRadius * sin(nextAngle);
+            shield2.z = 0;
+
+            
+            drawLine(shield1, shield2, 5);
+
+
+        }
+    }
+    void drawArrow()
+    {
+        float Length = 50;
+
+        float centerX = mouse.pos.x;
+        float centerY = mouse.pos.y;
+        modelProject = &NullProject;
+
+        point3d Arrow1, Arrow2;
+
+        Arrow1.x = centerX + Length;
+        Arrow1.y = centerY + Length;
+        Arrow1.z = 0;
+
+        Arrow2.x = centerX;
+        Arrow2.y = centerY;
+        Arrow2.z = 0;
+
+        drawLine(Arrow1, Arrow2, 10);
+
+    }
+
 
     struct WeaponFlight {
         point3d startPos;
@@ -350,29 +412,21 @@ namespace drawer
 
     point3d startPoint;
 
-    float lerp(float start, float end, float t) {
-        return start + (end - start) * t;
-    }
-    void VectorWeapons(point3d& p, Constellation& Constellations)
+    void VectorWeapons()
     {
-
-        point3d enemyPosition = { 0,0,0 };
-       
-
-        if (weapon[(int)current_weapon].constellation)
-        {
-            p = weapon[(int)current_weapon].constellation->getPosition();
+      if (weapon[(int)current_weapon].constellation)
+      {
+            int сount = 100;
 
             startPoint = { 0, 0, 0 };
             placeHeroToWorld(startPoint, *starSet[player_sign]);
-
-            int сount = 100;
-            placeConstToWorld(enemyPosition, *starSet[currentEnemyID]);
             modelProject = &fightProject;
+            point3d endPos = { 0, 0, 0 };
+            placeConstToWorld(endPos, *starSet[currentEnemyID]);
 
-            drawLine(startPoint, enemyPosition, сount);
+            drawLine(startPoint, endPos, сount);
 
-        }
+      }
     }
     
     void InitConstellationAttack() {
@@ -925,12 +979,15 @@ namespace drawer
                 DrawCombatStats();
                 textStyle.color = RGB(0, 191, 255);
                
-                if (attackCooldown == true) {
+                if (attackCooldown == true)
+                {
 
                     AttackVector();
+                    
+                    VectorWeapons();
                     if (current_weapon == weapon_name::Sword) 
                     {
-                    
+                        drawSwordLine();
                     }
                     if (current_weapon == weapon_name::Shield)
                     {
@@ -938,7 +995,8 @@ namespace drawer
                     }
                     if (current_weapon == weapon_name::Bow) 
                     {
-                    
+                        drawBowLine();
+                        drawArrow();
                     }
                     
                 }

@@ -280,9 +280,6 @@ void AttackVector()
 
         }
 
-        
-
-
     }
     else
     {
