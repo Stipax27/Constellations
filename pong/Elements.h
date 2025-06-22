@@ -1,4 +1,4 @@
-using namespace std;
+п»їusing namespace std;
 
 struct Element_ {
 public:
@@ -154,14 +154,14 @@ void DrawCombatStats() {
     std::string damageText = "Damage: " + std::to_string(combinedDamage);
     drawString(damageText.c_str(), window.width / 4, window.height - 400, 1, true);
 
-    // Установка цвета текста на цвет стихии
+    // РЈСЃС‚Р°РЅРѕРІРєР° С†РІРµС‚Р° С‚РµРєСЃС‚Р° РЅР° С†РІРµС‚ СЃС‚РёС…РёРё
     COLORREF oldColor = SetTextColor(window.context, elements[(int)current_element].color);
 
-    // Текст элемента и оружия
+    // РўРµРєСЃС‚ СЌР»РµРјРµРЅС‚Р° Рё РѕСЂСѓР¶РёСЏ
     std::string elementText = elements[(int)current_element].name + " " + weapon[(int)current_weapon].name;
     drawString(elementText.c_str(), window.width / 4, window.height - 180, 1.2f, true);
 
-    // Восстановление старого цвета текста
+    // Р’РѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёРµ СЃС‚Р°СЂРѕРіРѕ С†РІРµС‚Р° С‚РµРєСЃС‚Р°
     SetTextColor(window.context, oldColor);
 }
 
@@ -208,7 +208,7 @@ bool isConstellationDead()
 
 void enemyAttack()
 {
-    Entity& playerEntity = entities[static_cast<size_t>(player_sign)];  // Предполагая, что entities — std::vector
+    Entity& playerEntity = entities[static_cast<size_t>(player_sign)];  // РџСЂРµРґРїРѕР»Р°РіР°СЏ, С‡С‚Рѕ entities вЂ” std::vector
 
     for (int& health : playerEntity.healthSystem->starsHealth)
     {
@@ -280,10 +280,7 @@ void AttackVector()
 
         }
 
-        HPEN pen = CreatePen(PS_SOLID, 3, RGB(0, 191, 255));
-        SelectObject(window.context, pen);
-        MoveToEx(window.context, mouse.oldPos.x, mouse.oldPos.y, NULL);
-        LineTo(window.context, mouse.pos.x, mouse.pos.y);
+        
 
 
     }
