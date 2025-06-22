@@ -14,6 +14,8 @@ char whatKeyPressed() {
 		return 'S';
 	if (GetAsyncKeyState('D') & 0x0001)
 		return 'D';
+	if (GetAsyncKeyState('1'))
+		return '1';
 	return '\0';  // Если ничего не нажато, возвращаем пустой символ
 }
 
