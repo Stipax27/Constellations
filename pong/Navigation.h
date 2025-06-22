@@ -96,12 +96,36 @@ void fightMove(point3d& p) {
 	
 	p.move(p, player_dodge_ofs);
 }
-/* void morph(point3d& p, Constellation& constell, Constellation& morphed) //started, todo
+ void morph(point3d& p, Constellation& constell, Constellation& morphed) //started, todo
 {
 	char key = PressedKey();
 
 	if (PressedKey() == '1') {
 		TextOutA (window.context, window.width / 2 + 20, window.height / 2 + 50., "MORPHLING!", 10);
+			if (constell.starsCords.size() == morphed.starsCords.size()) {
+			for (int i = 0; i < constell.starsCords.size(); i++)
+			{
+				constell.starsCords[i] = lerp(constell.starsCords[i], morphed.starsCords[i], 0.003);
+			}
+		}
+
+		if (constell.starsCords.size() > morphed.starsCords.size()) {
+
+			std::vector<point3d> surplus(constell.starsCords.size() - morphed.starsCords.size(), constell.starsCords[constell.starsCords.size()]);
 
 
-	}*/
+			for (int i = 0; i < morphed.starsCords.size() ; i++)
+			{
+				constell.starsCords[i] = lerp(constell.starsCords[i], morphed.starsCords[i], 0.003);
+			}
+		}
+
+		if (constell.starsCords.size() < morphed.starsCords.size()) {
+			for (int i = 0; i < constell.starsCords.size() - 1; i++)
+			{
+				constell.starsCords[i] = lerp(constell.starsCords[i], morphed.starsCords[i], 0.003);
+			}
+			
+	}
+
+	}
