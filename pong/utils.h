@@ -20,11 +20,6 @@ float fract(float a)
     return a - floor(a);
 }
 
-float lerp(float x1, float x2, float a) 
-{
-    return x1 * (1 - a) + x2 * a;
-}
-
 float smoothstep(float x) 
 {
     return (1 - cos(saturate(x) * PI)) / 2;
