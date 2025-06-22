@@ -5,7 +5,7 @@ bool isMoveActive = false;
 
 float finalS;
 
-char whatKeyPressed() {
+char PressedKey() {
 	if (GetAsyncKeyState('W') & 0x0001) 
 		return 'W';
 	if (GetAsyncKeyState('A') & 0x0001)
@@ -36,7 +36,7 @@ void fightMove(point3d& p) {
 
 	static char SYM[2] = {0};
 
-	char key = whatKeyPressed();
+	char key = PressedKey();
 
 	if (!isMoveActive && key != '\0') // Проверка срабатывает если кнопка нажимается хотя бы один раз
 	{
@@ -105,7 +105,7 @@ void fightMove(point3d& p) {
 			if (constell.starsCords.size() == morphed.starsCords.size()) {
 			for (int i = 0; i < constell.starsCords.size(); i++)
 			{
-				constell.starsCords[i] = lerp(constell.starsCords[i], morphed.starsCords[i], 0.003);
+				constell.starsCords[i] = point3d::lerp(constell.starsCords[i], morphed.starsCords[i], 0.003);
 			}
 		}
 
@@ -116,16 +116,15 @@ void fightMove(point3d& p) {
 
 			for (int i = 0; i < morphed.starsCords.size() ; i++)
 			{
-				constell.starsCords[i] = lerp(constell.starsCords[i], morphed.starsCords[i], 0.003);
+				constell.starsCords[i] = point3d::lerp(constell.starsCords[i], morphed.starsCords[i], 0.003);
 			}
 		}
 
 		if (constell.starsCords.size() < morphed.starsCords.size()) {
 			for (int i = 0; i < constell.starsCords.size() - 1; i++)
 			{
-				constell.starsCords[i] = lerp(constell.starsCords[i], morphed.starsCords[i], 0.003);
-			}
-			
-	}
+				constell.starsCords[i] = point3d::lerp(constell.starsCords[i], morphed.starsCords[i], 0.003);
 
+			}
+		}
 	}
