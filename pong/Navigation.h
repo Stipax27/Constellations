@@ -96,3 +96,12 @@ void fightMove(point3d& p) {
 	
 	p.move(p, player_dodge_ofs);
 }
+/* void morph(point3d& p, Constellation& constell, Constellation& morphed) //started, todo
+{
+	char key = PressedKey();
+
+	if (PressedKey() == '1') {
+		TextOutA (window.context, window.width / 2 + 20, window.height / 2 + 50., "MORPHLING!", 10);
+
+
+	}*/
