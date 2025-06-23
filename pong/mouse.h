@@ -33,6 +33,7 @@ void navigationByMouse()
 {
     if (GetAsyncKeyState(VK_RBUTTON))
     {
+
         if (!rmb)
         {
             rmb = true;

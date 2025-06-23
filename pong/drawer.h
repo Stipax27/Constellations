@@ -397,104 +397,82 @@ namespace drawer
     }
     //Hello
 
-    struct StarProjectile {
-        point3d currentPos;
-        point3d targetPos;
-        float speed;
-        float progress;
-        bool isActive;
-        float size;
-        COLORREF color;
-    };
-
-    
-    StarProjectile flyingStar;
+   
 
     point3d startPoint;
 
 
     
-    void InitStarProjectile(const point3d& startPos, const point3d& targetPos) {
+    struct StarProjectile {
+        point3d currentPos;
+        point3d targetPos;
+        point3d direction;
+        float speed;
+        bool isActive;
+        float size;
+        COLORREF color;
 
-        flyingStar.currentPos = startPos;
-        flyingStar.targetPos = targetPos;
-        flyingStar.speed = 0.05f;
-        flyingStar.progress = 0.0f;
-        flyingStar.isActive = true;
-        flyingStar.size = 200.0f; 
-        flyingStar.color = RGB(255, 0, 0); 
-    }
+        void Init(const point3d& start, const point3d& target) {
+            currentPos = start;
+            targetPos = target;
+            speed = 0.05f;
+            isActive = true;
+            size = 20.0f;
+            color = RGB(255, 255, 0); // Желтый цвет
 
-    
-    
-    void UpdateStarProjectile() {
-        if (!flyingStar.isActive) return;
-
-        flyingStar.progress += 1.* flyingStar.speed;
-        point3d direction = flyingStar.targetPos - flyingStar.currentPos;
-        float distance = sqrt(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
-
-        // Нормализуем направление
-        if (distance > 0) {
-            direction.x /= distance;
-            direction.y /= distance;
-            direction.z /= distance;
+            // Вычисляем направление
+            direction = target - start;
+            float length = sqrt(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
+            if (length > 0) {
+                direction.x /= length;
+                direction.y /= length;
+                direction.z /= length;
+            }
         }
 
-        // Перемещаем звезду
-        flyingStar.currentPos.x += direction.x * flyingStar.speed * distance;
-        flyingStar.currentPos.y += direction.y * flyingStar.speed * distance;
-        flyingStar.currentPos.z += direction.z * flyingStar.speed * distance;
+        void Update() {
+            if (!isActive) return;
 
-        // Уменьшаем размер для эффекта
-        flyingStar.size *= 0.98f;
+            // Двигаем звезду к цели
+            currentPos.x += direction.x * speed;
+            currentPos.y += direction.y * speed;
+            currentPos.z += direction.z * speed;
 
-        // Проверяем достижение цели
-        if (flyingStar.progress >= 1.f) {
-            flyingStar.isActive = false;
+            // Проверяем достижение цели
+            float distance = sqrt(
+                pow(targetPos.x - currentPos.x, 2) +
+                pow(targetPos.y - currentPos.y, 2) +
+                pow(targetPos.z - currentPos.z, 2));
+
+            if (distance < 10.0f) {
+                isActive = false;
+                // Здесь можно добавить эффект попадания
+            }
         }
-    }
 
-    void DrawStarProjectile() {
-        if (!flyingStar.isActive) return;
+        void Draw(HDC hdc) {
+            if (!isActive) return;
 
-        HBRUSH starBrush = CreateSolidBrush(flyingStar.color);
-        HPEN starPen = CreatePen(PS_SOLID, 1, flyingStar.color);
+            HBRUSH brush = CreateSolidBrush(color);
+            HPEN pen = CreatePen(PS_SOLID, 1, color);
+            SelectObject(hdc, brush);
+            SelectObject(hdc, pen);
 
-        SelectObject(window.context, starBrush);
-        SelectObject(window.context, starPen);
+            // Рисуем звезду с пульсацией
+            float pulseSize = size * (1.0f + 0.2f * sin(currentTime * 0.01f));
 
-        // Рисуем звезду с пульсацией
-        float pulseSize = flyingStar.size * (1.0f + 0.2f * sin(currentTime * 0.01f));
+            Ellipse(hdc,
+                static_cast<int>(currentPos.x - pulseSize),
+                static_cast<int>(currentPos.y - pulseSize),
+                static_cast<int>(currentPos.x + pulseSize),
+                static_cast<int>(currentPos.y + pulseSize));
 
-        Ellipse(window.context,
-            flyingStar.currentPos.x - pulseSize,
-            flyingStar.currentPos.y - pulseSize,
-            flyingStar.currentPos.x + pulseSize,
-            flyingStar.currentPos.y + pulseSize);
+            DeleteObject(brush);
+            DeleteObject(pen);
+        }
+    };
 
-        DeleteObject(starBrush);
-        DeleteObject(starPen);
-    }
-
-    float cameraX = 0.0f;
-    float cameraY = 0.0f;
-    float cameraZoom = 1.0f;
-
-    void ScreenToWorld(int screenX, int screenY, float* worldX, float* worldY) {
-        POINT pt = { screenX, screenY };
-        ClientToScreen(window.hWnd, &pt); // Преобразуем в экранные координаты
-
-        RECT rect;
-        GetClientRect(window.hWnd, &rect);
-        MapWindowPoints(window.hWnd, NULL, (LPPOINT)&rect, 2);
-
-        float centeredX = (pt.x - (rect.left + rect.right) / 2.0f);
-        float centeredY = ((rect.top + rect.bottom) / 2.0f - pt.y);
-
-        *worldX = (centeredX / cameraZoom) + cameraX;
-        *worldY = (centeredY / cameraZoom) + cameraY;
-    }
+    StarProjectile starProjectile;
 
     //Полёт врага вокруг героя(Надо фиксить)
     void UpdateEnemyOrbitPosition();
@@ -1052,12 +1030,11 @@ namespace drawer
                     isShaking = false;
                 }
 
-                if (flyingStar.isActive)
+                if (starProjectile.isActive)
                 {
-                    UpdateStarProjectile();
+                    starProjectile.Update();
 
-                   
-                    DrawStarProjectile();
+                    starProjectile.Draw(window.context);
                 }
 
                 if (currentTime > attack_cooldown + 5000)
@@ -1065,25 +1042,26 @@ namespace drawer
                     attackCooldown = true;
                 }
 
-                if (!GetAsyncKeyState(VK_LBUTTON))
+                if (!GetAsyncKeyState(VK_LBUTTON) && !starProjectile.isActive)
                 {
+                    point3d heroPos = { 0, 0, 0 };
+                    placeHeroToWorld(heroPos, *starSet[player_sign]);
+
+                    // Получаем позицию врага (например, центр его созвездия)
+                    point3d enemyPos = { 0, 0, 0 };
+                    placeConstToWorld(enemyPos, *starSet[currentEnemyID]);
+
+                    // Запускаем звезду
+                    starProjectile.Init(heroPos, enemyPos);
+                    
+                }
                     if (attack_collision == true and attackCooldown == true)
                     {
                         attack_cooldown = currentTime;
                         attackCooldown = false;
                         check_attack = false;
                         attackStartTime = currentTime;
-                        point3d heroPos = { 0, 0, 0 };
-                        placeHeroToWorld(heroPos, *starSet[player_sign]);
-
-                        // Преобразуем координаты мыши в мировые
-                        point3d targetPos;
-                        ScreenToWorld(mouse.pos.x, mouse.pos.y, &targetPos.x, &targetPos.y);
-                        targetPos.z = 0;
-                        
-                        // Запускаем звезду
-                        InitStarProjectile(heroPos, targetPos);
-                    }
+                       
                     
                     drawСonstellation(entities[currentEnemyID]);
 
