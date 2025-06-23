@@ -401,6 +401,7 @@ namespace drawer
         point3d currentPos;
         point3d targetPos;
         float speed;
+        float progress;
         bool isActive;
         float size;
         COLORREF color;
@@ -414,12 +415,14 @@ namespace drawer
 
     
     void InitStarProjectile(const point3d& startPos, const point3d& targetPos) {
+
         flyingStar.currentPos = startPos;
         flyingStar.targetPos = targetPos;
         flyingStar.speed = 0.05f;
+        flyingStar.progress = 0.0f;
         flyingStar.isActive = true;
-        flyingStar.size = 200.0f; // Начальный размер
-        flyingStar.color = RGB(255, 0, 0); // Жёлтый цвет
+        flyingStar.size = 200.0f; 
+        flyingStar.color = RGB(255, 0, 0); 
     }
 
     
@@ -427,7 +430,7 @@ namespace drawer
     void UpdateStarProjectile() {
         if (!flyingStar.isActive) return;
 
-        // Рассчитываем направление
+        flyingStar.progress += 1.* flyingStar.speed;
         point3d direction = flyingStar.targetPos - flyingStar.currentPos;
         float distance = sqrt(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
 
@@ -447,7 +450,7 @@ namespace drawer
         flyingStar.size *= 0.98f;
 
         // Проверяем достижение цели
-        if (distance < 5.0f || flyingStar.size < 1.0f) {
+        if (flyingStar.progress >= 1.f) {
             flyingStar.isActive = false;
         }
     }
