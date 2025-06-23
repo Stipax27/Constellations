@@ -418,7 +418,7 @@ namespace drawer
         flyingStar.targetPos = targetPos;
         flyingStar.speed = 0.05f;
         flyingStar.isActive = true;
-        flyingStar.size = 100.0f; // Начальный размер
+        flyingStar.size = 200.0f; // Начальный размер
         flyingStar.color = RGB(255, 0, 0); // Жёлтый цвет
     }
 
@@ -1077,7 +1077,7 @@ namespace drawer
                         point3d targetPos;
                         ScreenToWorld(mouse.pos.x, mouse.pos.y, &targetPos.x, &targetPos.y);
                         targetPos.z = 0;
-
+                        
                         // Запускаем звезду
                         InitStarProjectile(heroPos, targetPos);
                     }
