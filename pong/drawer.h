@@ -397,108 +397,100 @@ namespace drawer
     }
 
 
-    struct WeaponFlight {
-        point3d startPos;
-        point3d endPos;
+    struct StarProjectile {
         point3d currentPos;
-        float progress;
+        point3d targetPos;
         float speed;
-        bool isFlying;
-        
+        bool isActive;
+        float size;
+        COLORREF color;
     };
 
     
-    WeaponFlight constellationFlight;
+    StarProjectile flyingStar;
 
     point3d startPoint;
 
-    void VectorWeapons()
-    {
-      if (weapon[(int)current_weapon].constellation)
-      {
-            int сount = 100;
 
-            startPoint = { 0, 0, 0 };
-            placeHeroToWorld(startPoint, *starSet[player_sign]);
-            modelProject = &fightProject;
-            point3d endPos = { 0, 0, 0 };
-            placeConstToWorld(endPos, *starSet[currentEnemyID]);
-
-            drawLine(startPoint, endPos, сount);
-
-      }
-    }
     
-    void InitConstellationAttack() {
-        
-        point3d mouseAngleBackup = mouse.Angle;
-        mouse.Angle.x = 0;
-        mouse.Angle.y = 0;
-
-        point3d heroPos = { 0, 0, 0 };
-        
-        placeHeroToWorld(heroPos, *starSet[player_sign]);
-
-        point3d enemyPos = { 0, 0, 0 };
-        placeConstToWorld(enemyPos, *starSet[currentEnemyID]);
-
-        constellationFlight.startPos = heroPos;
-        constellationFlight.endPos = enemyPos;
-        constellationFlight.currentPos = heroPos;
-        constellationFlight.progress = 0.0f;
-        constellationFlight.speed = 0.05f; 
-        constellationFlight.isFlying = true;
-
-        mouse.Angle = mouseAngleBackup;
+    void InitStarProjectile(const point3d& startPos, const point3d& targetPos) {
+        flyingStar.currentPos = startPos;
+        flyingStar.targetPos = targetPos;
+        flyingStar.speed = 0.05f;
+        flyingStar.isActive = true;
+        flyingStar.size = 100.0f; // Начальный размер
+        flyingStar.color = RGB(255, 0, 0); // Жёлтый цвет
     }
 
-    void ReturnHeroConstellation() {
-        point3d homePos = { 0, 0, 0 };
-        placeHeroToWorld(homePos, *starSet[player_sign]);
-
-        for (auto& star : starSet[player_sign]->starsCords) {
-            star = homePos;
-        }
-    }
     
-    void UpdateConstellationAttack() {
-        if (!constellationFlight.isFlying) return;
+    
+    void UpdateStarProjectile() {
+        if (!flyingStar.isActive) return;
 
-        constellationFlight.progress += constellationFlight.speed;
+        // Рассчитываем направление
+        point3d direction = flyingStar.targetPos - flyingStar.currentPos;
+        float distance = sqrt(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
 
-        float steps = 1. / constellationFlight.speed;
-        float dx = .008 * (constellationFlight.endPos.x - constellationFlight.startPos.x) / steps;
-        float dy = .008 * (constellationFlight.endPos.y - constellationFlight.startPos.y) / steps;
-        float dz = .008 * (constellationFlight.endPos.z - constellationFlight.startPos.z) / steps;
-
-        // Параболическая траектория
-        /*float t = constellationFlight.progress;
-        float height = 300.0f * sin(t * PI); // Высота дуги
-
-        constellationFlight.currentPos.x = lerp(constellationFlight.startPos.x, constellationFlight.endPos.x, t);
-        constellationFlight.currentPos.y = lerp(constellationFlight.startPos.y, constellationFlight.endPos.y, t);// +height;
-        constellationFlight.currentPos.z = lerp(constellationFlight.startPos.z, constellationFlight.endPos.z, t);
-        */
-
-        // Перемещаем всё созвездие героя
-        for (auto& star : starSet[player_sign]->starsCords) {
-            star.x += dx;
-            star.y += dy;
-            star.z += dz;
+        // Нормализуем направление
+        if (distance > 0) {
+            direction.x /= distance;
+            direction.y /= distance;
+            direction.z /= distance;
         }
 
-        if (constellationFlight.progress >= 1.0f) {
-            constellationFlight.isFlying = false;
-            //enemyAttack(*starSet[currentEnemyID]);
+        // Перемещаем звезду
+        flyingStar.currentPos.x += direction.x * flyingStar.speed * distance;
+        flyingStar.currentPos.y += direction.y * flyingStar.speed * distance;
+        flyingStar.currentPos.z += direction.z * flyingStar.speed * distance;
 
-            // Возвращаем созвездие на место
-            //ReturnHeroConstellation();
-            for (auto& star : starSet[player_sign]->starsCords) {
-                star.x -= dx * steps;
-                star.y -= dy * steps;
-                star.z -= dz * steps;
-            }
+        // Уменьшаем размер для эффекта
+        flyingStar.size *= 0.98f;
+
+        // Проверяем достижение цели
+        if (distance < 5.0f || flyingStar.size < 1.0f) {
+            flyingStar.isActive = false;
         }
+    }
+
+    void DrawStarProjectile() {
+        if (!flyingStar.isActive) return;
+
+        HBRUSH starBrush = CreateSolidBrush(flyingStar.color);
+        HPEN starPen = CreatePen(PS_SOLID, 1, flyingStar.color);
+
+        SelectObject(window.context, starBrush);
+        SelectObject(window.context, starPen);
+
+        // Рисуем звезду с пульсацией
+        float pulseSize = flyingStar.size * (1.0f + 0.2f * sin(currentTime * 0.01f));
+
+        Ellipse(window.context,
+            flyingStar.currentPos.x - pulseSize,
+            flyingStar.currentPos.y - pulseSize,
+            flyingStar.currentPos.x + pulseSize,
+            flyingStar.currentPos.y + pulseSize);
+
+        DeleteObject(starBrush);
+        DeleteObject(starPen);
+    }
+
+    float cameraX = 0.0f;
+    float cameraY = 0.0f;
+    float cameraZoom = 1.0f;
+
+    void ScreenToWorld(int screenX, int screenY, float* worldX, float* worldY) {
+        POINT pt = { screenX, screenY };
+        ClientToScreen(window.hWnd, &pt); // Преобразуем в экранные координаты
+
+        RECT rect;
+        GetClientRect(window.hWnd, &rect);
+        MapWindowPoints(window.hWnd, NULL, (LPPOINT)&rect, 2);
+
+        float centeredX = (pt.x - (rect.left + rect.right) / 2.0f);
+        float centeredY = ((rect.top + rect.bottom) / 2.0f - pt.y);
+
+        *worldX = (centeredX / cameraZoom) + cameraX;
+        *worldY = (centeredY / cameraZoom) + cameraY;
     }
 
     //Полёт врага вокруг героя(Надо фиксить)
@@ -981,10 +973,12 @@ namespace drawer
                
                 if (attackCooldown == true)
                 {
+                   
+                    
 
                     AttackVector();
                     
-                    VectorWeapons();
+                   
                     if (current_weapon == weapon_name::Sword) 
                     {
                         drawSwordLine();
@@ -1055,9 +1049,12 @@ namespace drawer
                     isShaking = false;
                 }
 
-                if (constellationFlight.isFlying) 
+                if (flyingStar.isActive)
                 {
-                    UpdateConstellationAttack();
+                    UpdateStarProjectile();
+
+                   
+                    DrawStarProjectile();
                 }
 
                 if (currentTime > attack_cooldown + 5000)
@@ -1073,7 +1070,16 @@ namespace drawer
                         attackCooldown = false;
                         check_attack = false;
                         attackStartTime = currentTime;
-                        InitConstellationAttack();
+                        point3d heroPos = { 0, 0, 0 };
+                        placeHeroToWorld(heroPos, *starSet[player_sign]);
+
+                        // Преобразуем координаты мыши в мировые
+                        point3d targetPos;
+                        ScreenToWorld(mouse.pos.x, mouse.pos.y, &targetPos.x, &targetPos.y);
+                        targetPos.z = 0;
+
+                        // Запускаем звезду
+                        InitStarProjectile(heroPos, targetPos);
                     }
                     
                     drawСonstellation(entities[currentEnemyID]);

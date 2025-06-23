@@ -1,4 +1,4 @@
-
+    
 float nearPlaneClip = 0;
 
 constexpr float def_size = 10;
@@ -76,8 +76,7 @@ public:
         return *this;
     }
       
-    void draw(point3d& p, float sz = def_size)
-    {
+    void draw(const point3d& p, float sz = def_size) const {  
         if (p.z < nearPlaneClip) return;
 
         Ellipse(window.context,
@@ -85,8 +84,7 @@ public:
             p.y - sz,
             p.x + sz,
             p.y + sz
-        );// Рисование элипса. sz = Размер звезды.
-
+        );
     }
 
 

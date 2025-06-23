@@ -19,6 +19,11 @@ struct BattleState {
     point3d starfield_angles;
     bool isAnchorPoint = false;
 
+    point3d enemyOrbitCenter;
+    float enemyOrbitAngle;
+    float enemyOrbitRadius;
+    std::vector<point3d> enemyStarOffsets;
+
     bool operator==(const BattleState& other) const {
         return timestamp == other.timestamp &&
             playerHP == other.playerHP &&
@@ -28,7 +33,11 @@ struct BattleState {
             playerStarsHealth == other.playerStarsHealth &&
             enemyStarsHealth == other.enemyStarsHealth &&
             playerstarCords == other.playerstarCords &&
-            enemystarCords == other.enemystarCords;
+            enemystarCords == other.enemystarCords &&
+            enemyOrbitCenter == other.enemyOrbitCenter &&
+            enemyOrbitAngle == other.enemyOrbitAngle &&
+            enemyOrbitRadius == other.enemyOrbitRadius &&
+            enemyStarOffsets == other.enemyStarOffsets;
     }
 };
 
@@ -50,6 +59,7 @@ void SaveCurrentState(bool forceSave = false, bool asAnchorPoint = false) {
     currentState.timestamp = currentTime;
     currentState.playerHP = playerEntity->getHP();
     currentState.enemyHP = enemyEntity->getHP();
+
 
     
     if (!forceSave && !battleHistory.empty()) {// —охранение состо€ни€ только если оно изменилось 
