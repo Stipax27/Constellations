@@ -411,7 +411,10 @@ namespace drawer
         float progress;      // Прогресс полета (0..1)
         bool isActive;       // Активен ли снаряд
         float size;          // Размер точки
-        COLORREF color;      // Цвет точки
+        COLORREF color;
+    };// Цвет точки
+
+    Projectile projectile;
 
         void Init() {
 
@@ -422,54 +425,61 @@ namespace drawer
             point3d enemyPos = { 0, 0, 0 };
             placeConstToWorld(enemyPos, *starSet[currentEnemyID]);
 
-            startPos = heroPos;
-            currentPos = heroPos;
-            targetPos = enemyPos;
-            progress = 0.0f;
-            speed = 0.05f;
-            size = 10.0f;
-            color = RGB(255, 255, 0); // Желтый цвет
-            isActive = true;
+            projectile.startPos = heroPos;
+            projectile.currentPos = heroPos;
+            projectile.targetPos = enemyPos;
+            projectile.progress = 0.0f;
+            projectile.speed = 0.05f;
+            projectile.size = 10.0f;
+            projectile.color = RGB(255, 255, 0); // Желтый цвет
+            projectile.isActive = true;
+
+            point3d mouseAngleBackup = mouse.Angle;
+            mouse.Angle.x = 0;
+            mouse.Angle.y = 0;
+
+            mouse.Angle = mouseAngleBackup;
         }
 
         void Update() {
-            if (!isActive) return;
+            if (!projectile.isActive) return;
 
-            progress += speed;
-            currentPos.x = startPos.x + (targetPos.x - startPos.x) * progress;
-            currentPos.y = startPos.y + (targetPos.y - startPos.y) * progress;
-            currentPos.z = startPos.z + (targetPos.z - startPos.z) * progress;
+            projectile.progress += projectile.speed;
+            float steps = 1. / projectile.speed;
+            float posx = (projectile.targetPos.x - projectile.startPos.x) / steps;
+            float posy = (projectile.targetPos.y - projectile.startPos.y) / steps;
+            float posz = (projectile.targetPos.z - projectile.startPos.z) / steps;
 
             // Проверяем достижение цели
-            if (progress >= 1.0f) {
-                isActive = false;
+            if (projectile.progress >= 1.0f) {
+                projectile.isActive = false;
                 // Здесь можно добавить эффект попадания
             }
         }
 
         void Draw(HDC hdc) {
-            if (!isActive) return;
+            if (!projectile.isActive) return;
 
-            HBRUSH brush = CreateSolidBrush(color);
-            HPEN pen = CreatePen(PS_SOLID, 1, color);
+            HBRUSH brush = CreateSolidBrush(projectile.color);
+            HPEN pen = CreatePen(PS_SOLID, 1, projectile.color);
             SelectObject(hdc, brush);
             SelectObject(hdc, pen);
 
             // Рисуем точку с пульсацией
-            float pulseSize = size * (1.0f + 0.1f * sin(currentTime * 0.01f));
+            float pulseSize = projectile.size * (1.0f + 0.1f * sin(currentTime * 0.01f));
 
             Ellipse(hdc,
-                static_cast<int>(currentPos.x - pulseSize),
-                static_cast<int>(currentPos.y - pulseSize),
-                static_cast<int>(currentPos.x + pulseSize),
-                static_cast<int>(currentPos.y + pulseSize));
+                static_cast<int>(projectile.currentPos.x - pulseSize),
+                static_cast<int>(projectile.currentPos.y - pulseSize),
+                static_cast<int>(projectile.currentPos.x + pulseSize),
+                static_cast<int>(projectile.currentPos.y + pulseSize));
 
             DeleteObject(brush);
             DeleteObject(pen);
         }
-    };
+    
 
-    Projectile projectile;
+    
 
 
     
@@ -1032,9 +1042,9 @@ namespace drawer
 
                 if (projectile.isActive)
                 {
-                    projectile.Update();
+                    Update();
 
-                    projectile.Draw(window.context);
+                    Draw(window.context);
                 }
 
                 if (currentTime > attack_cooldown + 5000)
@@ -1047,7 +1057,7 @@ namespace drawer
                     
 
                     // Запускаем звезду
-                    projectile.Init();
+                    Init();
                 }
                     if (attack_collision == true and attackCooldown == true)
                     {
