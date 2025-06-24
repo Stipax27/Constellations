@@ -861,8 +861,9 @@ namespace drawer
     }
     void drawBook()
     {
-        const float barWidth = 1200;
-        const float barHeight = 650;
+       
+        const float barWidth =  (1200. / 2560) * window.width;
+        const float barHeight = (650. / 1440) * window.height;
         const float barX = 10;
         const float barY = 10;
         const float starCount = 10;
@@ -875,6 +876,8 @@ namespace drawer
         point3d topRight = { Bar.x + barWidth , Bar.y - barHeight, 0 };
         point3d bottomLeft = { Bar.x - barWidth, Bar.y + barHeight, 0 };
         point3d bottomRight = { Bar.x + barWidth, Bar.y + barHeight, 0 };
+        point3d centerUP = { Bar.x  ,Bar.y - barHeight, 0};
+        point3d centerDown = { Bar.x ,Bar.y - barHeight, 0 };
 
         
         // Рисуем рамку
@@ -882,7 +885,7 @@ namespace drawer
         drawLine(bottomLeft, bottomRight, 50); // Низ
         drawLine(topLeft, bottomLeft, 20);  // Лево
         drawLine(bottomRight, topRight, 20); // Право
-
+        drawLine(centerUP, centerDown, 30); // Центр
     }
  
     void drawWorld()
