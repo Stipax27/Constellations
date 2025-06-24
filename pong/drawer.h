@@ -404,84 +404,85 @@ namespace drawer
 
     
     struct Projectile {
-        point3d startPos;    // Начальная позиция
-        point3d currentPos;  // Текущая позиция
-        point3d targetPos;   // Целевая позиция
-        float speed;         // Скорость полета
-        float progress;      // Прогресс полета (0..1)
-        bool isActive;       // Активен ли снаряд
-        float size;          // Размер точки
+        point3d currentPos;
+        point3d targetPos;
+        float speed;
+        bool isActive;
+        float size;
         COLORREF color;
-    };// Цвет точки
 
-    Projectile projectile;
-
-        void Init() {
-
-            point3d heroPos = { 0, 0, 0 };
-            placeHeroToWorld(heroPos, *starSet[player_sign]);
-
-            // Получаем позицию врага (например, центр его созвездия)
-            point3d enemyPos = { 0, 0, 0 };
-            placeConstToWorld(enemyPos, *starSet[currentEnemyID]);
-
-            projectile.startPos = heroPos;
-            projectile.currentPos = heroPos;
-            projectile.targetPos = enemyPos;
-            projectile.progress = 0.0f;
-            projectile.speed = 0.05f;
-            projectile.size = 10.0f;
-            projectile.color = RGB(255, 255, 0); // Желтый цвет
-            projectile.isActive = true;
-
-            point3d mouseAngleBackup = mouse.Angle;
-            mouse.Angle.x = 0;
-            mouse.Angle.y = 0;
-
-            mouse.Angle = mouseAngleBackup;
+        void Init(const point3d& start, const point3d& target) {
+            currentPos = start;
+            targetPos = target;
+            speed = 200.f; 
+            isActive = true;
+            size = 10.0f;
+            color = RGB(255, 0, 0); 
         }
 
         void Update() {
-            if (!projectile.isActive) return;
+            if (!isActive) return;
 
-            projectile.progress += projectile.speed;
-            float steps = 1. / projectile.speed;
-            float posx = (projectile.targetPos.x - projectile.startPos.x) / steps;
-            float posy = (projectile.targetPos.y - projectile.startPos.y) / steps;
-            float posz = (projectile.targetPos.z - projectile.startPos.z) / steps;
+            point3d dir = {
+                targetPos.x - currentPos.x,
+                targetPos.y - currentPos.y,
+                targetPos.z - currentPos.z
+            };
 
-            // Проверяем достижение цели
-            if (projectile.progress >= 1.0f) {
-                projectile.isActive = false;
-                // Здесь можно добавить эффект попадания
+           
+            float len = sqrt(dir.x * dir.x + dir.y * dir.y + dir.z * dir.z);
+            if (len > 0) {
+                dir.x /= len;
+                dir.y /= len;
+                dir.z /= len;
             }
+
+            
+            currentPos.x += dir.x * speed;
+            currentPos.y += dir.y * speed;
+            currentPos.z += dir.z * speed;
+
+           
+            if (len < 5.0f) isActive = false;
         }
+    };
 
-        void Draw(HDC hdc) {
-            if (!projectile.isActive) return;
+    Projectile projectile;
 
+    void InitParticl() 
+    {
+        if (!projectile.isActive) {
+            point3d start = { 0, 0, 0 };
+            point3d end = { 0, 0, 0 };
+
+            placeHeroToWorld(start, *starSet[player_sign]);
+            placeConstToWorld(end, *starSet[currentEnemyID]);
+
+            projectile.Init(start, end);
+
+        }
+    }
+    void GameUpdate() {
+        
+        projectile.Update();
+    }
+
+    void GameRender() {
+        if (projectile.isActive) {
+            point3d drawPos = projectile.currentPos;
+            modelProject(drawPos);
+
+           
             HBRUSH brush = CreateSolidBrush(projectile.color);
-            HPEN pen = CreatePen(PS_SOLID, 1, projectile.color);
-            SelectObject(hdc, brush);
-            SelectObject(hdc, pen);
-
-            // Рисуем точку с пульсацией
-            float pulseSize = projectile.size * (1.0f + 0.1f * sin(currentTime * 0.01f));
-
-            Ellipse(hdc,
-                static_cast<int>(projectile.currentPos.x - pulseSize),
-                static_cast<int>(projectile.currentPos.y - pulseSize),
-                static_cast<int>(projectile.currentPos.x + pulseSize),
-                static_cast<int>(projectile.currentPos.y + pulseSize));
-
+            float sz = projectile.size;
+            Ellipse(window.context,
+                (int)(drawPos.x - sz),
+                (int)(drawPos.y - sz),
+                (int)(drawPos.x + sz),
+                (int)(drawPos.y + sz));
             DeleteObject(brush);
-            DeleteObject(pen);
         }
-    
-
-    
-
-
+    }
     
 
     //Полёт врага вокруг героя(Надо фиксить)
@@ -1042,9 +1043,13 @@ namespace drawer
 
                 if (projectile.isActive)
                 {
-                    Update();
+                    for (int i= 0;i<3;i++ ) 
+                    {
+                        GameUpdate();
 
-                    Draw(window.context);
+                        GameRender();
+                    
+                    }
                 }
 
                 if (currentTime > attack_cooldown + 5000)
@@ -1054,10 +1059,7 @@ namespace drawer
 
                 if (!GetAsyncKeyState(VK_LBUTTON) && !projectile.isActive)
                 {
-                    
 
-                    // Запускаем звезду
-                    Init();
                 }
                     if (attack_collision == true and attackCooldown == true)
                     {
@@ -1065,7 +1067,7 @@ namespace drawer
                         attackCooldown = false;
                         check_attack = false;
                         attackStartTime = currentTime;
-                       
+                        InitParticl();
                     
                     drawСonstellation(entities[currentEnemyID]);
 
