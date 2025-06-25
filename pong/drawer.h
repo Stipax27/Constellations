@@ -457,7 +457,7 @@ namespace drawer
 
             placeHeroToWorld(start, *starSet[player_sign]);
             placeConstToWorld(end, *starSet[currentEnemyID]);
-
+          
             projectile.Init(start, end);
 
         }
@@ -469,9 +469,31 @@ namespace drawer
 
     void GameRender() {
         if (projectile.isActive) {
+            /*weapon[(int)current_weapon];*/
             point3d drawPos = projectile.currentPos;
             modelProject(drawPos);
 
+            float Length = 100;
+
+            float centerX = drawPos.x;
+            float centerY = drawPos.y;
+            modelProject = &NullProject;
+
+
+            point3d Sword1, Sword2;
+
+            Sword1.x = centerX + Length;
+            Sword1.y = centerY + Length;
+            Sword1.z = 0;
+
+            Sword2.x = centerX - Length;
+            Sword2.y = centerY - Length;
+            Sword2.z = 0;
+
+
+            drawLine(Sword1, Sword2, 20);
+            
+            // Сделать что бы вылетал вектор оружие которое выбрано в данный момент
            
             HBRUSH brush = CreateSolidBrush(projectile.color);
             float sz = projectile.size;
@@ -968,9 +990,6 @@ namespace drawer
                
                 if (attackCooldown == true)
                 {
-                   
-                    
-
                     AttackVector();
                     
                    
@@ -1046,13 +1065,12 @@ namespace drawer
 
                 if (projectile.isActive)
                 {
-                    for (int i= 0;i<3;i++ ) 
-                    {
+                    
                         GameUpdate();
 
                         GameRender();
                     
-                    }
+                    
                 }
 
                 if (currentTime > attack_cooldown + 5000)
