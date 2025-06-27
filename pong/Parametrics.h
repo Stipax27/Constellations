@@ -293,7 +293,17 @@ void placeConstToStartMenu(point3d& p, Constellation& Constellation) {
 
 void HeroUITransform(point3d& p, Constellation& Constellation) {
     p.move(0, 0, 0.);
-    fightMove(p);
+
+    static float lastTime = currentTime;
+    float deltaTime = currentTime - lastTime;
+    lastTime = currentTime;
+
+    if (deltaTime > 100.0f) deltaTime = 100.0f;
+    
+    updateFlyDirection();
+    updateFlySpeed(deltaTime);
+    updatePlayerPosition(deltaTime, p);
+
     p *= .13;
     p *= Constellation.scale;
 }
@@ -321,7 +331,17 @@ void placeConstToWorld(point3d& p, Constellation& Constellation) {
 void placeHeroToWorld(point3d& p, Constellation& Constellation) {
     ShakingHero(p);
     p.move(0, 0, 0. / Constellation.scale);
-    fightMove(p);
+
+    static float lastTime = currentTime;
+    float deltaTime = currentTime - lastTime;
+    lastTime = currentTime;
+
+    if (deltaTime > 100.0f) deltaTime = 100.0f;
+    
+    updateFlyDirection();
+    updateFlySpeed(deltaTime);
+    updatePlayerPosition(deltaTime, p);
+
     p *= .13;
     p *= Constellation.scale;
 

@@ -452,8 +452,8 @@ namespace drawer
     void InitParticl() 
     {
         if (!projectile.isActive) {
-            point3d start = { 0, 0, 0 };
             point3d end = { 0, 0, 0 };
+            point3d start = { 0, 0, 0 };
 
             placeHeroToWorld(start, *starSet[player_sign]);
             placeConstToWorld(end, *starSet[currentEnemyID]);
@@ -1006,6 +1006,8 @@ namespace drawer
                              
                 StartBattle();
                 enemyFight();
+
+                
 
                 DrawHpHeroBar(entities[player_sign]);
                 modelTransform = &placeToWorld;

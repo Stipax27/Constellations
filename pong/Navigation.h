@@ -1,96 +1,64 @@
-
-int start;
-
-bool isMoveActive = false; 
-
-float finalS;
-
-char whatKeyPressed() {
-	if (GetAsyncKeyState('W') & 0x0001) 
-		return 'W';
-	if (GetAsyncKeyState('A') & 0x0001)
-		return 'A';
-	if (GetAsyncKeyState('S') & 0x0001)
-		return 'S';
-	if (GetAsyncKeyState('D') & 0x0001)
-		return 'D';
-	return '\0';  // Если ничего не нажато, возвращаем пустой символ
-}
-
 point3d player_dodge_ofs = { 0,0,0 };
 point3d starfield_angles = { 0,0,0 };
 point3d milkyway_angles = { 0,0,100 };
 
+point3d flyDirection = { 0, 0, 0 };
+point3d heroPosition = { 0, 0, 0 };
 
-void fightMove(point3d& p) {
+float currentFlySpeed = 0.0f;
+const float maxFlySpeed = 0.5f;
+const float flyAcceleration = 0.001f;
+const float flyDeceleration = 0.002f;
 
-	float T;
-	float moveTimer = 4;
-	float currentV;
-	float currentS;
-	float currentA;
-	float F = -1.5;
-	bool isMoveStateBack; 
+void updateFlyDirection() {
+    flyDirection = { 0, 0, 0 };
 
-	static char SYM[2] = {0};
+    if (GetAsyncKeyState('W') & 0x8000) flyDirection.z += 1.0f;
+    if (GetAsyncKeyState('A') & 0x8000) flyDirection.x -= 1.0f;
+    if (GetAsyncKeyState('S') & 0x8000) flyDirection.z -= 1.0f;
+    if (GetAsyncKeyState('D') & 0x8000) flyDirection.x += 1.0f;
 
-	char key = whatKeyPressed();
+    if (GetAsyncKeyState(VK_SPACE) & 0x8000) flyDirection.y -= 1.0f;
+    if (GetAsyncKeyState(VK_SHIFT) & 0x8000) flyDirection.y += 1.0f;
 
-	if (!isMoveActive && key != '\0') // Проверка срабатывает если кнопка нажимается хотя бы один раз
-	{
-		if (!isMoveActive)
-		{
-			SYM[0] = key;
-			SYM[1] = '\0';
+    // Нормализация вектора направления
+    float length = sqrt(flyDirection.x * flyDirection.x +
+        flyDirection.y * flyDirection.y +
+        flyDirection.z * flyDirection.z);
+    if (length > 0) {
+        flyDirection.x /= length;
+        flyDirection.y /= length;
+        flyDirection.z /= length;
+    }
+}
 
-			start = currentTime;
-			isMoveActive = true;
-		}
-	}
+void updateFlySpeed(float deltaTime) {
+    bool isMoving = (flyDirection.x != 0 || flyDirection.y != 0 || flyDirection.z != 0);
 
-	if (isMoveActive) {
-		T = currentTime - start;
-		currentA = F * (moveTimer / 2 - T / 1000);
-		currentV = currentA * T / 1000;
-		
-		currentS = currentV * T / 1000;
-		isMoveStateBack = false;
-		if (T/1000 < moveTimer) {
-			if (T/1000 > (moveTimer / 2))
-			{
-				isMoveStateBack = true;
-			}
-			if (!isMoveStateBack) {
-				finalS = currentS;
+    if (isMoving) {
+        currentFlySpeed += flyAcceleration * deltaTime;
+        if (currentFlySpeed > maxFlySpeed) {
+            currentFlySpeed = maxFlySpeed;
+        }
+    }
+    else {
+        currentFlySpeed -= flyDeceleration * deltaTime;
+        if (currentFlySpeed < 0) {
+            currentFlySpeed = 0;
+        }
+    }
+}
 
-				switch (SYM[0]) {
-				case 'W':
-					player_dodge_ofs = { 0, currentS, 0 };
-					break;
-				case 'A':
-					player_dodge_ofs = { currentS, 0, 0 };
-					break;
-				case 'S':
-					player_dodge_ofs = { 0, -currentS, 0 };
-					break;
-				case 'D':
-					player_dodge_ofs = { -currentS, 0, 0 };
-					break;
-
-				
-				}
-			}
-			else {
-				currentA = F * (T / 1000 - moveTimer / 2);
-				
-			}
-			char temp[64] = {0};
-		}
-		else {
-			isMoveActive = false;
-		}
-
-	}
-	
-	p.move(p, player_dodge_ofs);
+void updatePlayerPosition(float deltaTime, point3d& p) {
+    if (currentFlySpeed > 0) {
+        // Обновляем глобальную позицию героя
+        heroPosition.x += flyDirection.x * currentFlySpeed * deltaTime;
+        heroPosition.y += flyDirection.y * currentFlySpeed * deltaTime;
+        heroPosition.z += flyDirection.z * currentFlySpeed * deltaTime;
+       
+        // Применяем изменения к переданной точке
+        p.x = heroPosition.x;
+        p.y = heroPosition.y;
+        p.z = heroPosition.z;
+    }
 }
