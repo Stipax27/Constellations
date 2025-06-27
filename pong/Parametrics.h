@@ -299,10 +299,15 @@ void HeroUITransform(point3d& p, Constellation& Constellation) {
     lastTime = currentTime;
 
     if (deltaTime > 100.0f) deltaTime = 100.0f;
-    
+
     updateFlyDirection();
     updateFlySpeed(deltaTime);
-    updatePlayerPosition(deltaTime, p);
+    updatePlayerPosition(deltaTime, p, Constellation);
+
+   
+    p.x += (constellationOffset.x)/10;
+    p.y += (constellationOffset.y)/10;
+    p.z += (constellationOffset.z)/10;
 
     p *= .13;
     p *= Constellation.scale;
@@ -337,10 +342,14 @@ void placeHeroToWorld(point3d& p, Constellation& Constellation) {
     lastTime = currentTime;
 
     if (deltaTime > 100.0f) deltaTime = 100.0f;
-    
+
     updateFlyDirection();
     updateFlySpeed(deltaTime);
-    updatePlayerPosition(deltaTime, p);
+    updatePlayerPosition(deltaTime, p, Constellation);
+
+    p.x += (constellationOffset.x)/10;
+    p.y += (constellationOffset.y)/10;
+    p.z += (constellationOffset.z)/10;
 
     p *= .13;
     p *= Constellation.scale;

@@ -4,27 +4,26 @@ point3d milkyway_angles = { 0,0,100 };
 
 point3d flyDirection = { 0, 0, 0 };
 point3d heroPosition = { 0, 0, 0 };
+point3d constellationOffset = { 0, 0, 0 };
 
 float currentFlySpeed = 0.0f;
-const float maxFlySpeed = 0.5f;
-const float flyAcceleration = 0.001f;
+const float maxFlySpeed = 0.1f;
+const float flyAcceleration = 0.2f;
 const float flyDeceleration = 0.002f;
 
 void updateFlyDirection() {
     flyDirection = { 0, 0, 0 };
 
-    if (GetAsyncKeyState('W') & 0x8000) flyDirection.z += 1.0f;
-    if (GetAsyncKeyState('A') & 0x8000) flyDirection.x -= 1.0f;
-    if (GetAsyncKeyState('S') & 0x8000) flyDirection.z -= 1.0f;
-    if (GetAsyncKeyState('D') & 0x8000) flyDirection.x += 1.0f;
+    if (GetAsyncKeyState('W') & 0x8000) flyDirection.z += .1f;// Вперёд
+    if (GetAsyncKeyState('A') & 0x8000) flyDirection.x -= .1f;// Влево
+    if (GetAsyncKeyState('S') & 0x8000) flyDirection.z -= .1f;// Назад
+    if (GetAsyncKeyState('D') & 0x8000) flyDirection.x += .1f;// Вправо
+    if (GetAsyncKeyState(VK_SPACE) & 0x8000) flyDirection.y -= .1f;// Вверх
+    if (GetAsyncKeyState(VK_CONTROL) & 0x8000) flyDirection.y += .1f;// Вниз
+    
+   
+    float length = sqrt(flyDirection.x * flyDirection.x + flyDirection.y * flyDirection.y + flyDirection.z * flyDirection.z);
 
-    if (GetAsyncKeyState(VK_SPACE) & 0x8000) flyDirection.y -= 1.0f;
-    if (GetAsyncKeyState(VK_SHIFT) & 0x8000) flyDirection.y += 1.0f;
-
-    // Нормализация вектора направления
-    float length = sqrt(flyDirection.x * flyDirection.x +
-        flyDirection.y * flyDirection.y +
-        flyDirection.z * flyDirection.z);
     if (length > 0) {
         flyDirection.x /= length;
         flyDirection.y /= length;
@@ -35,7 +34,9 @@ void updateFlyDirection() {
 void updateFlySpeed(float deltaTime) {
     bool isMoving = (flyDirection.x != 0 || flyDirection.y != 0 || flyDirection.z != 0);
 
-    if (isMoving) {
+    if (isMoving) 
+    {
+       
         currentFlySpeed += flyAcceleration * deltaTime;
         if (currentFlySpeed > maxFlySpeed) {
             currentFlySpeed = maxFlySpeed;
@@ -49,16 +50,11 @@ void updateFlySpeed(float deltaTime) {
     }
 }
 
-void updatePlayerPosition(float deltaTime, point3d& p) {
+void updatePlayerPosition(float deltaTime, point3d& p, Constellation& C) {
     if (currentFlySpeed > 0) {
-        // Обновляем глобальную позицию героя
-        heroPosition.x += flyDirection.x * currentFlySpeed * deltaTime;
-        heroPosition.y += flyDirection.y * currentFlySpeed * deltaTime;
-        heroPosition.z += flyDirection.z * currentFlySpeed * deltaTime;
-       
-        // Применяем изменения к переданной точке
-        p.x = heroPosition.x;
-        p.y = heroPosition.y;
-        p.z = heroPosition.z;
+     
+        constellationOffset.x += flyDirection.x * currentFlySpeed * deltaTime;
+        constellationOffset.y += flyDirection.y * currentFlySpeed * deltaTime;
+        constellationOffset.z += flyDirection.z * currentFlySpeed * deltaTime;
     }
 }
