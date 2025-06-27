@@ -293,13 +293,13 @@ namespace drawer
         //drawСonstellation(*starSet[player_sign]);
     }
 
-    void drawShieldCircle() 
+    void drawShieldCircle(float CenterX, float CenterY)
     {
         float shieldRadius = 200;
 
         // Центр = oldmouse (круг растёт из этой точки)
-        float centerX = mouse.pos.x;
-        float centerY = mouse.pos.y;
+        float centerX = CenterX;
+        float centerY = CenterY;
         modelProject = &NullProject;
         
             for (int i = 0; i < 36; i++) {
@@ -321,12 +321,12 @@ namespace drawer
         
     }
 
-    void drawSwordLine() 
+    void drawSwordLine(float CenterX,float CenterY) 
     {
         float Length = 100 ;
 
-        float centerX = mouse.pos.x;
-        float centerY = mouse.pos.y;
+        float centerX = CenterX;
+        float centerY = CenterY;
         modelProject = &NullProject;
 
 
@@ -345,13 +345,13 @@ namespace drawer
         
     }
 
-    void drawBowLine()
+    void drawBowLine(float CenterX, float CenterY)
     {
         float shieldRadius = 20;
         
         // Центр = oldmouse (круг растёт из этой точки)
-        float centerX = mouse.pos.x;
-        float centerY = mouse.pos.y;
+        float centerX = CenterX;
+        float centerY = CenterY;
         modelProject = &NullProject;
 
         for (int i = 0; i < 36; i++) {
@@ -374,12 +374,12 @@ namespace drawer
 
         }
     }
-    void drawArrow()
+    void drawArrow(float CenterX, float CenterY)
     {
         float Length = 50;
 
-        float centerX = mouse.pos.x;
-        float centerY = mouse.pos.y;
+        float centerX = CenterX;
+        float centerY = CenterY;
         modelProject = &NullProject;
 
         point3d Arrow1, Arrow2;
@@ -473,36 +473,31 @@ namespace drawer
             point3d drawPos = projectile.currentPos;
             modelProject(drawPos);
 
-            float Length = 100;
-
-            float centerX = drawPos.x;
-            float centerY = drawPos.y;
-            modelProject = &NullProject;
-
-
-            point3d Sword1, Sword2;
-
-            Sword1.x = centerX + Length;
-            Sword1.y = centerY + Length;
-            Sword1.z = 0;
-
-            Sword2.x = centerX - Length;
-            Sword2.y = centerY - Length;
-            Sword2.z = 0;
-
-
-            drawLine(Sword1, Sword2, 20);
             
-            // Сделать что бы вылетал вектор оружие которое выбрано в данный момент
+
+            if (current_weapon == weapon_name::Sword)
+            {
+                drawSwordLine(drawPos.x, drawPos.y);
+            }
+            if (current_weapon == weapon_name::Shield)
+            {
+                drawShieldCircle(drawPos.x, drawPos.y);
+            }
+            if (current_weapon == weapon_name::Bow)
+            {
+                drawBowLine(drawPos.x, drawPos.y);
+                drawArrow(drawPos.x, drawPos.y);
+            }
+            //// Сделать что бы вылетал вектор оружие которое выбрано в данный момент
            
-            HBRUSH brush = CreateSolidBrush(projectile.color);
-            float sz = projectile.size;
-            Ellipse(window.context,
-                (int)(drawPos.x - sz),
-                (int)(drawPos.y - sz),
-                (int)(drawPos.x + sz),
-                (int)(drawPos.y + sz));
-            DeleteObject(brush);
+            //HBRUSH brush = CreateSolidBrush(projectile.color);
+            //float sz = projectile.size;
+            //Ellipse(window.context,
+            //    (int)(drawPos.x - sz),
+            //    (int)(drawPos.y - sz),
+            //    (int)(drawPos.x + sz),
+            //    (int)(drawPos.y + sz));
+            //DeleteObject(brush);
         }
     }
     
@@ -995,16 +990,16 @@ namespace drawer
                    
                     if (current_weapon == weapon_name::Sword) 
                     {
-                        drawSwordLine();
+                        drawSwordLine(mouse.pos.x, mouse.pos.y);
                     }
                     if (current_weapon == weapon_name::Shield)
                     {
-                        drawShieldCircle();
+                        drawShieldCircle(mouse.pos.x, mouse.pos.y);
                     }
                     if (current_weapon == weapon_name::Bow) 
                     {
-                        drawBowLine();
-                        drawArrow();
+                        drawBowLine(mouse.pos.x, mouse.pos.y);
+                        drawArrow(mouse.pos.x, mouse.pos.y);
                     }
                     
                 }

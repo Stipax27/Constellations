@@ -130,7 +130,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно   
 
 
-/*        int sz = starSet[currentEnemyID]->starsCords.size();
+        /*int sz = starSet[currentEnemyID]->starsCords.size();
         for (int i = 0; i < sz; i++)
         {
             starSet[currentEnemyID]->starsCords[i].x *= .999;
