@@ -45,7 +45,7 @@ struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
     float2 uv : TEXCOORD0;
-    uint   starID : TEXCOORD1;
+    uint   starID : COLOR0;
 };
 
 
@@ -62,12 +62,12 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     };
 
     float3 starPos = randomPosition(starID);
-
+    starPos = lerp(normalize(starPos)* 1400.0f, starPos,.1);
 
     float3 right = normalize(view[0]._m00_m10_m20); // X column
     float3 up = normalize(view[0]._m01_m11_m21); // Y column
 
-    float size = 0.95;
+    float size = 3.95;
 
     float2 vertexOffset = quadPos[vertexInQuad];
     float3 offset3D = right * vertexOffset.x * size + up * vertexOffset.y * size;
@@ -79,5 +79,6 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     output.uv = quadPos[vertexInQuad];
     output.pos = projPos;
+    output.starID = starID;
     return output;
 }

@@ -7,7 +7,7 @@ class Constellation {
 public:
 
     XMMATRIX Transform;
-    XMMATRIX Project;
+    
     std::vector<point3d> starsCords;
     float hp;
     float maxHP;
@@ -16,7 +16,7 @@ public:
     std::vector <std::vector <float>> constellationEdges;
 
     std::vector<point3d> starsRenderedCords = {};
-    float scale = 1000;
+    float scale = 200;
     int ID;
     std::string name;
 
@@ -28,36 +28,15 @@ public:
     bool isMoveActive;
     point3d position;
 
-    friend XMMATRIX CreateWorldToScreenMatrix(const Constellation& c)
-    {
-        XMMATRIX view = ConstBuf::camera.view[0];
-        XMMATRIX proj = ConstBuf::camera.proj[0];
-
-       
-        XMMATRIX viewProj = view * proj;
-
-        float width = ConstBuf::frame.aspect.z;
-        float height = ConstBuf::frame.aspect.w;
-
-        XMMATRIX screenTransform = XMMatrixSet(
-            0.5f * width, 0.0f, 0.0f, 0.0f,
-            0.0f, -0.5f * height, 0.0f, 0.0f,
-            0.0f, 0.0f, 1.0f, 0.0f,
-            0.5f * width, 0.5f * height, 0.0f, 1.0f
-        );
-
-        return viewProj * screenTransform;
-    }
+    
 
     friend XMMATRIX CreateConstToWorldMatrix(const Constellation& c)
     {
         float zOffset = 1000.0f / c.scale;
         XMMATRIX translateZ = XMMatrixTranslation(0, 0, zOffset);
-        XMMATRIX rotateX = XMMatrixRotationX(c.angle.x);
-        XMMATRIX rotateY = XMMatrixRotationY(c.angle.y);
-        XMMATRIX rotateZ = XMMatrixRotationZ(c.angle.z);
+        XMMATRIX rotate = XMMatrixRotationRollPitchYaw(c.angle.x, c.angle.y,c.angle.z);
         XMMATRIX scale = XMMatrixScaling(c.scale, c.scale, c.scale);
-        return translateZ * rotateX*  rotateY*  rotateZ * scale;
+        return translateZ * rotate * scale;
     }
     friend XMMATRIX CreatefightProjectMatrix(const Constellation& c)
     {

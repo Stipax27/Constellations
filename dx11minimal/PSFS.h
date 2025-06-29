@@ -36,12 +36,14 @@ struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
     float2 uv : TEXCOORD0;
-    uint   starID : TEXCOORD1;
+    uint   starID : COLOR0;
 };
+
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
+
     float2 uv = input.uv;
 float brightness = exp(-dot(uv, uv) * 20);
-return float4(brightness, brightness, brightness, 1);
+return float4(brightness, brightness, brightness, 1)*float4(1,1,1.4,1)*(1+.9*sin(input.starID*1.2+time.x*.1));
 }

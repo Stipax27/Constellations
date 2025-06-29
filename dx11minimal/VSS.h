@@ -33,35 +33,42 @@ struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
     float2 uv : TEXCOORD0;
+
 };
 
+float3 rotZ(float3 pos, float a)
+{
+    float3x3 m =
+    {
+        cos(a), -sin(a),0,
+        sin(a), cos(a), 0,
+        0, 0, 1
+    };
+    pos = mul(pos, m);
+    return pos;
+}
 
 VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output;
     float sz = gConst[0].w ;
-    float3 starPos = float3(gConst[0].xyz);
-     starPos.x = float(gConst[0].x);
-     starPos.y = float(gConst[0].y);
+
     float2 quad[6] = {
         float2(-sz, -sz), float2(sz, -sz), float2(-sz, sz),
         float2(sz, -sz), float2(sz, sz), float2(-sz, sz)
     };
 
-    float3 right = normalize(view[0]._m00_m10_m20); 
-    float3 up = normalize(view[0]._m01_m11_m21); 
-
-    float size = 0.95;
-
-    float2 vertexOffset = quad[vID];
-    float3 offset3D = right * vertexOffset.x * size + up * vertexOffset.y * size;
-
-    float3 worldPos = starPos + offset3D;
-
-    float4 viewPos = mul(float4(worldPos, 1.0f), view[0]);
+    float2 quadUV[6] = {
+    float2(-1, -1), float2(1, -1), float2(-1, 1),
+    float2(1, -1), float2(1, 1), float2(-1, 1)
+    };
+        
+    float4 viewPos = mul(float4(gConst[0].xyz, 1.0f), view[0]);
     float4 projPos = mul(viewPos, proj[0]);
 
-    output.uv = quad[vID];
+    projPos.xy += quad[vID]*float2(aspect.x,1)*4;
+
+    output.uv = quadUV[vID];
     output.pos = projPos;
 
     return output;

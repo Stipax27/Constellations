@@ -20,7 +20,7 @@ const float PI = 3.1415926535897;
 HINSTANCE hInst;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-const float starSize = 10;
+float starSize = 30;
 int startTime;
 float circleRadius;
 int currentDayIndex = -1;

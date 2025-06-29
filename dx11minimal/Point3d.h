@@ -170,17 +170,7 @@ public:
 
 point3d TransformPoint(const point3d& p, const XMMATRIX& m) {
     XMVECTOR v = XMVectorSet(p.x, p.y, p.z, 1.0f);
-    v = XMVector4Transform(v, m);
-    return {
-        XMVectorGetX(v),
-        XMVectorGetY(v),
-        XMVectorGetZ(v)
-    };
-}
-
-point3d TransformPointDivW(const point3d& p, const XMMATRIX& m) {
-    XMVECTOR v = XMVectorSet(p.x, p.y, p.z, 1.0f);
-    v = XMVector4Transform(v, m);
+    v = XMVector3Transform(v, m);
     return {
         XMVectorGetX(v),
         XMVectorGetY(v),

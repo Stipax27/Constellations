@@ -23,7 +23,7 @@ namespace drawer
                 //modelProject(point);
             }
 
-            float sz = 1 + .5 * sinf(i + currentTime * .01);
+            float sz = 6 + 3 * sinf(i*117 + currentTime * .0031);
             point.draw(point, sz);
             // Рисование Линий.
         }
@@ -50,7 +50,7 @@ namespace drawer
                 float dy = point2.y - point1.y;
                 float dz = point2.z - point1.z;
                 float length = sqrt(dx * dx + dy * dy + dz * dz);
-                int x = static_cast<int>(length) / linksDivider;
+                int x = length / linksDivider;
                 drawLine(point1, point2, x);// Рисование звёздных линий созвездия.
             }
         }
@@ -73,25 +73,26 @@ namespace drawer
             point3d point;
             point = starArray[i];
             point3d worldPoint = TransformPoint(point, Constellation.Transform);
-            point3d screenPoint = TransformPointDivW(worldPoint, XMMatrixTranspose(ConstBuf::camera.view[0])* XMMatrixTranspose(ConstBuf::camera.proj[0]));
-           // screenPoint.x *= -1;
-            //screenPoint.x *= aspect;
-          //  screenPoint.y *= -1;
-            screenPoint.x += window.width / 2;
-            screenPoint.y += window.height / 2;
-            //screenPoint.x += window.width / 2;
-            //screenPoint *= (1, -1);
+
+            XMVECTOR p = XMVECTOR{ worldPoint.x,worldPoint.y,worldPoint.z,1 };
+            p = XMVector4Transform(p, XMMatrixTranspose(ConstBuf::camera.view[0]) * XMMatrixTranspose(ConstBuf::camera.proj[0]));
+
+            float px = .5f * XMVectorGetX(p) / XMVectorGetW(p) + .5f;
+            float py = -.5f * XMVectorGetY(p) / XMVectorGetW(p) + .5f;
+
+            point3d screenPoint = { px,py,0 };
+            screenPoint.x *=window.width;
+            screenPoint.y *= window.height;
+
             // Пульсирование Звёзд при наведение мыши.
             finalStarRad = 1;
-            //point = TransformPoint(point, ConstBuf::camera.view[0]);
-          //  if (uiFunc)
+            if (uiFunc)
             {
                 uiFunc(screenPoint, Constellation, i);
             }
 
-            
+           
             if (finalStarRad > 0)
-            //if (screenPoint.x>0 && screenPoint.x<window.width&& screenPoint.y>0&& screenPoint.y<window.height)
             {
                 point.draw(worldPoint, finalStarRad);
             }
@@ -106,7 +107,7 @@ namespace drawer
 
     void drawСonstellation(Constellation& Constellation, bool colorOverride = false)
     {
-
+       
         drawLinks(Constellation, colorOverride);
         drawStarPulse(Constellation, colorOverride);
     }
@@ -115,6 +116,7 @@ namespace drawer
     {
         Shaders::vShader(2);
         Shaders::pShader(2);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
         Draw::Starfield(1);
     }
 
@@ -711,9 +713,11 @@ namespace drawer
 
         case gameState_::selectEnemy:
         {
-            
+            Depth::Depth(Depth::depthmode::off);
+            Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
             uiFunc = &constSelectUI;
-            linksDivider = 50;
+            linksDivider = 15;
+            
             drawStarField();
             Shaders::vShader(1);
             Shaders::pShader(1);
@@ -723,10 +727,8 @@ namespace drawer
 
             for (int i = 0;i < 12;i++)
             {
-                Constellation& c = *starSet[i];
-                c.Transform = CreateConstToWorldMatrix(c);
-                T = true;
-                c.Project = CreateWorldToScreenMatrix(c);
+               Constellation& c = *starSet[i];
+               c.Transform = CreateConstToWorldMatrix(c);
                drawСonstellation(*starSet[i]);
             }
 
