@@ -63,5 +63,6 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     output.uv = quad[vID];
     output.pos = projPos;
+
     return output;
 }

@@ -21,6 +21,8 @@ void mainLoop()
 
 
 	drawer::drawWorld();
+
+
 	/*
 		InputAssembler::IA(InputAssembler::topology::triList);
 		Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);

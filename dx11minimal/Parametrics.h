@@ -104,6 +104,8 @@ void constSelectUI(point3d& point, Constellation& Constellation, int i)
     float lenght = sqrt(dx * dx + dy * dy);
 
     float rad = saturate(1.2 - lenght * .05) * fabs(sin(currentTime * .01));
+    //rad = max(100 - lenght*.1, 0);
+    rad = max(lenght * .1, 0);
 
     if (GetAsyncKeyState(VK_LBUTTON))
     {
@@ -121,6 +123,7 @@ void constSelectUI(point3d& point, Constellation& Constellation, int i)
     }
 
     finalStarRad = starSize * starHealth[i] + rad * 15;
+    finalStarRad = rad;
 }
 
 float get_lenghts(point3d& point1, point3d& point2)

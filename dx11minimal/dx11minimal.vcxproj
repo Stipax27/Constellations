@@ -145,18 +145,30 @@
     <ClInclude Include="Parametrics.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Point3d.h" />
-    <ClInclude Include="PSS.h" />
-    <ClInclude Include="PSFS.h" />
-    <ClInclude Include="VSFS.h" />
+    <None Include="PSS.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="PSFS.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="VSFS.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
     <ClInclude Include="StatusGame.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="utils.h" />
-    <ClInclude Include="VSS.h" />
+    <None Include="VSS.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
     <ClInclude Include="Weapon.h" />
-    <None Include="PS.h" />
+    <None Include="PS.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
-    <None Include="VS.h" />
+    <None Include="VS.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dx11minimal.cpp" />

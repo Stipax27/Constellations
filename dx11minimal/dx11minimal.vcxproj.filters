@@ -90,18 +90,6 @@
     <ClInclude Include="loop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PSS.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="VSS.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PSFS.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="VSFS.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dx11minimal.cpp">
@@ -126,6 +114,18 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="VS.h">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="PSFS.h">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="VSS.h">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="VSFS.h">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="PSS.h">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

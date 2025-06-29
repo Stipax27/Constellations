@@ -73,20 +73,25 @@ namespace drawer
             point3d point;
             point = starArray[i];
             point3d worldPoint = TransformPoint(point, Constellation.Transform);
-            point3d screenPoint = TransformPoint(worldPoint, Constellation.Project);
-            if (T) {
-                point3d screenPoint = TransformPoint(worldPoint, Constellation.Project);
-            }
+            point3d screenPoint = TransformPointDivW(worldPoint, XMMatrixTranspose(ConstBuf::camera.view[0])* XMMatrixTranspose(ConstBuf::camera.proj[0]));
+           // screenPoint.x *= -1;
+            //screenPoint.x *= aspect;
+          //  screenPoint.y *= -1;
+            screenPoint.x += window.width / 2;
+            screenPoint.y += window.height / 2;
+            //screenPoint.x += window.width / 2;
+            //screenPoint *= (1, -1);
             // Пульсирование Звёзд при наведение мыши.
             finalStarRad = 1;
             //point = TransformPoint(point, ConstBuf::camera.view[0]);
-            if (uiFunc)
+          //  if (uiFunc)
             {
                 uiFunc(screenPoint, Constellation, i);
             }
 
             
             if (finalStarRad > 0)
+            //if (screenPoint.x>0 && screenPoint.x<window.width&& screenPoint.y>0&& screenPoint.y<window.height)
             {
                 point.draw(worldPoint, finalStarRad);
             }
@@ -733,6 +738,10 @@ namespace drawer
             drawString("Features:\nMouse wheel to zoom in and out", (1700. / 2560) * window.width, (1200. / 1440) * window.height, .7f, false);
             // drawColorCircle();
             isBattleActive = false;
+
+
+           // drawString("X", 0, 0, 1, false);
+           // drawString(std::to_string(mouse.pos.y).c_str(), 0, 0, 1, false);
 
             break;
         }
