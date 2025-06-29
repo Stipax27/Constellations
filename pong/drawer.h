@@ -40,7 +40,6 @@ namespace drawer
         p.x *= 200;
         p.y *= 200;
         p.z *= 200;
-        //move(p, offset.x, offset.y, offset.z);
         float a = currentTime;
         rotateY(p, a * 0.1);
         move(p, 0, 0, 1300);

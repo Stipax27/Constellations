@@ -7,7 +7,7 @@ class Constellation {
 public:
 
     XMMATRIX Transform;
-
+    XMMATRIX Project;
     std::vector<point3d> starsCords;
     float hp;
     float maxHP;
@@ -27,6 +27,28 @@ public:
     DWORD moveStartTime;
     bool isMoveActive;
     point3d position;
+
+    friend XMMATRIX CreateWorldToScreenMatrix(const Constellation& c)
+    {
+        XMMATRIX view = ConstBuf::camera.view[0];
+        XMMATRIX proj = ConstBuf::camera.proj[0];
+
+       
+        XMMATRIX viewProj = view * proj;
+
+        float width = ConstBuf::frame.aspect.z;
+        float height = ConstBuf::frame.aspect.w;
+
+        XMMATRIX screenTransform = XMMatrixSet(
+            0.5f * width, 0.0f, 0.0f, 0.0f,
+            0.0f, -0.5f * height, 0.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 0.0f,
+            0.5f * width, 0.5f * height, 0.0f, 1.0f
+        );
+
+        return viewProj * screenTransform;
+    }
+
     friend XMMATRIX CreateConstToWorldMatrix(const Constellation& c)
     {
         float zOffset = 1000.0f / c.scale;
@@ -35,8 +57,6 @@ public:
         XMMATRIX rotateY = XMMatrixRotationY(c.angle.y);
         XMMATRIX rotateZ = XMMatrixRotationZ(c.angle.z);
         XMMATRIX scale = XMMatrixScaling(c.scale, c.scale, c.scale);
-       // XMMATRIX rotateX1 = XMMatrixRotationX( mouse.Angle.y * 0.1);
-       // XMMATRIX rotateY1 = XMMatrixRotationY(mouse.Angle.x * 0.1);
         return translateZ * rotateX*  rotateY*  rotateZ * scale;
     }
     friend XMMATRIX CreatefightProjectMatrix(const Constellation& c)

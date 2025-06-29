@@ -85,7 +85,7 @@ public:
        // Camera::Camera();
 
         
-        ConstBuf::global[0] = XMFLOAT4(p.x, p.y, sz, 1.0f);
+        ConstBuf::global[0] = XMFLOAT4(p.x, p.y, p.z, sz);
         ConstBuf::Update(5, ConstBuf::global);
         ConstBuf::ConstToVertex(5);
 

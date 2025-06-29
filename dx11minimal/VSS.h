@@ -39,7 +39,7 @@ struct VS_OUTPUT
 VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output;
-    float sz = gConst[0].z ;
+    float sz = gConst[0].w ;
     float3 starPos = float3(gConst[0].xyz);
      starPos.x = float(gConst[0].x);
      starPos.y = float(gConst[0].y);

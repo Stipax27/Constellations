@@ -12,6 +12,7 @@ bool attack_collision = false;
 bool attack_speed = false;
 bool attack_start = false;
 bool attackCooldown = true;
+bool T = false;
 
 void (*modelTransform)(point3d& p, Constellation& Constellation);
 void (*modelProject)(point3d& p);

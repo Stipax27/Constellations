@@ -13,13 +13,14 @@ namespace drawer
             float length = sqrt(dx * dx + dy * dy + dz * dz);
 
             point3d point;
-            point.x = p1.x + dx * (float)i / (float)(count - 1);
-            point.y = p1.y + dy * (float)i / (float)(count - 1);
-            point.z = p1.z + dz * (float)i / (float)(count - 1);
+            float t = static_cast<float>(i) / count;
+            point.x = p1.x + dx * t;
+            point.y = p1.y + dy * t;
+            point.z = p1.z + dz * t;
 
             if (modelProject)
             {
-                modelProject(point);
+                //modelProject(point);
             }
 
             float sz = 1 + .5 * sinf(i + currentTime * .01);
@@ -71,24 +72,23 @@ namespace drawer
         {
             point3d point;
             point = starArray[i];
-
-            point = TransformPoint(point, Constellation.Transform);
-             if (modelProject)
-             {
-                 modelProject(point);
-             }
+            point3d worldPoint = TransformPoint(point, Constellation.Transform);
+            point3d screenPoint = TransformPoint(worldPoint, Constellation.Project);
+            if (T) {
+                point3d screenPoint = TransformPoint(worldPoint, Constellation.Project);
+            }
             // Ïóëüñèðîâàíèå Çâ¸çä ïðè íàâåäåíèå ìûøè.
             finalStarRad = 1;
-            point = TransformPoint(point, ConstBuf::camera.view[0]);
+            //point = TransformPoint(point, ConstBuf::camera.view[0]);
             if (uiFunc)
             {
-                uiFunc(point, Constellation, i);
+                uiFunc(screenPoint, Constellation, i);
             }
 
             
             if (finalStarRad > 0)
             {
-                point.draw(point, finalStarRad);
+                point.draw(worldPoint, finalStarRad);
             }
         }
 
@@ -713,13 +713,15 @@ namespace drawer
             Shaders::vShader(1);
             Shaders::pShader(1);
             //modelProject = &fightProject;
-           // modelTransform = &placeConstToWorld;
+            //modelTransform = &placeConstToWorld;
             
 
             for (int i = 0;i < 12;i++)
             {
                 Constellation& c = *starSet[i];
                 c.Transform = CreateConstToWorldMatrix(c);
+                T = true;
+                c.Project = CreateWorldToScreenMatrix(c);
                drawÑonstellation(*starSet[i]);
             }
 

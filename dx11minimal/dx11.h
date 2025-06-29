@@ -989,19 +989,7 @@ namespace Camera
 		XMVECTOR defaultForward = XMVectorSet(0, 0, 1, 0); 
 		XMVECTOR defaultUp = XMVectorSet(0, 1, 0, 0);     
 	} static state;
-	void Start()
-	{
 
-		XMVECTOR eye = XMVectorSet(100,0,100,0);
-		XMVECTOR At = XMVectorSet(0, 0, 0, 0.0f);
-		XMVECTOR Up = XMVectorSet(0, 1, 0, 0.0f);
-		ConstBuf::camera.view[0] = XMMatrixTranspose(XMMatrixLookAtLH(eye, At, Up));
-
-		ConstBuf::camera.proj[0] = XMMatrixTranspose(XMMatrixPerspectiveFovLH(DegreesToRadians(state.fovAngle), iaspect, 0.01f, 10000.0f));
-		ConstBuf::UpdateCamera();
-		ConstBuf::ConstToVertex(3);
-		ConstBuf::ConstToPixel(3);
-	}
 	void Camera()
 	{
 		XMVECTOR rotatedForward = XMVector3Rotate(state.defaultForward, state.currentRotation);
