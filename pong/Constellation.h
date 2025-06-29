@@ -1,4 +1,4 @@
-int constellationsCounter = 0;
+﻿int constellationsCounter = 0;
 
 class HealthSystem {
 public:
@@ -109,6 +109,7 @@ public:
             starsRenderedCords[i] = p;
         }
     }
+    
 
     bool operator==(const Constellation& other) const {
         const float epsilon = 0.0001f;

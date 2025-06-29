@@ -110,6 +110,26 @@ namespace drawer
         }
     }
 
+    void drawTriangleGalaxy() 
+    {
+        SelectObject(window.context, fireBrush);
+        SelectObject(window.context, firePen);
+
+        srand(10);
+
+        for (int i = 0; i < 1000; i++) 
+        {
+            point3d stars;
+            genRandGalaxy(stars);
+            modelTransform(stars, Aries);
+            stars.rotateZ(stars, starfield_angles.z);
+            modelProject(stars);
+
+            stars.draw(stars, 2);
+        }
+    
+    }
+
     void drawMilkyWay()
     {
         HBRUSH brashStar;
@@ -945,7 +965,8 @@ namespace drawer
                 uiFunc = &constSelectUI;
                 linksDivider = 50;
                 drawStarField();
-                drawMilkyWay();
+                //drawMilkyWay();
+                drawTriangleGalaxy();
                 drawQuest();
                 modelTransform = &placeConstToWorld;
 

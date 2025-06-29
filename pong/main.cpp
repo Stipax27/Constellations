@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+п»ї#define _CRT_SECURE_NO_WARNINGS
 
 const float PI = 3.1415926535897;
 
@@ -85,7 +85,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_ LPWSTR    lpCmdLine,
     _In_ int       nCmdShow)
 {
-    InitWindow();//здесь инициализируем все что нужно для рисования в окне
+    InitWindow();//Р·РґРµСЃСЊ РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј РІСЃРµ С‡С‚Рѕ РЅСѓР¶РЅРѕ РґР»СЏ СЂРёСЃРѕРІР°РЅРёСЏ РІ РѕРєРЅРµ
 
     mainBrush = CreateSolidBrush(RGB(0, 191, 255));
     mainPen = CreatePen(PS_SOLID,2,RGB(255, 255, 255));
@@ -107,7 +107,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     initStars(1000); 
 
-    InitGame();//здесь инициализируем переменные игры
+    InitGame();//Р·РґРµСЃСЊ РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј РїРµСЂРµРјРµРЅРЅС‹Рµ РёРіСЂС‹
     //initContentData();
     //mciSendString(TEXT("play ..\\Debug\\music.mp3 repeat"), NULL, 0, NULL);
     ShowCursor(NULL);
@@ -126,8 +126,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         /*CamerhandleInput(camera);
         renderScene(camera);*/
         mouse.Input();
-        drawer::drawWorld();//рисуем фон, ракетку и шарик
-        BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//копируем буфер в окно   
+        drawer::drawWorld();//СЂРёСЃСѓРµРј С„РѕРЅ, СЂР°РєРµС‚РєСѓ Рё С€Р°СЂРёРє
+        BitBlt(window.device_context, 0, 0, window.width, window.height, window.context, 0, 0, SRCCOPY);//РєРѕРїРёСЂСѓРµРј Р±СѓС„РµСЂ РІ РѕРєРЅРѕ   
 
 
         /*int sz = starSet[currentEnemyID]->starsCords.size();
@@ -152,7 +152,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             currentStateIndex,
             anchorIndex);
 
-        Sleep(16);//ждем 16 милисекунд (1/количество кадров в секунду)
+        Sleep(16);//Р¶РґРµРј 16 РјРёР»РёСЃРµРєСѓРЅРґ (1/РєРѕР»РёС‡РµСЃС‚РІРѕ РєР°РґСЂРѕРІ РІ СЃРµРєСѓРЅРґСѓ)
     }
 
 }

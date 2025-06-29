@@ -1,4 +1,4 @@
-HBRUSH brush;
+﻿HBRUSH brush;
 HBRUSH brush2;
 
 float finalStarRad = 0;
@@ -27,6 +27,26 @@ void genRandSphere(point3d& p) {
 
     p.rotateX(p, angleX);
     p.rotateY(p, angleY);
+}
+void genRandGalaxy(point3d& p)
+{
+    float amp = 1.25;
+    float angleX, angleY,angleZ;
+
+    angleX = rand() % 360;
+    angleY = rand() % 360;
+    angleZ = rand() % 360;
+
+    p.x = window.width/6;
+    p.y = window.height/6;
+    p.z = 10;
+
+    p.rotateX(p, angleX);
+    p.rotateY(p, angleY);
+    p.rotateZ(p, angleZ);
+
+    p.z += 1000;
+
 }
 
 void genWaySphere(point3d& p) {
@@ -230,6 +250,7 @@ void StarQuestUi(point3d& point)
 
 void QuestExit() 
 {
+    drawString("Quit button T" ,window.width/2,window.height/4,1.f,true);
     if (GetAsyncKeyState('T')) {
 
         SelectObject(window.context, brush2);
@@ -332,6 +353,8 @@ void placeConstToWorld(point3d& p, Constellation& Constellation) {
     p.rotateX(p, mouse.Angle.y * 0.1);
     p.rotateY(p, mouse.Angle.x * 0.1);
 }
+
+
 
 void placeHeroToWorld(point3d& p, Constellation& Constellation) {
     ShakingHero(p);
