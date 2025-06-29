@@ -1,4 +1,4 @@
-cbuffer global : register(b5)
+﻿cbuffer global : register(b5)
 {
     float4 gConst[32];
 };

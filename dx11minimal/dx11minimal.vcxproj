@@ -145,13 +145,13 @@
     <ClInclude Include="Parametrics.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Point3d.h" />
-    <ClInclude Include="PSS.h" />
-    <ClInclude Include="PSFS.h" />
-    <ClInclude Include="VSFS.h" />
+    <None Include="PSS.h" />
+    <None Include="PSFS.h" />
+    <None Include="VSFS.h" />
     <ClInclude Include="StatusGame.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="utils.h" />
-    <ClInclude Include="VSS.h" />
+    <None Include="VSS.h" />
     <ClInclude Include="Weapon.h" />
     <None Include="PS.h" />
     <ClInclude Include="Resource.h" />

@@ -1,4 +1,4 @@
-#pragma comment(lib, "d3d10.lib")
+ï»¿#pragma comment(lib, "d3d10.lib")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "dxguid.lib")
@@ -795,20 +795,20 @@ ID2D1HwndRenderTarget* d2dRenderTarget = nullptr;
 
 void InitD2D(HWND hwnd)
 {
-	// Øàã 1: Ñîçäàíèå ôàáðèêè
+	// Ð¨Ð°Ð³ 1: Ð¡Ð¾Ð·Ð´Ð°Ð½Ð¸Ðµ Ñ„Ð°Ð±Ñ€Ð¸ÐºÐ¸
 	D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &d2dFactory);
 
-	// Øàã 2: Ïîëó÷àåì ðàçìåðû îêíà
+	// Ð¨Ð°Ð³ 2: ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ñ€Ð°Ð·Ð¼ÐµÑ€Ñ‹ Ð¾ÐºÐ½Ð°
 	RECT rc;
 	GetClientRect(hwnd, &rc);
 
-	// Øàã 3: Îïèñàíèå ðåíäåð-òàðãåòà
+	// Ð¨Ð°Ð³ 3: ÐžÐ¿Ð¸ÑÐ°Ð½Ð¸Ðµ Ñ€ÐµÐ½Ð´ÐµÑ€-Ñ‚Ð°Ñ€Ð³ÐµÑ‚Ð°
 	D2D1_RENDER_TARGET_PROPERTIES rtProps = D2D1::RenderTargetProperties();
 	D2D1_HWND_RENDER_TARGET_PROPERTIES hwndProps =
 		D2D1::HwndRenderTargetProperties(hwnd,
 			D2D1::SizeU(rc.right - rc.left, rc.bottom - rc.top));
 
-	// Øàã 4: Ñîçäà¸ì render target
+	// Ð¨Ð°Ð³ 4: Ð¡Ð¾Ð·Ð´Ð°Ñ‘Ð¼ render target
 	d2dFactory->CreateHwndRenderTarget(rtProps, hwndProps, &d2dRenderTarget);
 }
 
@@ -817,7 +817,7 @@ void InitD2D(HWND hwnd)
 namespace Device
 {
 
-#define DirectXDebugMode false
+#define DirectXDebugMode true
 
 	D3D_DRIVER_TYPE	driverType = D3D_DRIVER_TYPE_NULL;
 
