@@ -972,10 +972,17 @@ namespace drawer
                 uiFunc = &constSelectUI;
                 linksDivider = 50;
                 drawStarField();
-                //drawMilkyWay();
-                //drawTriangleGalaxy();
-                galaxy.update();
-                galaxy.draw();
+
+
+                milkyWay.setTiltAngle(-70);
+                milkyWay.setArmCount(2);
+                milkyWay.setArmWidth(0.2f);
+                milkyWay.setRotationSpeed(.5f);
+                milkyWay.update();
+                milkyWay.draw();
+
+                
+
                 drawQuest();
                 modelTransform = &placeConstToWorld;
 
@@ -983,6 +990,18 @@ namespace drawer
                 {
                     drawСonstellation(entities[i]);
                 }
+
+                linksDivider = 10;
+                modelTransform = &placeHeroToWorld;
+                uiFunc = &heroUI;
+                nearPlaneClip = -2000;
+                SelectObject(window.context, heroBrush);
+                SelectObject(window.context, heroPen);
+
+                drawСonstellation(entities[player_sign], true);//Игрок
+
+                SelectObject(window.context, mainBrush);
+                SelectObject(window.context, mainPen);
 
                 std::string curentSignstring = zodiacSignToString(player_sign);
                 //TextOutA(window.context, window.width * 5 / 6, window.height-window.height/20., curentSignstring.c_str(), curentSignstring.size());

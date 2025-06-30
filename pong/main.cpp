@@ -62,7 +62,6 @@ HPEN waterPen;
 void (*modelTransform)(point3d& p, Constellation& Constellation);
 void (*modelProject)(point3d& p);
 void (*uiFunc)(point3d& point, Constellation& Constellation, Entity* entity, int i);
-
 #include "Line.h"
 #include "MainWorld.h"
 #include "DodgeEnemy.h"
@@ -78,7 +77,7 @@ void (*uiFunc)(point3d& point, Constellation& Constellation, Entity* entity, int
 #include "Parametrics.h"
 #include "Player.h"
 #include "Galaxy.h"
-SpiralGalaxy galaxy;
+SpiralGalaxy milkyWay;
 #include "drawer.h"
 
 
