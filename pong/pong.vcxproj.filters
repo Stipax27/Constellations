@@ -109,5 +109,8 @@
     <ClInclude Include="Camer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Galaxy.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

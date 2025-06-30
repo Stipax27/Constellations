@@ -30,21 +30,26 @@ void genRandSphere(point3d& p) {
 }
 void genRandGalaxy(point3d& p)
 {
-    float amp = 1.25;
-    float angleX, angleY,angleZ;
+    float diskRadius = 300.0f;    // Радиус диска галактики
+    float coreRadius = 50.0f;     // Радиус центрального скопления
+    float thickness = 30.0f;      // Толщина диска
+    float spiralTightness = 2.5f; // Коэффициент закрученности спиралей
 
-    angleX = rand() % 360;
-    angleY = rand() % 360;
-    angleZ = rand() % 360;
+    // Генерируем случайные параметры
+    float distance = coreRadius + (rand() % (int)(diskRadius - coreRadius));
+    float angle = rand() % 360;
+    float height = (rand() % (int)thickness) - thickness / 2;
 
-    p.x = window.width/6;
-    p.y = window.height/6;
-    p.z = 10;
+    // Добавляем спиральную структуру - угол зависит от расстояния от центра
+    angle += spiralTightness * (distance / diskRadius) * 360;
 
-    p.rotateX(p, angleX);
-    p.rotateY(p, angleY);
-    p.rotateZ(p, angleZ);
+    // Преобразуем полярные координаты в декартовы
+    p.x = distance * cos(angle * PI / 180.);
+    p.y = distance * sin(angle * PI / 180.);
+    p.z = height;
 
+    p.x += window.width / 6;
+    p.y += window.height / 6;
     p.z += 1000;
 
 }

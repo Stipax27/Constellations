@@ -157,6 +157,7 @@
     <ClInclude Include="drawer.h" />
     <ClInclude Include="Elements.h" />
     <ClInclude Include="font.h" />
+    <ClInclude Include="Galaxy.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="MainGame.h" />

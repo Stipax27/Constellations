@@ -117,14 +117,21 @@ namespace drawer
 
         srand(10);
 
-        for (int i = 0; i < 1000; i++) 
+        for (int i = 0; i < 1000; i++)
         {
             point3d stars;
-            genRandGalaxy(stars);
-            modelTransform(stars, Aries);
-            stars.rotateZ(stars, starfield_angles.z);
-            modelProject(stars);
+            genRandGalaxy(stars); // Генерация точек в локальном пространстве галактики
 
+            // 1. Локальные вращения галактики (относительно ее центра)
+            stars.rotateX(stars, 45); // Наклон 45 градусов
+
+            // 2. Позиционирование в мировом пространстве
+            modelTransform(stars, Aries);
+
+            // 3. Глобальные вращения (если нужны)
+            stars.rotateZ(stars, starfield_angles.z);
+
+            modelProject(stars);
             stars.draw(stars, 2);
         }
     
@@ -966,7 +973,9 @@ namespace drawer
                 linksDivider = 50;
                 drawStarField();
                 //drawMilkyWay();
-                drawTriangleGalaxy();
+                //drawTriangleGalaxy();
+                galaxy.update();
+                galaxy.draw();
                 drawQuest();
                 modelTransform = &placeConstToWorld;
 
