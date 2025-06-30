@@ -37,11 +37,13 @@ struct VS_OUTPUT
     float4 pos : SV_POSITION;
     float2 uv : TEXCOORD0;
     uint   starID : COLOR0;
+    float4 worldpos : POSITION1;
 };
 
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
+    return input.worldpos.x/2000+.5;
 
     float2 uv = input.uv;
 float brightness = exp(-dot(uv, uv) * 20);

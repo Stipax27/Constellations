@@ -33,9 +33,9 @@ float hash11(uint n) {
 }
 
 float3 randomPosition(uint index) {
-    float x = hash11(index * 3u) * 2000.0f - 1000.0f;
-    float y = hash11(index * 3u + 1u) * 2000.0f - 1000.0f;
-    float z = hash11(index * 3u + 2u) * 2000.0f - 1000.0f;
+    float x = hash11(index * 3u);
+    float y = hash11(index * 3u + 1u);
+    float z = hash11(index * 3u + 2u);
     return float3(x, y, z);
 }
 
@@ -46,6 +46,7 @@ struct VS_OUTPUT
     float4 pos : SV_POSITION;
     float2 uv : TEXCOORD0;
     uint   starID : COLOR0;
+    float4 worldpos : POSITION1;
 };
 
 
@@ -61,24 +62,24 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
         float2(1, -1), float2(1, 1), float2(-1, 1)
     };
 
-    float3 starPos = randomPosition(starID);
-    starPos = lerp(normalize(starPos)* 1400.0f, starPos,.1);
+    //calc star position
 
-    float3 right = normalize(view[0]._m00_m10_m20); // X column
-    float3 up = normalize(view[0]._m01_m11_m21); // Y column
+    float size = 7;
+    float range = 1000.;
+    float3 starPos = frac(randomPosition(starID)+float3(time.x*.01,0,0))*range*2-range;
 
-    float size = 3.95;
+    //starPos = lerp(normalize(starPos)* 1400.0f, starPos,.5);
 
-    float2 vertexOffset = quadPos[vertexInQuad];
-    float3 offset3D = right * vertexOffset.x * size + up * vertexOffset.y * size;
 
-    float3 worldPos = starPos + offset3D;
 
-    float4 viewPos = mul(float4(worldPos, 1.0f), view[0]);
+
+    //-----
+    float4 viewPos = mul(float4(starPos, 1.0f), view[0]);
     float4 projPos = mul(viewPos, proj[0]);
-
+    projPos.xy += quadPos[vertexInQuad] * float2(aspect.x, 1) * size;
     output.uv = quadPos[vertexInQuad];
     output.pos = projPos;
     output.starID = starID;
+    output.worldpos = float4(starPos, 1);
     return output;
 }
