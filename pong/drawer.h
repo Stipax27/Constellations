@@ -1000,8 +1000,7 @@ namespace drawer
 
                 drawСonstellation(entities[player_sign], true);//Игрок
 
-                SelectObject(window.context, mainBrush);
-                SelectObject(window.context, mainPen);
+                
 
                 std::string curentSignstring = zodiacSignToString(player_sign);
                 //TextOutA(window.context, window.width * 5 / 6, window.height-window.height/20., curentSignstring.c_str(), curentSignstring.size());
