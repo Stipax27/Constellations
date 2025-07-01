@@ -481,12 +481,12 @@ namespace Shaders {
 
 	void Init()
 	{
-		CreateVS(0, nameToPatchLPCWSTR("VS.h"));
-		CreatePS(0, nameToPatchLPCWSTR("PS.h"));
-		CreateVS(1, nameToPatchLPCWSTR("VSS.h"));
-		CreatePS(1, nameToPatchLPCWSTR("PSS.h"));
-		CreateVS(2, nameToPatchLPCWSTR("VSFS.h"));
-		CreatePS(2, nameToPatchLPCWSTR("PSFS.h"));
+		CreateVS(0, nameToPatchLPCWSTR("VS.shader"));
+		CreatePS(0, nameToPatchLPCWSTR("PS.shader"));
+		CreateVS(1, nameToPatchLPCWSTR("VSS.shader"));
+		CreatePS(1, nameToPatchLPCWSTR("PSS.shader"));
+		CreateVS(2, nameToPatchLPCWSTR("VSFS.shader"));
+		CreatePS(2, nameToPatchLPCWSTR("PSFS.shader"));
 	}
 
 	void vShader(unsigned int n)

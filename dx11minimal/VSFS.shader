@@ -66,7 +66,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     float size = 7;
     float range = 1000.;
-    float3 starPos = frac(randomPosition(starID)+float3(time.x*.01,0,0))*range*2-range;
+    float3 starPos = randomPosition(starID)*range*2-range;
 
     //starPos = lerp(normalize(starPos)* 1400.0f, starPos,.5);
 
