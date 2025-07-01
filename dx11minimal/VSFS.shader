@@ -29,13 +29,18 @@ cbuffer objParams : register(b0)
 
 float hash11(uint n) {
     n = (n << 13u) ^ n;
+    return frac((n * (n * n * 15731u + 789221u) + 1376312589u) * 0.000000000931322574615478515625f)*2147483647;
+}
+
+float hash2(uint n) {
+    n = (n << 13u) ^ n;
     return frac((n * (n * n * 15731u + 789221u) + 1376312589u) * 0.000000000931322574615478515625f);
 }
 
 float3 randomPosition(uint index) {
-    float x = hash11(index * 3u);
-    float y = hash11(index * 3u + 1u);
-    float z = hash11(index * 3u + 2u);
+    float x = hash2(index * 3u);
+    float y = hash2(index * 3u + 1u);
+    float z = hash2(index * 3u + 2u);
     return float3(x, y, z);
 }
 
@@ -49,6 +54,41 @@ struct VS_OUTPUT
     float4 worldpos : POSITION1;
 };
 
+float3 rotX(float3 pos,float a)
+{
+    float3x3 m =
+    {
+        1, 0,       0,
+        0, cos(a), -sin(a),
+        0, sin(a), cos(a)
+    };
+    pos = mul(pos, m);
+    return pos;
+}
+
+float3 rotY(float3 pos, float a)
+{
+    float3x3 m =
+    {
+        cos(a), 0, sin(a),
+        0, 1, 0,
+        -sin(a), 0, cos(a)
+    };
+    pos = mul(pos, m);
+    return pos;
+}
+
+float3 rotZ(float3 pos, float a)
+{
+    float3x3 m =
+    {
+        cos(a), -sin(a),0,
+        sin(a), cos(a), 0,
+        0, 0, 1
+    };
+    pos = mul(pos, m);
+    return pos;
+}
 
 VS_OUTPUT VS(uint vID : SV_VertexID)
 {
@@ -65,12 +105,61 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     //calc star position
 
     float size = 7;
-    float range = 1000.;
+    float range = 2000.;
     float3 starPos = randomPosition(starID)*range*2-range;
+    
+    float diskRadius = 1000.f;
+    float coreRadius = 80.f;
+    float thickness = 140.f;
+    float armsCount = 2.f;
+    float armWidth = 0.5f;
+    float rotationSpeed = 0.5f;
+    float rotationAngle = time.x * rotationSpeed * 0.01;
+    float armRadius = 90.;
+
+    float dh = hash2(starID*12);
+    float distance = coreRadius*0 + dh *(diskRadius - coreRadius);
+    float height = hash2(starID*22) *thickness - thickness / 2;
+
+    float armAngle = (starID) % armsCount * armRadius*2;
+        
+    float spiralFactor = 3.5f * log(distance / coreRadius + 1);
+    float angle = armAngle + spiralFactor * (distance / diskRadius) * 360;
+    
+    float randomOffset = hash2(starID)* armWidth * distance;
+    angle += randomOffset;
+    
+
+    starPos.x = distance * cos(angle * PI / 180.);
+    starPos.y = distance * sin(angle * PI / 180.);
+    starPos.z = height*(1-dh);
+    
+    float3 corePos;
+   //if (hash2(starID) <.5) {
+
+    
+     
+     float coreDistance = hash2(starID*32) * coreRadius; 
+     float coreAngle = hash2(starID*30) * 360.;
+     corePos.x = coreDistance * cos(coreAngle * PI / 180.);
+     corePos.y = coreDistance * sin(coreAngle * PI / 180.);
+     corePos.z=starPos.z;
+     corePos.z = sign(corePos.z)*pow(cos(length(corePos.xyz)/coreRadius*PI/2),.5)*coreRadius*hash2(starID*130);
+     //starPos=normalize(starPos)* coreRadius;
+   //}
+
+   //float ds = length(starPos.xy)/coreRadius;
+   //starPos.z = sign(starPos.z)*pow(sin(ds)/ds,4)*coreRadius*hash2(starID*130);
+
+   starPos = lerp(starPos,corePos,pow(saturate(dh),8));
+    
+   
+   starPos = rotZ(starPos,rotationAngle);
+
 
     //starPos = lerp(normalize(starPos)* 1400.0f, starPos,.5);
 
-
+   // starPos = randomPosition(starID)*range*2-range;
 
 
     //-----

@@ -462,6 +462,10 @@ namespace Shaders {
 		{
 			hr = device->CreateVertexShader(VS[i].pBlob->GetBufferPointer(), VS[i].pBlob->GetBufferSize(), NULL, &VS[i].pShader);
 		}
+		else 
+		{
+			ExitProcess(0);
+		}
 
 	}
 
@@ -475,6 +479,10 @@ namespace Shaders {
 		if (hr == S_OK)
 		{
 			hr = device->CreatePixelShader(PS[i].pBlob->GetBufferPointer(), PS[i].pBlob->GetBufferSize(), NULL, &PS[i].pShader);
+		}
+		else 
+		{
+			ExitProcess(0);
 		}
 
 	}
