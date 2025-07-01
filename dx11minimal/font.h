@@ -282,9 +282,9 @@ void letterProject(point3d& p)
 }
 point3d drawString(const char* str, float x, float y, float scale, bool centered, bool getSize = false, int count = -1)
 {
-    preprocessFont();
     Shaders::vShader(0);
     Shaders::pShader(0);
+    preprocessFont();
     scale = scale * window.width / 2560.;
 
     float tracking = 10;

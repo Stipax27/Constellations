@@ -56,7 +56,7 @@ void navigationByMouse()
         XMVECTOR rotatedUp = XMVector3Rotate(XMVectorSet(0, 1, 0, 0), Camera::state.currentRotation);
         XMVECTOR eye = XMVectorScale(rotatedForward, -Camera::state.camDist);
 
-        ConstBuf::camera.view[0] = XMMatrixTranspose(XMMatrixLookAtLH(eye, XMVectorZero(), rotatedUp));
+        ConstBuf::camera.view[0] = XMMatrixTranspose(XMMatrixLookAtLH(eye, Camera::state.at, rotatedUp));
 
         ConstBuf::UpdateCamera();
         mouse.Angle.x = mouse.oldAngle.x + dx;

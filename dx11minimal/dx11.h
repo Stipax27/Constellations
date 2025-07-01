@@ -982,12 +982,16 @@ namespace Camera
 	struct State
 	{
 		float camDist = 500.0f;      
-		float minDist = 1000.0f;      
+		float minDist = 10.0f;      
 		float maxDist = 30000.0f;     
 		float fovAngle = 60.0f;      
+		XMVECTOR relativeMovement = XMVectorSet(1, 0, 0, 0);
 		XMVECTOR currentRotation = XMQuaternionIdentity();
 		XMVECTOR defaultForward = XMVectorSet(0, 0, 1, 0); 
-		XMVECTOR defaultUp = XMVectorSet(0, 1, 0, 0);     
+		XMVECTOR defaultUp = XMVectorSet(0, 1, 0, 0);   
+		XMVECTOR at = XMVectorZero();
+		XMVECTOR Forvard;
+		XMVECTOR Up;
 	} static state;
 
 	void Camera()
@@ -996,9 +1000,8 @@ namespace Camera
 		XMVECTOR rotatedUp = XMVector3Rotate(state.defaultUp, state.currentRotation);
 
 		XMVECTOR eye = XMVectorScale(rotatedForward, -state.camDist);
-		XMVECTOR at = XMVectorZero();  
 
-		ConstBuf::camera.view[0] = XMMatrixTranspose(XMMatrixLookAtLH(eye, at, rotatedUp));
+		ConstBuf::camera.view[0] = XMMatrixTranspose(XMMatrixLookAtLH(eye, state.at, rotatedUp));
 
 		ConstBuf::camera.proj[0] = XMMatrixTranspose(XMMatrixPerspectiveFovLH(DegreesToRadians(state.fovAngle), iaspect,0.01f,10000.0f));
 
@@ -1017,5 +1020,7 @@ namespace Camera
 		
 		Camera();
 	}
+
+
 }
 

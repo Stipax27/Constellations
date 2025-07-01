@@ -285,7 +285,7 @@ void HeroUITransform(point3d& p, Constellation& Constellation)
 {
     p.move(0, 0, 0.);
 
-    fightMove(p);
+    //fightMove();
 
     p *= .13;
 
@@ -308,7 +308,7 @@ void placeHeroToWorld(point3d& p, Constellation& Constellation)
     ShakingHero(p);
     p.move(0, 0, 0. / Constellation.scale);
 
-    fightMove(p);
+   // fightMove();
 
     p *= .13;
 

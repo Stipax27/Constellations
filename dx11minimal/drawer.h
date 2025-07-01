@@ -50,7 +50,7 @@ namespace drawer
                 float dy = point2.y - point1.y;
                 float dz = point2.z - point1.z;
                 float length = sqrt(dx * dx + dy * dy + dz * dz);
-                int x = length / linksDivider;
+                int x = static_cast<int>(length) / linksDivider;
                 drawLine(point1, point2, x);// Ðèñîâàíèå çâ¸çäíûõ ëèíèé ñîçâåçäèÿ.
             }
         }
@@ -705,6 +705,8 @@ namespace drawer
             break;
 
         case gameState_::confirmSign:
+            Depth::Depth(Depth::depthmode::off);
+            Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
             drawPlayerÑonstellationToMenu();
             menuMonthprocessing();
             menuDayprocessing();
@@ -756,11 +758,12 @@ namespace drawer
 
         case gameState_::Fight:
         {
+            Depth::Depth(Depth::depthmode::off);
             SelectWeapon();
             SelectElement();
 
 
-            DrawCombatStats();
+           // DrawCombatStats();
 
             if (attackCooldown == true) {
 
@@ -772,15 +775,15 @@ namespace drawer
                 }
             }
 
-            StartBattle();
-            enemyFight();
+           // StartBattle();
+            //enemyFight();
 
             modelTransform = &placeToWorld;
             modelProject = &fightProject;
             uiFunc = &starIntersectUI;
             linksDivider = 50;
 
-            drawStarField();
+           // drawStarField();
 
 
             modelTransform = &placeConstToWorld;
@@ -788,7 +791,7 @@ namespace drawer
 
             srand(currentTime);
 
-            DrawHpEnemyBar();
+          //  DrawHpEnemyBar();
             modelTransform = &placeConstToWorld;//Âðàã
 
             nearPlaneClip = 0;
@@ -802,15 +805,15 @@ namespace drawer
                     auto p1 = starSet[currentEnemyID]->starsCords[i];
                     point3d p2 = starSet[player_sign]->starsCords[i % starSet[player_sign]->starsCords.size()];
 
-                    placeConstToWorld(p1, *starSet[currentEnemyID]);
-                    placeHeroToWorld(p2, *starSet[currentEnemyID]);
+                  //  placeConstToWorld(p1, *starSet[currentEnemyID]);
+                   // placeHeroToWorld(p2, *starSet[currentEnemyID]);
 
                     p2.x = lerp(p1.x, p2.x, beamTime);
                     p2.y = lerp(p1.y, p2.y, beamTime);
                     p2.z = lerp(p1.z, p2.z, beamTime);
 
 
-                    drawLine(p1, p2, 50);
+                   // drawLine(p1, p2, 50);
                 }
             }
 
@@ -844,18 +847,24 @@ namespace drawer
                     attackCooldown = false;
                     check_attack = false;
                     attackStartTime = currentTime;
-                    InitConstellationAttack();
+                    //InitConstellationAttack();
                 }
-
+                Shaders::vShader(1);
+                Shaders::pShader(1);
+                Constellation& h = *starSet[currentEnemyID];
+                h.Transform = CreateEnemyToWorldMatrix(h);
+                Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
                 drawÑonstellation(*starSet[currentEnemyID]);
 
                 linksDivider = 15;
                 modelTransform = &placeHeroToWorld;
                 uiFunc = &heroUI;
                 nearPlaneClip = -2000;
+                Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
                 SelectObject(window.context, heroBrush);
                 SelectObject(window.context, heroPen);
-
+                Constellation& c = *starSet[player_sign];
+                c.Transform = CreateHeroToWorldMatrix(c);
                 drawÑonstellation(*starSet[player_sign], true);//Èãðîê
 
                 SelectObject(window.context, mainBrush);
@@ -870,6 +879,13 @@ namespace drawer
             }
             else
             {
+                uiFunc = NULL;
+                Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+                Constellation& c = *starSet[currentEnemyID];
+
+                c.Transform = CreateEnemyToWorldMatrix(c);
+                Shaders::vShader(1);
+                Shaders::pShader(1);
                 drawÑonstellation(*starSet[currentEnemyID]);
             }
 
@@ -883,11 +899,15 @@ namespace drawer
             SelectObject(window.context, mainPen);
 
             modelTransform = &placeConstToWorld;
-            DrawStarsHP(window.context);
+           // DrawStarsHP(window.context);
 
             linksDivider = 5;
             modelTransform = &placeHeroToWorld;
             uiFunc = &heroUI;
+
+            modelTransform = NULL;
+            uiFunc = NULL;
+
             nearPlaneClip = -2000;
 
             if (isDamageHero)
@@ -901,38 +921,39 @@ namespace drawer
             {
                 isShakingHero = false;
             }
-
+            Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
             SelectObject(window.context, heroBrush);
             SelectObject(window.context, heroPen);
-
-            drawÑonstellation(*starSet[player_sign], true);
+            Constellation& c = *starSet[player_sign];
+            c.Transform = CreateHeroToWorldMatrix(c);
+            //drawÑonstellation(*starSet[player_sign], true);
 
             SelectObject(window.context, mainBrush);
             SelectObject(window.context, mainPen);
 
 
             std::string curentSignstring = zodiacSignToString(currentEnemyID);
-            drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);
+      //      drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);
 
             curentSignstring = zodiacSignToString(player_sign);
-            drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 7., 1, true);
+       //     drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 7., 1, true);
 
             curentSignstring = "current weapon: " + weapon[(int)current_weapon].name;
-            drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 10., 1, true);
+     //       drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 10., 1, true);
 
-            drawCurrentElement();
+       //     drawCurrentElement();
 
-            drawString("Weapon selection:\nButton 1 - Sword \nButton 2 - Shield \nButton 3 - Bow ", (1700. / 2560) * window.width, (1100. / 1440) * window.height, .7f, false);
-            drawString("Rewind time:\nbutton - E", (500. / 2560) * window.width, (1200. / 1440) * window.height, .7f, false);
-            drawString("TUTORIAL:\nTo hit an enemy with a sword,\npress LMB and draw a line along the enemy star\nTo hit with a shield,\npress LMB and draw a line that will draw a circle that attacks stars\nTo hit with a bow,\npress LMB on the star and draw a vector in any direction from the star.", (60. / 2560) * window.width, (60. / 1440) * window.height, .7f, false);
+      //      drawString("Weapon selection:\nButton 1 - Sword \nButton 2 - Shield \nButton 3 - Bow ", (1700. / 2560) * window.width, (1100. / 1440) * window.height, .7f, false);
+       //     drawString("Rewind time:\nbutton - E", (500. / 2560) * window.width, (1200. / 1440) * window.height, .7f, false);
+       //     drawString("TUTORIAL:\nTo hit an enemy with a sword,\npress LMB and draw a line along the enemy star\nTo hit with a shield,\npress LMB and draw a line that will draw a circle that attacks stars\nTo hit with a bow,\npress LMB on the star and draw a vector in any direction from the star.", (60. / 2560) * window.width, (60. / 1440) * window.height, .7f, false);
 
             float cdTimeOut = 1. - (currentTime - attack_cooldown) / 5000.;
             cdTimeOut *= 10;
             std::string cdTimeOutText = std::to_string((int)cdTimeOut);
             if (cdTimeOut > 0)
             {
-                drawString("recharge", window.width * .9, window.height * .85, 1., false);
-                drawString(cdTimeOutText.c_str(), window.width * .9, window.height * .9, 3., false);
+           //     drawString("recharge", window.width * .9, window.height * .85, 1., false);
+          //      drawString(cdTimeOutText.c_str(), window.width * .9, window.height * .9, 3., false);
             }
 
             UpdateGame();

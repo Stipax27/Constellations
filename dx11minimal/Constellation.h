@@ -38,6 +38,41 @@ public:
         XMMATRIX scale = XMMatrixScaling(c.scale, c.scale, c.scale);
         return translateZ * rotate * scale;
     }
+
+    friend XMMATRIX CreateEnemyToWorldMatrix(const Constellation& c)
+    {
+        float zOffset = 1000.0f / c.scale;
+        XMMATRIX translateZ = XMMatrixTranslation(0, 0, zOffset);
+
+        XMMATRIX rotate = XMMatrixRotationRollPitchYaw(c.angle.x, c.angle.y, c.angle.z);
+        XMMATRIX scale = XMMatrixScaling(c.scale, c.scale, c.scale);
+        return  translateZ*scale;
+    }
+
+    friend XMMATRIX HeroUITransform( const Constellation& c)
+    {
+
+       // fightMove();
+
+
+        XMMATRIX scale = XMMatrixScaling(c.scale * .53, c.scale * .53, c.scale * .53);
+    }
+
+    friend XMMATRIX CreateHeroToWorldMatrix(const Constellation& c)
+    {
+        static float lastTime = currentTime;
+        float deltaTime = currentTime - lastTime;
+        lastTime = currentTime;
+        if (deltaTime > 100.0f) deltaTime = 100.0f;
+        updateFlyDirection();
+        updateFlySpeed(deltaTime);
+        updatePlayerPosition(deltaTime);
+
+        XMMATRIX scale = XMMatrixScaling(c.scale* .53, c.scale* .53, c.scale* .53);
+        
+        return constellationOffset/10* scale;
+    }
+
     friend XMMATRIX CreatefightProjectMatrix(const Constellation& c)
     {
         int fadeInTime = currentTime - startTime;

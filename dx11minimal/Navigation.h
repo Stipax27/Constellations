@@ -1,94 +1,60 @@
-
-int start;
-
-bool isMoveActive = false;
-
-float finalS;
-
-char whatKeyPressed() {
-	if (GetAsyncKeyState('W') & 0x0001)
-		return 'W';
-	if (GetAsyncKeyState('A') & 0x0001)
-		return 'A';
-	if (GetAsyncKeyState('S') & 0x0001)
-		return 'S';
-	if (GetAsyncKeyState('D') & 0x0001)
-		return 'D';
-	return '\0';  // Если ничего не нажато, возвращаем пустой символ
-}
-
 point3d player_dodge_ofs = { 0,0,0 };
 point3d starfield_angles = { 0,0,0 };
+point3d milkyway_angles = { 0,0,100 };
 
-void fightMove(point3d& p) {
+point3d flyDirection = { 0, 0, 0 };
+point3d heroPosition = { 0, 0, 0 };
+XMMATRIX constellationOffset= XMMatrixTranslation(0, 0, 0);
+float currentFlySpeed = 0.0f;
+const float maxFlySpeed = 0.1f;
+const float flyAcceleration = 0.2f;
+const float flyDeceleration = 0.002f;
 
-	float T;
-	float moveTimer = 4;
-	float currentV;
-	float currentS;
-	float currentA;
-	float F = -1.5;
-	bool isMoveStateBack;
+void updateFlyDirection() { // Раскладка управления 
+    flyDirection = { 0, 0, 0 };
 
-	static char SYM[2] = { 0 };
-
-	char key = whatKeyPressed();
-
-	if (!isMoveActive && key != '\0') // Проверка срабатывает если кнопка нажимается хотя бы один раз
-	{
-		if (!isMoveActive)
-		{
-			SYM[0] = key;
-			SYM[1] = '\0';
-
-			start = currentTime;
-			isMoveActive = true;
-		}
-	}
-
-	if (isMoveActive) {
-		T = currentTime - start;
-		currentA = F * (moveTimer / 2 - T / 1000);
-		currentV = currentA * T / 1000;
-
-		currentS = currentV * T / 1000;
-		isMoveStateBack = false;
-		if (T / 1000 < moveTimer) {
-			if (T / 1000 > (moveTimer / 2))
-			{
-				isMoveStateBack = true;
-			}
-			if (!isMoveStateBack) {
-				finalS = currentS;
-
-				switch (SYM[0]) {
-				case 'W':
-					player_dodge_ofs = { 0, currentS, 0 };
-					break;
-				case 'A':
-					player_dodge_ofs = { currentS, 0, 0 };
-					break;
-				case 'S':
-					player_dodge_ofs = { 0, -currentS, 0 };
-					break;
-				case 'D':
-					player_dodge_ofs = { -currentS, 0, 0 };
-					break;
+    if (GetAsyncKeyState('W') & 0x8000) flyDirection.z += .1f;// Вперёд
+    if (GetAsyncKeyState('A') & 0x8000) flyDirection.x -= .1f;// Влево
+    if (GetAsyncKeyState('S') & 0x8000) flyDirection.z -= .1f;// Назад
+    if (GetAsyncKeyState('D') & 0x8000) flyDirection.x += .1f;// Вправо
+    if (GetAsyncKeyState(VK_SPACE) & 0x8000) flyDirection.y -= .1f;// Вверх
+    if (GetAsyncKeyState(VK_CONTROL) & 0x8000) flyDirection.y += .1f;// Вниз
 
 
-				}
-			}
-			else {
-				currentA = F * (T / 1000 - moveTimer / 2);
+    float length = sqrt(flyDirection.x * flyDirection.x + flyDirection.y * flyDirection.y + flyDirection.z * flyDirection.z);
 
-			}
-			char temp[64] = { 0 };
-		}
-		else {
-			isMoveActive = false;
-		}
+    if (length > 0) {
+        flyDirection.x /= length;
+        flyDirection.y /= length;
+        flyDirection.z /= length;
+    }
+}
 
-	}
+void updateFlySpeed(float deltaTime) {// Обновления во время полёта
+    bool isMoving = (flyDirection.x != 0 || flyDirection.y != 0 || flyDirection.z != 0);
 
-	p.move(p, player_dodge_ofs);
+    if (isMoving)
+    {
+
+        currentFlySpeed += flyAcceleration * deltaTime;
+
+        if (currentFlySpeed > maxFlySpeed) {
+            currentFlySpeed = maxFlySpeed;
+        }
+    }
+    else {
+        currentFlySpeed -= flyDeceleration * deltaTime;
+        if (currentFlySpeed < 0) {
+            currentFlySpeed = 0;
+        }
+    }
+}
+
+void updatePlayerPosition(float deltaTime) {// обновление позиции ГГ
+    if (currentFlySpeed > 0) {
+        if (GetAsyncKeyState(VK_SHIFT) & 0x8000) currentFlySpeed *= 5.f;// Ускорение полёта
+
+         constellationOffset = constellationOffset *XMMatrixTranslation(flyDirection.x * currentFlySpeed * deltaTime, flyDirection.y * currentFlySpeed * deltaTime, flyDirection.z * currentFlySpeed * deltaTime);
+    }
+
 }
