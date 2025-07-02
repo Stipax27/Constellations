@@ -24,15 +24,45 @@ struct Mouse
 };
 
 Mouse mouse;
-
+bool keyA = false;
+bool keyD = false;
 bool rmb = false;
 bool lmb = false;
 
+const float turnSpeed = 0.05f;
+
+void rotationMatrix(XMMATRIX& rotationMatrix)
+{
+    if (!rmb)
+    {
+        rmb = true;
+        mouse.oldPos.x = mouse.pos.x;
+        mouse.oldPos.y = mouse.pos.y;
+        mouse.oldAngle = mouse.Angle;
+    }
+
+    // Определяем изменения координат мыши
+    float dx = (mouse.pos.x - mouse.oldPos.x) * 0.01f;
+    float dy = (mouse.pos.y - mouse.oldPos.y) * 0.01f;
+
+    // Кватернион вращения по вертикальной оси (yaw)
+    XMVECTOR qYaw = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), dx);
+
+    // Кватернион вращения по горизонтальной оси (pitch)
+    XMVECTOR qPitch = XMQuaternionRotationAxis(XMVectorSet(1, 0, 0, 0), dy);
+
+    XMVECTOR finalRotationQuat = XMQuaternionMultiply(qYaw, qPitch);
+
+    finalRotationQuat = XMQuaternionNormalize(finalRotationQuat);
+
+    rotationMatrix = XMMatrixRotationQuaternion(finalRotationQuat);
+
+}
 void navigationByMouse()
 {
     static XMVECTOR currentRotation = XMQuaternionIdentity();
 
-    if (GetAsyncKeyState(VK_RBUTTON))
+    //if (GetAsyncKeyState(VK_RBUTTON))
     {
         if (!rmb)
         {
@@ -41,32 +71,43 @@ void navigationByMouse()
             mouse.oldPos.y = mouse.pos.y;
             mouse.oldAngle = mouse.Angle;
         }
+        float x = Camera::state.constellationOffset.r[3].m128_f32[0];
+        float y = Camera::state.constellationOffset.r[3].m128_f32[1];
+        float z = Camera::state.constellationOffset.r[3].m128_f32[2];
+        Camera::state.at = XMVectorSet(x, y, z, 0)*10.5;
+        float dx = (mouse.pos.x - mouse.oldPos.x) * 0.01;
+        float dy = (mouse.pos.y - mouse.oldPos.y) * 0.01;
 
-        float dx = (mouse.pos.x - mouse.oldPos.x)*0.01 ;
-        float dy = (mouse.pos.y - mouse.oldPos.y)*0.01;
+        // Инвертировали dy для инвертированной оси Y
+        XMVECTOR qPitch = XMQuaternionRotationAxis(XMVectorSet(1, 0, 0, 0), -dy); // Изwменили знак dy
+        XMVECTOR qYaw = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), -dx);
 
-        XMVECTOR qPitch = XMQuaternionRotationAxis(XMVectorSet(1, 0, 0, 0), dy);
-        XMVECTOR qYaw = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), dx);
+        float dYawKeyboard = 0.0f;
+        if (GetAsyncKeyState(0x44)){ dYawKeyboard -= turnSpeed ; }
+        if (GetAsyncKeyState(0x41)){dYawKeyboard += turnSpeed ; }
 
-        XMVECTOR qNewRotation = XMQuaternionMultiply(qYaw, qPitch);
+        // Формирование общего кватерниона поворота вокруг оси Y
+        XMVECTOR qYawTotal = XMQuaternionRotationAxis(XMVectorSet(0, 0, 1, 0), dYawKeyboard);
+
+        // Общий кватернион поворота
+        XMVECTOR qNewRotation = XMQuaternionMultiply(qYawTotal, qPitch);
+        qNewRotation = XMQuaternionMultiply(qYaw, qNewRotation);
         Camera::state.currentRotation = XMQuaternionMultiply(qNewRotation, Camera::state.currentRotation);
         Camera::state.currentRotation = XMQuaternionNormalize(Camera::state.currentRotation);
+        Camera::state.Forward = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), Camera::state.currentRotation);
+        Camera::state.Up = XMVector3Rotate(Camera::state.defaultUp, Camera::state.currentRotation);
 
-        XMVECTOR rotatedForward = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), Camera::state.currentRotation);
-        XMVECTOR rotatedUp = XMVector3Rotate(XMVectorSet(0, 1, 0, 0), Camera::state.currentRotation);
-        XMVECTOR eye = XMVectorScale(rotatedForward, -Camera::state.camDist);
+        Camera::state.Eye = Camera::state.at - XMVectorScale(Camera::state.Forward, Camera::state.camDist);
+        Camera::Camera();
 
-        ConstBuf::camera.view[0] = XMMatrixTranspose(XMMatrixLookAtLH(eye, Camera::state.at, rotatedUp));
-
-        ConstBuf::UpdateCamera();
         mouse.Angle.x = mouse.oldAngle.x + dx;
         mouse.Angle.y = mouse.oldAngle.y + dy;
         mouse.oldPos.x = mouse.pos.x;
         mouse.oldPos.y = mouse.pos.y;
     }
-    else
+    //else
     {
-        rmb = false;
+        //rmb = false;
     }
 }
 

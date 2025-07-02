@@ -69,8 +69,9 @@ public:
         updatePlayerPosition(deltaTime);
 
         XMMATRIX scale = XMMatrixScaling(c.scale* .53, c.scale* .53, c.scale* .53);
-        
-        return constellationOffset/10* scale;
+        XMMATRIX rotation= XMMatrixRotationRollPitchYaw(0,0,0);
+        //rotationMatrix(rotation);
+        return Camera::state.constellationOffset / 10 * scale* rotation;
     }
 
     friend XMMATRIX CreatefightProjectMatrix(const Constellation& c)
