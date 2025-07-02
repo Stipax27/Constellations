@@ -1,4 +1,4 @@
-
+bool t = true;
 namespace drawer
 {
     void drawLine(point3d& p1, point3d& p2, int count)
@@ -715,6 +715,7 @@ namespace drawer
 
         case gameState_::selectEnemy:
         {
+            Camera::state.mouse = true;
             Depth::Depth(Depth::depthmode::off);
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
             uiFunc = &constSelectUI;
@@ -758,6 +759,12 @@ namespace drawer
 
         case gameState_::Fight:
         {
+            
+            if (t) {
+                t = false;
+                Camera::state.camDist = 100;
+            }
+            Camera::state.mouse = true;
             Depth::Depth(Depth::depthmode::off);
             SelectWeapon();
             SelectElement();
@@ -775,8 +782,8 @@ namespace drawer
                 }
             }
 
-           StartBattle();
-           enemyFight();
+           //StartBattle();
+           //enemyFight();
 
             modelTransform = &placeToWorld;
             modelProject = &fightProject;
@@ -926,7 +933,7 @@ namespace drawer
             SelectObject(window.context, heroPen);
             Constellation& c = *starSet[player_sign];
             c.Transform = CreateHeroToWorldMatrix(c);
-            draw—onstellation(*starSet[player_sign], true);
+            //draw—onstellation(*starSet[player_sign], true);
 
             SelectObject(window.context, mainBrush);
             SelectObject(window.context, mainPen);

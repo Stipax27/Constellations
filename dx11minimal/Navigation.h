@@ -64,7 +64,7 @@ void updatePlayerPosition(float deltaTime) {// обновление позиции ГГ
          float y = Camera::state.constellationOffset.r[3].m128_f32[1];
          float z = Camera::state.constellationOffset.r[3].m128_f32[2];
 
-         Camera::state.at = XMVectorSet(x, y, z, 0)*10.5;
+         Camera::state.at = XMVectorSet(x, y, z, 0)*20;
          Camera::state.Up = XMVector3Rotate(Camera::state.defaultUp, Camera::state.currentRotation);
          Camera::state.Forward = XMVector3Normalize(Camera::state.at - Camera::state.Eye);
          Camera::state.Eye = Camera::state.at - (Camera::state.Forward * Camera::state.camDist);

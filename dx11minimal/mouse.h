@@ -61,8 +61,19 @@ void rotationMatrix(XMMATRIX& rotationMatrix)
 void navigationByMouse()
 {
     static XMVECTOR currentRotation = XMQuaternionIdentity();
+    float dYawKeyboard = 0.0f;
+    if (GetAsyncKeyState(0x44)) { dYawKeyboard -= turnSpeed; }
+    if (GetAsyncKeyState(0x41)) { dYawKeyboard += turnSpeed; }
+    XMVECTOR qYawTotal = XMQuaternionRotationAxis(XMVectorSet(0, 0, 1, 0), dYawKeyboard);
+    Camera::state.currentRotation = XMQuaternionMultiply(qYawTotal, Camera::state.currentRotation);
+    Camera::state.currentRotation = XMQuaternionNormalize(Camera::state.currentRotation);
+    Camera::state.Forward = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), Camera::state.currentRotation);
+    Camera::state.Up = XMVector3Rotate(Camera::state.defaultUp, Camera::state.currentRotation);
 
-    //if (GetAsyncKeyState(VK_RBUTTON))
+    Camera::state.Eye = Camera::state.at - XMVectorScale(Camera::state.Forward, Camera::state.camDist);
+    Camera::Camera();
+    if (Camera::state.mouse)
+    if (GetAsyncKeyState(VK_RBUTTON))
     {
         if (!rmb)
         {
@@ -74,7 +85,7 @@ void navigationByMouse()
         float x = Camera::state.constellationOffset.r[3].m128_f32[0];
         float y = Camera::state.constellationOffset.r[3].m128_f32[1];
         float z = Camera::state.constellationOffset.r[3].m128_f32[2];
-        Camera::state.at = XMVectorSet(x, y, z, 0)*10.5;
+        Camera::state.at = XMVectorSet(x, y, z, 0)*20;
         float dx = (mouse.pos.x - mouse.oldPos.x) * 0.01;
         float dy = (mouse.pos.y - mouse.oldPos.y) * 0.01;
 
@@ -105,9 +116,9 @@ void navigationByMouse()
         mouse.oldPos.x = mouse.pos.x;
         mouse.oldPos.y = mouse.pos.y;
     }
-    //else
+    else
     {
-        //rmb = false;
+        rmb = false;
     }
 }
 

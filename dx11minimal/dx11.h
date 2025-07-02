@@ -981,6 +981,7 @@ namespace Camera
 {
 	struct State
 	{
+		bool mouse = false;
 		float camDist = 500.0f;
 		float minDist = 100.0f;
 		float maxDist = 30000.0f;
@@ -991,7 +992,7 @@ namespace Camera
 		XMVECTOR defaultUp = XMVectorSet(0, -1, 0, 0);
 		XMVECTOR at = XMVectorSet(0, 0, 0, 0);
 		XMVECTOR Up = XMVector3Rotate(defaultUp, currentRotation);
-		XMVECTOR Eye = XMVectorSet(0, 0, 1, 0);
+		XMVECTOR Eye =at - (Forward * camDist);
 		XMMATRIX constellationOffset = XMMatrixTranslation(0, 0, 0);
 	} static state;
 
