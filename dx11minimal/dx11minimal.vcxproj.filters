@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{b967359e-bb37-436b-b9d4-2e9546a63363}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Starfield">
+      <UniqueIdentifier>{a801d8a1-fb89-4199-a540-4939cf5d239b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -111,22 +117,27 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="PS.shader">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="VS.shader">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="PSFS.shader">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="VSS.shader">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="VSFS.shader">
-      <Filter>Source Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="PSS.shader">
-      <Filter>Source Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
+    <None Include="VS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="VSS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="PSFS.shader">
+      <Filter>Shaders\Starfield</Filter>
+    </None>
+    <None Include="VSFS.shader">
+      <Filter>Shaders\Starfield</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Stars_VS.shader">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

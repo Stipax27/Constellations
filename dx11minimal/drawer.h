@@ -111,6 +111,14 @@ namespace drawer
         Draw::Starfield(1);
     }
 
+    void drawStars()
+    {
+        Shaders::vShader(3);
+        Shaders::pShader(2);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+        Draw::Starfield(1);
+    }
+
     const COLORREF colors[] =
     {
         RGB(255, 0, 0),    // Красный
@@ -704,6 +712,7 @@ namespace drawer
             //linksDivider = 50;
 
             drawStarField();
+            drawStars();
 
 
             modelTransform = &placeConstToWorld;

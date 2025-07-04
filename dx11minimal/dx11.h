@@ -489,6 +489,8 @@ namespace Shaders {
 
 		CreateVS(2, nameToPatchLPCWSTR("VSFS.shader"));
 		CreatePS(2, nameToPatchLPCWSTR("PSFS.shader"));
+
+		CreateVS(3, nameToPatchLPCWSTR("Stars_VS.shader"));
 	}
 
 	void vShader(unsigned int n)

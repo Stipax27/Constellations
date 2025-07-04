@@ -27,6 +27,37 @@ cbuffer objParams : register(b0)
     float drawerV[32];
 };
 
+float noise(float3 pos) {
+    return frac(sin(dot(pos, float3(12.9898, 78.233, 45.5432))) * 43758.5453);
+}
+
+float lerp(float a, float b, float t)
+{
+    return a + t * (b - a);
+}
+
+float perlinNoise(float3 pos)
+{
+    float3 i = floor(pos);
+    float3 j = frac(pos);
+
+    float a = noise(i);
+    float b = noise(i + float3(1, 0, 0));
+    float c = noise(i + float3(0, 1, 0));
+    float d = noise(i + float3(1, 1, 0));
+    float e = noise(i + float3(0, 0, 1));
+    float f = noise(i + float3(1, 0, 1));
+    float g = noise(i + float3(0, 1, 1));
+    float h = noise(i + float3(1, 1, 1));
+
+    float3 u = j * j * (3.0f - 2.0f * j);
+    return lerp(
+        lerp(lerp(a, b, u.x), lerp(c, d, u.x), u.y),
+        lerp(lerp(e, f, u.x), lerp(g, h, u.x), u.y),
+        u.z
+    );
+}
+
 float hash11(uint n) {
     n = (n << 13u) ^ n;
     return frac((n * (n * n * 15731u + 789221u) + 1376312589u) * 0.000000000931322574615478515625f);
@@ -38,8 +69,6 @@ float3 randomPosition(uint index) {
     float z = hash11(index * 3u + 2u);
     return float3(x, y, z);
 }
-
-#define PI 3.1415926535897932384626433832795
 
 struct VS_OUTPUT
 {
@@ -65,16 +94,17 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     //calc star position
 
     float size = 7;
-    float range = 2000.;
-    float3 starPos = normalize(randomPosition(starID) * range * 2 - range) * range;
-
-    float4x4 v = view[0];
-    v._m30_m31_m32_m33 = 0.0f;
-
-    //starPos = lerp(normalize(starPos)* 1400.0f, starPos,.5);
+    float range = 1500.0f;
+    float4 camPos = -view[0]._m30_m31_m32_m33;
+    //float3 starPos = float3(
+    //    perlinNoise(camPos),
+    //    perlinNoise(camPos + float3(0, 100.0f, 0)),
+    //    perlinNoise(camPos + float3(0, 0, 100.0f))
+    //) * range;
+    float3 starPos = randomPosition(starID) * range * 2 - range;
 
     //-----
-    float4 viewPos = mul(float4(starPos, 1.0f), v);
+    float4 viewPos = mul(float4(starPos, 1.0f), view[0]);
     float4 projPos = mul(viewPos, proj[0]);
     projPos.xy += quadPos[vertexInQuad] * float2(aspect.x, 1) * size;
 
