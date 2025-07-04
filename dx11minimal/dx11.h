@@ -1,4 +1,4 @@
-#pragma comment(lib, "d3d10.lib")
+п»ї#pragma comment(lib, "d3d10.lib")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "dxguid.lib")
@@ -483,8 +483,10 @@ namespace Shaders {
 	{
 		CreateVS(0, nameToPatchLPCWSTR("VS.shader"));
 		CreatePS(0, nameToPatchLPCWSTR("PS.shader"));
+
 		CreateVS(1, nameToPatchLPCWSTR("VSS.shader"));
 		CreatePS(1, nameToPatchLPCWSTR("PSS.shader"));
+
 		CreateVS(2, nameToPatchLPCWSTR("VSFS.shader"));
 		CreatePS(2, nameToPatchLPCWSTR("PSFS.shader"));
 	}
@@ -795,20 +797,20 @@ ID2D1HwndRenderTarget* d2dRenderTarget = nullptr;
 
 void InitD2D(HWND hwnd)
 {
-	// Шаг 1: Создание фабрики
+	// РЁР°Рі 1: РЎРѕР·РґР°РЅРёРµ С„Р°Р±СЂРёРєРё
 	D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &d2dFactory);
 
-	// Шаг 2: Получаем размеры окна
+	// РЁР°Рі 2: РџРѕР»СѓС‡Р°РµРј СЂР°Р·РјРµСЂС‹ РѕРєРЅР°
 	RECT rc;
 	GetClientRect(hwnd, &rc);
 
-	// Шаг 3: Описание рендер-таргета
+	// РЁР°Рі 3: РћРїРёСЃР°РЅРёРµ СЂРµРЅРґРµСЂ-С‚Р°СЂРіРµС‚Р°
 	D2D1_RENDER_TARGET_PROPERTIES rtProps = D2D1::RenderTargetProperties();
 	D2D1_HWND_RENDER_TARGET_PROPERTIES hwndProps =
 		D2D1::HwndRenderTargetProperties(hwnd,
 			D2D1::SizeU(rc.right - rc.left, rc.bottom - rc.top));
 
-	// Шаг 4: Создаём render target
+	// РЁР°Рі 4: РЎРѕР·РґР°С‘Рј render target
 	d2dFactory->CreateHwndRenderTarget(rtProps, hwndProps, &d2dRenderTarget);
 }
 
@@ -1016,7 +1018,7 @@ namespace Camera
 		state.camDist -= delta ; 
 		state.camDist = clamp(state.camDist, state.minDist, state.maxDist);
 
-		// Пересчитываем позицию камеры
+		// РџРµСЂРµСЃС‡РёС‚С‹РІР°РµРј РїРѕР·РёС†РёСЋ РєР°РјРµСЂС‹
 		state.Eye = state.at - (state.Forward * state.camDist);
 		Camera();
 	}

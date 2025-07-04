@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+п»ї#define _CRT_SECURE_NO_WARNINGS
 
 const float PI = 3.1415926535897;
 #include "framework.h"
@@ -205,7 +205,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     window.context = CreateCompatibleDC(window.device_context);
     SelectObject(window.context, CreateCompatibleBitmap(window.device_context, window.width, window.height));
 
-    hWnd = window.hWnd; // <- чтобы DirectX тоже использовал это окно
+    hWnd = window.hWnd; // <- С‡С‚РѕР±С‹ DirectX С‚РѕР¶Рµ РёСЃРїРѕР»СЊР·РѕРІР°Р» СЌС‚Рѕ РѕРєРЅРѕ
 
     return TRUE;
 }
