@@ -29,9 +29,9 @@ namespace drawer
         }
     }
 
-    float linksDivider = 25;
+    float linksDivider = 5;
 
-    void drawLinks(Constellation& Constellation, bool colorOverride = false)
+    void drawLinks(Constellation& Constellation)
     {
         std::vector <point3d>& starArray = Constellation.starsCords;
         std::vector<std::vector<float>>& starEdges = Constellation.constellationEdges;
@@ -96,8 +96,10 @@ namespace drawer
 
     void drawСonstellation(Constellation& Constellation, bool colorOverride = false)
     {
-       
-        drawLinks(Constellation, colorOverride);
+        Shaders::vShader(1);
+        Shaders::pShader(1);
+
+        drawLinks(Constellation);
         drawStarPulse(Constellation, colorOverride);
     }
 
@@ -176,7 +178,7 @@ namespace drawer
         startTime = currentTime;
         int n = (currentTime / 1000) % starSet.size();
         uiFunc = &menuUI;
-        linksDivider = 15;
+        //linksDivider = 15;
         if (gameState == gameState_::confirmSign) n = player_sign;
         Constellation& c = *starSet[n];
         float t = currentTime * 0.001;
@@ -347,7 +349,7 @@ namespace drawer
         auto progress = getConstellationHP(*starSet[currentEnemyID]) / maxHP;
         auto progressText = "HP: " + std::to_string(progress);
 
-        linksDivider = 15;
+        //linksDivider = 15;
         modelTransform = &placeConstToWorld;
         uiFunc = starIntersectUI;
         modelProject = &fightProject;
@@ -431,7 +433,7 @@ namespace drawer
         auto progress = getConstellationHP(*starSet[player_sign]) / maxHP;
         auto progressText = "HP: " + std::to_string(progress);
 
-        linksDivider = 15;
+        //linksDivider = 15;
         modelTransform = &HeroUITransform;
         uiFunc = NULL;
         nearPlaneClip = -2000;
@@ -630,7 +632,7 @@ namespace drawer
             Depth::Depth(Depth::depthmode::off);
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
             uiFunc = &constSelectUI;
-            linksDivider = 15;
+            //linksDivider = 15;
             
             drawStarField();
             Shaders::vShader(1);
@@ -699,7 +701,7 @@ namespace drawer
             modelTransform = &placeToWorld;
             modelProject = &fightProject;
             uiFunc = &starIntersectUI;
-            linksDivider = 50;
+            //linksDivider = 50;
 
             drawStarField();
 
@@ -767,14 +769,12 @@ namespace drawer
                     attackStartTime = currentTime;
                     //InitConstellationAttack();
                 }
-                Shaders::vShader(1);
-                Shaders::pShader(1);
                 Constellation& h = *starSet[currentEnemyID];
                 h.Transform = CreateEnemyToWorldMatrix(h);
                 Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
                 drawСonstellation(*starSet[currentEnemyID]);
 
-                linksDivider = 15;
+                //linksDivider = 15;
                 modelTransform = &placeHeroToWorld;
                 uiFunc = &heroUI;
                 nearPlaneClip = -2000;
@@ -782,7 +782,7 @@ namespace drawer
 
                 Constellation& c = *starSet[player_sign];
                 c.Transform = CreateHeroToWorldMatrix(c);
-                drawСonstellation(*starSet[player_sign], true);//Игрок
+                drawСonstellation(*starSet[player_sign]);//Игрок
 
                 if (attack_collision == true)
                 {
@@ -798,8 +798,6 @@ namespace drawer
                 Constellation& c = *starSet[currentEnemyID];
 
                 c.Transform = CreateEnemyToWorldMatrix(c);
-                Shaders::vShader(1);
-                Shaders::pShader(1);
                 drawСonstellation(*starSet[currentEnemyID]);
             }
 
@@ -812,7 +810,7 @@ namespace drawer
             modelTransform = &placeConstToWorld;
             DrawStarsHP(window.context);
 
-            linksDivider = 15;
+            //linksDivider = 15;
             modelTransform = &placeHeroToWorld;
             uiFunc = &heroUI;
 
@@ -836,7 +834,7 @@ namespace drawer
 
             Constellation& c = *starSet[player_sign];
             c.Transform = CreateHeroToWorldMatrix(c);
-            //drawСonstellation(*starSet[player_sign], true);
+            drawСonstellation(*starSet[player_sign]);
 
             std::string curentSignstring = zodiacSignToString(currentEnemyID);
             drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);

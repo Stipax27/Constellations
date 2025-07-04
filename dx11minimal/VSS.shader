@@ -27,8 +27,6 @@ cbuffer objParams : register(b0)
     float drawerV[32];
 };
 
-#define PI 3.1415926535897932384626433832795
-
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
