@@ -1,4 +1,4 @@
-bool t = true;
+п»їbool t = true;
 namespace drawer
 {
     void drawLine(point3d& p1, point3d& p2, int count)
@@ -25,7 +25,7 @@ namespace drawer
 
             float sz = 6 + 3 * sinf(i*117 + currentTime * .0031);
             point.draw(point, sz);
-            // Рисование Линий.
+            // Р РёСЃРѕРІР°РЅРёРµ Р›РёРЅРёР№.
         }
     }
 
@@ -44,14 +44,14 @@ namespace drawer
             point3d point1 = TransformPoint(starArray[starEdges[i][0]], Constellation.Transform);
             point3d point2 = TransformPoint(starArray[starEdges[i][1]], Constellation.Transform);
 
-            if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0) // - Стало
+            if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0) // - РЎС‚Р°Р»Рѕ
             {
                 float dx = point2.x - point1.x;
                 float dy = point2.y - point1.y;
                 float dz = point2.z - point1.z;
                 float length = sqrt(dx * dx + dy * dy + dz * dz);
                 int x = static_cast<int>(length) / linksDivider;
-                drawLine(point1, point2, x);// Рисование звёздных линий созвездия.
+                drawLine(point1, point2, x);// Р РёСЃРѕРІР°РЅРёРµ Р·РІС‘Р·РґРЅС‹С… Р»РёРЅРёР№ СЃРѕР·РІРµР·РґРёСЏ.
             }
         }
     }
@@ -62,11 +62,6 @@ namespace drawer
         std::vector <float>& starHealth = Constellation.starsHealth;
 
         int starsCount = starArray.size();
-        if (!colorOverride) {
-            brush = CreateSolidBrush(RGB(0, 191, 255));
-            brush2 = CreateSolidBrush(RGB(255, 0, 0));
-            SelectObject(window.context, brush);
-        }
 
         for (int i = 0; i < starsCount; i++)
         {
@@ -84,7 +79,7 @@ namespace drawer
             screenPoint.x *=window.width;
             screenPoint.y *= window.height;
 
-            // Пульсирование Звёзд при наведение мыши.
+            // РџСѓР»СЊСЃРёСЂРѕРІР°РЅРёРµ Р—РІС‘Р·Рґ РїСЂРё РЅР°РІРµРґРµРЅРёРµ РјС‹С€Рё.
             finalStarRad = 1;
             if (uiFunc)
             {
@@ -97,22 +92,16 @@ namespace drawer
                 point.draw(worldPoint, finalStarRad);
             }
         }
-
-        if (!colorOverride)
-        {
-            DeleteObject(brush);
-            DeleteObject(brush2);
-        }
     }
 
-    void drawСonstellation(Constellation& Constellation, bool colorOverride = false)
+    void drawРЎonstellation(Constellation& Constellation, bool colorOverride = false)
     {
        
         drawLinks(Constellation, colorOverride);
         drawStarPulse(Constellation, colorOverride);
     }
 
-    void(drawStarField())
+    void drawStarField()
     {
         Shaders::vShader(2);
         Shaders::pShader(2);
@@ -122,90 +111,14 @@ namespace drawer
 
     const COLORREF colors[] =
     {
-        RGB(255, 0, 0),    // Красный
-        RGB(255, 165, 0),  // Оранжевый
-        RGB(255, 255, 0),  // Желтый
-        RGB(0, 255, 0),    // Зеленый
-        RGB(0, 255, 255),  // Голубой
-        RGB(0, 0, 255),    // Синий
-        RGB(128, 0, 128)   // Фиолетовый
+        RGB(255, 0, 0),    // РљСЂР°СЃРЅС‹Р№
+        RGB(255, 165, 0),  // РћСЂР°РЅР¶РµРІС‹Р№
+        RGB(255, 255, 0),  // Р–РµР»С‚С‹Р№
+        RGB(0, 255, 0),    // Р—РµР»РµРЅС‹Р№
+        RGB(0, 255, 255),  // Р“РѕР»СѓР±РѕР№
+        RGB(0, 0, 255),    // РЎРёРЅРёР№
+        RGB(128, 0, 128)   // Р¤РёРѕР»РµС‚РѕРІС‹Р№
     };
-
-    HBRUSH colorBrush[numColors];
-
-    void drawColorCircle()
-    {
-        circleRadius = 175;
-        float centerX = window.width / 4;
-        float centerY = window.height / 4;
-
-        int numColors = sizeof(colors) / sizeof(colors[0]);
-        float angleStep = 2 * PI / (float)numColors;
-
-        for (int i = 0; i < numColors; ++i) {
-
-            float angle1 = -i * angleStep;
-            float angle2 = -(i + 1) * angleStep;
-
-            POINT p1, p2;
-            p1.x = centerX + circleRadius * cos(angle1);
-            p1.y = centerY + circleRadius * sin(angle1);
-
-            p2.x = centerX + circleRadius * cos(angle2);
-            p2.y = centerY + circleRadius * sin(angle2);
-
-            HBRUSH brush = CreateSolidBrush(colors[i]);
-            SelectObject(window.context, brush);
-
-            Pie(window.context,
-                centerX - circleRadius,
-                centerY - circleRadius,
-                centerX + circleRadius,
-                centerY + circleRadius,
-                p1.x, p1.y,
-                p2.x, p2.y);
-
-            DeleteObject(brush);// Данные для рисование цвет. круга.
-        }
-    }
-
-    void drawGameCursor()
-    {
-        HPEN pen = CreatePen(PS_SOLID, 3, RGB(0, 191, 255));
-        HBRUSH brush = CreateSolidBrush(RGB(0, 191, 255));
-        SelectObject(window.context, pen);
-        SelectObject(window.context, brush);
-
-        for (int i = 0; i < numColors;i++)
-        {
-            colorBrush[i] = CreateSolidBrush(colors[i]);
-        }
-
-        if (currentColorIndex == -1)
-        {
-            SelectObject(window.context, brush);
-        }
-        else
-        {
-            SelectObject(window.context, colorBrush[currentColorIndex]);
-        }
-
-        Ellipse(window.context,
-            mouse.pos.x - starSize,
-            mouse.pos.y - starSize,
-            mouse.pos.x + starSize,
-            mouse.pos.y + starSize
-        );
-
-        for (int i = 0; i < numColors;i++)
-        {
-            DeleteObject(colorBrush[i]);
-        }
-
-        DeleteObject(pen);
-        DeleteObject(brush);
-
-    }
 
 
 
@@ -253,10 +166,10 @@ namespace drawer
             Morp_health.push_back(1);
         }
 
-        //drawСonstellation(morphArray, Morp_indices, Morp_health); Отключено
+        //drawРЎonstellation(morphArray, Morp_indices, Morp_health); РћС‚РєР»СЋС‡РµРЅРѕ
     }
 
-    void drawPlayerСonstellationToMenu()
+    void drawPlayerРЎonstellationToMenu()
     {
         Shaders::vShader(1);
         Shaders::pShader(1);
@@ -268,7 +181,7 @@ namespace drawer
         Constellation& c = *starSet[n];
         float t = currentTime * 0.001;
         c.Transform = XMMatrixScaling(120, 120, 120) * XMMatrixRotationY(t) * XMMatrixTranslation(0, 0, 500);
-        drawСonstellation(*starSet[player_sign]);
+        drawРЎonstellation(*starSet[player_sign]);
     }
 
     void drawShieldCircle()
@@ -277,13 +190,13 @@ namespace drawer
         float dy = mouse.pos.y - mouse.oldPos.y;
         float shieldRadius = sqrt(dx * dx + dy * dy);
 
-        // Центр = oldmouse (круг растёт из этой точки)
+        // Р¦РµРЅС‚СЂ = oldmouse (РєСЂСѓРі СЂР°СЃС‚С‘С‚ РёР· СЌС‚РѕР№ С‚РѕС‡РєРё)
         float centerX = mouse.oldPos.x;
         float centerY = mouse.oldPos.y;
         modelProject = &NullProject;
         if (GetAsyncKeyState(VK_LBUTTON)) {
             for (int i = 0; i < 36; i++) {
-                float angle = i * (2 * PI / 36);  // 36 точек для гладкого круга
+                float angle = i * (2 * PI / 36);  // 36 С‚РѕС‡РµРє РґР»СЏ РіР»Р°РґРєРѕРіРѕ РєСЂСѓРіР°
                 float nextAngle = (i + 1) * (2 * PI / 36);
 
                 point3d shield1, shield2;
@@ -330,11 +243,11 @@ namespace drawer
             startPoint = { 0, 0, 0 };
             placeHeroToWorld(startPoint, *starSet[player_sign]);
 
-            int сount = 100;
+            int СЃount = 100;
             placeConstToWorld(enemyPosition, *starSet[currentEnemyID]);
             modelProject = &fightProject;
 
-            drawLine(startPoint, enemyPosition, сount);
+            drawLine(startPoint, enemyPosition, СЃount);
 
         }
     }
@@ -381,16 +294,16 @@ namespace drawer
         float dy = .008 * (constellationFlight.endPos.y - constellationFlight.startPos.y) / steps;
         float dz = .008 * (constellationFlight.endPos.z - constellationFlight.startPos.z) / steps;
 
-        // Параболическая траектория
+        // РџР°СЂР°Р±РѕР»РёС‡РµСЃРєР°СЏ С‚СЂР°РµРєС‚РѕСЂРёСЏ
         /*float t = constellationFlight.progress;
-        float height = 300.0f * sin(t * PI); // Высота дуги
+        float height = 300.0f * sin(t * PI); // Р’С‹СЃРѕС‚Р° РґСѓРіРё
 
         constellationFlight.currentPos.x = lerp(constellationFlight.startPos.x, constellationFlight.endPos.x, t);
         constellationFlight.currentPos.y = lerp(constellationFlight.startPos.y, constellationFlight.endPos.y, t);// +height;
         constellationFlight.currentPos.z = lerp(constellationFlight.startPos.z, constellationFlight.endPos.z, t);
         */
 
-        // Перемещаем всё созвездие героя
+        // РџРµСЂРµРјРµС‰Р°РµРј РІСЃС‘ СЃРѕР·РІРµР·РґРёРµ РіРµСЂРѕСЏ
         for (auto& star : starSet[player_sign]->starsCords) {
             star.x += dx;
             star.y += dy;
@@ -401,7 +314,7 @@ namespace drawer
             constellationFlight.isFlying = false;
             //enemyAttack(*starSet[currentEnemyID]);
 
-            // Возвращаем созвездие на место
+            // Р’РѕР·РІСЂР°С‰Р°РµРј СЃРѕР·РІРµР·РґРёРµ РЅР° РјРµСЃС‚Рѕ
             //ReturnHeroConstellation();
             for (auto& star : starSet[player_sign]->starsCords) {
                 star.x -= dx * steps;
@@ -439,7 +352,7 @@ namespace drawer
         uiFunc = starIntersectUI;
         modelProject = &fightProject;
 
-        // Параметры временного бара
+        // РџР°СЂР°РјРµС‚СЂС‹ РІСЂРµРјРµРЅРЅРѕРіРѕ Р±Р°СЂР°
         const float barWidth = 300;
         const float barHeight = 60;
         const float barX = 0;
@@ -452,20 +365,20 @@ namespace drawer
         modelTransform(Bar, *starSet[currentEnemyID]);
         modelProject(Bar);
 
-        // Создаем точки для рамки
+        // РЎРѕР·РґР°РµРј С‚РѕС‡РєРё РґР»СЏ СЂР°РјРєРё
         point3d topLeft = { Bar.x - barWidth / 2, Bar.y, 0 };
         point3d topRight = { Bar.x + barWidth / 2, Bar.y, 0 };
         point3d bottomLeft = { Bar.x - barWidth / 2, Bar.y + barHeight, 0 };
         point3d bottomRight = { Bar.x + barWidth / 2, Bar.y + barHeight, 0 };
 
         modelProject = NULL;
-        // Рисуем рамку
-        drawLine(topLeft, topRight, 50);    // Верх
-        drawLine(bottomLeft, bottomRight, 50); // Низ
-        drawLine(topLeft, bottomLeft, 5);  // Лево
-        drawLine(bottomRight, topRight, 5); // Право
+        // Р РёСЃСѓРµРј СЂР°РјРєСѓ
+        drawLine(topLeft, topRight, 50);    // Р’РµСЂС…
+        drawLine(bottomLeft, bottomRight, 50); // РќРёР·
+        drawLine(topLeft, bottomLeft, 5);  // Р›РµРІРѕ
+        drawLine(bottomRight, topRight, 5); // РџСЂР°РІРѕ
 
-        // Рисуем заполнение из звёзд
+        // Р РёСЃСѓРµРј Р·Р°РїРѕР»РЅРµРЅРёРµ РёР· Р·РІС‘Р·Рґ
         int activeStars = (int)(starCount * progress);
         float starSpacing = barWidth / (float)(starCount + 1);
 
@@ -486,7 +399,7 @@ namespace drawer
             star.draw(star, currentSize);
         }
 
-        // Соединяем звёзды
+        // РЎРѕРµРґРёРЅСЏРµРј Р·РІС‘Р·РґС‹
         for (int i = 0; i < starCount - 1; i++) {
             point3d star1 = {
                 Bar.x + (i + 1) * starSpacing - barWidth / 2,
@@ -524,7 +437,7 @@ namespace drawer
         nearPlaneClip = -2000;
         modelProject = &fightProject;
 
-        // Параметры временного бара
+        // РџР°СЂР°РјРµС‚СЂС‹ РІСЂРµРјРµРЅРЅРѕРіРѕ Р±Р°СЂР°
         const float barWidth = 4;
         const float barHeight = .25;
         const float barX = -barWidth / 2;
@@ -532,7 +445,7 @@ namespace drawer
         const float starCount = 20;
         const float starSize = 5.0f;
 
-        // Создаем точки для рамки
+        // РЎРѕР·РґР°РµРј С‚РѕС‡РєРё РґР»СЏ СЂР°РјРєРё
         point3d topLeft = { barX, barY, 0 };
         point3d topRight = { barX + barWidth, barY, 0 };
         point3d bottomLeft = { barX, barY + barHeight, 0 };
@@ -543,13 +456,13 @@ namespace drawer
         modelTransform(bottomLeft, player_const);
         modelTransform(bottomRight, player_const);
 
-        // Рисуем рамку
-        drawer::drawLine(topLeft, topRight, 50);    // Верх
-        drawer::drawLine(bottomLeft, bottomRight, 50); // Низ
-        drawer::drawLine(topLeft, bottomLeft, 5);  // Лево
-        drawer::drawLine(bottomRight, topRight, 5); // Право
+        // Р РёСЃСѓРµРј СЂР°РјРєСѓ
+        drawer::drawLine(topLeft, topRight, 50);    // Р’РµСЂС…
+        drawer::drawLine(bottomLeft, bottomRight, 50); // РќРёР·
+        drawer::drawLine(topLeft, bottomLeft, 5);  // Р›РµРІРѕ
+        drawer::drawLine(bottomRight, topRight, 5); // РџСЂР°РІРѕ
 
-        // Рисуем заполнение из звёзд
+        // Р РёСЃСѓРµРј Р·Р°РїРѕР»РЅРµРЅРёРµ РёР· Р·РІС‘Р·Рґ
         int activeStars = (int)(starCount * progress);
         float starSpacing = barWidth / (float)(starCount + 1);
 
@@ -573,7 +486,7 @@ namespace drawer
             star.draw(star, currentSize);
         }
 
-        // Соединяем звёзды
+        // РЎРѕРµРґРёРЅСЏРµРј Р·РІС‘Р·РґС‹
         for (int i = 0; i < starCount - 1; i++) {
             point3d star1 = {
                 barX + (i + 1) * starSpacing,
@@ -609,7 +522,7 @@ namespace drawer
             battleStartTime = currentTime;
             attackTime = battleStartTime;
             isBattleActive = true;
-            //TextOutA(window.context, 400, 400, "Бой начался", 10);
+            //TextOutA(window.context, 400, 400, "Р‘РѕР№ РЅР°С‡Р°Р»СЃСЏ", 10);
             drawString("Start Fight", 400, 400, 1, true);
         }
     }
@@ -682,8 +595,6 @@ namespace drawer
     {
         nearPlaneClip = 0;
 
-        SelectObject(window.context, mainBrush);
-        SelectObject(window.context, mainPen);
         textStyle.color = RGB(0, 191, 255);
         Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
         Draw::ClearDepth();
@@ -707,7 +618,7 @@ namespace drawer
         case gameState_::confirmSign:
             Depth::Depth(Depth::depthmode::off);
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-            drawPlayerСonstellationToMenu();
+            drawPlayerРЎonstellationToMenu();
             menuMonthprocessing();
             menuDayprocessing();
             menuConfirmationButton();
@@ -732,7 +643,7 @@ namespace drawer
             {
                Constellation& c = *starSet[i];
                c.Transform = CreateConstToWorldMatrix(c);
-               drawСonstellation(*starSet[i]);
+               drawРЎonstellation(*starSet[i]);
             }
 
             std::string curentSignstring = zodiacSignToString(player_sign);
@@ -799,7 +710,7 @@ namespace drawer
             srand(currentTime);
 
             DrawHpEnemyBar();
-            modelTransform = &placeConstToWorld;//Враг
+            modelTransform = &placeConstToWorld;//Р’СЂР°Рі
 
             nearPlaneClip = 0;
 
@@ -861,21 +772,17 @@ namespace drawer
                 Constellation& h = *starSet[currentEnemyID];
                 h.Transform = CreateEnemyToWorldMatrix(h);
                 Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-                drawСonstellation(*starSet[currentEnemyID]);
+                drawРЎonstellation(*starSet[currentEnemyID]);
 
                 linksDivider = 15;
                 modelTransform = &placeHeroToWorld;
                 uiFunc = &heroUI;
                 nearPlaneClip = -2000;
                 Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-                SelectObject(window.context, heroBrush);
-                SelectObject(window.context, heroPen);
+
                 Constellation& c = *starSet[player_sign];
                 c.Transform = CreateHeroToWorldMatrix(c);
-                drawСonstellation(*starSet[player_sign], true);//Игрок
-
-                SelectObject(window.context, mainBrush);
-                SelectObject(window.context, mainPen);
+                drawРЎonstellation(*starSet[player_sign], true);//РРіСЂРѕРє
 
                 if (attack_collision == true)
                 {
@@ -893,7 +800,7 @@ namespace drawer
                 c.Transform = CreateEnemyToWorldMatrix(c);
                 Shaders::vShader(1);
                 Shaders::pShader(1);
-                drawСonstellation(*starSet[currentEnemyID]);
+                drawРЎonstellation(*starSet[currentEnemyID]);
             }
 
             if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true)
@@ -901,9 +808,6 @@ namespace drawer
                 isDamageTaken = true;
                 attack_start = false;
             }
-
-            SelectObject(window.context, mainBrush);
-            SelectObject(window.context, mainPen);
 
             modelTransform = &placeConstToWorld;
             DrawStarsHP(window.context);
@@ -929,15 +833,10 @@ namespace drawer
                 isShakingHero = false;
             }
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-            SelectObject(window.context, heroBrush);
-            SelectObject(window.context, heroPen);
+
             Constellation& c = *starSet[player_sign];
             c.Transform = CreateHeroToWorldMatrix(c);
-            //drawСonstellation(*starSet[player_sign], true);
-
-            SelectObject(window.context, mainBrush);
-            SelectObject(window.context, mainPen);
-
+            //drawРЎonstellation(*starSet[player_sign], true);
 
             std::string curentSignstring = zodiacSignToString(currentEnemyID);
             drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);
@@ -979,7 +878,6 @@ namespace drawer
             break;
         }
         }
-        drawGameCursor();
 
     }
 }

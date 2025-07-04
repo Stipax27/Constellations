@@ -1,8 +1,8 @@
-
+п»ї
 struct {
-    HWND hWnd;//хэндл окна
-    HDC device_context, context;// два контекста устройства (для буферизации)
-    int width, height;//сюда сохраним размеры окна которое создаст программа
+    HWND hWnd;//С…СЌРЅРґР» РѕРєРЅР°
+    HDC device_context, context;// РґРІР° РєРѕРЅС‚РµРєСЃС‚Р° СѓСЃС‚СЂРѕР№СЃС‚РІР° (РґР»СЏ Р±СѓС„РµСЂРёР·Р°С†РёРё)
+    int width, height;//СЃСЋРґР° СЃРѕС…СЂР°РЅРёРј СЂР°Р·РјРµСЂС‹ РѕРєРЅР° РєРѕС‚РѕСЂРѕРµ СЃРѕР·РґР°СЃС‚ РїСЂРѕРіСЂР°РјРјР°
 } window;
 
 float getX(float x)
@@ -41,7 +41,7 @@ void InitWindow()
     window.width = r.right - r.left;
     window.height = r.bottom - r.top;
 
-    // ? GDI буфер отключён
+    // ? GDI Р±СѓС„РµСЂ РѕС‚РєР»СЋС‡С‘РЅ
     window.context = nullptr;
 }
 

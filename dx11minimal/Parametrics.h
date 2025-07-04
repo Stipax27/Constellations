@@ -1,7 +1,4 @@
-HBRUSH brush;
-HBRUSH brush2;
-
-float finalStarRad = 0;
+п»їfloat finalStarRad = 0;
 float attackStartTime = 0;
 float line_hit;
 float attack_time;
@@ -30,7 +27,7 @@ void genRandSphere(point3d& p)
     p.z = window.width;
 
     p.rotateX(p, angleX);
-    p.rotateY(p, angleY); // Сферообразное пространство.
+    p.rotateY(p, angleY); // РЎС„РµСЂРѕРѕР±СЂР°Р·РЅРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ.
 }
 
 void placeToWorld(point3d& p, Constellation& Constellation)
@@ -57,14 +54,14 @@ void placeConstToWorld(point3d& p, Constellation& Constellation)
 
 XMMATRIX CreateFightProjectionMatrix(float camDist, float width, float height)
 {
-    // Простая перспективная проекция вручную (без FOV)
+    // РџСЂРѕСЃС‚Р°СЏ РїРµСЂСЃРїРµРєС‚РёРІРЅР°СЏ РїСЂРѕРµРєС†РёСЏ РІСЂСѓС‡РЅСѓСЋ (Р±РµР· FOV)
     float nearZ = 0.1f;
     float farZ = 10000.f;
 
-    // 2D-подобная матрица с проекцией "на экран"
+    // 2D-РїРѕРґРѕР±РЅР°СЏ РјР°С‚СЂРёС†Р° СЃ РїСЂРѕРµРєС†РёРµР№ "РЅР° СЌРєСЂР°РЅ"
     float aspect = width / height;
 
-    // Вручную задаём перспективную матрицу (приближённая логика fightProject)
+    // Р’СЂСѓС‡РЅСѓСЋ Р·Р°РґР°С‘Рј РїРµСЂСЃРїРµРєС‚РёРІРЅСѓСЋ РјР°С‚СЂРёС†Сѓ (РїСЂРёР±Р»РёР¶С‘РЅРЅР°СЏ Р»РѕРіРёРєР° fightProject)
     XMMATRIX proj = XMMatrixPerspectiveFovLH(XM_PIDIV4, aspect, nearZ, farZ);
     return proj;
 }
@@ -109,7 +106,7 @@ void constSelectUI(point3d& point, Constellation& Constellation, int i)
     {
         if (lenght < starSize)
         {
-            SelectObject(window.context, brush2);
+            //SelectObject(window.context, brush2);
             gameState = gameState_::Fight;
             currentEnemy = &Constellation;
             currentEnemyID = (ZodiacSign)(currentEnemy->ID);
@@ -117,7 +114,7 @@ void constSelectUI(point3d& point, Constellation& Constellation, int i)
     }
     else
     {
-        SelectObject(window.context, brush);
+        //SelectObject(window.context, brush);
     }
 
     finalStarRad = starSize * starHealth[i] + rad * 15;
@@ -186,7 +183,7 @@ void starIntersectUI(point3d& point, Constellation& Constellation, int i)
             {
                 attack_collision = true;
             }
-            SelectObject(window.context, brush);
+            //SelectObject(window.context, brush);
         }
         else
         {
@@ -209,7 +206,7 @@ void starIntersectUI(point3d& point, Constellation& Constellation, int i)
                 attack_collision = true;
 
             }
-            SelectObject(window.context, brush);
+            //SelectObject(window.context, brush);
         }
         else
         {
@@ -229,7 +226,7 @@ void starIntersectUI(point3d& point, Constellation& Constellation, int i)
             {
                 attack_collision = true;
             }
-            SelectObject(window.context, brush);
+            //SelectObject(window.context, brush);
         }
         else
         {
@@ -257,12 +254,12 @@ void heroUI(point3d& point, Constellation& Constellation, int i)
     {
         if (lenght < starSize)
         {
-            SelectObject(window.context, brush2);
+            //SelectObject(window.context, brush2);
         }
     }
     else
     {
-        SelectObject(window.context, brush);
+        //SelectObject(window.context, brush);
     }
     finalStarRad = 3 * starHealth[i] + rad * 15;
 }

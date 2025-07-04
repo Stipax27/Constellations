@@ -1,4 +1,4 @@
-using namespace std;
+п»їusing namespace std;
 
 struct Element_ {
 public:
@@ -28,26 +28,26 @@ void initElements() {
     elements[(int)element_name::Fire].defenseMod = 0.8f;
     elements[(int)element_name::Fire].name = "Fire";
     elements[(int)element_name::Fire].color = RGB(255, 100, 0);
-    elements[(int)element_name::Fire].swordMod = 1.5f;  // Меч + Огонь = +50% урона
-    elements[(int)element_name::Fire].bowMod = 1.3f;    // Лук + Огонь = +30% урона
+    elements[(int)element_name::Fire].swordMod = 1.5f;  // РњРµС‡ + РћРіРѕРЅСЊ = +50% СѓСЂРѕРЅР°
+    elements[(int)element_name::Fire].bowMod = 1.3f;    // Р›СѓРє + РћРіРѕРЅСЊ = +30% СѓСЂРѕРЅР°
 
     elements[(int)element_name::Earth].damageMod = 0.9f;
     elements[(int)element_name::Earth].defenseMod = 1.4f;
     elements[(int)element_name::Earth].name = "Earth";
     elements[(int)element_name::Earth].color = RGB(139, 69, 19);
-    elements[(int)element_name::Earth].shieldMod = 1.6f; // Щит + Земля = +60% защиты
+    elements[(int)element_name::Earth].shieldMod = 1.6f; // Р©РёС‚ + Р—РµРјР»СЏ = +60% Р·Р°С‰РёС‚С‹
 
     elements[(int)element_name::Air].damageMod = 1.1f;
     elements[(int)element_name::Air].defenseMod = 0.9f;
     elements[(int)element_name::Air].name = "Air";
     elements[(int)element_name::Air].color = RGB(173, 216, 230);
-    elements[(int)element_name::Air].bowMod = 1.4f;     // Лук + Воздух = +40% урона
+    elements[(int)element_name::Air].bowMod = 1.4f;     // Р›СѓРє + Р’РѕР·РґСѓС… = +40% СѓСЂРѕРЅР°
 
     elements[(int)element_name::Water].damageMod = 1.0f;
     elements[(int)element_name::Water].defenseMod = 1.2f;
     elements[(int)element_name::Water].name = "Water";
     elements[(int)element_name::Water].color = RGB(0, 105, 148);
-    elements[(int)element_name::Water].staffMod = 1.3f;  // Посох + Вода = +30% урона
+    elements[(int)element_name::Water].staffMod = 1.3f;  // РџРѕСЃРѕС… + Р’РѕРґР° = +30% СѓСЂРѕРЅР°
 }
 
 float CalculateCombinedDamage() {
@@ -232,8 +232,6 @@ void AttackVector()
 
         }
 
-        HPEN pen = CreatePen(PS_SOLID, 3, RGB(0, 191, 255));
-        SelectObject(window.context, pen);
         MoveToEx(window.context, mouse.oldPos.x, mouse.oldPos.y, NULL);
         LineTo(window.context, mouse.pos.x, mouse.pos.y);
 

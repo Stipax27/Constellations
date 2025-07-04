@@ -30,11 +30,6 @@ const int numColors = 7;
 float camDist = 100;
 DWORD currentTime;
 ID2D1SolidColorBrush* d2dBrush = nullptr;
-HBRUSH mainBrush;
-HPEN mainPen;
-
-HBRUSH heroBrush;
-HPEN heroPen;
 
 HWND hWnd;
 #include "utils.h"
@@ -98,11 +93,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     {
         return FALSE;
     }
-    //InitWindow();  
-    mainBrush = CreateSolidBrush(RGB(0, 191, 255));
-    mainPen = CreatePen(PS_SOLID, 2, RGB(255, 255, 255));
-    heroBrush = CreateSolidBrush(RGB(225, 225, 255));
-    heroPen = CreatePen(PS_SOLID, 2, RGB(225, 225, 255));
+    //InitWindow();
     Dx11Init();
     InitGame();
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_DX11MINIMAL));
@@ -202,8 +193,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     window.device_context = GetDC(window.hWnd);
     window.width = r.right - r.left;
     window.height = r.bottom - r.top;
-    window.context = CreateCompatibleDC(window.device_context);
-    SelectObject(window.context, CreateCompatibleBitmap(window.device_context, window.width, window.height));
 
     hWnd = window.hWnd; // <- чтобы DirectX тоже использовал это окно
 
