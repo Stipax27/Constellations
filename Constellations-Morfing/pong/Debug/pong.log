@@ -1,0 +1,1672 @@
+﻿  main.cpp
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\main.cpp(3,18): warning C4305: инициализация: усечение из "double" в "float"
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\utils.h(3,12): warning C4244: return: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\utils.h(31,54): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\utils.h(31,65): warning C4244: return: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Point3d.h(87,17): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Point3d.h(86,17): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Point3d.h(85,17): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Point3d.h(84,17): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Point3d.h(114,17): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Point3d.h(127,17): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Point3d.h(140,17): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\mouse.h(60,18): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\mouse.h(61,18): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\mouse.h(65,33): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Constellation.h(18,40): warning C4244: инициализация: преобразование "_Ty" в "float", возможна потеря данных
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Constellation.h(18,40): warning C4244:         with
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Constellation.h(18,40): warning C4244:         [
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Constellation.h(18,40): warning C4244:             _Ty=int
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Constellation.h(18,40): warning C4244:         ]
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Constellation.h(19,23): warning C4244: +=: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Constellation.h(24,41): warning C4018: <: несоответствие типов со знаком и без знака
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Constellation.h(93,28): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Constellation.h(103,26): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Constellation.h(106,27): warning C4018: <: несоответствие типов со знаком и без знака
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Constellation.h(213,45): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Line.h(22,36): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Line.h(22,18): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(5,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(5,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(6,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(6,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(7,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(7,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(20,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(21,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(21,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(22,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(22,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(24,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(24,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(25,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(25,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(26,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(26,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(28,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(28,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(29,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(29,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(30,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(31,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(31,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(32,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(32,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(33,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(34,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(53,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(53,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(54,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(54,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(55,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(55,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(56,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(56,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(57,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(57,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(58,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(59,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(60,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(61,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(62,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(64,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(64,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(65,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(65,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(66,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(66,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(67,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(67,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(68,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(68,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(69,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(69,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(70,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(70,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(71,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(71,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(73,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(73,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(96,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(96,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(97,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(97,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(99,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(101,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(101,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(116,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(116,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(117,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(118,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(118,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(119,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(119,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(121,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(121,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(122,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(123,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(123,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(124,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(125,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(126,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(126,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(144,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(144,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(145,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(145,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(146,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(147,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(148,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(148,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(149,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(150,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(151,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(152,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(154,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(154,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(155,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(156,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(156,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(157,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(157,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(158,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(158,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(159,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(182,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(182,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(183,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(183,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(184,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(184,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(185,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(185,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(187,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(187,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(188,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(188,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(204,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(204,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(205,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(206,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(206,13): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(207,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(207,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(208,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(209,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(210,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(210,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(211,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(211,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(212,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(212,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(214,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(214,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(215,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(215,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(216,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(216,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(217,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(217,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(218,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(218,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(219,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(219,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(220,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(221,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(221,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(247,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(247,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(248,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(248,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(249,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(250,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(250,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(251,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(251,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(252,8): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(254,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(254,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(255,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(256,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(256,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(257,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(257,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(258,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(259,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(259,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(260,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(261,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(262,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(262,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(286,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(287,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(289,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(290,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(291,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(291,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(292,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(292,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(293,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(293,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(295,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(295,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(296,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(296,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(297,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(297,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(317,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(317,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(318,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(318,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(320,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(320,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(321,8): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(322,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(322,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(323,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(324,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(325,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(325,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(326,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(327,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(327,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(347,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(348,7): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(348,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(349,7): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(350,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(351,7): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(351,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(354,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(355,7): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(356,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(357,7): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(357,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(358,7): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(358,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(360,7): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(360,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(381,5): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(381,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(382,7): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(382,12): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(383,7): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(383,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(384,7): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(384,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(386,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(386,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(387,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(387,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(389,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(389,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(390,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(391,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(391,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(392,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(393,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(393,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(394,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(394,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(395,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(418,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(419,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(420,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(420,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(421,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(422,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(422,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(423,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(423,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(424,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(425,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(425,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(426,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(428,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(429,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(429,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(430,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(431,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(431,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(432,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(432,11): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(433,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(434,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(434,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(435,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(436,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(437,8): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(467,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(468,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(469,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(469,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(470,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(470,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(471,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(471,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(472,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(472,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(473,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(475,8): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(476,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(476,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(477,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(477,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(478,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(478,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(479,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(479,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(480,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(481,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(505,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(505,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(506,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(507,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(507,9): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(509,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(509,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(510,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(511,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(511,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(512,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(512,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(513,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(513,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(514,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(514,10): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainWorld.h(515,6): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DodgeEnemy.h(4,22): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DodgeEnemy.h(14,24): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DodgeEnemy.h(16,28): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DodgeEnemy.h(17,28): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DodgeEnemy.h(27,26): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DodgeEnemy.h(37,24): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DodgeEnemy.h(39,28): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DodgeEnemy.h(40,28): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Navigation.h(61,25): error C2589: (: недопустимая лексема справа от "::"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Navigation.h(61,25): error C2059: синтаксическая ошибка: )
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Navigation.h(62,20): warning C4018: <: несоответствие типов со знаком и без знака
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Navigation.h(96,23): error C2065: key: необъявленный идентификатор
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Navigation.h(100,13): error C2065: key: необъявленный идентификатор
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Navigation.h(109,19): warning C4244: =: преобразование "DWORD" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\StatusGame.h(8,24): warning C4244: return: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\StatusGame.h(64,48): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\StatusGame.h(68,46): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(203,27): warning C4018: <: несоответствие типов со знаком и без знака
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(211,27): warning C4018: <: несоответствие типов со знаком и без знака
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(217,21): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(219,27): warning C4018: <: несоответствие типов со знаком и без знака
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(227,38): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(246,62): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(246,31): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(248,23): warning C4018: <: несоответствие типов со знаком и без знака
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(252,35): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(252,32): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(274,25): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(274,14): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(276,23): warning C4018: <: несоответствие типов со знаком и без знака
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(287,17): warning C4244: *=: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(288,17): warning C4244: *=: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(289,17): warning C4244: *=: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(295,49): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(295,40): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(299,46): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(299,37): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\font.h(324,34): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(53,22): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(60,58): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(63,58): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(66,58): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(69,58): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(143,69): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(143,50): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(152,24): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(155,68): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(155,49): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(162,69): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(162,50): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(183,12): warning C4244: return: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(238,30): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(243,77): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(243,56): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(244,80): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(244,60): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(285,62): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(285,46): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(286,54): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Elements.h(286,41): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(34,46): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(34,43): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(41,33): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(41,30): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(58,35): warning C4244: *=: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(59,19): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(60,19): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(63,50): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(81,86): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(81,79): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(112,27): warning C4305: аргумент: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(114,85): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(114,67): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(116,77): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(116,59): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(123,19): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(124,19): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(133,27): warning C4305: аргумент: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(135,82): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(135,61): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(140,92): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(156,54): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(157,56): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(168,40): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(169,45): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(189,31): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(190,31): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(194,87): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(194,70): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(230,27): warning C4018: <: несоответствие типов со знаком и без знака
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Helper.h(4,73): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Helper.h(4,52): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Helper.h(7,71): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Helper.h(7,52): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Helper.h(10,71): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Helper.h(10,52): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Helper.h(14,134): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Helper.h(14,104): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Helper.h(15,84): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Helper.h(15,54): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Helper.h(16,333): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Helper.h(16,304): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DialogStruct.h(142,42): warning C4018: >=: несоответствие типов со знаком и без знака
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DialogStruct.h(150,54): warning C4018: <: несоответствие типов со знаком и без знака
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DialogStruct.h(160,17): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DialogStruct.h(161,17): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DialogStruct.h(165,26): warning C4018: <: несоответствие типов со знаком и без знака
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DialogStruct.h(171,89): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DialogStruct.h(171,67): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DialogStruct.h(174,34): warning C4018: >=: несоответствие типов со знаком и без знака
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DialogStruct.h(182,35): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DialogStruct.h(185,36): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DialogStruct.h(191,90): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DialogStruct.h(191,83): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DialogStruct.h(195,39): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\DialogStruct.h(206,127): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(21,21): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(22,21): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(26,17): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(35,21): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(36,21): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(38,23): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(39,24): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(47,32): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(48,32): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(61,13): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(62,13): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(70,13): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(71,13): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(85,25): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(85,41): warning C4244: return: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(107,7): error C2084: функция "float get_lenghts(point3d &,point3d &)" уже имеет текст реализации
+  (компиляция исходного файла "main.cpp")
+      C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\MainGame.h(50,7):
+      см. предыдущее определение "get_lenghts"
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(122,20): error C2264: get_lenghts: ошибка в определении или объявлении функции; функция не вызвана
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(123,20): error C2264: get_lenghts: ошибка в определении или объявлении функции; функция не вызвана
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(124,20): error C2264: get_lenghts: ошибка в определении или объявлении функции; функция не вызвана
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(152,51): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(163,27): warning C4244: =: преобразование "DWORD" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(174,27): warning C4244: =: преобразование "DWORD" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(185,27): warning C4244: =: преобразование "DWORD" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(217,30): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(217,15): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(250,30): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(250,15): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(270,30): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(270,15): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(290,30): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(296,5): error C2660: fightMove: функция не принимает 1 аргументов
+  (компиляция исходного файла "main.cpp")
+      C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Navigation.h(83,6):
+       см. объявление "fightMove"
+      C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(296,5):
+      при попытке сопоставить список аргументов "(point3d)"
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(297,10): warning C4305: аргумент: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(303,13): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(304,13): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(311,24): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(317,32): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(318,32): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(323,21): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(324,5): error C2660: fightMove: функция не принимает 1 аргументов
+  (компиляция исходного файла "main.cpp")
+      C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Navigation.h(83,6):
+       см. объявление "fightMove"
+      C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(324,5):
+      при попытке сопоставить список аргументов "(point3d)"
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(325,10): warning C4305: аргумент: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(328,32): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\Parametrics.h(329,32): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(23,54): warning C4244: аргумент: преобразование "_Ty" в "const unsigned int", возможна потеря данных
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(23,54): warning C4244:         with
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(23,54): warning C4244:         [
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(23,54): warning C4244:             _Ty=float
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(23,54): warning C4244:         ]
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(24,54): warning C4244: аргумент: преобразование "_Ty" в "const unsigned int", возможна потеря данных
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(24,54): warning C4244:         with
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(24,54): warning C4244:         [
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(24,54): warning C4244:             _Ty=float
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(24,54): warning C4244:         ]
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(30,42): warning C4244: аргумент: преобразование "_Ty" в "const unsigned int", возможна потеря данных
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(30,42): warning C4244:         with
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(30,42): warning C4244:         [
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(30,42): warning C4244:             _Ty=float
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(30,42): warning C4244:         ]
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(30,77): warning C4244: аргумент: преобразование "_Ty" в "const unsigned int", возможна потеря данных
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(30,77): warning C4244:         with
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(30,77): warning C4244:         [
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(30,77): warning C4244:             _Ty=float
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(30,77): warning C4244:         ]
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(35,23): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(112,19): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(128,31): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(148,23): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(149,23): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(160,28): warning C4244: =: преобразование "float" в "LONG", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(161,28): warning C4244: =: преобразование "float" в "LONG", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(163,28): warning C4244: =: преобразование "float" в "LONG", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(164,28): warning C4244: =: преобразование "float" в "LONG", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(173,25): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(172,25): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(171,25): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(170,25): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(206,25): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(205,25): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(204,25): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(203,25): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(241,34): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(242,82): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(249,34): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(250,82): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(410,21): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(411,18): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(412,18): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(413,18): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(493,22): warning C4244: инициализация: преобразование "_Ty" в "float", возможна потеря данных
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(493,22): warning C4244:         with
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(493,22): warning C4244:         [
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(493,22): warning C4244:             _Ty=int
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(493,22): warning C4244:         ]
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(525,28): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(558,31): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(586,25): warning C4305: инициализация: усечение из "double" в "float"
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(652,31): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(759,58): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(793,37): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(875,90): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(875,71): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(877,95): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(877,80): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(878,111): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(878,85): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(935,36): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(937,38): warning C4018: <: несоответствие типов со знаком и без знака
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(958,38): warning C4244: =: преобразование "DWORD" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(980,43): warning C4244: =: преобразование "DWORD" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(983,43): warning C4244: =: преобразование "DWORD" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(1036,42): warning C4244: =: преобразование "DWORD" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(1057,33): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(1062,77): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(1062,57): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(1063,88): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(1063,68): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(1088,225): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\drawer.h(1088,208): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  (компиляция исходного файла "main.cpp")
+  
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\main.cpp(125,40): warning C4244: =: преобразование "double" в "DWORD", возможна потеря данных
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\main.cpp(142,31): warning C4305: +=: усечение из "double" в "float"
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\main.cpp(143,31): warning C4305: +=: усечение из "double" в "float"
+C:\Users\Пользователь\Desktop\Constellations-Morfing\pong\main.cpp(144,31): warning C4305: +=: усечение из "double" в "float"
