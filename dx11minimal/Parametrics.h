@@ -15,20 +15,6 @@ void (*modelTransform)(point3d& p, Constellation& Constellation);
 void (*modelProject)(point3d& p);
 void (*uiFunc)(point3d& point, Constellation& Constellation, int i);
 
-void genRandSphere(point3d& p)
-{
-    float amp = 1.25;
-    float angleX, angleY;
-    angleX = rand() % 360;
-    angleY = rand() % 360;
-
-    p.x = 0;
-    p.y = 0;
-    p.z = window.width;
-
-    p.rotateX(p, angleX);
-    p.rotateY(p, angleY); // Сферообразное пространство.
-}
 
 void placeToWorld(point3d& p, Constellation& Constellation)
 {

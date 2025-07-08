@@ -1,4 +1,4 @@
-//#include "Windows.h"
+#include <vector>
 
 int constellationsCounter = 0;
 
@@ -7,6 +7,11 @@ class Constellation {
 public:
 
     XMMATRIX Transform;
+
+    point3d position;
+    float scale = 200;
+    point3d angle;
+    float distance;
     
     std::vector<point3d> starsCords;
     float hp;
@@ -16,17 +21,12 @@ public:
     std::vector <std::vector <float>> constellationEdges;
 
     std::vector<point3d> starsRenderedCords = {};
-    float scale = 200;
     int ID;
     std::string name;
-
-    point3d angle;
-    float distance;
 
     char currentMoveDirection;
     DWORD moveStartTime;
     bool isMoveActive;
-    point3d position;
 
     
 
@@ -107,7 +107,6 @@ public:
     }
 
 
-
     void setPosition(const point3d& newPos) {
 
         point3d offset = {
@@ -138,7 +137,6 @@ public:
         p *= scale;
 
         p += position;
-
     }
 
     void setStarsRenderedCords(float angleX, float angleY, float angleZ) {
@@ -153,5 +151,22 @@ public:
         }
     }
 
+    //////////////////////////////////////////////////////////////////////////////////
+
+    void TransformStars()
+    {
+        for (int i = 0; i < starsCords.size(); i++) {
+            point3d p = starsCords[i];
+
+            p -= position;
+
+            p.rotateX(p, angle.x);
+            p.rotateY(p, angle.y);
+            p.rotateZ(p, angle.z);
+
+            p *= scale;
+            p += position;
+        }
+    }
 
 };

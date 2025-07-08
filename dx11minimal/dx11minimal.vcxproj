@@ -156,6 +156,7 @@
     </None>
     <ClInclude Include="StatusGame.h" />
     <ClInclude Include="timer.h" />
+    <ClInclude Include="Transform.h" />
     <ClInclude Include="utils.h" />
     <None Include="VSS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

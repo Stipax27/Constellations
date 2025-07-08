@@ -554,7 +554,6 @@ void initWorld()
         int z = 0;
         starSet[i]->setStarsRenderedCords(x, y, z);
     }
-
 }
 
 using namespace std;

@@ -19,6 +19,9 @@
     <Filter Include="Shaders\Starfield">
       <UniqueIdentifier>{a801d8a1-fb89-4199-a540-4939cf5d239b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Transform">
+      <UniqueIdentifier>{f37ce6c4-c4ba-4946-b7c0-562d179e0be8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -95,6 +98,9 @@
     </ClInclude>
     <ClInclude Include="loop.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Header Files\Transform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
