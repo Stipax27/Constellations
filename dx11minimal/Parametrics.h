@@ -37,6 +37,21 @@ void placeConstToWorld(point3d& p, Constellation& Constellation)
 }
 
 
+void placeHeroToWorld(point3d& p, Constellation& Constellation)
+{
+    Constellation.scale = 0.13f;
+    ShakingHero(p);
+    p.move(0, 0, 0. / Constellation.scale);
+
+    // fightMove();
+
+    p *= Constellation.scale;
+
+    p.rotateX(p, mouse.Angle.y * 0.1);
+    p.rotateY(p, mouse.Angle.x * 0.1);
+}
+
+
 
 XMMATRIX CreateFightProjectionMatrix(float camDist, float width, float height)
 {
@@ -284,21 +299,6 @@ void projectSingleConst(point3d& p)
 
     p.x = x;
     p.y = y;
-}
-
-void placeHeroToWorld(point3d& p, Constellation& Constellation)
-{
-    ShakingHero(p);
-    p.move(0, 0, 0. / Constellation.scale);
-
-   // fightMove();
-
-    p *= .13;
-
-    p *= Constellation.scale;
-
-    p.rotateX(p, mouse.Angle.y * 0.1);
-    p.rotateY(p, mouse.Angle.x * 0.1);
 }
 
 void NullProject(point3d& p) {

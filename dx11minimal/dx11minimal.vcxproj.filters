@@ -19,8 +19,11 @@
     <Filter Include="Shaders\Starfield">
       <UniqueIdentifier>{a801d8a1-fb89-4199-a540-4939cf5d239b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Transform">
-      <UniqueIdentifier>{f37ce6c4-c4ba-4946-b7c0-562d179e0be8}</UniqueIdentifier>
+    <Filter Include="Header Files\New">
+      <UniqueIdentifier>{398bf34c-ae1f-42f5-98c5-47843bf6f72a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Structures">
+      <UniqueIdentifier>{1c1b4a90-adae-44bb-b600-6c931ee59e03}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -43,9 +46,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Point3d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Constellation.h">
@@ -99,8 +99,11 @@
     <ClInclude Include="loop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Header Files\Transform</Filter>
+    <ClInclude Include="WorldRender.h">
+      <Filter>Header Files\New</Filter>
+    </ClInclude>
+    <ClInclude Include="Point3d.h">
+      <Filter>Header Files\Structures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

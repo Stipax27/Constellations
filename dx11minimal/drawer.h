@@ -86,7 +86,7 @@ namespace drawer
                 uiFunc(screenPoint, Constellation, i);
             }
 
-           
+            
             if (finalStarRad > 0)
             {
                 point.draw(worldPoint, finalStarRad);
@@ -527,16 +527,6 @@ namespace drawer
     DWORD battleStartTime;
 
 
-    void StartBattle() {
-        if (!isBattleActive) {
-            battleStartTime = currentTime;
-            attackTime = battleStartTime;
-            isBattleActive = true;
-            //TextOutA(window.context, 400, 400, "Бой начался", 10);
-            drawString("Start Fight", 400, 400, 1, true);
-        }
-    }
-
     void UpdateGame() {
         static const DWORD MAX_BATTLE_TIME = 4 * 60 * 1000;
         static const DWORD MAX_REWIND = 30 * 1000;
@@ -884,6 +874,12 @@ namespace drawer
             winFight();
             break;
         }
+        case gameState_::Exploring:
+        {
+
+            break;
+        }
+
         }
 
     }
