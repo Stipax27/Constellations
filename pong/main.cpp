@@ -11,6 +11,7 @@ const float PI = 3.1415926535897;
 #include <string>
 #include <cmath>
 #include <sstream>
+
 #include <algorithm>
 #include <deque>
 #include "timer.h"
