@@ -7,6 +7,34 @@ class point3d {
 public:
     float x, y, z;
 
+
+    point3d(float X = 0.0f, float Y = 0.0f, float Z = 0.0f)
+        : x(X), y(Y), z(Z)
+    {}
+
+
+    float magnitude() {
+        return sqrt(x * x + y * y + z * z);
+    }
+
+    inline point3d normalized() {
+        float length = magnitude();
+        if (length > 0)
+        {
+            return *this / magnitude();
+        }
+        else
+        {
+            return point3d(0.0f, 1.0f);
+        }
+    }
+
+    inline point3d lerp(const point3d& other, float a)
+    {
+        return { lerp(x, other.x, a), lerp(y, other.y, a), lerp(z, other.z, a) };
+    }
+
+
     bool operator==(const point3d& other) const {   // Перегрузка Операторов для точек.
         return fabs(x - other.x) < 0.001f &&
             fabs(y - other.y) < 0.001f &&
@@ -15,8 +43,13 @@ public:
     bool operator!=(const point3d& other) const {
         return !(*this == other);
     }
+
+
     point3d operator+(const point3d& other) const {
-        return point3d{ x + other.x, y + other.y, z + other.z };
+        return { x + other.x, y + other.y, z + other.z };
+    }
+    point3d operator+(float scalar) const {
+        return { x + scalar, y + scalar, z + scalar };
     }
     point3d& operator+=(const point3d& other) {
         x += other.x;
@@ -30,8 +63,13 @@ public:
         z += scalar;
         return *this;
     }
+
+
     point3d operator-(const point3d& other) const {
-        return point3d{ x - other.x, y - other.y, z - other.z };
+        return { x - other.x, y - other.y, z - other.z };
+    }
+    point3d operator-(float scalar) const {
+        return { x - scalar, y - scalar, z - scalar };
     }
     point3d& operator-=(const point3d& other) {
         x -= other.x;
@@ -45,8 +83,13 @@ public:
         z -= scalar;
         return *this;
     }
+
+
     point3d operator*(float scalar) const {
-        return point3d{ x * scalar, y * scalar, z * scalar };
+        return { x * scalar, y * scalar, z * scalar };
+    }
+    point3d operator*(const point3d& other) const {
+        return { x * other.x, y * other.y, z * other.z };
     }
     point3d& operator*=(float scalar) {
         x *= scalar;
@@ -60,8 +103,13 @@ public:
         z *= other.z;
         return *this;
     }
+
+
+    point3d operator/(const point3d& other) const {
+        return { x / other.x, y / other.y, z / other.z };
+    }
     point3d operator/(float scalar) const {
-        return point3d{ x / scalar, y / scalar, z / scalar };
+        return { x / scalar, y / scalar, z / scalar };
     }
     point3d& operator/=(const point3d& other) {
         x /= other.x;
@@ -78,7 +126,7 @@ public:
 
     void draw(point3d& p, float sz = def_size)
     {
-        if (p.z < nearPlaneClip) return;
+        //if (p.z < nearPlaneClip) return;
 
         ConstBuf::ConstToVertex(4);
         ConstBuf::ConstToPixel(4);

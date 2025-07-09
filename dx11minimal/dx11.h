@@ -470,7 +470,7 @@ namespace Shaders {
 		HRESULT hr;
 
 		hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PS", "ps_4_1", NULL, NULL, &PS[i].pBlob, &pErrorBlob);
-		CompilerLog(name, hr, "vertex shader compiled: ");
+		CompilerLog(name, hr, "pixel shader compiled: ");
 
 		if (hr == S_OK)
 		{
@@ -490,7 +490,11 @@ namespace Shaders {
 		CreateVS(2, nameToPatchLPCWSTR("VSFS.shader"));
 		CreatePS(2, nameToPatchLPCWSTR("PSFS.shader"));
 
-		CreateVS(3, nameToPatchLPCWSTR("Stars_VS.shader"));
+		CreateVS(3, nameToPatchLPCWSTR("BackgroundStars_VS.shader"));
+		CreatePS(3, nameToPatchLPCWSTR("BackgroundStars_PS.shader"));
+
+		CreateVS(4, nameToPatchLPCWSTR("StarLink_VS.shader"));
+		CreatePS(4, nameToPatchLPCWSTR("StarLink_PS.shader"));
 	}
 
 	void vShader(unsigned int n)

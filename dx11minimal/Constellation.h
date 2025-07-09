@@ -134,7 +134,7 @@ public:
         p.rotateY(p, angle.y);
         p.rotateZ(p, angle.z);
 
-        p *= scale;
+        p *= 3000;
 
         p += position;
     }

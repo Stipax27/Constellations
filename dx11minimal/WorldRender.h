@@ -1,11 +1,3 @@
-#include "Point3d.h"
-#include "Constellation.h"
-#include "MainWindow.h"
-#include "dx11.h"
-#include "mouse.h"
-#include <algorithm>
-
-bool t = true;
 namespace WorldRender
 {
     void drawLine(point3d& p1, point3d& p2, int count)
@@ -299,8 +291,6 @@ namespace WorldRender
 
     void Update()
     {
-        nearPlaneClip = 0;
-
         textStyle.color = RGB(0, 191, 255);
         Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
         Draw::ClearDepth();
@@ -333,16 +323,6 @@ namespace WorldRender
 
             std::string curentSignstring = zodiacSignToString(player_sign);
             TextOutA(window.context, window.width * 5 / 6, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());
-            //drawString(curentSignstring, window.width * 5 / 6, window.height - window.height / 20., 1, false);
-
-            drawString("Find Constallations and click on him", window.width / 2, (200. / 1440) * window.height, 1, true);
-            drawString("Features:\nMouse wheel to zoom in and out", (1700. / 2560) * window.width, (1200. / 1440) * window.height, .7f, false);
-            // drawColorCircle();
-            isBattleActive = false;
-
-
-            // drawString("X", 0, 0, 1, false);
-            // drawString(std::to_string(mouse.pos.y).c_str(), 0, 0, 1, false);
 
             break;
         }
@@ -385,13 +365,10 @@ namespace WorldRender
 
 
             modelTransform = &placeConstToWorld;
-            nearPlaneClip = 0;
 
             srand(currentTime);
 
             modelTransform = &placeConstToWorld;//Âðàã
-
-            nearPlaneClip = 0;
 
             if (isShakingHero) {
 
@@ -426,11 +403,6 @@ namespace WorldRender
                 isShaking = false;
             }
 
-            if (constellationFlight.isFlying)
-            {
-                UpdateConstellationAttack();
-            }
-
             if (currentTime > attack_cooldown + 5000)
             {
                 attackCooldown = true;
@@ -444,7 +416,6 @@ namespace WorldRender
                     attackCooldown = false;
                     check_attack = false;
                     attackStartTime = currentTime;
-                    //InitConstellationAttack();
                 }
                 Constellation& h = *starSet[currentEnemyID];
                 h.Transform = CreateEnemyToWorldMatrix(h);
@@ -454,7 +425,7 @@ namespace WorldRender
                 //linksDivider = 15;
                 modelTransform = &placeHeroToWorld;
                 uiFunc = &heroUI;
-                nearPlaneClip = -2000;
+
                 Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 
                 Constellation& c = *starSet[player_sign];
@@ -485,7 +456,6 @@ namespace WorldRender
             }
 
             modelTransform = &placeConstToWorld;
-            DrawStarsHP(window.context);
 
             //linksDivider = 15;
             modelTransform = &placeHeroToWorld;
@@ -493,8 +463,6 @@ namespace WorldRender
 
             modelTransform = NULL;
             uiFunc = NULL;
-
-            nearPlaneClip = -2000;
 
             if (isDamageHero)
             {
@@ -512,32 +480,6 @@ namespace WorldRender
             Constellation& c = *starSet[player_sign];
             c.Transform = CreateHeroToWorldMatrix(c);
             drawÑonstellation(*starSet[player_sign]);
-
-            std::string curentSignstring = zodiacSignToString(currentEnemyID);
-            drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);
-
-            curentSignstring = zodiacSignToString(player_sign);
-            drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 7., 1, true);
-
-            curentSignstring = "current weapon: " + weapon[(int)current_weapon].name;
-            drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 10., 1, true);
-
-            drawCurrentElement();
-
-            drawString("Weapon selection:\nButton 1 - Sword \nButton 2 - Shield \nButton 3 - Bow ", (1700. / 2560) * window.width, (1100. / 1440) * window.height, .7f, false);
-            drawString("Rewind time:\nbutton - E", (500. / 2560) * window.width, (1200. / 1440) * window.height, .7f, false);
-            drawString("TUTORIAL:\nTo hit an enemy with a sword,\npress LMB and draw a line along the enemy star\nTo hit with a shield,\npress LMB and draw a line that will draw a circle that attacks stars\nTo hit with a bow,\npress LMB on the star and draw a vector in any direction from the star.", (60. / 2560) * window.width, (60. / 1440) * window.height, .7f, false);
-
-            float cdTimeOut = 1. - (currentTime - attack_cooldown) / 5000.;
-            cdTimeOut *= 10;
-            std::string cdTimeOutText = std::to_string((int)cdTimeOut);
-            if (cdTimeOut > 0)
-            {
-                drawString("recharge", window.width * .9, window.height * .85, 1., false);
-                drawString(cdTimeOutText.c_str(), window.width * .9, window.height * .9, 3., false);
-            }
-
-            UpdateGame();
 
             break;
         }

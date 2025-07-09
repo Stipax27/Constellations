@@ -25,6 +25,12 @@
     <Filter Include="Header Files\Structures">
       <UniqueIdentifier>{1c1b4a90-adae-44bb-b600-6c931ee59e03}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\StarLink">
+      <UniqueIdentifier>{805d6cf2-516d-4e6a-8f08-95c845959c4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\BackgroundStars">
+      <UniqueIdentifier>{fe668379-b7cd-428f-8864-ae6d68f81cd7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -143,10 +149,19 @@
     <None Include="VSFS.shader">
       <Filter>Shaders\Starfield</Filter>
     </None>
+    <None Include="StarLink_VS.shader">
+      <Filter>Shaders\StarLink</Filter>
+    </None>
+    <None Include="BackgroundStars_PS.shader">
+      <Filter>Shaders\BackgroundStars</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Stars_VS.shader">
-      <Filter>Shaders</Filter>
+    <FxCompile Include="StarLink_PS.shader">
+      <Filter>Shaders\StarLink</Filter>
+    </FxCompile>
+    <FxCompile Include="BackgroundStars_VS.shader">
+      <Filter>Shaders\BackgroundStars</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

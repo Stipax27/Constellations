@@ -1,35 +1,25 @@
 ﻿bool t = true;
 namespace drawer
 {
-    void drawLine(point3d& p1, point3d& p2, int count)
+    void drawLine(point3d& p1, point3d& p2)
     {
-        if (count < 1) return;
+        point3d vector = p2 - p1;
+        point3d mid = p1.lerp(p2, 0.5f);
 
-        for (int i = 0;i < count;i++)
-        {
-            float dx = p2.x - p1.x;
-            float dy = p2.y - p1.y;
-            float dz = p2.z - p1.z;
-            float length = sqrt(dx * dx + dy * dy + dz * dz);
+        float sz = 1;
 
-            point3d point;
-            float t = static_cast<float>(i) / count;
-            point.x = p1.x + dx * t;
-            point.y = p1.y + dy * t;
-            point.z = p1.z + dz * t;
+        ConstBuf::ConstToVertex(4);
+        ConstBuf::ConstToPixel(4);
 
-            if (modelProject)
-            {
-                //modelProject(point);
-            }
 
-            float sz = 6 + 3 * sinf(i*117 + currentTime * .0031);
-            point.draw(point, sz);
-            // Рисование Линий.
-        }
+        ConstBuf::global[0] = XMFLOAT4(p1.x, p1.y, p1.z, 1.0f);
+        ConstBuf::global[1] = XMFLOAT4(p2.x, p2.y, p2.z, 1.0f);
+
+        ConstBuf::Update(5, ConstBuf::global);
+        ConstBuf::ConstToVertex(5);
+
+        Draw::elipse(1);
     }
-
-    float linksDivider = 5;
 
     void drawLinks(Constellation& Constellation)
     {
@@ -40,18 +30,12 @@ namespace drawer
         int starsEdgesCount = starEdges.size();
         for (int i = 0; i < starsEdgesCount; i++)
         {
-
             point3d point1 = TransformPoint(starArray[starEdges[i][0]], Constellation.Transform);
             point3d point2 = TransformPoint(starArray[starEdges[i][1]], Constellation.Transform);
 
             if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0) // - Стало
             {
-                float dx = point2.x - point1.x;
-                float dy = point2.y - point1.y;
-                float dz = point2.z - point1.z;
-                float length = sqrt(dx * dx + dy * dy + dz * dz);
-                int x = static_cast<int>(length) / linksDivider;
-                drawLine(point1, point2, x);// Рисование звёздных линий созвездия.
+                drawLine(point1, point2);
             }
         }
     }
@@ -99,8 +83,12 @@ namespace drawer
         Shaders::vShader(1);
         Shaders::pShader(1);
 
-        drawLinks(Constellation);
         drawStarPulse(Constellation, colorOverride);
+
+        Shaders::vShader(4);
+        Shaders::pShader(4);
+
+        drawLinks(Constellation);
     }
 
     void drawStarField()
@@ -114,7 +102,7 @@ namespace drawer
     void drawStars()
     {
         Shaders::vShader(3);
-        Shaders::pShader(2);
+        Shaders::pShader(3);
         Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
         Draw::Starfield(1);
     }
@@ -219,7 +207,7 @@ namespace drawer
                 shield2.y = centerY + shieldRadius * sin(nextAngle);
                 shield2.z = 0;
 
-                drawLine(shield1, shield2, 5);
+                drawLine(shield1, shield2);
             }
         }
     }
@@ -253,11 +241,10 @@ namespace drawer
             startPoint = { 0, 0, 0 };
             placeHeroToWorld(startPoint, *starSet[player_sign]);
 
-            int сount = 100;
             placeConstToWorld(enemyPosition, *starSet[currentEnemyID]);
             modelProject = &fightProject;
 
-            drawLine(startPoint, enemyPosition, сount);
+            drawLine(startPoint, enemyPosition);
 
         }
     }
@@ -383,10 +370,10 @@ namespace drawer
 
         modelProject = NULL;
         // Рисуем рамку
-        drawLine(topLeft, topRight, 50);    // Верх
-        drawLine(bottomLeft, bottomRight, 50); // Низ
-        drawLine(topLeft, bottomLeft, 5);  // Лево
-        drawLine(bottomRight, topRight, 5); // Право
+        drawLine(topLeft, topRight);    // Верх
+        drawLine(bottomLeft, bottomRight); // Низ
+        drawLine(topLeft, bottomLeft);  // Лево
+        drawLine(bottomRight, topRight); // Право
 
         // Рисуем заполнение из звёзд
         int activeStars = (int)(starCount * progress);
@@ -423,8 +410,7 @@ namespace drawer
                 Bar.z
             };
 
-            int lineSegments = ((i < activeStars - 1) ? 10 : 5);
-            drawLine(star1, star2, lineSegments);
+            drawLine(star1, star2);
         }
         modelProject = &fightProject;
         point3d p = { 0,.3,0 };
@@ -444,7 +430,6 @@ namespace drawer
         //linksDivider = 15;
         modelTransform = &HeroUITransform;
         uiFunc = NULL;
-        nearPlaneClip = -2000;
         modelProject = &fightProject;
 
         // Параметры временного бара
@@ -467,10 +452,10 @@ namespace drawer
         modelTransform(bottomRight, player_const);
 
         // Рисуем рамку
-        drawer::drawLine(topLeft, topRight, 50);    // Верх
-        drawer::drawLine(bottomLeft, bottomRight, 50); // Низ
-        drawer::drawLine(topLeft, bottomLeft, 5);  // Лево
-        drawer::drawLine(bottomRight, topRight, 5); // Право
+        drawer::drawLine(topLeft, topRight);    // Верх
+        drawer::drawLine(bottomLeft, bottomRight); // Низ
+        drawer::drawLine(topLeft, bottomLeft);  // Лево
+        drawer::drawLine(bottomRight, topRight); // Право
 
         // Рисуем заполнение из звёзд
         int activeStars = (int)(starCount * progress);
@@ -513,8 +498,7 @@ namespace drawer
             modelTransform(star1, player_const);
             modelTransform(star2, player_const);
 
-            int lineSegments = (i < activeStars - 1) ? 10 : 5;
-            drawer::drawLine(star1, star2, lineSegments);
+            drawer::drawLine(star1, star2);
         }
 
         point3d p = { 0,2,0 };
@@ -593,8 +577,6 @@ namespace drawer
 
     void drawWorld()
     {
-        nearPlaneClip = 0;
-
         textStyle.color = RGB(0, 191, 255);
         Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
         Draw::ClearDepth();
@@ -638,6 +620,9 @@ namespace drawer
             //modelProject = &fightProject;
             //modelTransform = &placeConstToWorld;
             
+            Constellation& c = *starSet[player_sign];
+            c.Transform = CreateHeroToWorldMatrix(c);
+            drawСonstellation(*starSet[player_sign]);//Игрок
 
             for (int i = 0;i < 12;i++)
             {
@@ -706,14 +691,11 @@ namespace drawer
 
 
             modelTransform = &placeConstToWorld;
-            nearPlaneClip = 0;
 
             srand(currentTime);
 
             DrawHpEnemyBar();
             modelTransform = &placeConstToWorld;//Враг
-
-            nearPlaneClip = 0;
 
             if (isShakingHero) {
 
@@ -732,7 +714,7 @@ namespace drawer
                     p2.z = lerp(p1.z, p2.z, beamTime);
 
 
-                    drawLine(p1, p2, 50);
+                    drawLine(p1, p2);
                 }
             }
 
@@ -776,12 +758,11 @@ namespace drawer
                 //linksDivider = 15;
                 modelTransform = &placeHeroToWorld;
                 uiFunc = &heroUI;
-                nearPlaneClip = -2000;
                 Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 
-                Constellation& c = *starSet[player_sign];
-                c.Transform = CreateHeroToWorldMatrix(c);
-                drawСonstellation(*starSet[player_sign]);//Игрок
+                //Constellation& c = *starSet[player_sign];
+                //c.Transform = CreateHeroToWorldMatrix(c);
+                //drawСonstellation(*starSet[player_sign]);//Игрок
 
                 if (attack_collision == true)
                 {
@@ -815,8 +796,6 @@ namespace drawer
 
             modelTransform = NULL;
             uiFunc = NULL;
-
-            nearPlaneClip = -2000;
 
             if (isDamageHero)
             {
