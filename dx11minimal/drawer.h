@@ -665,7 +665,6 @@ namespace drawer
             SelectWeapon();
             SelectElement();
 
-
             DrawCombatStats();
 
             if (attackCooldown == true) {
@@ -684,7 +683,6 @@ namespace drawer
             modelTransform = &placeToWorld;
             modelProject = &fightProject;
             uiFunc = &starIntersectUI;
-            //linksDivider = 50;
 
             drawStarField();
             drawStars();
