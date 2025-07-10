@@ -14,25 +14,36 @@ void updateFlyDirection() { // Раскладка управления
 
     if (GetAsyncKeyState('W') & 0x8000) {
         // Добавляем вектор направления камеры (уже нормализован)
-        flyDirection.x += XMVectorGetX(Camera::state.Forward) * 0.1f;
-        flyDirection.y += XMVectorGetY(Camera::state.Forward) * 0.1f;
-        flyDirection.z += XMVectorGetZ(Camera::state.Forward) * 0.1f;
+        flyDirection.x += XMVectorGetX(Camera::state.Forward) * 1.0f;
+        flyDirection.y += XMVectorGetY(Camera::state.Forward) * 1.0f;
+        flyDirection.z += XMVectorGetZ(Camera::state.Forward) * 1.0f;
     }
     if (GetAsyncKeyState('S') & 0x8000) {
         // Движение назад - обратное направление
-        flyDirection.x -= XMVectorGetX(Camera::state.Forward) * 0.1f;
-        flyDirection.y -= XMVectorGetY(Camera::state.Forward) * 0.1f;
-        flyDirection.z -= XMVectorGetZ(Camera::state.Forward) * 0.1f;
+        flyDirection.x -= XMVectorGetX(Camera::state.Forward) * 1.0f;
+        flyDirection.y -= XMVectorGetY(Camera::state.Forward) * 1.0f;
+        flyDirection.z -= XMVectorGetZ(Camera::state.Forward) * 1.0f;
+    }
+    if (GetAsyncKeyState('A') & 0x8000) {
+        // Добавляем вектор направления камеры (уже нормализован)
+        flyDirection.x -= XMVectorGetX(Camera::state.Right) * 0.5f;
+        flyDirection.y -= XMVectorGetY(Camera::state.Right) * 0.5f;
+        flyDirection.z -= XMVectorGetZ(Camera::state.Right) * 0.5f;
+    }
+    if (GetAsyncKeyState('D') & 0x8000) {
+        // Движение назад - обратное направление
+        flyDirection.x += XMVectorGetX(Camera::state.Right) * 0.5f;
+        flyDirection.y += XMVectorGetY(Camera::state.Right) * 0.5f;
+        flyDirection.z += XMVectorGetZ(Camera::state.Right) * 0.5f;
     }
 
-
-    float length = sqrt(flyDirection.x * flyDirection.x + flyDirection.y * flyDirection.y + flyDirection.z * flyDirection.z);
+    /*float length = sqrt(flyDirection.x * flyDirection.x + flyDirection.y * flyDirection.y + flyDirection.z * flyDirection.z);
 
     if (length > 0) {
         flyDirection.x /= length;
         flyDirection.y /= length;
         flyDirection.z /= length;
-    }
+    }*/
 }
 
 void updateFlySpeed(float deltaTime) {// Обновления во время полёта

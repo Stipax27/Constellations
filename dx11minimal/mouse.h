@@ -8,6 +8,7 @@ struct Mouse
     point3d Angle;
     point3d oldPos;
     point3d oldAngle;
+    point3d worldPos;
 
     void Input()
     {
@@ -62,13 +63,14 @@ void navigationByMouse()
 {
     static XMVECTOR currentRotation = XMQuaternionIdentity();
     float dYawKeyboard = 0.0f;
-    if (GetAsyncKeyState(0x44)) { dYawKeyboard -= turnSpeed; }
-    if (GetAsyncKeyState(0x41)) { dYawKeyboard += turnSpeed; }
+    if (GetAsyncKeyState('E')) { dYawKeyboard -= turnSpeed; }
+    if (GetAsyncKeyState('Q')) { dYawKeyboard += turnSpeed; }
     XMVECTOR qYawTotal = XMQuaternionRotationAxis(XMVectorSet(0, 0, 1, 0), dYawKeyboard);
     Camera::state.currentRotation = XMQuaternionMultiply(qYawTotal, Camera::state.currentRotation);
     Camera::state.currentRotation = XMQuaternionNormalize(Camera::state.currentRotation);
     Camera::state.Forward = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), Camera::state.currentRotation);
     Camera::state.Up = XMVector3Rotate(Camera::state.defaultUp, Camera::state.currentRotation);
+    Camera::state.Right = XMVector3Rotate(XMVectorSet(-1, 0, 0, 0), Camera::state.currentRotation);
 
     Camera::state.Eye = Camera::state.at - XMVectorScale(Camera::state.Forward, Camera::state.camDist);
     Camera::Camera();
@@ -94,8 +96,8 @@ void navigationByMouse()
         XMVECTOR qYaw = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), -dx);
 
         float dYawKeyboard = 0.0f;
-        if (GetAsyncKeyState(0x44)){ dYawKeyboard -= turnSpeed ; }
-        if (GetAsyncKeyState(0x41)){dYawKeyboard += turnSpeed ; }
+        //if (GetAsyncKeyState(0x44)){ dYawKeyboard -= turnSpeed ; }
+        //if (GetAsyncKeyState(0x41)){dYawKeyboard += turnSpeed ; }
 
         // Формирование общего кватерниона поворота вокруг оси Y
         XMVECTOR qYawTotal = XMQuaternionRotationAxis(XMVectorSet(0, 0, 1, 0), dYawKeyboard);
@@ -107,6 +109,7 @@ void navigationByMouse()
         Camera::state.currentRotation = XMQuaternionNormalize(Camera::state.currentRotation);
         Camera::state.Forward = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), Camera::state.currentRotation);
         Camera::state.Up = XMVector3Rotate(Camera::state.defaultUp, Camera::state.currentRotation);
+        Camera::state.Right = XMVector3Rotate(XMVectorSet(-1, 0, 0, 0), Camera::state.currentRotation);
 
         Camera::state.Eye = Camera::state.at - XMVectorScale(Camera::state.Forward, Camera::state.camDist);
         Camera::Camera();

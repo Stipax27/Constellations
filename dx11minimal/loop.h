@@ -22,7 +22,9 @@ void mainLoop()
 
 	drawer::drawWorld();
 
-
+	if (gameState == gameState_::Fight) {
+		drawer::FireProjectile();
+	}
 	/*
 		InputAssembler::IA(InputAssembler::topology::triList);
 		Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);

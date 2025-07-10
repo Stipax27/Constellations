@@ -29,6 +29,7 @@ int currentColorIndex = -1;
 const int numColors = 7;
 float camDist = 100;
 DWORD currentTime;
+DWORD lastFrameTime = 0;
 ID2D1SolidColorBrush* d2dBrush = nullptr;
 
 HWND hWnd;
