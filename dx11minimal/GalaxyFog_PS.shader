@@ -42,12 +42,6 @@ float time;
 // Noise functions
 //----------------------------------------------------------------------------------------
 
-template<typename T>
-T fract(T x)
-{
-    return x - floor(x);
-}
-
 #define HASHSCALE3 float3(0.1031f, 0.1030f, 0.0973f)
 #define HASHSCALE4 float4(1031.0f, 0.1030f, 0.0973f, 0.1099f)
 #define HASHSCALE1 0.1031f

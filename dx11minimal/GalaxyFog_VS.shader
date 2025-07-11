@@ -27,13 +27,6 @@ float time;
 #define GALAXY   1.0f
 #define STAR     2.0f
 #define PLANET   3.0f
-
-
-template<typename T>
-T fract(T x)
-{
-    return x - floor(x);
-}
     
     
 #define HASHSCALE1 0.1031f
