@@ -1,8 +1,4 @@
-﻿// in progress
-//#define WITH_PLANETS  
-
-
-const float PI = 3.14159265359;
+﻿const float PI = 3.14159265359;
 const float DEG_TO_RAD = (PI / 180.0);
 const float MAX = 10000.0;
 
@@ -15,16 +11,8 @@ const int   STAR_FIELD_VOXEL_STEPS = 13;
 const float STAR_FIELD_VOXEL_STEP_SIZE = .5;  // 5AL 
 const float STAR_RADIUS = .01; // 2e-8 in true life !   // (% of 5)   1e-8
 
-const float PLANET_FIELD_SCALE = 75.;
-const int   PLANET_FIELD_VOXEL_STEPS = 10;
-const float PLANET_FIELD_VOXEL_STEP_SIZE = .5;  // 5AL 
-const float PLANET_RADIUS = .04; 
-
-
 const float kU2G = GALAXY_FIELD_VOXEL_STEP_SIZE/STAR_FIELD_VOXEL_STEP_SIZE;
 const float kG2U = STAR_FIELD_VOXEL_STEP_SIZE/GALAXY_FIELD_VOXEL_STEP_SIZE;
-
-
 
 
 float time;
@@ -32,9 +20,6 @@ float time;
 float keyPress(int ascii) {
 	return texture(iChannel2,vec2((.5+float(ascii))/256.,0.25)).x ;
 }
-
-
-
 
 
 // Time spend traveling to clicked point
@@ -75,14 +60,6 @@ float hash(vec3 p3) {
     return fract((p3.x + p3.y) * p3.z);
 }
 
-/*
-vec3 hash33( const in vec3 p) {
-    return fract(vec3(
-        sin(dot(p,    vec3(127.1,311.7,758.5453123))),
-        sin(dot(p.zyx,vec3(127.1,311.7,758.5453123))),
-        sin(dot(p.yxz,vec3(127.1,311.7,758.5453123))))*43758.5453123);
-}
-*/
 
 #define HASHSCALE3 vec3(.1031, .1030, .0973)
 //#define HASHSCALE4 vec4(1031, .1030, .0973, .1099)
@@ -90,77 +67,6 @@ vec3 hash33(vec3 p3){
 	p3 = fract(p3 * HASHSCALE3);
     p3 += dot(p3, p3.yxz+19.19);
     return fract(vec3((p3.x + p3.y)*p3.z, (p3.x+p3.z)*p3.y, (p3.y+p3.z)*p3.x));
-}
-
-float distanceRayPoint(vec3 ro, vec3 rd, vec3 p, out float h) {
-    h = dot(p-ro,rd);
-    return length(p-ro-rd*h);
-}
-
-// Toujours en coordonnes Univers
-bool renderGalaxyField( in vec3 roU, in vec3 rd, out vec3 out_posU, out vec3 out_id) { 
-    float d, dint;
-    vec3 ros = roU + rd*d,   
-		pos = floor(ros),
-		ri = 1./rd,
-		rs = sign(rd),
-		dis = (pos-ros + 0.5 + rs*0.5) * ri,
-		offset, id, galaxyro;
-    
-    float pitch = 10./iResolution.x;
-    
-	for( int i=0; i<GALAXY_FIELD_VOXEL_STEPS; i++ ) {
-        id = hash33(pos);
-        offset = clamp(id, GALAXY_RADIUS, 1.-GALAXY_RADIUS);
-        
-        // Si on intersectionne avec la boundingbox (sphere)
-        d = distanceRayPoint(ros, rd, pos+offset, dint);
-        if( dint > 0. && d < GALAXY_RADIUS*.5+dint*pitch ) {
-            galaxyro = pos+offset;
-            out_posU = galaxyro;
-        	out_id = id;
-        	return true;	    
-        }
-        
-		vec3 mm = step(dis.xyz, dis.yxy) * step(dis.xyz, dis.zzx);
-		dis += mm * rs * ri;
-        pos += mm * rs;
-	}
-    
-	return false;
-}
-
-
-
-// Toujours en coordonnes Galaxy
-bool renderStarField(vec3 galaxyId, in vec3 roG, in vec3 rd, out vec3 out_posG, out vec3 out_id) { 
-    out_id = vec3(9);
-
-    float d, dint;
-    vec3 ros = roG + rd*d,
-	 	pos = floor(ros),
-		ri = 1./rd,
-		rs = sign(rd),
-		dis = (pos-ros + 0.5 + rs*0.5) * ri,	
-		mm, offset = vec3(0.), id, galaxyro;
-
-    float pitch = 10./iResolution.x;
-    
-	for( int i=0; i<STAR_FIELD_VOXEL_STEPS; i++ ) {
-        id = hash33(pos);
-        offset = clamp(id, STAR_RADIUS, 1.-STAR_RADIUS);
-        d = distanceRayPoint(ros, rd, pos+offset, dint);
-        if (dint > 0. && d < STAR_RADIUS*.5+dint*pitch) {
-	        out_posG = pos+offset;
-   	     	out_id = id;
-        	return true;
-        }
-		mm = step(dis.xyz, dis.yxy) * step(dis.xyz, dis.zzx);
-		dis += mm * rs * ri;
-        pos += mm * rs;
-	}
-
-	return false;
 }
 
   
@@ -212,36 +118,10 @@ Config getConfig() {
     return cfg;
 }
 
-
-bool isInGalaxy(in vec3 roU, out vec3 out_GalaxyId, out vec3 out_GalaxyPosU) {
-    vec3 pos = floor(roU);
-    out_GalaxyId = hash33(pos);
-    
-    vec3 offset = clamp(out_GalaxyId, GALAXY_RADIUS, 1.-GALAXY_RADIUS);
-    out_GalaxyPosU = (pos+offset);
-    
-    return length(roU - out_GalaxyPosU) < GALAXY_RADIUS;
-}
-
-// Echelle 1 pour la grille des galaxies 
-vec3 galaxyToUniverse(vec3 galaxyPosU, vec3 coord) {
-    return coord*kG2U + galaxyPosU;
-}
-
 // Centré sur le centre de la galaxie
 // Echelle 1 pour la grille des etoiles
 vec3 universeToGalaxy(vec3 galaxyPosU, vec3 coord) {
     return (coord-galaxyPosU)*kU2G;
-}
-
-Config galaxyToUniverse(vec3 galaxyPosU, Config cfg) {
-	cfg.coordSystem = IN_UNIVERSE;
-    cfg.galaxy_pos = galaxyPosU;
-    cfg.ro_cam =  galaxyToUniverse(galaxyPosU, cfg.ro_cam);
-    cfg.ro_from = galaxyToUniverse(galaxyPosU, cfg.ro_from);
-    cfg.ro_to =   galaxyToUniverse(galaxyPosU, cfg.ro_to);
-    cfg.target_pos = galaxyToUniverse(galaxyPosU, cfg.target_pos);
-    return cfg;
 }
 
 Config universeToGalaxy(vec3 galaxyPosU, Config cfg) {
@@ -304,31 +184,6 @@ void VS( out vec4 fragColor, in vec2 fragCoord ) {
 
 // - Est t on dans une galaxie ? --------------------------------     
         vec3 galaxyId, galaxyPosU;
-        bool inGalaxy = isInGalaxy(isU ? ro : galaxyToUniverse(cfg.galaxy_pos, ro), galaxyId, galaxyPosU);
-
-// - Recherche des clicks sur les objets
-        vec3 targetPosU, targetPosG, targetId;
-     
-        // - Click Galaxy Field ------------------------------------------
-
-        bool isHitGalaxy = false, isHitStar = false, isHitPlanet = false;
-
-        // Le calcul se fait toujours en coordonnees univers
-        vec3 roU = isG ? galaxyToUniverse(cfg.galaxy_pos, ro) : ro;
-        isHitGalaxy = renderGalaxyField( roU, rd, targetPosU, targetId);
-        if (isG && length(roU - targetPosU) > 3.) isHitGalaxy = false;
-        if (isHitGalaxy) {
-            targetPosG = universeToGalaxy(cfg.galaxy_pos,targetPosU);    
-        }
-// - Click Star Field ------------------------------------------
-
-        if (isG && !isHitGalaxy) {
-            // Le calcul se fait toujours en coordonnees Galaxie       
-            vec3 roG = ro;    
-            isHitStar = renderStarField(galaxyId, roG, rd, targetPosG, targetId );
-			if (isHitStar) targetPosU = galaxyToUniverse(cfg.galaxy_pos,targetPosG);
-        }
-        
 
 
 // - Generate new Configuration ----------------------------
@@ -336,51 +191,14 @@ void VS( out vec4 fragColor, in vec2 fragCoord ) {
         cfg.ro_cam = ro;
         cfg.rd_cam = rd_cam;
 
-        // On est en mode attente
-        if (cfg.movingMode == STATIONARY) { // stationary
-            
-            // click en cours
-            bool isClick = (iMouse.z != 0. && abs(iMouse.z - iMouse.x) < 3. && abs(iMouse.w - iMouse.y) <3.)
-                           || (keyPress(32) >.5);
-
-            if (isClick) {
-                // On va declancher un mouvement vers le point cliqué
-				cfg.targetType = 
-                    	isHitGalaxy ? GALAXY :
-                		isHitStar ? STAR :
-                		isHitPlanet ? PLANET : NONE;
-                cfg.ro_from = ro;
-                cfg.ro_to = 
-                    isHitGalaxy ? (isU ? targetPosU-(cfg.target_pos==vec3(1)||targetPosU==cfg.target_pos?0.:.03)*rd : targetPosG-.03*rd*kU2G) : // vers la cible
-                    isHitStar ? targetPosG-.03*rd :
-                	isHitPlanet ? targetPosG-.06*rd/PLANET_FIELD_SCALE :
-                    ro + 3.*rd; // 3 unitees dans la direction du click
-
-                cfg.rd_from = rd_cam;
-                cfg.rd_to = rd;
-                cfg.movingMode = MOVING;            
-                cfg.time = iTime;
-                cfg.target_pos = isU ? targetPosU : targetPosG;
-                //((isHitGalaxy && targetId!=cfg.target_id)) ? targetId : isHitStar ? vec3(.5) : isHitPlanet ? vec3(9.) : vec3(0.);
-            }
-            
-        } else { 
-          // En mouvement vers une cible
-            if (isU && inGalaxy) {
-                // On vient de rentrer dans une galaxie, on change de coordonnes pour garder la precision
-                cfg = universeToGalaxy(galaxyPosU, cfg);
-                
-            } else if (isG && !inGalaxy) {
-                if (length(ro)*kG2U > GALAXY_RADIUS*3.) {
-                // On vient de sortir de la galaxy, on change de systeme de coordonnes pour garder la precision   
-       				cfg = galaxyToUniverse(galaxyPosU, cfg);
-                }
-            } 
+        if (isU) {
+            // On vient de rentrer dans une galaxie, on change de coordonnes pour garder la precision
+            cfg = universeToGalaxy(galaxyPosU, cfg);
+        }
           
-            if (iTime - cfg.time > TRAVEL_DELAY+1.) {
-                cfg.movingMode = STATIONARY;            
-                cfg.time = iTime;  
-            }
+        if (iTime - cfg.time > TRAVEL_DELAY+1.) {
+            cfg.movingMode = STATIONARY;            
+            cfg.time = iTime;  
         }
 
     }

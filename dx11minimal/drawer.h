@@ -107,6 +107,14 @@ namespace drawer
         Draw::Starfield(1);
     }
 
+    void drawGalaxyFog()
+    {
+        Shaders::vShader(5);
+        Shaders::pShader(5);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+        Draw::GalaxyFog(1);
+    }
+
     const COLORREF colors[] =
     {
         RGB(255, 0, 0),    // Красный
@@ -686,6 +694,7 @@ namespace drawer
 
             drawStarField();
             drawStars();
+            drawGalaxyFog();
 
 
             modelTransform = &placeConstToWorld;

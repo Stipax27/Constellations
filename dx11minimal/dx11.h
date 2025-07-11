@@ -495,6 +495,9 @@ namespace Shaders {
 
 		CreateVS(4, nameToPatchLPCWSTR("StarLink_VS.shader"));
 		CreatePS(4, nameToPatchLPCWSTR("StarLink_PS.shader"));
+
+		CreateVS(5, nameToPatchLPCWSTR("GalaxyFog_VS.shader"));
+		CreatePS(5, nameToPatchLPCWSTR("GalaxyFog_PS.shader"));
 	}
 
 	void vShader(unsigned int n)
@@ -962,6 +965,15 @@ namespace Draw
 		ConstBuf::ConstToPixel(1);
 
 		context->DrawInstanced(quadCount * 60000, instances, 0, 0);
+	}
+	void GalaxyFog(int quadCount)
+	{
+		ConstBuf::Update(0, ConstBuf::drawerV);
+		ConstBuf::ConstToVertex(0);
+		ConstBuf::Update(1, ConstBuf::drawerP);
+		ConstBuf::ConstToPixel(1);
+
+		context->Draw(quadCount * 6, 0);
 	}
 
 	void Present()
