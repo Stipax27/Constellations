@@ -71,6 +71,9 @@ public:
     point3d operator-(float scalar) const {
         return { x - scalar, y - scalar, z - scalar };
     }
+    point3d operator-() const {
+        return { -x, -y, -z };
+    }
     point3d& operator-=(const point3d& other) {
         x -= other.x;
         y -= other.y;

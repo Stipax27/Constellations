@@ -60,6 +60,7 @@ HWND hWnd;
 
 #include "WorldRender.h"
 
+
 #define MAX_LOADSTRING 100
                             // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text

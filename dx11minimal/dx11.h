@@ -1027,8 +1027,6 @@ namespace Camera
 	}
 	void UpdateCameraFromOffset()
 	{
-
-
 		Camera();
 	}
 }

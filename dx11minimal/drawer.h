@@ -928,7 +928,17 @@ namespace drawer
                 }
             }
             point3d start = starSet[player_sign]->position;
-            point3d end = ScreenToWorld(mouse.pos);
+
+            point3d camPos = point3d(XMVectorGetX(Camera::state.Eye), XMVectorGetY(Camera::state.Eye), XMVectorGetZ(Camera::state.Eye));
+            point3d mouseRay = GetMouseRay(mouse.pos);
+            point3d mousePos = camPos + mouseRay * 1000;
+            point3d end = start + (mousePos - start);
+
+            string info = std::to_string(mouseRay.x) + " " + std::to_string(mouseRay.y) + " " + std::to_string(mouseRay.z);
+            drawString(info.c_str(), 1500, 50, 1.0f, true);
+
+            Shaders::vShader(4);
+            Shaders::pShader(4);
             drawLine(start, end);
 
             float deltaTime = (currentTime - lastFrameTime) / 1000.0f;

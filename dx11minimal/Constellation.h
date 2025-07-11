@@ -12,7 +12,7 @@ public:
     float scale = 200;
     point3d angle;
     float distance;
-    
+    point3d lookvector = point3d(0,0,1);
     std::vector<point3d> starsCords;
     float hp;
     float maxHP;
