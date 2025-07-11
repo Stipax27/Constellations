@@ -1,4 +1,4 @@
-﻿const int SPIRAL_NOISE_ITER = 6
+const int SPIRAL_NOISE_ITER = 6
 
 const float PI = 3.14159265359;
 const float DEG_TO_RAD = (PI / 180.0);

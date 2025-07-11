@@ -1,4 +1,4 @@
-﻿const float PI = 3.14159265359;
+const float PI = 3.14159265359;
 const float DEG_TO_RAD = (PI / 180.0);
 const float MAX = 10000.0;
 
@@ -118,7 +118,7 @@ Config getConfig() {
     return cfg;
 }
 
-// Centré sur le centre de la galaxie
+// Centr? sur le centre de la galaxie
 // Echelle 1 pour la grille des etoiles
 vec3 universeToGalaxy(vec3 galaxyPosU, vec3 coord) {
     return (coord-galaxyPosU)*kU2G;
