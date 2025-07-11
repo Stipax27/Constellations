@@ -29,12 +29,8 @@ float time;
 #define PLANET   3.0f
 
 
-float fract(float x)
-{
-    return x - floor(x);
-}
-
-float3 fract(float3 x)
+template<typename T>
+T fract(T x)
 {
     return x - floor(x);
 }

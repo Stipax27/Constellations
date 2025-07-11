@@ -42,24 +42,20 @@ float time;
 // Noise functions
 //----------------------------------------------------------------------------------------
 
-float fract(float x)
+template<typename T>
+T fract(T x)
 {
     return x - floor(x);
 }
 
-float3 fract(float3 x)
-{
-    return x - floor(x);
-}
-
-#define HASHSCALE3 float3(.1031, .1030, .0973)
-#define HASHSCALE4 float4(1031, .1030, .0973, .1099)
-#define HASHSCALE1 .1031
+#define HASHSCALE3 float3(0.1031f, 0.1030f, 0.0973f)
+#define HASHSCALE4 float4(1031.0f, 0.1030f, 0.0973f, 0.1099f)
+#define HASHSCALE1 0.1031f
 
 float hash(float p)
 {
 	float3 p3  = fract(float3(p, p, p) * HASHSCALE1);
-    p3 += dot(p3, p3.yzx + 19.19);
+    p3 += dot(p3, p3.yzx + 19.19f);
     return fract((p3.x + p3.y) * p3.z);
 }
 
