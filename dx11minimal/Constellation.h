@@ -68,10 +68,34 @@ public:
         updateFlySpeed(deltaTime);
         updatePlayerPosition(deltaTime);
 
-        XMMATRIX scale = XMMatrixScaling(c.scale , c.scale , c.scale);
-        XMMATRIX rotation= XMMatrixRotationRollPitchYaw(0,0,0);
+        XMVECTOR heroPosition = XMVectorSet(
+            Camera::state.constellationOffset.r[3].m128_f32[0],
+            Camera::state.constellationOffset.r[3].m128_f32[1],
+            Camera::state.constellationOffset.r[3].m128_f32[2],
+            0.0f
+        );
+
+        // 2. Матрица перемещения в начало координат
+        XMMATRIX toOrigin = XMMatrixTranslationFromVector(-heroPosition);
+
+        // 3. Матрица вращения
+        XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(Hero::state.currentRotation);
+
+        // 4. Матрица масштабирования
+        XMMATRIX scaleMatrix = XMMatrixScaling(c.scale, c.scale, c.scale);
+
+        // 5. Матрица перемещения (из constellationOffset)
+        XMMATRIX translationMatrix = Camera::state.constellationOffset;
+
+        // 6. Обратная матрица перемещения
+        XMVECTOR det;
+        XMMATRIX invTranslationMatrix = XMMatrixInverse(&det, translationMatrix);
+
+        XMMATRIX Hero = translationMatrix * invTranslationMatrix * rotationMatrix * scaleMatrix * toOrigin;
+
+        return -Hero;
         //rotationMatrix(rotation);
-        return Camera::state.constellationOffset/10  * scale* rotation;
+        
     }
 
     friend XMMATRIX CreatefightProjectMatrix(const Constellation& c)

@@ -35,10 +35,10 @@ ID2D1SolidColorBrush* d2dBrush = nullptr;
 HWND hWnd;
 #include "utils.h"
 #include "dx11.h"
+#include "Player.h"
 
 #include "MainWindow.h"
 #include "Point3d.h"
-#include "Player.h"
 #include "mouse.h"
 #include "Navigation.h"
 #include "Constellation.h"

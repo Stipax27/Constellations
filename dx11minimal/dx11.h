@@ -984,7 +984,26 @@ float DegreesToRadians(float degrees)
 {
 	return degrees * PI / 180.f;
 }
+namespace Hero
+{
 
+	struct State
+	{
+		
+		XMVECTOR relativeMovement = XMVectorSet(-1, 0, 0, 0);
+		XMVECTOR currentRotation = XMQuaternionIdentity();
+		XMVECTOR Forward = XMVectorSet(0, 0, 1, 0);
+		XMVECTOR defaultUp = XMVectorSet(0, -1, 0, 0);
+		XMVECTOR Right = XMVectorSet(-1, 0, 0, 0);
+		XMVECTOR at = XMVectorSet(0, 0, 0, 0);
+		XMVECTOR Up = XMVector3Rotate(defaultUp, currentRotation);
+		
+		XMMATRIX constellationOffset = XMMatrixTranslation(0, 0, 0);
+
+	} static state;
+
+
+}
 namespace Camera
 {
 	struct State
@@ -992,25 +1011,62 @@ namespace Camera
 		bool mouse = false;
 		float camDist = 500.0f;
 		float minDist = 100.0f;
-		float maxDist = 30000.0f;
+		float maxDist = 500.0f;
 		float fovAngle = 60.0f;
 		XMVECTOR relativeMovement = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR currentRotation = XMQuaternionIdentity();
 		XMVECTOR Forward = XMVectorSet(0, 0, 1, 0);
 		XMVECTOR defaultUp = XMVectorSet(0, -1, 0, 0);
-		XMVECTOR Right = XMVectorSet(-1,0,0,0);
+		XMVECTOR Right = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR at = XMVectorSet(0, 0, 0, 0);
 		XMVECTOR Up = XMVector3Rotate(defaultUp, currentRotation);
-		XMVECTOR Eye =at - (Forward * camDist);
+		XMVECTOR Eye;
 		XMMATRIX constellationOffset = XMMatrixTranslation(0, 0, 0);
 	} static state;
 
-	void Camera()
+	void UpdateCameraPosition()
 	{
-		ConstBuf::camera.view[0] = XMMatrixTranspose(XMMatrixLookAtLH(XMVECTOR{ 0,0,-300 }, XMVECTOR{ 0, 0, 0 }, XMVECTOR{ 0, 1, 0 }));
-		//ConstBuf::camera.view[0] = XMMatrixTranspose(XMMatrixLookAtLH(state.Eye, state.at, state.Up));
+		// Получаем текущую позицию героя
+		XMVECTOR heroPosition = XMVectorSet(
+			Camera::state.constellationOffset.r[3].m128_f32[0],
+			Camera::state.constellationOffset.r[3].m128_f32[1],
+			Camera::state.constellationOffset.r[3].m128_f32[2],
+			0.0f
+		);
 
-		ConstBuf::camera.proj[0] = XMMatrixTranspose(XMMatrixPerspectiveFovLH(DegreesToRadians(state.fovAngle), iaspect,0.01f,10000.0f));
+		// Обновляем векторы камеры на основе ориентации героя
+		float speed = 1.;
+		state.Forward = XMVectorLerp(state.Forward, Hero::state.Forward, speed);
+		state.Up = XMVectorLerp(state.Up, Hero::state.Up, speed);
+		state.Right = XMVectorLerp(state.Right, Hero::state.Right, speed);
+
+		// Нормализация векторов
+		//state.Forward = XMVector3Normalize(state.Forward);
+		//state.Up = XMVector3Normalize(state.Up);
+		//state.Right = XMVector3Normalize(state.Right);
+
+		state.Eye = heroPosition - (state.Forward * state.camDist);//откуда смотрит камера
+		state.at = heroPosition;//куда смотрит камера
+	}
+
+	void Camera()//обновление позиции камеры после обновления позиция созвездия в Navigation.h Дублирующее
+	{
+		UpdateCameraPosition();
+
+		// Обновляем матрицу вида
+		ConstBuf::camera.view[0] = XMMatrixTranspose(XMMatrixLookAtLH(
+			state.Eye,
+			state.at,
+			state.Up
+		));
+
+		// Матрица проекции остается неизменной
+		ConstBuf::camera.proj[0] = XMMatrixTranspose(XMMatrixPerspectiveFovLH(
+			DegreesToRadians(state.fovAngle),
+			iaspect,
+			0.01f,
+			10000.0f
+		));
 
 		ConstBuf::UpdateCamera();
 		ConstBuf::ConstToVertex(3);
@@ -1019,16 +1075,8 @@ namespace Camera
 
 	void HandleMouseWheel(int delta)
 	{
-		state.camDist -= delta ; 
+		state.camDist -= delta * 5.0f; // Увеличиваем чувствительность
 		state.camDist = clamp(state.camDist, state.minDist, state.maxDist);
-
-		// Пересчитываем позицию камеры
-		state.Eye = state.at - (state.Forward * state.camDist);
-		Camera();
-	}
-	void UpdateCameraFromOffset()
-	{
 		Camera();
 	}
 }
-

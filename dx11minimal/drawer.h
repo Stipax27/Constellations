@@ -921,7 +921,7 @@ namespace drawer
             point3d mousePos = camPos + mouseRay * 1000;
             point3d end = start + (mousePos - start);
 
-            string info = std::to_string(mouseRay.x) + " " + std::to_string(mouseRay.y) + " " + std::to_string(mouseRay.z);
+            string info = std::to_string(camPos.x);
             drawString(info.c_str(), 1500, 50, 1.0f, true);
 
             Shaders::vShader(4);

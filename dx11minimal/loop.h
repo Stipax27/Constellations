@@ -16,7 +16,7 @@ void mainLoop()
 	if (!Camerainit)
 	{
 		Camerainit = true;
-		Camera::Camera();
+		//Camera::Camera();
 	}
 
 
