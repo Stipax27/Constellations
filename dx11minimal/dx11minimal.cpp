@@ -38,6 +38,7 @@ HWND hWnd;
 
 #include "MainWindow.h"
 #include "Point3d.h"
+#include "Player.h"
 #include "mouse.h"
 #include "Navigation.h"
 #include "Constellation.h"
@@ -51,7 +52,6 @@ HWND hWnd;
 #include "DiologTEXT.h"
 #include "DialogStruct.h"
 #include "Parametrics.h"
-#include "Player.h"
 #include "drawer.h"
 
 #include "loop.h"

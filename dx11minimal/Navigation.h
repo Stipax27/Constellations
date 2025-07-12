@@ -1,4 +1,4 @@
-point3d player_dodge_ofs = { 0,0,0 };
+п»їpoint3d player_dodge_ofs = { 0,0,0 };
 point3d starfield_angles = { 0,0,0 };
 point3d milkyway_angles = { 0,0,100 };
 
@@ -9,34 +9,44 @@ const float maxFlySpeed = 0.1f;
 const float flyAcceleration = 0.2f;
 const float flyDeceleration = 0.002f;
 
-void updateFlyDirection() { // Раскладка управления 
+void updateFlyDirection() { // Р Р°СЃРєР»Р°РґРєР° СѓРїСЂР°РІР»РµРЅРёСЏ 
     flyDirection = { 0, 0, 0 };
 
     if (GetAsyncKeyState('W') & 0x8000) {
-        // Добавляем вектор направления камеры (уже нормализован)
-        flyDirection.x += XMVectorGetX(Camera::state.Forward) * 1.0f;
-        flyDirection.y += XMVectorGetY(Camera::state.Forward) * 1.0f;
-        flyDirection.z += XMVectorGetZ(Camera::state.Forward) * 1.0f;
+        // Р”РѕР±Р°РІР»СЏРµРј РІРµРєС‚РѕСЂ РЅР°РїСЂР°РІР»РµРЅРёСЏ РєР°РјРµСЂС‹ (СѓР¶Рµ РЅРѕСЂРјР°Р»РёР·РѕРІР°РЅ)
+        flyDirection.x += XMVectorGetX(Hero::state.Forward) * 1.0f;
+        flyDirection.y += XMVectorGetY(Hero::state.Forward) * 1.0f;
+        flyDirection.z += XMVectorGetZ(Hero::state.Forward) * 1.0f;
     }
     if (GetAsyncKeyState('S') & 0x8000) {
-        // Движение назад - обратное направление
-        flyDirection.x -= XMVectorGetX(Camera::state.Forward) * 1.0f;
-        flyDirection.y -= XMVectorGetY(Camera::state.Forward) * 1.0f;
-        flyDirection.z -= XMVectorGetZ(Camera::state.Forward) * 1.0f;
+        // Р”РІРёР¶РµРЅРёРµ РЅР°Р·Р°Рґ - РѕР±СЂР°С‚РЅРѕРµ РЅР°РїСЂР°РІР»РµРЅРёРµ
+        flyDirection.x -= XMVectorGetX(Hero::state.Forward) * 1.0f;
+        flyDirection.y -= XMVectorGetY(Hero::state.Forward) * 1.0f;
+        flyDirection.z -= XMVectorGetZ(Hero::state.Forward) * 1.0f;
     }
     if (GetAsyncKeyState('A') & 0x8000) {
-        // Добавляем вектор направления камеры (уже нормализован)
-        flyDirection.x -= XMVectorGetX(Camera::state.Right) * 0.5f;
-        flyDirection.y -= XMVectorGetY(Camera::state.Right) * 0.5f;
-        flyDirection.z -= XMVectorGetZ(Camera::state.Right) * 0.5f;
+        // Р”РѕР±Р°РІР»СЏРµРј РІРµРєС‚РѕСЂ РЅР°РїСЂР°РІР»РµРЅРёСЏ РєР°РјРµСЂС‹ (СѓР¶Рµ РЅРѕСЂРјР°Р»РёР·РѕРІР°РЅ)
+        flyDirection.x += XMVectorGetX(Hero::state.Right) * 0.5f;
+        flyDirection.y += XMVectorGetY(Hero::state.Right) * 0.5f;
+        flyDirection.z += XMVectorGetZ(Hero::state.Right) * 0.5f;
     }
     if (GetAsyncKeyState('D') & 0x8000) {
-        // Движение назад - обратное направление
-        flyDirection.x += XMVectorGetX(Camera::state.Right) * 0.5f;
-        flyDirection.y += XMVectorGetY(Camera::state.Right) * 0.5f;
-        flyDirection.z += XMVectorGetZ(Camera::state.Right) * 0.5f;
+        // Р”РІРёР¶РµРЅРёРµ РЅР°Р·Р°Рґ - РѕР±СЂР°С‚РЅРѕРµ РЅР°РїСЂР°РІР»РµРЅРёРµ
+        flyDirection.x -= XMVectorGetX(Hero::state.Right) * 0.5f;
+        flyDirection.y -= XMVectorGetY(Hero::state.Right) * 0.5f;
+        flyDirection.z -= XMVectorGetZ(Hero::state.Right) * 0.5f;
     }
+   
+    float dYawKeyboard = 0.0f;
 
+    if (GetAsyncKeyState('E')) { dYawKeyboard -= turnSpeed; }
+    if (GetAsyncKeyState('Q')) { dYawKeyboard += turnSpeed; }
+    XMVECTOR qYawTotal = XMQuaternionRotationAxis(XMVectorSet(0, 0, 1, 0), dYawKeyboard);
+    Hero::state.currentRotation = XMQuaternionMultiply(qYawTotal, Hero::state.currentRotation);
+    Hero::state.currentRotation = XMQuaternionNormalize(Hero::state.currentRotation);
+    Hero::state.Forward = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), Hero::state.currentRotation);
+    Hero::state.Up = XMVector3Rotate(Hero::state.defaultUp, Hero::state.currentRotation);
+    Hero::state.Right = XMVector3Rotate(XMVectorSet(-1, 0, 0, 0), Hero::state.currentRotation);
     /*float length = sqrt(flyDirection.x * flyDirection.x + flyDirection.y * flyDirection.y + flyDirection.z * flyDirection.z);
 
     if (length > 0) {
@@ -46,7 +56,7 @@ void updateFlyDirection() { // Раскладка управления
     }*/
 }
 
-void updateFlySpeed(float deltaTime) {// Обновления во время полёта
+void updateFlySpeed(float deltaTime) {// РћР±РЅРѕРІР»РµРЅРёСЏ РІРѕ РІСЂРµРјСЏ РїРѕР»С‘С‚Р°
     bool isMoving = (flyDirection.x != 0 || flyDirection.y != 0 || flyDirection.z != 0);
 
     if (isMoving)
@@ -66,9 +76,9 @@ void updateFlySpeed(float deltaTime) {// Обновления во время полёта
     }
 }
 
-void updatePlayerPosition(float deltaTime) {// обновление позиции ГГ
+void updatePlayerPosition(float deltaTime) {// РѕР±РЅРѕРІР»РµРЅРёРµ РїРѕР·РёС†РёРё Р“Р“
     if (currentFlySpeed > 0) {
-        if (GetAsyncKeyState(VK_SHIFT) & 0x8000) currentFlySpeed *= 5.f;// Ускорение полёта
+        if (GetAsyncKeyState(VK_SHIFT) & 0x8000) currentFlySpeed *= 5.f;// РЈСЃРєРѕСЂРµРЅРёРµ РїРѕР»С‘С‚Р°
 
          Camera::state.constellationOffset = Camera::state.constellationOffset *XMMatrixTranslation(flyDirection.x * currentFlySpeed * deltaTime, flyDirection.y * currentFlySpeed * deltaTime, flyDirection.z * currentFlySpeed * deltaTime);
          float x = Camera::state.constellationOffset.r[3].m128_f32[0];

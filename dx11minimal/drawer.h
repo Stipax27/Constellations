@@ -440,22 +440,7 @@ namespace drawer
         }
     }
 
-    //void CheckCollision(Projectile& proj) {
-    //    Constellation* enemy = starSet[currentEnemyID];
-
-    //    for (size_t i = 0; i < enemy->starsCords.size(); ++i) {
-    //        point3d starPos = enemy->starsCords[i];
-    //        modelTransform(starPos, *enemy);
-
-    //        float dist = (proj.position - starPos).length();
-
-    //        if (dist < 10.0f) { // Радиус столкновения
-    //            enemy->starsHealth[i] -= weapon[(int)current_weapon].damage;
-    //            proj.isActive = false;
-    //            break;
-    //        }
-    //    }
-    //}
+    
 
     void ProjectileUpdate(float deltaTime) {
         // Обновление снарядов
@@ -535,6 +520,8 @@ namespace drawer
         }
     }
 
+
+    
 
     void DrawStarsHP(HDC hdc) {
 

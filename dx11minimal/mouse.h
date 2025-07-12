@@ -1,4 +1,4 @@
-void navigationByMouse();
+п»їvoid navigationByMouse();
 void selectWeapon();
 
 struct Mouse
@@ -13,7 +13,7 @@ struct Mouse
     {
         POINT p;
         GetCursorPos(&p);
-        ScreenToClient(window.hWnd, &p); // Управление мышью.
+        ScreenToClient(window.hWnd, &p); // РЈРїСЂР°РІР»РµРЅРёРµ РјС‹С€СЊСЋ.
 
         pos = { (float)p.x, (float)p.y, 0.f };
 
@@ -41,14 +41,14 @@ void rotationMatrix(XMMATRIX& rotationMatrix)
         mouse.oldAngle = mouse.Angle;
     }
 
-    // Определяем изменения координат мыши
+    // РћРїСЂРµРґРµР»СЏРµРј РёР·РјРµРЅРµРЅРёСЏ РєРѕРѕСЂРґРёРЅР°С‚ РјС‹С€Рё
     float dx = (mouse.pos.x - mouse.oldPos.x) * 0.01f;
     float dy = (mouse.pos.y - mouse.oldPos.y) * 0.01f;
 
-    // Кватернион вращения по вертикальной оси (yaw)
+    // РљРІР°С‚РµСЂРЅРёРѕРЅ РІСЂР°С‰РµРЅРёСЏ РїРѕ РІРµСЂС‚РёРєР°Р»СЊРЅРѕР№ РѕСЃРё (yaw)
     XMVECTOR qYaw = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), dx);
 
-    // Кватернион вращения по горизонтальной оси (pitch)
+    // РљРІР°С‚РµСЂРЅРёРѕРЅ РІСЂР°С‰РµРЅРёСЏ РїРѕ РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅРѕР№ РѕСЃРё (pitch)
     XMVECTOR qPitch = XMQuaternionRotationAxis(XMVectorSet(1, 0, 0, 0), dy);
 
     XMVECTOR finalRotationQuat = XMQuaternionMultiply(qYaw, qPitch);
@@ -90,18 +90,18 @@ void navigationByMouse()
         float dx = (mouse.pos.x - mouse.oldPos.x) * 0.01;
         float dy = (mouse.pos.y - mouse.oldPos.y) * 0.01;
 
-        // Инвертировали dy для инвертированной оси Y
-        XMVECTOR qPitch = XMQuaternionRotationAxis(XMVectorSet(1, 0, 0, 0), -dy); // Изwменили знак dy
+        // РРЅРІРµСЂС‚РёСЂРѕРІР°Р»Рё dy РґР»СЏ РёРЅРІРµСЂС‚РёСЂРѕРІР°РЅРЅРѕР№ РѕСЃРё Y
+        XMVECTOR qPitch = XMQuaternionRotationAxis(XMVectorSet(1, 0, 0, 0), -dy); // РР·wРјРµРЅРёР»Рё Р·РЅР°Рє dy
         XMVECTOR qYaw = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), -dx);
 
         float dYawKeyboard = 0.0f;
         //if (GetAsyncKeyState(0x44)){ dYawKeyboard -= turnSpeed ; }
         //if (GetAsyncKeyState(0x41)){dYawKeyboard += turnSpeed ; }
 
-        // Формирование общего кватерниона поворота вокруг оси Y
+        // Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕР±С‰РµРіРѕ РєРІР°С‚РµСЂРЅРёРѕРЅР° РїРѕРІРѕСЂРѕС‚Р° РІРѕРєСЂСѓРі РѕСЃРё Y
         XMVECTOR qYawTotal = XMQuaternionRotationAxis(XMVectorSet(0, 0, 1, 0), dYawKeyboard);
 
-        // Общий кватернион поворота
+        // РћР±С‰РёР№ РєРІР°С‚РµСЂРЅРёРѕРЅ РїРѕРІРѕСЂРѕС‚Р°
         XMVECTOR qNewRotation = XMQuaternionMultiply(qYawTotal, qPitch);
         qNewRotation = XMQuaternionMultiply(qYaw, qNewRotation);
         Camera::state.currentRotation = XMQuaternionMultiply(qNewRotation, Camera::state.currentRotation);
@@ -133,7 +133,7 @@ void selectWeapon()
         float lenght = sqrt(dx * dx + dy * dy);
         if (lenght < circleRadius)
         {
-            currentColorIndex = min(numColors * (atan2(dy, -dx) / (2. * PI) + .5), numColors - 1);// При нажатии ЛКМ Перекрас мыши в цвет который мы выбррали на Цвет. круге.
+            currentColorIndex = min(numColors * (atan2(dy, -dx) / (2. * PI) + .5), numColors - 1);// РџСЂРё РЅР°Р¶Р°С‚РёРё Р›РљРњ РџРµСЂРµРєСЂР°СЃ РјС‹С€Рё РІ С†РІРµС‚ РєРѕС‚РѕСЂС‹Р№ РјС‹ РІС‹Р±СЂСЂР°Р»Рё РЅР° Р¦РІРµС‚. РєСЂСѓРіРµ.
         }
         else
         {
