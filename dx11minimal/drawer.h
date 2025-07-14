@@ -109,10 +109,10 @@ namespace drawer
 
     void drawGalaxyFog()
     {
-        /*Shaders::vShader(5);
+        Shaders::vShader(5);
         Shaders::pShader(5);
         Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-        Draw::GalaxyFog(1);*/
+        Draw::GalaxyFog(1);
     }
 
     const COLORREF colors[] =

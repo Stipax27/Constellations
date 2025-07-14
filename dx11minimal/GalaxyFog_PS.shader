@@ -1,3 +1,17 @@
+cbuffer frame : register(b4)
+{
+    float4 time;
+    float4 aspect;
+};
+
+cbuffer camera : register(b3)
+{
+    float4x4 world[2];
+    float4x4 view[2];
+    float4x4 proj[2];
+};
+
+
 int SPIRAL_NOISE_ITER = 6;
 
 float DEG_TO_RAD = 0.0174699591855f;
@@ -18,8 +32,6 @@ float PLANET_FIELD_VOXEL_STEP_SIZE = 0.5f;  // 5AL
 float PLANET_RADIUS = 0.04f;
 
 float3 SUN_COLOR = float3(0.3f, 0.21f, 0.165f);
-
-float time;
 
 float kU2G = 500000.0f;
 float kG2U = 0.000002f;
@@ -157,7 +169,7 @@ float3 hsv2rgb(float x, float y, float z) {
 }
 
 
-float4 renderIntergalacticClouds(float3 ro, float3 rd, float tmax, const float4 id) {
+float4 renderIntergalacticClouds(float3 ro, float3 rd, float tmax, float4 id) {
     
     float max_dist= min(tmax, float(STAR_FIELD_VOXEL_STEPS)),
 		  td=0.0f, d, t, noi, lDist, a, sp = 9.0f,         
@@ -225,50 +237,44 @@ float4 PS( VS_OUTPUT input ) : SV_Target
 {
 	float2 uv = input.uv;
     float2 p = -1.0f + 2.0f * uv;
-    p.x *= iResolution.x/iResolution.y;
+    //p.x *= iResolution.x/iResolution.y;
     
-    float3 col = float3(0);
+    float3 color = float3(0, 0, 0);
     
     
 // Lecture de la configuration -------------------------
-        Config cfg = getConfig();
 
-		bool isU = cfg.coordSystem == IN_UNIVERSE,
-			 isG = cfg.coordSystem == IN_GALAXY;
+		bool isU = false,
+			 isG = true;
 
 // camera ----------------------------------------------
 
-    float3 ro, rdcam, ta, up;
-    ro = cfg.ro_cam; 
-    rdcam = cfg.rd_cam;
+    float4x4 v = view[0];
+    v._m30_m31_m32_m33 = 0.0f;
 
-    // Leger tangage
-    up = normalize(float3(.1*cos(.1*iTime), .3*cos(.1*iTime), 1.));
+    float3 ro, rdcam, up;
+    ro = float3(view[0]._m30_m31_m32);
+    rdcam = float3(view[0]._m20_m21_m22);
+    up = float3(view[0]._m10_m11_m12);
+
     float3 ww = normalize( rdcam ),
-         uu = normalize( cross(ww,up) ),
-         vv = normalize( cross(uu,ww)),
-         rd = normalize( -p.x*uu + p.y*vv + 2.*ww );
+         uu = normalize( cross(ww, up) ),
+         vv = normalize( cross(uu, ww)),
+         rd = normalize( -p.x * uu + p.y * vv + 2.0f * ww );
        
 // - rendu des etoiles -----------------------------------
 
-	float3 starPosG, starId = float3(90);  
-	float4 star = float4(0);
-    
-    float3 roG = isU ? universeToGalaxy(cfg.galaxy_pos, ro) : ro;    
-    float dStar = 9999.;
-    star = renderStarField(roG, rd, dStar, starId );
+	float3 starPosG, starId = float3(90, 90, 90);  
+	float4 star = float4(0, 0, 0, 0);
+
+    float3 roG = isU ? universeToGalaxy(float3(0, 0, 0), ro) : ro;
+    float dStar = 9999.0f;
+    float4 clouds = renderIntergalacticClouds(roG, rd, dStar, float4(0.5f, 0.4f, 0.16f, 0.7f));
+    star = clouds + (1.-clouds.a) *sqrt(star) * star.a;
 
 // - rendu des galaxies ----------------------------------
 
-    float3 targetPosU, targetId = float3(90);
-    // Le calcul se fait toujours en coordonnees univers
-	float3 roU = isG ? galaxyToUniverse(cfg.galaxy_pos, ro) : ro;
-	float4 colGalaxy = renderGalaxyField(roU, rd, targetPosU, targetId, isG);
-
-    star.rgb += colGalaxy.rgb* (1. - star.a);
-
-    col = star.rgb;
+    color = star.xyz;
     
-    
-    return float4((isU ? float3(0.03,0.,.1)+col : col), 1.);
+    return float4((isU ? float3(0.03f, 0.1f, 0.1f) + color : color), 1.0f);
 }

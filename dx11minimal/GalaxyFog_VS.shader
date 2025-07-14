@@ -62,19 +62,13 @@ float hash(float3 p3) {
 #define HASHSCALE3 float3(0.1031f, 0.1030f, 0.0973f)
 float3 hash33(float3 p3){
 	p3 = fract(p3 * HASHSCALE3);
-    p3 += dot(p3, p3.yxz+19.19f);
-    return fract(float3((p3.x + p3.y)*p3.z, (p3.x+p3.z)*p3.y, (p3.y+p3.z)*p3.x));
+    p3 += dot(p3, p3.yxz + 19.19f);
+    return fract(float3((p3.x + p3.y) * p3.z, (p3.x+p3.z)*p3.y, (p3.y + p3.z) * p3.x));
 }
 
 //--------------------------------------------------------------------
 
-// Centr? sur le centre de la galaxie
-// Echelle 1 pour la grille des etoiles
-float3 universeToGalaxy(float3 galaxyPosU, float3 coord) {
-    return (coord-galaxyPosU)*kU2G;
-}
-
-#define R(p, a) p=cos(a)*p+sin(a)*vec2(p.y, -p.x)
+#define R(p, a) p = cos(a) * p+sin(a) * vec2(p.y, -p.x)
 
 struct VS_OUTPUT
 {
@@ -84,7 +78,7 @@ struct VS_OUTPUT
     float4 worldpos : POSITION1;
 };
 
-VS_OUTPUT VS(uint vID : SV_VertexID, out float4 fragColor, in float2 fragCoord ) {
+VS_OUTPUT VS(uint vID : SV_VertexID ) {
 
     VS_OUTPUT output;
 
@@ -101,23 +95,6 @@ VS_OUTPUT VS(uint vID : SV_VertexID, out float4 fragColor, in float2 fragCoord )
 
     output.pos = float4(pos.xy, 0, 1);
     output.uv = uv;
-        
-
-// - Est t on dans une galaxie ? --------------------------------     
-    float3 galaxyId, galaxyPosU;
-
-
-// - Generate new Configuration ----------------------------
-
-    if (isU) {
-        // On vient de rentrer dans une galaxie, on change de coordonnes pour garder la precision
-        output = universeToGalaxy(galaxyPosU, output);
-    }
-    
-    
-// - Save new Configuration -----------------------------------
-    fragColor = float4(0.0f);
-    //saveConfig(output, fragColor, fragCoord);
 
     return output;
 }
