@@ -21,6 +21,8 @@ float3 SUN_COLOR = float3(0.3f, 0.21f, 0.165f);
 
 float time;
 
+float kU2G = 500000.0f;
+float kG2U = 0.000002f;
 
 //-----------------------------------------------------
 
@@ -134,8 +136,9 @@ float pn(const in float3 x) {
     float3 p = floor(x), f = fract(x);
 	f *= f * (3.0f - f - f);
 	float2 uv = (p.xy + float2(37.0f, 17.0f) * p.z) + f.xy,
-	     rg = textureLod(tex, (uv + 0.5f) / 256.0f, - 100.0f).yx;
-	return 2.4f * mix(rg.x, rg.y, f.z) - 1.0f;
+	     //rg = textureLod(tex, (uv + 0.5f) / 256.0f, - 100.0f).yx;
+         rg = float2(1.0f, 1.0f);
+	return 2.4f * lerp(rg.x, rg.y, f.z) - 1.0f;
 }
 
 float mapIntergalacticCloud(float3 p, float4 id) {
@@ -150,7 +153,7 @@ float mapIntergalacticCloud(float3 p, float4 id) {
 
 
 float3 hsv2rgb(float x, float y, float z) {	
-	return z + z * y * (clamp(abs(mod(x * 6.0f + float3(0, 4, 2), 6.0f) - 3.0f) - 1.0f, 0.0f, 1.0f) - 1.0f);
+	return z + z * y * (clamp(abs(((x * 6.0f + float3(0, 4, 2)) % 6.0f) - 3.0f) - 1.0f, 0.0f, 1.0f) - 1.0f);
 }
 
 
@@ -172,9 +175,9 @@ float4 renderIntergalacticClouds(float3 ro, float3 rd, float tmax, const float4 
         d = abs(mapIntergalacticCloud(pos, id)) + 0.07f;
 
         // Light calculations
-        lDist = max(length(mod(pos + sp * 0.5f, sp) - sp * 0.5f), 0.001f); // TODO add random offset
+        lDist = max(length(((pos + sp * 0.5f) % sp) - sp * 0.5f), 0.001f); // TODO add random offset
         noi = pn(0.05f * pos);
-        lightColor = mix(hsv2rgb(noi, 0.5f, 0.6f), 
+        lightColor = lerp(hsv2rgb(noi, 0.5f, 0.6f), 
                          hsv2rgb(noi + 0.3f, 0.5f, 0.6f), 
                          smoothstep(rRef * 0.5, rRef * 2.0f, lDist));
         sum.rgb += a * lightColor / exp(lDist * lDist * lDist * 0.08f) / 30.0f;
@@ -209,8 +212,9 @@ float3 universeToGalaxy(float3 galaxyPosU, float3 coord) {
 }
 
 
-float4 PS( out float4 fragColor, in float2 fragCoord ) {
-	float2 uv = fragCoord.xy / iResolution.xy;
+float4 PS( VS_OUTPUT input ) : SV_Target
+{
+	float2 uv = input.uv;
     float2 p = -1.0f + 2.0f * uv;
     p.x *= iResolution.x/iResolution.y;
     
