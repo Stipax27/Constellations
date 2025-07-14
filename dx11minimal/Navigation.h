@@ -53,10 +53,12 @@ void updateFlyDirection() { // Раскладка управления
         dYaw -= turnSpeed; Camera::state.n += 10;
 }
     if (GetAsyncKeyState('E')){
-        dRoll -= turnSpeed; Camera::state.n += 10;
+        dRoll -= turnSpeed;
+        Camera::state.n = lerp(Camera::state.n, 100, 0.2f);
 }
     if (GetAsyncKeyState('Q')){
-        dRoll += turnSpeed; Camera::state.n += 10;
+        dRoll += turnSpeed;
+        Camera::state.n = lerp(Camera::state.n, 100, 0.2f);
 }
 
         if (dPitch != 0.0f || dYaw != 0.0f || dRoll != 0.0f) {
@@ -75,7 +77,7 @@ void updateFlyDirection() { // Раскладка управления
             Hero::state.Up = XMVector3Rotate(Hero::state.defaultUp, Hero::state.currentRotation);
             Hero::state.Right = XMVector3Cross(Hero::state.Up, Hero::state.Forwardbuf);
         }
-        else Camera::state.n=0;
+        else Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
                     //убейте меня!!!!!!!!!!!
 
     /*float length = sqrt(flyDirection.x * flyDirection.x + flyDirection.y * flyDirection.y + flyDirection.z * flyDirection.z);
