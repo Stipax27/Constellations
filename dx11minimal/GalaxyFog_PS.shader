@@ -251,7 +251,6 @@ float4 PS( VS_OUTPUT input ) : SV_Target
        
 // - rendu des etoiles -----------------------------------
 
-    bool isHitStar = false;
 	float3 starPosG, starId = float3(90);  
 	float4 star = float4(0);
     

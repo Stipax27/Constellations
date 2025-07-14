@@ -88,13 +88,19 @@ VS_OUTPUT VS(uint vID : SV_VertexID, out float4 fragColor, in float2 fragCoord )
 
     VS_OUTPUT output;
 
-    uint starID = vID / 6;
     uint vertexInQuad = vID % 6;
 
     float2 quadPos[6] = {
         float2(-1, -1), float2(1, -1), float2(-1, 1),
         float2(1, -1), float2(1, 1), float2(-1, 1)
     };
+
+    float2 pos = quad[vID];
+
+    float2 uv = float2(0.5 + p.x * 0.5, 0.5 - p.y * 0.5);
+
+    output.pos = float4(p.xy, 0, 1);
+    output.uv = uv;
 		
     if (fragCoord.y > 0.5f || fragCoord.x > 10.0f) discard;
             float2 uv = iMouse.xy / iResolution.xy;
