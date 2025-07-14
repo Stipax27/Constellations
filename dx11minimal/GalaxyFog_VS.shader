@@ -95,58 +95,23 @@ VS_OUTPUT VS(uint vID : SV_VertexID, out float4 fragColor, in float2 fragCoord )
         float2(1, -1), float2(1, 1), float2(-1, 1)
     };
 
-    float2 pos = quad[vID];
+    float2 pos = quadPos[vID];
 
-    float2 uv = float2(0.5 + p.x * 0.5, 0.5 - p.y * 0.5);
+    float2 uv = float2(0.5 + pos.x * 0.5, 0.5 - pos.y * 0.5);
 
-    output.pos = float4(p.xy, 0, 1);
+    output.pos = float4(pos.xy, 0, 1);
     output.uv = uv;
-		
-    if (fragCoord.y > 0.5f || fragCoord.x > 10.0f) discard;
-            float2 uv = iMouse.xy / iResolution.xy;
-        float2 p = -1.0f + 2.0f * uv;
-        p.x *= iResolution.x/iResolution.y;
-
-// - Initialisation si besoin -------------------------  
-    if(iFrame < 10) { 
-        
-        output.rd_cam = normalize(float3(1.0f, 0.0f, 0.0f));
- 
-        float3 pos = floor(float3(10.0f));
-        float3 id = hash33(pos),
-        offset = clamp(id, GALAXY_RADIUS, 1.0f - GALAXY_RADIUS);
-        output.ro_cam = pos + offset- 0.03f * output.rd_cam;
-        float3 mov = 0.03f * output.rd_cam;
-        float3 center = output.ro_cam + mov; 
-        R(mov.yz, 1.0f);
-        R(mov.xy, 1.0f);
-        output.ro_cam = center - mov;
-        output.rd_cam = normalize(mov);
-        
-        output.ro_from = output.ro_cam;
-        output.rd_from = output.rd_cam;
-        output.ro_to = output.ro_cam;
-        output.rd_to = output.rd_cam;
-        output.galaxy_pos = float3(0);
-        output.target_pos = float3(1);
-
-    } else {
         
 
 // - Est t on dans une galaxie ? --------------------------------     
-        float3 galaxyId, galaxyPosU;
+    float3 galaxyId, galaxyPosU;
 
 
 // - Generate new Configuration ----------------------------
 
-        output.ro_cam = ro;
-        output.rd_cam = rd_cam;
-
-        if (isU) {
-            // On vient de rentrer dans une galaxie, on change de coordonnes pour garder la precision
-            output = universeToGalaxy(galaxyPosU, output);
-        }
-
+    if (isU) {
+        // On vient de rentrer dans une galaxie, on change de coordonnes pour garder la precision
+        output = universeToGalaxy(galaxyPosU, output);
     }
     
     
