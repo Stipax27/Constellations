@@ -993,6 +993,7 @@ namespace Hero
 		XMVECTOR relativeMovement = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR currentRotation = XMQuaternionIdentity();
 		XMVECTOR Forward = XMVectorSet(0, 0, 1, 0);
+		XMVECTOR Forwardbuf = XMVectorSet(0, 0, 1, 0);
 		XMVECTOR defaultUp = XMVectorSet(0, -1, 0, 0);
 		XMVECTOR Right = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR at = XMVectorSet(0, 0, 0, 0);
@@ -1008,20 +1009,24 @@ namespace Camera
 {
 	struct State
 	{
+		int n = 0; //угол поворота
 		bool mouse = false;
 		float camDist = 500.0f;
-		float minDist = 100.0f;
-		float maxDist = 500.0f;
+		float camDist1 = 500.0f;
+		float minDist = 500.0f;
+		float maxDist = 1000.0f;
 		float fovAngle = 60.0f;
 		XMVECTOR relativeMovement = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR currentRotation = XMQuaternionIdentity();
 		XMVECTOR Forward = XMVectorSet(0, 0, 1, 0);
+		//XMVECTOR Forwardbuf = XMVectorSet(0, 0, 1, 0);//аналог форварда локальный тут
 		XMVECTOR defaultUp = XMVectorSet(0, -1, 0, 0);
 		XMVECTOR Right = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR at = XMVectorSet(0, 0, 0, 0);
 		XMVECTOR Up = XMVector3Rotate(defaultUp, currentRotation);
 		XMVECTOR Eye;
 		XMMATRIX constellationOffset = XMMatrixTranslation(0, 0, 0);
+		XMVECTOR EyeBack = XMVectorSet(0, 0, -1, 0);
 	} static state;
 
 	void UpdateCameraPosition()
@@ -1033,23 +1038,43 @@ namespace Camera
 			Camera::state.constellationOffset.r[3].m128_f32[2],
 			0.0f
 		);
-
 		// Обновляем векторы камеры на основе ориентации героя
-		float speed = 1.;
-		state.Forward = XMVectorLerp(state.Forward, Hero::state.Forward, speed);
+		float speed = 0.5f;
+
+		/*
+		XMVECTOR camRotation = XMQuaternionRotationMatrix(XMMatrixLookToLH(
+			XMVectorZero(), state.Forward, state.Up));
+		XMVECTOR heroRotation = XMQuaternionRotationMatrix(XMMatrixLookToLH(
+			XMVectorZero(), Hero::state.Forward, Hero::state.Up));
+		XMVECTOR newRotation = XMQuaternionSlerp(camRotation, heroRotation, speed);
+		XMMATRIX rotMatrix = XMMatrixRotationQuaternion(newRotation);
+		state.Forward = XMVector3TransformNormal(XMVectorSet(0, 0, 1, 0), rotMatrix);
+		state.Up = XMVector3TransformNormal(XMVectorSet(0, 1, 0, 0), rotMatrix);
+		*/
+
+		state.Forward = XMVectorLerp(state.Forward, Hero::state.Forwardbuf, speed);
 		state.Up = XMVectorLerp(state.Up, Hero::state.Up, speed);
 		state.Right = XMVectorLerp(state.Right, Hero::state.Right, speed);
 
-		// Нормализация векторов
-		//state.Forward = XMVector3Normalize(state.Forward);
-		//state.Up = XMVector3Normalize(state.Up);
-		//state.Right = XMVector3Normalize(state.Right);
+		
+		//state.Forward = XMQuaternionSlerp(state.Forward, Hero::state.Forward, speed);
+		//state.Up = XMQuaternionSlerp(state.Up, Hero::state.Up, speed);
+		//state.Right = XMQuaternionSlerp(state.Right, Hero::state.Right, speed);
+		
 
-		state.Eye = heroPosition - (state.Forward * state.camDist);//откуда смотрит камера
+		// Нормализация векторов
+		state.Forward = XMVector3Normalize(state.Forward);
+		state.Up = XMVector3Normalize(state.Up);
+		state.Right = XMVector3Normalize(state.Right);
+
+		state.camDist1 = state.camDist + state.n;
+		//попробовать реализовать отдаление камеры в зависимости от угла поворота
+		//сделать что-то типо: camDistNow=camDist+(camDist*Q(угол поворота)) не забыть про возврат начального кам диста после отжатия клавиш
+		state.Eye = heroPosition - (state.Forward * state.camDist1);//откуда смотрит камера
 		state.at = heroPosition;//куда смотрит камера
 	}
 
-	void Camera()//обновление позиции камеры после обновления позиция созвездия в Navigation.h Дублирующее
+	void Camera()//обновление позиции камеры после обновления позиции созвездия. В Navigation.h, Loop.h, Mouse.h(navigationByMouse 2 раза) и тут тоже есть вызовы.
 	{
 		UpdateCameraPosition();
 
@@ -1071,12 +1096,13 @@ namespace Camera
 		ConstBuf::UpdateCamera();
 		ConstBuf::ConstToVertex(3);
 		ConstBuf::ConstToPixel(3);
+		
 	}
-
+	
 	void HandleMouseWheel(int delta)
 	{
 		state.camDist -= delta * 5.0f; // Увеличиваем чувствительность
 		state.camDist = clamp(state.camDist, state.minDist, state.maxDist);
-		Camera();
+		//Camera();
 	}
 }

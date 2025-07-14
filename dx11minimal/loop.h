@@ -16,7 +16,7 @@ void mainLoop()
 	if (!Camerainit)
 	{
 		Camerainit = true;
-		//Camera::Camera();
+		Camera::Camera();//это описание что такой вызов запланировал (но надо в исполняемом файле(dx11minimal.cpp) вызов прописать(уже сделал))
 	}
 
 

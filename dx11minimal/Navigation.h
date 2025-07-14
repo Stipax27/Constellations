@@ -15,15 +15,15 @@ void updateFlyDirection() { // Раскладка управления
 
     if (GetAsyncKeyState('W') & 0x8000) {
         // Добавляем вектор направления камеры (уже нормализован)
-        flyDirection.x += XMVectorGetX(Hero::state.Forward) * 10.0f;
-        flyDirection.y += XMVectorGetY(Hero::state.Forward) * 10.0f;
-        flyDirection.z += XMVectorGetZ(Hero::state.Forward) * 10.0f;
+        flyDirection.x += XMVectorGetX(Hero::state.Forwardbuf) * 10.0f;
+        flyDirection.y += XMVectorGetY(Hero::state.Forwardbuf) * 10.0f;
+        flyDirection.z += XMVectorGetZ(Hero::state.Forwardbuf) * 10.0f;
     }
     if (GetAsyncKeyState('S') & 0x8000) {
         // Движение назад - обратное направление
-        flyDirection.x -= XMVectorGetX(Hero::state.Forward) * 10.0f;
-        flyDirection.y -= XMVectorGetY(Hero::state.Forward) * 10.0f;
-        flyDirection.z -= XMVectorGetZ(Hero::state.Forward) * 10.0f;
+        flyDirection.x -= XMVectorGetX(Hero::state.Forwardbuf) * 10.0f;
+        flyDirection.y -= XMVectorGetY(Hero::state.Forwardbuf) * 10.0f;
+        flyDirection.z -= XMVectorGetZ(Hero::state.Forwardbuf) * 10.0f;
     }
     if (GetAsyncKeyState('A') & 0x8000) {
         // Добавляем вектор направления камеры (уже нормализован)
@@ -40,29 +40,44 @@ void updateFlyDirection() { // Раскладка управления
 
     float dPitch = 0.0f, dYaw = 0.0f, dRoll = 0.0f;
 
-    if (GetAsyncKeyState(VK_UP))    dPitch += turnSpeed;
-    if (GetAsyncKeyState(VK_DOWN))  dPitch -= turnSpeed;
-    if (GetAsyncKeyState(VK_LEFT))  dYaw += turnSpeed;
-    if (GetAsyncKeyState(VK_RIGHT)) dYaw -= turnSpeed;
-    if (GetAsyncKeyState('E'))      dRoll -= turnSpeed;
-    if (GetAsyncKeyState('Q'))      dRoll += turnSpeed;
-
-    if (dPitch != 0.0f || dYaw != 0.0f || dRoll != 0.0f) {
-        XMVECTOR qPitch = XMQuaternionRotationAxis(Hero::state.Right, dPitch);
-        XMVECTOR qYaw = XMQuaternionRotationAxis(Hero::state.Up, dYaw);
-        XMVECTOR qRoll = XMQuaternionRotationAxis(Hero::state.Forward, dRoll);
-
-        XMVECTOR qTotal = XMQuaternionMultiply(qYaw, qPitch);
-        qTotal = XMQuaternionMultiply(qTotal, qRoll);
-
-        Hero::state.currentRotation = XMQuaternionMultiply(Hero::state.currentRotation, qTotal);
-        Hero::state.currentRotation = XMQuaternionNormalize(Hero::state.currentRotation);
-
-        // Обновляем базовые векторы
-        Hero::state.Forward = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), Hero::state.currentRotation);
-        Hero::state.Up = XMVector3Rotate(Hero::state.defaultUp, Hero::state.currentRotation);
-        Hero::state.Right = XMVector3Cross(Hero::state.Up, Hero::state.Forward);
+    if (GetAsyncKeyState(VK_UP)) {
+        dPitch += turnSpeed; Camera::state.n += 10;
     }
+    if (GetAsyncKeyState(VK_DOWN)){
+        dPitch -= turnSpeed; Camera::state.n += 10;
+}
+    if (GetAsyncKeyState(VK_LEFT)){
+        dYaw += turnSpeed; Camera::state.n += 10;
+}
+    if (GetAsyncKeyState(VK_RIGHT)){
+        dYaw -= turnSpeed; Camera::state.n += 10;
+}
+    if (GetAsyncKeyState('E')){
+        dRoll -= turnSpeed; Camera::state.n += 10;
+}
+    if (GetAsyncKeyState('Q')){
+        dRoll += turnSpeed; Camera::state.n += 10;
+}
+
+        if (dPitch != 0.0f || dYaw != 0.0f || dRoll != 0.0f) {
+            XMVECTOR qPitch = XMQuaternionRotationAxis(Hero::state.Right, dPitch);
+            XMVECTOR qYaw = XMQuaternionRotationAxis(Hero::state.Up, dYaw);
+            XMVECTOR qRoll = XMQuaternionRotationAxis(Hero::state.Forwardbuf, dRoll);
+
+            XMVECTOR qTotal = XMQuaternionMultiply(qYaw, qPitch);
+            qTotal = XMQuaternionMultiply(qTotal, qRoll);
+
+            Hero::state.currentRotation = XMQuaternionMultiply(Hero::state.currentRotation, qTotal);
+            Hero::state.currentRotation = XMQuaternionNormalize(Hero::state.currentRotation);
+
+            // Обновляем базовые векторы
+            Hero::state.Forwardbuf = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), Hero::state.currentRotation);
+            Hero::state.Up = XMVector3Rotate(Hero::state.defaultUp, Hero::state.currentRotation);
+            Hero::state.Right = XMVector3Cross(Hero::state.Up, Hero::state.Forwardbuf);
+        }
+        else Camera::state.n=0;
+                    //убейте меня!!!!!!!!!!!
+
     /*float length = sqrt(flyDirection.x * flyDirection.x + flyDirection.y * flyDirection.y + flyDirection.z * flyDirection.z);
 
     if (length > 0) {
