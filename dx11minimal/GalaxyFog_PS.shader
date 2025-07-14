@@ -42,6 +42,26 @@ float time;
 // Noise functions
 //----------------------------------------------------------------------------------------
 
+float fract(float x)
+{
+    return x - floor(x);
+}
+
+float2 fract(float2 x)
+{
+    return x - floor(x);
+}
+
+float3 fract(float3 x)
+{
+    return x - floor(x);
+}
+
+float4 fract(float4 x)
+{
+    return x - floor(x);
+}
+
 #define HASHSCALE3 float3(0.1031f, 0.1030f, 0.0973f)
 #define HASHSCALE4 float4(1031.0f, 0.1030f, 0.0973f, 0.1099f)
 #define HASHSCALE1 0.1031f
@@ -86,78 +106,41 @@ float4 hash43(float3 p) {
 	return fract(float4((p4.x + p4.y)*p4.z, (p4.x + p4.z)*p4.y, (p4.y + p4.z)*p4.w, (p4.z + p4.w)*p4.x));
 }
 
+
 //----------------------------------------------------------------------------------------
-
-
-float noise(const in float3 x) {
-    float3 p = floor(x), f = fract(x);
-	f *= f*(3.-f-f);
-	float2 uv = (p.xy+float2(37.,17.)*p.z) + f.xy,
-	     rg = textureLod( iChannel1, (uv+.5)/256., -100.).yx;
-	return mix(rg.x, rg.y, f.z);
-}
-
-float pn(const in float3 x) {
-    float3 p = floor(x), f = fract(x);
-	f *= f*(3.-f-f);
-	float2 uv = (p.xy+float2(37.,17.)*p.z) + f.xy,
-	     rg = textureLod( iChannel1, (uv+.5)/256., -100.).yx;
-	return 2.4*mix(rg.x, rg.y, f.z)-1.;
-}
-
-float bm(const in float3 x) {
-    float3 p = floor(x), f = fract(x);
-	f *= f*(3.-f-f);
-	float2 uv = (p.xy+float2(37.,17.)*p.z) + f.xy,
-	     rg = textureLod( iChannel1, (uv+ .5)/256., -100.).yx;
-	return 1.-.82*mix(rg.x, rg.y, f.z);
-}
-
-float fpn(const in vec3 p) { 
-    return pn(p*.06125)*.5 + 
-           pn(p*.125)*.25 + 
-           pn(p*.25)*.125;// + pn(p*.5)*.625;
-}
-
-float fbm(const in float3 p) {
-   return bm(p*.06125)*.5 + 
-          bm(p*.125)*.25 + 
-          bm(p*.25)*.125 + 
-          bm(p*.4)*.2;
-}
-
-const mat3 msun = mat3(0., .8, .6, -.8, .36, -.48, -.6, -.48, .64);
-
-float smoothNoise(in float3 q){
-	float f  = .5000*noise(q); q=msun*q*2.01;
-          f += .2500*noise(q); q=msun*q*2.02;
-          f += .1250*noise(q); q=msun*q*2.03;
-          f += .0625*noise(q);
-	return f;
-}
 
 
 // This spiral noise works by successively adding and rotating sin waves while increasing frequency.
 // It should work the same on all computers since it's not based on a hash function like some other noises.
 // It can be much faster than other noise functions if you're ok with some repetition.
-const float nudge = 20.;	// size of perpendicular vector
-float normalizer = 1.0 / sqrt(1.0 + nudge*nudge);	// pythagorean theorem on that perpendicular to maintain scale
+float nudge = 20.0f;	// size of perpendicular vector
+float normalizer = 0.0499376169438922f;	// pythagorean theorem on that perpendicular to maintain scale
 float SpiralNoiseC(float3 p, float4 id) {
-    float iter = 2., n = 2.-id.x; // noise amount
+    float iter = 2.0f, n = 2.0f - id.x; // noise amount
     for (int i = 0; i < SPIRAL_NOISE_ITER; i++) {
         n += -abs(sin(p.y*iter) + cos(p.x*iter)) / iter; // add sin and cos scaled inverse with the frequency (abs for a ridged look)
         p.xy += float2(p.y, -p.x) * nudge; // rotate by adding perpendicular and scaling down
         p.xy *= normalizer;
         p.xz += float2(p.z, -p.x) * nudge; // rotate on other axis
         p.xz *= normalizer;  
-        iter *= id.y + .733733;          // increase the frequency
+        iter *= id.y + 0.733733f;          // increase the frequency
     }
     return n;
 }
 
+float4 tex = float4(1.0f, 1.0f, 1.0f, 1.0f);
+
+float pn(const in float3 x) {
+    float3 p = floor(x), f = fract(x);
+	f *= f * (3.0f - f - f);
+	float2 uv = (p.xy + float2(37.0f, 17.0f) * p.z) + f.xy,
+	     rg = textureLod(tex, (uv + 0.5f) / 256.0f, - 100.0f).yx;
+	return 2.4f * mix(rg.x, rg.y, f.z) - 1.0f;
+}
+
 float mapIntergalacticCloud(float3 p, float4 id) {
-	float k = 2.*id.w +.1;  // p/=k;
-    return k*(.5 + SpiralNoiseC(p.zxy*.4132+333., id)*3. + pn(p*8.5)*.12);
+	float k = 2.0f * id.w + 0.1f;  // p/=k;
+    return k * (0.5f + SpiralNoiseC(p.zxy * 0.4132f + 333.0f, id) * 3.0f + pn(p * 8.5f) * 0.12f);
 }
 
 
@@ -167,46 +150,46 @@ float mapIntergalacticCloud(float3 p, float4 id) {
 
 
 float3 hsv2rgb(float x, float y, float z) {	
-	return z+z*y*(clamp(abs(mod(x*6.+float3(0,4,2),6.)-3.)-1.,0.,1.)-1.);
+	return z + z * y * (clamp(abs(mod(x * 6.0f + float3(0, 4, 2), 6.0f) - 3.0f) - 1.0f, 0.0f, 1.0f) - 1.0f);
 }
 
 
 float4 renderIntergalacticClouds(float3 ro, float3 rd, float tmax, const float4 id) {
     
     float max_dist= min(tmax, float(STAR_FIELD_VOXEL_STEPS)),
-		  td=0., d, t, noi, lDist, a, sp = 9.,         
-    	  rRef = 2.*id.x,
-          h = .05+.25*id.z;
+		  td=0.0f, d, t, noi, lDist, a, sp = 9.0f,         
+    	  rRef = 2.0f * id.x,
+          h = 0.05f + 0.25f * id.z;
     float3 pos, lightColor;   
-    float4 sum = float4(0);
+    float4 sum = float4(0, 0, 0, 0);
    	
     t = .1*hash(hash(rd)); 
 
-    for (int i=0; i<100; i++)  {
-	    if(td>.9 ||  sum.a > .99 || t>max_dist) break;
-        a = smoothstep(max_dist,0.,t);
-        pos = ro + t*rd;
-        d = abs(mapIntergalacticCloud(pos, id))+.07;
+    for (int i = 0; i < 100; i++)  {
+	    if(td > 0.9f ||  sum.a > 0.99f || t > max_dist) break;
+        a = smoothstep(max_dist, 0.0f, t);
+        pos = ro + t * rd;
+        d = abs(mapIntergalacticCloud(pos, id)) + 0.07f;
 
         // Light calculations
-        lDist = max(length(mod(pos+sp*.5,sp)-sp*.5), .001); // TODO add random offset
-        noi = pn(.05*pos);
-        lightColor = mix(hsv2rgb(noi,.5,.6), 
-                         hsv2rgb(noi+.3,.5,.6), 
-                         smoothstep(rRef*.5,rRef*2.,lDist));
-        sum.rgb += a*lightColor/exp(lDist*lDist*lDist*.08)/30.;
+        lDist = max(length(mod(pos + sp * 0.5f, sp) - sp * 0.5f), 0.001f); // TODO add random offset
+        noi = pn(0.05f * pos);
+        lightColor = mix(hsv2rgb(noi, 0.5f, 0.6f), 
+                         hsv2rgb(noi + 0.3f, 0.5f, 0.6f), 
+                         smoothstep(rRef * 0.5, rRef * 2.0f, lDist));
+        sum.rgb += a * lightColor / exp(lDist * lDist * lDist * 0.08f) / 30.0f;
 		// Edges coloring
-        if (d<h) {
-			td += (1.-td)*(h-d)+.005;  // accumulate density
-            sum.rgb += sum.a * sum.rgb * .25 / lDist;  // emission	
-			sum += (1.-sum.a)*.02*td*a;  // uniform scale density + alpha blend in contribution 
+        if (d < h) {
+			td += (1.0f - td) * (h - d) + 0.005f;  // accumulate density
+            sum.rgb += sum.a * sum.rgb * 0.25f / lDist;  // emission	
+			sum += (1.0f - sum.a) * 0.02f * td * a;  // uniform scale density + alpha blend in contribution 
         } 
-        td += .015;
-        t += max(d * .08 * max(min(lDist,d),2.), .01);  // trying to optimize step size
+        td += 0.015f;
+        t += max(d * 0.08f * max(min(lDist, d), 2.0f), 0.01f);  // trying to optimize step size
     }
     
-   	sum = clamp(sum, 0., 1.);   
-    sum.xyz *= sum.xyz*(3.-sum.xyz-sum.xyz);
+   	sum = clamp(sum, 0.0f, 1.0f);   
+    sum.xyz *= sum.xyz * (3.0f - sum.xyz - sum.xyz);
 	return sum;
 }
 
@@ -217,18 +200,18 @@ float4 renderIntergalacticClouds(float3 ro, float3 rd, float tmax, const float4 
 
 
 float3 galaxyToUniverse(float3 galaxyPosU, float3 coord) {
-    return coord*kG2U + galaxyPosU;
+    return coord * kG2U + galaxyPosU;
 }
 
 
 float3 universeToGalaxy(float3 galaxyPosU, float3 coord) {
-    return (coord-galaxyPosU)*kU2G;
+    return (coord - galaxyPosU)*kU2G;
 }
 
 
 float4 PS( out float4 fragColor, in float2 fragCoord ) {
 	float2 uv = fragCoord.xy / iResolution.xy;
-    float2 p = -1. + 2. * uv;
+    float2 p = -1.0f + 2.0f * uv;
     p.x *= iResolution.x/iResolution.y;
     
     float3 col = float3(0);

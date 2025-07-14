@@ -13,6 +13,27 @@ float STAR_RADIUS = 0.01f; // 2e-8 in true life !   // (% of 5)   1e-8
 float time;
 
 
+float fract(float x)
+{
+    return x - floor(x);
+}
+
+float2 fract(float2 x)
+{
+    return x - floor(x);
+}
+
+float3 fract(float3 x)
+{
+    return x - floor(x);
+}
+
+float4 fract(float4 x)
+{
+    return x - floor(x);
+}
+
+
 // Time spend traveling to clicked point
 #define TRAVEL_DELAY 4.0f
 
