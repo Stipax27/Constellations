@@ -84,13 +84,21 @@ struct VS_OUTPUT
     float4 worldpos : POSITION1;
 };
 
-VS_OUTPUT VS( out vec4 fragColor, in vec2 fragCoord ) {
+VS_OUTPUT VS(uint vID : SV_VertexID, out float4 fragColor, in float2 fragCoord ) {
 
     VS_OUTPUT output;
+
+    uint starID = vID / 6;
+    uint vertexInQuad = vID % 6;
+
+    float2 quadPos[6] = {
+        float2(-1, -1), float2(1, -1), float2(-1, 1),
+        float2(1, -1), float2(1, 1), float2(-1, 1)
+    };
 		
     if (fragCoord.y > 0.5f || fragCoord.x > 10.0f) discard;
-            vec2 uv = iMouse.xy / iResolution.xy;
-        vec2 p = -1.0f + 2.0f * uv;
+            float2 uv = iMouse.xy / iResolution.xy;
+        float2 p = -1.0f + 2.0f * uv;
         p.x *= iResolution.x/iResolution.y;
 
 // - Initialisation si besoin -------------------------  

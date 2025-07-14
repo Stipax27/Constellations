@@ -212,6 +212,15 @@ float3 universeToGalaxy(float3 galaxyPosU, float3 coord) {
 }
 
 
+struct VS_OUTPUT
+{
+    float4 pos : SV_POSITION;
+    float2 uv : TEXCOORD0;
+    uint   starID : COLOR0;
+    float4 worldpos : POSITION1;
+};
+
+
 float4 PS( VS_OUTPUT input ) : SV_Target
 {
 	float2 uv = input.uv;
