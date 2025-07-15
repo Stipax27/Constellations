@@ -54,11 +54,11 @@ void updateFlyDirection() { // Раскладка управления
 }
     if (GetAsyncKeyState('E')){
         dRoll -= turnSpeed;
-        Camera::state.n = lerp(Camera::state.n, 100, 0.2f);
+        Camera::state.n = lerp(Camera::state.n, 200, 0.03f);
 }
     if (GetAsyncKeyState('Q')){
         dRoll += turnSpeed;
-        Camera::state.n = lerp(Camera::state.n, 100, 0.2f);
+        Camera::state.n = lerp(Camera::state.n, 200, 0.03f);
 }
 
         if (dPitch != 0.0f || dYaw != 0.0f || dRoll != 0.0f) {
@@ -96,7 +96,6 @@ void updateFlySpeed(float deltaTime) {// Обновления во время п
 
     if (isMoving)
     {
-
         currentFlySpeed += flyAcceleration * deltaTime;
 
         if (currentFlySpeed > maxFlySpeed) {
