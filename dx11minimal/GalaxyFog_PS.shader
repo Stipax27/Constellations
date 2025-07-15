@@ -36,21 +36,6 @@ float3 SUN_COLOR = float3(0.3f, 0.21f, 0.165f);
 float kU2G = 500000.0f;
 float kG2U = 0.000002f;
 
-//-----------------------------------------------------
-
-
-#define IN_UNIVERSE 1.
-#define IN_GALAXY 2.
-#define IN_SOLAR_SYSTEM 3.
-
-#define MOVING     1.
-#define STATIONARY 2.
-
-#define NONE     0.
-#define GALAXY   1.
-#define STAR     2.
-#define PLANET   3.
-
 
 //-----------------------------------------------------
 // Noise functions
@@ -136,7 +121,7 @@ float SpiralNoiseC(float3 p, float4 id) {
         p.xy += float2(p.y, -p.x) * nudge; // rotate by adding perpendicular and scaling down
         p.xy *= normalizer;
         p.xz += float2(p.z, -p.x) * nudge; // rotate on other axis
-        p.xz *= normalizer;  
+        p.xz *= normalizer;
         iter *= id.y + 0.733733f;          // increase the frequency
     }
     return n;
@@ -144,7 +129,7 @@ float SpiralNoiseC(float3 p, float4 id) {
 
 float4 tex = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
-float pn(const in float3 x) {
+float pn(float3 x) {
     float3 p = floor(x), f = fract(x);
 	f *= f * (3.0f - f - f);
 	float2 uv = (p.xy + float2(37.0f, 17.0f) * p.z) + f.xy,
@@ -170,41 +155,40 @@ float3 hsv2rgb(float x, float y, float z) {
 
 
 float4 renderIntergalacticClouds(float3 ro, float3 rd, float tmax, float4 id) {
-    
     float max_dist = min(tmax, float(STAR_FIELD_VOXEL_STEPS)),
-		  td = 0.0f, d, t, noi, lDist, a, sp = 9.0f,         
-    	  rRef = 2.0f * id.x,
-          h = 0.05f + 0.25f * id.z;
+		  td=0., d, t, noi, lDist, a, sp = 9.,         
+    	  rRef = 2.*id.x,
+          h = .05+.25*id.z;
     float3 pos, lightColor;   
     float4 sum = float4(0, 0, 0, 0);
    	
-    t = 0.1f * hash(hash(rd)); 
+    t = .1 * hash(hash(rd)); 
 
     for (int i = 0; i < 100; i++)  {
-	    if(td > 0.9f ||  sum.a > 0.99f || t > max_dist) break;
-        a = smoothstep(max_dist, 0.0f, t);
+	    if (td > .9 ||  sum.w > .99 || t > max_dist) break;
+        a = smoothstep(max_dist, 0., t);
         pos = ro + t * rd;
-        d = abs(mapIntergalacticCloud(pos, id)) + 0.07f;
+        d = abs(mapIntergalacticCloud(pos, id))+.07;
 
         // Light calculations
-        lDist = max(length(((pos + sp * 0.5f) % sp) - sp * 0.5f), 0.001f); // TODO add random offset
-        noi = pn(0.05f * pos);
-        lightColor = lerp(hsv2rgb(noi, 0.5f, 0.6f), 
-                         hsv2rgb(noi + 0.3f, 0.5f, 0.6f), 
-                         smoothstep(rRef * 0.5, rRef * 2.0f, lDist));
-        sum.rgb += a * lightColor / exp(lDist * lDist * lDist * 0.08f) / 30.0f;
+        lDist = max(length(fmod(pos+sp*.5,sp)-sp*.5), .001); // TODO add random offset
+        noi = pn(.05*pos);
+        lightColor = lerp(hsv2rgb(noi,.5,.6), 
+                         hsv2rgb(noi+.3,.5,.6), 
+                         smoothstep(rRef*.5,rRef*2.,lDist));
+        sum.xyz += a * lightColor/exp(lDist*lDist*lDist*.08)/30.;
 		// Edges coloring
         if (d < h) {
-			td += (1.0f - td) * (h - d) + 0.005f;  // accumulate density
-            sum.rgb += sum.a * sum.rgb * 0.25f / lDist;  // emission	
-			sum += (1.0f - sum.a) * 0.02f * td * a;  // uniform scale density + alpha blend in contribution 
+			td += (1.-td)*(h-d)+.005;  // accumulate density
+            sum.xyz += sum.w * sum.xyz * .25 / lDist;  // emission	
+			sum += (1.-sum.w) * .02 * td * a;  // uniform scale density + alpha blend in contribution 
         } 
-        td += 0.015f;
-        t += max(d * 0.08f * max(min(lDist, d), 2.0f), 0.01f);  // trying to optimize step size
+        td += .015;
+        t += max(d * .08 * max( min(lDist, d), 2.), .01);  // trying to optimize step size
     }
     
-   	sum = clamp(sum, 0.0f, 1.0f);   
-    sum.xyz *= sum.xyz * (3.0f - sum.xyz - sum.xyz);
+   	sum = clamp(sum, 0., 1.);   
+    sum.xyz *= sum.xyz * (3. - sum.xyz - sum.xyz);
 	return sum;
 }
 
@@ -228,6 +212,7 @@ float4 PS( VS_OUTPUT input ) : SV_Target
 	float2 uv = input.uv;
     float2 p = -1.0f + 2.0f * uv;
     //p.x *= iResolution.x/iResolution.y;
+    p.x *= aspect.x;
     
     float3 color = float3(0, 0, 0);
 
@@ -236,27 +221,33 @@ float4 PS( VS_OUTPUT input ) : SV_Target
     float4x4 v = view[0];
 
     float3 ro, rdcam, up;
-    ro = float3(v._m30_m31_m32);
-    rdcam = float3(v._m20_m21_m22);
-    up = float3(v._m10_m11_m12);
+    ro = float3(v._m30, v._m31, v._m32);
+    rdcam = float3(v._m20, v._m21, v._m22);
+    up = float3(v._m10, v._m11, v._m12);
 
     float3 ww = normalize( rdcam ),
          uu = normalize( cross(ww, up) ),
          vv = normalize( cross(uu, ww)),
-         rd = normalize( -p.x * uu + p.y * vv + 2.0f * ww );
+         rd = mul(float4(p.x, p.y, 1, 0), view[0]).xyz;
+
+    rd = normalize(rd);
        
 // - rendu des etoiles -----------------------------------
 
-	float3 starPosG, starId = float3(90, 90, 90);  
 	float4 star = float4(0, 0, 0, 0);
 
     float dStar = 9999.0f;
-    float4 clouds = renderIntergalacticClouds(ro, rdcam, dStar, float4(0.5f, 0.4f, 0.16f, 0.7f));
-    star = clouds + (1.-clouds.a) *sqrt(star) * star.a;
+    float4 clouds = renderIntergalacticClouds(ro, rd, dStar, float4(0.5f, 0.4f, 0.16f, 0.7f));
+    star = clouds + (1.0f - clouds.w) *sqrt(star) * star.w;
 
 // - rendu des galaxies ----------------------------------
 
     color = star.xyz;
+
+    float noise = frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
+    return float4(noise, noise, noise, 1.0);
+
+    return star;
     
     return float4((float3(0.03f, 0.1f, 0.1f) + color), 1.0f);
 }
