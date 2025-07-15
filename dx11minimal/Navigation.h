@@ -8,7 +8,7 @@ float currentFlySpeed = 0.0f;
 const float maxFlySpeed = 0.1f;
 const float flyAcceleration = 0.2f;
 const float flyDeceleration = 0.002f;
-
+const float MOUSE_SENSITIVITY = 0.002f;
 
 void updateFlyDirection() { // Раскладка управления 
     flyDirection = { 0, 0, 0 };
@@ -40,55 +40,89 @@ void updateFlyDirection() { // Раскладка управления
 
     float dPitch = 0.0f, dYaw = 0.0f, dRoll = 0.0f;
 
-    if (GetAsyncKeyState(VK_UP)) {
-        dPitch += turnSpeed; Camera::state.n += 10;
-    }
-    if (GetAsyncKeyState(VK_DOWN)){
-        dPitch -= turnSpeed; Camera::state.n += 10;
-}
-    if (GetAsyncKeyState(VK_LEFT)){
-        dYaw += turnSpeed; Camera::state.n += 10;
-}
-    if (GetAsyncKeyState(VK_RIGHT)){
-        dYaw -= turnSpeed; Camera::state.n += 10;
-}
-    if (GetAsyncKeyState('E')){
-        dRoll -= turnSpeed;
-        Camera::state.n = lerp(Camera::state.n, 100, 0.2f);
-}
-    if (GetAsyncKeyState('Q')){
-        dRoll += turnSpeed;
-        Camera::state.n = lerp(Camera::state.n, 100, 0.2f);
-}
+    
+        // Получаем текущую позицию мыши
+        POINT currentMousePos;
+        GetCursorPos(&currentMousePos);
+        ScreenToClient(window.hWnd, &currentMousePos);
+        
+        //if (!rmb) {
+        //    // Первое движение после нажатия - запоминаем позицию
+        //    rmb = true;
+        //    mouse.oldPos.x = (float)currentMousePos.x;
+        //    mouse.oldPos.y = (float)currentMousePos.y;
+        //}
+        //else {
+        //    // Вычисляем разницу в движении мыши
+        //    float dx = (currentMousePos.x - window.width/2) * 0.01f;
+        //    float dy = (currentMousePos.y - window.height/2) * 0.01f;
 
-        if (dPitch != 0.0f || dYaw != 0.0f || dRoll != 0.0f) {
-            XMVECTOR qPitch = XMQuaternionRotationAxis(Hero::state.Right, dPitch);
-            XMVECTOR qYaw = XMQuaternionRotationAxis(Hero::state.Up, dYaw);
-            XMVECTOR qRoll = XMQuaternionRotationAxis(Hero::state.Forwardbuf, dRoll);
+        //    // Применяем к поворотам
+        //    dPitch = dy; // Вертикальное движение мыши - pitch (инвертируем dy)
+        //    dYaw = dx;   // Горизонтальное движение мыши - yaw
 
-            XMVECTOR qTotal = XMQuaternionMultiply(qYaw, qPitch);
-            qTotal = XMQuaternionMultiply(qTotal, qRoll);
+        //    // Обновляем старую позицию
+        //    mouse.oldPos.x = (float)currentMousePos.x;
+        //    mouse.oldPos.y = (float)currentMousePos.y;
 
-            Hero::state.currentRotation = XMQuaternionMultiply(Hero::state.currentRotation, qTotal);
-            Hero::state.currentRotation = XMQuaternionNormalize(Hero::state.currentRotation);
+        //    Camera::state.n += 10; // Аналогично тому, что было при нажатии клавиш
+        //}
 
-            // Обновляем базовые векторы
-            Hero::state.Forwardbuf = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), Hero::state.currentRotation);
-            Hero::state.Up = XMVector3Rotate(Hero::state.defaultUp, Hero::state.currentRotation);
-            Hero::state.Right = XMVector3Cross(Hero::state.Up, Hero::state.Forwardbuf);
+        //SetCursorPos(window.width / 2, window.height / 2);
+
+
+        float x = currentMousePos.x - window.width / 2;
+        float y = currentMousePos.y - window.height / 2;
+        
+        point3d mousePos = point3d(x / window.width, y / window.height);
+        float length = mousePos.magnitude();
+
+        if (length > 0.05f)
+        {
+            if (length > 0.2f)
+            {
+                mousePos = mousePos.normalized() * 0.2f;
+                SetCursorPos(mousePos.x * window.width + window.width / 2, mousePos.y * window.height + window.height / 2);
+            }
+
+            float dx = (mousePos.x) * 0.5f;
+            float dy = (mousePos.y) * 0.5f;
+
+            // Применяем к поворотам
+            dPitch = dy; // Вертикальное движение мыши - pitch (инвертируем dy)
+            dYaw = dx;   // Горизонтальное движение мыши - yaw
         }
-        else Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
-                    //убейте меня!!!!!!!!!!!
-
-    /*float length = sqrt(flyDirection.x * flyDirection.x + flyDirection.y * flyDirection.y + flyDirection.z * flyDirection.z);
-
-    if (length > 0) {
-        flyDirection.x /= length;
-        flyDirection.y /= length;
-        flyDirection.z /= length;
-    }*/
     
 
+    // Обработка Q и E для крена (оставляем как было)
+    if (GetAsyncKeyState('E')) {
+        dRoll -= turnSpeed;
+        Camera::state.n = lerp(Camera::state.n, 100, 0.3f);
+    }
+    if (GetAsyncKeyState('Q')) {
+        dRoll += turnSpeed;
+        Camera::state.n = lerp(Camera::state.n, 100, 0.3f);
+    }
+
+    if (dPitch != 0.0f || dYaw != 0.0f || dRoll != 0.0f) {
+        XMVECTOR qPitch = XMQuaternionRotationAxis(Hero::state.Right, dPitch);
+        XMVECTOR qYaw = XMQuaternionRotationAxis(Hero::state.Up, dYaw);
+        XMVECTOR qRoll = XMQuaternionRotationAxis(Hero::state.Forwardbuf, dRoll);
+
+        XMVECTOR qTotal = XMQuaternionMultiply(qYaw, qPitch);
+        qTotal = XMQuaternionMultiply(qTotal, qRoll);
+
+        Hero::state.currentRotation = XMQuaternionMultiply(Hero::state.currentRotation, qTotal);
+        Hero::state.currentRotation = XMQuaternionNormalize(Hero::state.currentRotation);
+
+        // Обновляем базовые векторы
+        Hero::state.Forwardbuf = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), Hero::state.currentRotation);
+        Hero::state.Up = XMVector3Rotate(Hero::state.defaultUp, Hero::state.currentRotation);
+        Hero::state.Right = XMVector3Cross(Hero::state.Up, Hero::state.Forwardbuf);
+    }
+    else {
+        Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
+    }
 }
 
 void updateFlySpeed(float deltaTime) {// Обновления во время полёта

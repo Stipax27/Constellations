@@ -1012,7 +1012,6 @@ namespace Camera
 		int n = 0; //угол поворота
 		bool mouse = false;
 		float camDist = 500.0f;
-		float camDist1 = 500.0f;
 		float minDist = 500.0f;
 		float maxDist = 1000.0f;
 		float fovAngle = 60.0f;
@@ -1067,10 +1066,9 @@ namespace Camera
 		state.Up = XMVector3Normalize(state.Up);
 		state.Right = XMVector3Normalize(state.Right);
 
-		state.camDist1 = state.camDist + state.n;
 		//попробовать реализовать отдаление камеры в зависимости от угла поворота
 		//сделать что-то типо: camDistNow=camDist+(camDist*Q(угол поворота)) не забыть про возврат начального кам диста после отжатия клавиш
-		state.Eye = heroPosition - (state.Forward * state.camDist1);//откуда смотрит камера
+		state.Eye = heroPosition - (state.Forward * state.camDist);//откуда смотрит камера
 		state.at = heroPosition;//куда смотрит камера
 	}
 
