@@ -117,7 +117,7 @@ float normalizer = 0.0499376169438922f;	// pythagorean theorem on that perpendic
 float SpiralNoiseC(float3 p, float4 id) {
     float iter = 2.0f, n = 2.0f - id.x; // noise amount
     for (int i = 0; i < SPIRAL_NOISE_ITER; i++) {
-        n += -abs(sin(p.y*iter) + cos(p.x*iter)) / iter; // add sin and cos scaled inverse with the frequency (abs for a ridged look)
+        n += -abs(sin(p.y * iter) + cos(p.x * iter)) / iter; // add sin and cos scaled inverse with the frequency (abs for a ridged look)
         p.xy += float2(p.y, -p.x) * nudge; // rotate by adding perpendicular and scaling down
         p.xy *= normalizer;
         p.xz += float2(p.z, -p.x) * nudge; // rotate on other axis
@@ -126,8 +126,6 @@ float SpiralNoiseC(float3 p, float4 id) {
     }
     return n;
 }
-
-float4 tex = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
 float pn(float3 x) {
     float3 p = floor(x), f = fract(x);
@@ -244,7 +242,9 @@ float4 PS( VS_OUTPUT input ) : SV_Target
 
     color = star.xyz;
 
-    float noise = frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
+    return float4(input.uv, 0, 1);
+
+    float noise = SpiralNoiseC(ro, float4(0.5f, 0.4f, 0.16f, 0.7f));
     return float4(noise, noise, noise, 1.0);
 
     return star;

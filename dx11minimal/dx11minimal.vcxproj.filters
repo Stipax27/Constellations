@@ -34,6 +34,9 @@
     <Filter Include="Shaders\GalaxyFog">
       <UniqueIdentifier>{e666e124-5f59-4272-9859-7a0554e5ea21}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Cursor">
+      <UniqueIdentifier>{7a53a6ab-51fc-43fa-9b0a-2483cee6faea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -163,6 +166,12 @@
     </None>
     <None Include="GalaxyFog_VS.shader">
       <Filter>Shaders\GalaxyFog</Filter>
+    </None>
+    <None Include="Cursor_VS.shader">
+      <Filter>Shaders\Cursor</Filter>
+    </None>
+    <None Include="Cursor_PS.shader">
+      <Filter>Shaders\Cursor</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
