@@ -498,6 +498,9 @@ namespace Shaders {
 
 		CreateVS(5, nameToPatchLPCWSTR("GalaxyFog_VS.shader"));
 		CreatePS(5, nameToPatchLPCWSTR("GalaxyFog_PS.shader"));
+
+		CreateVS(6, nameToPatchLPCWSTR("Cursor_VS.shader"));
+		CreatePS(6, nameToPatchLPCWSTR("Cursor_PS.shader"));
 	}
 
 	void vShader(unsigned int n)
@@ -974,6 +977,15 @@ namespace Draw
 		ConstBuf::ConstToPixel(1);
 
 		context->Draw(quadCount * 6, 0);
+	}
+	void Cursor()
+	{
+		ConstBuf::Update(5, ConstBuf::global);
+		ConstBuf::ConstToVertex(5);
+		ConstBuf::Update(1, ConstBuf::drawerP);
+		ConstBuf::ConstToPixel(1);
+
+		context->Draw(6, 0);
 	}
 
 	void Present()

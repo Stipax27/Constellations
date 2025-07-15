@@ -115,6 +115,16 @@ namespace drawer
         Draw::GalaxyFog(1);
     }
 
+    void drawCursor()
+    {
+        Shaders::vShader(6);
+        Shaders::pShader(6);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+        ConstBuf::global[0] = XMFLOAT4(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1), 0.0f, 1.0f);
+        Draw::Cursor();
+    }
+
     const COLORREF colors[] =
     {
         RGB(255, 0, 0),    // Красный
@@ -588,6 +598,8 @@ namespace drawer
         textStyle.color = RGB(0, 191, 255);
         Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
         Draw::ClearDepth();
+
+        drawCursor();
 
        //d2dRenderTarget->BeginDraw();
         switch (gameState)
