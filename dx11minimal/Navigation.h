@@ -130,7 +130,6 @@ void updateFlySpeed(float deltaTime) {// Обновления во время п
 
     if (isMoving)
     {
-
         currentFlySpeed += flyAcceleration * deltaTime;
 
         if (currentFlySpeed > maxFlySpeed) {
