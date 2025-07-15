@@ -171,14 +171,14 @@ float3 hsv2rgb(float x, float y, float z) {
 
 float4 renderIntergalacticClouds(float3 ro, float3 rd, float tmax, float4 id) {
     
-    float max_dist= min(tmax, float(STAR_FIELD_VOXEL_STEPS)),
-		  td=0.0f, d, t, noi, lDist, a, sp = 9.0f,         
+    float max_dist = min(tmax, float(STAR_FIELD_VOXEL_STEPS)),
+		  td = 0.0f, d, t, noi, lDist, a, sp = 9.0f,         
     	  rRef = 2.0f * id.x,
           h = 0.05f + 0.25f * id.z;
     float3 pos, lightColor;   
     float4 sum = float4(0, 0, 0, 0);
    	
-    t = .1*hash(hash(rd)); 
+    t = 0.1f * hash(hash(rd)); 
 
     for (int i = 0; i < 100; i++)  {
 	    if(td > 0.9f ||  sum.a > 0.99f || t > max_dist) break;
@@ -214,16 +214,6 @@ float4 renderIntergalacticClouds(float3 ro, float3 rd, float tmax, float4 id) {
 //-----------------------------------------------------
 
 
-float3 galaxyToUniverse(float3 galaxyPosU, float3 coord) {
-    return coord * kG2U + galaxyPosU;
-}
-
-
-float3 universeToGalaxy(float3 galaxyPosU, float3 coord) {
-    return (coord - galaxyPosU)*kU2G;
-}
-
-
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
@@ -240,22 +230,15 @@ float4 PS( VS_OUTPUT input ) : SV_Target
     //p.x *= iResolution.x/iResolution.y;
     
     float3 color = float3(0, 0, 0);
-    
-    
-// Lecture de la configuration -------------------------
-
-		bool isU = false,
-			 isG = true;
 
 // camera ----------------------------------------------
 
     float4x4 v = view[0];
-    v._m30_m31_m32_m33 = 0.0f;
 
     float3 ro, rdcam, up;
-    ro = float3(view[0]._m30_m31_m32);
-    rdcam = float3(view[0]._m20_m21_m22);
-    up = float3(view[0]._m10_m11_m12);
+    ro = float3(v._m30_m31_m32);
+    rdcam = float3(v._m20_m21_m22);
+    up = float3(v._m10_m11_m12);
 
     float3 ww = normalize( rdcam ),
          uu = normalize( cross(ww, up) ),
@@ -267,14 +250,13 @@ float4 PS( VS_OUTPUT input ) : SV_Target
 	float3 starPosG, starId = float3(90, 90, 90);  
 	float4 star = float4(0, 0, 0, 0);
 
-    float3 roG = isU ? universeToGalaxy(float3(0, 0, 0), ro) : ro;
     float dStar = 9999.0f;
-    float4 clouds = renderIntergalacticClouds(roG, rd, dStar, float4(0.5f, 0.4f, 0.16f, 0.7f));
+    float4 clouds = renderIntergalacticClouds(ro, rdcam, dStar, float4(0.5f, 0.4f, 0.16f, 0.7f));
     star = clouds + (1.-clouds.a) *sqrt(star) * star.a;
 
 // - rendu des galaxies ----------------------------------
 
     color = star.xyz;
     
-    return float4((isU ? float3(0.03f, 0.1f, 0.1f) + color : color), 1.0f);
+    return float4((float3(0.03f, 0.1f, 0.1f) + color), 1.0f);
 }
