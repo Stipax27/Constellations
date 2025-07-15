@@ -23,6 +23,7 @@ struct Mouse
 
 };
 
+
 Mouse mouse;
 bool keyA = false;
 bool keyD = false;
