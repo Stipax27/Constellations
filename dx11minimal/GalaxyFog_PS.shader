@@ -242,10 +242,10 @@ float4 PS( VS_OUTPUT input ) : SV_Target
 
     color = star.xyz;
 
-    return float4(input.uv, 0, 1);
+    //return float4(input.uv, 0, 1);
 
-    float noise = SpiralNoiseC(ro, float4(0.5f, 0.4f, 0.16f, 0.7f));
-    return float4(noise, noise, noise, 1.0);
+    //float noise = SpiralNoiseC(ro, float4(0.5f, 0.4f, 0.16f, 0.7f));
+    //return float4(noise, noise, noise, 1.0);
 
     return star;
     
