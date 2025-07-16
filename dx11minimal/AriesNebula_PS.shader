@@ -84,7 +84,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
     float2 uv = input.uv;
 
     float3 rainbow = ApplyRainbowEffect(input.worldpos);
-    float3 color = lerp(float3(1, 1, 1), rainbow, max(min((input.worldpos.y - 1000) / 500, 1), 0));
+    float3 color = lerp(float3(1, 1, 1), rainbow, max(min((input.worldpos.y - 500) / 500, 1), 0));
 
     float brightness = exp(-dot(uv, uv) * 20) * 0.02f;
 
