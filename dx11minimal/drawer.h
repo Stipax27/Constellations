@@ -112,7 +112,7 @@ namespace drawer
         Shaders::vShader(7);
         Shaders::pShader(7);
         Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-        Draw::GalaxyFog(1);
+        Draw::GalaxyFog(100);
     }
 
     void drawCursor()
@@ -705,7 +705,7 @@ namespace drawer
             uiFunc = &starIntersectUI;
 
             drawStarField();
-            drawStars();
+            //drawStars();
             drawGalaxyFog();
 
 

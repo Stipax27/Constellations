@@ -44,6 +44,6 @@ struct VS_OUTPUT
 float4 PS(VS_OUTPUT input) : SV_Target
 {
     float2 uv = input.uv;
-    float brightness = exp(-dot(uv, uv) * 20) * 0.5f;
+    float brightness = exp(-dot(uv, uv) * 20) * 0.01f;
     return float4(brightness, brightness, brightness, 1)*float4(1,1,1.4,1)*(1+.9*sin(input.starID*1.2+time.x*.1));
 }

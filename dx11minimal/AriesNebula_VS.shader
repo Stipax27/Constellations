@@ -123,7 +123,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     //calc star position
 
-    float size = 7;
+    float size = 128;
     float range = 2000.;
     float3 starPos = randomPosition(starID)*range*2-range;
     
@@ -137,7 +137,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     float armRadius = 90.;
 
     float dh = hash2(starID*12);
-    float distance = coreRadius*0 + dh *(diskRadius - coreRadius);
+    float distance = coreRadius * 0 + dh *(diskRadius - coreRadius);
     float height = hash2(starID*22) *thickness - thickness / 2;
 
     float armAngle = (starID) % armsCount * armRadius*2;
@@ -148,37 +148,12 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     float randomOffset = hash2(starID)* armWidth * distance;
     angle += randomOffset;
     
-
-    starPos.x = noise(starPos.xyz * 0.125 + 0.25 * time.x * 0.003) * 50;
-    starPos.y = noise(starPos.xyz * 0.131 + 0.25 * time.x * 0.017) * 50;
-    starPos.z = noise(starPos.xyz * 0.157 + 0.25 * time.x * 0.008) * 50;
     
-    float3 corePos;
-   //if (hash2(starID) <.5) {
+    starPos.x = noise(starPos.xyz * 0.083 * 100 * 0.00007 + float3(53.529, 31.611, 59.317)) * 10000;
+    starPos.y = noise(starPos.yxz * 0.131 * 100 * 0.00011 + float3(65.235, 14.631, 41.547)) * 10000;
+    starPos.z = noise(starPos.zxy * 0.157 * 100 * 0.00009 + float3(27.153, 63.721, 12.591)) * 10000;
 
-    
-     
-     float coreDistance = hash2(starID*32) * coreRadius; 
-     float coreAngle = hash2(starID*30) * 360.;
-     corePos.x = coreDistance * cos(coreAngle * PI / 180.);
-     corePos.y = coreDistance * sin(coreAngle * PI / 180.);
-     corePos.z=starPos.z;
-     corePos.z = sign(corePos.z)*pow(cos(length(corePos.xyz)/coreRadius*PI/2),.5)*coreRadius*hash2(starID*130);
-     //starPos=normalize(starPos)* coreRadius;
-   //}
-
-   //float ds = length(starPos.xy)/coreRadius;
-   //starPos.z = sign(starPos.z)*pow(sin(ds)/ds,4)*coreRadius*hash2(starID*130);
-
-   starPos = lerp(starPos,corePos,pow(saturate(dh),8));
-    
-   
-   starPos = rotZ(starPos,rotationAngle);
-
-   starPos.z += 400;  
-    //starPos = lerp(normalize(starPos)* 1400.0f, starPos,.5);
-
-   // starPos = randomPosition(starID)*range*2-range;
+    starPos.z += 400;  
 
 
     //-----
