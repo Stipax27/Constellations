@@ -501,6 +501,9 @@ namespace Shaders {
 
 		CreateVS(6, nameToPatchLPCWSTR("Cursor_VS.shader"));
 		CreatePS(6, nameToPatchLPCWSTR("Cursor_PS.shader"));
+
+		CreateVS(7, nameToPatchLPCWSTR("AriesNebula_VS.shader"));
+		CreatePS(7, nameToPatchLPCWSTR("AriesNebula_PS.shader"));
 	}
 
 	void vShader(unsigned int n)
@@ -976,7 +979,7 @@ namespace Draw
 		ConstBuf::Update(1, ConstBuf::drawerP);
 		ConstBuf::ConstToPixel(1);
 
-		context->Draw(quadCount * 6, 0);
+		context->Draw(quadCount * 60000, 0);
 	}
 	void Cursor()
 	{

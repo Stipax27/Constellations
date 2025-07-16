@@ -109,8 +109,8 @@ namespace drawer
 
     void drawGalaxyFog()
     {
-        Shaders::vShader(5);
-        Shaders::pShader(5);
+        Shaders::vShader(7);
+        Shaders::pShader(7);
         Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
         Draw::GalaxyFog(1);
     }
