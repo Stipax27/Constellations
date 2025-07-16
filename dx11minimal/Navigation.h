@@ -56,7 +56,7 @@ void updateFlyDirection() { // Раскладка управления
     float x = currentMousePos.x - window.width / 2;
     float y = currentMousePos.y - window.height / 2;
 
-    point3d mousePos = point3d(x / (window.width * aspect), y / window.height);
+    point3d mousePos = point3d(x / window.width / aspect, y / window.height);
     float length = mousePos.magnitude();
 
     if (length > CURSOR_IGNORE_ZONE)
@@ -64,7 +64,7 @@ void updateFlyDirection() { // Раскладка управления
         if (length > MAX_CURSOR_DEVIATION)
         {
             mousePos = mousePos.normalized() * MAX_CURSOR_DEVIATION;
-            SetCursorPos(mousePos.x * (window.width * aspect) + window.width / 2, mousePos.y * window.height + window.height / 2);
+            SetCursorPos(mousePos.x * window.width * aspect + window.width / 2, mousePos.y * window.height + window.height / 2);
         }
 
         float k = (length - CURSOR_IGNORE_ZONE) / MAX_CURSOR_DEVIATION;
