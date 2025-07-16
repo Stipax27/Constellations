@@ -1015,6 +1015,9 @@ namespace Camera
 		float minDist = 500.0f;
 		float maxDist = 1000.0f;
 		float fovAngle = 60.0f;
+		float verticalOffset = 700.0f;  
+		float horizontalOffset = 0.0f; 
+		float distanceOffset = 500.0f;
 		XMVECTOR relativeMovement = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR currentRotation = XMQuaternionIdentity();
 		XMVECTOR Forward = XMVectorSet(0, 0, 1, 0);
@@ -1037,53 +1040,43 @@ namespace Camera
 			Camera::state.constellationOffset.r[3].m128_f32[2],
 			0.0f
 		);
-		// Обновляем векторы камеры на основе ориентации героя
-		float speed = 0.5f;
-
-		/*
-		XMVECTOR camRotation = XMQuaternionRotationMatrix(XMMatrixLookToLH(
-			XMVectorZero(), state.Forward, state.Up));
-		XMVECTOR heroRotation = XMQuaternionRotationMatrix(XMMatrixLookToLH(
-			XMVectorZero(), Hero::state.Forward, Hero::state.Up));
-		XMVECTOR newRotation = XMQuaternionSlerp(camRotation, heroRotation, speed);
-		XMMATRIX rotMatrix = XMMatrixRotationQuaternion(newRotation);
-		state.Forward = XMVector3TransformNormal(XMVectorSet(0, 0, 1, 0), rotMatrix);
-		state.Up = XMVector3TransformNormal(XMVectorSet(0, 1, 0, 0), rotMatrix);
-		*/
-
-		state.Forward = XMVectorLerp(state.Forward, Hero::state.Forwardbuf, speed);
-		state.Up = XMVectorLerp(state.Up, Hero::state.Up, speed);
-		state.Right = XMVectorLerp(state.Right, Hero::state.Right, speed);
 
 		
-		//state.Forward = XMQuaternionSlerp(state.Forward, Hero::state.Forward, speed);
-		//state.Up = XMQuaternionSlerp(state.Up, Hero::state.Up, speed);
-		//state.Right = XMQuaternionSlerp(state.Right, Hero::state.Right, speed);
+		XMVECTOR heroForward = Hero::state.Forwardbuf;
+		XMVECTOR heroUp = Hero::state.Up;
+		XMVECTOR heroRight = Hero::state.Right;
+
 		
+		XMVECTOR cameraPosition = heroPosition
+			- (heroForward * state.distanceOffset)
+			+ (heroUp * state.verticalOffset)
+			+ (heroRight * state.horizontalOffset);
 
-		// Нормализация векторов
-		state.Forward = XMVector3Normalize(state.Forward);
-		state.Up = XMVector3Normalize(state.Up);
-		state.Right = XMVector3Normalize(state.Right);
+		
+		XMVECTOR cameraTarget = heroPosition + (heroUp * state.verticalOffset * 0.5f);
 
-		//попробовать реализовать отдаление камеры в зависимости от угла поворота
-		//сделать что-то типо: camDistNow=camDist+(camDist*Q(угол поворота)) не забыть про возврат начального кам диста после отжатия клавиш
-		state.Eye = heroPosition - (state.Forward * state.camDist);//откуда смотрит камера
-		state.at = heroPosition;//куда смотрит камера
+		
+		state.Eye = cameraPosition;
+		state.at = cameraTarget;
+		state.Up = heroUp; 
+
+		
+		state.Forward = XMVector3Normalize(cameraTarget - cameraPosition);
+		state.Right = XMVector3Normalize(XMVector3Cross(heroUp, state.Forward));
 	}
 
 	void Camera()//обновление позиции камеры после обновления позиции созвездия. В Navigation.h, Loop.h, Mouse.h(navigationByMouse 2 раза) и тут тоже есть вызовы.
 	{
 		UpdateCameraPosition();
 
-		// Обновляем матрицу вида
+		
 		ConstBuf::camera.view[0] = XMMatrixTranspose(XMMatrixLookAtLH(
 			state.Eye,
 			state.at,
 			state.Up
 		));
 
-		// Матрица проекции остается неизменной
+		
 		ConstBuf::camera.proj[0] = XMMatrixTranspose(XMMatrixPerspectiveFovLH(
 			DegreesToRadians(state.fovAngle),
 			iaspect,
@@ -1099,8 +1092,7 @@ namespace Camera
 	
 	void HandleMouseWheel(int delta)
 	{
-		state.camDist -= delta * 5.0f; // Увеличиваем чувствительность
-		state.camDist = clamp(state.camDist, state.minDist, state.maxDist);
-		//Camera();
+		state.distanceOffset -= delta * 5.0f;
+		state.distanceOffset = clamp(state.distanceOffset, state.minDist, state.maxDist);
 	}
 }
