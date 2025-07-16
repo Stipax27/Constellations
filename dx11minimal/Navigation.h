@@ -3,7 +3,7 @@ point3d starfield_angles = { 0,0,0 };
 point3d milkyway_angles = { 0,0,100 };
 
 point3d flyDirection = { 0, 0, 0 };
-point3d heroPosition = { 0, 0, 0 };
+//point3d heroPosition = { 0, 0, 0 };
 float currentFlySpeed = 0.0f;
 const float maxFlySpeed = 0.1f;
 const float flyAcceleration = 0.2f;
@@ -47,14 +47,8 @@ void updateFlyDirection() { // Раскладка управления
     float dPitch = 0.0f, dYaw = 0.0f, dRoll = 0.0f;
 
 
-    // Получаем текущую позицию мыши
-    POINT currentMousePos;
-    GetCursorPos(&currentMousePos);
-    ScreenToClient(window.hWnd, &currentMousePos);
-
-
-    float x = currentMousePos.x - window.width / 2;
-    float y = currentMousePos.y - window.height / 2;
+    float x = mouse.pos.x - window.width / 2;
+    float y = mouse.pos.y - window.height / 2;
 
     point3d mousePos = point3d(x / window.width / aspect, y / window.height);
     float length = mousePos.magnitude();

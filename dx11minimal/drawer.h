@@ -832,6 +832,19 @@ namespace drawer
                c.Transform = CreateConstToWorldMatrix(c);
                drawСonstellation(*starSet[i]);
             }
+            point3d start = heroPosition;
+
+            point3d camPos = point3d(XMVectorGetX(Camera::state.Eye), XMVectorGetY(Camera::state.Eye), XMVectorGetZ(Camera::state.Eye));
+            point3d mouseRay = GetMouseRay(mouse.pos);
+            point3d mousePos = camPos + mouseRay * 1000;
+            point3d end = start + (mousePos - start);
+
+            string info = std::to_string(camPos.x);
+            drawString(info.c_str(), 1500, 50, 1.0f, true);
+
+            Shaders::vShader(4);
+            Shaders::pShader(4);
+            drawLine(start, end);
 
             std::string curentSignstring = zodiacSignToString(player_sign);
             TextOutA(window.context, window.width * 5 / 6, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());
@@ -914,19 +927,7 @@ namespace drawer
                     drawLine(p1, p2);
                 }
             }
-            point3d start = starSet[player_sign]->position;
-
-            point3d camPos = point3d(XMVectorGetX(Camera::state.Eye), XMVectorGetY(Camera::state.Eye), XMVectorGetZ(Camera::state.Eye));
-            point3d mouseRay = GetMouseRay(mouse.pos);
-            point3d mousePos = camPos + mouseRay * 1000;
-            point3d end = start + (mousePos - start);
-
-            string info = std::to_string(camPos.x);
-            drawString(info.c_str(), 1500, 50, 1.0f, true);
-
-            Shaders::vShader(4);
-            Shaders::pShader(4);
-            drawLine(start, end);
+            
 
             float deltaTime = (currentTime - lastFrameTime) / 1000.0f;
             ProjectileUpdate(deltaTime);

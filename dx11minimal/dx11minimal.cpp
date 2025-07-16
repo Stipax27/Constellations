@@ -122,7 +122,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         {
             currentTime= timer::GetCounter();
             timer::frameBeginTime = timer::GetCounter();
-            //mouse.Input();
+            mouse.Input();
             mainLoop();
             timer::frameEndTime = timer::GetCounter();
             timer::frameRenderingDuration = timer::frameEndTime - timer::frameBeginTime;
