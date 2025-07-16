@@ -111,6 +111,44 @@ float noise( float3 x ) {
     return a - 0.5;
 }
 
+float random(float2 p) {
+    float2 r = float2(23.14069263277926, 2.665144142690225);
+    return frac(cos(dot(p, r)) * 12345.6789);
+}
+
+// Функция шума Вороного
+float voronoiNoise(float2 uv, float randomness) {
+    float2 iuv = floor(uv);
+    float2 fuv = frac(uv);
+    
+    float minDist = 1.0;
+    float secondMinDist = 1.0;
+    
+    // Проверяем соседние клетки (3x3 область)
+    for (int y = -1; y <= 1; y++) {
+        for (int x = -1; x <= 1; x++) {
+            float2 neighbor = float2(x, y);
+            float2 p = neighbor * random(iuv) * randomness;
+            
+            // Вычисляем вектор от текущего пикселя к точке
+            float2 diff = neighbor + p - fuv;
+            float dist = length(diff);
+            
+            // Обновляем минимальные расстояния
+            if (dist < minDist) {
+                secondMinDist = minDist;
+                minDist = dist;
+            } else if (dist < secondMinDist) {
+                secondMinDist = dist;
+            }
+        }
+    }
+    
+    // Возвращаем разницу между двумя ближайшими точками
+    return secondMinDist - minDist;
+}
+
+
 VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output;
@@ -133,7 +171,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     starPos.y = cos(starPos.x / 50000 * PI) * cos(starPos.z / 50000 * PI) * 15000;
     
-    starPos.y += noise(starPos.yxz * 0.131 * 20 * 0.00011 + float3(65.235, 14.631, 41.547) + time.x * 0.001) * 10000;
+    starPos.y += voronoiNoise(starPos.xz * 0.131 * 20 * 0.00011 + float2(41.547, 14.631) + time.x * 0.001, 19.98140843) * 10000;
 
 
     //-----
