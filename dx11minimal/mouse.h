@@ -20,7 +20,6 @@ struct Mouse
         navigationByMouse();
         selectWeapon();
     }
-
 };
 
 

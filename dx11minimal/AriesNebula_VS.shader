@@ -95,19 +95,18 @@ float hash( float n ) {
 }
      
 float noise( float3 x ) {
-    // The noise function returns a value in the range -1.0f -> 1.0f
     float3 p = floor(x);
     float3 f = frac(x);
      
     f = f*f*(3.0-2.0*f);
     float n = p.x + p.y*57.0 + 113.0*p.z;
      
-    float a= lerp(lerp(lerp( hash(n+0.0), hash(n+1.0),f.x),
+    float a = lerp(lerp(lerp( hash(n+0.0), hash(n+1.0),f.x),
             lerp( hash(n+57.0), hash(n+58.0),f.x),f.y),
             lerp(lerp( hash(n+113.0), hash(n+114.0),f.x),
             lerp( hash(n+170.0), hash(n+171.0),f.x),f.y),f.z);
 
-    return a-.5;
+    return a - 0.5;
 }
 
 VS_OUTPUT VS(uint vID : SV_VertexID)
@@ -150,9 +149,9 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     angle += randomOffset;
     
 
-    starPos.x = distance * cos(angle * PI / 180.);
-    starPos.y = distance * sin(angle * PI / 180.);
-    starPos.z = height*(1-dh);
+    starPos.x = noise(starPos.xyz * 0.125 + 0.25 * time.x * 0.003) * 50;
+    starPos.y = noise(starPos.xyz * 0.131 + 0.25 * time.x * 0.017) * 50;
+    starPos.z = noise(starPos.xyz * 0.157 + 0.25 * time.x * 0.008) * 50;
     
     float3 corePos;
    //if (hash2(starID) <.5) {
