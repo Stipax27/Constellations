@@ -10,6 +10,10 @@ const float flyAcceleration = 0.2f;
 const float flyDeceleration = 0.002f;
 const float MOUSE_SENSITIVITY = 0.002f;
 
+const float CURSOR_IGNORE_ZONE = 0.05f;
+const float MAX_CURSOR_DEVIATION = 0.3f;
+const float SENSIVITY = 0.25f;
+const float CURSOR_ZONE_DELTA = MAX_CURSOR_DEVIATION - CURSOR_IGNORE_ZONE;
 
 
 void updateFlyDirection() { // Раскладка управления 
@@ -42,19 +46,40 @@ void updateFlyDirection() { // Раскладка управления
 
     float dPitch = 0.0f, dYaw = 0.0f, dRoll = 0.0f;
 
-    if (GetAsyncKeyState(VK_UP)) {
-        dPitch += turnSpeed; Camera::state.n += 10;
+
+    // Получаем текущую позицию мыши
+    POINT currentMousePos;
+    GetCursorPos(&currentMousePos);
+    ScreenToClient(window.hWnd, &currentMousePos);
+
+
+    float x = currentMousePos.x - window.width / 2;
+    float y = currentMousePos.y - window.height / 2;
+
+    point3d mousePos = point3d(x / (window.width * aspect), y / window.height);
+    float length = mousePos.magnitude();
+
+    if (length > CURSOR_IGNORE_ZONE)
+    {
+        if (length > MAX_CURSOR_DEVIATION)
+        {
+            mousePos = mousePos.normalized() * MAX_CURSOR_DEVIATION;
+            SetCursorPos(mousePos.x * (window.width * aspect) + window.width / 2, mousePos.y * window.height + window.height / 2);
+        }
+
+        float k = (length - CURSOR_IGNORE_ZONE) / MAX_CURSOR_DEVIATION;
+
+        float dx = (mousePos.x) * SENSIVITY * k;
+        float dy = (mousePos.y) * SENSIVITY * k;
+
+        // Применяем к поворотам
+        dPitch = dy; // Вертикальное движение мыши - pitch (инвертируем dy)
+        dYaw = dx;   // Горизонтальное движение мыши - yaw
     }
-    if (GetAsyncKeyState(VK_DOWN)){
-        dPitch -= turnSpeed; Camera::state.n += 10;
-}
-    if (GetAsyncKeyState(VK_LEFT)){
-        dYaw += turnSpeed; Camera::state.n += 10;
-}
-    if (GetAsyncKeyState(VK_RIGHT)){
-        dYaw -= turnSpeed; Camera::state.n += 10;
-}
-    if (GetAsyncKeyState('E')){
+
+
+    // Обработка Q и E для крена (оставляем как было)
+    if (GetAsyncKeyState('E')) {
         dRoll -= turnSpeed;
         Camera::state.n = lerp(Camera::state.n, 100, 0.3f);
     }
