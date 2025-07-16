@@ -57,18 +57,17 @@ void updateFlySpeed(float deltaTime) {// Обновления во время полёта
 
 void updatePlayerPosition(float deltaTime) {// обновление позиции ГГ
     if (currentFlySpeed > 0) {
-        if (GetAsyncKeyState(VK_SHIFT) & 0x8000) currentFlySpeed *= 5.f;// Ускорение полёта
+        if (GetAsyncKeyState(VK_SHIFT) & 0x8000) currentFlySpeed *= 5.0f;// Ускорение полёта
 
          Camera::state.constellationOffset = Camera::state.constellationOffset *XMMatrixTranslation(flyDirection.x * currentFlySpeed * deltaTime, flyDirection.y * currentFlySpeed * deltaTime, flyDirection.z * currentFlySpeed * deltaTime);
          float x = Camera::state.constellationOffset.r[3].m128_f32[0];
          float y = Camera::state.constellationOffset.r[3].m128_f32[1];
          float z = Camera::state.constellationOffset.r[3].m128_f32[2];
 
-         Camera::state.at = XMVectorSet(x, y, z, 0)*20;
+         Camera::state.at = XMVectorSet(x, y, z, 0) * 20;
          Camera::state.Up = XMVector3Rotate(Camera::state.defaultUp, Camera::state.currentRotation);
          Camera::state.Forward = XMVector3Normalize(Camera::state.at - Camera::state.Eye);
          Camera::state.Eye = Camera::state.at - (Camera::state.Forward * Camera::state.camDist);
          Camera::Camera();
     }
-
 }
