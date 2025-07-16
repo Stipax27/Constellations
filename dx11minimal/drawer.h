@@ -1,4 +1,5 @@
 ﻿bool t = true;
+
 namespace drawer
 {
     void drawLine(point3d& p1, point3d& p2)
@@ -776,6 +777,81 @@ namespace drawer
         }
     }
 
+    bool isAttacking = false;
+    float attackProgress = 0.0f;
+    XMVECTOR attackStart, attackEnd;  // Изменили на XMVECTOR
+    const float attackSpeed = 5.0f;
+    const float swordLength = 200.0f;
+
+    // Обработка нажатия ЛКМ
+    void HandleMouseClick() {
+        if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 && !isAttacking) {
+            // Получаем позицию игрока
+            attackStart = Hero::state.constellationOffset.r[3];
+
+            // Получаем направление луча мыши
+            XMVECTOR camPos = XMVectorSet(
+                XMVectorGetX(Camera::state.Eye),
+                XMVectorGetY(Camera::state.Eye),
+                XMVectorGetZ(Camera::state.Eye),
+                0.0f
+            );
+
+            point3d mouseRayP = GetMouseRay(mouse.pos);
+            XMVECTOR mouseRay = XMVectorSet(mouseRayP.x, mouseRayP.y, mouseRayP.z, 0.0f);
+            XMVECTOR mouseWorldPos = camPos + mouseRay * 1000.0f;
+
+            // Вычисляем конечную точку атаки
+            XMVECTOR dir = XMVector3Normalize(mouseWorldPos - attackStart);
+            attackEnd = attackStart + dir * swordLength;
+
+            // Запускаем анимацию
+            isAttacking = true;
+            attackProgress = 0.0f;
+        }
+    }
+
+    void UpdateAttack(float deltaTime) {
+        if (isAttacking) {
+            attackProgress += attackSpeed * deltaTime;
+
+            if (attackProgress >= 1.0f) {
+                isAttacking = false;
+            }
+        }
+    }
+
+    void DrawSwordAttack() {
+        // Текущая позиция меча
+        if (!isAttacking) return;
+
+        // Создаем временные объекты point3d для всех точек
+        point3d start, end;
+
+        // Конвертируем XMVECTOR в point3d
+        start.x = XMVectorGetX(attackStart);
+        start.y = XMVectorGetY(attackStart);
+        start.z = XMVectorGetZ(attackStart);
+
+        end.x = XMVectorGetX(attackEnd);
+        end.y = XMVectorGetY(attackEnd);
+        end.z = XMVectorGetZ(attackEnd);
+
+        // Вычисляем текущую позицию меча (линейная интерполяция)
+        point3d currentPos;
+        currentPos.x = start.x + (end.x - start.x) * attackProgress;
+        currentPos.y = start.y + (end.y - start.y) * attackProgress;
+        currentPos.z = start.z + (end.z - start.z) * attackProgress;
+
+        // Простая отрисовка одной линии (меч)
+        Shaders::vShader(4);
+        Shaders::pShader(4);
+        Blend::Blending(Blend::blendmode::on);
+
+        // Рисуем линию от текущей позиции до конца
+        drawLine(currentPos, end);
+    }
+    
 
     void drawWorld()
     {
@@ -822,9 +898,7 @@ namespace drawer
             //modelProject = &fightProject;
             //modelTransform = &placeConstToWorld;
             
-            Constellation& c = *starSet[player_sign];
-            c.Transform = CreateHeroToWorldMatrix(c);
-            drawСonstellation(*starSet[player_sign]);//Игрок
+            
 
             for (int i = 0;i < 12;i++)
             {
@@ -832,19 +906,41 @@ namespace drawer
                c.Transform = CreateConstToWorldMatrix(c);
                drawСonstellation(*starSet[i]);
             }
-            point3d start = heroPosition;
 
-            point3d camPos = point3d(XMVectorGetX(Camera::state.Eye), XMVectorGetY(Camera::state.Eye), XMVectorGetZ(Camera::state.Eye));
-            point3d mouseRay = GetMouseRay(mouse.pos);
-            point3d mousePos = camPos + mouseRay * 1000;
-            point3d end = start + (mousePos - start);
+            float deltaTime = (currentTime - lastFrameTime) / 1000.0f;
+            HandleMouseClick();
+            UpdateAttack(deltaTime);
+            DrawSwordAttack();
+            //XMVECTOR heroPosition = Hero::state.constellationOffset.r[3];
+            //point3d start = point3d(
+            //    XMVectorGetX(heroPosition),
+            //    XMVectorGetY(heroPosition),
+            //    XMVectorGetZ(heroPosition)
+            //);
 
-            string info = std::to_string(camPos.x);
-            drawString(info.c_str(), 1500, 50, 1.0f, true);
+            //// Остальной код без изменений
+            //point3d camPos = point3d(
+            //    XMVectorGetX(Camera::state.Eye),
+            //    XMVectorGetY(Camera::state.Eye),
+            //    XMVectorGetZ(Camera::state.Eye)
+            //);
 
-            Shaders::vShader(4);
-            Shaders::pShader(4);
-            drawLine(start, end);
+            //point3d mouseRay = GetMouseRay(mouse.pos);
+            //point3d mousePos = camPos + mouseRay * 1000;
+            //point3d end = start + (mousePos - start);
+
+            //float attackLength = 2000.0f; // Длина атаки
+            //// Рисуем луч
+            //for (int i = 0; i < 5; i++) {
+            //    float offset = i * 10.0f;
+            //    point3d swordStart = start + mouseRay * offset;
+            //    point3d swordEnd = start + mouseRay * (attackLength - offset);
+            //    drawLine(swordStart, swordEnd);
+            //}
+
+            Constellation& c = *starSet[player_sign];
+            c.Transform = CreateHeroToWorldMatrix(c);
+            drawСonstellation(*starSet[player_sign]);//Игрок
 
             std::string curentSignstring = zodiacSignToString(player_sign);
             TextOutA(window.context, window.width * 5 / 6, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());

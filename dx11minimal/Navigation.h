@@ -124,10 +124,16 @@ void updateFlySpeed(float deltaTime) {// Обновления во время п
 
 void updatePlayerPosition(float deltaTime) {// обновление позиции ГГ
     if (currentFlySpeed > 0) {
-        Camera::state.constellationOffset = Camera::state.constellationOffset *
-            XMMatrixTranslation(flyDirection.x * currentFlySpeed * deltaTime,
+        // Обновляем Hero::state.constellationOffset
+        Hero::state.constellationOffset = Hero::state.constellationOffset *
+            XMMatrixTranslation(
+                flyDirection.x * currentFlySpeed * deltaTime,
                 flyDirection.y * currentFlySpeed * deltaTime,
-                flyDirection.z * currentFlySpeed * deltaTime);
+                flyDirection.z * currentFlySpeed * deltaTime
+            );
+
+        // Копируем в Camera::state
+        Camera::state.constellationOffset = Hero::state.constellationOffset;
     }
 
 }

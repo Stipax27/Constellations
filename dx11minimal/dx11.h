@@ -1031,6 +1031,7 @@ namespace Camera
 		XMVECTOR EyeBack = XMVectorSet(0, 0, -1, 0);
 	} static state;
 
+	
 	void UpdateCameraPosition()
 	{
 		// Получаем текущую позицию героя

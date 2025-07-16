@@ -69,9 +69,9 @@ public:
         updatePlayerPosition(deltaTime);
 
         XMVECTOR heroPosition = XMVectorSet(
-            Camera::state.constellationOffset.r[3].m128_f32[0],
-            Camera::state.constellationOffset.r[3].m128_f32[1],
-            Camera::state.constellationOffset.r[3].m128_f32[2],
+            Hero::state.constellationOffset.r[3].m128_f32[0],
+            Hero::state.constellationOffset.r[3].m128_f32[1],
+            Hero::state.constellationOffset.r[3].m128_f32[2],
             0.0f
         );
 
@@ -94,7 +94,7 @@ public:
         XMMATRIX Hero = translationMatrix * invTranslationMatrix * rotationMatrix * scaleMatrix * toOrigin;
 
         return -Hero;
-        //rotationMatrix(rotation);
+        //rotationMatrix(rotation); 
         
     }
 
