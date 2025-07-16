@@ -171,7 +171,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     starPos.y = cos(starPos.x / 50000 * PI) * cos(starPos.z / 50000 * PI) * 15000;
     
-    starPos.y += voronoiNoise(starPos.xz * 0.131 * 20 * 0.00011 + float2(41.547, 14.631) + time.x * 0.001, 19.98140843) * 10000;
+    starPos.y += noise(starPos.xzy * 0.131 * 20 * 0.00011 + float3(41.547, 14.631, 51.591) + time.x * 0.001) * 10000;
 
 
     //-----
