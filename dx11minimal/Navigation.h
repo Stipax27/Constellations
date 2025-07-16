@@ -10,6 +10,8 @@ const float flyAcceleration = 0.2f;
 const float flyDeceleration = 0.002f;
 const float MOUSE_SENSITIVITY = 0.002f;
 
+
+
 void updateFlyDirection() { // Раскладка управления 
     flyDirection = { 0, 0, 0 };
 
@@ -40,62 +42,19 @@ void updateFlyDirection() { // Раскладка управления
 
     float dPitch = 0.0f, dYaw = 0.0f, dRoll = 0.0f;
 
-    
-        // Получаем текущую позицию мыши
-        POINT currentMousePos;
-        GetCursorPos(&currentMousePos);
-        ScreenToClient(window.hWnd, &currentMousePos);
-        
-        //if (!rmb) {
-        //    // Первое движение после нажатия - запоминаем позицию
-        //    rmb = true;
-        //    mouse.oldPos.x = (float)currentMousePos.x;
-        //    mouse.oldPos.y = (float)currentMousePos.y;
-        //}
-        //else {
-        //    // Вычисляем разницу в движении мыши
-        //    float dx = (currentMousePos.x - window.width/2) * 0.01f;
-        //    float dy = (currentMousePos.y - window.height/2) * 0.01f;
-
-        //    // Применяем к поворотам
-        //    dPitch = dy; // Вертикальное движение мыши - pitch (инвертируем dy)
-        //    dYaw = dx;   // Горизонтальное движение мыши - yaw
-
-        //    // Обновляем старую позицию
-        //    mouse.oldPos.x = (float)currentMousePos.x;
-        //    mouse.oldPos.y = (float)currentMousePos.y;
-
-        //    Camera::state.n += 10; // Аналогично тому, что было при нажатии клавиш
-        //}
-
-        //SetCursorPos(window.width / 2, window.height / 2);
-
-
-        float x = currentMousePos.x - window.width / 2;
-        float y = currentMousePos.y - window.height / 2;
-        
-        point3d mousePos = point3d(x / window.width, y / window.height);
-        float length = mousePos.magnitude();
-
-        if (length > 0.05f)
-        {
-            if (length > 0.2f)
-            {
-                mousePos = mousePos.normalized() * 0.2f;
-                SetCursorPos(mousePos.x * window.width + window.width / 2, mousePos.y * window.height + window.height / 2);
-            }
-
-            float dx = (mousePos.x) * 0.5f;
-            float dy = (mousePos.y) * 0.5f;
-
-            // Применяем к поворотам
-            dPitch = dy; // Вертикальное движение мыши - pitch (инвертируем dy)
-            dYaw = dx;   // Горизонтальное движение мыши - yaw
-        }
-    
-
-    // Обработка Q и E для крена (оставляем как было)
-    if (GetAsyncKeyState('E')) {
+    if (GetAsyncKeyState(VK_UP)) {
+        dPitch += turnSpeed; Camera::state.n += 10;
+    }
+    if (GetAsyncKeyState(VK_DOWN)){
+        dPitch -= turnSpeed; Camera::state.n += 10;
+}
+    if (GetAsyncKeyState(VK_LEFT)){
+        dYaw += turnSpeed; Camera::state.n += 10;
+}
+    if (GetAsyncKeyState(VK_RIGHT)){
+        dYaw -= turnSpeed; Camera::state.n += 10;
+}
+    if (GetAsyncKeyState('E')){
         dRoll -= turnSpeed;
         Camera::state.n = lerp(Camera::state.n, 100, 0.3f);
     }
@@ -150,8 +109,6 @@ void updatePlayerPosition(float deltaTime) {// обновление позици
             XMMatrixTranslation(flyDirection.x * currentFlySpeed * deltaTime,
                 flyDirection.y * currentFlySpeed * deltaTime,
                 flyDirection.z * currentFlySpeed * deltaTime);
-
-        //Camera::Camera(); // Обновляем камеру после перемещения (вот это дублирующее)
     }
 
 }
