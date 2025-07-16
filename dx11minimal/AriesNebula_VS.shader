@@ -121,41 +121,19 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
         float2(1, -1), float2(1, 1), float2(-1, 1)
     };
 
+    float3 starPos;
+
     //calc star position
 
     float size = 128;
     float range = 25000.;
-    float3 starPos = randomPosition(starID)*range*2-range;
+    starPos = randomPosition(starID)*range*2-range;
 
     starPos.y = 0.0;
     
-    float diskRadius = 1000.f;
-    float coreRadius = 80.f;
-    float thickness = 140.f;
-    float armsCount = 2.f;
-    float armWidth = 0.5f;
-    float rotationSpeed = 0.5f;
-    float rotationAngle = time.x * rotationSpeed * 0.01;
-    float armRadius = 90.;
+    starPos.y = noise(starPos.yxz * 0.131 * 20 * 0.00011 + float3(65.235, 14.631, 41.547) + time.x * 0.001) * 10000;
 
-    float dh = hash2(starID*12);
-    float distance = coreRadius * 0 + dh *(diskRadius - coreRadius);
-    float height = hash2(starID*22) *thickness - thickness / 2;
-
-    float armAngle = (starID) % armsCount * armRadius*2;
-        
-    float spiralFactor = 3.5f * log(distance / coreRadius + 1);
-    float angle = armAngle + spiralFactor * (distance / diskRadius) * 360;
-    
-    float randomOffset = hash2(starID)* armWidth * distance;
-    angle += randomOffset;
-    
-    
-    //starPos.x = noise(starPos.xyz * 0.083 * 40 * 0.00007 + float3(53.529, 31.611, 59.317)) * 10000;
-    //starPos.y = noise(starPos.yxz * 0.131 * 40 * 0.00011 + float3(65.235, 14.631, 41.547)) * 10000;
-    //starPos.z = noise(starPos.zxy * 0.157 * 40 * 0.00009 + float3(27.153, 63.721, 12.591)) * 10000;
-
-    starPos.y += 500;  
+    starPos.y += 500;
 
 
     //-----
