@@ -124,8 +124,10 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     //calc star position
 
     float size = 128;
-    float range = 2000.;
+    float range = 25000.;
     float3 starPos = randomPosition(starID)*range*2-range;
+
+    starPos.y = 0.0;
     
     float diskRadius = 1000.f;
     float coreRadius = 80.f;
@@ -149,11 +151,11 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     angle += randomOffset;
     
     
-    starPos.x = noise(starPos.xyz * 0.083 * 100 * 0.00007 + float3(53.529, 31.611, 59.317)) * 10000;
-    starPos.y = noise(starPos.yxz * 0.131 * 100 * 0.00011 + float3(65.235, 14.631, 41.547)) * 10000;
-    starPos.z = noise(starPos.zxy * 0.157 * 100 * 0.00009 + float3(27.153, 63.721, 12.591)) * 10000;
+    //starPos.x = noise(starPos.xyz * 0.083 * 40 * 0.00007 + float3(53.529, 31.611, 59.317)) * 10000;
+    //starPos.y = noise(starPos.yxz * 0.131 * 40 * 0.00011 + float3(65.235, 14.631, 41.547)) * 10000;
+    //starPos.z = noise(starPos.zxy * 0.157 * 40 * 0.00009 + float3(27.153, 63.721, 12.591)) * 10000;
 
-    starPos.z += 400;  
+    starPos.y += 500;  
 
 
     //-----
