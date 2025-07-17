@@ -117,35 +117,52 @@ float random(float2 p) {
 }
 
 // Функция шума Вороного
-float voronoiNoise(float2 uv, float randomness) {
-    float2 iuv = floor(uv);
-    float2 fuv = frac(uv);
-    
-    float minDist = 1.0;
-    float secondMinDist = 1.0;
-    
-    // Проверяем соседние клетки (3x3 область)
-    for (int y = -1; y <= 1; y++) {
-        for (int x = -1; x <= 1; x++) {
-            float2 neighbor = float2(x, y);
-            float2 p = neighbor * random(iuv) * randomness;
-            
-            // Вычисляем вектор от текущего пикселя к точке
-            float2 diff = neighbor + p - fuv;
-            float dist = length(diff);
-            
-            // Обновляем минимальные расстояния
-            if (dist < minDist) {
-                secondMinDist = minDist;
-                minDist = dist;
-            } else if (dist < secondMinDist) {
-                secondMinDist = dist;
+float3 voronoiNoise(float2 value){
+    float2 baseCell = floor(value);
+
+    //first pass to find the closest cell
+    float minDistToCell = 10;
+    float2 toClosestCell;
+    float2 closestCell;
+    [unroll]
+    for(int x1=-1; x1<=1; x1++){
+        [unroll]
+        for(int y1=-1; y1<=1; y1++){
+            float2 cell = baseCell + float2(x1, y1);
+            float2 cellPosition = cell + float2(random(cell.xy), random(cell.yx));
+            float2 toCell = cellPosition - value;
+            float distToCell = length(toCell);
+            if(distToCell < minDistToCell){
+                minDistToCell = distToCell;
+                closestCell = cell;
+                toClosestCell = toCell;
             }
         }
     }
-    
-    // Возвращаем разницу между двумя ближайшими точками
-    return secondMinDist - minDist;
+
+    //second pass to find the distance to the closest edge
+    float minEdgeDistance = 10;
+    [unroll]
+    for(int x2=-1; x2<=1; x2++){
+        [unroll]
+        for(int y2=-1; y2<=1; y2++){
+            float2 cell = baseCell + float2(x2, y2);
+            float2 cellPosition = cell + float2(random(cell.xy), random(cell.yx));
+            float2 toCell = cellPosition - value;
+
+            float2 diffToClosestCell = abs(closestCell - cell);
+            bool isClosestCell = diffToClosestCell.x + diffToClosestCell.y < 0.1;
+            if(!isClosestCell){
+                float2 toCenter = (toClosestCell + toCell) * 0.5;
+                float2 cellDifference = normalize(toCell - toClosestCell);
+                float edgeDistance = dot(toCenter, cellDifference);
+                minEdgeDistance = min(minEdgeDistance, edgeDistance);
+            }
+        }
+    }
+
+    float rand = random(closestCell);
+    return float3(minDistToCell, rand, minEdgeDistance);
 }
 
 
@@ -165,13 +182,17 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     //calc star position
 
-    float size = 128;
-    float range = 25000.;
-    starPos = randomPosition(starID)*range*2-range;
+    float size = 512;
+    float range = 50000;
+    starPos = randomPosition(starID) * range * 2 - range;
 
-    starPos.y = cos(starPos.x / 50000 * PI) * cos(starPos.z / 50000 * PI) * 15000;
+
+    starPos.y = cos(starPos.x / 100000 * PI) * cos(starPos.z / 100000 * PI) * -7500 + min(exp(abs(starPos.x) / 1000) * exp(abs(starPos.z) / 1000), 15000);
     
-    starPos.y += noise(starPos.xzy * 0.131 * 20 * 0.00011 + float3(41.547, 14.631, 51.591) + time.x * 0.001) * 10000;
+    //starPos.y += noise(starPos.xzy * 0.131 * 20 * 0.00011 + float3(41.547, 14.631, 51.591) + time.x * 0.005) * 10000;
+
+    float3 n = voronoiNoise(starPos.xz * 0.131 * 20 * 0.00011 + float2(41.547, 14.631) + time.x * 0.005);
+    starPos.y -= n.x * n.y * n.z * 40000;
 
 
     //-----

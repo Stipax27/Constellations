@@ -71,7 +71,7 @@ float3 HSLToRGB(float3 hsl) {
 float3 ApplyRainbowEffect(float4 worldpos) {
     // Ќормализуем врем€ в диапазон [0, 1] дл€ Hue
     float hue = frac(time * 0.005 + worldpos.x / 100000 + worldpos.z / 250000); // frac аналогичен %1.0
-    float saturation = 1.0;
+    float saturation = 0.5;
     float lightness = 0.5;
 
     float3 hsl = float3(hue, saturation, lightness);
@@ -83,8 +83,8 @@ float4 PS(VS_OUTPUT input) : SV_Target
 {
     float2 uv = input.uv;
 
-    float3 rainbow = ApplyRainbowEffect(input.worldpos);
-    float3 color = lerp(float3(1, 1, 1), rainbow, max(min((input.worldpos.y - 500) / 500, 1), 0));
+    float3 lowerColor = ApplyRainbowEffect(input.worldpos);
+    float3 color = lerp(float3(1, 1, 1), lowerColor, max(min((input.worldpos.y - 500) / 500, 1), 0));
 
     float brightness = exp(-dot(uv, uv) * 20) * 0.02f;
 

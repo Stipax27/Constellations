@@ -979,7 +979,7 @@ namespace Draw
 		ConstBuf::Update(1, ConstBuf::drawerP);
 		ConstBuf::ConstToPixel(1);
 
-		context->Draw(quadCount * 60000, 0);
+		context->Draw(quadCount * 6, 0);
 	}
 	void Cursor()
 	{

@@ -112,7 +112,7 @@ namespace drawer
         Shaders::vShader(7);
         Shaders::pShader(7);
         Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-        Draw::GalaxyFog(1000);
+        Draw::GalaxyFog(5000000);
     }
 
     void drawCursor()
