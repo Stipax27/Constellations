@@ -182,17 +182,17 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     //calc star position
 
-    float size = 512;
+    float size = 256;
     float range = 50000;
     starPos = randomPosition(starID) * range * 2 - range;
+    starPos.y = 0.0;
 
-
-    starPos.y = cos(starPos.x / 100000 * PI) * cos(starPos.z / 100000 * PI) * -7500 + min(exp(abs(starPos.x) / 1000) * exp(abs(starPos.z) / 1000), 15000);
+    //starPos.y = cos(starPos.x / 100000 * PI) * cos(starPos.z / 100000 * PI) * -7500 + min(exp(abs(starPos.x) / 1000) * exp(abs(starPos.z) / 1000), 15000);
     
     //starPos.y += noise(starPos.xzy * 0.131 * 20 * 0.00011 + float3(41.547, 14.631, 51.591) + time.x * 0.005) * 10000;
 
-    float3 n = voronoiNoise(starPos.xz * 0.131 * 20 * 0.00011 + float2(41.547, 14.631) + time.x * 0.005);
-    starPos.y -= n.x * n.y * n.z * 40000;
+    float3 n = voronoiNoise(starPos.xz * 0.131 * 20 * 0.00011 + time.x * 0.005 + float2(41.547, 14.631));
+   // starPos.y -= n.x * n.y * n.z * 40000;
 
 
     //-----

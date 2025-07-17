@@ -37,6 +37,9 @@
     <Filter Include="Shaders\Cursor">
       <UniqueIdentifier>{7a53a6ab-51fc-43fa-9b0a-2483cee6faea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\AriesNebula">
+      <UniqueIdentifier>{550a3ce4-b24b-4575-9584-0953ae84ab38}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -172,6 +175,12 @@
     </None>
     <None Include="Cursor_PS.shader">
       <Filter>Shaders\Cursor</Filter>
+    </None>
+    <None Include="AriesNebula_PS.shader">
+      <Filter>Shaders\AriesNebula</Filter>
+    </None>
+    <None Include="AriesNebula_VS.shader">
+      <Filter>Shaders\AriesNebula</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
