@@ -16,21 +16,21 @@ void mainLoop()
 	drawer::drawWorld();
 
 	//--------------------------------
-	Textures::CreateMipMap();
+	//Textures::CreateMipMap();
 
-	Draw::SwitchRenderTextures();
+	//Draw::SwitchRenderTextures();
 
-	Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
-	Depth::Depth(Depth::depthmode::off);
-	Rasterizer::Cull(Rasterizer::cullmode::off);
+	//Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
+	//Depth::Depth(Depth::depthmode::off);
+	//Rasterizer::Cull(Rasterizer::cullmode::off);
 
-	Shaders::vShader(10);
-	Shaders::pShader(10);
-	Draw::NullDrawer(1, 1);
+	//Shaders::vShader(10);
+	//Shaders::pShader(10);
+	//Draw::NullDrawer(1, 1);
 
-	Draw::OutputRenderTextures();
-	//Shaders::pShader(3);
-	Draw::NullDrawer(1, 1);
+	//Draw::OutputRenderTextures();
+	////Shaders::pShader(3);
+	//Draw::NullDrawer(1, 1);
 	//--------------------------------
 
 	Draw::Present();
