@@ -111,7 +111,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
     float3 lowerColor = lerp(float3(0.25, 1, 0.25), float3(0.36, 1, 1), n);
     float3 upperColor = float3(0.8, 0.5, 0.05);
 
-    float3 color = lerp(upperColor, lowerColor, max(min((input.worldpos.y + 500) / 500, 1), 0));
+    float3 color = lerp(upperColor, lowerColor, max(min((input.worldpos.y + 1000) / 500, 1), 0));
 
     float brightness = exp(-dot(uv, uv) * 20) * 0.03f;
 
