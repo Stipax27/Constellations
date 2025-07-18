@@ -186,8 +186,9 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     float range = 50000;
     starPos = randomPosition(starID) * range * 2 - range;
     starPos.y = 0.0;
-
-    starPos.y = cos(starPos.x / 100000 * PI) * cos(starPos.z / 100000 * PI) * -7500 + min(exp(abs(starPos.x) / 1000) * exp(abs(starPos.z) / 1000), 7500);
+    
+    float par = starPos.x * starPos.x + starPos.z * starPos.z;
+    starPos.y = cos(starPos.x / 100000 * PI) * cos(starPos.z / 100000 * PI) * -7500 + (par * 12000) / (50000000 + par);
     
     starPos.y += noise(starPos.zxy * 0.131 * 5 * 0.00011 + float3(41.547, 14.631, 51.591) + time.x * -0.005) * 4000;
 
