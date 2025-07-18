@@ -9,5 +9,6 @@ SamplerState samplerState : register(s0);
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
+    //return float4(1, 1, 1, 1);
     return float4(renderTexture.Sample(samplerState, input.uv).rgb, 1);
 }
