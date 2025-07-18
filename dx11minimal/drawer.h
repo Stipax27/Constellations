@@ -107,10 +107,10 @@ namespace drawer
         Draw::Starfield(1);
     }
 
-    void drawGalaxyFog()
+    void drawGalaxyFog(int shaderID)
     {
-        Shaders::vShader(7);
-        Shaders::pShader(7);
+        Shaders::vShader(shaderID);
+        Shaders::pShader(shaderID);
         Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
         Draw::GalaxyFog(5000000);
     }
@@ -706,7 +706,7 @@ namespace drawer
 
             drawStarField();
             //drawStars();
-            drawGalaxyFog();
+            drawGalaxyFog(8);
 
 
             modelTransform = &placeConstToWorld;

@@ -37,8 +37,8 @@
     <Filter Include="Shaders\Cursor">
       <UniqueIdentifier>{7a53a6ab-51fc-43fa-9b0a-2483cee6faea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders\AriesNebula">
-      <UniqueIdentifier>{550a3ce4-b24b-4575-9584-0953ae84ab38}</UniqueIdentifier>
+    <Filter Include="Shaders\Aries">
+      <UniqueIdentifier>{301c29da-b511-41cb-91ed-3c2b31a75811}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -177,10 +177,16 @@
       <Filter>Shaders\Cursor</Filter>
     </None>
     <None Include="AriesNebula_PS.shader">
-      <Filter>Shaders\AriesNebula</Filter>
+      <Filter>Shaders\Aries</Filter>
     </None>
     <None Include="AriesNebula_VS.shader">
-      <Filter>Shaders\AriesNebula</Filter>
+      <Filter>Shaders\Aries</Filter>
+    </None>
+    <None Include="AriesNebula2_VS.shader">
+      <Filter>Shaders\Aries</Filter>
+    </None>
+    <None Include="AriesNebula2_PS.shader">
+      <Filter>Shaders\Aries</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
