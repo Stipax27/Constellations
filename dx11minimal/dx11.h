@@ -507,6 +507,12 @@ namespace Shaders {
 
 		CreateVS(8, nameToPatchLPCWSTR("AriesNebula2_VS.shader"));
 		CreatePS(8, nameToPatchLPCWSTR("AriesNebula2_PS.shader"));
+
+		CreateVS(9, nameToPatchLPCWSTR("DotText_VS.shader"));
+		CreatePS(9, nameToPatchLPCWSTR("DotText_PS.shader"));
+
+		CreateVS(10, nameToPatchLPCWSTR("PP_VS.shader"));
+		CreatePS(10, nameToPatchLPCWSTR("PP_PS.shader"));
 	}
 
 	void vShader(unsigned int n)
@@ -923,7 +929,10 @@ void Dx11Init()
 	
 	//main RT
 	Textures::Create(0, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), false, true);
+	//rt1
 	Textures::Create(1, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), false, true);
+	//rt2
+	Textures::Create(2, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), false, true);
 
 }
 
@@ -957,6 +966,29 @@ namespace Draw
 
 		context->DrawInstanced(quadCount*50 , instances, 0, 0);
 	}
+
+	void Drawer(int quadCount)
+	{
+		ConstBuf::Update(0, ConstBuf::drawerV);
+		ConstBuf::ConstToVertex(0);
+		ConstBuf::Update(1, ConstBuf::drawerP);
+		ConstBuf::ConstToPixel(1);
+
+		context->Draw(quadCount * 6, 0);
+	}
+
+	void SwitchRenderTextures() {
+		int index = 3 - Textures::currentRT;
+		Textures::RenderTarget(index, 0);
+		context->PSSetShaderResources(0, 1, &Textures::Texture[3 - index].TextureResView);
+	}
+
+	void OutputRenderTextures() {
+		int index = Textures::currentRT;
+		Textures::RenderTarget(0, 0);
+		context->PSSetShaderResources(0, 1, &Textures::Texture[index].TextureResView);
+	}
+
 	void elipse(int quadCount, unsigned int instances = 1)
 	{
 		ConstBuf::Update(0, ConstBuf::drawerV);
@@ -966,6 +998,7 @@ namespace Draw
 
 		context->DrawInstanced(quadCount*6 , instances, 0, 0);
 	}
+
 	void Starfield(int quadCount, unsigned int instances = 1)
 	{
 		ConstBuf::Update(0, ConstBuf::drawerV);
@@ -975,6 +1008,7 @@ namespace Draw
 
 		context->DrawInstanced(quadCount * 60000, instances, 0, 0);
 	}
+
 	void GalaxyFog(int quadCount)
 	{
 		ConstBuf::Update(0, ConstBuf::drawerV);
@@ -984,6 +1018,7 @@ namespace Draw
 
 		context->Draw(quadCount * 6, 0);
 	}
+
 	void Cursor()
 	{
 		ConstBuf::Update(5, ConstBuf::global);
@@ -1036,10 +1071,6 @@ namespace Camera
 
 	void Camera()
 	{
-
-		
-		
-
 		ConstBuf::camera.view[0] = XMMatrixTranspose(XMMatrixLookAtLH(state.Eye, state.at, state.Up));
 
 		ConstBuf::camera.proj[0] = XMMatrixTranspose(XMMatrixPerspectiveFovLH(DegreesToRadians(state.fovAngle), iaspect,0.01f,10000.0f));
@@ -1060,8 +1091,6 @@ namespace Camera
 	}
 	void UpdateCameraFromOffset()
 	{
-
-
 		Camera();
 	}
 }

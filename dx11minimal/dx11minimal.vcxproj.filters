@@ -40,6 +40,12 @@
     <Filter Include="Shaders\Aries">
       <UniqueIdentifier>{301c29da-b511-41cb-91ed-3c2b31a75811}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\UI">
+      <UniqueIdentifier>{3d6e8974-8fa6-4a84-a718-390436143a50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\PostProcess">
+      <UniqueIdentifier>{f8bf8761-8810-4b83-93b7-1d5ff1d0fd7d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -187,6 +193,21 @@
     </None>
     <None Include="AriesNebula2_PS.shader">
       <Filter>Shaders\Aries</Filter>
+    </None>
+    <None Include="DotText_PS.shader">
+      <Filter>Shaders\UI</Filter>
+    </None>
+    <None Include="DotText_VS.shader">
+      <Filter>Shaders\UI</Filter>
+    </None>
+    <None Include="PP_VS.shader">
+      <Filter>Shaders\PostProcess</Filter>
+    </None>
+    <None Include="Lensing_PS.shader">
+      <Filter>Shaders\PostProcess</Filter>
+    </None>
+    <None Include="PP_PS.shader">
+      <Filter>Shaders\PostProcess</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
