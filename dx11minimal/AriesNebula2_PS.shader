@@ -59,7 +59,7 @@ float noise( float3 x ) {
             lerp(lerp( hash(n+113.0), hash(n+114.0),f.x),
             lerp( hash(n+170.0), hash(n+171.0),f.x),f.y),f.z);
 
-    return a - 0.65;
+    return a - 0.25;
 }
 
 
@@ -108,7 +108,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
     float n = noise(input.worldpos * 0.131 * 20 * 0.00011);
 
     //float3 lowerColor = ApplyRainbowEffect(input.worldpos);
-    float3 lowerColor = lerp(float3(0.25, 1, 0.25), float3(0.36, 1, 1), n);
+    float3 lowerColor = lerp(float3(0.25, 1, 0.25), float3(1, 0, 1), n);
     float3 upperColor = float3(0.8, 0.5, 0.05);
 
     float3 color = lerp(upperColor, lowerColor, max(min(input.worldpos.y / 1000, 1), 0));

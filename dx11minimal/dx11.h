@@ -995,7 +995,7 @@ namespace Draw
 		ConstBuf::Update(1, ConstBuf::drawerP);
 		ConstBuf::ConstToPixel(1);
 
-		context->DrawInstanced(quadCount*6 , instances, 0, 0);
+		context->DrawInstanced(quadCount * 6 , instances, 0, 0);
 	}
 
 	void Starfield(int quadCount, unsigned int instances = 1)

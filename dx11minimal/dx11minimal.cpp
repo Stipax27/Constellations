@@ -119,7 +119,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         if (time >= timer::nextFrameTime)
         {
-            currentTime= timer::GetCounter();
+            currentTime = timer::GetCounter();
             timer::frameBeginTime = timer::GetCounter();
             mouse.Input();
             mainLoop();

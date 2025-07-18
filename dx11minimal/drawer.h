@@ -706,7 +706,7 @@ namespace drawer
 
             drawStarField();
             //drawStars();
-            drawGalaxyFog(7);
+            drawGalaxyFog(8);
 
 
             modelTransform = &placeConstToWorld;
