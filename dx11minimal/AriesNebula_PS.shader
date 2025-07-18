@@ -41,6 +41,28 @@ struct VS_OUTPUT
 };
 
 
+float hash( float n ) {
+    return frac(sin(n)*43758.5453);
+}
+     
+float noise( float3 x ) {
+    float3 p = floor(x);
+    float3 f = frac(x);
+
+    f *= f;
+     
+    f = f*f*(3.0-2.0*f);
+    float n = p.x + p.y*57.0 + 113.0*p.z;
+     
+    float a = lerp(lerp(lerp( hash(n+0.0), hash(n+1.0),f.x),
+            lerp( hash(n+57.0), hash(n+58.0),f.x),f.y),
+            lerp(lerp( hash(n+113.0), hash(n+114.0),f.x),
+            lerp( hash(n+170.0), hash(n+171.0),f.x),f.y),f.z);
+
+    return a - 0.65;
+}
+
+
 float3 HSLToRGB(float3 hsl) {
     float h = hsl.x; // Hue [0, 1]
     float s = hsl.y; // Saturation [0, 1]
@@ -83,14 +105,19 @@ float4 PS(VS_OUTPUT input) : SV_Target
 {
     float2 uv = input.uv;
 
+    float n = noise(input.worldpos * 0.131 * 20 * 0.00011);
+
     //float3 lowerColor = ApplyRainbowEffect(input.worldpos);
-    float3 lowerColor = float3(1, 0.25, 0.25);
+    float3 lowerColor = lerp(float3(1, 0.25, 0.25), float3(1, 0.95, 0.2), n);
     float3 upperColor = float3(1, 1, 1);
 
-    float3 color = lerp(upperColor, lowerColor, max(min((input.worldpos.y - 500) / 500, 1), 0));
+    float3 color = lerp(upperColor, lowerColor, max(min((input.worldpos.y - 3000) / 500, 1), 0));
 
-    float brightness = exp(-dot(uv, uv) * 20) * 0.02f;
-    //brightness *= 1 - (length(input.worldpos.xz) / 25000);
+    float brightness = exp(-dot(uv, uv) * 20) * 0.03f;
+
+    float offset = max(length(input.worldpos.xz) - 40000, 0);
+    float sat = max(1 - offset / 10000, 0);
+    brightness *= sat;
 
     return float4(color, 1) * float4(brightness, brightness, brightness * 1.4, 1) * (1 + 0.9 * sin(input.starID * 1.2 + time.x * 0.1));
 }
