@@ -136,6 +136,7 @@
     <ClInclude Include="dx11minimal.h" />
     <ClInclude Include="Elements.h" />
     <ClInclude Include="font.h" />
+    <ClInclude Include="FpsCounter.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="loop.h" />
     <ClInclude Include="MainGame.h" />

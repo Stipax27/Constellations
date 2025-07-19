@@ -1057,7 +1057,7 @@ namespace Camera
 		float camDist = 500.0f;
 		float minDist = 100.0f;
 		float maxDist = 30000.0f;
-		float fovAngle = 60.0f;
+		float fovAngle = 70.0f;
 		XMVECTOR relativeMovement = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR currentRotation = XMQuaternionIdentity();
 		XMVECTOR Forward = XMVectorSet(0, 0, 1, 0);
@@ -1070,8 +1070,8 @@ namespace Camera
 
 	void Camera()
 	{
+		ConstBuf::camera.world[0] = XMMatrixIdentity();
 		ConstBuf::camera.view[0] = XMMatrixTranspose(XMMatrixLookAtLH(state.Eye, state.at, state.Up));
-
 		ConstBuf::camera.proj[0] = XMMatrixTranspose(XMMatrixPerspectiveFovLH(DegreesToRadians(state.fovAngle), iaspect,0.01f,10000.0f));
 
 		ConstBuf::UpdateCamera();
