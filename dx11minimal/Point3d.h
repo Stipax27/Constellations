@@ -126,7 +126,10 @@ public:
         z /= scalar;
         return *this;
     }
-
+    float Dot(const point3d& other) const {
+        return x * other.x + y * other.y + z * other.z;
+    }
+    
     void draw(point3d& p, float sz = def_size)
     {
         //if (p.z < nearPlaneClip) return;
@@ -217,6 +220,19 @@ public:
     {
         return { lerp(p1.x, p2.x, a), lerp(p1.y, p2.y, a), lerp(p1.z, p2.z, a) };
     }
+
+    float DistanceTo(const point3d& other) const {
+        float dx = x - other.x;
+        float dy = y - other.y;
+        float dz = z - other.z;
+        return sqrt(dx * dx + dy * dy + dz * dz);
+    }
+
+    // Альтернативное название (если предпочитаете)
+    float distance_to(const point3d& other) const {
+        return DistanceTo(other);
+    }
+
 };
 
 point3d TransformPoint(const point3d& p, const XMMATRIX& m) {

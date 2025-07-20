@@ -108,9 +108,9 @@ void constSelectUI(point3d& point, Constellation& Constellation, int i)
         if (lenght < starSize)
         {
             //SelectObject(window.context, brush2);
-            gameState = gameState_::Fight;
-            currentEnemy = &Constellation;
-            currentEnemyID = (ZodiacSign)(currentEnemy->ID);
+            //gameState = gameState_::Fight;
+            //currentEnemy = &Constellation;
+            //currentEnemyID = (ZodiacSign)(currentEnemy->ID);
         }
     }
     else

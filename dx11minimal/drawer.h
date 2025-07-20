@@ -647,6 +647,8 @@ namespace drawer
         DrawAttackStars();
     }
 
+    
+
     void drawWorld(float deltaTime)
     {
         textStyle.color = RGB(0, 191, 255);
@@ -684,53 +686,80 @@ namespace drawer
             Depth::Depth(Depth::depthmode::off);
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
             uiFunc = &constSelectUI;
-            //linksDivider = 15;
-            
+
             drawStarField();
             Shaders::vShader(1);
             Shaders::pShader(1);
-            //modelProject = &fightProject;
-            //modelTransform = &placeConstToWorld;
-            
-            
 
-            /*for (int i = 0;i < 12;i++)
+            // Логика выбора врага
+            static DWORD lastCheckTime = 0;
+
+            if ((currentTime - lastCheckTime > 300) && (GetAsyncKeyState(VK_LBUTTON) & 0x8000))
             {
-               Constellation& c = *starSet[i];
-               c.Transform = CreateConstToWorldMatrix(c);
-               drawСonstellation(*starSet[i]);
-            }*/
+                lastCheckTime = currentTime;
 
+                // Получаем луч от камеры
+                    point3d rayOrigin(
+                        XMVectorGetX(Camera::state.Eye),
+                        XMVectorGetY(Camera::state.Eye),
+                        XMVectorGetZ(Camera::state.Eye)
+                    );
+                    point3d rayDir = GetMouseRay(mouse.pos);
+
+                    // Проверяем пересечение с каждым созвездием
+                    for (int i = 0; i < starSet.size(); i++) {
+                        if (i == player_sign) continue; // Пропускаем игрока
+
+                        Constellation& constellation = *starSet[0];
+
+                        // 1. Получаем центр созвездия в мировых координатах
+                        point3d center = constellation.position;
+
+                        // 2. Вычисляем расстояние от луча до центра
+                        point3d oc = rayOrigin - center;
+                        float a = rayDir.Dot(rayDir);
+                        float b = 2.0f * oc.Dot(rayDir);
+                        float c = oc.Dot(oc) - pow(constellation.scale * 1.5f, 2); // Учитываем масштаб
+
+                        float discriminant = b * b - 4 * a * c;
+
+                        if (discriminant >= 0) { // Есть пересечение
+                            //currentEnemyID = (ZodiacSign)i;
+                            //gameState = gameState_::Fight;
+                            //battleStartTime = currentTime;
+                            //isBattleActive = true;
+
+                            // Инициализация боя
+                            starSet[currentEnemyID]->angle = { 0, 0, 0 };
+                            starSet[currentEnemyID]->scale = 200;
+                            break;
+                        }
+                    }
+            }
+
+            // Отрисовка всех созвездий
+            for (int i = 0; i < starSet.size(); i++) {
+                if (i == player_sign) continue; // Игрока рисуем отдельно
+
+                Constellation& c = *starSet[0];
+
+                // Анимация вращения созвездий
+                float rotationSpeed = 0.0001f;
+                c.angle.y = currentTime * rotationSpeed;
+
+                c.Transform = CreateConstToWorldMatrix(c);
+                drawСonstellation(c);
+            }
+
+            // Остальной код...
             HandleMouseClick();
             UpdateAttack(deltaTime);
             DrawSwordAttack();
-            //XMVECTOR heroPosition = Hero::state.constellationOffset.r[3];
-            //point3d start = point3d(
-            //    XMVectorGetX(heroPosition),
-            //    XMVectorGetY(heroPosition),
-            //    XMVectorGetZ(heroPosition)
-            //);
 
-            //// Остальной код без изменений
-            //point3d camPos = point3d(
-            //    XMVectorGetX(Camera::state.Eye),
-            //    XMVectorGetY(Camera::state.Eye),
-            //    XMVectorGetZ(Camera::state.Eye)
-            //);
-
-            //point3d mouseRay = GetMouseRay(mouse.pos);
-            //point3d mousePos = camPos + mouseRay * 1000;
-            //point3d end = start + (mousePos - start);
-
-            //
-            //// Рисуем луч
-            //
-            //    drawLine(start, end);
-            
-
-            Constellation& c = *starSet[player_sign];
-            c.Transform = CreateHeroToWorldMatrix(c);
-            drawСonstellation(*starSet[player_sign]);//Игрок
+            // Отрисовка игрока
+            Constellation& playerConst = *starSet[player_sign];
+            playerConst.Transform = CreateHeroToWorldMatrix(playerConst);
+            drawСonstellation(playerConst);
 
             std::string curentSignstring = zodiacSignToString(player_sign);
             TextOutA(window.context, window.width * 5 / 6, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());

@@ -53,6 +53,7 @@ HWND hWnd;
 #include "DiologTEXT.h"
 #include "DialogStruct.h"
 #include "Parametrics.h"
+#include "EnemyAi.h"
 #include "drawer.h"
 
 #include "loop.h"
