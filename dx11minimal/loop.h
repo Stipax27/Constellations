@@ -23,7 +23,7 @@ void mainLoop(float deltaTime)
 	drawer::drawWorld(deltaTime);
 
 	if (gameState == gameState_::Fight) {
-		drawer::FireProjectile();
+		drawer::DrawSwordAttack();
 	}
 	/*
 		InputAssembler::IA(InputAssembler::topology::triList);
