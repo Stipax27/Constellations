@@ -1,4 +1,5 @@
 ﻿bool t = true;
+point3d attackDirection;
 
 namespace drawer
 {
@@ -291,235 +292,7 @@ namespace drawer
 
 
 
-    struct Projectile {
-        point3d currentPos;
-        point3d targetPos;
-        point3d position;
-        point3d direction;
-        float lifetime;
-        float speed;
-        bool isActive;
-        float size;
-        COLORREF color;
-        weapon_name weaponType;
-        element_name elementType;
-        float damage;
-
-        void Init(const point3d& start, const point3d& target) {
-            position = start;
-            direction = (target - start).normalized();
-            speed = 50.0f;
-            isActive = true;
-            lifetime = 5.0f; // 5 секунд жизни
-        
-            // Настройки в зависимости от оружия
-            switch (weaponType) {
-            case weapon_name::Sword:
-                speed = 10.f;
-                size = 15.0f;
-                color = RGB(255, 255, 0); // Желтый для меча
-                break;
-            case weapon_name::Bow:
-                speed = 500.f;
-                size = 8.0f;
-                color = RGB(200, 200, 200); // Серый для лука
-                break;
-            case weapon_name::Staff:
-                speed = 250.f;
-                size = 20.0f;
-                // Цвет зависит от элемента
-                color = elements[(int)elementType].color;
-                break;
-            case weapon_name::Shield:
-                speed = 20.f;
-                size = 25.0f;
-                color = RGB(100, 100, 255); // Синий для щита
-                break;
-            }
-
-            isActive = true;
-        }
-
-        float CalculateProjectileDamage() {
-            float baseDamage = weapon[(int)weaponType].damage;
-            float elementMod = elements[(int)elementType].damageMod;
-            float weaponElementMod = 1.0f;
-
-            switch (weaponType) {
-            case weapon_name::Sword: weaponElementMod = elements[(int)elementType].swordMod; break;
-            case weapon_name::Shield: weaponElementMod = elements[(int)elementType].shieldMod; break;
-            case weapon_name::Bow: weaponElementMod = elements[(int)elementType].bowMod; break;
-            case weapon_name::Staff: weaponElementMod = elements[(int)elementType].staffMod; break;
-            }
-
-            return baseDamage * elementMod * weaponElementMod;
-        }
-
-        void Update(float deltaTime) {
-            if (!isActive) return;
-
-            // Движение вперед
-            position += direction * speed * deltaTime;
-
-            // Уменьшение времени жизни
-            lifetime -= deltaTime;
-            if (lifetime <= 0) isActive = false;
-        }
-
-        void OnHitTarget() {
-            // Здесь можно добавить эффекты попадания
-            // и нанесение урона врагу
-        }
-    };
-
-
-    std::vector<Projectile> projectiles; // Вектор для хранения снарядов
-
-
-    point3d ScreenToWorld(point3d screenPos) {
-        // 1. Получаем матрицы вида и проекции
-        XMMATRIX view = ConstBuf::camera.view[0];
-        XMMATRIX proj = ConstBuf::camera.proj[0];
-
-        // 2. Инвертируем матрицу вида-проекции
-        XMMATRIX invViewProj = XMMatrixInverse(nullptr, view * proj);
-
-        // 3. Преобразуем экранные координаты в NDC
-        float x = (2.0f * screenPos.x) / window.width - 1.0f;
-        float y = 1.0f - (2.0f * screenPos.y) / window.height;
-
-        // 4. Создаем луч из камеры
-        XMVECTOR rayOrigin = XMVector3Unproject(
-            XMVectorSet(screenPos.x, screenPos.y, 0.0f, 0.0f),
-            0, 0, window.width, window.height, 0.0f, 1.0f,
-            proj, view, XMMatrixIdentity());
-
-        XMVECTOR rayEnd = XMVector3Unproject(
-            XMVectorSet(screenPos.x, screenPos.y, 1.0f, 0.0f),
-            0, 0, window.width, window.height, 0.0f, 1.0f,
-            proj, view, XMMatrixIdentity());
-
-        // 5. Нормализуем направление
-        XMVECTOR rayDir = XMVector3Normalize(rayEnd - rayOrigin);
-
-        // 6. Возвращаем точку на фиксированном расстоянии
-        XMVECTOR worldPos = rayOrigin + rayDir * 1000.0f;
-
-        return point3d{
-            XMVectorGetX(worldPos),
-            XMVectorGetY(worldPos),
-            XMVectorGetZ(worldPos)
-        };
-    }
-
-
-    // Модифицированная функция атаки
-    void FireProjectile() {
-        if (GetAsyncKeyState(VK_LBUTTON) && !lmb) {
-            lmb = true;
-
-            // 1. Получаем позицию игрока (например, центр его созвездия)
-            Constellation* player = starSet[player_sign];
-            point3d startPos = player->position;
-
-            // 2. Получаем мировую позицию курсора
-            point3d targetPos = ScreenToWorld(mouse.pos);
-
-            // 3. Корректируем направление от игрока к курсору
-            XMVECTOR dir = XMVector3Normalize(XMVectorSet(
-                targetPos.x - startPos.x,
-                targetPos.y - startPos.y,
-                targetPos.z - startPos.z, 0));
-
-            // 4. Создаем снаряд
-            Projectile proj;
-            proj.Init(startPos, targetPos);
-            projectiles.push_back(proj);
-        }
-        else if (!GetAsyncKeyState(VK_LBUTTON)) {
-            lmb = false;
-        }
-    }
-
-    
-
-    void ProjectileUpdate(float deltaTime) {
-        // Обновление снарядов
-        for (auto& proj : projectiles) {
-            proj.Update(deltaTime);
-
-            // Проверка столкновений
-            //CheckCollision(proj);
-        }
-
-        // Удаление неактивных снарядов
-        projectiles.erase(
-            std::remove_if(projectiles.begin(), projectiles.end(),
-                [](const Projectile& p) { return !p.isActive; }),
-            projectiles.end());
-    }
-
-    void CreateProjectile() {
-        // 1. Позиция игрока (например, центр его созвездия)
-        Constellation* player = starSet[player_sign];
-        point3d startPos = player->position;
-
-        // 2. Получаем направление от камеры к курсору
-        point3d target = ScreenToWorld(mouse.pos);
-        XMVECTOR eye = Camera::state.Eye;
-
-        XMVECTOR dir = XMVector3Normalize(XMVectorSet(
-            target.x - XMVectorGetX(eye),
-            target.y - XMVectorGetY(eye),
-            target.z - XMVectorGetZ(eye),
-            0));
-
-        // 3. Создаем снаряд
-        Projectile proj;
-        proj.position = startPos;
-        proj.direction = point3d{
-            XMVectorGetX(dir),
-            XMVectorGetY(dir),
-            XMVectorGetZ(dir)
-        };
-        proj.speed = 50.0f; // Скорость полета
-        proj.isActive = true;
-
-        projectiles.push_back(proj);
-    }
-    void WeaponRender() {
-        for (const auto& proj : projectiles) {
-            if (proj.isActive) {
-                point3d drawPos = proj.currentPos;
-                modelProject(drawPos);
-
-                // Отрисовка в зависимости от типа оружия
-                switch (proj.weaponType) {
-                case weapon_name::Sword:
-                    drawSwordLine(drawPos.x, drawPos.y);
-                    break;
-                case weapon_name::Shield:
-                    drawShieldCircle(drawPos.x, drawPos.y, drawPos.z);
-                    break;
-                case weapon_name::Bow:
-                    drawBowLine(drawPos.x, drawPos.y);
-                    drawArrow(drawPos.x, drawPos.y);
-                    break;
-                case weapon_name::Staff:
-                    // Для посоха используем цвет элемента
-                    HBRUSH brush = CreateSolidBrush(proj.color);
-                    float sz = proj.size;
-                    Ellipse(window.context,
-                        (int)(drawPos.x - sz),
-                        (int)(drawPos.y - sz),
-                        (int)(drawPos.x + sz),
-                        (int)(drawPos.y + sz));
-                    DeleteObject(brush);
-                    break;
-                }
-            }
-        }
-    }
+   
 
 
     
@@ -776,84 +549,105 @@ namespace drawer
             }
         }
     }
+    struct StarProjectile {
+        point3d position;
+        point3d direction;  // Индивидуальное направление для каждой звезды
+    };
+
+    std::vector<StarProjectile> attackStars; // Теперь храним звёзды с их направлениями
+
+    void UpdateAttackStars(float deltaTime) {
+        // Обновляем позиции звёзд по их индивидуальным направлениям
+        for (auto& star : attackStars) {
+            star.position += star.direction.normalized() * 2.0f * deltaTime;
+        }
+    }
+
+    void DrawAttackStars() {
+        // Отрисовываем все звёзды
+        for (auto& star : attackStars) {
+            star.position.draw(star.position, 5.0f);
+        }
+    }
 
     bool isAttacking = false;
-    float attackProgress = 0.0f;
-    XMVECTOR attackStart, attackEnd;  // Изменили на XMVECTOR
-    const float attackSpeed = 5.0f;
-    const float swordLength = 200.0f;
+    static DWORD lastAttackTime = 0;
+    const float projectileSpeed = 2.0f;
+    point3d mouseRay;
 
-    // Обработка нажатия ЛКМ
     void HandleMouseClick() {
-        if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 && !isAttacking) {
-            // Получаем позицию игрока
-            attackStart = Hero::state.constellationOffset.r[3];
+        if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 && currentTime - lastAttackTime > 500) {
+            lastAttackTime = currentTime;
 
-            // Получаем направление луча мыши
-            XMVECTOR camPos = XMVectorSet(
-                XMVectorGetX(Camera::state.Eye),
-                XMVectorGetY(Camera::state.Eye),
-                XMVectorGetZ(Camera::state.Eye),
-                0.0f
+            // Получаем позицию героя
+            XMVECTOR heroPosition = Hero::state.constellationOffset.r[3];
+            point3d start = point3d(
+                XMVectorGetX(heroPosition),
+                XMVectorGetY(heroPosition),
+                XMVectorGetZ(heroPosition)
             );
 
-            point3d mouseRayP = GetMouseRay(mouse.pos);
-            XMVECTOR mouseRay = XMVectorSet(mouseRayP.x, mouseRayP.y, mouseRayP.z, 0.0f);
-            XMVECTOR mouseWorldPos = camPos + mouseRay * 1000.0f;
+            // Вычисляем направление атаки от камеры к курсору
+            point3d camPos = point3d(
+                XMVectorGetX(Camera::state.Eye),
+                XMVectorGetY(Camera::state.Eye),
+                XMVectorGetZ(Camera::state.Eye)
+            );
 
-            // Вычисляем конечную точку атаки
-            XMVECTOR dir = XMVector3Normalize(mouseWorldPos - attackStart);
-            attackEnd = attackStart + dir * swordLength;
+            mouseRay = GetMouseRay(mouse.pos);
+            point3d mousePos = camPos + mouseRay * 7500;
+            point3d newDirection = (mousePos - start).normalized();
 
-            // Запускаем анимацию
+            // Создаём звёзды с этим направлением
+            for (int i = 0; i < 20; i++) {
+                StarProjectile newStar;
+                newStar.position = start;
+                newStar.direction = newDirection; // Фиксируем направление при создании
+
+                // Добавляем небольшой разброс позиции
+                point3d up = point3d(XMVectorGetX(Camera::state.Up),
+                    XMVectorGetY(Camera::state.Up),
+                    XMVectorGetZ(Camera::state.Up));
+                point3d right = point3d(XMVectorGetX(Camera::state.Right),
+                    XMVectorGetY(Camera::state.Right),
+                    XMVectorGetZ(Camera::state.Right));
+
+                newStar.position += up * (i * 10 - 100);
+                newStar.position += right * (i * 10 - 100);
+
+                attackStars.push_back(newStar);
+            }
+
             isAttacking = true;
-            attackProgress = 0.0f;
         }
     }
 
     void UpdateAttack(float deltaTime) {
         if (isAttacking) {
-            attackProgress += attackSpeed * deltaTime;
-
-            if (attackProgress >= 1.0f) {
-                isAttacking = false;
-            }
+            isAttacking = false;
         }
+        UpdateAttackStars(deltaTime);
+
+        // Очистка улетевших звёзд (опционально)
+        attackStars.erase(
+            std::remove_if(attackStars.begin(), attackStars.end(),
+                [](StarProjectile& star) {
+                    return star.position.magnitude() > 7500.0f;
+                }),
+            attackStars.end());
     }
 
     void DrawSwordAttack() {
-        // Текущая позиция меча
-        if (!isAttacking) return;
+        if (isAttacking) return;
 
-        // Создаем временные объекты point3d для всех точек
-        point3d start, end;
-
-        // Конвертируем XMVECTOR в point3d
-        start.x = XMVectorGetX(attackStart);
-        start.y = XMVectorGetY(attackStart);
-        start.z = XMVectorGetZ(attackStart);
-
-        end.x = XMVectorGetX(attackEnd);
-        end.y = XMVectorGetY(attackEnd);
-        end.z = XMVectorGetZ(attackEnd);
-
-        // Вычисляем текущую позицию меча (линейная интерполяция)
-        point3d currentPos;
-        currentPos.x = start.x + (end.x - start.x) * attackProgress;
-        currentPos.y = start.y + (end.y - start.y) * attackProgress;
-        currentPos.z = start.z + (end.z - start.z) * attackProgress;
-
-        // Простая отрисовка одной линии (меч)
-        Shaders::vShader(4);
-        Shaders::pShader(4);
+        Shaders::vShader(1);
+        Shaders::pShader(1);
         Blend::Blending(Blend::blendmode::on);
 
-        // Рисуем линию от текущей позиции до конца
-        drawLine(currentPos, end);
+        DrawAttackStars();
     }
-    
 
-    void drawWorld()
+    void drawWorld(float deltaTime)
     {
         textStyle.color = RGB(0, 191, 255);
         Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
@@ -900,14 +694,13 @@ namespace drawer
             
             
 
-            for (int i = 0;i < 12;i++)
+            /*for (int i = 0;i < 12;i++)
             {
                Constellation& c = *starSet[i];
                c.Transform = CreateConstToWorldMatrix(c);
                drawСonstellation(*starSet[i]);
-            }
+            }*/
 
-            float deltaTime = (currentTime - lastFrameTime) / 1000.0f;
             HandleMouseClick();
             UpdateAttack(deltaTime);
             DrawSwordAttack();
@@ -929,14 +722,11 @@ namespace drawer
             //point3d mousePos = camPos + mouseRay * 1000;
             //point3d end = start + (mousePos - start);
 
-            //float attackLength = 2000.0f; // Длина атаки
+            //
             //// Рисуем луч
-            //for (int i = 0; i < 5; i++) {
-            //    float offset = i * 10.0f;
-            //    point3d swordStart = start + mouseRay * offset;
-            //    point3d swordEnd = start + mouseRay * (attackLength - offset);
-            //    drawLine(swordStart, swordEnd);
-            //}
+            //
+            //    drawLine(start, end);
+            
 
             Constellation& c = *starSet[player_sign];
             c.Transform = CreateHeroToWorldMatrix(c);
@@ -1025,7 +815,6 @@ namespace drawer
             }
             
 
-            float deltaTime = (currentTime - lastFrameTime) / 1000.0f;
             ProjectileUpdate(deltaTime);
             FireProjectile();
             WeaponRender();

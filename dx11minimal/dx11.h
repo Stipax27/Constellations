@@ -998,7 +998,7 @@ namespace Hero
 		XMVECTOR Right = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR at = XMVectorSet(0, 0, 0, 0);
 		XMVECTOR Up = XMVector3Rotate(defaultUp, currentRotation);
-		
+		XMVECTOR heroPosition;
 		XMMATRIX constellationOffset = XMMatrixTranslation(0, 0, 0);
 
 	} static state;
@@ -1015,7 +1015,7 @@ namespace Camera
 		float minDist = 500.0f;
 		float maxDist = 1000.0f;
 		float fovAngle = 60.0f;
-		float verticalOffset = 700.0f;  
+		float verticalOffset = 500.0f;  
 		float horizontalOffset = 0.0f; 
 		float distanceOffset = 500.0f;
 		XMVECTOR relativeMovement = XMVectorSet(-1, 0, 0, 0);
@@ -1035,7 +1035,7 @@ namespace Camera
 	void UpdateCameraPosition()
 	{
 		// Получаем текущую позицию героя
-		XMVECTOR heroPosition = XMVectorSet(
+		Hero::state.heroPosition = XMVectorSet(
 			Camera::state.constellationOffset.r[3].m128_f32[0],
 			Camera::state.constellationOffset.r[3].m128_f32[1],
 			Camera::state.constellationOffset.r[3].m128_f32[2],
@@ -1048,13 +1048,13 @@ namespace Camera
 		XMVECTOR heroRight = Hero::state.Right;
 
 		
-		XMVECTOR cameraPosition = heroPosition
+		XMVECTOR cameraPosition = Hero::state.heroPosition
 			- (heroForward * state.distanceOffset)
 			+ (heroUp * state.verticalOffset)
 			+ (heroRight * state.horizontalOffset);
 
 		
-		XMVECTOR cameraTarget = heroPosition + (heroUp * state.verticalOffset * 0.5f);
+		XMVECTOR cameraTarget = Hero::state.heroPosition + (heroUp * state.verticalOffset * 0.5f);
 
 		
 		state.Eye = cameraPosition;

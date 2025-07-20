@@ -30,6 +30,7 @@ const int numColors = 7;
 float camDist = 100;
 DWORD currentTime;
 DWORD lastFrameTime = 0;
+DWORD deltaTime = 0;
 ID2D1SolidColorBrush* d2dBrush = nullptr;
 
 HWND hWnd;
@@ -121,9 +122,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         if (time >= timer::nextFrameTime)
         {
             currentTime= timer::GetCounter();
+            deltaTime = currentTime - lastFrameTime;
+            lastFrameTime = currentTime;
+
             timer::frameBeginTime = timer::GetCounter();
             mouse.Input();
-            mainLoop();
+            mainLoop(deltaTime);
             timer::frameEndTime = timer::GetCounter();
             timer::frameRenderingDuration = timer::frameEndTime - timer::frameBeginTime;
             timer::nextFrameTime = timer::frameBeginTime + FRAME_LEN;

@@ -1,6 +1,6 @@
 bool Camerainit = false;
 
-void mainLoop()
+void mainLoop(float deltaTime)
 {
 	frameConst();
 
@@ -20,7 +20,7 @@ void mainLoop()
 	}
 
 
-	drawer::drawWorld();
+	drawer::drawWorld(deltaTime);
 
 	if (gameState == gameState_::Fight) {
 		drawer::FireProjectile();
