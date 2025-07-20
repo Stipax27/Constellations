@@ -815,9 +815,9 @@ namespace drawer
             }
             
 
-            ProjectileUpdate(deltaTime);
-            FireProjectile();
-            WeaponRender();
+            //ProjectileUpdate(deltaTime);
+            //FireProjectile();
+            //WeaponRender();
 
             lastFrameTime = currentTime;
 

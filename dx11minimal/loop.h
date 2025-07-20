@@ -1,4 +1,4 @@
-bool Camerainit = false;
+п»їbool Camerainit = false;
 
 void mainLoop(float deltaTime)
 {
@@ -16,14 +16,14 @@ void mainLoop(float deltaTime)
 	if (!Camerainit)
 	{
 		Camerainit = true;
-		Camera::Camera();//это описание что такой вызов запланировал (но надо в исполняемом файле(dx11minimal.cpp) вызов прописать(уже сделал))
+		Camera::Camera();//СЌС‚Рѕ РѕРїРёСЃР°РЅРёРµ С‡С‚Рѕ С‚Р°РєРѕР№ РІС‹Р·РѕРІ Р·Р°РїР»Р°РЅРёСЂРѕРІР°Р» (РЅРѕ РЅР°РґРѕ РІ РёСЃРїРѕР»РЅСЏРµРјРѕРј С„Р°Р№Р»Рµ(dx11minimal.cpp) РІС‹Р·РѕРІ РїСЂРѕРїРёСЃР°С‚СЊ(СѓР¶Рµ СЃРґРµР»Р°Р»))
 	}
 
 
 	drawer::drawWorld(deltaTime);
 
 	if (gameState == gameState_::Fight) {
-		drawer::FireProjectile();
+		drawer::DrawAttackStars();
 	}
 	/*
 		InputAssembler::IA(InputAssembler::topology::triList);
