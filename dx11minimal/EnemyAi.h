@@ -17,16 +17,16 @@ private:
 public:
     EnemyAI() : currentState(AIState::PATROL), playerDistance(0.0f), playerVisible(false), currentWaypoint(0) {
         waypoints = {
-            point3d(200.0f, 100.0f, 200.0f),
-            point3d(100.0f, 10.0f, 50.0f),
-            point3d(50.0f, 200.0f, 100.0f)
+            point3d(2000.0f, 1000.0f, 200.0f),
+            point3d(1000.0f, 100.0f, 500.0f),
+            point3d(500.0f, 2000.0f, 1000.0f)
         };
     }
 
     void Update(point3d& playerPos, point3d& enemyPos) {
         // Расстояние до игрока
         playerDistance = enemyPos.DistanceTo(playerPos);
-        playerVisible = (playerDistance < 15.0f);
+        playerVisible = (playerDistance < 150.0f);
 
         // Логика состояний
         switch (currentState) {
@@ -49,11 +49,10 @@ public:
 
         float distance = direction.magnitude();
 
-        if (distance < 2.0f) {
+        if (distance < 20.0f) {
             currentWaypoint = (currentWaypoint + 1) % waypoints.size();
         }
         else {
-            // Используем normalized() из вашего класса
             enemyPos += direction.normalized() * 0.02f;
         }
 

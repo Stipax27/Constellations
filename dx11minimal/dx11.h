@@ -982,7 +982,7 @@ namespace Draw
 		context->PSSetShaderResources(0, 1, &Textures::Texture[3 - index].TextureResView);
 	}
 
-	void OutputRenderTextures() {
+	void OutputRenderTextures(){
 		int index = Textures::currentRT;
 		Textures::RenderTarget(0, 0);
 		context->PSSetShaderResources(0, 1, &Textures::Texture[index].TextureResView);

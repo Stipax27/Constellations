@@ -20,8 +20,11 @@ void mainLoop(float deltaTime)
 		Camera::Camera();//это описание что такой вызов запланировал (но надо в исполняемом файле(dx11minimal.cpp) вызов прописать(уже сделал))
 	}
 
-	drawer::drawWorld();
+	drawer::drawWorld(deltaTime);
 
+	/*if (gameState == gameState_::Fight) {
+		drawer::DrawSwordAttack();
+	}*/
 	//--------------------------------
 	//Textures::CreateMipMap();
 
@@ -34,13 +37,10 @@ void mainLoop(float deltaTime)
 	//Shaders::vShader(10);
 	//Shaders::pShader(10);
 	//Draw::NullDrawer(1, 1);
-	if (gameState == gameState_::Fight) {
-		drawer::DrawSwordAttack();
-	}
-	/*
-		InputAssembler::IA(InputAssembler::topology::triList);
-		Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
-		Textures::RenderTarget(0, 0);
+	
+	/*InputAssembler::IA(InputAssembler::topology::triList);
+	Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
+	Textures::RenderTarget(0, 0);*/
 
 	//Draw::OutputRenderTextures();
 	////Shaders::pShader(3);

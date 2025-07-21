@@ -583,8 +583,8 @@ namespace drawer
 
     void DrawAttackStars() {
         // Отрисовываем все звёзды
-        for (auto& star : attackStars) {
-            star.position.draw(star.position, 5.0f);
+        for (StarProjectile& star : attackStars) {
+           star.position.draw(star.position, 5.0f);
         }
     }
 
@@ -711,56 +711,11 @@ namespace drawer
             Shaders::vShader(1);
             Shaders::pShader(1);
 
-            // Логика выбора врага
-            //static DWORD lastCheckTime = 0;
-
-            //if ((currentTime - lastCheckTime > 300) && (GetAsyncKeyState(VK_LBUTTON) & 0x8000))
-            //{
-            //    lastCheckTime = currentTime;
-
-            //     Получаем луч от камеры
-            //        point3d rayOrigin(
-            //            XMVectorGetX(Camera::state.Eye),
-            //            XMVectorGetY(Camera::state.Eye),
-            //            XMVectorGetZ(Camera::state.Eye)
-            //        );
-            //        point3d rayDir = GetMouseRay(mouse.pos);
-
-            //         Проверяем пересечение с каждым созвездием
-            //        for (int i = 0; i < starSet.size(); i++) {
-            //            if (i == player_sign) continue; // Пропускаем игрока
-
-            //            Constellation& constellation = *starSet[0];
-
-            //             1. Получаем центр созвездия в мировых координатах
-            //            point3d center = constellation.position;
-
-            //             2. Вычисляем расстояние от луча до центра
-            //            point3d oc = rayOrigin - center;
-            //            float a = rayDir.Dot(rayDir);
-            //            float b = 2.0f * oc.Dot(rayDir);
-            //            float c = oc.Dot(oc) - pow(constellation.scale * 1.5f, 2); // Учитываем масштаб
-
-            //            float discriminant = b * b - 4 * a * c;
-
-            //            if (discriminant >= 0) { // Есть пересечение
-            //                currentEnemyID = (ZodiacSign)i;
-            //                gameState = gameState_::Fight;
-            //                battleStartTime = currentTime;
-            //                isBattleActive = true;
-
-            //                 Инициализация боя
-            //                starSet[currentEnemyID]->angle = { 0, 0, 0 };
-            //                starSet[currentEnemyID]->scale = 200;
-            //                break;
-            //            }
-            //        }
-            //}
             Constellation& playerConst = *starSet[player_sign];
             playerConst.Transform = CreateHeroToWorldMatrix(playerConst);
-            // Отрисовка всех созвездий
+            
             for (int i = 0; i < starSet.size(); i++) {
-                if (i == player_sign) continue; // Игрока рисуем отдельно
+                if (i == player_sign) continue; 
 
                 Constellation& c = *starSet[0];
                 c.Transform = CreateEnemyToWorldMatrix(c);
@@ -772,21 +727,17 @@ namespace drawer
                     XMVectorGetY(enemyPosition),
                     XMVectorGetZ(enemyPosition)
                 );
-
-                
+ 
                 c.ai.Update(start, Enemy);
 
                 drawСonstellation(c);
             }
 
-            // Остальной код...
+           
             HandleMouseClick();
             UpdateAttack(deltaTime);
             DrawSwordAttack();
 
-            // Отрисовка игрока
-            
-            
             drawСonstellation(playerConst);
 
             std::string curentSignstring = zodiacSignToString(player_sign);
