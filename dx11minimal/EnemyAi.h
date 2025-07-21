@@ -23,7 +23,7 @@ public:
         };
     }
 
-    void Update(const point3d& playerPos, point3d& enemyPos) {
+    void Update(point3d& playerPos, point3d& enemyPos) {
         // Расстояние до игрока
         playerDistance = enemyPos.DistanceTo(playerPos);
         playerVisible = (playerDistance < 15.0f);
@@ -32,26 +32,15 @@ public:
         switch (currentState) {
         case AIState::PATROL:
             Patrol(enemyPos);
-            if (playerVisible) currentState = AIState::CHASE;
+            if (playerVisible) //currentState = AIState::CHASE;
             break;
-
-        case AIState::CHASE:
+        }
+        /*case AIState::CHASE:
             Chase(playerPos, enemyPos);
             if (playerDistance < 5.0f) currentState = AIState::ATTACK;
             else if (!playerVisible) currentState = AIState::SEARCH;
             break;
-
-        case AIState::ATTACK:
-            Attack();
-            if (playerDistance > 5.0f) currentState = AIState::CHASE;
-            break;
-
-        case AIState::SEARCH:
-            Search();
-            if (playerVisible) currentState = AIState::CHASE;
-            else if (playerDistance > 20.0f) currentState = AIState::PATROL;
-            break;
-        }
+        }*/
     }
 
     void Patrol(point3d& enemyPos) {
@@ -86,12 +75,5 @@ public:
         }
     }
 
-    void Attack() {
-        std::cout << "Attacking player!\n";
-    }
-
-    void Search() {
-        std::cout << "Player lost. Searching...\n";
-    }
 };
 
