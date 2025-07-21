@@ -280,10 +280,16 @@ void letterProject(point3d& p)
     p.x = x;
     p.y = y;
 }
-point3d drawString(const char* str, float x, float y, float scale, bool centered, bool getSize = false, int count = -1)
+point3d drawString(const char* str, float x, float y, float scale, bool centered, bool getSize = false, int count = -1, bool animated = false)
 {
-    Shaders::vShader(0);
-    Shaders::pShader(0);
+    int shaderID = 0;
+    if (animated)
+    {
+        shaderID = 9;
+    }
+    Shaders::vShader(shaderID);
+    Shaders::pShader(shaderID);
+
     preprocessFont();
     scale = scale * window.width / 2560.;
 

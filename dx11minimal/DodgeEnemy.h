@@ -32,8 +32,6 @@ float shakeStartTimeHero = 0;
 void ShakingHero(point3d& p)
 {
     if (isShakingHero) {
-
-
         float shakeAmp = shakeIntensityHero * (1. - (currentTime - shakeStartTimeHero) / shakeDurationHero);
 
         float shakeOffsetX = ((rand() % 100) / 100. - .5) * shakeAmp;

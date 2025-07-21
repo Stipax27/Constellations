@@ -1,3 +1,5 @@
+#pragma once
+
 namespace timer
 {
 	double PCFreq = 0.0;

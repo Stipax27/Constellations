@@ -16,29 +16,29 @@ const float SENSIVITY = 0.25f;
 const float CURSOR_ZONE_DELTA = MAX_CURSOR_DEVIATION - CURSOR_IGNORE_ZONE;
 
 
-void updateFlyDirection() { // Раскладка управления 
+void updateFlyDirection() { // ��������� ���������� 
     flyDirection = { 0, 0, 0 };
 
     if (GetAsyncKeyState('W') & 0x8000) {
-        // Добавляем вектор направления камеры (уже нормализован)
+        // ��������� ������ ����������� ������ (��� ������������)
         flyDirection.x += XMVectorGetX(Hero::state.Forwardbuf) * 10.0f;
         flyDirection.y += XMVectorGetY(Hero::state.Forwardbuf) * 10.0f;
         flyDirection.z += XMVectorGetZ(Hero::state.Forwardbuf) * 10.0f;
     }
     if (GetAsyncKeyState('S') & 0x8000) {
-        // Движение назад - обратное направление
+        // �������� ����� - �������� �����������
         flyDirection.x -= XMVectorGetX(Hero::state.Forwardbuf) * 10.0f;
         flyDirection.y -= XMVectorGetY(Hero::state.Forwardbuf) * 10.0f;
         flyDirection.z -= XMVectorGetZ(Hero::state.Forwardbuf) * 10.0f;
     }
     if (GetAsyncKeyState('A') & 0x8000) {
-        // Добавляем вектор направления камеры (уже нормализован)
+        // ��������� ������ ����������� ������ (��� ������������)
         flyDirection.x -= XMVectorGetX(Hero::state.Right) * 5.f;
         flyDirection.y -= XMVectorGetY(Hero::state.Right) * 5.f;
         flyDirection.z -= XMVectorGetZ(Hero::state.Right) * 5.f;
     }
     if (GetAsyncKeyState('D') & 0x8000) {
-        // Движение назад - обратное направление
+        // �������� ����� - �������� �����������
         flyDirection.x += XMVectorGetX(Hero::state.Right) * 5.f;
         flyDirection.y += XMVectorGetY(Hero::state.Right) * 5.f;
         flyDirection.z += XMVectorGetZ(Hero::state.Right) * 5.f;
@@ -66,13 +66,13 @@ void updateFlyDirection() { // Раскладка управления
         float dx = (mousePos.x) * SENSIVITY * k;
         float dy = (mousePos.y) * SENSIVITY * k;
 
-        // Применяем к поворотам
-        dPitch = dy; // Вертикальное движение мыши - pitch (инвертируем dy)
-        dYaw = dx;   // Горизонтальное движение мыши - yaw
+        // ��������� � ���������
+        dPitch = dy; // ������������ �������� ���� - pitch (����������� dy)
+        dYaw = dx;   // �������������� �������� ���� - yaw
     }
 
 
-    // Обработка Q и E для крена (оставляем как было)
+    // ��������� Q � E ��� ����� (��������� ��� ����)
     if (GetAsyncKeyState('E')) {
         dRoll -= turnSpeed;
         Camera::state.n = lerp(Camera::state.n, 100, 0.3f);
@@ -93,7 +93,7 @@ void updateFlyDirection() { // Раскладка управления
         Hero::state.currentRotation = XMQuaternionMultiply(Hero::state.currentRotation, qTotal);
         Hero::state.currentRotation = XMQuaternionNormalize(Hero::state.currentRotation);
 
-        // Обновляем базовые векторы
+        // ��������� ������� �������
         Hero::state.Forwardbuf = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), Hero::state.currentRotation);
         Hero::state.Up = XMVector3Rotate(Hero::state.defaultUp, Hero::state.currentRotation);
         Hero::state.Right = XMVector3Cross(Hero::state.Up, Hero::state.Forwardbuf);
@@ -103,7 +103,7 @@ void updateFlyDirection() { // Раскладка управления
     }
 }
 
-void updateFlySpeed(float deltaTime) {// Обновления во время полёта
+void updateFlySpeed(float deltaTime) {// ���������� �� ����� �����
     bool isMoving = (flyDirection.x != 0 || flyDirection.y != 0 || flyDirection.z != 0);
 
     if (isMoving)
@@ -122,7 +122,7 @@ void updateFlySpeed(float deltaTime) {// Обновления во время п
     }
 }
 
-void updatePlayerPosition(float deltaTime) {// обновление позиции ГГ
+void updatePlayerPosition(float deltaTime) {// ���������� ������� ��
     if (currentFlySpeed > 0) {
         // Обновляем Hero::state.constellationOffset
         Hero::state.constellationOffset = Hero::state.constellationOffset *
@@ -135,5 +135,4 @@ void updatePlayerPosition(float deltaTime) {// обновление позици
         // Копируем в Camera::state
         Camera::state.constellationOffset = Hero::state.constellationOffset;
     }
-
 }

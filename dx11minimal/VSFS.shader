@@ -64,8 +64,8 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     //calc star position
 
-    float size = 7;
-    float range = 2000.;
+    float size = 7.0f;
+    float range = 2000.0f;
     float3 starPos = normalize(randomPosition(starID) * range * 2 - range) * range;
 
     float4x4 v = view[0];

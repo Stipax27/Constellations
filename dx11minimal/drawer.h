@@ -109,6 +109,24 @@ namespace drawer
         Draw::Starfield(1);
     }
 
+    void drawGalaxyFog(int shaderID)
+    {
+        Shaders::vShader(shaderID);
+        Shaders::pShader(shaderID);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+        Draw::GalaxyFog(5000000);
+    }
+
+    void drawCursor()
+    {
+        Shaders::vShader(6);
+        Shaders::pShader(6);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+        ConstBuf::global[0] = XMFLOAT4(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1), 0.0f, 1.0f);
+        Draw::Cursor();
+    }
+
     const COLORREF colors[] =
     {
         RGB(255, 0, 0),    // Красный
@@ -655,6 +673,8 @@ namespace drawer
         Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
         Draw::ClearDepth();
 
+        drawCursor();
+
        //d2dRenderTarget->BeginDraw();
         switch (gameState)
         {
@@ -803,7 +823,6 @@ namespace drawer
             SelectWeapon();
             SelectElement();
 
-
             DrawCombatStats();
 
             if (attackCooldown == true) {
@@ -817,10 +836,10 @@ namespace drawer
             modelTransform = &placeToWorld;
             modelProject = &fightProject;
             uiFunc = &starIntersectUI;
-            //linksDivider = 50;
 
             drawStarField();
-            drawStars();
+            //drawStars();
+            drawGalaxyFog(7);
 
 
             modelTransform = &placeConstToWorld;
