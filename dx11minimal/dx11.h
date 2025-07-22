@@ -629,6 +629,11 @@ namespace ConstBuf
 	//b5
 	XMFLOAT4 global[constCount];//update once on start
 
+	//b6
+	struct {
+		float AriesNebulaLerpFactor;
+	};
+
 	int roundUp(int n, int r)
 	{
 		return 	n - (n % r) + r;
