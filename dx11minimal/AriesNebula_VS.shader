@@ -169,6 +169,7 @@ float3 voronoiNoise(float2 value){
 VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output;
+    float AriesNebulaLerpFactor = frac(time.x * 0.01);
 
     uint starID = vID / 6;
     uint vertexInQuad = vID % 6;
@@ -188,12 +189,12 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     starPos.y = 0.0;
 
     float par = starPos.x * starPos.x + starPos.z * starPos.z;
-    starPos.y = cos(starPos.x / 100000 * PI) * cos(starPos.z / 100000 * PI) * -7500 + (par * 16000) / (60000000 + par);
+    starPos.y = cos(starPos.x / 100000 * PI) * cos(starPos.z / 100000 * PI) * -7500 + (par * lerp(16000, 12000, AriesNebulaLerpFactor)) / (lerp(60000000, 50000000, AriesNebulaLerpFactor) + par);
     
-    starPos.y += noise(starPos.xzy * 0.131 * 8 * 0.00011 + float3(41.547, 14.631, 51.591) + time.x * -0.005) * 5000;
+    starPos.y += noise(starPos.xzy * 0.131 * lerp(8, 5, AriesNebulaLerpFactor) * 0.00011 + float3(41.547, 14.631, 51.591) + time.x * -0.005) * lerp(5000, 4000, AriesNebulaLerpFactor);
 
-    float3 n = voronoiNoise(starPos.xz * 0.131 * 18 * 0.00011 + time.x * 0.005 + float2(41.547, 14.631));
-    starPos.y -= n.x * n.y * n.z * 35000;
+    float3 n = voronoiNoise(starPos.xz * 0.131 * lerp(18, 12, AriesNebulaLerpFactor) * 0.00011 + time.x * 0.005 + float2(41.547, 14.631));
+    starPos.y -= n.x * n.y * n.z * lerp(35000, 10000, AriesNebulaLerpFactor);
 
 
     //-----
