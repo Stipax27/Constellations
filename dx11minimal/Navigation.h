@@ -66,7 +66,7 @@ void updateFlyDirection() { // ��������� �������
 
         float dx = (mousePos.x) * SENSIVITY * k;
         float dy = (mousePos.y) * SENSIVITY * k;
-
+        //
         // ��������� � ���������
         dPitch = dy; // ������������ �������� ���� - pitch (����������� dy)
         dYaw = dx;   // �������������� �������� ���� - yaw
