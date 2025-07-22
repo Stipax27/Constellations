@@ -713,27 +713,34 @@ namespace drawer
 
             Constellation& playerConst = *starSet[player_sign];
             playerConst.Transform = CreateHeroToWorldMatrix(playerConst);
+
             
+            XMVECTOR playerPosition = playerConst.Transform.r[3];
+            point3d playerPos = point3d(
+                XMVectorGetX(playerPosition),
+                XMVectorGetY(playerPosition),
+                XMVectorGetZ(playerPosition)
+            );
+
             for (int i = 0; i < starSet.size(); i++) {
-                if (i == player_sign) continue; 
+                if (i == player_sign) continue;
 
                 Constellation& c = *starSet[0];
-                c.Transform = CreateEnemyToWorldMatrix(c);
-
-                XMVECTOR enemyPosition = c.Transform.r[3];
-
-                point3d Enemy = point3d(
-                    XMVectorGetX(enemyPosition),
-                    XMVectorGetY(enemyPosition),
-                    XMVectorGetZ(enemyPosition)
+                c.Transform = CreateHeroToWorldMatrix(c);
+                // Получаем текущую позицию врага
+                point3d enemyPos = point3d(
+                    XMVectorGetX(c.Transform.r[3]),
+                    XMVectorGetY(c.Transform.r[3]),
+                    XMVectorGetZ(c.Transform.r[3])
                 );
- 
-                c.ai.Update(start, Enemy);
 
+               
+                c.ai.AiUpdate(playerPos, enemyPos, c.Transform);
+
+               
                 drawСonstellation(c);
             }
 
-           
             HandleMouseClick();
             UpdateAttack(deltaTime);
             DrawSwordAttack();
@@ -742,13 +749,12 @@ namespace drawer
 
             std::string curentSignstring = zodiacSignToString(player_sign);
             TextOutA(window.context, window.width * 5 / 6, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());
-            //drawString(curentSignstring, window.width * 5 / 6, window.height - window.height / 20., 1, false);
 
             drawString("Find Constallations and click on him", window.width / 2, (200. / 1440) * window.height, 1, true);
             drawString("Features:\nMouse wheel to zoom in and out", (1700. / 2560) * window.width, (1200. / 1440) * window.height, .7f, false);
-            // drawColorCircle();
-            isBattleActive = false;
 
+            isBattleActive = false;
+            break;
 
            // drawString("X", 0, 0, 1, false);
            // drawString(std::to_string(mouse.pos.y).c_str(), 0, 0, 1, false);
