@@ -6,8 +6,9 @@ point3d flyDirection = { 0, 0, 0 };
 //point3d heroPosition = { 0, 0, 0 };
 float currentFlySpeed = 0.0f;
 const float maxFlySpeed = 0.1f;
-const float flyAcceleration = 0.2f;
+const float flyAcceleration = 0.5f;
 const float flyDeceleration = 0.002f;
+const float boostFlySpeed = 0.9f;
 const float MOUSE_SENSITIVITY = 0.002f;
 
 const float CURSOR_IGNORE_ZONE = 0.05f;
@@ -106,12 +107,15 @@ void updateFlyDirection() { // ��������� �������
 void updateFlySpeed(float deltaTime) {// ���������� �� ����� �����
     bool isMoving = (flyDirection.x != 0 || flyDirection.y != 0 || flyDirection.z != 0);
 
+    bool isBoosting = (GetAsyncKeyState(VK_SHIFT) & 0x8000);
+    float targetSpeed = isBoosting ? boostFlySpeed : maxFlySpeed;
+
     if (isMoving)
     {
         currentFlySpeed += flyAcceleration * deltaTime;
 
-        if (currentFlySpeed > maxFlySpeed) {
-            currentFlySpeed = maxFlySpeed;
+        if (currentFlySpeed > targetSpeed) {
+            currentFlySpeed = targetSpeed;
         }
     }
     else {
