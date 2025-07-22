@@ -7,7 +7,7 @@ class Constellation {
 public:
 
     XMMATRIX Transform;
-
+    EnemyAI ai;
     point3d position;
     float scale = 200;
     point3d angle;

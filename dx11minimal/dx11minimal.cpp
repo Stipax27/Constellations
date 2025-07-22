@@ -41,12 +41,13 @@ HWND hWnd;
 #include "MainWindow.h"
 #include "Point3d.h"
 #include "mouse.h"
+#include "font.h"
 #include "Navigation.h"
+#include "EnemyAi.h"
 #include "Constellation.h"
 #include "MainWorld.h"
 #include "DodgeEnemy.h"
 #include "StatusGame.h"
-#include "font.h"
 #include "Weapon.h"
 #include "Elements.h"
 #include "MainGame.h"
@@ -106,6 +107,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg = { 0 };
 
     timer::StartCounter();
+    ShowCursor(FALSE);
 
     // Main message loop:
     while (msg.message != WM_QUIT)

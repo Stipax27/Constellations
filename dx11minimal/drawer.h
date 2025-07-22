@@ -109,6 +109,24 @@ namespace drawer
         Draw::Starfield(1);
     }
 
+    void drawGalaxyFog(int shaderID)
+    {
+        Shaders::vShader(shaderID);
+        Shaders::pShader(shaderID);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+        Draw::GalaxyFog(5000000);
+    }
+
+    void drawCursor()
+    {
+        Shaders::vShader(6);
+        Shaders::pShader(6);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+        ConstBuf::global[0] = XMFLOAT4(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1), 0.0f, 1.0f);
+        Draw::Cursor();
+    }
+
     const COLORREF colors[] =
     {
         RGB(255, 0, 0),    // Красный
@@ -565,8 +583,8 @@ namespace drawer
 
     void DrawAttackStars() {
         // Отрисовываем все звёзды
-        for (auto& star : attackStars) {
-            star.position.draw(star.position, 5.0f);
+        for (StarProjectile& star : attackStars) {
+           star.position.draw(star.position, 5.0f);
         }
     }
 
@@ -574,14 +592,14 @@ namespace drawer
     static DWORD lastAttackTime = 0;
     const float projectileSpeed = 2.0f;
     point3d mouseRay;
-
+    point3d start;
     void HandleMouseClick() {
         if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 && currentTime - lastAttackTime > 500) {
             lastAttackTime = currentTime;
 
             // Получаем позицию героя
             XMVECTOR heroPosition = Hero::state.constellationOffset.r[3];
-            point3d start = point3d(
+            start = point3d(
                 XMVectorGetX(heroPosition),
                 XMVectorGetY(heroPosition),
                 XMVectorGetZ(heroPosition)
@@ -647,11 +665,15 @@ namespace drawer
         DrawAttackStars();
     }
 
+    
+
     void drawWorld(float deltaTime)
     {
         textStyle.color = RGB(0, 191, 255);
         Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
         Draw::ClearDepth();
+
+        drawCursor();
 
        //d2dRenderTarget->BeginDraw();
         switch (gameState)
@@ -684,53 +706,39 @@ namespace drawer
             Depth::Depth(Depth::depthmode::off);
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
             uiFunc = &constSelectUI;
-            //linksDivider = 15;
-            
+
             drawStarField();
             Shaders::vShader(1);
             Shaders::pShader(1);
-            //modelProject = &fightProject;
-            //modelTransform = &placeConstToWorld;
-            
-            
 
-            /*for (int i = 0;i < 12;i++)
-            {
-               Constellation& c = *starSet[i];
-               c.Transform = CreateConstToWorldMatrix(c);
-               drawСonstellation(*starSet[i]);
-            }*/
+            Constellation& playerConst = *starSet[player_sign];
+            playerConst.Transform = CreateHeroToWorldMatrix(playerConst);
+            
+            for (int i = 0; i < starSet.size(); i++) {
+                if (i == player_sign) continue; 
 
+                Constellation& c = *starSet[0];
+                c.Transform = CreateEnemyToWorldMatrix(c);
+
+                XMVECTOR enemyPosition = c.Transform.r[3];
+
+                point3d Enemy = point3d(
+                    XMVectorGetX(enemyPosition),
+                    XMVectorGetY(enemyPosition),
+                    XMVectorGetZ(enemyPosition)
+                );
+ 
+                c.ai.Update(start, Enemy);
+
+                drawСonstellation(c);
+            }
+
+           
             HandleMouseClick();
             UpdateAttack(deltaTime);
             DrawSwordAttack();
-            //XMVECTOR heroPosition = Hero::state.constellationOffset.r[3];
-            //point3d start = point3d(
-            //    XMVectorGetX(heroPosition),
-            //    XMVectorGetY(heroPosition),
-            //    XMVectorGetZ(heroPosition)
-            //);
 
-            //// Остальной код без изменений
-            //point3d camPos = point3d(
-            //    XMVectorGetX(Camera::state.Eye),
-            //    XMVectorGetY(Camera::state.Eye),
-            //    XMVectorGetZ(Camera::state.Eye)
-            //);
-
-            //point3d mouseRay = GetMouseRay(mouse.pos);
-            //point3d mousePos = camPos + mouseRay * 1000;
-            //point3d end = start + (mousePos - start);
-
-            //
-            //// Рисуем луч
-            //
-            //    drawLine(start, end);
-            
-
-            Constellation& c = *starSet[player_sign];
-            c.Transform = CreateHeroToWorldMatrix(c);
-            drawСonstellation(*starSet[player_sign]);//Игрок
+            drawСonstellation(playerConst);
 
             std::string curentSignstring = zodiacSignToString(player_sign);
             TextOutA(window.context, window.width * 5 / 6, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());
@@ -766,7 +774,6 @@ namespace drawer
             SelectWeapon();
             SelectElement();
 
-
             DrawCombatStats();
 
             if (attackCooldown == true) {
@@ -780,10 +787,10 @@ namespace drawer
             modelTransform = &placeToWorld;
             modelProject = &fightProject;
             uiFunc = &starIntersectUI;
-            //linksDivider = 50;
 
             drawStarField();
-            drawStars();
+            //drawStars();
+            drawGalaxyFog(7);
 
 
             modelTransform = &placeConstToWorld;

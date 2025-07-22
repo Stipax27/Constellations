@@ -20,8 +20,8 @@ struct Mouse
         //navigationByMouse();
         selectWeapon();
     }
-
 };
+
 
 Mouse mouse;
 bool keyA = false;

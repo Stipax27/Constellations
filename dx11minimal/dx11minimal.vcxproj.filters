@@ -31,6 +31,24 @@
     <Filter Include="Shaders\BackgroundStars">
       <UniqueIdentifier>{fe668379-b7cd-428f-8864-ae6d68f81cd7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\GalaxyFog">
+      <UniqueIdentifier>{e666e124-5f59-4272-9859-7a0554e5ea21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Cursor">
+      <UniqueIdentifier>{7a53a6ab-51fc-43fa-9b0a-2483cee6faea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Aries">
+      <UniqueIdentifier>{301c29da-b511-41cb-91ed-3c2b31a75811}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\UI">
+      <UniqueIdentifier>{3d6e8974-8fa6-4a84-a718-390436143a50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\PostProcess">
+      <UniqueIdentifier>{f8bf8761-8810-4b83-93b7-1d5ff1d0fd7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Debug">
+      <UniqueIdentifier>{0f14d95d-018a-42b9-bcae-16c829c4f63d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -111,6 +129,15 @@
     <ClInclude Include="Point3d.h">
       <Filter>Header Files\Structures</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleObject.h">
+      <Filter>Header Files\New</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Header Files\New</Filter>
+    </ClInclude>
+    <ClInclude Include="FpsCounter.h">
+      <Filter>Header Files\Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dx11minimal.cpp">
@@ -154,6 +181,45 @@
     </None>
     <None Include="BackgroundStars_PS.shader">
       <Filter>Shaders\BackgroundStars</Filter>
+    </None>
+    <None Include="GalaxyFog_PS.shader">
+      <Filter>Shaders\GalaxyFog</Filter>
+    </None>
+    <None Include="GalaxyFog_VS.shader">
+      <Filter>Shaders\GalaxyFog</Filter>
+    </None>
+    <None Include="Cursor_VS.shader">
+      <Filter>Shaders\Cursor</Filter>
+    </None>
+    <None Include="Cursor_PS.shader">
+      <Filter>Shaders\Cursor</Filter>
+    </None>
+    <None Include="AriesNebula_PS.shader">
+      <Filter>Shaders\Aries</Filter>
+    </None>
+    <None Include="AriesNebula_VS.shader">
+      <Filter>Shaders\Aries</Filter>
+    </None>
+    <None Include="AriesNebula2_VS.shader">
+      <Filter>Shaders\Aries</Filter>
+    </None>
+    <None Include="AriesNebula2_PS.shader">
+      <Filter>Shaders\Aries</Filter>
+    </None>
+    <None Include="DotText_PS.shader">
+      <Filter>Shaders\UI</Filter>
+    </None>
+    <None Include="DotText_VS.shader">
+      <Filter>Shaders\UI</Filter>
+    </None>
+    <None Include="PP_VS.shader">
+      <Filter>Shaders\PostProcess</Filter>
+    </None>
+    <None Include="Lensing_PS.shader">
+      <Filter>Shaders\PostProcess</Filter>
+    </None>
+    <None Include="PP_PS.shader">
+      <Filter>Shaders\PostProcess</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
