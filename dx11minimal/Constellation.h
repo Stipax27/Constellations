@@ -51,11 +51,11 @@ public:
             1.0f
         );
 
-        XMMATRIX scale = XMMatrixScaling(c.scale, c.scale, c.scale);
-        XMMATRIX rotation = XMMatrixRotationQuaternion(Enemy::enemyAi.currentRotation);
         XMMATRIX translation = XMMatrixTranslationFromVector(currentPos);
+        XMMATRIX rotation = XMMatrixRotationQuaternion(Enemy::enemyAi.currentRotation);
+        XMMATRIX scale = XMMatrixScaling(c.scale, c.scale, c.scale);
 
-        return scale * rotation * translation;
+        return  scale * rotation * translation;
     }
 
     friend XMMATRIX HeroUITransform( const Constellation& c)

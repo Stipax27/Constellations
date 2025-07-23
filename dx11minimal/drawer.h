@@ -715,16 +715,14 @@ namespace drawer
             playerConst.Transform = CreateHeroToWorldMatrix(playerConst);
 
 
-            for (int i = 0; i < starSet.size(); i++) {
-                if (i == player_sign) continue;
+           
+            Constellation& c = *starSet[0]; // Используем текущего врага
 
-                Constellation& c = *starSet[0]; // Используем текущего врага
-
-                c.Transform = CreateEnemyToWorldMatrix(c);
-               
-                
-                drawСonstellation(c);
-            }
+            c.Transform = CreateEnemyToWorldMatrix(c);
+           
+            
+            drawСonstellation(c);
+           
 
             HandleMouseClick();
             UpdateAttack(deltaTime);

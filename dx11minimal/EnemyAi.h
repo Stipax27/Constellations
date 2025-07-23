@@ -1,6 +1,6 @@
 
 point3d flyDirectionEnemy = { 0, 0, 0 };
-float patrolSpeed = 5.f;
+
 namespace Enemy
 {
     
@@ -36,21 +36,19 @@ namespace Enemy
            playerDistance(0.0f),
            playerVisible(false),
            currentWaypoint(0),
-           patrolSpeed(5.0f),
+           patrolSpeed(0.5f),
            chaseSpeed(10.0f),
            rotationSpeed(0.1f)
        {
        
            waypoints = {
-               point3d(200.0f, 100.0f, 20.0f),
-               point3d(100.0f, 10.0f, 50.0f),
-               point3d(50.0f, 200.0f, 100.0f)
+               point3d(2000.0f, 1000.0f, 200.0f),
+               point3d(1000.0f, 100.0f, 500.0f),
+               point3d(500.0f, 2000.0f, 1000.0f)
            };
        
        }
-        //
-        //
-        //
+        
                 void AiUpdate(float deltaTime) {
         
                     
@@ -99,40 +97,44 @@ namespace Enemy
                     point3d direction = target - currentPos;
                     float distance = direction.magnitude();
 
+                    // Если близко к точке - переключаемся на следующую
                     if (distance < 20.0f) {
-                        // Достигли точки - переходим к следующей
                         currentWaypoint = (currentWaypoint + 1) % waypoints.size();
+                        return;
                     }
-                    else {
-                        // Нормализуем направление и применяем скорость
-                        point3d moveDir = direction.normalized() * patrolSpeed * deltaTime;
 
-                        // Обновляем позицию врага
-                        enemyConstellationOffset = XMMatrixMultiply(
-                            enemyConstellationOffset,
-                            XMMatrixTranslation(moveDir.x, moveDir.y, moveDir.z)
-                        );
+                    // Нормализуем направление и применяем скорость с учетом deltaTime
+                    point3d moveDir = direction.normalized() * patrolSpeed * deltaTime;
 
-                        // Обновляем вектор направления для вращения
-                        if (direction.magnitude() > 0.1f) {
-                            XMVECTOR targetDir = XMVectorSet(direction.x, direction.y, direction.z, 0.0f);
-                            targetDir = XMVector3Normalize(targetDir);
+                    // Обновляем позицию врага
+                    enemyConstellationOffset = XMMatrixMultiply(
+                        enemyConstellationOffset,
+                        XMMatrixTranslation(moveDir.x, moveDir.y, moveDir.z)
+                    );
 
+                    // Поворот только если есть куда поворачивать
+                    if (direction.magnitude() > 0.1f) {
+                        XMVECTOR targetDir = XMVectorSet(direction.x, direction.y, direction.z, 0.0f);
+                        targetDir = XMVector3Normalize(targetDir);
+
+                        // Безопасный расчет поворота
+                        float dot = XMVectorGetX(XMVector3Dot(ForwardEn, targetDir));
+                        if (fabsf(dot) < 0.9999f) { // Если не параллельны
                             XMVECTOR axis = XMVector3Cross(ForwardEn, targetDir);
-                            float angle = acosf(XMVectorGetX(XMVector3Dot(ForwardEn, targetDir)));
+                            axis = XMVector3Normalize(axis);
+                            float angle = acosf(dot);
                             XMVECTOR rotQuat = XMQuaternionRotationAxis(axis, angle);
 
                             currentRotation = XMQuaternionMultiply(currentRotation, rotQuat);
+                            currentRotation = XMQuaternionNormalize(currentRotation);
 
                             // Обновляем базовые векторы
                             ForwardEn = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), currentRotation);
                             UpEn = XMVector3Rotate(defaultUp, currentRotation);
                             RightEn = XMVector3Cross(UpEn, ForwardEn);
+                            
                         }
                     }
-
-                    drawString("Patrolling to waypoint " ,
-                        window.width / 3, window.height / 3, 1.f, true);
                 }
         //
         //        void Chase(const point3d& playerPos, point3d& enemyPos) {
