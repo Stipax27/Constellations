@@ -650,7 +650,7 @@ namespace drawer
         attackStars.erase(
             std::remove_if(attackStars.begin(), attackStars.end(),
                 [](StarProjectile& star) {
-                    return star.position.magnitude() > 7500.0f;
+                    return (star.position - point3d(XMVectorGetX(Hero::state.heroPosition), XMVectorGetY(Hero::state.heroPosition), XMVectorGetZ(Hero::state.heroPosition))).magnitude() > 7500.0f;
                 }),
             attackStars.end());
     }
