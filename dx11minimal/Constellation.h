@@ -7,7 +7,7 @@ class Constellation {
 public:
 
     XMMATRIX Transform;
-    EnemyAI ai = EnemyAI();
+    
     std::vector<point3d> starPositions;
     point3d position;
     float scale = 200;
@@ -42,12 +42,21 @@ public:
 
     friend XMMATRIX CreateEnemyToWorldMatrix(const Constellation& c)
     {
-        float zOffset = 1000.0f / c.scale;
-        XMMATRIX translateZ = XMMatrixTranslation(zOffset, zOffset, zOffset);
+        navigationEnemy();
+        updateEnemyPosition(deltaTime);
 
-        XMMATRIX rotate = XMMatrixRotationRollPitchYaw(c.angle.x, c.angle.y, c.angle.z);
+        XMVECTOR currentPos = XMVectorSet(
+            Enemy::enemyAi.enemyConstellationOffset.r[3].m128_f32[0],
+            Enemy::enemyAi.enemyConstellationOffset.r[3].m128_f32[1],
+            Enemy::enemyAi.enemyConstellationOffset.r[3].m128_f32[2],
+            1.0f
+        );
+
         XMMATRIX scale = XMMatrixScaling(c.scale, c.scale, c.scale);
-        return  translateZ*scale* rotate;
+        XMMATRIX rotation = XMMatrixRotationRollPitchYaw(c.angle.x, c.angle.y, c.angle.z);
+        XMMATRIX translation = XMMatrixTranslationFromVector(currentPos);
+
+        return scale * rotation * translation;
     }
 
     friend XMMATRIX HeroUITransform( const Constellation& c)
