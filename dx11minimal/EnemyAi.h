@@ -3,21 +3,21 @@ point3d flyDirectionEnemy = { 0, 0, 0 };
 float patrolSpeed = 5.f;
 namespace Enemy
 {
-    //
-    //    enum class AIState {
-    //        PATROL,
-    //        CHASE,
-    //        ATTACK,
-    //        SEARCH
-    //    };
-    //
+    
+        enum class AIState {
+            PATROL,
+            CHASE,
+            ATTACK,
+            SEARCH
+        };
+    
     class EnemyAI {
     public:
-        //AIState currentState;
+        AIState currentState;
         float playerDistance;
         bool playerVisible;
         int currentWaypoint;
-        float patrolSpeed = 0.0005f;
+        float patrolSpeed = 0.000005f;
         float chaseSpeed;
         float rotationSpeed;
         point3d currentDirection;
@@ -33,84 +33,82 @@ namespace Enemy
 
 
 
-        //    public:
-        //        
-        //        EnemyAI() :
-        //            currentState(AIState::PATROL),
-        //            playerDistance(0.0f),
-        //            playerVisible(false),
-        //            currentWaypoint(0),
-        //            patrolSpeed(5.0f),
-        //            chaseSpeed(10.0f),
-        //            rotationSpeed(0.1f)
-        //        {
-        //
-        //            waypoints = {
-        //                point3d(2000.0f, 1000.0f, 200.0f),
-        //                point3d(1000.0f, 100.0f, 500.0f),
-        //                point3d(500.0f, 2000.0f, 1000.0f)
-        //            };
-        //
-        //        }
-        //
-        //
-        //
-        //        void AiUpdate(point3d playerPos, point3d& enemyPos) {
-        //
-        //            playerDistance = (enemyPos - playerPos).magnitude();
-        //            playerVisible = (playerDistance < 1500.0f);
+           
+                
+                EnemyAI() :
+                    currentState(AIState::PATROL),
+                    playerDistance(0.0f),
+                    playerVisible(false),
+                    currentWaypoint(0),
+                    patrolSpeed(5.0f),
+                    chaseSpeed(10.0f),
+                    rotationSpeed(0.1f)
+                {
+        
+                    waypoints = {
+                        point3d(200.0f, 100.0f, 20.0f),
+                        point3d(100.0f, 10.0f, 50.0f),
+                        point3d(50.0f, 200.0f, 100.0f)
+                    };
+        
+                }
         //
         //
-        //            switch (currentState) {
-        //            case AIState::PATROL:
-        //                Patrol(enemyPos);
-        //                if (playerVisible) currentState = AIState::CHASE;
-        //                break;
         //
-        //                /*case AIState::CHASE:
-        //                    Chase(playerPos, enemyPos );
-        //                    if (playerDistance < 500.0f) currentState = AIState::ATTACK;
-        //                    else if (!playerVisible) {
-        //                        currentState = AIState::SEARCH;
-        //
-        //                        waypoints.push_back(playerPos);
-        //                    }
-        //                    break;
-        //
-        //                case AIState::ATTACK:
-        //                    Attack(playerPos, enemyPos);
-        //                    if (playerDistance > 600.0f) currentState = AIState::CHASE;
-        //                    break;
-        //
-        //                case AIState::SEARCH:
-        //                    Search(playerPos, enemyPos);
-        //                    if (playerVisible) currentState = AIState::CHASE;
-        //                    else if (waypoints.size() <= 3) currentState = AIState::PATROL;
-        //                    break;*/
-        //            }
-        //        }
+                void AiUpdate() {
+        
+                    
+                    switch (currentState) {
+                    case AIState::PATROL:
+                        Patrol();
+                        //if (playerVisible) currentState = AIState::CHASE;
+                        break;
+        
+                        /*case AIState::CHASE:
+                            Chase(playerPos, enemyPos );
+                            if (playerDistance < 500.0f) currentState = AIState::ATTACK;
+                            else if (!playerVisible) {
+                                currentState = AIState::SEARCH;
+        
+                                waypoints.push_back(playerPos);
+                            }
+                            break;
+        
+                        case AIState::ATTACK:
+                            Attack(playerPos, enemyPos);
+                            if (playerDistance > 600.0f) currentState = AIState::CHASE;
+                            break;
+        
+                        case AIState::SEARCH:
+                            Search(playerPos, enemyPos);
+                            if (playerVisible) currentState = AIState::CHASE;
+                            else if (waypoints.size() <= 3) currentState = AIState::PATROL;
+                            break;*/
+                    }
+                }
         //
         //    private:
         //
-        //        void Patrol(point3d& enemyPos) {
-        //            if (waypoints.empty()) return;
-        //
-        //            point3d& target = waypoints[currentWaypoint];
-        //            point3d direction = target - enemyPos;
-        //            float distance = direction.magnitude();
-        //
-        //            if (distance < 20.0f) {
-        //                currentWaypoint = (currentWaypoint + 1) % waypoints.size();
-        //            }
-        //            else {
-        //
-        //                enemyPos += (direction*patrolSpeed);
-        //            }
-        //
-        //
-        //            drawString("Patrolling to waypoint " + (currentWaypoint),
-        //                window.width / 3, window.height / 3, 1.f, true);
-        //        }
+                void Patrol() {
+                    if (waypoints.empty()) return;
+
+                    
+                    point3d& target = waypoints[currentWaypoint];
+                    point3d direction = target - flyDirectionEnemy;
+                    float distance = direction.magnitude();
+        
+                    if (distance < 20.0f) {
+                        currentWaypoint = (currentWaypoint + 1) % waypoints.size();
+                    }
+                    else {
+        
+                        flyDirectionEnemy += (direction * patrolSpeed);
+                    }
+        
+                    string pos = flyDirectionEnemy.c_str();
+                    drawString("Patrolling to waypoint " + (currentWaypoint),
+                        window.width / 3, window.height / 3, 1.f, true);
+                }
         //
         //        void Chase(const point3d& playerPos, point3d& enemyPos) {
         //            point3d direction = (playerPos - enemyPos).normalized();
@@ -145,12 +143,6 @@ namespace Enemy
     }static enemyAi;
 }
 
-void navigationEnemy() 
-{
-    flyDirectionEnemy.x += XMVectorGetX(Enemy::enemyAi.ForwardEn) * 0.1f;
-    flyDirectionEnemy.y += XMVectorGetY(Enemy::enemyAi.ForwardEn) * 0.1f;
-    flyDirectionEnemy.z += XMVectorGetZ(Enemy::enemyAi.ForwardEn) * 0.1f;
-}
 
 void updateEnemyPosition(float deltaTime) {
     XMVECTOR currentPos = Enemy::enemyAi.enemyConstellationOffset.r[3];

@@ -42,7 +42,7 @@ public:
 
     friend XMMATRIX CreateEnemyToWorldMatrix(const Constellation& c)
     {
-        navigationEnemy();
+        Enemy::enemyAi.AiUpdate();
         updateEnemyPosition(deltaTime);
 
         XMVECTOR currentPos = XMVectorSet(

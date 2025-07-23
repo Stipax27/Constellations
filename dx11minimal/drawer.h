@@ -721,7 +721,7 @@ namespace drawer
                 Constellation& c = *starSet[0]; // Используем текущего врага
 
                 c.Transform = CreateEnemyToWorldMatrix(c);
-
+               
                 
                 drawСonstellation(c);
             }
