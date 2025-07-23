@@ -726,7 +726,7 @@ namespace drawer
                 if (i == player_sign) continue;
 
                 Constellation& c = *starSet[0];
-                c.Transform = CreateHeroToWorldMatrix(c);
+                c.Transform = CreateEnemyToWorldMatrix(c);
                 // Получаем текущую позицию врага
                 point3d enemyPos = point3d(
                     XMVectorGetX(c.Transform.r[3]),
@@ -734,10 +734,8 @@ namespace drawer
                     XMVectorGetZ(c.Transform.r[3])
                 );
 
-               
-                c.ai.AiUpdate(playerPos, enemyPos, c.Transform);
+                c.ai.AiUpdate(playerPos, enemyPos);
 
-               
                 drawСonstellation(c);
             }
 

@@ -42,12 +42,6 @@ public:
 
     friend XMMATRIX CreateEnemyToWorldMatrix(const Constellation& c)
     {
-        XMVECTOR EnemyPosition = XMVectorSet(
-            enemyAi.enemyConstellationOffset.r[3].m128_f32[0],
-            enemyAi.enemyConstellationOffset.r[3].m128_f32[1],
-            enemyAi.enemyConstellationOffset.r[3].m128_f32[2],
-            0.0f
-        );
         float zOffset = 1000.0f / c.scale;
         XMMATRIX translateZ = XMMatrixTranslation(zOffset, zOffset, zOffset);
 
