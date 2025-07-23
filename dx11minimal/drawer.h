@@ -728,7 +728,7 @@ namespace drawer
                 if (i == player_sign) continue;
 
                 Constellation& c = *starSet[0];
-                c.Transform = CreateHeroToWorldMatrix(c);
+                c.Transform = CreateEnemyToWorldMatrix(c);
                 // Получаем текущую позицию врага
                 point3d enemyPos = point3d(
                     XMVectorGetX(c.Transform.r[3]),
@@ -772,6 +772,13 @@ namespace drawer
 
         case gameState_::Fight:
         {
+            if (AriesNebula.defeatTime >= 0 && ConstBuf::factors.AriesNebulaLerpFactor < 1)
+            {
+                ConstBuf::factors.AriesNebulaLerpFactor = min((ConstBuf::frame.time.x - AriesNebula.defeatTime) / 150.0f, 1);
+                ConstBuf::UpdateFactors();
+                ConstBuf::ConstToVertex(6);
+                ConstBuf::ConstToPixel(6);
+            }
             
             if (t) {
                 t = false;

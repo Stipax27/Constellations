@@ -38,6 +38,8 @@ HWND hWnd;
 #include "dx11.h"
 #include "Player.h"
 
+#include "AriesNebula.h"
+
 #include "MainWindow.h"
 #include "Point3d.h"
 #include "mouse.h"

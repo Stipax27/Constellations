@@ -111,6 +111,8 @@ void constSelectUI(point3d& point, Constellation& Constellation, int i)
             gameState = gameState_::Fight;
             currentEnemy = &Constellation;
             currentEnemyID = (ZodiacSign)(currentEnemy->ID);
+
+            AriesNebula.defeatTime = ConstBuf::frame.time.x;
         }
     }
     else

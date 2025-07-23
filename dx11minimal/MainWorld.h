@@ -1,4 +1,4 @@
-﻿
+
 Constellation Aries(
     {
         {0, 0, 0.},//coords

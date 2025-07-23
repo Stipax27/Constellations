@@ -596,7 +596,7 @@ namespace Sampler
 
 namespace ConstBuf
 {
-	ID3D11Buffer* buffer[6];
+	ID3D11Buffer* buffer[7];
 
 #define constCount 32
 
@@ -629,6 +629,11 @@ namespace ConstBuf
 	//b5
 	XMFLOAT4 global[constCount];//update once on start
 
+	//b6
+	struct {
+		float AriesNebulaLerpFactor;
+	} factors;
+
 	int roundUp(int n, int r)
 	{
 		return 	n - (n % r) + r;
@@ -655,6 +660,7 @@ namespace ConstBuf
 		Create(buffer[3], sizeof(camera));
 		Create(buffer[4], sizeof(frame));
 		Create(buffer[5], sizeof(global));
+		Create(buffer[6], sizeof(factors));
 	}
 
 	template <typename T>
@@ -678,6 +684,11 @@ namespace ConstBuf
 		context->UpdateSubresource(ConstBuf::buffer[3], 0, NULL, &camera, 0, 0);
 	}
 
+	void UpdateFactors()
+	{
+		context->UpdateSubresource(ConstBuf::buffer[6], 0, NULL, &factors, 0, 0);
+	}
+
 	void ConstToVertex(int i)
 	{
 		context->VSSetConstantBuffers(i, 1, &buffer[i]);
@@ -690,9 +701,8 @@ namespace ConstBuf
 
 
 	namespace getbyname {
-		enum { drawerV, drawerP, drawerMat, camera, frame, global };
+		enum { drawerV, drawerP, drawerMat, camera, frame, global, factors };
 	}
-
 }
 
 

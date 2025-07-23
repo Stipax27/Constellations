@@ -1,3 +1,8 @@
+cbuffer factors : register(b6)
+{
+    float AriesNebulaLerpFactor;
+};
+
 cbuffer global : register(b5)
 {
     float4 gConst[32];
@@ -91,8 +96,7 @@ float3 HSLToRGB(float3 hsl) {
 }
 
 float3 ApplyRainbowEffect(float4 worldpos) {
-    // Ќормализуем врем€ в диапазон [0, 1] дл€ Hue
-    float hue = frac(time * 0.005 + worldpos.x / 100000 + worldpos.z / 250000); // frac аналогичен %1.0
+    float hue = frac(time * 0.005 + worldpos.x / 100000 + worldpos.z / 250000);
     float saturation = 0.5;
     float lightness = 0.5;
 
@@ -103,7 +107,6 @@ float3 ApplyRainbowEffect(float4 worldpos) {
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-    float AriesNebulaLerpFactor = frac(time.x * 0.01);
     float2 uv = input.uv;
 
     float n = noise(input.worldpos * 0.131 * 20 * 0.00011);
