@@ -744,7 +744,6 @@ namespace drawer
            // drawString("X", 0, 0, 1, false);
            // drawString(std::to_string(mouse.pos.y).c_str(), 0, 0, 1, false);
 
-            break;
         }
         case gameState_::DialogStruct:
             initContentData();

@@ -31,36 +31,32 @@ namespace Enemy
         std::vector<point3d> waypoints;
         XMMATRIX enemyConstellationOffset = XMMatrixTranslation(0, 0, 0);
 
-
-
-           
-                
-                EnemyAI() :
-                    currentState(AIState::PATROL),
-                    playerDistance(0.0f),
-                    playerVisible(false),
-                    currentWaypoint(0),
-                    patrolSpeed(5.0f),
-                    chaseSpeed(10.0f),
-                    rotationSpeed(0.1f)
-                {
-        
-                    waypoints = {
-                        point3d(200.0f, 100.0f, 20.0f),
-                        point3d(100.0f, 10.0f, 50.0f),
-                        point3d(50.0f, 200.0f, 100.0f)
-                    };
-        
-                }
+       EnemyAI() :
+           currentState(AIState::PATROL),
+           playerDistance(0.0f),
+           playerVisible(false),
+           currentWaypoint(0),
+           patrolSpeed(5.0f),
+           chaseSpeed(10.0f),
+           rotationSpeed(0.1f)
+       {
+       
+           waypoints = {
+               point3d(200.0f, 100.0f, 20.0f),
+               point3d(100.0f, 10.0f, 50.0f),
+               point3d(50.0f, 200.0f, 100.0f)
+           };
+       
+       }
         //
         //
         //
-                void AiUpdate() {
+                void AiUpdate(float deltaTime) {
         
                     
                     switch (currentState) {
                     case AIState::PATROL:
-                        Patrol();
+                        Patrol(deltaTime);
                         //if (playerVisible) currentState = AIState::CHASE;
                         break;
         
@@ -86,27 +82,56 @@ namespace Enemy
                             break;*/
                     }
                 }
-        //
-        //    private:
-        //
-                void Patrol() {
+        
+            private:
+        
+                void Patrol(float deltaTime) {
                     if (waypoints.empty()) return;
 
-                    
+                    // Получаем текущую позицию врага
+                    point3d currentPos = point3d(
+                        enemyConstellationOffset.r[3].m128_f32[0],
+                        enemyConstellationOffset.r[3].m128_f32[1],
+                        enemyConstellationOffset.r[3].m128_f32[2]
+                    );
+
                     point3d& target = waypoints[currentWaypoint];
-                    point3d direction = target - flyDirectionEnemy;
+                    point3d direction = target - currentPos;
                     float distance = direction.magnitude();
-        
+
                     if (distance < 20.0f) {
+                        // Достигли точки - переходим к следующей
                         currentWaypoint = (currentWaypoint + 1) % waypoints.size();
                     }
                     else {
-        
-                        flyDirectionEnemy += (direction * patrolSpeed);
+                        // Нормализуем направление и применяем скорость
+                        point3d moveDir = direction.normalized() * patrolSpeed * deltaTime;
+
+                        // Обновляем позицию врага
+                        enemyConstellationOffset = XMMatrixMultiply(
+                            enemyConstellationOffset,
+                            XMMatrixTranslation(moveDir.x, moveDir.y, moveDir.z)
+                        );
+
+                        // Обновляем вектор направления для вращения
+                        if (direction.magnitude() > 0.1f) {
+                            XMVECTOR targetDir = XMVectorSet(direction.x, direction.y, direction.z, 0.0f);
+                            targetDir = XMVector3Normalize(targetDir);
+
+                            XMVECTOR axis = XMVector3Cross(ForwardEn, targetDir);
+                            float angle = acosf(XMVectorGetX(XMVector3Dot(ForwardEn, targetDir)));
+                            XMVECTOR rotQuat = XMQuaternionRotationAxis(axis, angle);
+
+                            currentRotation = XMQuaternionMultiply(currentRotation, rotQuat);
+
+                            // Обновляем базовые векторы
+                            ForwardEn = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), currentRotation);
+                            UpEn = XMVector3Rotate(defaultUp, currentRotation);
+                            RightEn = XMVector3Cross(UpEn, ForwardEn);
+                        }
                     }
-        
-                    string pos = flyDirectionEnemy.c_str();
-                    drawString("Patrolling to waypoint " + (currentWaypoint),
+
+                    drawString("Patrolling to waypoint " ,
                         window.width / 3, window.height / 3, 1.f, true);
                 }
         //
@@ -145,15 +170,5 @@ namespace Enemy
 
 
 void updateEnemyPosition(float deltaTime) {
-    XMVECTOR currentPos = Enemy::enemyAi.enemyConstellationOffset.r[3];
-
-  Enemy::enemyAi.enemyConstellationOffset = XMMatrixMultiply(
-            Enemy::enemyAi.enemyConstellationOffset,
-            XMMatrixTranslation(
-                flyDirectionEnemy.x * Enemy::enemyAi.patrolSpeed * deltaTime,
-                flyDirectionEnemy.y * Enemy::enemyAi.patrolSpeed * deltaTime,
-                flyDirectionEnemy.z * Enemy::enemyAi.patrolSpeed * deltaTime
-            )
-        );
-  
+    Enemy::enemyAi.AiUpdate(deltaTime);
 }

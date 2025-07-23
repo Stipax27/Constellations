@@ -42,7 +42,6 @@ public:
 
     friend XMMATRIX CreateEnemyToWorldMatrix(const Constellation& c)
     {
-        Enemy::enemyAi.AiUpdate();
         updateEnemyPosition(deltaTime);
 
         XMVECTOR currentPos = XMVectorSet(
@@ -53,7 +52,7 @@ public:
         );
 
         XMMATRIX scale = XMMatrixScaling(c.scale, c.scale, c.scale);
-        XMMATRIX rotation = XMMatrixRotationRollPitchYaw(c.angle.x, c.angle.y, c.angle.z);
+        XMMATRIX rotation = XMMatrixRotationQuaternion(Enemy::enemyAi.currentRotation);
         XMMATRIX translation = XMMatrixTranslationFromVector(currentPos);
 
         return scale * rotation * translation;
