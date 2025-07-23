@@ -5,7 +5,8 @@
 
 struct GalaxyFog : RenderObject
 {
-	
+	int instances;
+
 };
 
 #endif

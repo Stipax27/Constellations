@@ -711,6 +711,8 @@ namespace drawer
             Shaders::vShader(1);
             Shaders::pShader(1);
 
+            drawGalaxyFog(7);
+
             Constellation& playerConst = *starSet[player_sign];
             playerConst.Transform = CreateHeroToWorldMatrix(playerConst);
 
