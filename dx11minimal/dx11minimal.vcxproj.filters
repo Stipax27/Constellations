@@ -138,6 +138,12 @@
     <ClInclude Include="FpsCounter.h">
       <Filter>Header Files\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="EnemyAi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GalaxyFog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dx11minimal.cpp">
