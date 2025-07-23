@@ -144,6 +144,9 @@
     <ClInclude Include="GalaxyFog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RenderObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dx11minimal.cpp">

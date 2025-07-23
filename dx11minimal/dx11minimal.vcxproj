@@ -204,6 +204,7 @@
     <None Include="VSFS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
+    <ClInclude Include="RenderObject.h" />
     <ClInclude Include="WorldRender.h" />
     <ClInclude Include="StatusGame.h" />
     <ClInclude Include="timer.h" />
