@@ -17,7 +17,7 @@ namespace Enemy
         float playerDistance;
         bool playerVisible;
         int currentWaypoint;
-        float patrolSpeed = 0.000005f;
+        float patrolSpeed = 0.5f;
         float chaseSpeed;
         float rotationSpeed;
         point3d currentDirection;
@@ -36,15 +36,15 @@ namespace Enemy
            playerDistance(0.0f),
            playerVisible(false),
            currentWaypoint(0),
-           patrolSpeed(0.5f),
+           patrolSpeed(5.f),
            chaseSpeed(10.0f),
            rotationSpeed(0.1f)
        {
        
            waypoints = {
-               point3d(2000.0f, 1000.0f, 200.0f),
-               point3d(1000.0f, 100.0f, 500.0f),
-               point3d(500.0f, 2000.0f, 1000.0f)
+               point3d(-50000.0f, 1000.0f, 0.0f),
+               point3d(0.0f, 1000.0f, 50000.0f),
+               point3d(50000.0f, 1000.0f, 25000.0f)
            };
        
        }

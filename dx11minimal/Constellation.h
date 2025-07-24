@@ -40,9 +40,10 @@ public:
         return translateZ * rotate * scale;
     }
 
-    friend XMMATRIX CreateEnemyToWorldMatrix(const Constellation& c)
+    friend XMMATRIX CreateEnemyToWorldMatrix(Constellation& c)
     {
         updateEnemyPosition(deltaTime);
+        c.scale = 20000;
 
         XMVECTOR currentPos = XMVectorSet(
             Enemy::enemyAi.enemyConstellationOffset.r[3].m128_f32[0],
