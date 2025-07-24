@@ -48,7 +48,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     float2 arcB[arcSteps];
     float2 A = gConst[rectIndex * 2 + 0].xy;
     float2 B = gConst[rectIndex * 2 + 1].xy;
-    float r = 1.0f;
+    float r = 1.3f;
     float2 vec = B - A;
     float2 dir = normalize(vec);
     float2 perp = float2(-dir.y, dir.x);

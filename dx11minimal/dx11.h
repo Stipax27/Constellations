@@ -513,6 +513,12 @@ namespace Shaders {
 
 		CreateVS(10, nameToPatchLPCWSTR("PP_VS.shader"));
 		CreatePS(10, nameToPatchLPCWSTR("PP_PS.shader"));
+
+		CreateVS(11, nameToPatchLPCWSTR("Cross_VS.shader"));
+		CreatePS(11, nameToPatchLPCWSTR("Cross_PS.shader"));
+
+		CreateVS(12, nameToPatchLPCWSTR("UiParticle_VS.shader"));
+		CreatePS(12, nameToPatchLPCWSTR("UiParticle_PS.shader"));
 	}
 
 	void vShader(unsigned int n)

@@ -21,7 +21,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output;
 
-    float size = 0.03;
+    float size = 0.06;
     float2 quadPos[6] = {
         float2(-1, -1), float2(1, -1), float2(-1, 1),
         float2(1, -1), float2(1, 1), float2(-1, 1)

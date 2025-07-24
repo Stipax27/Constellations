@@ -85,10 +85,10 @@ float3 rotZ(float3 pos, float a)
 
 float star(float2 uv)
 {
-    float c = pow(sin(length(uv / 1.2 * 3.14)), 100) * 0.5;
-    c = saturate(c - saturate(1 - 12 * ((abs(uv.x) - 0.05) * (abs(uv.y) - 0.05))));
-    c += saturate((1 - (pow(abs(uv.x), 0.5) + pow(abs(uv.y), 0.5))) * 2);
-
+    float c = saturate(1. - 1. * length(uv));
+    c = pow(c, 3);
+    c *= saturate(1. - 228. * abs(uv.x) * abs(uv.y));
+    c += pow(sin(length(uv * 3.14)), 118) * .03;
     return c;
 }
 
@@ -96,7 +96,8 @@ float star(float2 uv)
 float4 PS(VS_OUTPUT input) : SV_Target
 {
     float c = star(input.uv);
+    c += star(rotZ(float3(input.uv,0),45*3.14/180).xy*1.5);
 
-    return float4(0, c, 0, c);
+    return float4(c, c, c, c);
 
 }

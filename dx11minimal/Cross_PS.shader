@@ -61,15 +61,6 @@ float3 HSLToRGB(float3 hsl) {
     return rgb + m;
 }
 
-float3 ApplyRainbowEffect() {
-    float hue = frac(time * 0.01);
-    float saturation = 1.0;
-    float lightness = 0.5;
-
-    float3 hsl = float3(hue, saturation, lightness);
-    return HSLToRGB(hsl);
-}
-
 
 float3 rotZ(float3 pos, float a)
 {
@@ -85,9 +76,18 @@ float3 rotZ(float3 pos, float a)
 
 float star(float2 uv)
 {
-    float c = pow(sin(length(uv / 1.2 * 3.14)), 100) * 0.5;
-    c = saturate(c - saturate(1 - 12 * ((abs(uv.x) - 0.05) * (abs(uv.y) - 0.05))));
-    c += saturate((1 - (pow(abs(uv.x), 0.5) + pow(abs(uv.y), 0.5))) * 2);
+    float c = pow(sin(length(uv * 3.14)), 400);
+    c = saturate(c - saturate(1 - 100 * ((abs(uv.x) - 0.1) * (abs(uv.y) - 0.1))));
+
+    c += saturate(1 - 100 * abs(uv.x) * abs(uv.y));
+    c -= saturate(ceil(1 - length(uv) * 4));
+    //c -= saturate(1 - length(uv) * 2);
+
+    //c = pow(uv.x / pow(uv.y, 2), 10);
+
+    //c += saturate((1 - (pow(abs(uv.x), 0.5) + pow(abs(uv.y), 0.5))) * 2);
+
+    //c += saturate(ceil(1 - length(uv) * 25));
 
     return c;
 }
@@ -97,6 +97,6 @@ float4 PS(VS_OUTPUT input) : SV_Target
 {
     float c = star(input.uv);
 
-    return float4(0, c, 0, c);
+    return float4(c, c, 0, c);
 
 }

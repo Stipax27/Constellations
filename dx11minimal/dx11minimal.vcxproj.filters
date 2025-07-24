@@ -236,6 +236,18 @@
     <None Include="PP_PS.shader">
       <Filter>Shaders\PostProcess</Filter>
     </None>
+    <None Include="Cross_VS.shader">
+      <Filter>Shaders\Cursor</Filter>
+    </None>
+    <None Include="Cross_PS.shader">
+      <Filter>Shaders\Cursor</Filter>
+    </None>
+    <None Include="UiParticle_VS.shader">
+      <Filter>Shaders\UI</Filter>
+    </None>
+    <None Include="UiParticle_PS.shader">
+      <Filter>Shaders\UI</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="StarLink_PS.shader">

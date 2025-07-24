@@ -3,6 +3,18 @@ point3d attackDirection;
 
 namespace drawer
 {
+    int GetRandom(int min = 1, int max = 0)
+    {
+        if (max > min)
+        {
+            return rand() % (max - min) + min;
+        }
+        else
+        {
+            return rand() % min;
+        }
+    }
+
     void drawLine(point3d& p1, point3d& p2)
     {
         point3d vector = p2 - p1;
@@ -117,11 +129,11 @@ namespace drawer
         Draw::GalaxyFog(5000000);
     }
 
-    void drawCursor()
+    void drawCursor(int shaderID)
     {
-        Shaders::vShader(6);
-        Shaders::pShader(6);
-        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+        Shaders::vShader(shaderID);
+        Shaders::pShader(shaderID);
+        Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
 
         ConstBuf::global[0] = XMFLOAT4(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1), 0.0f, 1.0f);
         Draw::Cursor();
@@ -665,6 +677,80 @@ namespace drawer
         DrawAttackStars();
     }
 
+
+    struct uiParticle
+    {
+        point3d pos;
+        point3d vel;
+        DWORD startTime;
+        DWORD lifetime;
+    };
+
+    vector<uiParticle*> uiParticles = vector<uiParticle*>{};
+    bool isPressed = false;
+    void CreateCursorParticles()
+    {
+        if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+        {
+            if (!isPressed)
+            {
+                isPressed = true;
+                point3d mousePos = point3d(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1));
+                DWORD curTime = timer::GetCounter();
+
+                for (int i = 0; i < 20; i++)
+                {
+                    uiParticle* particle = new uiParticle;
+                    particle->pos = mousePos;
+                    particle->vel = point3d(GetRandom(-100, 100), GetRandom(-100, 100)).normalized() * (float)GetRandom(5, 25) / 100.0f * 0.002f;
+                    particle->lifetime = GetRandom(500, 1500);
+                    particle->startTime = curTime;
+
+                    uiParticles.push_back(particle);
+                }
+            }
+        }
+        else
+        {
+            isPressed = false;
+        }
+    }
+
+    void DrawUiParticles(float deltaTime)
+    {
+        Shaders::vShader(12);
+        Shaders::pShader(12);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+        int i = 0;
+        DWORD curTime = timer::GetCounter();
+        while (i < uiParticles.size())
+        {
+            uiParticle* particle = uiParticles[i];
+
+            if (curTime - particle->startTime < particle->lifetime)
+            {
+                ConstBuf::global[0] = XMFLOAT4(particle->pos.x, particle->pos.y, 0.0f, 1 - (float)(curTime - particle->startTime) / (float)particle->lifetime);
+
+                ConstBuf::Update(5, ConstBuf::global);
+                ConstBuf::ConstToVertex(5);
+                ConstBuf::Update(1, ConstBuf::drawerP);
+                ConstBuf::ConstToPixel(1);
+
+                context->Draw(6, 0);
+
+                particle->pos += particle->vel * deltaTime;
+                particle->vel *= 0.95f;
+
+                i++;
+            }
+            else
+            {
+                uiParticles.erase(uiParticles.begin() + i);
+            }
+        }
+    }
+
     
 
     void drawWorld(float deltaTime)
@@ -672,8 +758,6 @@ namespace drawer
         textStyle.color = RGB(0, 191, 255);
         Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
         Draw::ClearDepth();
-
-        drawCursor();
 
        //d2dRenderTarget->BeginDraw();
         switch (gameState)
@@ -981,6 +1065,20 @@ namespace drawer
         }
 
         }
+
+
+        Depth::Depth(Depth::depthmode::off);
+        if (gameState != gameState_::selectEnemy && gameState != gameState_::Fight)
+        {
+            drawCursor(6);
+            CreateCursorParticles();
+        }
+        else
+        {
+            drawCursor(11);
+        }
+
+        DrawUiParticles(deltaTime);
 
     }
 }
