@@ -40,6 +40,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output;
 
+    float size = 0.04;
     float2 quadPos[6] = {
         float2(-1, -1), float2(1, -1), float2(-1, 1),
         float2(1, -1), float2(1, 1), float2(-1, 1)
@@ -49,11 +50,11 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     float2 pos = quadPos[vID];
 
-    float2 uv = mul(float4(quadPos[vID], 0.0, 1.0), proj[0]).xy;
-    uv = float2(mousepos.x + uv.x * 0.01, mousepos.y - uv.y * 0.01);
+    float2 screenPos = mul(float4(quadPos[vID], 0.0, 1.0), proj[0]).xy;
+    screenPos = float2(mousepos.x + screenPos.x * size, mousepos.y - screenPos.y * size);
 
-    output.pos = float4(uv.xy, 0, 1);
-    output.uv = uv;
+    output.pos = float4(screenPos.xy, 0, 1);
+    output.uv = quadPos[vID];
 
     return output;
 }

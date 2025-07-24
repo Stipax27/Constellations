@@ -72,8 +72,35 @@ float3 ApplyRainbowEffect() {
 }
 
 
+float3 rotZ(float3 pos, float a)
+{
+    float3x3 m =
+    {
+        cos(a), -sin(a),0,
+        sin(a), cos(a), 0,
+        0, 0, 1
+    };
+    pos = mul(pos, m);
+    return pos;
+}
+
+float star(float2 uv)
+{
+    float c = pow(sin(length(uv / 1.2 * 3.14)), 100) * 0.5;
+    c = saturate(c - saturate(1 - 8 * ((abs(uv.x) - 0.05) * (abs(uv.y) - 0.05))));
+    c += saturate((1 - (pow(abs(uv.x), 0.5) + pow(abs(uv.y), 0.5))) * 2);
+
+    return c;
+}
+
+
 float4 PS(VS_OUTPUT input) : SV_Target
 {
+    float c = star(input.uv);
+
+    return float4(c, c, c*1.2, 1);
+
+
     float3 rainbowColor = ApplyRainbowEffect();
 
     return float4(rainbowColor, 1.);
