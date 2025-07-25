@@ -36,7 +36,7 @@ namespace drawer
         Draw::elipse(1);
     }
 
-    void drawLinks(Constellation& Constellation,float sz)
+    void drawLinks(Constellation& Constellation, float sz)
     {
         std::vector <point3d>& starArray = Constellation.starsCords;
         std::vector<std::vector<float>>& starEdges = Constellation.constellationEdges;
@@ -48,14 +48,35 @@ namespace drawer
             point3d point1 = TransformPoint(starArray[starEdges[i][0]], Constellation.Transform);
             point3d point2 = TransformPoint(starArray[starEdges[i][1]], Constellation.Transform);
 
-            if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0) // - Стало
+            if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0)
             {
-                drawLine(point1, point2,sz);
+                // Устанавливаем яркий цвет для линий между неповрежденными звездами
+                ConstBuf::global[0] = XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f); // Желтый
+                ConstBuf::Update(5, ConstBuf::global);
+                ConstBuf::ConstToPixel(5);
+
+                drawLine(point1, point2, sz * 1.5f); // Увеличиваем толщину линии
+
+                // Восстанавливаем стандартный цвет
+                ConstBuf::global[0] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+                ConstBuf::Update(5, ConstBuf::global);
+            }
+            else if (starHealth[starEdges[i][0]] > 0 || starHealth[starEdges[i][1]] > 0)
+            {
+                // Полуповрежденные линии - тонкие и бледные
+                ConstBuf::global[0] = XMFLOAT4(0.7f, 0.7f, 0.7f, 0.5f);
+                ConstBuf::Update(5, ConstBuf::global);
+                ConstBuf::ConstToPixel(5);
+
+                drawLine(point1, point2, sz * 0.5f);
+
+                ConstBuf::global[0] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+                ConstBuf::Update(5, ConstBuf::global);
             }
         }
     }
 
-    void drawStarPulse(Constellation& Constellation, bool colorOverride = false, float finalStarRad = 10.f )
+    void drawStarPulse(Constellation& Constellation, bool colorOverride = false, float finalStarRad = 10.f)
     {
         std::vector <point3d>& starArray = Constellation.starsCords;
         std::vector <float>& starHealth = Constellation.starsHealth;
@@ -75,21 +96,41 @@ namespace drawer
             float py = -.5f * XMVectorGetY(p) / XMVectorGetW(p) + .5f;
 
             point3d screenPoint = { px,py,0 };
-            screenPoint.x *=window.width;
+            screenPoint.x *= window.width;
             screenPoint.y *= window.height;
 
-            // Пульсирование Звёзд при наведение мыши.
-            
-            /*if (uiFunc)
-            {
-                uiFunc(screenPoint, Constellation, i);
-            }*/
+            // Изменяем цвет или размер для неповрежденных звезд
+            float currentRadius = finalStarRad;
+            XMFLOAT4 starColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // Белый по умолчанию
 
-            
-            if (finalStarRad > 0)
+            if (starHealth[i] > 0)
             {
-                point.draw(worldPoint, finalStarRad);
+                // Для неповрежденных звезд - пульсация и другой цвет
+                float pulse = 0.5f + 0.5f * sinf(currentTime * 0.005f);
+                currentRadius += pulse * 5.0f;
+
+                // Можно использовать другой цвет, например желтый
+                starColor = XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f); // Желтый
             }
+            else
+            {
+                // Для поврежденных звезд - серый цвет
+                starColor = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.7f); // Серый с прозрачностью
+            }
+
+            // Устанавливаем цвет звезды
+            ConstBuf::global[0] = starColor;
+            ConstBuf::Update(5, ConstBuf::global);
+            ConstBuf::ConstToPixel(5);
+
+            if (currentRadius > 0)
+            {
+                point.draw(worldPoint, currentRadius);
+            }
+
+            // Восстанавливаем стандартный цвет
+            ConstBuf::global[0] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+            ConstBuf::Update(5, ConstBuf::global);
         }
     }
 
@@ -514,8 +555,7 @@ namespace drawer
         drawString(progressText.c_str(), p.x, p.y, 1, true);
     }
 
-    bool isBattleActive = false;
-    DWORD battleStartTime;
+    
 
 
     void UpdateGame() {
@@ -581,36 +621,25 @@ namespace drawer
         }
     }
 
-    bool CheckSwordStarCollision(const point3d& swordStart, const point3d& swordEnd,
-        const point3d& starPos, float starRadius) {
-        // Вектор направления атаки меча
-        point3d swordDir = swordEnd - swordStart;
-        float swordLength = swordDir.magnitude();
-        swordDir = swordDir.normalized();
+    bool CheckRaySphereCollision(const point3d& rayStart, const point3d& rayDir,
+        const point3d& sphereCenter, float sphereRadius)
+    {
+        // Проверка валидности входных параметров
+        if (sphereRadius <= 0 || isnan(rayDir.x))return false;
+        
 
-        // Вектор от начала атаки к центру звезды
-        point3d toStar = starPos - swordStart;
+            point3d toSphere = sphereCenter - rayStart;
+            float projection = toSphere.dot(rayDir);
 
-        // Проекция вектора toStar на направление атаки
-        float projection = toStar.dot(swordDir);
+            // Если сфера позади луча и не пересекается
+            if (projection < 0 && toSphere.magnitude() > sphereRadius) {
+                return false;
+            }
 
-        // Ближайшая точка на линии атаки к центру звезды
-        point3d closestPoint;
-        if (projection < 0) {
-            closestPoint = swordStart;
-        }
-        else if (projection > swordLength) {
-            closestPoint = swordEnd;
-        }
-        else {
-            closestPoint = swordStart + swordDir * projection;
-        }
+        point3d closestPoint = rayStart + rayDir * projection;
+            float distanceSquared = (closestPoint - sphereCenter).dot(closestPoint - sphereCenter);
 
-        // Расстояние от ближайшей точки до центра звезды
-        float distance = (closestPoint - starPos).magnitude();
-
-        // Если расстояние меньше радиуса - есть коллизия
-        return distance < starRadius;
+        return distanceSquared < (sphereRadius * sphereRadius);
     }
 
     struct StarProjectile {
@@ -623,14 +652,19 @@ namespace drawer
     void UpdateAttackStars(float deltaTime) {
         // Обновляем позиции звёзд по их индивидуальным направлениям
         for (auto& star : attackStars) {
-            star.position += star.direction.normalized() * 2.0f * deltaTime;
+            star.position += star.direction.normalized() * 50.0f * deltaTime;
         }
     }
 
     void DrawAttackStars() {
         // Отрисовываем все звёзды
         for (StarProjectile& star : attackStars) {
-           star.position.draw(star.position, 5.0f);
+            // Рисуем линию от начальной позиции до текущей
+            point3d endPos = star.position + star.direction * 100.f; // Удлиняем для визуализации
+            drawLine(star.position, endPos, 3.f);
+
+            // Рисуем саму звезду
+            star.position.draw(star.position, 15.0f);
         }
     }
 
@@ -640,7 +674,15 @@ namespace drawer
     point3d mouseRay;
     point3d start;
     void HandleMouseClick() {
+
+        if (!Hero::state.constellationOffset.r || !Camera::state.Eye.m128_f32[0]) {
+            OutputDebugStringA("Hero or Camera not initialized!\n");
+            return;
+        }
         if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 && currentTime - lastAttackTime > 500) {
+            if (gameState == gameState_::selectEnemy) {
+                gameState = gameState_::Fight;
+            }
             lastAttackTime = currentTime;
 
             // Получаем позицию героя
@@ -659,11 +701,11 @@ namespace drawer
             );
 
             mouseRay = GetMouseRay(mouse.pos);
-            point3d mousePos = camPos + mouseRay * 7500;
+            point3d mousePos = camPos + mouseRay * 6000;
             point3d newDirection = (mousePos - start).normalized();
 
             // Создаём звёзды с этим направлением
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 25; i++) {
                 StarProjectile newStar;
                 newStar.position = start;
                 newStar.direction = newDirection; // Фиксируем направление при создании
@@ -676,8 +718,8 @@ namespace drawer
                     XMVectorGetY(Camera::state.Right),
                     XMVectorGetZ(Camera::state.Right));
 
-                newStar.position += up * (i * 10 - 100);
-                newStar.position += right * (i * 10 - 100);
+                newStar.position += up * (i * 15 - 150); 
+                newStar.position += right * (i * 15 - 150);
 
                 attackStars.push_back(newStar);
             }
@@ -688,26 +730,38 @@ namespace drawer
     }
 
     void UpdateAttack(float deltaTime) {
+
+        if (starSet.empty() ||
+            currentEnemyID < 0 ||
+            currentEnemyID >= starSet.size() ||
+            !starSet[currentEnemyID] ||
+            starSet[currentEnemyID]->starsCords.empty()) {
+            OutputDebugStringA("Invalid attack state - resetting\n");
+            attackStars.clear();
+            return;
+        }
+        
+        if (!starSet[currentEnemyID]) return;
         if (isAttacking) {
-            // Проверяем коллизии только во время атаки
             Constellation& enemy = *starSet[currentEnemyID];
 
-            // Получаем мировые координаты звезд врага
             for (int i = 0; i < enemy.starsCords.size(); i++) {
-                if (enemy.starsHealth[i] <= 0) continue; // Пропускаем уничтоженные звезды
+                if (enemy.starsHealth[i] <= 0) continue;
 
+                // Получаем мировые координаты звезды с учетом трансформации
                 point3d starWorldPos = TransformPoint(enemy.starsCords[i], enemy.Transform);
 
-                // Проверяем коллизию с каждой звездой врага
+                // Для каждого снаряда проверяем расстояние до звезды
                 for (auto& star : attackStars) {
-                    if (CheckSwordStarCollision(start, star.position, starWorldPos, 1000.f)) {
-                        // Наносим урон звезде
-                        enemy.starsHealth[i] -= 10.f; // Примерное значение урона
+                    float distance = (star.position - starWorldPos).magnitude();
 
-                        // Можно добавить эффекты попадания
+                    // Используем явное сравнение расстояния с радиусом звезды
+                    if (CheckRaySphereCollision(star.position, star.direction,
+                        starWorldPos, 100.f)) { // 1000.f - радиус звезды
+                        enemy.starsHealth[i] -= 1.f;
+                        std::string enemyH = "HP: " + std::to_string(enemy.starsHealth[i]);
+                        drawString(enemyH.c_str(), window.width / 4, window.height / 4, 1.f,true);
                         ProcessSound("Damage.wav");
-
-                        // Прерываем проверку для этой звезды
                         break;
                     }
                 }
@@ -718,11 +772,10 @@ namespace drawer
 
         UpdateAttackStars(deltaTime);
 
-        // Очистка улетевших звёзд
         attackStars.erase(
             std::remove_if(attackStars.begin(), attackStars.end(),
                 [](const StarProjectile& star) {
-                    return (star.position - start).magnitude() > 7500.0f;
+                    return (star.position - start).magnitude() > 18000.0f;
                 }),
             attackStars.end());
     }
@@ -760,14 +813,14 @@ namespace drawer
             {
                 isPressed = true;
                 ProcessSound("Mouse_click1.wav");
-                point3d mousePos = point3d(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1));
+                point3d mousePos = point3d(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1),0);
                 DWORD curTime = timer::GetCounter();
 
                 for (int i = 0; i < 20; i++)
                 {
                     uiParticle* particle = new uiParticle;
                     particle->pos = mousePos;
-                    particle->vel = point3d(GetRandom(-100, 100), GetRandom(-100, 100)).normalized() * point3d(aspect, 1) * (float)GetRandom(8, 30) / 100.0f * 0.002f;
+                    particle->vel = point3d(GetRandom(-100, 100), GetRandom(-100, 100), 0).normalized()* point3d(aspect, 1, 0) * (float)GetRandom(8, 30) / 100.0f * 0.002f;
                     particle->lifetime = GetRandom(500, 1500);
                     particle->startTime = curTime;
 
@@ -854,7 +907,7 @@ namespace drawer
             Camera::state.mouse = true;
             Depth::Depth(Depth::depthmode::off);
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-            uiFunc = &constSelectUI;
+           
 
             drawStarField();
             Shaders::vShader(1);
@@ -870,9 +923,9 @@ namespace drawer
             Constellation& c = *starSet[0]; // Используем текущего врага
 
             c.Transform = CreateEnemyToWorldMatrix(c);
+            
            
             drawСonstellation(c,false,1000.f,100.f);
-           
 
             HandleMouseClick();
             UpdateAttack(deltaTime);
@@ -902,6 +955,10 @@ namespace drawer
 
         case gameState_::Fight:
         {
+            if (starSet.empty() || currentEnemyID < 0 || currentEnemyID >= starSet.size()) {
+                gameState = gameState_::selectEnemy;
+                break;
+            }
             
             if (t) {
                 t = false;
@@ -959,7 +1016,7 @@ namespace drawer
                 }
             }
             
-
+            
             //ProjectileUpdate(deltaTime);
             //FireProjectile();
             //WeaponRender();
@@ -1057,6 +1114,29 @@ namespace drawer
                 isShakingHero = false;
             }
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+            if (starSet.empty() || currentEnemyID < 0 || currentEnemyID >= starSet.size()) {
+                gameState = gameState_::selectEnemy;
+                break;
+            }
+
+            // Безопасный вызов функций атаки
+            Constellation& enemy = *starSet[currentEnemyID];
+            Constellation& player = *starSet[player_sign];
+
+            // Обновление атак
+            HandleMouseClick();
+            UpdateAttack(deltaTime);
+            DrawSwordAttack();
+
+            // Проверка условий победы/поражения
+            if (getConstellationHP(enemy) <= 0) {
+                gameState = gameState_::WinFight;
+            }
+            else if (getConstellationHP(player) <= 0) {
+                gameState = gameState_::EndFight;
+            }
+
 
             Constellation& c = *starSet[player_sign];
             c.Transform = CreateHeroToWorldMatrix(c);

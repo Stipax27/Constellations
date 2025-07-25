@@ -5,28 +5,32 @@ constexpr float def_size = 10;
 
 class point3d {
 public:
-    float x, y, z;
+    float x = 0.0f;
+    float y = 0.0f;
+    float z = 0.0f;
+
+    // Конструкторы
+    point3d() = default;
+    point3d(float X, float Y, float Z) : x(X), y(Y), z(Z) {}
+    explicit point3d(float val) : x(val), y(val), z(val) {}
 
 
-    point3d(float X = 0.0f, float Y = 0.0f, float Z = 0.0f)
-        : x(X), y(Y), z(Z)
-    {}
+    float magnitude() const {
+        
+        float xx = isnan(x) ? 0.0f : x;
+        float yy = isnan(y) ? 0.0f : y;
+        float zz = isnan(z) ? 0.0f : z;
 
-
-    float magnitude() {
-        return sqrt(x * x + y * y + z * z);
+        return sqrt(xx * xx + yy * yy + zz * zz);
     }
 
-    inline point3d normalized() {
-        float length = magnitude();
-        if (length > 0)
-        {
-            return *this / magnitude();
+    // Улучшенный normalized
+    point3d normalized() const {
+        float mag = magnitude();
+        if (mag <= std::numeric_limits<float>::epsilon()) {
+            return point3d(0.0f, 1.0f, 0.0f); // Возвращаем вектор по умолчанию
         }
-        else
-        {
-            return point3d(0.0f, 1.0f);
-        }
+        return *this / mag;
     }
 
     inline point3d lerp(const point3d& other, float a)

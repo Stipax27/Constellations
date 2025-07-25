@@ -33,6 +33,8 @@ DWORD currentTime;
 DWORD lastFrameTime = 0;
 DWORD deltaTime = 0;
 ID2D1SolidColorBrush* d2dBrush = nullptr;
+bool isBattleActive = false;
+DWORD battleStartTime;
 
 HWND hWnd;
 #include "utils.h"

@@ -95,30 +95,31 @@ void menuProject(point3d& p)
 
 void constSelectUI(point3d& point, Constellation& Constellation, int i)
 {
-    std::vector <float>& starHealth = Constellation.starsHealth;
-
     float dx = point.x - mouse.pos.x;
     float dy = point.y - mouse.pos.y;
     float lenght = sqrt(dx * dx + dy * dy);
-
-    float rad = saturate(1.2 - lenght * .05) * fabs(sin(currentTime * .01));
 
     if (GetAsyncKeyState(VK_LBUTTON))
     {
         if (lenght < starSize)
         {
-            //SelectObject(window.context, brush2);
-            gameState = gameState_::Fight;
-            currentEnemy = &Constellation;
-            currentEnemyID = (ZodiacSign)(currentEnemy->ID);
+            // Only transition if this is an enemy constellation (not player's)
+            if (Constellation.ID != player_sign)
+            {
+                gameState = gameState_::Fight;
+                currentEnemy = &Constellation;
+                currentEnemyID = (ZodiacSign)Constellation.ID;
+
+                // Initialize fight-specific variables
+                    isBattleActive = true;
+                battleStartTime = currentTime;
+
+                // Reset camera for fight
+                Camera::state.camDist = 100;
+                Camera::state.mouse = true;
+            }
         }
     }
-    else
-    {
-        //SelectObject(window.context, brush);
-    }
-
-    
 }
 
 float get_lenghts(point3d& point1, point3d& point2)
