@@ -228,10 +228,6 @@ public:
         return sqrt(dx * dx + dy * dy + dz * dz);
     }
 
-    // Альтернативное название (если предпочитаете)
-    float distance_to(const point3d& other) const {
-        return DistanceTo(other);
-    }
 
 };
 

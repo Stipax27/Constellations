@@ -1,4 +1,4 @@
-﻿float finalStarRad = 0;
+﻿
 float attackStartTime = 0;
 float line_hit;
 float attack_time;
@@ -118,7 +118,7 @@ void constSelectUI(point3d& point, Constellation& Constellation, int i)
         //SelectObject(window.context, brush);
     }
 
-    finalStarRad = starSize * starHealth[i] + rad * 15;
+    
 }
 
 float get_lenghts(point3d& point1, point3d& point2)
@@ -139,7 +139,7 @@ void starIntersectUI(point3d& point, Constellation& Constellation, int i)
     float lenght = sqrt(dx * dx + dy * dy);
 
     float rad = saturate(1.2 - lenght * .05) * fabs(sin(currentTime * .01));
-    finalStarRad = starSize * starHealth[i] + rad * 15;
+    
 
     float line_x = get_lenghts(attack[0], attack[1]);
     float line_y = get_lenghts(attack[0], point);
@@ -262,12 +262,12 @@ void heroUI(point3d& point, Constellation& Constellation, int i)
     {
         //SelectObject(window.context, brush);
     }
-    finalStarRad = 3 * starHealth[i] + rad * 15;
+   
 }
 
 void menuUI(point3d& point, Constellation& Constellation, int i)
 {
-    finalStarRad = 5;
+    
 }
 
 void placeConstToStartMenu(point3d& p, Constellation& Constellation)

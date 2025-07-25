@@ -16,18 +16,19 @@ namespace drawer
     }
 
     void drawLine(point3d& p1, point3d& p2)
+    void drawLine(point3d& p1, point3d& p2 , float sz = 2.f )
     {
         point3d vector = p2 - p1;
         point3d mid = p1.lerp(p2, 0.5f);
 
-        float sz = 1;
+        
 
         ConstBuf::ConstToVertex(4);
         ConstBuf::ConstToPixel(4);
 
 
-        ConstBuf::global[0] = XMFLOAT4(p1.x, p1.y, p1.z, 1.0f);
-        ConstBuf::global[1] = XMFLOAT4(p2.x, p2.y, p2.z, 1.0f);
+        ConstBuf::global[0] = XMFLOAT4(p1.x, p1.y, p1.z, sz);
+        ConstBuf::global[1] = XMFLOAT4(p2.x, p2.y, p2.z, sz);
 
         ConstBuf::Update(5, ConstBuf::global);
         ConstBuf::ConstToVertex(5);
@@ -35,7 +36,7 @@ namespace drawer
         Draw::elipse(1);
     }
 
-    void drawLinks(Constellation& Constellation)
+    void drawLinks(Constellation& Constellation,float sz)
     {
         std::vector <point3d>& starArray = Constellation.starsCords;
         std::vector<std::vector<float>>& starEdges = Constellation.constellationEdges;
@@ -49,12 +50,12 @@ namespace drawer
 
             if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0) // - Стало
             {
-                drawLine(point1, point2);
+                drawLine(point1, point2,sz);
             }
         }
     }
 
-    void drawStarPulse(Constellation& Constellation, bool colorOverride = false)
+    void drawStarPulse(Constellation& Constellation, bool colorOverride = false, float finalStarRad = 10.f )
     {
         std::vector <point3d>& starArray = Constellation.starsCords;
         std::vector <float>& starHealth = Constellation.starsHealth;
@@ -78,11 +79,11 @@ namespace drawer
             screenPoint.y *= window.height;
 
             // Пульсирование Звёзд при наведение мыши.
-            finalStarRad = 1;
-            if (uiFunc)
+            
+            /*if (uiFunc)
             {
                 uiFunc(screenPoint, Constellation, i);
-            }
+            }*/
 
             
             if (finalStarRad > 0)
@@ -92,17 +93,17 @@ namespace drawer
         }
     }
 
-    void drawСonstellation(Constellation& Constellation, bool colorOverride = false)
+    void drawСonstellation(Constellation& Constellation, bool colorOverride = false , float finalStarRad = 10.f, float sz =2.f)
     {
         Shaders::vShader(1);
         Shaders::pShader(1);
 
-        drawStarPulse(Constellation, colorOverride);
+        drawStarPulse(Constellation, colorOverride, finalStarRad);
 
         Shaders::vShader(4);
         Shaders::pShader(4);
 
-        drawLinks(Constellation);
+        drawLinks(Constellation,sz);
     }
 
     void drawStarField()
@@ -800,32 +801,14 @@ namespace drawer
             Constellation& playerConst = *starSet[player_sign];
             playerConst.Transform = CreateHeroToWorldMatrix(playerConst);
 
-            
-            XMVECTOR playerPosition = playerConst.Transform.r[3];
-            point3d playerPos = point3d(
-                XMVectorGetX(playerPosition),
-                XMVectorGetY(playerPosition),
-                XMVectorGetZ(playerPosition)
-            );
 
-            for (int i = 0; i < starSet.size(); i++) {
-                if (i == player_sign) continue;
+           
+            Constellation& c = *starSet[0]; // Используем текущего врага
 
-                Constellation& c = *starSet[0];
-                c.Transform = CreateEnemyToWorldMatrix(c);
-                // Получаем текущую позицию врага
-                point3d enemyPos = point3d(
-                    XMVectorGetX(c.Transform.r[3]),
-                    XMVectorGetY(c.Transform.r[3]),
-                    XMVectorGetZ(c.Transform.r[3])
-                );
-
-               
-                c.ai.AiUpdate(playerPos, enemyPos, c.Transform);
-
-               
-                drawСonstellation(c);
-            }
+            c.Transform = CreateEnemyToWorldMatrix(c);
+           
+            drawСonstellation(c,false,1000.f,100.f);
+           
 
             HandleMouseClick();
             UpdateAttack(deltaTime);
@@ -845,7 +828,6 @@ namespace drawer
            // drawString("X", 0, 0, 1, false);
            // drawString(std::to_string(mouse.pos.y).c_str(), 0, 0, 1, false);
 
-            break;
         }
         case gameState_::DialogStruct:
             initContentData();
@@ -951,7 +933,7 @@ namespace drawer
                 Constellation& h = *starSet[currentEnemyID];
                 h.Transform = CreateEnemyToWorldMatrix(h);
                 Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-                drawСonstellation(*starSet[currentEnemyID]);
+                drawСonstellation(*starSet[currentEnemyID],false, 1000.f, 100.f);
 
                 //linksDivider = 15;
                 modelTransform = &placeHeroToWorld;
@@ -976,7 +958,7 @@ namespace drawer
                 Constellation& c = *starSet[currentEnemyID];
 
                 c.Transform = CreateEnemyToWorldMatrix(c);
-                drawСonstellation(*starSet[currentEnemyID]);
+                drawСonstellation(*starSet[currentEnemyID],false, 1000.f, 100.f);
             }
 
             if (GetAsyncKeyState('P')) {
