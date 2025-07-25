@@ -15,6 +15,7 @@ const float PI = 3.1415926535897;
 #include <deque>
 #include "timer.h"
 #include <d2d1.h>
+#include <mmsystem.h> 
 #pragma comment(lib, "d2d1.lib")
 
 HINSTANCE hInst;

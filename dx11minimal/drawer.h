@@ -15,7 +15,7 @@ namespace drawer
         }
     }
 
-    void drawLine(point3d& p1, point3d& p2)
+    
     void drawLine(point3d& p1, point3d& p2 , float sz = 2.f )
     {
         point3d vector = p2 - p1;
@@ -650,6 +650,7 @@ namespace drawer
             }
 
             isAttacking = true;
+            ProcessSound("Sword.wav");
         }
     }
 
@@ -674,9 +675,11 @@ namespace drawer
         Shaders::vShader(1);
         Shaders::pShader(1);
         Blend::Blending(Blend::blendmode::on);
-
+       
         DrawAttackStars();
     }
+
+    
 
 
     struct uiParticle
@@ -693,9 +696,11 @@ namespace drawer
     {
         if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
         {
+           
             if (!isPressed)
             {
                 isPressed = true;
+                ProcessSound("Mouse_click1.wav");
                 point3d mousePos = point3d(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1));
                 DWORD curTime = timer::GetCounter();
 

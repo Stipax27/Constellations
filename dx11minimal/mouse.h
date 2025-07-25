@@ -103,3 +103,8 @@ point3d GetMouseRay(point3d pos)
 
     return rayWorld;
 }
+
+void ProcessSound(const char* name)//проигрывание аудиофайла в формате .wav, файл должен лежать в той же папке где и программа
+{
+    PlaySound(TEXT(name), NULL, SND_FILENAME | SND_ASYNC);//переменная name содежрит имя файла. флаг ASYNC позволяет проигрывать звук паралельно с исполнением программы
+}
