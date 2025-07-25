@@ -89,7 +89,7 @@ public:
         XMMATRIX toOrigin = XMMatrixTranslationFromVector(-heroPosition);
 
         // 3. Матрица вращения
-        XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(Hero::state.currentRotation);
+        XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(Hero::state.currentRotation);//
 
         // 4. Матрица масштабирования
         XMMATRIX scaleMatrix = XMMatrixScaling(c.scale, c.scale, c.scale);
