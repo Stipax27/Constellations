@@ -580,6 +580,39 @@ namespace drawer
             }
         }
     }
+
+    bool CheckSwordStarCollision(const point3d& swordStart, const point3d& swordEnd,
+        const point3d& starPos, float starRadius) {
+        // Вектор направления атаки меча
+        point3d swordDir = swordEnd - swordStart;
+        float swordLength = swordDir.magnitude();
+        swordDir = swordDir.normalized();
+
+        // Вектор от начала атаки к центру звезды
+        point3d toStar = starPos - swordStart;
+
+        // Проекция вектора toStar на направление атаки
+        float projection = toStar.dot(swordDir);
+
+        // Ближайшая точка на линии атаки к центру звезды
+        point3d closestPoint;
+        if (projection < 0) {
+            closestPoint = swordStart;
+        }
+        else if (projection > swordLength) {
+            closestPoint = swordEnd;
+        }
+        else {
+            closestPoint = swordStart + swordDir * projection;
+        }
+
+        // Расстояние от ближайшей точки до центра звезды
+        float distance = (closestPoint - starPos).magnitude();
+
+        // Если расстояние меньше радиуса - есть коллизия
+        return distance < starRadius;
+    }
+
     struct StarProjectile {
         point3d position;
         point3d direction;  // Индивидуальное направление для каждой звезды
@@ -656,18 +689,44 @@ namespace drawer
 
     void UpdateAttack(float deltaTime) {
         if (isAttacking) {
+            // Проверяем коллизии только во время атаки
+            Constellation& enemy = *starSet[currentEnemyID];
+
+            // Получаем мировые координаты звезд врага
+            for (int i = 0; i < enemy.starsCords.size(); i++) {
+                if (enemy.starsHealth[i] <= 0) continue; // Пропускаем уничтоженные звезды
+
+                point3d starWorldPos = TransformPoint(enemy.starsCords[i], enemy.Transform);
+
+                // Проверяем коллизию с каждой звездой врага
+                for (auto& star : attackStars) {
+                    if (CheckSwordStarCollision(start, star.position, starWorldPos, 1000.f)) {
+                        // Наносим урон звезде
+                        enemy.starsHealth[i] -= 10.f; // Примерное значение урона
+
+                        // Можно добавить эффекты попадания
+                        ProcessSound("Damage.wav");
+
+                        // Прерываем проверку для этой звезды
+                        break;
+                    }
+                }
+            }
+
             isAttacking = false;
         }
+
         UpdateAttackStars(deltaTime);
 
-        // Очистка улетевших звёзд (опционально)
+        // Очистка улетевших звёзд
         attackStars.erase(
             std::remove_if(attackStars.begin(), attackStars.end(),
-                [](StarProjectile& star) {
-                    return (star.position - point3d(XMVectorGetX(Hero::state.heroPosition), XMVectorGetY(Hero::state.heroPosition), XMVectorGetZ(Hero::state.heroPosition))).magnitude() > 7500.0f;
+                [](const StarProjectile& star) {
+                    return (star.position - start).magnitude() > 7500.0f;
                 }),
             attackStars.end());
     }
+
 
     void DrawSwordAttack() {
         if (isAttacking) return;
@@ -801,7 +860,7 @@ namespace drawer
             Shaders::vShader(1);
             Shaders::pShader(1);
 
-            drawGalaxyFog(7);
+            //drawGalaxyFog(7);
 
             Constellation& playerConst = *starSet[player_sign];
             playerConst.Transform = CreateHeroToWorldMatrix(playerConst);
@@ -869,7 +928,7 @@ namespace drawer
 
             drawStarField();
             //drawStars();
-            drawGalaxyFog(7);
+            //drawGalaxyFog(7);
 
 
             modelTransform = &placeConstToWorld;

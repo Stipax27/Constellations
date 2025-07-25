@@ -228,6 +228,10 @@ public:
         return sqrt(dx * dx + dy * dy + dz * dz);
     }
 
+    float dot(const point3d& other) const {
+        return x * other.x + y * other.y + z * other.z;
+    }
+
 
 };
 
