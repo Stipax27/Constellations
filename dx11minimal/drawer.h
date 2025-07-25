@@ -702,7 +702,7 @@ namespace drawer
                 {
                     uiParticle* particle = new uiParticle;
                     particle->pos = mousePos;
-                    particle->vel = point3d(GetRandom(-100, 100), GetRandom(-100, 100)).normalized() * (float)GetRandom(5, 25) / 100.0f * 0.002f;
+                    particle->vel = point3d(GetRandom(-100, 100), GetRandom(-100, 100)).normalized() * point3d(aspect, 1) * (float)GetRandom(8, 30) / 100.0f * 0.002f;
                     particle->lifetime = GetRandom(500, 1500);
                     particle->startTime = curTime;
 
@@ -740,7 +740,7 @@ namespace drawer
                 context->Draw(6, 0);
 
                 particle->pos += particle->vel * deltaTime;
-                particle->vel *= 0.95f;
+                particle->vel *= 0.92f;
 
                 i++;
             }
@@ -856,13 +856,6 @@ namespace drawer
 
         case gameState_::Fight:
         {
-            if (AriesNebula.defeatTime >= 0 && ConstBuf::factors.AriesNebulaLerpFactor < 1)
-            {
-                ConstBuf::factors.AriesNebulaLerpFactor = min((ConstBuf::frame.time.x - AriesNebula.defeatTime) / 150.0f, 1);
-                ConstBuf::UpdateFactors();
-                ConstBuf::ConstToVertex(6);
-                ConstBuf::ConstToPixel(6);
-            }
             
             if (t) {
                 t = false;
@@ -986,6 +979,10 @@ namespace drawer
                 drawСonstellation(*starSet[currentEnemyID]);
             }
 
+            if (GetAsyncKeyState('P')) {
+                gameState = gameState_::WinFight;
+            }
+
             if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true)
             {
                 isDamageTaken = true;
@@ -993,7 +990,7 @@ namespace drawer
             }
 
             modelTransform = &placeConstToWorld;
-            DrawStarsHP(window.context);
+            //DrawStarsHP(window.context);
 
             //linksDivider = 15;
             modelTransform = &placeHeroToWorld;
@@ -1031,7 +1028,7 @@ namespace drawer
             drawCurrentElement();
 
            drawString("Weapon selection:\nButton 1 - Sword \nButton 2 - Shield \nButton 3 - Bow ", (1700. / 2560) * window.width, (1100. / 1440) * window.height, .7f, false);
-           drawString("Rewind time:\nbutton - E", (500. / 2560) * window.width, (1200. / 1440) * window.height, .7f, false);
+           drawString("Rewind time:\nbutton - R", (500. / 2560) * window.width, (1250. / 1440) * window.height, .7f, false);
            drawString("TUTORIAL:\nTo hit an enemy with a sword,\npress LMB and draw a line along the enemy star\nTo hit with a shield,\npress LMB and draw a line that will draw a circle that attacks stars\nTo hit with a bow,\npress LMB on the star and draw a vector in any direction from the star.", (60. / 2560) * window.width, (60. / 1440) * window.height, .7f, false);
 
             float cdTimeOut = 1. - (currentTime - attack_cooldown) / 5000.;
@@ -1055,7 +1052,127 @@ namespace drawer
         }
         case gameState_::WinFight:
         {
-            winFight();
+            //winFight();
+
+            if (AriesNebula.defeatTime >= 0)
+            {
+                if (ConstBuf::factors.AriesNebulaLerpFactor < 1)
+                {
+                    ConstBuf::factors.AriesNebulaLerpFactor = min((ConstBuf::frame.time.x - AriesNebula.defeatTime) / 150.0f, 1);
+                    ConstBuf::UpdateFactors();
+                    ConstBuf::ConstToVertex(6);
+                    ConstBuf::ConstToPixel(6);
+                }
+            }
+            else
+            {
+                AriesNebula.defeatTime = ConstBuf::frame.time.x;
+            }
+
+            if (t) {
+                t = false;
+                Camera::state.camDist = 100;
+            }
+            Camera::state.mouse = true;
+            Depth::Depth(Depth::depthmode::off);
+
+            modelTransform = &placeToWorld;
+            modelProject = &fightProject;
+            uiFunc = &starIntersectUI;
+
+            drawStarField();
+            //drawStars();
+            drawGalaxyFog(7);
+
+
+            modelTransform = &placeConstToWorld;
+
+            srand(currentTime);
+
+            //DrawHpEnemyBar();
+            modelTransform = &placeConstToWorld;//Враг
+
+            lastFrameTime = currentTime;
+
+            if (!GetAsyncKeyState(VK_LBUTTON))
+            {
+                if (attack_collision == true and attackCooldown == true)
+                {
+                    attack_cooldown = currentTime;
+                    attackCooldown = false;
+                    check_attack = false;
+                    attackStartTime = currentTime;
+
+                }
+                Constellation& h = *starSet[currentEnemyID];
+                h.Transform = CreateEnemyToWorldMatrix(h);
+                Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+                drawСonstellation(*starSet[currentEnemyID]);
+
+                //linksDivider = 15;
+                modelTransform = &placeHeroToWorld;
+                uiFunc = &heroUI;
+                Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+                //Constellation& c = *starSet[player_sign];
+                //c.Transform = CreateHeroToWorldMatrix(c);
+                //drawСonstellation(*starSet[player_sign]);//Игрок
+
+                if (attack_collision == true)
+                {
+                    check_attack = true;
+                    attack_collision = false;
+                    attack_speed = false;
+                }
+            }
+            else
+            {
+                uiFunc = NULL;
+                Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+                Constellation& c = *starSet[currentEnemyID];
+
+                c.Transform = CreateEnemyToWorldMatrix(c);
+                drawСonstellation(*starSet[currentEnemyID]);
+            }
+
+            modelTransform = &placeConstToWorld;
+            //DrawStarsHP(window.context);
+
+            //linksDivider = 15;
+            modelTransform = &placeHeroToWorld;
+            uiFunc = &heroUI;
+
+            modelTransform = NULL;
+            uiFunc = NULL;
+
+            if (isDamageHero)
+            {
+                isDamageHero = false;
+                isShakingHero = true;
+                shakeStartTimeHero = currentTime;
+            }
+
+            if (currentTime > shakeStartTimeHero + shakeDurationHero)
+            {
+                isShakingHero = false;
+            }
+            Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+            Constellation& c = *starSet[player_sign];
+            c.Transform = CreateHeroToWorldMatrix(c);
+            drawСonstellation(*starSet[player_sign]);
+
+            std::string curentSignstring = zodiacSignToString(currentEnemyID);
+            drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);
+
+            curentSignstring = zodiacSignToString(player_sign);
+            drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 7., 1, true);
+
+
+            //drawCurrentElement();
+
+            //UpdateGame();
+
             break;
         }
         case gameState_::Exploring:
@@ -1068,7 +1185,7 @@ namespace drawer
 
 
         Depth::Depth(Depth::depthmode::off);
-        if (gameState != gameState_::selectEnemy && gameState != gameState_::Fight)
+        if (gameState != gameState_::selectEnemy && gameState != gameState_::Fight && gameState != gameState_::WinFight)
         {
             drawCursor(6);
             CreateCursorParticles();

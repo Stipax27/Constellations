@@ -97,6 +97,6 @@ float4 PS(VS_OUTPUT input) : SV_Target
 {
     float c = star(input.uv);
 
-    return float4(0, c, 0, c);
+    return float4(c, c, 0, c);
 
 }
