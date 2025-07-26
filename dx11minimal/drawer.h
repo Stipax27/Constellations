@@ -684,7 +684,7 @@ namespace drawer
             if (gameState == gameState_::selectEnemy) {
                 gameState = gameState_::Fight;
                 mciSendString(TEXT("stop ..\\dx11minimal\\GG_C.mp3"), NULL, 0, NULL);
-                mciSendString(TEXT("play ..\\dx11minimal\\Oven_C.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("play ..\\dx11minimal\\Oven_NEW.mp3"), NULL, 0, NULL);
             }
             lastAttackTime = currentTime;
 
@@ -1184,7 +1184,7 @@ namespace drawer
 
             if (GetAsyncKeyState('P')) {
                 gameState = gameState_::WinFight;
-                mciSendString(TEXT("stop ..\\dx11minimal\\Oven_C.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("stop ..\\dx11minimal\\Oven_NEW.mp3"), NULL, 0, NULL);
                 mciSendString(TEXT("play ..\\dx11minimal\\GG_C.mp3"), NULL, 0, NULL);
             }
 
@@ -1234,7 +1234,7 @@ namespace drawer
             // Проверка условий победы/поражения
             if (getConstellationHP(enemy) <= 0) {
                 gameState = gameState_::WinFight;
-                mciSendString(TEXT("stop ..\\dx11minimal\\Oven_C.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("stop ..\\dx11minimal\\Oven_NEW.mp3"), NULL, 0, NULL);
                 mciSendString(TEXT("play ..\\dx11minimal\\GG_C.mp3"), NULL, 0, NULL);
             }
             else if (getConstellationHP(player) <= 0) {
