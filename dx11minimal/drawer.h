@@ -757,7 +757,7 @@ namespace drawer
 
                     // Используем явное сравнение расстояния с радиусом звезды
                     if (CheckRaySphereCollision(star.position, star.direction,
-                        starWorldPos, 100.f)) { // 1000.f - радиус звезды
+                        starWorldPos, 1000.f)) { // 1000.f - радиус звезды
                         enemy.starsHealth[i] -= 1.f;
                         std::string enemyH = "HP: " + std::to_string(enemy.starsHealth[i]);
                         drawString(enemyH.c_str(), window.width / 4, window.height / 4, 1.f,true);
