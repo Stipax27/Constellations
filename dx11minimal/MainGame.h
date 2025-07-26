@@ -29,6 +29,8 @@ void InitGame()
     ConstBuf::ConstToPixel(7);
 
     // DELETE
+
+    mciSendString(TEXT("play ..\\dx11minimal\\GG_C.mp3"), NULL, 0, NULL);
 }
 
 bool drawClickableText(

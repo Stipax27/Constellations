@@ -680,8 +680,11 @@ namespace drawer
             return;
         }
         if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 && currentTime - lastAttackTime > 500) {
+
             if (gameState == gameState_::selectEnemy) {
                 gameState = gameState_::Fight;
+                mciSendString(TEXT("stop ..\\dx11minimal\\GG_C.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("play ..\\dx11minimal\\Oven_C.mp3"), NULL, 0, NULL);
             }
             lastAttackTime = currentTime;
 
@@ -1012,7 +1015,6 @@ namespace drawer
             Constellation& playerConst = *starSet[player_sign];
             playerConst.Transform = CreateHeroToWorldMatrix(playerConst);
 
-
            
             Constellation& c = *starSet[0]; // Используем текущего врага
 
@@ -1182,6 +1184,8 @@ namespace drawer
 
             if (GetAsyncKeyState('P')) {
                 gameState = gameState_::WinFight;
+                mciSendString(TEXT("stop ..\\dx11minimal\\Oven_C.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("play ..\\dx11minimal\\GG_C.mp3"), NULL, 0, NULL);
             }
 
             if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true)
@@ -1230,6 +1234,8 @@ namespace drawer
             // Проверка условий победы/поражения
             if (getConstellationHP(enemy) <= 0) {
                 gameState = gameState_::WinFight;
+                mciSendString(TEXT("stop ..\\dx11minimal\\Oven_C.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("play ..\\dx11minimal\\GG_C.mp3"), NULL, 0, NULL);
             }
             else if (getConstellationHP(player) <= 0) {
                 gameState = gameState_::EndFight;

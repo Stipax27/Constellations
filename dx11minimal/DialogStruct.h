@@ -1,4 +1,4 @@
-void renderContent();
+ï»¿void renderContent();
 void selectVariant(int variantIndex);
 void handleInput();
 void initContentData();
@@ -13,7 +13,7 @@ struct Dialog {
     std::vector<answer> variants;
 
     Dialog(const std::string& msg) : question(msg) {
-        std::cout << "Äèàëîã: " << question << std::endl;
+        std::cout << "Ð”Ð¸Ð°Ð»Ð¾Ð³: " << question << std::endl;
     }
 };
 
@@ -32,14 +32,14 @@ void initContentData() {
     if (initDialogs) return;
     initDialogs = true;
 
-    // Íà÷àëüíûå íàððàòèâíûå òåêñòû
+    // ÐÐ°Ñ‡Ð°Ð»ÑŒÐ½Ñ‹Ðµ Ð½Ð°Ñ€Ñ€Ð°Ñ‚Ð¸Ð²Ð½Ñ‹Ðµ Ñ‚ÐµÐºÑÑ‚Ñ‹
     narratives.push_back({ "MC: \"Who... am I?\" " });
     narratives.push_back({ "MC: \"And where?\" " });
     narratives.push_back({ "He instinctively tries to perform at least some action, \n as if wanting to wake up from a cold oblivion. \n A pleasant pulsation begins to spread through his being." });
     narratives.push_back({ "A pair of palms slid off his face,\n opening his eyes and allowing him to see the space around him that filled with dim light sources. \n His mind was trying to assess the situation around him,\n creating even more questions that he didn't know the answers to. \n It was if a shadow had enveloped his mind, leaving only fragmented thoughts..." });
     narratives.push_back({ "At this most desperate moment, he suddenly felt someone's powerful presence. \n A bright creature appeared in front of him, starting to resonate with his mind." });
 
-    // Îñíîâíàÿ öåïî÷êà äèàëîãîâ
+    // ÐžÑÐ½Ð¾Ð²Ð½Ð°Ñ Ñ†ÐµÐ¿Ð¾Ñ‡ÐºÐ° Ð´Ð¸Ð°Ð»Ð¾Ð³Ð¾Ð²
     Dialog d0("Zenith: \"I can hear the questions in your tiny mind, and I have the answers. \n I am Zenith, the being who rules this world, and You are my creation, which  '\n'I have formed for a specific purpose. '\n' You have appeared in a place beyond your limited understanding. \n The boundless space around you is a canvas on which the world takes shape, and you are just a shell. \n But even such an insignificant creature has a reason to exist...  \nFor example, to fulfill the will of your creator.\"");
 
     answer v0_1;
@@ -54,7 +54,7 @@ void initContentData() {
 
     dialogs.push_back(d0);
 
-    // Îòâåò íà ïåðâûé âàðèàíò
+    // ÐžÑ‚Ð²ÐµÑ‚ Ð½Ð° Ð¿ÐµÑ€Ð²Ñ‹Ð¹ Ð²Ð°Ñ€Ð¸Ð°Ð½Ñ‚
     Dialog d1("Zenith: \"My power is immense and can be destructive if \nI interfere with the delicate weaves of this world's destinies. \n But you... You are just a faint echo of my power, \n which is now responsible for the future fate of this universe. \n So open your mind and listen to my words!\"");
 
     answer v1_1;
@@ -64,7 +64,7 @@ void initContentData() {
 
     dialogs.push_back(d1);
 
-    // Îòâåò íà âòîðîé âàðèàíò
+    // ÐžÑ‚Ð²ÐµÑ‚ Ð½Ð° Ð²Ñ‚Ð¾Ñ€Ð¾Ð¹ Ð²Ð°Ñ€Ð¸Ð°Ð½Ñ‚
     Dialog d2("Zenith: \"You don't need to understand now. Just know that you were created for a great purpose, \n and in time all will become clear to you.\"");
 
     answer v2_1;
@@ -74,7 +74,7 @@ void initContentData() {
 
     dialogs.push_back(d2);
 
-    // Ïðîäîëæåíèå ñþæåòà
+    // ÐŸÑ€Ð¾Ð´Ð¾Ð»Ð¶ÐµÐ½Ð¸Ðµ ÑÑŽÐ¶ÐµÑ‚Ð°
     narratives.push_back({ "The star cluster is approaching and is beginning to take on clearer outlines, \n resembling a man that dressed in shimmering white robes.  \nHe waves his hand and small lights begin to circle around, \n which line up to form the shapes of constellations." });
 
     Dialog d3("Zenith: \"Do you see these bizarre connections in front of you? These are constellations. \n They represent a fundamental aspect of the natural order of things that maintain\n a delicate balance in this world. \n Among them, I will single out the oldest constellation: Aries. \n I learned that Aries was shrouded in a fog of corruption, \n a malevolent force that threatens to disrupt the harmony of existence.\"");
@@ -117,12 +117,12 @@ void initContentData() {
 
     answer v7_1;
     v7_1.text = "I'm ready";
-    v7_1.dialogLink = -1; // Êîíåö äèàëîãà
+    v7_1.dialogLink = -1; // ÐšÐ¾Ð½ÐµÑ† Ð´Ð¸Ð°Ð»Ð¾Ð³Ð°
     d7.variants.push_back(v7_1);
 
     dialogs.push_back(d7);
 
-    // Çàâåðøàþùèå íàððàòèâû
+    // Ð—Ð°Ð²ÐµÑ€ÑˆÐ°ÑŽÑ‰Ð¸Ðµ Ð½Ð°Ñ€Ñ€Ð°Ñ‚Ð¸Ð²Ñ‹
     /*narratives.push_back({ "START TUTORIAL" });
     narratives.push_back({ "Zenith: \"I'll show you how you should unleash your potential in battle. Let's get started.\""});
     narratives.push_back({ "AFTER TUTORIAL"});
@@ -144,7 +144,7 @@ void selectVariant(int variantIndex) {
     int nextDialogIndex = currentDialog.variants[variantIndex].dialogLink;
 
     if (nextDialogIndex == -1) {
-        // Êîíåö äèàëîãà
+        // ÐšÐ¾Ð½ÐµÑ† Ð´Ð¸Ð°Ð»Ð¾Ð³Ð°
         currentDialogs.clear();
     }
     else if (nextDialogIndex >= 0 && nextDialogIndex < dialogs.size()) {
@@ -202,8 +202,8 @@ void handleInput() {
     static double lastClickTime = 0.0;
 
     bool canClick = (currentTime - lastClickTime) >= 1.f;
-
-    if (drawClickableText("If you don't want to read \n Start Game", true, RGB(0, 191, 255), window.width / 2, (1200. / 1440) * window.height) && canClick) {
+    drawString("If you don't want to read \n Start Game Press T", window.width / 2, (1200. / 1440) * window.height,1.f,true);
+    if (GetAsyncKeyState('T') & 0x8000) {
         lastClickTime = currentTime;
         gameState = gameState_::selectEnemy;
         startTime = currentTime;
