@@ -1,3 +1,9 @@
+cbuffer demoDayBuffer : register(b7)
+{
+    int NebulaState;
+    int NebulaPixelState;
+};
+
 cbuffer factors : register(b6)
 {
     float AriesNebulaLerpFactor;
@@ -191,13 +197,41 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     starPos = randomPosition(starID) * range * 2 - range;
     starPos.y = 0.0;
 
-    float par = starPos.x * starPos.x + starPos.z * starPos.z;
-    starPos.y = cos(starPos.x / 100000 * PI) * cos(starPos.z / 100000 * PI) * -7500 + (par * lerp(16000, 12000, AriesNebulaLerpFactor)) / (lerp(60000000, 50000000, AriesNebulaLerpFactor) + par);
+    //float par = starPos.x * starPos.x + starPos.z * starPos.z;
+    //starPos.y = cos(starPos.x / 100000 * PI) * cos(starPos.z / 100000 * PI) * -7500 + (par * lerp(16000, 12000, AriesNebulaLerpFactor)) / (lerp(60000000, 50000000, AriesNebulaLerpFactor) + par);
     
-    starPos.y += noise(starPos.xzy * 0.131 * lerp(8, 5, AriesNebulaLerpFactor) * 0.00011 + float3(41.547, 14.631, 51.591) + time.x * -0.005) * lerp(5000, 4000, AriesNebulaLerpFactor);
+    //starPos.y += noise(starPos.xzy * 0.131 * lerp(8, 5, AriesNebulaLerpFactor) * 0.00011 + float3(41.547, 14.631, 51.591) + time.x * -0.005) * lerp(5000, 4000, AriesNebulaLerpFactor);
 
-    float3 n = voronoiNoise(starPos.xz * 0.131 * lerp(18, 12, AriesNebulaLerpFactor) * 0.00011 + time.x * 0.005 + float2(41.547, 14.631));
-    starPos.y -= n.x * n.y * n.z * lerp(35000, 10000, AriesNebulaLerpFactor);
+    //float3 n = voronoiNoise(starPos.xz * 0.131 * lerp(18, 12, AriesNebulaLerpFactor) * 0.00011 + time.x * 0.005 + float2(41.547, 14.631));
+    //starPos.y -= n.x * n.y * n.z * lerp(35000, 10000, AriesNebulaLerpFactor);
+
+
+
+    // DELETE
+
+    if (NebulaState > 0)
+    {
+        starPos.y = cos(starPos.x / 100000 * PI) * cos(starPos.z / 100000 * PI) * -7500;
+    }
+
+    if (NebulaState > 1)
+    {
+        float par = starPos.x * starPos.x + starPos.z * starPos.z;
+        starPos.y += (par * lerp(16000, 12000, AriesNebulaLerpFactor)) / (lerp(60000000, 50000000, AriesNebulaLerpFactor) + par);
+    }
+
+    if (NebulaState > 2)
+    {
+        starPos.y += noise(starPos.xzy * 0.131 * lerp(8, 5, AriesNebulaLerpFactor) * 0.00011 + float3(41.547, 14.631, 51.591) + time.x * -0.005) * lerp(5000, 4000, AriesNebulaLerpFactor);
+    }
+
+    if (NebulaState > 3)
+    {
+        float3 n = voronoiNoise(starPos.xz * 0.131 * lerp(18, 12, AriesNebulaLerpFactor) * 0.00011 + time.x * 0.005 + float2(41.547, 14.631));
+        starPos.y -= n.x * n.y * n.z * lerp(35000, 10000, AriesNebulaLerpFactor);
+    }
+
+    // DELETE
 
 
     //-----

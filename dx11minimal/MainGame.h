@@ -1,4 +1,4 @@
-bool isRewind = false;
+ï»¿bool isRewind = false;
 
 struct {
     int day, month;//?????????? ????????? ????? ? ?????????? "??????"
@@ -20,6 +20,15 @@ void InitGame()
     game.month = 13;
     startTime = currentTime;
 
+    // DELETE
+
+    ConstBuf::demoDayBuffer.NebulaState = 4;
+    ConstBuf::demoDayBuffer.NebulaPixelState = 3;
+    ConstBuf::UpdateDemoDayBuffer();
+    ConstBuf::ConstToVertex(7);
+    ConstBuf::ConstToPixel(7);
+
+    // DELETE
 }
 
 bool drawClickableText(
@@ -29,27 +38,27 @@ bool drawClickableText(
     int x = 0, int y = 0,
     float scale = 1.f)
 {
-    static std::string lastHoveredText; // Çàïîìèíàåì ïîñëåäíèé íàâåäåííûé òåêñò
+    static std::string lastHoveredText; // Ð—Ð°Ð¿Ð¾Ð¼Ð¸Ð½Ð°ÐµÐ¼ Ð¿Ð¾ÑÐ»ÐµÐ´Ð½Ð¸Ð¹ Ð½Ð°Ð²ÐµÐ´ÐµÐ½Ð½Ñ‹Ð¹ Ñ‚ÐµÐºÑÑ‚
     COLORREF COLOR_REGULAR = RGB(160, 160, 160);
 
-    // Ïåðâûé ïðîõîä - ïîëó÷àåì ðàçìåðû òåêñòà
+    // ÐŸÐµÑ€Ð²Ñ‹Ð¹ Ð¿Ñ€Ð¾Ñ…Ð¾Ð´ - Ð¿Ð¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ñ€Ð°Ð·Ð¼ÐµÑ€Ñ‹ Ñ‚ÐµÐºÑÑ‚Ð°
     point3d sz = drawString(text.c_str(), x, y, scale, true, true);
 
-    // Ïðîâåðÿåì íàâåäåíèå ìûøè
+    // ÐŸÑ€Ð¾Ð²ÐµÑ€ÑÐµÐ¼ Ð½Ð°Ð²ÐµÐ´ÐµÐ½Ð¸Ðµ Ð¼Ñ‹ÑˆÐ¸
     bool isHovered = (mouse.pos.x > x - sz.x / 2 && mouse.pos.x < x + sz.x / 2 &&
         mouse.pos.y > y && mouse.pos.y < y + sz.y);
 
-    // Ïðîèãðûâàåì çâóê òîëüêî ïðè ïåðâîì íàâåäåíèè íà ýòîò òåêñò
+    // ÐŸÑ€Ð¾Ð¸Ð³Ñ€Ñ‹Ð²Ð°ÐµÐ¼ Ð·Ð²ÑƒÐº Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð¿Ñ€Ð¸ Ð¿ÐµÑ€Ð²Ð¾Ð¼ Ð½Ð°Ð²ÐµÐ´ÐµÐ½Ð¸Ð¸ Ð½Ð° ÑÑ‚Ð¾Ñ‚ Ñ‚ÐµÐºÑÑ‚
     if (isHovered && lastHoveredText != text) {
         ProcessSound("Mouse_select.wav");
         lastHoveredText = text;
     }
-    // Ñáðàñûâàåì çàïîìíåííûé òåêñò, åñëè ìûøü íå íàä íèì
+    // Ð¡Ð±Ñ€Ð°ÑÑ‹Ð²Ð°ÐµÐ¼ Ð·Ð°Ð¿Ð¾Ð¼Ð½ÐµÐ½Ð½Ñ‹Ð¹ Ñ‚ÐµÐºÑÑ‚, ÐµÑÐ»Ð¸ Ð¼Ñ‹ÑˆÑŒ Ð½Ðµ Ð½Ð°Ð´ Ð½Ð¸Ð¼
     else if (!isHovered && lastHoveredText == text) {
         lastHoveredText.clear();
     }
 
-    // Óñòàíàâëèâàåì öâåò è ðèñóåì òåêñò
+    // Ð£ÑÑ‚Ð°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÐ¼ Ñ†Ð²ÐµÑ‚ Ð¸ Ñ€Ð¸ÑÑƒÐµÐ¼ Ñ‚ÐµÐºÑÑ‚
     textStyle.color = isHovered ? COLOR_HOVER : COLOR_REGULAR;
     drawString(text.c_str(), x, y, scale, center);
 
