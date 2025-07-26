@@ -15,6 +15,7 @@ const float PI = 3.1415926535897;
 #include <deque>
 #include "timer.h"
 #include <d2d1.h>
+#include <mmsystem.h> 
 #pragma comment(lib, "d2d1.lib")
 
 HINSTANCE hInst;
@@ -32,18 +33,22 @@ DWORD currentTime;
 DWORD lastFrameTime = 0;
 DWORD deltaTime = 0;
 ID2D1SolidColorBrush* d2dBrush = nullptr;
+bool isBattleActive = false;
+DWORD battleStartTime;
 
 HWND hWnd;
 #include "utils.h"
 #include "dx11.h"
 #include "Player.h"
 
+#include "AriesNebula.h"
+
 #include "MainWindow.h"
 #include "Point3d.h"
 #include "mouse.h"
 #include "font.h"
-#include "Navigation.h"
 #include "EnemyAi.h"
+#include "Navigation.h"
 #include "Constellation.h"
 #include "MainWorld.h"
 #include "DodgeEnemy.h"

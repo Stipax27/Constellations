@@ -513,6 +513,12 @@ namespace Shaders {
 
 		CreateVS(10, nameToPatchLPCWSTR("PP_VS.shader"));
 		CreatePS(10, nameToPatchLPCWSTR("PP_PS.shader"));
+
+		CreateVS(11, nameToPatchLPCWSTR("Cross_VS.shader"));
+		CreatePS(11, nameToPatchLPCWSTR("Cross_PS.shader"));
+
+		CreateVS(12, nameToPatchLPCWSTR("UiParticle_VS.shader"));
+		CreatePS(12, nameToPatchLPCWSTR("UiParticle_PS.shader"));
 	}
 
 	void vShader(unsigned int n)
@@ -596,7 +602,7 @@ namespace Sampler
 
 namespace ConstBuf
 {
-	ID3D11Buffer* buffer[6];
+	ID3D11Buffer* buffer[7];
 
 #define constCount 32
 
@@ -632,7 +638,7 @@ namespace ConstBuf
 	//b6
 	struct {
 		float AriesNebulaLerpFactor;
-	};
+	} factors;
 
 	int roundUp(int n, int r)
 	{
@@ -660,6 +666,7 @@ namespace ConstBuf
 		Create(buffer[3], sizeof(camera));
 		Create(buffer[4], sizeof(frame));
 		Create(buffer[5], sizeof(global));
+		Create(buffer[6], sizeof(factors));
 	}
 
 	template <typename T>
@@ -683,6 +690,11 @@ namespace ConstBuf
 		context->UpdateSubresource(ConstBuf::buffer[3], 0, NULL, &camera, 0, 0);
 	}
 
+	void UpdateFactors()
+	{
+		context->UpdateSubresource(ConstBuf::buffer[6], 0, NULL, &factors, 0, 0);
+	}
+
 	void ConstToVertex(int i)
 	{
 		context->VSSetConstantBuffers(i, 1, &buffer[i]);
@@ -695,9 +707,8 @@ namespace ConstBuf
 
 
 	namespace getbyname {
-		enum { drawerV, drawerP, drawerMat, camera, frame, global };
+		enum { drawerV, drawerP, drawerMat, camera, frame, global, factors };
 	}
-
 }
 
 

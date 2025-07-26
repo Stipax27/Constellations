@@ -62,8 +62,7 @@ float3 HSLToRGB(float3 hsl) {
 }
 
 float3 ApplyRainbowEffect() {
-    // Ќормализуем врем€ в диапазон [0, 1] дл€ Hue
-    float hue = frac(time * 0.01); // frac аналогичен %1.0
+    float hue = frac(time * 0.01);
     float saturation = 1.0;
     float lightness = 0.5;
 
@@ -72,10 +71,32 @@ float3 ApplyRainbowEffect() {
 }
 
 
+float3 rotZ(float3 pos, float a)
+{
+    float3x3 m =
+    {
+        cos(a), -sin(a),0,
+        sin(a), cos(a), 0,
+        0, 0, 1
+    };
+    pos = mul(pos, m);
+    return pos;
+}
+
+float star(float2 uv)
+{
+    float c = pow(sin(length(uv / 1.2 * 3.14)), 100) * 0.5;
+    c = saturate(c - saturate(1 - 12 * ((abs(uv.x) - 0.05) * (abs(uv.y) - 0.05))));
+    c += saturate((1 - (pow(abs(uv.x), 0.5) + pow(abs(uv.y), 0.5))) * 2);
+
+    return c;
+}
+
+
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-    float3 rainbowColor = ApplyRainbowEffect();
+    float c = star(input.uv);
 
-    return float4(rainbowColor, 1.);
+    return float4(c, c, 0, c);
 
 }

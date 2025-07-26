@@ -39,7 +39,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output;
 
-    const int arcSteps = 7;
+    const int arcSteps = 4;
     float angleStep = PI / (arcSteps - 1);
     const int vertsPerRoundedRect = (arcSteps - 1) * 3 * 2 + 6;
     uint rectIndex = vID / vertsPerRoundedRect;
@@ -48,7 +48,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     float2 arcB[arcSteps];
     float2 A = gConst[rectIndex * 2 + 0].xy;
     float2 B = gConst[rectIndex * 2 + 1].xy;
-    float r = 1.7f;
+    float r = 1.3f;
     float2 vec = B - A;
     float2 dir = normalize(vec);
     float2 perp = float2(-dir.y, dir.x);
@@ -85,7 +85,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     float2 quad[3 * (arcSteps - 1) * 2 + 6];
     int q = 0;
 
-    // Левая дуга
+    // ????? ????
     for (int i = 0; i < arcSteps - 1; ++i)
     {
         quad[q++] = centerA;
@@ -93,7 +93,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
         quad[q++] = arcA[i + 1];
     }
 
-    // Прямоугольник (2 треугольника)
+    // ????????????? (2 ????????????)
     quad[q++] = A1;
     quad[q++] = B1;
     quad[q++] = B2;
@@ -102,7 +102,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     quad[q++] = A2;
     quad[q++] = A1;
 
-    // Правая дуга
+    // ?????? ????
     for (int i = 0; i < arcSteps - 1; ++i)
     {
         quad[q++] = centerB;
@@ -110,10 +110,10 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
         quad[q++] = arcB[i + 1];
     }
 
-    float2 pos = quad[localV]; // позиция в "пикселях" или локальной системе
+    float2 pos = quad[localV]; // ??????? ? "????????" ??? ????????? ???????
 
-    float width = aspect.z;   // передай width в константный буфер
-    float height = aspect.w;  // и height
+    float width = aspect.z;   // ??????? width ? ??????????? ?????
+    float height = aspect.w;  // ? height
 
     float2 normalizedPos = float2(pos.x / width, pos.y / height) * 2.0f;
 

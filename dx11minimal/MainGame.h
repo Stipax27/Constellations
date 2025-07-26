@@ -1,8 +1,8 @@
 bool isRewind = false;
 
 struct {
-    int day, month;//количество набранных очков и оставшихс€ "жизней"
-    bool action = false;//состо€ние - ожидание (игрок должен нажать пробел) или игра
+    int day, month;//?????????? ????????? ????? ? ?????????? "??????"
+    bool action = false;//????????? - ???????? (????? ?????? ?????? ??????) ??? ????
 } game;
 
 enum menu_type {
@@ -23,24 +23,37 @@ void InitGame()
 }
 
 bool drawClickableText(
-    const std::string text,
+    const std::string& text,
     bool center,
     COLORREF COLOR_HOVER,
     int x = 0, int y = 0,
     float scale = 1.f)
 {
+    static std::string lastHoveredText; // «апоминаем последний наведенный текст
     COLORREF COLOR_REGULAR = RGB(160, 160, 160);
 
+    // ѕервый проход - получаем размеры текста
     point3d sz = drawString(text.c_str(), x, y, scale, true, true);
 
+    // ѕровер€ем наведение мыши
     bool isHovered = (mouse.pos.x > x - sz.x / 2 && mouse.pos.x < x + sz.x / 2 &&
         mouse.pos.y > y && mouse.pos.y < y + sz.y);
 
+    // ѕроигрываем звук только при первом наведении на этот текст
+    if (isHovered && lastHoveredText != text) {
+        ProcessSound("Mouse_select.wav");
+        lastHoveredText = text;
+    }
+    // —брасываем запомненный текст, если мышь не над ним
+    else if (!isHovered && lastHoveredText == text) {
+        lastHoveredText.clear();
+    }
+
+    // ”станавливаем цвет и рисуем текст
     textStyle.color = isHovered ? COLOR_HOVER : COLOR_REGULAR;
+    drawString(text.c_str(), x, y, scale, center);
 
-    drawString(text.c_str(), x, y, scale, true);
-
-    return isHovered && GetAsyncKeyState(VK_LBUTTON);
+    return isHovered && (GetAsyncKeyState(VK_LBUTTON) & 0x8000);
 }
 
 void drawCircularMenu(float circleRadius, float speed, string* items, int size, menu_type selectedType) {
@@ -116,7 +129,7 @@ void menuDayprocessing()
 
     drawCircularMenu(300, 0.00002, days, 31, second);
 
-    drawString(days[player_day - 1].c_str(), window.width / 2 + 800, window.height / 2., 1, true);// ¬ывод 1го числа 
+    drawString(days[player_day - 1].c_str(), window.width / 2 + 800, window.height / 2., 1, true);// ????? 1?? ????? 
 }
 
 void menuConfirmationButton()

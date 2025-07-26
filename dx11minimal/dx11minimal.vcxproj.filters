@@ -49,6 +49,9 @@
     <Filter Include="Header Files\Debug">
       <UniqueIdentifier>{0f14d95d-018a-42b9-bcae-16c829c4f63d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Locations">
+      <UniqueIdentifier>{0f106aa3-80e1-45eb-968f-e7ca2ee286b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -138,6 +141,18 @@
     <ClInclude Include="FpsCounter.h">
       <Filter>Header Files\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="EnemyAi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GalaxyFog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AriesNebula.h">
+      <Filter>Header Files\Locations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dx11minimal.cpp">
@@ -220,6 +235,18 @@
     </None>
     <None Include="PP_PS.shader">
       <Filter>Shaders\PostProcess</Filter>
+    </None>
+    <None Include="Cross_VS.shader">
+      <Filter>Shaders\Cursor</Filter>
+    </None>
+    <None Include="Cross_PS.shader">
+      <Filter>Shaders\Cursor</Filter>
+    </None>
+    <None Include="UiParticle_VS.shader">
+      <Filter>Shaders\UI</Filter>
+    </None>
+    <None Include="UiParticle_PS.shader">
+      <Filter>Shaders\UI</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

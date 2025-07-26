@@ -51,7 +51,7 @@ void updateFlyDirection() { // ��������� �������
     float x = mouse.pos.x - window.width / 2;
     float y = mouse.pos.y - window.height / 2;
 
-    point3d mousePos = point3d(x / window.width / aspect, y / window.height);
+    point3d mousePos = point3d(x / window.width / aspect, y / window.height,0);
     float length = mousePos.magnitude();
 
     if (length > CURSOR_IGNORE_ZONE)

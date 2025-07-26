@@ -50,7 +50,7 @@ namespace WorldRender
         }
     }
 
-    void drawStarPulse(Constellation& Constellation, bool colorOverride = false)
+    void drawStarPulse(Constellation& Constellation, bool colorOverride = false , float finalStarRad = 10.f)
     {
         std::vector <point3d>& starArray = Constellation.starsCords;
         std::vector <float>& starHealth = Constellation.starsHealth;
@@ -74,13 +74,8 @@ namespace WorldRender
             screenPoint.y *= window.height;
 
             // Пульсирование Звёзд при наведение мыши.s
-            finalStarRad = 1;
-            if (uiFunc)
-            {
-                uiFunc(screenPoint, Constellation, i);
-            }
-
-
+           
+            
             if (finalStarRad > 0)
             {
                 point.draw(worldPoint, finalStarRad);

@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AriesNebula.h" />
     <ClInclude Include="Constellation.h" />
     <ClInclude Include="DialogStruct.h" />
     <ClInclude Include="DiologTEXT.h" />
@@ -139,6 +140,7 @@
     <ClInclude Include="font.h" />
     <ClInclude Include="FpsCounter.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="GalaxyFog.h" />
     <ClInclude Include="loop.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="MainWindow.h" />
@@ -159,6 +161,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
     <None Include="AriesNebula_VS.shader">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="Cross_PS.shader">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="Cross_VS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
     <None Include="Cursor_PS.shader">
@@ -200,9 +208,16 @@
     <None Include="BackgroundStars_PS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
+    <None Include="UiParticle_PS.shader">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="UiParticle_VS.shader">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
     <None Include="VSFS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
+    <ClInclude Include="RenderObject.h" />
     <ClInclude Include="WorldRender.h" />
     <ClInclude Include="StatusGame.h" />
     <ClInclude Include="timer.h" />

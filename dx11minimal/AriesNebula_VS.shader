@@ -1,3 +1,8 @@
+cbuffer factors : register(b6)
+{
+    float AriesNebulaLerpFactor;
+};
+
 cbuffer global : register(b5)
 {
     float4 gConst[32];
@@ -116,7 +121,6 @@ float random(float2 p) {
     return frac(cos(dot(p, r)) * 12345.6789);
 }
 
-// Функция шума Вороного
 float3 voronoiNoise(float2 value){
     float2 baseCell = floor(value);
 
@@ -169,7 +173,6 @@ float3 voronoiNoise(float2 value){
 VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output;
-    float AriesNebulaLerpFactor = frac(time.x * 0.01);
 
     uint starID = vID / 6;
     uint vertexInQuad = vID % 6;

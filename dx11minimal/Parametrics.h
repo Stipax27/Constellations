@@ -1,4 +1,4 @@
-﻿float finalStarRad = 0;
+﻿
 float attackStartTime = 0;
 float line_hit;
 float attack_time;
@@ -95,30 +95,31 @@ void menuProject(point3d& p)
 
 void constSelectUI(point3d& point, Constellation& Constellation, int i)
 {
-    std::vector <float>& starHealth = Constellation.starsHealth;
-
     float dx = point.x - mouse.pos.x;
     float dy = point.y - mouse.pos.y;
     float lenght = sqrt(dx * dx + dy * dy);
-
-    float rad = saturate(1.2 - lenght * .05) * fabs(sin(currentTime * .01));
 
     if (GetAsyncKeyState(VK_LBUTTON))
     {
         if (lenght < starSize)
         {
-            //SelectObject(window.context, brush2);
-            gameState = gameState_::Fight;
-            currentEnemy = &Constellation;
-            currentEnemyID = (ZodiacSign)(currentEnemy->ID);
+            // Only transition if this is an enemy constellation (not player's)
+            if (Constellation.ID != player_sign)
+            {
+                gameState = gameState_::Fight;
+                currentEnemy = &Constellation;
+                currentEnemyID = (ZodiacSign)Constellation.ID;
+
+                // Initialize fight-specific variables
+                    isBattleActive = true;
+                battleStartTime = currentTime;
+
+                // Reset camera for fight
+                Camera::state.camDist = 100;
+                Camera::state.mouse = true;
+            }
         }
     }
-    else
-    {
-        //SelectObject(window.context, brush);
-    }
-
-    finalStarRad = starSize * starHealth[i] + rad * 15;
 }
 
 float get_lenghts(point3d& point1, point3d& point2)
@@ -139,7 +140,7 @@ void starIntersectUI(point3d& point, Constellation& Constellation, int i)
     float lenght = sqrt(dx * dx + dy * dy);
 
     float rad = saturate(1.2 - lenght * .05) * fabs(sin(currentTime * .01));
-    finalStarRad = starSize * starHealth[i] + rad * 15;
+    
 
     float line_x = get_lenghts(attack[0], attack[1]);
     float line_y = get_lenghts(attack[0], point);
@@ -262,12 +263,12 @@ void heroUI(point3d& point, Constellation& Constellation, int i)
     {
         //SelectObject(window.context, brush);
     }
-    finalStarRad = 3 * starHealth[i] + rad * 15;
+   
 }
 
 void menuUI(point3d& point, Constellation& Constellation, int i)
 {
-    finalStarRad = 5;
+    
 }
 
 void placeConstToStartMenu(point3d& p, Constellation& Constellation)
