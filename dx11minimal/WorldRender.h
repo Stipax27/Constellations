@@ -331,7 +331,7 @@ namespace WorldRender
             }
             Camera::state.mouse = true;
             Depth::Depth(Depth::depthmode::off);
-            SelectWeapon();
+            //SelectWeapon();
             SelectElement();
 
 

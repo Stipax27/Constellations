@@ -24,11 +24,11 @@ public:
         return sqrt(xx * xx + yy * yy + zz * zz);
     }
 
-    // Улучшенный normalized
+    
     point3d normalized() const {
         float mag = magnitude();
         if (mag <= std::numeric_limits<float>::epsilon()) {
-            return point3d(0.0f, 1.0f, 0.0f); // Возвращаем вектор по умолчанию
+            return point3d(0.0f, 1.0f, 0.0f); 
         }
         return *this / mag;
     }

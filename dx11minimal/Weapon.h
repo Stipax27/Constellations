@@ -1,4 +1,7 @@
 DWORD attackTime;
+enum class weapon_name {
+    Sword, Shield, Bow, Staff
+};
 
 struct weapon_ {
 public:
@@ -12,9 +15,7 @@ public:
 
 weapon_ weapon[4];
 
-enum class weapon_name {
-    Sword, Shield, Bow, Staff
-};
+
 
 Constellation* currentWeapon = &Sword;
 weapon_name current_weapon = weapon_name::Sword;
