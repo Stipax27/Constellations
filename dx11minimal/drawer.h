@@ -939,6 +939,11 @@ namespace drawer
             drawString("Find Constallations and click on him", window.width / 2, (200. / 1440) * window.height, 1, true);
             drawString("Features:\nMouse wheel to zoom in and out", (1700. / 2560) * window.width, (1200. / 1440) * window.height, .7f, false);
 
+            if (GetAsyncKeyState('M')) {
+                playerConst.Morph(c);
+            }
+            playerConst.RenderMorph(deltaTime);
+
             isBattleActive = false;
             break;
 

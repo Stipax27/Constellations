@@ -8,16 +8,24 @@ public:
 
     XMMATRIX Transform;
     
-    std::vector<point3d> starPositions;
     point3d position;
     float scale = 200;
     point3d angle;
     float distance;
     point3d lookvector = point3d(0,0,1);
-    std::vector<point3d> starsCords;
+
     float hp;
     float maxHP;
     float defens;
+
+    std::vector<point3d> originStarsCords;
+    std::vector <std::vector <float>> originConstellationEdges;
+    std::vector<point3d> targetStarsCords;
+    std::vector <std::vector <float>> targetConstellationEdges;
+    bool morphed = false;
+    float morphProgress = 0.0f;
+
+    std::vector<point3d> starsCords;
     std::vector <float> starsHealth;
     std::vector <std::vector <float>> constellationEdges;
 
@@ -125,6 +133,9 @@ public:
     Constellation(std::vector<point3d> _starsCords, std::vector <float> _starsHealth, std::vector <std::vector <float>> _constellationEdges) : position{ 0,0,0 }
     {
 
+        originStarsCords = _starsCords;
+        originConstellationEdges = _constellationEdges;
+
         starsCords = _starsCords;
         starsHealth = _starsHealth;
         constellationEdges = _constellationEdges;
@@ -176,7 +187,6 @@ public:
 
     void setStarsRenderedCords(float angleX, float angleY, float angleZ) {
         angle = { angleX, angleY, angleZ };
-        distance = 3000. / scale;
         starsRenderedCords = starsCords;
 
         for (int i = 0; i < starsCords.size(); i++) {
@@ -188,19 +198,39 @@ public:
 
     //////////////////////////////////////////////////////////////////////////////////
 
-    void TransformStars()
+    void Morph(const Constellation& c)
     {
-        for (int i = 0; i < starsCords.size(); i++) {
-            point3d p = starsCords[i];
+        morphed = true;
+        targetStarsCords = c.originStarsCords;
+        targetConstellationEdges = c.originConstellationEdges;
+    }
 
-            p -= position;
+    void RenderMorph(float deltaTime)
+    {
+        if (morphed)
+        {
+            morphProgress += deltaTime / 1000.0f;
 
-            p.rotateX(p, angle.x);
-            p.rotateY(p, angle.y);
-            p.rotateZ(p, angle.z);
+            if (morphProgress <= 1.0f)
+            {
+                starsCords = originStarsCords;
+                constellationEdges = originConstellationEdges;
 
-            p *= scale;
-            p += position;
+                for (int i = 0; i < starsCords.size(); i++) {
+                    point3d p = starsCords[i];
+                    starsCords[i] = p.lerp(point3d(), morphProgress);
+                }
+            }
+            else if (morphProgress <= 2.0f)
+            {
+                //starsCords = targetStarsCords;
+                constellationEdges = targetConstellationEdges;
+
+                for (int i = 0; i < targetStarsCords.size(); i++) {
+                    point3d p = starsCords[i];
+                    starsCords[i] = p.lerp(targetStarsCords[i], morphProgress - 1.0f);
+                }
+            }
         }
     }
 
