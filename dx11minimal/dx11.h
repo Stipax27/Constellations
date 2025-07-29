@@ -602,7 +602,7 @@ namespace Sampler
 
 namespace ConstBuf
 {
-	ID3D11Buffer* buffer[8];
+	ID3D11Buffer* buffer[7];
 
 #define constCount 32
 
@@ -640,12 +640,6 @@ namespace ConstBuf
 		float AriesNebulaLerpFactor;
 	} factors;
 
-	//b7
-	struct {
-		int NebulaState;
-		int NebulaPixelState;
-	} demoDayBuffer;  // DELETE
-
 	int roundUp(int n, int r)
 	{
 		return 	n - (n % r) + r;
@@ -673,7 +667,6 @@ namespace ConstBuf
 		Create(buffer[4], sizeof(frame));
 		Create(buffer[5], sizeof(global));
 		Create(buffer[6], sizeof(factors));
-		Create(buffer[7], sizeof(demoDayBuffer));  // DELETE
 	}
 
 	template <typename T>
@@ -700,11 +693,6 @@ namespace ConstBuf
 	void UpdateFactors()
 	{
 		context->UpdateSubresource(ConstBuf::buffer[6], 0, NULL, &factors, 0, 0);
-	}
-
-	void UpdateDemoDayBuffer()  // DELETE
-	{
-		context->UpdateSubresource(ConstBuf::buffer[7], 0, NULL, &demoDayBuffer, 0, 0);
 	}
 
 	void ConstToVertex(int i)

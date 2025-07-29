@@ -873,98 +873,6 @@ namespace drawer
     }
 
 
-    bool IKeyPressed = false; // DELETE
-    bool UKeyPressed = false; // DELETE
-    bool KKeyPressed = false; // DELETE
-    bool JKeyPressed = false; // DELETE
-    void NebulaSwitchControl() // DELETE
-    {
-        if (GetAsyncKeyState('I'))
-        {
-            if (!IKeyPressed)
-            {
-                IKeyPressed = true;
-
-                ConstBuf::demoDayBuffer.NebulaState += 1;
-                if (ConstBuf::demoDayBuffer.NebulaState > 4)
-                {
-                    ConstBuf::demoDayBuffer.NebulaState = 0;
-                }
-
-                ConstBuf::UpdateDemoDayBuffer();
-                ConstBuf::ConstToVertex(7);
-            }
-        }
-        else
-        {
-            IKeyPressed = false;
-        }
-
-        if (GetAsyncKeyState('U'))
-        {
-            if (!UKeyPressed)
-            {
-                UKeyPressed = true;
-
-                ConstBuf::demoDayBuffer.NebulaState -= 1;
-                if (ConstBuf::demoDayBuffer.NebulaState < 0)
-                {
-                    ConstBuf::demoDayBuffer.NebulaState = 4;
-                }
-
-                ConstBuf::UpdateDemoDayBuffer();
-                ConstBuf::ConstToVertex(7);
-            }
-        }
-        else
-        {
-            UKeyPressed = false;
-        }
-
-        if (GetAsyncKeyState('K'))
-        {
-            if (!KKeyPressed)
-            {
-                KKeyPressed = true;
-
-                ConstBuf::demoDayBuffer.NebulaPixelState += 1;
-                if (ConstBuf::demoDayBuffer.NebulaPixelState > 3)
-                {
-                    ConstBuf::demoDayBuffer.NebulaPixelState = 0;
-                }
-
-                ConstBuf::UpdateDemoDayBuffer();
-                ConstBuf::ConstToPixel(7);
-            }
-        }
-        else
-        {
-            KKeyPressed = false;
-        }
-
-        if (GetAsyncKeyState('J'))
-        {
-            if (!JKeyPressed)
-            {
-                JKeyPressed = true;
-
-                ConstBuf::demoDayBuffer.NebulaPixelState -= 1;
-                if (ConstBuf::demoDayBuffer.NebulaPixelState < 0)
-                {
-                    ConstBuf::demoDayBuffer.NebulaPixelState = 3;
-                }
-
-                ConstBuf::UpdateDemoDayBuffer();
-                ConstBuf::ConstToPixel(7);
-            }
-        }
-        else
-        {
-            JKeyPressed = false;
-        }
-    }
-
-
     void drawWorld(float deltaTime)
     {
         textStyle.color = RGB(0, 191, 255);
@@ -1001,10 +909,6 @@ namespace drawer
             Camera::state.mouse = true;
             Depth::Depth(Depth::depthmode::off);
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-
-
-            NebulaSwitchControl(); // DELETE
-           
 
             drawStarField();
             Shaders::vShader(1);
@@ -1078,9 +982,6 @@ namespace drawer
             modelTransform = &placeToWorld;
             modelProject = &fightProject;
             uiFunc = &starIntersectUI;
-
-
-            NebulaSwitchControl(); // DELETE
 
 
             drawStarField();
@@ -1309,9 +1210,6 @@ namespace drawer
             modelTransform = &placeToWorld;
             modelProject = &fightProject;
             uiFunc = &starIntersectUI;
-
-
-            NebulaSwitchControl(); // DELETE
 
 
             drawStarField();

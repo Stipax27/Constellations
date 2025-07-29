@@ -1,9 +1,3 @@
-cbuffer demoDayBuffer : register(b7)
-{
-    int NebulaState;
-    int NebulaPixelState;
-};
-
 cbuffer factors : register(b6)
 {
     float AriesNebulaLerpFactor;
@@ -117,59 +111,17 @@ float4 PS(VS_OUTPUT input) : SV_Target
 
     float n = noise(input.worldpos * 0.131 * 20 * 0.00011);
 
-    //float3 lowerColor = lerp(lerp(float3(1, 0.25, 0.25), float3(1, 0.95, 0.2), n), lerp(float3(0.25, 1, 0.25), float3(1, 0, 1), n + 0.4), AriesNebulaLerpFactor);
+    float3 lowerColor = lerp(lerp(float3(1, 0.25, 0.25), float3(1, 0.95, 0.2), n), lerp(float3(0.25, 1, 0.25), float3(1, 0, 1), n + 0.4), AriesNebulaLerpFactor);
 
-    //float3 upperColor = lerp(float3(1, 1, 1), float3(0.8, 0.5, 0.05), AriesNebulaLerpFactor);
+    float3 upperColor = lerp(float3(1, 1, 1), float3(0.8, 0.5, 0.05), AriesNebulaLerpFactor);
 
-    //float3 color = lerp(upperColor, lowerColor, max(min(lerp((input.worldpos.y - 3000) / 1500, input.worldpos.y / 1000, AriesNebulaLerpFactor), 1), 0));
-
-    //float brightness = exp(-dot(uv, uv) * 20) * 0.03f;
-
-    //float offset = max(length(input.worldpos.xz) - 40000, 0);
-    //float sat = max(1 - offset / 10000, 0);
-    //brightness *= sat;
-
-    //return float4(color, 1) * float4(brightness, brightness, brightness * 1.4, 1) * (1 + 0.9 * sin(input.starID * 1.2 + time.x * 0.1));
-
-
-    // DELETE
-
-    float3 lowerColor;
-    float3 upperColor;
-    float3 color;
-
-    if (NebulaPixelState > 0)
-    {
-        if (NebulaPixelState == 1)
-        {
-            lowerColor = lerp(float3(1, 0.25, 0.25), float3(0.25, 1, 0.25), AriesNebulaLerpFactor);
-            upperColor = lerp(float3(1, 1, 1), float3(0.8, 0.5, 0.05), AriesNebulaLerpFactor);
-        }
-        else
-        {
-            lowerColor = lerp(lerp(float3(1, 0.25, 0.25), float3(1, 0.95, 0.2), n), lerp(float3(0.25, 1, 0.25), float3(1, 0, 1), n + 0.4), AriesNebulaLerpFactor);
-            upperColor = lerp(float3(1, 1, 1), float3(0.8, 0.5, 0.05), AriesNebulaLerpFactor);
-        }
-
-        color = lerp(upperColor, lowerColor, max(min(lerp((input.worldpos.y - 3000) / 1500, input.worldpos.y / 1000, AriesNebulaLerpFactor), 1), 0));
-    }
-    else
-    {
-        color = float3(1, 1, 1);
-    }
-
-    
+    float3 color = lerp(upperColor, lowerColor, max(min(lerp((input.worldpos.y - 3000) / 1500, input.worldpos.y / 1000, AriesNebulaLerpFactor), 1), 0));
 
     float brightness = exp(-dot(uv, uv) * 20) * 0.03f;
 
-    if (NebulaPixelState > 2)
-    {
-        float offset = max(length(input.worldpos.xz) - 40000, 0);
-        float sat = max(1 - offset / 10000, 0);
-        brightness *= sat;
-    }
+    float offset = max(length(input.worldpos.xz) - 40000, 0);
+    float sat = max(1 - offset / 10000, 0);
+    brightness *= sat;
 
     return float4(color, 1) * float4(brightness, brightness, brightness * 1.4, 1) * (1 + 0.9 * sin(input.starID * 1.2 + time.x * 0.1));
-
-    // DELETE
 }
