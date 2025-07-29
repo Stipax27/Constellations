@@ -20,16 +20,6 @@ void InitGame()
     game.month = 13;
     startTime = currentTime;
 
-    // DELETE
-
-    ConstBuf::demoDayBuffer.NebulaState = 4;
-    ConstBuf::demoDayBuffer.NebulaPixelState = 3;
-    ConstBuf::UpdateDemoDayBuffer();
-    ConstBuf::ConstToVertex(7);
-    ConstBuf::ConstToPixel(7);
-
-    // DELETE
-
     mciSendString(TEXT("play ..\\dx11minimal\\GG_C.mp3"), NULL, 0, NULL);
 }
 
