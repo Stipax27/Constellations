@@ -1,4 +1,4 @@
-#include <vector>
+п»ї#include <vector>
 
 int constellationsCounter = 0;
 
@@ -93,19 +93,19 @@ public:
             0.0f
         );
 
-        // 2. Матрица перемещения в начало координат
+        // 2. РњР°С‚СЂРёС†Р° РїРµСЂРµРјРµС‰РµРЅРёСЏ РІ РЅР°С‡Р°Р»Рѕ РєРѕРѕСЂРґРёРЅР°С‚
         XMMATRIX toOrigin = XMMatrixTranslationFromVector(-heroPosition);
 
-        // 3. Матрица вращения
+        // 3. РњР°С‚СЂРёС†Р° РІСЂР°С‰РµРЅРёСЏ
         XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(Hero::state.currentRotation);
 
-        // 4. Матрица масштабирования
+        // 4. РњР°С‚СЂРёС†Р° РјР°СЃС€С‚Р°Р±РёСЂРѕРІР°РЅРёСЏ
         XMMATRIX scaleMatrix = XMMatrixScaling(c.scale, c.scale, c.scale);
 
-        // 5. Матрица перемещения (из constellationOffset)
+        // 5. РњР°С‚СЂРёС†Р° РїРµСЂРµРјРµС‰РµРЅРёСЏ (РёР· constellationOffset)
         XMMATRIX translationMatrix = Camera::state.constellationOffset;
 
-        // 6. Обратная матрица перемещения
+        // 6. РћР±СЂР°С‚РЅР°СЏ РјР°С‚СЂРёС†Р° РїРµСЂРµРјРµС‰РµРЅРёСЏ
         XMVECTOR det;
         XMMATRIX invTranslationMatrix = XMMatrixInverse(&det, translationMatrix);
 
@@ -200,9 +200,35 @@ public:
 
     void Morph(const Constellation& c)
     {
-        morphed = true;
         targetStarsCords = c.originStarsCords;
         targetConstellationEdges = c.originConstellationEdges;
+
+        starsCords.clear();
+        for (int i = 0; i < targetStarsCords.size(); i++) {
+            if (i < originStarsCords.size())
+            {
+                starsCords.push_back(originStarsCords[i]);
+            }
+            else
+            {
+                starsCords.push_back(point3d());
+            }
+        }
+
+        constellationEdges.clear();
+        for (int i = 0; i < targetConstellationEdges.size(); i++) {
+            if (i < originConstellationEdges.size())
+            {
+                constellationEdges.push_back(originConstellationEdges[i]);
+            }
+            /*else
+            {
+                constellationEdges.push_back(point3d());
+            }*/
+        }
+
+        morphed = true;
+        morphProgress = 0;
     }
 
     void RenderMorph(float deltaTime)
@@ -213,8 +239,8 @@ public:
 
             if (morphProgress <= 1.0f)
             {
-                starsCords = originStarsCords;
-                constellationEdges = originConstellationEdges;
+                //starsCords = originStarsCords;
+                //constellationEdges = originConstellationEdges;
 
                 for (int i = 0; i < starsCords.size(); i++) {
                     point3d p = starsCords[i];
@@ -224,7 +250,7 @@ public:
             else if (morphProgress <= 2.0f)
             {
                 //starsCords = targetStarsCords;
-                constellationEdges = targetConstellationEdges;
+                //constellationEdges = targetConstellationEdges;
 
                 for (int i = 0; i < targetStarsCords.size(); i++) {
                     point3d p = starsCords[i];
