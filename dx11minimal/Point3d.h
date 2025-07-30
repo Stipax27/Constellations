@@ -1,4 +1,4 @@
-
+п»ї
 float nearPlaneClip = 0;
 
 constexpr float def_size = 10;
@@ -9,7 +9,7 @@ public:
     float y = 0.0f;
     float z = 0.0f;
 
-    // Конструкторы
+    // РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
     point3d() = default;
     point3d(float X, float Y, float Z) : x(X), y(Y), z(Z) {}
     explicit point3d(float val) : x(val), y(val), z(val) {}
@@ -24,11 +24,11 @@ public:
         return sqrt(xx * xx + yy * yy + zz * zz);
     }
 
-    // Улучшенный normalized
+    // РЈР»СѓС‡С€РµРЅРЅС‹Р№ normalized
     point3d normalized() const {
         float mag = magnitude();
         if (mag <= std::numeric_limits<float>::epsilon()) {
-            return point3d(0.0f, 1.0f, 0.0f); // Возвращаем вектор по умолчанию
+            return point3d(0.0f, 1.0f, 0.0f); // Р’РѕР·РІСЂР°С‰Р°РµРј РІРµРєС‚РѕСЂ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
         }
         return *this / mag;
     }
@@ -38,8 +38,18 @@ public:
         return { lerp(x, other.x, a), lerp(y, other.y, a), lerp(z, other.z, a) };
     }
 
+    point3d floor3()
+    {
+        return { floor(x), floor(y), floor(z) };
+    }
 
-    bool operator==(const point3d& other) const {   // Перегрузка Операторов для точек.
+    point3d fract()
+    {
+        return { x - floor(x), y - floor(y), z - floor(z) };
+    }
+
+
+    bool operator==(const point3d& other) const {   // РџРµСЂРµРіСЂСѓР·РєР° РћРїРµСЂР°С‚РѕСЂРѕРІ РґР»СЏ С‚РѕС‡РµРє.
         return fabs(x - other.x) < 0.001f &&
             fabs(y - other.y) < 0.001f &&
             fabs(z - other.z) < 0.001f;
@@ -152,7 +162,7 @@ public:
         //Shaders::vShader(0);
         //Shaders::pShader(0);
         //Draw::NullDrawer(0, 1);
-        // Рисование элипса. sz = Размер звезды.
+        // Р РёСЃРѕРІР°РЅРёРµ СЌР»РёРїСЃР°. sz = Р Р°Р·РјРµСЂ Р·РІРµР·РґС‹.
 
     }
 
@@ -176,7 +186,7 @@ public:
         p += ofs;
     }
 
-    void rotateX(point3d& p, float angle)// поворот по Оси X.
+    void rotateX(point3d& p, float angle)// РїРѕРІРѕСЂРѕС‚ РїРѕ РћСЃРё X.
     {
         float a = angle * PI / 180.;
 
@@ -189,7 +199,7 @@ public:
         p.z = z1;
     }
 
-    void rotateY(point3d& p, float angle)// поворот по Оси Y.
+    void rotateY(point3d& p, float angle)// РїРѕРІРѕСЂРѕС‚ РїРѕ РћСЃРё Y.
     {
         float a = angle * PI / 180.;
 
@@ -202,7 +212,7 @@ public:
         p.z = z1;
     }
 
-    void rotateZ(point3d& p, float angle)// поворот по Оси Z.
+    void rotateZ(point3d& p, float angle)// РїРѕРІРѕСЂРѕС‚ РїРѕ РћСЃРё Z.
     {
         float a = angle * PI / 180.;
 

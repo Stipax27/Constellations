@@ -200,35 +200,42 @@ public:
 
     void Morph(const Constellation& c)
     {
-        targetStarsCords = c.originStarsCords;
-        targetConstellationEdges = c.originConstellationEdges;
+        if (!morphed)
+        {
 
-        starsCords.clear();
-        for (int i = 0; i < targetStarsCords.size(); i++) {
-            if (i < originStarsCords.size())
-            {
-                starsCords.push_back(originStarsCords[i]);
-            }
-            else
-            {
-                starsCords.push_back(point3d());
-            }
-        }
+            morphed = true;
+            morphProgress = 0;
 
-        constellationEdges.clear();
-        for (int i = 0; i < targetConstellationEdges.size(); i++) {
-            if (i < originConstellationEdges.size())
-            {
-                constellationEdges.push_back(originConstellationEdges[i]);
+            targetStarsCords = c.originStarsCords;
+            targetConstellationEdges = c.originConstellationEdges;
+
+            constellationEdges.clear();
+
+            /*starsCords.clear();
+            for (int i = 0; i < targetStarsCords.size(); i++) {
+                if (i < originStarsCords.size())
+                {
+                    starsCords.push_back(originStarsCords[i]);
+                }
+                else
+                {
+                    starsCords.push_back(targetStarsCords[i]);
+                }
             }
-            /*else
-            {
-                constellationEdges.push_back(point3d());
+
+            constellationEdges.clear();
+            for (int i = 0; i < targetConstellationEdges.size(); i++) {
+                if (i < originConstellationEdges.size())
+                {
+                    constellationEdges.push_back(originConstellationEdges[i]);
+                }
+                else
+                {
+                    constellationEdges.push_back(targetConstellationEdges[i]);
+                }
             }*/
-        }
 
-        morphed = true;
-        morphProgress = 0;
+        }
     }
 
     void RenderMorph(float deltaTime)
@@ -242,15 +249,46 @@ public:
                 //starsCords = originStarsCords;
                 //constellationEdges = originConstellationEdges;
 
+                
+
                 for (int i = 0; i < starsCords.size(); i++) {
                     point3d p = starsCords[i];
-                    starsCords[i] = p.lerp(point3d(), morphProgress);
+                    starsCords[i] = p.lerp(
+                        point3d(noise(point3d(p.y, p.z, p.x)), noise(point3d(p.x, p.z, p.y)), noise(point3d(p.z, p.x, p.y))),
+                        morphProgress);
                 }
             }
             else if (morphProgress <= 2.0f)
             {
-                //starsCords = targetStarsCords;
-                //constellationEdges = targetConstellationEdges;
+                if (starsCords.size() != targetStarsCords.size())
+                {
+                    starsCords.clear();
+                    for (int i = 0; i < targetStarsCords.size(); i++) {
+                        if (i < originStarsCords.size())
+                        {
+                            starsCords.push_back(point3d());
+                        }
+                        else
+                        {
+                            starsCords.push_back(point3d());
+                        }
+                    }
+                }
+
+                if (constellationEdges.size() != targetConstellationEdges.size())
+                {
+                    constellationEdges.clear();
+                    for (int i = 0; i < targetConstellationEdges.size(); i++) {
+                        if (i < originConstellationEdges.size())
+                        {
+                            constellationEdges.push_back(originConstellationEdges[i]);
+                        }
+                        else
+                        {
+                            constellationEdges.push_back(targetConstellationEdges[i]);
+                        }
+                    }
+                }
 
                 for (int i = 0; i < targetStarsCords.size(); i++) {
                     point3d p = starsCords[i];
