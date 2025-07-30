@@ -9,7 +9,7 @@ public:
     float y = 0.0f;
     float z = 0.0f;
 
-    // Конструкторы
+    
     point3d() = default;
     point3d(float X, float Y, float Z) : x(X), y(Y), z(Z) {}
     explicit point3d(float val) : x(val), y(val), z(val) {}
@@ -31,6 +31,14 @@ public:
             return point3d(0.0f, 1.0f, 0.0f); 
         }
         return *this / mag;
+    }
+
+    point3d cross(const point3d& other) const {
+        return point3d{
+            y * other.z - z * other.y,
+            z * other.x - x * other.z,
+            x * other.y - y * other.x 
+        };
     }
 
     inline point3d lerp(const point3d& other, float a)

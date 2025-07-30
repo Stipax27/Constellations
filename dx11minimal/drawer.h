@@ -648,6 +648,8 @@ namespace drawer
         point3d position;
         point3d direction; 
         float radius;
+        point3d up;
+        point3d right;
     };
 
     std::vector<StarProjectile> attackStars; // Теперь храним звёзды с их направлениями
@@ -680,32 +682,19 @@ namespace drawer
 
         case weapon_name::Shield:
             for (StarProjectile& star : attackStars) {
-                
-                float centerX = star.position.x;
-                float centerY = star.position.y;
-                float shieldRadius = star.radius;
-
-                Shaders::vShader(1);
-                Shaders::pShader(1);
-
+               
                 for (int i = 0; i < 36; i++) {
                     float angle = i * (2 * PI / 36);
                     float nextAngle = (i + 1) * (2 * PI / 36);
 
-                    point3d shield1, shield2;
+                    point3d local1(cos(angle), sin(angle), 0);
+                    point3d local2(cos(nextAngle), sin(nextAngle), 0);
 
-                    shield1.x = centerX + shieldRadius * cos(angle);
-                    shield1.y = centerY + shieldRadius * sin(angle);
-                    shield1.z = star.position.z;
+                    point3d shield1 = star.position + (star.right * local1.x + star.up * local1.y) * star.radius;
+                    point3d shield2 = star.position + (star.right * local2.x + star.up * local2.y) * star.radius;
 
-                    shield2.x = centerX + shieldRadius * cos(nextAngle);
-                    shield2.y = centerY + shieldRadius * sin(nextAngle);
-                    shield2.z = star.position.z;
-
-                    drawLine(shield1, shield2);
+                    drawLine(shield1, shield2, 10.f);
                 }
-
-                
                 star.position.draw(star.position, 15.0f);
             }
             break;
@@ -715,11 +704,9 @@ namespace drawer
                 point3d arrowStart = star.position;
                 point3d arrowEnd = star.position + star.direction * 500.f;
 
-                Shaders::vShader(4);
-                Shaders::pShader(4);
                 drawLine(arrowStart, arrowEnd, 3.f);
 
-                // Рисуем наконечник стрелы
+               
                 point3d tip1 = arrowEnd + point3d(10, 0, -20);
                 point3d tip2 = arrowEnd + point3d(-10, 0, -20);
                 drawLine(arrowEnd, tip1, 2.f);
@@ -746,7 +733,7 @@ namespace drawer
             }
             lastAttackTime = currentTime;
 
-            // Получаем позицию героя
+           
             XMVECTOR heroPosition = Hero::state.constellationOffset.r[3];
             start = point3d(
                 XMVectorGetX(heroPosition),
@@ -754,7 +741,6 @@ namespace drawer
                 XMVectorGetZ(heroPosition)
             );
 
-            // Вычисляем направление атаки от камеры к курсору
             point3d camPos = point3d(
                 XMVectorGetX(Camera::state.Eye),
                 XMVectorGetY(Camera::state.Eye),
@@ -765,20 +751,19 @@ namespace drawer
             point3d mousePos = camPos + mouseRay * 6000;
             point3d newDirection = (mousePos - start).normalized();
 
-            // Очищаем старые снаряды
+         
             attackStars.clear();
 
-            // Создаем снаряды в зависимости от типа оружия
+            
             switch (current_weapon) {
             case weapon_name::Sword: {
-                // Для меча - множество линий
+                
                 for (int i = 0; i < 25; i++) {
                     StarProjectile newStar;
                     newStar.position = start;
                     newStar.direction = newDirection;
                     newStar.radius = 15.0f;
 
-                   
                     point3d up = point3d(XMVectorGetX(Camera::state.Up),
                         XMVectorGetY(Camera::state.Up),
                         XMVectorGetZ(Camera::state.Up));
@@ -796,13 +781,20 @@ namespace drawer
             }
 
             case weapon_name::Shield: {
-                // Для щита - один большой круг
+                
                 StarProjectile newStar;
                 newStar.position = start;
                 newStar.direction = newDirection;
                 newStar.radius = 300.0f;
+
+                newStar.up = point3d(XMVectorGetX(Camera::state.Up),
+                    XMVectorGetY(Camera::state.Up),
+                    XMVectorGetZ(Camera::state.Up));
+                newStar.right = newDirection.cross(newStar.up).normalized();
+                newStar.up = newStar.right.cross(newDirection).normalized();
+
                 attackStars.push_back(newStar);
-                //ProcessSound("Shield.wav");
+                ProcessSound("ShieldStan3.wav");
                 break;
             }
 
@@ -817,7 +809,7 @@ namespace drawer
                     
                     attackStars.push_back(newStar);
                 }
-                //ProcessSound("Bow.wav");
+                ProcessSound("Bow.wav");
                 break;
             }
             }
