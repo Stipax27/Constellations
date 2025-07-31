@@ -3,6 +3,30 @@
 int constellationsCounter = 0;
 
 
+float hashf(float n)
+{
+    return fract(sin(n) * 43758.5453f);
+}
+
+float noise(point3d point)
+{
+    point3d p = point.floor3();
+    point3d f = point.fract();
+
+    f *= f;
+
+    f = f * f * (3.0f - 2.0f * f.x);
+    float n = p.x + p.y * 57.0f + 113.0f * p.z;
+
+    float a = lerp(lerp(lerp(hashf(n + 0.0f), hashf(n + 1.0f), f.x),
+        lerp(hashf(n + 57.0f), hashf(n + 58.0f), f.x), f.y),
+        lerp(lerp(hashf(n + 113.0f), hashf(n + 114.0f), f.x),
+            lerp(hashf(n + 170.0f), hashf(n + 171.0f), f.x), f.y), f.z);
+
+    return a - 0.5f;
+}
+
+
 class Constellation {
 public:
 
@@ -249,12 +273,26 @@ public:
                 //starsCords = originStarsCords;
                 //constellationEdges = originConstellationEdges;
 
-                
-
+                float time = timer::GetCounter() / 500;
                 for (int i = 0; i < starsCords.size(); i++) {
+
+                    point3d origin;
+                    if (i < originStarsCords.size())
+                    {
+                        origin = originStarsCords[i];
+                    }
+                    else
+                    {
+                        origin = targetStarsCords[i];
+                    }
+
                     point3d p = starsCords[i];
                     starsCords[i] = p.lerp(
-                        point3d(noise(point3d(p.y, p.z, p.x)), noise(point3d(p.x, p.z, p.y)), noise(point3d(p.z, p.x, p.y))),
+                        point3d(
+                            noise(point3d(origin.x, origin.z, origin.y) + time),
+                            noise(point3d(origin.y, origin.z, origin.x) + time),
+                            noise(point3d(origin.z, origin.x, origin.y) + time)
+                        ).normalized() * 0.1f,
                         morphProgress);
                 }
             }
@@ -263,15 +301,15 @@ public:
                 if (starsCords.size() != targetStarsCords.size())
                 {
                     starsCords.clear();
+                    float time = timer::GetCounter() / 500;
                     for (int i = 0; i < targetStarsCords.size(); i++) {
-                        if (i < originStarsCords.size())
-                        {
-                            starsCords.push_back(point3d());
-                        }
-                        else
-                        {
-                            starsCords.push_back(point3d());
-                        }
+                        point3d origin = targetStarsCords[i];
+                        starsCords.push_back(
+                            point3d(
+                                noise(point3d(origin.x, origin.z, origin.y) + time),
+                                noise(point3d(origin.y, origin.z, origin.x) + time),
+                                noise(point3d(origin.z, origin.x, origin.y) + time)
+                            ).normalized() * 0.1f);
                     }
                 }
 

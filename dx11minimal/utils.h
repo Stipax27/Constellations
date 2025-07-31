@@ -24,26 +24,3 @@ float lerp(float x1, float x2, float a)
 {
     return x1 * (1 - a) + x2 * a;
 }
-
-float hashf(float n)
-{
-    return fract(sin(n) * 43758.5453f);
-}
-
-float noise(point3d point)
-{
-    point3d p = point.floor3();
-    point3d f = point.fract();
-
-    f *= f;
-
-    f = f * f * (3.0f - 2.0f * f.x);
-    float n = p.x + p.y * 57.0f + 113.0f * p.z;
-
-    float a = lerp(lerp(lerp(hashf(n + 0.0f), hashf(n + 1.0f), f.x),
-        lerp(hashf(n + 57.0f), hashf(n + 58.0f), f.x), f.y),
-        lerp(lerp(hashf(n + 113.0f), hashf(n + 114.0f), f.x),
-            lerp(hashf(n + 170.0f), hashf(n + 171.0f), f.x), f.y), f.z);
-
-    return a - 0.5f;
-}

@@ -170,11 +170,11 @@ float3 voronoiNoise(float2 value){
 }
 
 
-VS_OUTPUT VS(uint vID : SV_VertexID)
+VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 {
     VS_OUTPUT output;
 
-    uint starID = vID / 6;
+    //uint starID = vID / 6;
     uint vertexInQuad = vID % 6;
 
     float2 quadPos[6] = {
@@ -188,7 +188,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     float size = 384;
     float range = 50000;
-    starPos = randomPosition(starID) * range * 2 - range;
+    starPos = randomPosition(iID) * range * 2 - range;
     starPos.y = 0.0;
 
     float par = starPos.x * starPos.x + starPos.z * starPos.z;
@@ -206,7 +206,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     projPos.xy += quadPos[vertexInQuad] * float2(aspect.x, 1) * size;
     output.uv = quadPos[vertexInQuad];
     output.pos = projPos;
-    output.starID = starID;
+    output.starID = iID;
     output.worldpos = float4(starPos, 1);
     return output;
 }

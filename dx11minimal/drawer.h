@@ -51,26 +51,26 @@ namespace drawer
             if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0)
             {
                 // Устанавливаем яркий цвет для линий между неповрежденными звездами
-                ConstBuf::global[0] = XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f); // Желтый
+                ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // Белый
                 ConstBuf::Update(5, ConstBuf::global);
                 ConstBuf::ConstToPixel(5);
 
                 drawLine(point1, point2, sz * 1.5f); // Увеличиваем толщину линии
 
                 // Восстанавливаем стандартный цвет
-                ConstBuf::global[0] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+                ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
                 ConstBuf::Update(5, ConstBuf::global);
             }
             else if (starHealth[starEdges[i][0]] > 0 || starHealth[starEdges[i][1]] > 0)
             {
                 // Полуповрежденные линии - тонкие и бледные
-                ConstBuf::global[0] = XMFLOAT4(0.7f, 0.7f, 0.7f, 0.5f);
+                ConstBuf::global[2] = XMFLOAT4(0.7f, 0.7f, 0.7f, 0.5f);
                 ConstBuf::Update(5, ConstBuf::global);
                 ConstBuf::ConstToPixel(5);
 
                 drawLine(point1, point2, sz * 0.5f);
 
-                ConstBuf::global[0] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+                ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
                 ConstBuf::Update(5, ConstBuf::global);
             }
         }
@@ -103,23 +103,26 @@ namespace drawer
             float currentRadius = finalStarRad;
             XMFLOAT4 starColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // Белый по умолчанию
 
-            if (starHealth[i] > 0)
+            if (i < starHealth.size())
             {
-                // Для неповрежденных звезд - пульсация и другой цвет
-                float pulse = 0.5f + 0.5f * sinf(currentTime * 0.005f);
-                currentRadius += pulse * 5.0f;
+                if (starHealth[i] > 0)
+                {
+                    // Для неповрежденных звезд - пульсация и другой цвет
+                    float pulse = 0.5f + 0.5f * sinf(currentTime * 0.005f);
+                    currentRadius += pulse * 5.0f;
 
-                // Можно использовать другой цвет, например желтый
-                starColor = XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f); // Желтый
-            }
-            else
-            {
-                // Для поврежденных звезд - серый цвет
-                starColor = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.7f); // Серый с прозрачностью
+                    // Можно использовать другой цвет, например желтый
+                    starColor = XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f); // Желтый
+                }
+                else
+                {
+                    // Для поврежденных звезд - серый цвет
+                    starColor = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.25f); // Серый с прозрачностью
+                }
             }
 
             // Устанавливаем цвет звезды
-            ConstBuf::global[0] = starColor;
+            ConstBuf::global[1] = starColor;
             ConstBuf::Update(5, ConstBuf::global);
             ConstBuf::ConstToPixel(5);
 
@@ -129,7 +132,7 @@ namespace drawer
             }
 
             // Восстанавливаем стандартный цвет
-            ConstBuf::global[0] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+            ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
             ConstBuf::Update(5, ConstBuf::global);
         }
     }
@@ -147,38 +150,16 @@ namespace drawer
         drawLinks(Constellation,sz);
     }
 
-    void drawStarField()
+    void DrawRenderObject(RenderObject* object)
     {
-        Shaders::vShader(2);
-        Shaders::pShader(2);
-        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-        Draw::Starfield(1);
-    }
+        Shaders::vShader(object->vs_id);
+        Shaders::pShader(object->ps_id);
+        Blend::Blending(object->blendmode, object->blendop);
 
-    void drawStars()
-    {
-        Shaders::vShader(3);
-        Shaders::pShader(3);
-        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-        Draw::Starfield(1);
-    }
-
-    void drawGalaxyFog(int shaderID)
-    {
-        Shaders::vShader(shaderID);
-        Shaders::pShader(shaderID);
-        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-        Draw::GalaxyFog(5000000);
-    }
-
-    void drawCursor(int shaderID)
-    {
-        Shaders::vShader(shaderID);
-        Shaders::pShader(shaderID);
-        Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
-
-        ConstBuf::global[0] = XMFLOAT4(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1), 0.0f, 1.0f);
-        Draw::Cursor();
+        if (object->instances > 1)
+            context->DrawInstanced(object->vertexes, object->instances, 0, 0);
+        else
+            context->Draw(object->instances * object->vertexes, 0);
     }
 
     const COLORREF colors[] =
@@ -910,11 +891,14 @@ namespace drawer
             Depth::Depth(Depth::depthmode::off);
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 
-            drawStarField();
-            Shaders::vShader(1);
-            Shaders::pShader(1);
+            ConstBuf::Update(0, ConstBuf::drawerV);
+            ConstBuf::ConstToVertex(0);
+            ConstBuf::Update(1, ConstBuf::drawerP);
+            ConstBuf::ConstToPixel(1);
 
-            drawGalaxyFog(7);
+            DrawRenderObject(backgroundStars);
+            DrawRenderObject(spaceStars);
+            DrawRenderObject(ariesNebula);
 
             Constellation& playerConst = *starSet[player_sign];
             playerConst.Transform = CreateHeroToWorldMatrix(playerConst);
@@ -936,11 +920,11 @@ namespace drawer
             std::string curentSignstring = zodiacSignToString(player_sign);
             TextOutA(window.context, window.width * 5 / 6, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());
 
-            drawString("Find Constallations and click on him", window.width / 2, (200. / 1440) * window.height, 1, true);
+            drawString("Find Constallations and click on it", window.width / 2, (200. / 1440) * window.height, 1, true);
             drawString("Features:\nMouse wheel to zoom in and out", (1700. / 2560) * window.width, (1200. / 1440) * window.height, .7f, false);
 
             if (GetAsyncKeyState('M')) {
-                playerConst.Morph(c);
+                playerConst.Morph(*starSet[12]);
             }
             playerConst.RenderMorph(deltaTime);
 
@@ -989,9 +973,14 @@ namespace drawer
             uiFunc = &starIntersectUI;
 
 
-            drawStarField();
-            //drawStars();
-            drawGalaxyFog(7);
+            ConstBuf::Update(0, ConstBuf::drawerV);
+            ConstBuf::ConstToVertex(0);
+            ConstBuf::Update(1, ConstBuf::drawerP);
+            ConstBuf::ConstToPixel(1);
+
+            DrawRenderObject(backgroundStars);
+            DrawRenderObject(spaceStars);
+            DrawRenderObject(ariesNebula);
 
 
             modelTransform = &placeConstToWorld;
@@ -1217,9 +1206,14 @@ namespace drawer
             uiFunc = &starIntersectUI;
 
 
-            drawStarField();
-            //drawStars();
-            drawGalaxyFog(7);
+            ConstBuf::Update(0, ConstBuf::drawerV);
+            ConstBuf::ConstToVertex(0);
+            ConstBuf::Update(1, ConstBuf::drawerP);
+            ConstBuf::ConstToPixel(1);
+
+            DrawRenderObject(backgroundStars);
+            DrawRenderObject(spaceStars);
+            DrawRenderObject(ariesNebula);
 
 
             modelTransform = &placeConstToWorld;
@@ -1324,13 +1318,22 @@ namespace drawer
         Depth::Depth(Depth::depthmode::off);
         if (gameState != gameState_::selectEnemy && gameState != gameState_::Fight && gameState != gameState_::WinFight)
         {
-            drawCursor(6);
+            cursor->vs_id = 6;
+            cursor->ps_id = 6;
             CreateCursorParticles();
         }
         else
         {
-            drawCursor(11);
+            cursor->vs_id = 11;
+            cursor->ps_id = 11;
         }
+
+        ConstBuf::global[0] = XMFLOAT4(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1), 0.0f, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
+        ConstBuf::ConstToVertex(5);
+        ConstBuf::Update(1, ConstBuf::drawerP);
+        ConstBuf::ConstToPixel(1);
+        DrawRenderObject(cursor);
 
         DrawUiParticles(deltaTime);
 

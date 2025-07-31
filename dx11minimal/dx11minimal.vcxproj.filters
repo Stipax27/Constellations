@@ -52,6 +52,9 @@
     <Filter Include="Header Files\Locations">
       <UniqueIdentifier>{0f106aa3-80e1-45eb-968f-e7ca2ee286b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Render">
+      <UniqueIdentifier>{ee3f03ef-3e75-4c94-ab66-a57a1d190bf6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -126,9 +129,6 @@
     <ClInclude Include="loop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WorldRender.h">
-      <Filter>Header Files\New</Filter>
-    </ClInclude>
     <ClInclude Include="Point3d.h">
       <Filter>Header Files\Structures</Filter>
     </ClInclude>
@@ -147,11 +147,11 @@
     <ClInclude Include="GalaxyFog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RenderObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AriesNebula.h">
       <Filter>Header Files\Locations</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderObject.h">
+      <Filter>Header Files\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1014,36 +1014,6 @@ namespace Draw
 		context->DrawInstanced(quadCount * 6 , instances, 0, 0);
 	}
 
-	void Starfield(int quadCount, unsigned int instances = 1)
-	{
-		ConstBuf::Update(0, ConstBuf::drawerV);
-		ConstBuf::ConstToVertex(0);
-		ConstBuf::Update(1, ConstBuf::drawerP);
-		ConstBuf::ConstToPixel(1);
-
-		context->DrawInstanced(quadCount * 60000, instances, 0, 0);
-	}
-
-	void GalaxyFog(int quadCount)
-	{
-		ConstBuf::Update(0, ConstBuf::drawerV);
-		ConstBuf::ConstToVertex(0);
-		ConstBuf::Update(1, ConstBuf::drawerP);
-		ConstBuf::ConstToPixel(1);
-
-		context->Draw(quadCount * 6, 0);
-	}
-
-	void Cursor()
-	{
-		ConstBuf::Update(5, ConstBuf::global);
-		ConstBuf::ConstToVertex(5);
-		ConstBuf::Update(1, ConstBuf::drawerP);
-		ConstBuf::ConstToPixel(1);
-
-		context->Draw(6, 0);
-	}
-
 	void Present()
 	{
 		Textures::UnbindAll();

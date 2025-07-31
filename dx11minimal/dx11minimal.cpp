@@ -41,6 +41,8 @@ HWND hWnd;
 #include "dx11.h"
 #include "Player.h"
 
+#include "RenderObject.h"
+
 #include "AriesNebula.h"
 
 #include "MainWindow.h"
@@ -64,8 +66,6 @@ HWND hWnd;
 #include "loop.h"
 
 #include "dx11minimal.h"
-
-#include "WorldRender.h"
 
 
 #define MAX_LOADSTRING 100

@@ -8,8 +8,18 @@ struct RenderObject {
 	float renderDistance;
 	int lodCount;
 
-	RenderObject(int VS_Id = 0, int PS_Id = 0, int LodCount = 4, float RenderDistance = 100000.0f)
-		: vs_id(VS_Id), ps_id(PS_Id), lodCount(LodCount), renderDistance(RenderDistance)
+	int vertexes;
+	int instances;
+
+	Blend::blendmode blendmode;
+	Blend::blendop blendop;
+
+	RenderObject(int VS_Id = 0, int PS_Id = 0, float RenderDistance = 100000.0f, int LodCount = 4, int Vertexes = 6, int Instances = 1,
+		Blend::blendmode Blendmode = Blend::blendmode::on, Blend::blendop Blendop = Blend::blendop::add)
+
+		: vs_id(VS_Id), ps_id(PS_Id), renderDistance(RenderDistance), lodCount(LodCount), vertexes(Vertexes), instances(Instances),
+		blendmode(Blendmode), blendop(Blendop)
+
 	{
 	}
 
