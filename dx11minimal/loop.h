@@ -37,10 +37,10 @@ void mainLoop(float deltaTime)
 	//Shaders::vShader(10);
 	//Shaders::pShader(10);
 	//Draw::NullDrawer(1, 1);
-	
-	/*InputAssembler::IA(InputAssembler::topology::triList);
-	Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
-	Textures::RenderTarget(0, 0);*/
+	//
+	///*InputAssembler::IA(InputAssembler::topology::triList);
+	//Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
+	//Textures::RenderTarget(0, 0);*/
 
 	//Draw::OutputRenderTextures();
 	////Shaders::pShader(3);

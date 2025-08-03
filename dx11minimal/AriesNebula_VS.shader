@@ -200,7 +200,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     starPos.y -= n.x * n.y * n.z * lerp(35000, 10000, AriesNebulaLerpFactor);
 
 
-    //-----
+    // //-----
     float4 viewPos = mul(float4(starPos, 1.0f), view[0]);
     float4 projPos = mul(viewPos, proj[0]);
     projPos.xy += quadPos[vertexInQuad] * float2(aspect.x, 1) * size;
