@@ -1004,7 +1004,7 @@ namespace Draw
 		context->PSSetShaderResources(0, 1, &Textures::Texture[index].TextureResView);
 	}
 
-	void elipse(int quadCount, unsigned int instances = 1)
+	void elipse(int quadCount, unsigned int instances = 1)//
 	{
 		ConstBuf::Update(0, ConstBuf::drawerV);
 		ConstBuf::ConstToVertex(0);
