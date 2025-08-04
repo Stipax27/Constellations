@@ -149,6 +149,7 @@
     <ClInclude Include="Parametrics.h" />
     <ClInclude Include="ParticleObject.h" />
     <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="PhysicLoop.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Point3d.h" />
     <None Include="AriesNebula2_PS.shader">

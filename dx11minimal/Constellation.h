@@ -228,36 +228,12 @@ public:
         {
 
             morphed = true;
-            morphProgress = 0;
+            morphProgress = -0.12f;
 
             targetStarsCords = c.originStarsCords;
             targetConstellationEdges = c.originConstellationEdges;
 
             constellationEdges.clear();
-
-            /*starsCords.clear();
-            for (int i = 0; i < targetStarsCords.size(); i++) {
-                if (i < originStarsCords.size())
-                {
-                    starsCords.push_back(originStarsCords[i]);
-                }
-                else
-                {
-                    starsCords.push_back(targetStarsCords[i]);
-                }
-            }
-
-            constellationEdges.clear();
-            for (int i = 0; i < targetConstellationEdges.size(); i++) {
-                if (i < originConstellationEdges.size())
-                {
-                    constellationEdges.push_back(originConstellationEdges[i]);
-                }
-                else
-                {
-                    constellationEdges.push_back(targetConstellationEdges[i]);
-                }
-            }*/
 
         }
     }
@@ -267,6 +243,17 @@ public:
         if (morphed)
         {
             morphProgress += deltaTime / 1000.0f;
+
+            point3d up = point3d(
+                XMVectorGetX(Camera::state.Up),
+                XMVectorGetY(Camera::state.Up),
+                XMVectorGetZ(Camera::state.Up)
+            );
+            point3d right = point3d(
+                XMVectorGetX(Camera::state.Right),
+                XMVectorGetY(Camera::state.Right),
+                XMVectorGetZ(Camera::state.Right)
+            );
 
             if (morphProgress <= 1.0f)
             {
@@ -286,13 +273,17 @@ public:
                         origin = targetStarsCords[i];
                     }
 
+                    point3d n = point3d(
+                        noise(point3d(origin.y, origin.z, origin.x) + i * 0.1f),
+                        noise(point3d(origin.z, origin.x, origin.y) + i * 0.1f),
+                        noise(point3d(origin.x, origin.y, origin.z) + i * 0.1f)
+                    ) * 2;
+                    point3d localUp = (up * n).normalized();
+                    point3d localRight = (right * n).normalized();
+
                     point3d p = starsCords[i];
                     starsCords[i] = p.lerp(
-                        point3d(
-                            noise(point3d(origin.x, origin.z, origin.y) + time),
-                            noise(point3d(origin.y, origin.z, origin.x) + time),
-                            noise(point3d(origin.z, origin.x, origin.y) + time)
-                        ).normalized() * 0.1f,
+                        (localUp * sin(time * 200) + localRight * cos(time * 200)) * 0.15f,
                         morphProgress);
                 }
             }
@@ -304,12 +295,17 @@ public:
                     float time = timer::GetCounter() / 500;
                     for (int i = 0; i < targetStarsCords.size(); i++) {
                         point3d origin = targetStarsCords[i];
+
+                        point3d n = point3d(
+                            noise(point3d(origin.y, origin.z, origin.x) + i * 0.1f),
+                            noise(point3d(origin.z, origin.x, origin.y) + i * 0.1f),
+                            noise(point3d(origin.x, origin.y, origin.z) + i * 0.1f)
+                        ) * 2;
+                        point3d localUp = (up * n).normalized();
+                        point3d localRight = (right * n).normalized();
+
                         starsCords.push_back(
-                            point3d(
-                                noise(point3d(origin.x, origin.z, origin.y) + time),
-                                noise(point3d(origin.y, origin.z, origin.x) + time),
-                                noise(point3d(origin.z, origin.x, origin.y) + time)
-                            ).normalized() * 0.1f);
+                            (localUp * sin(time * 200) + localRight * cos(time * 200)) * 0.15f);
                     }
                 }
 

@@ -171,10 +171,16 @@ namespace drawer
         Shaders::pShader(object->ps_id);
         Blend::Blending(object->blendmode, object->blendop);
 
-        if (object->instances > 1)
-            context->DrawInstanced(object->vertexes, object->instances, 0, 0);
-        else
-            context->Draw(object->instances * object->vertexes, 0);
+        point3d camPos = point3d(XMVectorGetX(Camera::state.Eye), XMVectorGetY(Camera::state.Eye), XMVectorGetZ(Camera::state.Eye));
+        float camDist = (camPos - object->pos).magnitude();
+
+        if (camDist < object->renderDistance || object->renderDistance < 0)
+        {
+            if (object->instances > 1)
+                context->DrawInstanced(object->vertexes, object->instances * (1 - min(camDist / object->lodDistanceStep, 1) / object->lodCount), 0, 0);
+            else
+                context->Draw(object->instances * object->vertexes, 0);
+        }
     }
 
     const COLORREF colors[] =
@@ -875,7 +881,7 @@ namespace drawer
         Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
         Draw::ClearDepth();
 
-       //d2dRenderTarget->BeginDraw();
+        //d2dRenderTarget->BeginDraw();
         switch (gameState)
         {
         case gameState_::MainMenu:
