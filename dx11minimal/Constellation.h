@@ -317,14 +317,7 @@ public:
                 {
                     constellationEdges.clear();
                     for (int i = 0; i < targetConstellationEdges.size(); i++) {
-                        if (i < originConstellationEdges.size())
-                        {
-                            constellationEdges.push_back(originConstellationEdges[i]);
-                        }
-                        else
-                        {
-                            constellationEdges.push_back(targetConstellationEdges[i]);
-                        }
+                        constellationEdges.push_back(targetConstellationEdges[i]);
                     }
                 }
 

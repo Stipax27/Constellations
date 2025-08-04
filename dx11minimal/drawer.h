@@ -48,9 +48,36 @@ namespace drawer
             point3d point1 = TransformPoint(starArray[starEdges[i][0]], Constellation.Transform);
             point3d point2 = TransformPoint(starArray[starEdges[i][1]], Constellation.Transform);
 
-            if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0)
+            if (!Constellation.morphed)
             {
-                // Устанавливаем яркий цвет для линий между неповрежденными звездами
+                if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0)
+                {
+                    // Устанавливаем яркий цвет для линий между неповрежденными звездами
+                    ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // Белый
+                    ConstBuf::Update(5, ConstBuf::global);
+                    ConstBuf::ConstToPixel(5);
+
+                    drawLine(point1, point2, sz * 1.5f); // Увеличиваем толщину линии
+
+                    // Восстанавливаем стандартный цвет
+                    ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+                    ConstBuf::Update(5, ConstBuf::global);
+                }
+                else if (starHealth[starEdges[i][0]] > 0 || starHealth[starEdges[i][1]] > 0)
+                {
+                    // Полуповрежденные линии - тонкие и бледные
+                    ConstBuf::global[2] = XMFLOAT4(0.7f, 0.7f, 0.7f, 0.5f);
+                    ConstBuf::Update(5, ConstBuf::global);
+                    ConstBuf::ConstToPixel(5);
+
+                    drawLine(point1, point2, sz * 0.5f);
+
+                    ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+                    ConstBuf::Update(5, ConstBuf::global);
+                }
+            }
+            else
+            {
                 ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // Белый
                 ConstBuf::Update(5, ConstBuf::global);
                 ConstBuf::ConstToPixel(5);
@@ -58,18 +85,6 @@ namespace drawer
                 drawLine(point1, point2, sz * 1.5f); // Увеличиваем толщину линии
 
                 // Восстанавливаем стандартный цвет
-                ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-                ConstBuf::Update(5, ConstBuf::global);
-            }
-            else if (starHealth[starEdges[i][0]] > 0 || starHealth[starEdges[i][1]] > 0)
-            {
-                // Полуповрежденные линии - тонкие и бледные
-                ConstBuf::global[2] = XMFLOAT4(0.7f, 0.7f, 0.7f, 0.5f);
-                ConstBuf::Update(5, ConstBuf::global);
-                ConstBuf::ConstToPixel(5);
-
-                drawLine(point1, point2, sz * 0.5f);
-
                 ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
                 ConstBuf::Update(5, ConstBuf::global);
             }
@@ -924,7 +939,7 @@ namespace drawer
             drawString("Features:\nMouse wheel to zoom in and out", (1700. / 2560) * window.width, (1200. / 1440) * window.height, .7f, false);
 
             if (GetAsyncKeyState('M')) {
-                playerConst.Morph(*starSet[12]);
+                playerConst.Morph(*starSet[13]);
             }
             playerConst.RenderMorph(deltaTime);
 
