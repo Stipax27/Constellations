@@ -248,6 +248,12 @@
     <None Include="UiParticle_PS.shader">
       <Filter>Shaders\UI</Filter>
     </None>
+    <None Include="Bar_VS.shader">
+      <Filter>Shaders\UI</Filter>
+    </None>
+    <None Include="Bar_PS.shader">
+      <Filter>Shaders\UI</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="StarLink_PS.shader">

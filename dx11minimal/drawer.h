@@ -137,7 +137,7 @@ namespace drawer
         }
     }
 
-    void drawСonstellation(Constellation& Constellation, bool colorOverride = false , float finalStarRad = 10.f, float sz =2.f)
+    void drawConstellation(Constellation& Constellation, bool colorOverride = false , float finalStarRad = 10.f, float sz =2.f)
     {
         Shaders::vShader(1);
         Shaders::pShader(1);
@@ -234,7 +234,7 @@ namespace drawer
         Constellation& c = *starSet[n];
         float t = currentTime * 0.001;
         c.Transform = XMMatrixScaling(120, 120, 120) * XMMatrixRotationY(t) * XMMatrixTranslation(0, 0, 500);
-        drawСonstellation(*starSet[player_sign]);
+        drawConstellation(*starSet[player_sign]);
     }
 
    
@@ -345,9 +345,134 @@ namespace drawer
 
 
 
+    //friend XMMATRIX CreateHeroToWorldMatrix(const Constellation& c)
+    //{
+    //    static float lastTime = currentTime;
+    //    float deltaTime = currentTime - lastTime;
+    //    lastTime = currentTime;
+    //    if (deltaTime > 100.0f) deltaTime = 100.0f;
+    //    updateFlyDirection();
+    //    updateFlySpeed(deltaTime);
+    //    updatePlayerPosition(deltaTime);
+
+    //    XMVECTOR heroPosition = XMVectorSet(
+    //        Hero::state.constellationOffset.r[3].m128_f32[0],
+    //        Hero::state.constellationOffset.r[3].m128_f32[1],
+    //        Hero::state.constellationOffset.r[3].m128_f32[2],
+    //        0.0f
+    //    );
+
+    //    // 2. Матрица перемещения в начало координат
+    //    XMMATRIX toOrigin = XMMatrixTranslationFromVector(-heroPosition);
+
+    //    // 3. Матрица вращения
+    //    XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(Hero::state.currentRotation);
+
+    //    // 4. Матрица масштабирования
+    //    XMMATRIX scaleMatrix = XMMatrixScaling(c.scale, c.scale, c.scale);
+
+    //    // 5. Матрица перемещения (из constellationOffset)
+    //    XMMATRIX translationMatrix = Camera::state.constellationOffset;
+
+    //    // 6. Обратная матрица перемещения
+    //    XMVECTOR det;
+    //    XMMATRIX invTranslationMatrix = XMMatrixInverse(&det, translationMatrix);
+
+    //    XMMATRIX Hero = translationMatrix * invTranslationMatrix * rotationMatrix * scaleMatrix * toOrigin;
+
+    //    return -Hero;
+    //    //rotationMatrix(rotation); 
+
+    //}
+
+    XMMATRIX CreateUIMatrix()
+    {
+
+        const Constellation& c = *starSet[player_sign];
+
+        XMVECTOR heroPosition = XMVectorSet(
+            Hero::state.constellationOffset.r[3].m128_f32[0],
+            Hero::state.constellationOffset.r[3].m128_f32[1],
+            Hero::state.constellationOffset.r[3].m128_f32[2],
+            0.0f
+        );
+
+        // 2. Матрица перемещения в начало координат
+        XMMATRIX toOrigin = XMMatrixTranslationFromVector(-heroPosition);
+
+        // 3. Матрица вращения
+        XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(Hero::state.currentRotation);
+
+        // 4. Матрица масштабирования
+        XMMATRIX scaleMatrix = XMMatrixScaling(c.scale, c.scale, c.scale);
+        //XMMATRIX scaleMatrix = XMMatrixScaling(100, 100, 100);
+
+        // 5. Матрица перемещения (из constellationOffset)
+        XMMATRIX translationMatrix = Camera::state.constellationOffset;
+
+        // 6. Обратная матрица перемещения
+        XMVECTOR det;
+        XMMATRIX invTranslationMatrix = XMMatrixInverse(&det, translationMatrix);
+
+        XMMATRIX Hero = translationMatrix * invTranslationMatrix * rotationMatrix * scaleMatrix ;
+
+        return -Hero;
+        //rotationMatrix(rotation); 
+
+    }
+
+    void DrawTEST() {
+ 
+        //point3d TEST_POINT1 = { 0,0,0 };
+        //point3d TEST_POINT2 = { 700,1300,2300 };
+
+        point3d TEST_POINT1 = { 1,1 + 1.2,0 }; // Центер на {0, 1, 0}. Почему - не знаю.
+        point3d TEST_POINT2 = { 2,1 + 1.2,0 };
+        point3d TEST_POINT3 = { 2,1 + 1,0 };
+        point3d TEST_POINT4 = { 1,1 + 1,0 };
+
+        XMMATRIX m = CreateUIMatrix();
+        point3d point1 = TransformPoint(TEST_POINT1, m);
+        point3d point2 = TransformPoint(TEST_POINT2, m);
+        point3d point3 = TransformPoint(TEST_POINT3, m);
+        point3d point4 = TransformPoint(TEST_POINT4, m);
+
+        //
+        Shaders::vShader(1);
+        Shaders::pShader(1);
+
+
+        ////XMFLOAT4 starColor = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f); // Серый с прозрачностью
+
+        ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // Белый
+        ConstBuf::Update(5, ConstBuf::global);
+        ConstBuf::ConstToPixel(5);
+
+        point1.draw(point1, 15.0f);
+        point1.draw(point2, 15.0f);
+        point1.draw(point3, 15.0f);
+        point1.draw(point4, 15.0f);
+
+
+
+
+        //
+        //Shaders::vShader(4);
+        //Shaders::pShader(4);
+
+        //ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // Белый
+        //ConstBuf::Update(5, ConstBuf::global);
+        //ConstBuf::ConstToPixel(5);
+
+        //drawLine(point1, point2, 25.0f);
+
+        
+
+
+
    
 
-
+    }
     
 
     void DrawStarsHP(HDC hdc) {
@@ -451,6 +576,11 @@ namespace drawer
 
     void DrawHpHeroBar()
     {
+        //Shaders::vShader(1);
+        //Shaders::pShader(1);
+        //drawString("TEST", (1. / 2) * window.width, (1. / 2) * window.height, .7f, false);
+
+
         auto player_const = *starSet[player_sign];
         auto maxHP = player_const.maxHP;
         auto progress = getConstellationHP(*starSet[player_sign]) / maxHP;
@@ -542,7 +672,9 @@ namespace drawer
     void UpdateGame() {
         static const DWORD MAX_BATTLE_TIME = 4 * 60 * 1000;
         static const DWORD MAX_REWIND = 30 * 1000;
-        static DWORD battleTime = 60 * 5 * 1000;
+        //static DWORD battleTime = 60 * 5 * 1000;
+        static DWORD battleTime = 120 * 1000;
+
         static DWORD timeModifier = 0;
         static DWORD lastInputTime = 0;
         const DWORD inputRepeatDelay = 100;
@@ -582,7 +714,7 @@ namespace drawer
             if (remainingTime > 0) {
 
                 DrawHpHeroBar();
-                std::string timeStr = "Time: " + std::to_string(remainingTime / 1000);
+                std::string timeStr = "Time " + (std::to_string(remainingTime / 1000 / 60)) + ":" + std::to_string(remainingTime / 1000 % 60 );
                 drawString(timeStr.c_str(), window.width / 1.1, 45, 1.f, true);
 
                 if (getConstellationHP(*starSet[currentEnemyID]) < 0)
@@ -642,7 +774,7 @@ namespace drawer
         for (StarProjectile& star : attackStars) {
             // Рисуем линию от начальной позиции до текущей
             point3d endPos = star.position + star.direction * 100.f; // Удлиняем для визуализации
-            drawLine(star.position, endPos, 3.f);
+            //drawLine(star.position, endPos, 3.f);
 
             // Рисуем саму звезду
             star.position.draw(star.position, 15.0f);
@@ -770,7 +902,7 @@ namespace drawer
 
         Shaders::vShader(1);
         Shaders::pShader(1);
-        Blend::Blending(Blend::blendmode::on);
+        //Blend::Blending(Blend::blendmode::on);
        
         DrawAttackStars();
     }
@@ -887,6 +1019,9 @@ namespace drawer
 
         case gameState_::selectEnemy:
         {
+            //DrawTEST();
+
+
             Camera::state.mouse = true;
             Depth::Depth(Depth::depthmode::off);
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
@@ -909,13 +1044,13 @@ namespace drawer
             c.Transform = CreateEnemyToWorldMatrix(c);
             
            
-            drawСonstellation(c,false,1000.f,100.f);
+            drawConstellation(c,false,1000.f,100.f);
 
             HandleMouseClick();
             UpdateAttack(deltaTime);
             DrawSwordAttack();
 
-            drawСonstellation(playerConst);
+            drawConstellation(playerConst);
 
             std::string curentSignstring = zodiacSignToString(player_sign);
             TextOutA(window.context, window.width * 5 / 6, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());
@@ -939,11 +1074,19 @@ namespace drawer
             initContentData();
             renderContent();
             handleInput();
-
+            
             break;
 
         case gameState_::Fight:
         {
+
+
+
+            if (isBattleActive == false) {
+                isBattleActive = true;
+                battleStartTime = currentTime;
+            }
+
             if (starSet.empty() || currentEnemyID < 0 || currentEnemyID >= starSet.size()) {
                 gameState = gameState_::selectEnemy;
                 break;
@@ -1049,7 +1192,7 @@ namespace drawer
                 Constellation& h = *starSet[currentEnemyID];
                 h.Transform = CreateEnemyToWorldMatrix(h);
                 Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-                drawСonstellation(*starSet[currentEnemyID],false, 1000.f, 100.f);
+                drawConstellation(*starSet[currentEnemyID],false, 1000.f, 100.f);
 
                 //linksDivider = 15;
                 modelTransform = &placeHeroToWorld;
@@ -1074,7 +1217,7 @@ namespace drawer
                 Constellation& c = *starSet[currentEnemyID];
 
                 c.Transform = CreateEnemyToWorldMatrix(c);
-                drawСonstellation(*starSet[currentEnemyID],false, 1000.f, 100.f);
+                drawConstellation(*starSet[currentEnemyID],false, 1000.f, 100.f);
             }
 
             if (GetAsyncKeyState('P')) {
@@ -1139,7 +1282,7 @@ namespace drawer
 
             Constellation& c = *starSet[player_sign];
             c.Transform = CreateHeroToWorldMatrix(c);
-            drawСonstellation(*starSet[player_sign]);
+            drawConstellation(*starSet[player_sign]);
 
             std::string curentSignstring = zodiacSignToString(currentEnemyID);
             drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);
@@ -1238,7 +1381,7 @@ namespace drawer
                 Constellation& h = *starSet[currentEnemyID];
                 h.Transform = CreateEnemyToWorldMatrix(h);
                 Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-                drawСonstellation(*starSet[currentEnemyID]);
+                drawConstellation(*starSet[currentEnemyID]);
 
                 //linksDivider = 15;
                 modelTransform = &placeHeroToWorld;
@@ -1263,7 +1406,7 @@ namespace drawer
                 Constellation& c = *starSet[currentEnemyID];
 
                 c.Transform = CreateEnemyToWorldMatrix(c);
-                drawСonstellation(*starSet[currentEnemyID]);
+                drawConstellation(*starSet[currentEnemyID]);
             }
 
             modelTransform = &placeConstToWorld;
@@ -1291,7 +1434,7 @@ namespace drawer
 
             Constellation& c = *starSet[player_sign];
             c.Transform = CreateHeroToWorldMatrix(c);
-            drawСonstellation(*starSet[player_sign]);
+            drawConstellation(*starSet[player_sign]);
 
             std::string curentSignstring = zodiacSignToString(currentEnemyID);
             drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);
