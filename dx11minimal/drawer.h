@@ -742,7 +742,7 @@ namespace drawer
             lastAttackTime = currentTime;
 
            
-            XMVECTOR heroPosition = Hero::state.constellationOffset.r[3];
+            
             start = point3d(
                 XMVectorGetX(heroPosition),
                 XMVectorGetY(heroPosition),
@@ -1258,9 +1258,8 @@ namespace drawer
                 modelTransform = &placeHeroToWorld;
                 uiFunc = &heroUI;
                 Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-                point3d enemyPos = Enemy::enemyAi.EnemyGetPosition();
-                point3d heroPos = Hero::state.HeroGetPosition();
-                updateEnemyPosition(deltaTime, heroPos, enemyPos);
+                
+                updateEnemyPosition(deltaTime);
                 //Constellation& c = *starSet[player_sign];
                 //c.Transform = CreateHeroToWorldMatrix(c);
                 //drawСonstellation(*starSet[player_sign]);//Игрок

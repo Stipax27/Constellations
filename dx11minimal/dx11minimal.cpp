@@ -40,7 +40,8 @@ HWND hWnd;
 #include "utils.h"
 #include "dx11.h"
 #include "Player.h"
-
+XMVECTOR heroPosition = Hero::state.constellationOffset.r[3];
+XMVECTOR enemyPositions = Enemy::enemyAi.enemyConstellationOffset.r[3];
 #include "AriesNebula.h"
 
 #include "MainWindow.h"

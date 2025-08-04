@@ -1102,16 +1102,6 @@ namespace Hero
 
 }
 
-
-
-point3d HeroGetPosition()
-{
-	return point3d(
-		state.constellationOffset.r[3].m128_f32[0],
-		state.constellationOffset.r[3].m128_f32[1],
-		state.constellationOffset.r[3].m128_f32[2]
-	);
-}
 namespace Camera
 {
 	struct State
