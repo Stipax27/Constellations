@@ -626,14 +626,14 @@ namespace drawer
     bool CheckRaySphereCollision(const point3d& rayStart, const point3d& rayDir,
         const point3d& sphereCenter, float sphereRadius)
     {
-        // Проверка валидности входных параметров
+      
         if (sphereRadius <= 0 || isnan(rayDir.x))return false;
         
 
             point3d toSphere = sphereCenter - rayStart;
             float projection = toSphere.dot(rayDir);
 
-            // Если сфера позади луча и не пересекается
+            
             if (projection < 0 && toSphere.magnitude() > sphereRadius) {
                 return false;
             }
@@ -655,66 +655,74 @@ namespace drawer
     std::vector<StarProjectile> attackStars; // Теперь храним звёзды с их направлениями
 
     void UpdateAttackStars(float deltaTime) {
-        // Обновляем позиции звёзд по их индивидуальным направлениям
+        
         for (auto& star : attackStars) {
             star.position += star.direction.normalized() * 5.0f * deltaTime;
         }
     }
 
     void DrawAttackStars() {
-        // Отрисовываем все звёзды
-        //for (StarProjectile& star : attackStars) {
-        //   
-        //    point3d endPos = star.position + star.direction * 100.f; // Удлиняем для визуализации
-        //    drawLine(star.position, endPos, 3.f);
 
-        //    star.position.draw(star.position, 15.0f);
-        //}
-        switch (current_weapon) {
+        for (auto& star : attackStars) 
+        {
 
-        case weapon_name::Sword:
-            for (StarProjectile& star : attackStars) {
-                point3d end = star.position + star.direction * 500.f;
-                drawLine(star.position, end, 3.f);
-                star.position.draw(star.position, 15.0f);
-            }
-            break;
+             switch (current_weapon) 
+             {
 
-        case weapon_name::Shield:
-            for (StarProjectile& star : attackStars) {
-               
-                for (int i = 0; i < 36; i++) {
-                    float angle = i * (2 * PI / 36);
-                    float nextAngle = (i + 1) * (2 * PI / 36);
+             case weapon_name::Sword: {
 
-                    point3d local1(cos(angle), sin(angle), 0);
-                    point3d local2(cos(nextAngle), sin(nextAngle), 0);
-
-                    point3d shield1 = star.position + (star.right * local1.x + star.up * local1.y) * star.radius;
-                    point3d shield2 = star.position + (star.right * local2.x + star.up * local2.y) * star.radius;
-
-                    drawLine(shield1, shield2, 10.f);
+                    Shaders::vShader(1);
+                    Shaders::pShader(1);
+                    
+                        point3d end = star.position + star.direction * 500.f;
+                        drawLine(star.position, end, 3.f);
+                        star.position.draw(star.position, 15.0f);
+                    
+                    break;
                 }
-                star.position.draw(star.position, 15.0f);
-            }
-            break;
 
-        case weapon_name::Bow: {
-            for (StarProjectile& star : attackStars) {
-                point3d arrowStart = star.position;
-                point3d arrowEnd = star.position + star.direction * 500.f;
+                case weapon_name::Shield: {
 
-                drawLine(arrowStart, arrowEnd, 3.f);
+                    Shaders::vShader(1);
+                    Shaders::pShader(1);
+                   
 
-               
-                point3d tip1 = arrowEnd + point3d(10, 0, -20);
-                point3d tip2 = arrowEnd + point3d(-10, 0, -20);
-                drawLine(arrowEnd, tip1, 2.f);
-                drawLine(arrowEnd, tip2, 2.f);
-            }
-            break;
-        }
-        
+                        for (int i = 0; i < 36; i++) {
+                            float angle = i * (2 * PI / 36);
+                            float nextAngle = (i + 1) * (2 * PI / 36);
+
+                            point3d local1(cos(angle), sin(angle), 0);
+                            point3d local2(cos(nextAngle), sin(nextAngle), 0);
+
+                            point3d shield1 = star.position + (star.right * local1.x + star.up * local1.y) * star.radius;
+                            point3d shield2 = star.position + (star.right * local2.x + star.up * local2.y) * star.radius;
+
+                            drawLine(shield1, shield2, 10.f);
+                        }
+                        star.position.draw(star.position, 15.0f);
+                    
+                    break;
+                }
+
+                case weapon_name::Bow: {
+                    Shaders::vShader(4);
+                    Shaders::pShader(4);
+
+                    point3d arrowStart = star.position;
+                    point3d arrowEnd = star.position + star.direction * 500.f;
+
+                    drawLine(arrowStart, arrowEnd, 3.f);
+
+                    point3d tip1 = arrowEnd + star.right * 10.f - star.direction * 20.f;
+                    point3d tip2 = arrowEnd - star.right * 10.f - star.direction * 20.f;
+
+                    drawLine(arrowEnd, tip1, 2.f);
+                    drawLine(arrowEnd, tip2, 2.f);
+                    drawLine(tip1, tip2, 2.f);
+                    break;
+                }
+
+             }
         }
        
     }
@@ -800,13 +808,22 @@ namespace drawer
 
             case weapon_name::Bow: {
                 
+                point3d fixedUp = point3d(XMVectorGetX(Camera::state.Up),
+                    XMVectorGetY(Camera::state.Up),
+                    XMVectorGetZ(Camera::state.Up));
+                point3d fixedRight = newDirection.cross(fixedUp).normalized();
+                fixedUp = fixedRight.cross(newDirection).normalized();
+
                 for (int i = 0; i < 5; i++) {
                     StarProjectile newStar;
                     newStar.position = start;
-                    newStar.direction = newDirection; 
+                    newStar.direction = newDirection;
                     newStar.radius = 10.0f;
+                  
+                    newStar.up = fixedUp;
+                    newStar.right = fixedRight;
+                   
 
-                    
                     attackStars.push_back(newStar);
                 }
                 ProcessSound("Bow.wav");
@@ -837,16 +854,16 @@ namespace drawer
             for (int i = 0; i < enemy.starsCords.size(); i++) {
                 if (enemy.starsHealth[i] <= 0) continue;
 
-                // Получаем мировые координаты звезды с учетом трансформации
+              
                 point3d starWorldPos = TransformPoint(enemy.starsCords[i], enemy.Transform);
 
-                // Для каждого снаряда проверяем расстояние до звезды
+                
                 for (auto& star : attackStars) {
                     float distance = (star.position - starWorldPos).magnitude();
 
-                    // Используем явное сравнение расстояния с радиусом звезды
+                
                     if (CheckRaySphereCollision(star.position, star.direction,
-                        starWorldPos, 1000.f)) { // 1000.f - радиус звезды
+                        starWorldPos, 1000.f)) { 
                         enemy.starsHealth[i] -= 1.f;
                         std::string enemyH = "HP: " + std::to_string(enemy.starsHealth[i]);
                         drawString(enemyH.c_str(), window.width / 4, window.height / 4, 1.f,true);
@@ -873,15 +890,10 @@ namespace drawer
     void DrawSwordAttack() {
         if (isAttacking) return;
 
-        Shaders::vShader(1);
-        Shaders::pShader(1);
         Blend::Blending(Blend::blendmode::on);
        
         DrawAttackStars();
     }
-
-    
-
 
     struct uiParticle
     {
@@ -1246,7 +1258,9 @@ namespace drawer
                 modelTransform = &placeHeroToWorld;
                 uiFunc = &heroUI;
                 Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-
+                point3d enemyPos = Enemy::enemyAi.EnemyGetPosition();
+                point3d heroPos = Hero::state.HeroGetPosition();
+                updateEnemyPosition(deltaTime, heroPos, enemyPos);
                 //Constellation& c = *starSet[player_sign];
                 //c.Transform = CreateHeroToWorldMatrix(c);
                 //drawСonstellation(*starSet[player_sign]);//Игрок

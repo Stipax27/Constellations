@@ -42,7 +42,7 @@ public:
 
     friend XMMATRIX CreateEnemyToWorldMatrix(Constellation& c)
     {
-        updateEnemyPosition(deltaTime);
+        
         c.scale = 20000;
 
         XMVECTOR currentPos = XMVectorSet(
@@ -84,6 +84,7 @@ public:
             Hero::state.constellationOffset.r[3].m128_f32[2],
             0.0f
         );
+      
 
         // 2. ћатрица перемещени€ в начало координат
         XMMATRIX toOrigin = XMMatrixTranslationFromVector(-heroPosition);

@@ -1093,9 +1093,24 @@ namespace Hero
 		XMVECTOR heroPosition;
 		XMMATRIX constellationOffset = XMMatrixTranslation(0, 0, 0);
 
+		
+		
 	} static state;
 
+	
+	
 
+}
+
+
+
+point3d HeroGetPosition()
+{
+	return point3d(
+		state.constellationOffset.r[3].m128_f32[0],
+		state.constellationOffset.r[3].m128_f32[1],
+		state.constellationOffset.r[3].m128_f32[2]
+	);
 }
 namespace Camera
 {

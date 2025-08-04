@@ -48,27 +48,28 @@ namespace Enemy
            };
        
        }
-        
-                void AiUpdate(float deltaTime) {
+
+       
+                void AiUpdate(float deltaTime , point3d playerPos,point3d enemyPos) {
         
                     
                     switch (currentState) {
                     case AIState::PATROL:
                         Patrol(deltaTime);
-                        //if (playerVisible) currentState = AIState::CHASE;
+                        if (playerVisible) currentState = AIState::CHASE;
                         break;
-        
+                    
                         /*case AIState::CHASE:
-                            Chase(playerPos, enemyPos );
+                            chase(playerPos, enemyPos );
                             if (playerDistance < 500.0f) currentState = AIState::ATTACK;
                             else if (!playerVisible) {
                                 currentState = AIState::SEARCH;
         
                                 waypoints.push_back(playerPos);
                             }
-                            break;
+                            break;*/
         
-                        case AIState::ATTACK:
+                       /* case AIState::ATTACK:
                             Attack(playerPos, enemyPos);
                             if (playerDistance > 600.0f) currentState = AIState::CHASE;
                             break;
@@ -87,7 +88,7 @@ namespace Enemy
                     if (waypoints.empty()) return;
 
                     // Получаем текущую позицию врага
-                    point3d currentPos = point3d(
+                    point3d currentPos =  point3d(
                         enemyConstellationOffset.r[3].m128_f32[0],
                         enemyConstellationOffset.r[3].m128_f32[1],
                         enemyConstellationOffset.r[3].m128_f32[2]
@@ -136,15 +137,16 @@ namespace Enemy
                         }
                     }
                 }
-        //
-        //        void Chase(const point3d& playerPos, point3d& enemyPos) {
-        //            point3d direction = (playerPos - enemyPos).normalized();
-        //
-        //            enemyPos += currentDirection * chaseSpeed;
-        //
-        //
-        //            drawString("Chasing player", window.width / 3, window.height / 3, 1.f, true);
-        //        }
+        
+                /*void chase(const point3d& playerpos, point3d& enemypos) {
+                    
+                    point3d direction = (playerpos - currentPos).normalized();
+        
+                    currentPos += currentDirection * chaseSpeed;
+        
+        
+                    drawString("chasing player", window.width / 3, window.height / 3, 1.f, true);
+                }*/
         //
         //        void Attack(const point3d& playerPos, point3d& enemyPos) {
         //
@@ -167,10 +169,14 @@ namespace Enemy
         //            drawString("Searching player", window.width / 3, window.height / 3, 1.f, true);
         //        }
         //
+                
+
     }static enemyAi;
+
+    
 }
 
 
-void updateEnemyPosition(float deltaTime) {
-    Enemy::enemyAi.AiUpdate(deltaTime);
+void updateEnemyPosition(float deltaTime,point3d playerPos , point3d enemyPos) {
+    Enemy::enemyAi.AiUpdate(deltaTime , playerPos , enemyPos);
 }
