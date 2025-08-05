@@ -55,6 +55,9 @@
     <Filter Include="Header Files\Render">
       <UniqueIdentifier>{ee3f03ef-3e75-4c94-ab66-a57a1d190bf6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Particles">
+      <UniqueIdentifier>{a2bffbc4-a2f9-47bb-95fc-7be21af45ca2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -250,6 +253,12 @@
     </None>
     <None Include="UiParticle_PS.shader">
       <Filter>Shaders\UI</Filter>
+    </None>
+    <None Include="SpeedParticles_VS.shader">
+      <Filter>Shaders\Particles</Filter>
+    </None>
+    <None Include="SpeedParticles_PS.shader">
+      <Filter>Shaders\Particles</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

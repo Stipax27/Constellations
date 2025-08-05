@@ -505,8 +505,8 @@ namespace Shaders {
 		CreateVS(7, nameToPatchLPCWSTR("AriesNebula_VS.shader"));
 		CreatePS(7, nameToPatchLPCWSTR("AriesNebula_PS.shader"));
 
-		CreateVS(8, nameToPatchLPCWSTR("AriesNebula2_VS.shader"));
-		CreatePS(8, nameToPatchLPCWSTR("AriesNebula2_PS.shader"));
+		CreateVS(8, nameToPatchLPCWSTR("SpeedParticles_VS.shader"));
+		CreatePS(8, nameToPatchLPCWSTR("SpeedParticles_PS.shader"));
 
 		CreateVS(9, nameToPatchLPCWSTR("DotText_VS.shader"));
 		CreatePS(9, nameToPatchLPCWSTR("DotText_PS.shader"));

@@ -799,7 +799,7 @@ namespace drawer
     
 
 
-    struct uiParticle
+    struct Particle
     {
         point3d pos;
         point3d vel;
@@ -807,7 +807,7 @@ namespace drawer
         DWORD lifetime;
     };
 
-    vector<uiParticle*> uiParticles = vector<uiParticle*>{};
+    vector<Particle*> uiParticles = vector<Particle*>{};
     bool isPressed = false;
     void CreateCursorParticles()
     {
@@ -823,7 +823,7 @@ namespace drawer
 
                 for (int i = 0; i < 20; i++)
                 {
-                    uiParticle* particle = new uiParticle;
+                    Particle* particle = new Particle;
                     particle->pos = mousePos;
                     particle->vel = point3d(GetRandom(-100, 100), GetRandom(-100, 100), 0).normalized()* point3d(aspect, 1, 0) * (float)GetRandom(8, 30) / 100.0f * 0.002f;
                     particle->lifetime = GetRandom(500, 1500);
@@ -849,7 +849,7 @@ namespace drawer
         DWORD curTime = timer::GetCounter();
         while (i < uiParticles.size())
         {
-            uiParticle* particle = uiParticles[i];
+            Particle* particle = uiParticles[i];
 
             if (curTime - particle->startTime < particle->lifetime)
             {
@@ -875,11 +875,104 @@ namespace drawer
     }
 
 
+    vector<Particle*> speedParticles = vector<Particle*>{};
+
+    int sp_rate = 50;
+    float sp_minFlySpeed = 0.5f;
+    float sp_emitDelta = 1000 / sp_rate;
+    DWORD sp_lastEmitTime = 0;
+
+    void CreateSpeedParticles()
+    {
+        if (currentFlySpeed >= sp_minFlySpeed)
+        {
+            DWORD curTime = timer::GetCounter();
+            if (curTime - sp_lastEmitTime >= sp_emitDelta)
+            {
+                sp_lastEmitTime = curTime;
+
+                point3d camPos = point3d(
+                    XMVectorGetX(Camera::state.Eye),
+                    XMVectorGetY(Camera::state.Eye),
+                    XMVectorGetZ(Camera::state.Eye)
+                );
+                point3d forward = point3d(
+                    XMVectorGetX(Camera::state.Forward),
+                    XMVectorGetY(Camera::state.Forward),
+                    XMVectorGetZ(Camera::state.Forward)
+                );
+                point3d up = point3d(
+                    XMVectorGetX(Camera::state.Up),
+                    XMVectorGetY(Camera::state.Up),
+                    XMVectorGetZ(Camera::state.Up)
+                );
+                point3d right = point3d(
+                    XMVectorGetX(Camera::state.Right),
+                    XMVectorGetY(Camera::state.Right),
+                    XMVectorGetZ(Camera::state.Right)
+                );
+
+                Particle* particle = new Particle;
+                particle->pos = camPos + forward * 10000 + (up * GetRandom(-100, 100) + right * GetRandom(-100, 100)).normalized() * 4000;
+                particle->lifetime = GetRandom(1000, 2000);
+                particle->startTime = curTime;
+
+                speedParticles.push_back(particle);
+            }
+        }
+    }
+
+    void DrawSpeedParticles()
+    {
+        Shaders::vShader(8);
+        Shaders::pShader(8);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+        int i = 0;
+        DWORD curTime = timer::GetCounter();
+        while (i < speedParticles.size())
+        {
+            Particle* particle = speedParticles[i];
+
+            if (curTime - particle->startTime < particle->lifetime)
+            {
+                if (flyDirection.magnitude() > 0)
+                {
+                    particle->vel = flyDirection;
+                }
+                particle->pos += particle->vel * -0.75f * deltaTime;
+
+                ConstBuf::global[0] = XMFLOAT4(particle->pos.x, particle->pos.y, particle->pos.z, 1 - (float)(curTime - particle->startTime) / (float)particle->lifetime);
+                ConstBuf::global[2] = XMFLOAT4(particle->vel.x, particle->vel.y, particle->vel.z, 0);
+
+                ConstBuf::Update(5, ConstBuf::global);
+                ConstBuf::ConstToVertex(5);
+                ConstBuf::Update(1, ConstBuf::drawerP);
+                ConstBuf::ConstToPixel(1);
+
+                context->Draw(6, 0);
+
+                i++;
+            }
+            else
+            {
+                speedParticles.erase(speedParticles.begin() + i);
+            }
+        }
+    }
+
+
+
+
+
     void drawWorld(float deltaTime)
     {
         textStyle.color = RGB(0, 191, 255);
         Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
         Draw::ClearDepth();
+
+        CreateSpeedParticles();
+        DrawSpeedParticles();
 
         //d2dRenderTarget->BeginDraw();
         switch (gameState)
