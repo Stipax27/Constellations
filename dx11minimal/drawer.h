@@ -916,8 +916,8 @@ namespace drawer
                 for (int i = 0; i < (int)(timeDelta / sp_emitDelta); i++)
                 {
                     Particle* particle = new Particle;
-                    particle->pos = point3d(0, 0, 1000) + point3d(GetRandom(-100, 100), GetRandom(-100, 100), 0).normalized() * 100;
-                    particle->vel = point3d(0, 0, 0);
+                    particle->pos = point3d(0, 0, 2000) + point3d(GetRandom(-100, 100), GetRandom(-100, 100), 0).normalized() * 1000;
+                    particle->vel = point3d(0, 0, -1);
                     particle->lifetime = GetRandom(1000, 2000);
                     particle->startTime = curTime;
 
