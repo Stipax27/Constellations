@@ -1259,7 +1259,7 @@ namespace drawer
                 uiFunc = &heroUI;
                 Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
                 
-                updateEnemyPosition(deltaTime);
+                updateEnemyPosition(deltaTime , start);
                 //Constellation& c = *starSet[player_sign];
                 //c.Transform = CreateHeroToWorldMatrix(c);
                 //drawСonstellation(*starSet[player_sign]);//Игрок
