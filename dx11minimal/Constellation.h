@@ -45,15 +45,15 @@ public:
         
         c.scale = 20000;
 
-        XMVECTOR currentPos = XMVectorSet(
-            Enemy::enemyAi.enemyConstellationOffset.r[3].m128_f32[0],
-            Enemy::enemyAi.enemyConstellationOffset.r[3].m128_f32[1],
-            Enemy::enemyAi.enemyConstellationOffset.r[3].m128_f32[2],
-            1.0f
-        );
+            XMVECTOR currentPos = XMVectorSet(
+                enemyData.enemyConstellationOffset.r[3].m128_f32[0],  // ? Без Enemy::
+                enemyData.enemyConstellationOffset.r[3].m128_f32[1],
+                enemyData.enemyConstellationOffset.r[3].m128_f32[2],
+                1.0f
+            );
 
         XMMATRIX translation = XMMatrixTranslationFromVector(currentPos);
-        XMMATRIX rotation = XMMatrixRotationQuaternion(Enemy::enemyAi.currentRotation);
+        XMMATRIX rotation = XMMatrixRotationQuaternion(enemyData.currentRotation);
         XMMATRIX scale = XMMatrixScaling(c.scale, c.scale, c.scale);
 
         return  scale * rotation * translation;
