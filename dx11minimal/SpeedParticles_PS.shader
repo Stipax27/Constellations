@@ -60,5 +60,5 @@ float4 PS(VS_OUTPUT input) : SV_Target
 
     float2 uv = input.uv;
     float brightness = exp(-dot(uv, uv) * 20);
-    return float4(brightness, brightness, brightness, 1) * float4(1, 1, 1.4, 1);
+    return float4(brightness, brightness, brightness, brightness) * float4(1, 1, 1.4, 1);
 }

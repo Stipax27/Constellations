@@ -916,8 +916,7 @@ namespace drawer
                 for (int i = 0; i < (int)(timeDelta / sp_emitDelta); i++)
                 {
                     Particle* particle = new Particle;
-                    particle->pos = point3d(GetRandom(-100, 100), GetRandom(-100, 100), 0).normalized() * 10;
-                    particle->vel = particle->pos;
+                    particle->pos = camPos + forward * 5000 + (up * GetRandom(-100, 100) + right * GetRandom(-100, 100)).normalized() * 4000;
                     particle->lifetime = GetRandom(1000, 2000);
                     particle->startTime = curTime;
 
@@ -931,7 +930,14 @@ namespace drawer
     {
         Shaders::vShader(8);
         Shaders::pShader(8);
-        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+        Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
+        Depth::Depth(Depth::depthmode::off);
+
+        point3d forward = point3d(
+            XMVectorGetX(Camera::state.Forward),
+            XMVectorGetY(Camera::state.Forward),
+            XMVectorGetZ(Camera::state.Forward)
+        );
 
         int i = 0;
         DWORD curTime = timer::GetCounter();
@@ -941,10 +947,14 @@ namespace drawer
 
             if (curTime - particle->startTime < particle->lifetime)
             {
+                if (flyDirection.magnitude() > 0)
+                {
+                    particle->vel = -flyDirection * 0.1f;
+                }
                 particle->pos += particle->vel * deltaTime;
 
-                ConstBuf::global[0] = XMFLOAT4(particle->pos.x, particle->pos.y, 0, 1 - (float)(curTime - particle->startTime) / (float)particle->lifetime);
-                ConstBuf::global[2] = XMFLOAT4(particle->vel.x, particle->vel.y, 0, 0);
+                ConstBuf::global[0] = XMFLOAT4(particle->pos.x, particle->pos.y, particle->pos.z, 1.0f - (float)(curTime - particle->startTime) / (float)particle->lifetime);
+                ConstBuf::global[2] = XMFLOAT4(particle->vel.x, particle->vel.y, particle->vel.z, 0);
 
                 ConstBuf::Update(5, ConstBuf::global);
                 ConstBuf::ConstToVertex(5);
