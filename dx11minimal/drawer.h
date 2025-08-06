@@ -916,8 +916,8 @@ namespace drawer
                 for (int i = 0; i < (int)(timeDelta / sp_emitDelta); i++)
                 {
                     Particle* particle = new Particle;
-                    particle->pos = point3d(0, 0, 2000) + point3d(GetRandom(-100, 100), GetRandom(-100, 100), 0).normalized() * 1000;
-                    particle->vel = point3d(0, 0, -1);
+                    particle->pos = point3d(GetRandom(-100, 100), GetRandom(-100, 100), 0).normalized() * 10;
+                    particle->vel = particle->pos;
                     particle->lifetime = GetRandom(1000, 2000);
                     particle->startTime = curTime;
 
@@ -943,8 +943,8 @@ namespace drawer
             {
                 particle->pos += particle->vel * deltaTime;
 
-                ConstBuf::global[0] = XMFLOAT4(particle->pos.x, particle->pos.y, particle->pos.z, 1 - (float)(curTime - particle->startTime) / (float)particle->lifetime);
-                ConstBuf::global[2] = XMFLOAT4(particle->vel.x, particle->vel.y, particle->vel.z, 0);
+                ConstBuf::global[0] = XMFLOAT4(particle->pos.x, particle->pos.y, 0, 1 - (float)(curTime - particle->startTime) / (float)particle->lifetime);
+                ConstBuf::global[2] = XMFLOAT4(particle->vel.x, particle->vel.y, 0, 0);
 
                 ConstBuf::Update(5, ConstBuf::global);
                 ConstBuf::ConstToVertex(5);

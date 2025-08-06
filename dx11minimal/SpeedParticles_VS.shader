@@ -53,13 +53,13 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     float lifeAspect = gConst[0].w;
     float sz = 150;
 
-    float4 p1 = gConst[0];
+    float2 p1 = gConst[0].xy;
     //float4 p2 = p1 - normalize(gConst[2]) * 10 * lifeAspect;
-    float4 p2 = p1 - float4(100, 0, 0, 0);
+    float2 p2 = p1 - normalize(gConst[2].xy) * 10;
 
     float4 pointsProj[] = {
-        mul(float4(p1.xyz, 1), proj[0]),
-        mul(float4(p2.xyz, 1), proj[0])
+        mul(float4(p1, 0.0, 1.0), proj[0]).xy,
+        mul(float4(p2, 0.0, 1.0), proj[0]).xy,
     };
 
     float4 direction = pointsProj[1] - pointsProj[0];
