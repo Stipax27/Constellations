@@ -54,7 +54,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     float sz = 150;
 
     float4 p1 = gConst[0];
-    float4 p2 = p1 - gConst[2] * 500 * lifeAspect;
+    float4 p2 = p1 - gConst[2] * 5000 * lifeAspect;
 
     float4 pointsProj[] = {
         mul(mul(float4(p1.xyz, 1), view[0]), proj[0]),

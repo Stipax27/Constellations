@@ -877,17 +877,18 @@ namespace drawer
 
     vector<Particle*> speedParticles = vector<Particle*>{};
 
-    int sp_rate = 50;
+    int sp_rate = 100;
     float sp_minFlySpeed = 0.5f;
     float sp_emitDelta = 1000 / sp_rate;
     DWORD sp_lastEmitTime = 0;
 
     void CreateSpeedParticles()
     {
-        if (currentFlySpeed >= sp_minFlySpeed)
+        if (currentFlySpeed >= sp_minFlySpeed && flyDirection.magnitude() > 0)
         {
             DWORD curTime = timer::GetCounter();
-            if (curTime - sp_lastEmitTime >= sp_emitDelta)
+            DWORD timeDelta = curTime - sp_lastEmitTime;
+            if (timeDelta >= sp_emitDelta)
             {
                 sp_lastEmitTime = curTime;
 
@@ -912,12 +913,15 @@ namespace drawer
                     XMVectorGetZ(Camera::state.Right)
                 );
 
-                Particle* particle = new Particle;
-                particle->pos = camPos + forward * 10000 + (up * GetRandom(-100, 100) + right * GetRandom(-100, 100)).normalized() * 4000;
-                particle->lifetime = GetRandom(1000, 2000);
-                particle->startTime = curTime;
+                for (int i = 0; i < (int)(timeDelta / sp_emitDelta); i++)
+                {
+                    Particle* particle = new Particle;
+                    particle->pos = camPos + forward * flyDirection.normalized() * 10000 + (up * GetRandom(-100, 100) + right * GetRandom(-100, 100)).normalized() * 4000;
+                    particle->lifetime = GetRandom(1000, 2000);
+                    particle->startTime = curTime;
 
-                speedParticles.push_back(particle);
+                    speedParticles.push_back(particle);
+                }
             }
         }
     }
@@ -938,7 +942,7 @@ namespace drawer
             {
                 if (flyDirection.magnitude() > 0)
                 {
-                    particle->vel = flyDirection;
+                    particle->vel = flyDirection.normalized();
                 }
                 particle->pos += particle->vel * -0.75f * deltaTime;
 
