@@ -916,7 +916,8 @@ namespace drawer
                 for (int i = 0; i < (int)(timeDelta / sp_emitDelta); i++)
                 {
                     Particle* particle = new Particle;
-                    particle->pos = camPos + forward * flyDirection.normalized() * 10000 + (up * GetRandom(-100, 100) + right * GetRandom(-100, 100)).normalized() * 4000;
+                    particle->pos = point3d(0, 0, 1000) + point3d(GetRandom(-100, 100), GetRandom(-100, 100), 0).normalized() * 100;
+                    particle->vel = point3d(0, 0, 0);
                     particle->lifetime = GetRandom(1000, 2000);
                     particle->startTime = curTime;
 
@@ -940,11 +941,7 @@ namespace drawer
 
             if (curTime - particle->startTime < particle->lifetime)
             {
-                if (flyDirection.magnitude() > 0)
-                {
-                    particle->vel = flyDirection.normalized();
-                }
-                particle->pos += particle->vel * -0.75f * deltaTime;
+                particle->pos += particle->vel * deltaTime;
 
                 ConstBuf::global[0] = XMFLOAT4(particle->pos.x, particle->pos.y, particle->pos.z, 1 - (float)(curTime - particle->startTime) / (float)particle->lifetime);
                 ConstBuf::global[2] = XMFLOAT4(particle->vel.x, particle->vel.y, particle->vel.z, 0);

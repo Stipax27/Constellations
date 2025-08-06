@@ -50,15 +50,19 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output;
 
+    float4x4 v = view[0];
+    v._m30_m31_m32_m33 = 0.0f;
+
     float lifeAspect = gConst[0].w;
     float sz = 150;
 
     float4 p1 = gConst[0];
-    float4 p2 = p1 - gConst[2] * 5000 * lifeAspect;
+    //float4 p2 = p1 - normalize(gConst[2]) * 10000 * lifeAspect;
+    float4 p2 = p1 - 1000;
 
     float4 pointsProj[] = {
-        mul(mul(float4(p1.xyz, 1), view[0]), proj[0]),
-        mul(mul(float4(p2.xyz, 1), view[0]), proj[0])
+        mul(float4(p1.xyz, 1), proj[0]),
+        mul(float4(p1.xyz, 1), proj[0])
     };
 
     float4 direction = pointsProj[1] - pointsProj[0];
@@ -71,7 +75,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     float4 pos = pointsProj[vID % 2];
     
-   // float4 viewPos = mul(float4(gConst[0].xyz, 1.0f), view[0]);
+   // float4 viewPos = mul(float4(gConst[0].xyz, 1.0f), v);
     //float4 projPos = mul(viewPos, proj[0]);
 
     pos.xy += perpendicular * quadUV[vID].y * gConst[0].w * float2(aspect.x, 1) * sz;

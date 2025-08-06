@@ -56,10 +56,7 @@ float star(float2 uv)
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-    float c = star(input.uv);
-    c += star(rotZ(float3(input.uv,0),45*3.14/180).xy*1.5);
-    c *= gConst[1].w;
-
-    return float4(c, c, c*1.2, 1);
-
+    float2 uv = input.uv;
+    float brightness = exp(-dot(uv, uv) * 20);
+    return float4(brightness, brightness, brightness, 1) * float4(1, 1, 1.4, 1);
 }
