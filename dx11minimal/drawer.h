@@ -732,7 +732,8 @@ namespace drawer
     const float projectileSpeed = 2.0f;
     point3d mouseRay;
     point3d start;
-    void HandleMouseClick() {
+    
+    void HandleMouseClick(XMVECTOR heroPosition) {
         if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 && currentTime - lastAttackTime > 500) {
             if (gameState == gameState_::selectEnemy) {
                 gameState = gameState_::Fight;
@@ -742,7 +743,6 @@ namespace drawer
             lastAttackTime = currentTime;
 
            
-            
             start = point3d(
                 XMVectorGetX(heroPosition),
                 XMVectorGetY(heroPosition),
@@ -1069,6 +1069,9 @@ namespace drawer
         Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
         Draw::ClearDepth();
 
+        XMVECTOR heroPosition = Hero::state.constellationOffset.r[3];
+        XMVECTOR enemyPositions = enemyData.enemyConstellationOffset.r[3];
+
        //d2dRenderTarget->BeginDraw();
         switch (gameState)
         {
@@ -1121,7 +1124,7 @@ namespace drawer
            
             drawСonstellation(c,false,1000.f,100.f);
 
-            HandleMouseClick();
+            HandleMouseClick(heroPosition);
             UpdateAttack(deltaTime);
             DrawSwordAttack();
 
@@ -1258,8 +1261,21 @@ namespace drawer
                 modelTransform = &placeHeroToWorld;
                 uiFunc = &heroUI;
                 Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
                 
-                updateEnemyPosition(deltaTime , start);
+                point3d Heropos = point3d(
+                    XMVectorGetX(heroPosition),
+                    XMVectorGetY(heroPosition),
+                    XMVectorGetZ(heroPosition)
+                );
+
+                point3d Enemypos = point3d(
+                    XMVectorGetX(enemyPositions),
+                    XMVectorGetY(enemyPositions),
+                    XMVectorGetZ(enemyPositions)
+                );
+
+                updateEnemyPosition(deltaTime , Heropos, Enemypos);
                 //Constellation& c = *starSet[player_sign];
                 //c.Transform = CreateHeroToWorldMatrix(c);
                 //drawСonstellation(*starSet[player_sign]);//Игрок
@@ -1326,7 +1342,7 @@ namespace drawer
             Constellation& player = *starSet[player_sign];
 
             // Обновление атак
-            HandleMouseClick();
+            HandleMouseClick(heroPosition);
             UpdateAttack(deltaTime);
             DrawSwordAttack();
 
