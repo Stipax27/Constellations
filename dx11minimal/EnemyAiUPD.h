@@ -32,35 +32,38 @@ namespace Enemy
         if (data.waypoints.empty()) return;
 
         
+        
         point3d currentPos = enemyPositions;
 
         point3d& target = data.waypoints[data.currentWaypoint];
         point3d direction = target - currentPos;
         float distance = direction.magnitude();
 
-        //currDir = direction.lerp(sin(Angle),0.f,cos(Angle))* radOrbit;
+        //currDir.x = lerp(cos(Angle), direction.x, 5.f) * radOrbit;
+        direction.lerp(cos(Angle), direction.z, 0.5) * radOrbit;
+
         if (distance < 200.0f) {
             data.currentWaypoint = (data.currentWaypoint + 1) % data.waypoints.size();
             return;
         }
 
-        // Нормализуем направление и применяем скорость с учетом deltaTime
+      
         point3d moveDir = direction.normalized() * data.patrolSpeed * deltaTime;
 
-        // Обновляем позицию врага
+      
         data.enemyConstellationOffset = XMMatrixMultiply(
             data.enemyConstellationOffset,
             XMMatrixTranslation(moveDir.x, moveDir.y, moveDir.z)
         );
 
-        // Поворот только если есть куда поворачивать
+       
         if (direction.magnitude() > 0.1f) {
             XMVECTOR targetDir = XMVectorSet(direction.x, direction.y, direction.z, 0.0f);
             targetDir = XMVector3Normalize(targetDir);
 
-            // Безопасный расчет поворота
+            
             float dot = XMVectorGetX(XMVector3Dot(data.ForwardEn, targetDir));
-            if (fabsf(dot) < 0.9999f) { // Если не параллельны
+            if (fabsf(dot) < 0.9999f) { 
                 XMVECTOR axis = XMVector3Cross(data.ForwardEn, targetDir);
                 axis = XMVector3Normalize(axis);
                 float angle = acosf(dot);
@@ -69,7 +72,7 @@ namespace Enemy
                 data.currentRotation = XMQuaternionMultiply(data.currentRotation, rotQuat);
                 data.currentRotation = XMQuaternionNormalize(data.currentRotation);
 
-                // Обновляем базовые векторы
+                
                 data.ForwardEn = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), data.currentRotation);
                 data.UpEn = XMVector3Rotate(data.defaultUp, data.currentRotation);
                 data.RightEn = XMVector3Cross(data.UpEn, data.ForwardEn);

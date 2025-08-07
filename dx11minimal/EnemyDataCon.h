@@ -9,6 +9,7 @@ namespace Enemy
         patrolSpeed(5.f),
         chaseSpeed(100.0f),
         rotationSpeed(0.1f),
+        patrolProgress(0.f),
         currentRotation(XMQuaternionIdentity()),
         ForwardEn(XMVectorSet(0, 0, 1, 0)),
         defaultUp(XMVectorSet(0, 1, 0, 0)),

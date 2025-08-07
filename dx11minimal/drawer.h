@@ -1276,6 +1276,7 @@ namespace drawer
                 );
 
                 updateEnemyPosition(deltaTime , Heropos, Enemypos);
+
                 //Constellation& c = *starSet[player_sign];
                 //c.Transform = CreateHeroToWorldMatrix(c);
                 //drawСonstellation(*starSet[player_sign]);//Игрок

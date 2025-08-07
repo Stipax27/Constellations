@@ -14,7 +14,7 @@ namespace Enemy
         float playerDistance;
         bool playerVisible;
         int currentWaypoint;
-
+        float patrolProgress;
       
         float patrolSpeed;
         float chaseSpeed;
