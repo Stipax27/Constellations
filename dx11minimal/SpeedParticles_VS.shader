@@ -61,10 +61,10 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
         mul(mul(float4(p2.xyz, 1), view[0]), proj[0])
     };
 
-    float4 direction = pointsProj[1] - pointsProj[0];
+    float2 direction = pointsProj[1].xy - pointsProj[0].xy;
     float2 perpendicular = normalize(float2(direction.y, -direction.x));
 
-    float2 quadUV[6] = {
+    float2 quadUV[6] = { //If I won't understand it in month I'll give 100 rubles to Nikita
         float2(-1, -1), float2(1, -1), float2(-1, 1),
         float2(1, -1), float2(-1, 1), float2(1, 1)
     };

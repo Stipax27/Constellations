@@ -59,7 +59,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     float4 viewPos = mul(float4(gConst[0].xyz, 1.0f), view[0]);
     float4 projPos = mul(viewPos, proj[0]);
 
-    projPos.xy += quadUV[vID]*float2(aspect.x,1)*4*sz;
+    projPos.xy += quadUV[vID] * float2(aspect.x,1) * 4 * sz;
 
     output.uv = quadUV[vID];
     output.pos = projPos;

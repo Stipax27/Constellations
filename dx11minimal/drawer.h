@@ -878,7 +878,7 @@ namespace drawer
     vector<Particle*> speedParticles = vector<Particle*>{};
 
     int sp_rate = 100;
-    float sp_minFlySpeed = 0.5f;
+    float sp_minFlySpeed = 0.0f;
     float sp_emitDelta = 1000 / sp_rate;
     DWORD sp_lastEmitTime = 0;
 
@@ -983,7 +983,7 @@ namespace drawer
         Draw::ClearDepth();
 
         CreateSpeedParticles();
-        //DrawSpeedParticles();
+        DrawSpeedParticles();
 
         //d2dRenderTarget->BeginDraw();
         switch (gameState)
