@@ -14,7 +14,7 @@ namespace Enemy
     private:
         void Patrol(float deltaTime , point3d& enemyPositions);
         void Chase( point3d& heroPos , point3d& enemyPositions);
-        void UpdateRotation( point3d& direction);
+        //void UpdateRotation( point3d& direction);
     };
 }
 
