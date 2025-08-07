@@ -983,7 +983,7 @@ namespace drawer
         Draw::ClearDepth();
 
         CreateSpeedParticles();
-        DrawSpeedParticles();
+        //DrawSpeedParticles();
 
         //d2dRenderTarget->BeginDraw();
         switch (gameState)

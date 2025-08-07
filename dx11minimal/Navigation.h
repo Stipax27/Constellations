@@ -103,26 +103,36 @@ void updateFlyDirection() { // ��������� �������
         Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
     }
 }
-
-void updateFlySpeed(float deltaTime) {// ���������� �� ����� �����
+// Рабочая зона Лехи, если что-то поменяли, то оставьте коммент на строке с изменением (а прерыдущий код закомменьте), СПАСИБО!!!
+void updateFlySpeed(float deltaTime) {
     bool isMoving = (flyDirection.x != 0 || flyDirection.y != 0 || flyDirection.z != 0);
 
     bool isBoosting = (GetAsyncKeyState(VK_SHIFT) & 0x8000);
-    float targetSpeed = isBoosting ? boostFlySpeed : maxFlySpeed;
+    float targetSpeed = 0.2f; // isBoosting ? boostFlySpeed : maxFlySpeed;
 
-    if (isMoving)
+    if (!isBoosting)
     {
-        currentFlySpeed += flyAcceleration * deltaTime;
+        if (isMoving)
+        {
+            currentFlySpeed += flyAcceleration * deltaTime;
 
-        if (currentFlySpeed > targetSpeed) {
-            currentFlySpeed = targetSpeed;
+            if (currentFlySpeed > targetSpeed)
+            {
+                currentFlySpeed = targetSpeed;
+            }
+        }
+        else
+        {
+            currentFlySpeed -= flyDeceleration * deltaTime;
+            if (currentFlySpeed < 0)
+            {
+                currentFlySpeed = 0;
+            }
         }
     }
-    else {
-        currentFlySpeed -= flyDeceleration * deltaTime;
-        if (currentFlySpeed < 0) {
-            currentFlySpeed = 0;
-        }
+    else
+    {
+
     }
 }
 
