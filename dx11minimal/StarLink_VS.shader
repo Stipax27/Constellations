@@ -59,7 +59,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     };
 
     float4 direction = pointsProj[1] - pointsProj[0];
-    float2 perpendicular = normalize(float2(direction.y, -direction.x));
+    float2 perpendicular = normalize(float2(direction.y, -direction.x) * float2(aspect.x, 1));
 
     float2 quadUV[6] = {
         float2(-1, -1), float2(1, -1), float2(-1, 1),

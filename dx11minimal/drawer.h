@@ -877,7 +877,7 @@ namespace drawer
 
     vector<Particle*> speedParticles = vector<Particle*>{};
 
-    int sp_rate = 100;
+    int sp_rate = 50;
     float sp_minFlySpeed = 0.0f;
     float sp_emitDelta = 1000 / sp_rate;
     DWORD sp_lastEmitTime = 0;
@@ -916,8 +916,8 @@ namespace drawer
                 for (int i = 0; i < (int)(timeDelta / sp_emitDelta); i++)
                 {
                     Particle* particle = new Particle;
-                    particle->pos = camPos + forward * 5000 + (up * GetRandom(-100, 100) + right * GetRandom(-100, 100)).normalized() * 4000;
-                    particle->lifetime = GetRandom(1000, 2000);
+                    particle->pos = camPos + forward * 10000 + (up * GetRandom(-100, 100) + right * GetRandom(-100, 100)).normalized() * 5000;
+                    particle->lifetime = GetRandom(500, 1000);
                     particle->startTime = curTime;
 
                     speedParticles.push_back(particle);
@@ -951,7 +951,7 @@ namespace drawer
                 {
                     particle->vel = -flyDirection * 0.1f;
                 }
-                particle->pos += particle->vel * deltaTime;
+                //particle->pos += particle->vel * deltaTime;
 
                 ConstBuf::global[0] = XMFLOAT4(particle->pos.x, particle->pos.y, particle->pos.z, 1.0f - (float)(curTime - particle->startTime) / (float)particle->lifetime);
                 ConstBuf::global[2] = XMFLOAT4(particle->vel.x, particle->vel.y, particle->vel.z, 0);

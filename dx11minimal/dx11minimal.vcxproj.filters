@@ -28,9 +28,6 @@
     <Filter Include="Shaders\StarLink">
       <UniqueIdentifier>{805d6cf2-516d-4e6a-8f08-95c845959c4d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders\BackgroundStars">
-      <UniqueIdentifier>{fe668379-b7cd-428f-8864-ae6d68f81cd7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\GalaxyFog">
       <UniqueIdentifier>{e666e124-5f59-4272-9859-7a0554e5ea21}</UniqueIdentifier>
     </Filter>
@@ -57,6 +54,9 @@
     </Filter>
     <Filter Include="Shaders\Particles">
       <UniqueIdentifier>{a2bffbc4-a2f9-47bb-95fc-7be21af45ca2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\SpaceStars">
+      <UniqueIdentifier>{fe668379-b7cd-428f-8864-ae6d68f81cd7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -200,8 +200,8 @@
     <None Include="StarLink_VS.shader">
       <Filter>Shaders\StarLink</Filter>
     </None>
-    <None Include="BackgroundStars_PS.shader">
-      <Filter>Shaders\BackgroundStars</Filter>
+    <None Include="SpaceStars_PS.shader">
+      <Filter>Shaders\SpaceStars</Filter>
     </None>
     <None Include="GalaxyFog_PS.shader">
       <Filter>Shaders\GalaxyFog</Filter>
@@ -265,8 +265,8 @@
     <FxCompile Include="StarLink_PS.shader">
       <Filter>Shaders\StarLink</Filter>
     </FxCompile>
-    <FxCompile Include="BackgroundStars_VS.shader">
-      <Filter>Shaders\BackgroundStars</Filter>
+    <FxCompile Include="SpaceStars_VS.shader">
+      <Filter>Shaders\SpaceStars</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

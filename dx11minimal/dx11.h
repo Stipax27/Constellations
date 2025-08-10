@@ -490,8 +490,8 @@ namespace Shaders {
 		CreateVS(2, nameToPatchLPCWSTR("VSFS.shader"));
 		CreatePS(2, nameToPatchLPCWSTR("PSFS.shader"));
 
-		CreateVS(3, nameToPatchLPCWSTR("BackgroundStars_VS.shader"));
-		CreatePS(3, nameToPatchLPCWSTR("BackgroundStars_PS.shader"));
+		CreateVS(3, nameToPatchLPCWSTR("SpaceStars_VS.shader"));
+		CreatePS(3, nameToPatchLPCWSTR("SpaceStars_PS.shader"));
 
 		CreateVS(4, nameToPatchLPCWSTR("StarLink_VS.shader"));
 		CreatePS(4, nameToPatchLPCWSTR("StarLink_PS.shader"));

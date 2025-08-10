@@ -50,34 +50,34 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output;
 
-    float lifeAspect = gConst[0].w;
-    float sz = 150;
+    float lifeAspect = 1 - gConst[0].w;
+    float sz = 0.02;
+    float length = 7500;
 
     float4 p1 = gConst[0];
-    float4 p2 = p1 - normalize(gConst[2]) * 5000 * lifeAspect;
+    float4 p2 = p1 + normalize(gConst[2]) * length * lifeAspect;
 
     float4 pointsProj[] = {
         mul(mul(float4(p1.xyz, 1), view[0]), proj[0]),
         mul(mul(float4(p2.xyz, 1), view[0]), proj[0])
     };
-
-    float2 direction = pointsProj[1].xy - pointsProj[0].xy;
-    float2 perpendicular = normalize(float2(direction.y, -direction.x));
+    pointsProj[0].xy /= max(pointsProj[0].w, 0);
+    pointsProj[1].xy /= max(pointsProj[1].w, 0);
 
     float2 quadUV[6] = { //If I won't understand it in month I'll give 100 rubles to Nikita
         float2(-1, -1), float2(1, -1), float2(-1, 1),
         float2(1, -1), float2(-1, 1), float2(1, 1)
     };
 
-    float4 pos = pointsProj[vID % 2];
-    
-    //float4 viewPos = mul(float4(pos.xyz, 1.0f), view[0]);
-    //float4 projPos = mul(viewPos, proj[0]);
+    float2 direction = pointsProj[1].xy - pointsProj[0].xy;
+    float2 perpendicular = normalize(float2(direction.y, -direction.x) * float2(aspect.x, 1));
 
-    pos.xy += perpendicular * quadUV[vID].y * float2(aspect.x, 1) * sz;
+    float2 pos = pointsProj[vID % 2];
+
+    pos += perpendicular * quadUV[vID].y * float2(aspect.x, 1) * sz;
 
     output.uv = quadUV[vID];
-    output.pos = pos;
+    output.pos = float4(pos, 0, 1);
 
     return output;
 }
