@@ -79,7 +79,7 @@ public:
         c.scale = 20000;
 
             XMVECTOR currentPos = XMVectorSet(
-                Enemy::enemyData.enemyConstellationOffset.r[3].m128_f32[0],  // ? Без Enemy::
+                Enemy::enemyData.enemyConstellationOffset.r[3].m128_f32[0],  // ? пїЅпїЅпїЅ Enemy::
                 Enemy::enemyData.enemyConstellationOffset.r[3].m128_f32[1],
                 Enemy::enemyData.enemyConstellationOffset.r[3].m128_f32[2],
                 1.0f
@@ -162,6 +162,7 @@ public:
         originStarsCords = _starsCords;
         originConstellationEdges = _constellationEdges;
         prevStarsCords = _starsCords;
+        targetConstellation = this;
 
         starsCords = _starsCords;
         starsHealth = _starsHealth;
