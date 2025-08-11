@@ -22,29 +22,26 @@ void mainLoop(float deltaTime)
 
 	drawer::drawWorld(deltaTime);
 
-	/*if (gameState == gameState_::Fight) {
-		drawer::DrawSwordAttack();
-	}*/
 	//--------------------------------
 	//Textures::CreateMipMap();
 
-	//Draw::SwitchRenderTextures();
+	////Draw::SwitchRenderTextures();
+	//Draw::OutputRenderTextures();
 
 	//Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
 	//Depth::Depth(Depth::depthmode::off);
 	//Rasterizer::Cull(Rasterizer::cullmode::off);
 
-	//Shaders::vShader(10);
-	//Shaders::pShader(10);
-	//Draw::NullDrawer(1, 1);
-	//
 	///*InputAssembler::IA(InputAssembler::topology::triList);
 	//Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
 	//Textures::RenderTarget(0, 0);*/
 
-	//Draw::OutputRenderTextures();
-	////Shaders::pShader(3);
+	//Shaders::vShader(10);
+	//Shaders::pShader(10);
 	//Draw::NullDrawer(1, 1);
+
+	////Draw::OutputRenderTextures();
+	////Draw::NullDrawer(1, 1);
 	//--------------------------------
 
 	Draw::Present();
