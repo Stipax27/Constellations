@@ -656,7 +656,7 @@ namespace drawer
                 }
 
                 case weapon_name::Bow: {
-                
+                    
                     point3d fixedUp = point3d(XMVectorGetX(Camera::state.Up),
                         XMVectorGetY(Camera::state.Up),
                         XMVectorGetZ(Camera::state.Up));
@@ -668,10 +668,10 @@ namespace drawer
                         newStar.position = start;
                         newStar.direction = newDirection;
                         newStar.radius = 10.0f;
-                  
+                        
                         newStar.up = fixedUp;
                         newStar.right = fixedRight;
-                   
+                        
 
                         attackStars.push_back(newStar);
                     }
