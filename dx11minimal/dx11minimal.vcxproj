@@ -137,6 +137,9 @@
     <ClInclude Include="dx11minimal.h" />
     <ClInclude Include="Elements.h" />
     <ClInclude Include="EnemyAi.h" />
+    <ClInclude Include="EnemyAiUPD.h" />
+    <ClInclude Include="EnemyData.h" />
+    <ClInclude Include="EnemyDataCon.h" />
     <ClInclude Include="font.h" />
     <ClInclude Include="FpsCounter.h" />
     <ClInclude Include="framework.h" />

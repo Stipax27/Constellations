@@ -75,18 +75,18 @@ public:
 
     friend XMMATRIX CreateEnemyToWorldMatrix(Constellation& c)
     {
-        updateEnemyPosition(deltaTime);
+        
         c.scale = 20000;
 
-        XMVECTOR currentPos = XMVectorSet(
-            Enemy::enemyAi.enemyConstellationOffset.r[3].m128_f32[0],
-            Enemy::enemyAi.enemyConstellationOffset.r[3].m128_f32[1],
-            Enemy::enemyAi.enemyConstellationOffset.r[3].m128_f32[2],
-            1.0f
-        );
+            XMVECTOR currentPos = XMVectorSet(
+                Enemy::enemyData.enemyConstellationOffset.r[3].m128_f32[0],  // ? ��� Enemy::
+                Enemy::enemyData.enemyConstellationOffset.r[3].m128_f32[1],
+                Enemy::enemyData.enemyConstellationOffset.r[3].m128_f32[2],
+                1.0f
+            );
 
         XMMATRIX translation = XMMatrixTranslationFromVector(currentPos);
-        XMMATRIX rotation = XMMatrixRotationQuaternion(Enemy::enemyAi.currentRotation);
+        XMMATRIX rotation = XMMatrixRotationQuaternion(Enemy::enemyData.currentRotation);
         XMMATRIX scale = XMMatrixScaling(c.scale, c.scale, c.scale);
 
         return  scale * rotation * translation;
@@ -117,6 +117,7 @@ public:
             Hero::state.constellationOffset.r[3].m128_f32[2],
             0.0f
         );
+      
 
         // 2. Матрица перемещения в начало координат
         XMMATRIX toOrigin = XMMatrixTranslationFromVector(-heroPosition);

@@ -49,7 +49,12 @@ HWND hWnd;
 #include "MainWindow.h"
 #include "mouse.h"
 #include "font.h"
+
+#include "EnemyData.h"
+#include "EnemyDataCon.h"
 #include "EnemyAi.h"
+#include "EnemyAiUPD.h"
+
 #include "Navigation.h"
 #include "Constellation.h"
 #include "MainWorld.h"

@@ -150,14 +150,24 @@
     <ClInclude Include="GalaxyFog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AriesNebula.h">
-      <Filter>Header Files\Locations</Filter>
-    </ClInclude>
+   
     <ClInclude Include="RenderObject.h">
       <Filter>Header Files\Render</Filter>
     </ClInclude>
     <ClInclude Include="PhysicLoop.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AriesNebula.h">
+      <Filter>Header Files\Locations</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyData.h">
+      <Filter>Header Files\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyDataCon.h">
+      <Filter>Header Files\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyAiUPD.h">
+      <Filter>Header Files\Structures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

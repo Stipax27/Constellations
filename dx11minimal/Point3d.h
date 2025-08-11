@@ -28,9 +28,17 @@ public:
     point3d normalized() const {
         float mag = magnitude();
         if (mag <= std::numeric_limits<float>::epsilon()) {
-            return point3d(0.0f, 1.0f, 0.0f); // Возвращаем вектор по умолчанию
+            return point3d(0.0f, 1.0f, 0.0f); 
         }
         return *this / mag;
+    }
+
+    point3d cross(const point3d& other) const {
+        return point3d{
+            y * other.z - z * other.y,
+            z * other.x - x * other.z,
+            x * other.y - y * other.x 
+        };
     }
 
     inline point3d lerp(const point3d& other, float a)
@@ -49,7 +57,7 @@ public:
     }
 
 
-    bool operator==(const point3d& other) const {   // Перегрузка Операторов для точек.
+    bool operator==(const point3d& other) const {   // ���������� ���������� ��� �����.
         return fabs(x - other.x) < 0.001f &&
             fabs(y - other.y) < 0.001f &&
             fabs(z - other.z) < 0.001f;
@@ -162,7 +170,7 @@ public:
         //Shaders::vShader(0);
         //Shaders::pShader(0);
         //Draw::NullDrawer(0, 1);
-        // Рисование элипса. sz = Размер звезды.
+        // ��������� ������. sz = ������ ������.
 
     }
 
@@ -186,7 +194,7 @@ public:
         p += ofs;
     }
 
-    void rotateX(point3d& p, float angle)// поворот по Оси X.
+    void rotateX(point3d& p, float angle)// ������� �� ��� X.
     {
         float a = angle * PI / 180.;
 
@@ -199,7 +207,7 @@ public:
         p.z = z1;
     }
 
-    void rotateY(point3d& p, float angle)// поворот по Оси Y.
+    void rotateY(point3d& p, float angle)// ������� �� ��� Y.
     {
         float a = angle * PI / 180.;
 
@@ -212,7 +220,7 @@ public:
         p.z = z1;
     }
 
-    void rotateZ(point3d& p, float angle)// поворот по Оси Z.
+    void rotateZ(point3d& p, float angle)// ������� �� ��� Z.
     {
         float a = angle * PI / 180.;
 

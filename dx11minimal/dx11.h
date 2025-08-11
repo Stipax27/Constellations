@@ -1050,10 +1050,15 @@ namespace Hero
 		XMVECTOR heroPosition;
 		XMMATRIX constellationOffset = XMMatrixTranslation(0, 0, 0);
 
+		
+		
 	} static state;
 
+	
+	
 
 }
+
 namespace Camera
 {
 	struct State
