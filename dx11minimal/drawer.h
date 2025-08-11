@@ -613,71 +613,71 @@ namespace drawer
 
             
             switch (current_weapon) {
-            case weapon_name::Sword: {
+                case weapon_name::Sword: {
                 
-                for (int i = 0; i < 25; i++) {
+                    for (int i = 0; i < 25; i++) {
+                        StarProjectile newStar;
+                        newStar.position = start;
+                        newStar.direction = newDirection;
+                        newStar.radius = 15.0f;
+
+                        point3d up = point3d(XMVectorGetX(Camera::state.Up),
+                            XMVectorGetY(Camera::state.Up),
+                            XMVectorGetZ(Camera::state.Up));
+                        point3d right = point3d(XMVectorGetX(Camera::state.Right),
+                            XMVectorGetY(Camera::state.Right),
+                            XMVectorGetZ(Camera::state.Right));
+
+                        newStar.position += up * (i * 15 - 150);
+                        newStar.position += right * (i * 15 - 150);
+
+                        attackStars.push_back(newStar);
+                    }
+                    ProcessSound("Sword.wav");
+                    break;
+                }
+
+                case weapon_name::Shield: {
+                
                     StarProjectile newStar;
                     newStar.position = start;
                     newStar.direction = newDirection;
-                    newStar.radius = 15.0f;
+                    newStar.radius = 300.0f;
 
-                    point3d up = point3d(XMVectorGetX(Camera::state.Up),
+                    newStar.up = point3d(XMVectorGetX(Camera::state.Up),
                         XMVectorGetY(Camera::state.Up),
                         XMVectorGetZ(Camera::state.Up));
-                    point3d right = point3d(XMVectorGetX(Camera::state.Right),
-                        XMVectorGetY(Camera::state.Right),
-                        XMVectorGetZ(Camera::state.Right));
-
-                    newStar.position += up * (i * 15 - 150);
-                    newStar.position += right * (i * 15 - 150);
+                    newStar.right = newDirection.cross(newStar.up).normalized();
+                    newStar.up = newStar.right.cross(newDirection).normalized();
 
                     attackStars.push_back(newStar);
+                    ProcessSound("ShieldStan3.wav");
+                    break;
                 }
-                ProcessSound("Sword.wav");
-                break;
-            }
 
-            case weapon_name::Shield: {
+                case weapon_name::Bow: {
                 
-                StarProjectile newStar;
-                newStar.position = start;
-                newStar.direction = newDirection;
-                newStar.radius = 300.0f;
+                    point3d fixedUp = point3d(XMVectorGetX(Camera::state.Up),
+                        XMVectorGetY(Camera::state.Up),
+                        XMVectorGetZ(Camera::state.Up));
+                    point3d fixedRight = newDirection.cross(fixedUp).normalized();
+                    fixedUp = fixedRight.cross(newDirection).normalized();
 
-                newStar.up = point3d(XMVectorGetX(Camera::state.Up),
-                    XMVectorGetY(Camera::state.Up),
-                    XMVectorGetZ(Camera::state.Up));
-                newStar.right = newDirection.cross(newStar.up).normalized();
-                newStar.up = newStar.right.cross(newDirection).normalized();
-
-                attackStars.push_back(newStar);
-                ProcessSound("ShieldStan3.wav");
-                break;
-            }
-
-            case weapon_name::Bow: {
-                
-                point3d fixedUp = point3d(XMVectorGetX(Camera::state.Up),
-                    XMVectorGetY(Camera::state.Up),
-                    XMVectorGetZ(Camera::state.Up));
-                point3d fixedRight = newDirection.cross(fixedUp).normalized();
-                fixedUp = fixedRight.cross(newDirection).normalized();
-
-                for (int i = 0; i < 5; i++) {
-                    StarProjectile newStar;
-                    newStar.position = start;
-                    newStar.direction = newDirection;
-                    newStar.radius = 10.0f;
+                    for (int i = 0; i < 5; i++) {
+                        StarProjectile newStar;
+                        newStar.position = start;
+                        newStar.direction = newDirection;
+                        newStar.radius = 10.0f;
                   
-                    newStar.up = fixedUp;
-                    newStar.right = fixedRight;
+                        newStar.up = fixedUp;
+                        newStar.right = fixedRight;
                    
 
-                    attackStars.push_back(newStar);
+                        attackStars.push_back(newStar);
+                    }
+                    ProcessSound("Bow.wav");
+                    break;
                 }
-                ProcessSound("Bow.wav");
-                break;
-            }
             }
 
             isAttacking = true;
