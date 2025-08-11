@@ -690,8 +690,7 @@ namespace drawer
     point3d start;
     
     void HandleMouseClick(XMVECTOR heroPosition) {
-        if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 && currentTime - lastAttackTime > 500) {
-            //playerConst->Morph(playerConst);
+        if (GetAsyncKeyState(VK_LBUTTON) && 0x8000 && currentTime - lastAttackTime > 500) {
 
             if (gameState == gameState_::selectEnemy) {
                 gameState = gameState_::Fight;
@@ -790,6 +789,7 @@ namespace drawer
             }
 
             isAttacking = true;
+            //current_weapon = weapon_name::None;
         }
     }
 
@@ -1097,7 +1097,8 @@ namespace drawer
            
             drawСonstellation(c,false,1000.f,100.f);
 
-            HandleMouseClick(heroPosition);
+            if (!playerConst.morphing)
+                HandleMouseClick(heroPosition);
             UpdateAttack(deltaTime);
             DrawSwordAttack();
 
@@ -1323,7 +1324,8 @@ namespace drawer
             Constellation& player = *starSet[player_sign];
 
             // Обновление атак
-            HandleMouseClick(heroPosition);
+            if (!playerConst.morphing)
+                HandleMouseClick(heroPosition);
             UpdateAttack(deltaTime);
             DrawSwordAttack();
 
