@@ -44,9 +44,9 @@ public:
 
     std::vector<point3d> originStarsCords;
     std::vector <std::vector <float>> originConstellationEdges;
-    std::vector<point3d> targetStarsCords;
-    std::vector <std::vector <float>> targetConstellationEdges;
     std::vector<point3d> prevStarsCords;
+
+    Constellation* targetConstellation;
     bool morphing = false;
     float morphProgress = 0.0f;
 
@@ -224,16 +224,15 @@ public:
 
     //////////////////////////////////////////////////////////////////////////////////
 
-    void Morph(const Constellation& c)
+    void Morph(Constellation* c)
     {
-        if (!morphing)
+        if (!morphing && targetConstellation != c)
         {
             morphing = true;
-            morphProgress = -0.12f;
+            morphProgress = -0.1f;
 
             prevStarsCords = starsCords;
-            targetStarsCords = c.originStarsCords;
-            targetConstellationEdges = c.originConstellationEdges;
+            targetConstellation = c;
 
             constellationEdges.clear();
 
@@ -272,7 +271,7 @@ public:
                     }
                     else
                     {
-                        origin = targetStarsCords[i];
+                        origin = targetConstellation->originStarsCords[i];
                     }
 
                     point3d n = point3d(
@@ -291,12 +290,12 @@ public:
             }
             else if (morphProgress <= 2.0f)
             {
-                if (starsCords.size() != targetStarsCords.size())
+                if (starsCords.size() != targetConstellation->originStarsCords.size())
                 {
                     starsCords.clear();
                     float time = timer::GetCounter() / 500;
-                    for (int i = 0; i < targetStarsCords.size(); i++) {
-                        point3d origin = targetStarsCords[i];
+                    for (int i = 0; i < targetConstellation->originStarsCords.size(); i++) {
+                        point3d origin = targetConstellation->originStarsCords[i];
 
                         point3d n = point3d(
                             noise(point3d(origin.y, origin.z, origin.x) + i * 0.1f),
@@ -311,17 +310,17 @@ public:
                     }
                 }
 
-                if (constellationEdges.size() != targetConstellationEdges.size())
+                if (constellationEdges.size() != targetConstellation->originConstellationEdges.size())
                 {
                     constellationEdges.clear();
-                    for (int i = 0; i < targetConstellationEdges.size(); i++) {
-                        constellationEdges.push_back(targetConstellationEdges[i]);
+                    for (int i = 0; i < targetConstellation->originConstellationEdges.size(); i++) {
+                        constellationEdges.push_back(targetConstellation->originConstellationEdges[i]);
                     }
                 }
 
-                for (int i = 0; i < targetStarsCords.size(); i++) {
+                for (int i = 0; i < targetConstellation->originStarsCords.size(); i++) {
                     point3d p = starsCords[i];
-                    starsCords[i] = p.lerp(targetStarsCords[i], morphProgress - 1.0f);
+                    starsCords[i] = p.lerp(targetConstellation->originStarsCords[i], morphProgress - 1.0f);
                 }
             }
 

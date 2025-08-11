@@ -196,52 +196,6 @@ namespace drawer
 
 
 
-    void morphWepon(std::vector <point3d>& starArray1, std::vector<std::vector<float>> starEdges1, std::vector <point3d>& starArray2, std::vector<std::vector<float>> starEdges2, std::vector <point3d>& morphArray, std::vector <std::vector <float>> Morp_indices, std::vector <float> Morp_health)
-    {
-        morphArray.clear();
-        Morp_indices.clear();
-        Morp_health.clear();
-        int sz1 = starArray1.size();
-        int sz2 = starArray2.size();
-        int sz3 = starEdges1.size();
-        int sz4 = starEdges2.size();
-        if (sz1 < sz2)
-        {
-            for (int i = 0; i < sz1;i++)
-            {
-                float morphSpeed = 0.01;
-                morphArray.push_back(point3d::lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(currentTime * morphSpeed))));
-            }
-        }
-        else
-        {
-            for (int i = 0; i < sz2;i++)
-            {
-                float morphSpeed = 0.01;
-                morphArray.push_back(point3d::lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(currentTime * morphSpeed))));
-            }
-        }
-        if (sz3 > sz4)
-        {
-            for (float i = 0; i < sz4;i++)
-            {
-                Morp_indices.push_back({ i, i + 1 });
-            }
-        }
-        else
-        {
-            for (float i = 0; i < sz3;i++)
-            {
-                Morp_indices.push_back({ i, i + 1 });
-            }
-        }
-        for (int i = 0; i < 15;i++)
-        {
-            Morp_health.push_back(1);
-        }
-
-        //drawСonstellation(morphArray, Morp_indices, Morp_health); Отключено
-    }
 
     void drawPlayerСonstellationToMenu()
     {
@@ -682,7 +636,7 @@ namespace drawer
             return;
         }
         if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 && currentTime - lastAttackTime > 500) {
-            playerConst->Morph(*starSet[12 + (int)current_weapon]);
+            //playerConst->Morph(playerConst);
 
             if (gameState == gameState_::selectEnemy) {
                 gameState = gameState_::Fight;
@@ -1071,6 +1025,9 @@ namespace drawer
                 gameState = gameState_::selectEnemy;
                 break;
             }
+
+            Constellation& playerConst = *starSet[player_sign];
+            playerConst.RenderMorph(deltaTime);
             
             if (t) {
                 t = false;
@@ -1078,7 +1035,7 @@ namespace drawer
             }
             Camera::state.mouse = true;
             Depth::Depth(Depth::depthmode::off);
-            SelectWeapon();
+            SelectWeapon(&playerConst);
             SelectElement();
 
             DrawCombatStats();
@@ -1090,9 +1047,6 @@ namespace drawer
 
            //StartBattle();
            //enemyFight();
-
-            Constellation& playerConst = *starSet[player_sign];
-            playerConst.RenderMorph(deltaTime);
 
             modelTransform = &placeToWorld;
             modelProject = &fightProject;

@@ -45,11 +45,13 @@ void initWeapon() {
     weapon[(int)weapon_name::Staff].constellation = &Staff;
 }
 
-void SelectWeapon() {
+void SelectWeapon(Constellation* playerConst) {
 
     if (GetAsyncKeyState('1')) current_weapon = weapon_name::Sword;
     if (GetAsyncKeyState('2')) current_weapon = weapon_name::Shield;
     if (GetAsyncKeyState('3')) current_weapon = weapon_name::Bow;
     if (GetAsyncKeyState('4')) current_weapon = weapon_name::Staff;
+
+    playerConst->Morph(starSet[12 + (int)current_weapon]);
 }
 
