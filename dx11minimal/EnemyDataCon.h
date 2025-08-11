@@ -1,22 +1,22 @@
 namespace Enemy {
-    // Перечисление состояний ИИ
+  
     enum class AIState {
         PATROL,
         CHASE,
         SEARCH
     };
 
-    // Структура данных врага
     struct EnemyData {
         AIState currentState = AIState::PATROL;
         float playerDistance = 0.0f;
         bool playerVisible = false;
         std::vector<point3d> waypoints;
         int currentWaypoint = 0;
-        float patrolSpeed = 150.0f;
-        float chaseSpeed = 200.0f;
+        float patrolSpeed = 10.0f;
+        float chaseSpeed = 20.0f;
         float rotationSpeed = 0.1f;
         float patrolProgress = 0.f;
+        float patrolRadius = 1000.0f;
 
         XMVECTOR currentRotation;
         XMVECTOR ForwardEn;
@@ -25,7 +25,7 @@ namespace Enemy {
         XMVECTOR UpEn;
         XMMATRIX enemyConstellationOffset;
 
-        // Конструктор для правильной инициализации
+        
         EnemyData() :
             currentRotation(XMQuaternionIdentity()),
             ForwardEn(XMVectorSet(0, 0, 1, 0)),
@@ -42,7 +42,7 @@ namespace Enemy {
         }
     };
     extern EnemyData enemyData;
-    // Класс для работы с кубическими сплайнами
+ 
     class SplinePath {
     public:
         struct SplineSegment {
@@ -60,7 +60,7 @@ namespace Enemy {
         point3d CubicBezier(point3d p0, point3d p1, point3d p2, point3d p3, float t) const;
     };
 
-    // Основной класс ИИ врага
+
     class EnemyAI {
     public:
         EnemyData data;
@@ -70,7 +70,9 @@ namespace Enemy {
 
         void AiUpdate(float deltaTime, point3d& heroPosition, point3d& enemyPositions);
         void Patrol(float deltaTime, point3d& enemyPositions);
-        void Chase(point3d& heroPos, point3d& enemyPositions);
-        void UpdateRotation(point3d& direction);
+        void Chase(point3d& heroPos, point3d& enemyPositions , float deltaTime);
+        void UpdateRotation(point3d direction);
     };
+
+    static EnemyData enemyData;
 }

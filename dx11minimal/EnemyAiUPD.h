@@ -1,5 +1,5 @@
 namespace Enemy {
-    // Реализация методов SplinePath
+    
     void SplinePath::BuildSpline(const std::vector<point3d>& waypoints) {
         segments.clear();
         totalLength = 0.0f;
@@ -58,26 +58,26 @@ namespace Enemy {
         return p;
     }
 
-    // Реализация методов EnemyAI
+ 
     void EnemyAI::AiUpdate(float deltaTime, point3d& heroPosition, point3d& enemyPositions) {
         data.playerDistance = (heroPosition - enemyPositions).magnitude();
         data.playerVisible = (data.playerDistance < 1000.0f);
 
         switch (data.currentState) {
-        case AIState::PATROL:
-            Patrol(deltaTime, enemyPositions);
-            if (data.playerVisible && data.playerDistance > 500.0f) {
-                data.currentState = AIState::CHASE;
-            }
-            break;
+            case AIState::PATROL:
+                Patrol(deltaTime, enemyPositions);
+                if (data.playerVisible && data.playerDistance > 500.0f) {
+                    data.currentState = AIState::CHASE;
+                }
+                break;
 
-        case AIState::CHASE:
-            Chase(heroPosition, enemyPositions);
-            if (!data.playerVisible) {
-                data.currentState = AIState::PATROL;
-                splineInitialized = false; // Перестраиваем сплайн при возврате к патрулированию
-            }
-            break;
+            /*case AIState::CHASE:
+                Chase(heroPosition, enemyPositions, deltaTime);
+                if (!data.playerVisible) {
+                    data.currentState = AIState::PATROL;
+                    splineInitialized = false;
+                }
+                break;*/
         }
     }
 
@@ -90,9 +90,7 @@ namespace Enemy {
             splineProgress = 0.0f;
         }
 
-        deltaTime /= 1000.0f;
         splineProgress += data.patrolSpeed * deltaTime / splinePath.totalLength;
-
         if (splineProgress >= 1.0f) {
             splineProgress = 0.0f;
         }
@@ -100,22 +98,30 @@ namespace Enemy {
         point3d targetPos = splinePath.Evaluate(splineProgress);
         point3d moveDir = (targetPos - enemyPositions).normalized() * data.patrolSpeed * deltaTime;
 
+        // Обновляем позицию и матрицу трансформации
         enemyPositions += moveDir;
+
+        data.enemyConstellationOffset = XMMatrixRotationQuaternion(data.currentRotation) *
+            XMMatrixTranslation(enemyPositions.x, enemyPositions.y, enemyPositions.z);
 
         if (moveDir.magnitude() > 0.1f) {
             UpdateRotation(moveDir.normalized());
         }
     }
 
-    void EnemyAI::Chase(point3d& heroPos, point3d& enemyPositions) {
+    void EnemyAI::Chase(point3d& heroPos, point3d& enemyPositions, float deltaTime) {
         point3d direction = (heroPos - enemyPositions).normalized();
         point3d moveDir = direction * data.chaseSpeed * (deltaTime / 1000.0f);
 
+        // Обновляем позицию и матрицу трансформации
         enemyPositions += moveDir;
+        data.enemyConstellationOffset = XMMatrixRotationQuaternion(data.currentRotation) *
+            XMMatrixTranslation(enemyPositions.x, enemyPositions.y, enemyPositions.z);
+
         UpdateRotation(direction);
     }
 
-    void EnemyAI::UpdateRotation(point3d& direction) {
+    void EnemyAI::UpdateRotation(point3d direction) {
         if (direction.magnitude() > 0.1f) {
             XMVECTOR targetDir = XMVectorSet(direction.x, direction.y, direction.z, 0.0f);
             targetDir = XMVector3Normalize(targetDir);
@@ -130,19 +136,24 @@ namespace Enemy {
                 data.currentRotation = XMQuaternionMultiply(data.currentRotation, rotQuat);
                 data.currentRotation = XMQuaternionNormalize(data.currentRotation);
 
+                // Обновляем векторы ориентации
                 data.ForwardEn = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), data.currentRotation);
                 data.UpEn = XMVector3Rotate(data.defaultUp, data.currentRotation);
                 data.RightEn = XMVector3Cross(data.UpEn, data.ForwardEn);
+
+                // Обновляем матрицу с новым вращением
+                XMVECTOR pos = data.enemyConstellationOffset.r[3];
+                data.enemyConstellationOffset = XMMatrixRotationQuaternion(data.currentRotation) *
+                    XMMatrixTranslation(XMVectorGetX(pos), XMVectorGetY(pos), XMVectorGetZ(pos));
             }
         }
     }
 }
 
-// Глобальный экземпляр (если нужно)
-Enemy::EnemyAI enemyAI(enemyData);
-
-void updateEnemyPosition(float deltaTime, point3d& heroPosition,
-    point3d& enemyPositions, Enemy::EnemyData& enemyData) {
-    Enemy::EnemyAI enemyAI(enemyData);
+void updateEnemyPosition(float deltaTime, point3d& heroPosition, point3d& enemyPositions) {
+    static Enemy::EnemyAI enemyAI;
     enemyAI.AiUpdate(deltaTime, heroPosition, enemyPositions);
+
+    // После обновления позиции получаем актуальную матрицу из EnemyAI
+    Enemy::enemyData.enemyConstellationOffset = enemyAI.data.enemyConstellationOffset;
 }

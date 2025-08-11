@@ -1070,7 +1070,7 @@ namespace drawer
         Draw::ClearDepth();
 
         XMVECTOR heroPosition = Hero::state.constellationOffset.r[3];
-        XMVECTOR enemyPositions = enemyData.enemyConstellationOffset.r[3];
+        XMVECTOR enemyPositions = Enemy::enemyData.enemyConstellationOffset.r[3];
 
        //d2dRenderTarget->BeginDraw();
         switch (gameState)
