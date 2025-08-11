@@ -185,7 +185,6 @@ void starIntersectUI(point3d& point, Constellation& Constellation, int i)
             {
                 attack_collision = true;
             }
-            //SelectObject(window.context, brush);
         }
         else
         {
@@ -208,7 +207,6 @@ void starIntersectUI(point3d& point, Constellation& Constellation, int i)
                 attack_collision = true;
 
             }
-            //SelectObject(window.context, brush);
         }
         else
         {
@@ -228,7 +226,6 @@ void starIntersectUI(point3d& point, Constellation& Constellation, int i)
             {
                 attack_collision = true;
             }
-            //SelectObject(window.context, brush);
         }
         else
         {

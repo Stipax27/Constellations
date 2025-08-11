@@ -48,7 +48,7 @@ namespace drawer
             point3d point1 = TransformPoint(starArray[starEdges[i][0]], Constellation.Transform);
             point3d point2 = TransformPoint(starArray[starEdges[i][1]], Constellation.Transform);
 
-            if (!Constellation.morphed)
+            if (!Constellation.morphing && Constellation.starsCords.size() == Constellation.originStarsCords.size())
             {
                 if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0)
                 {
@@ -675,13 +675,14 @@ namespace drawer
     const float projectileSpeed = 2.0f;
     point3d mouseRay;
     point3d start;
-    void HandleMouseClick() {
+    void HandleMouseClick(Constellation* playerConst) {
 
         if (!Hero::state.constellationOffset.r || !Camera::state.Eye.m128_f32[0]) {
             OutputDebugStringA("Hero or Camera not initialized!\n");
             return;
         }
         if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 && currentTime - lastAttackTime > 500) {
+            playerConst->Morph(*starSet[12 + (int)current_weapon]);
 
             if (gameState == gameState_::selectEnemy) {
                 gameState = gameState_::Fight;
@@ -1036,7 +1037,7 @@ namespace drawer
            
             drawСonstellation(c,false,1000.f,100.f);
 
-            HandleMouseClick();
+            HandleMouseClick(&playerConst);
             UpdateAttack(deltaTime);
             DrawSwordAttack();
 
@@ -1048,9 +1049,6 @@ namespace drawer
             drawString("Find Constallations and click on it", window.width / 2, (200. / 1440) * window.height, 1, true);
             drawString("Features:\nMouse wheel to zoom in and out", (1700. / 2560) * window.width, (1200. / 1440) * window.height, .7f, false);
 
-            if (GetAsyncKeyState('M')) {
-                playerConst.Morph(*starSet[13]);
-            }
             playerConst.RenderMorph(deltaTime);
 
             isBattleActive = false;
@@ -1092,6 +1090,9 @@ namespace drawer
 
            //StartBattle();
            //enemyFight();
+
+            Constellation& playerConst = *starSet[player_sign];
+            playerConst.RenderMorph(deltaTime);
 
             modelTransform = &placeToWorld;
             modelProject = &fightProject;
@@ -1247,7 +1248,7 @@ namespace drawer
             Constellation& player = *starSet[player_sign];
 
             // Обновление атак
-            HandleMouseClick();
+            HandleMouseClick(&playerConst);
             UpdateAttack(deltaTime);
             DrawSwordAttack();
 

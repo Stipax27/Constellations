@@ -46,7 +46,8 @@ public:
     std::vector <std::vector <float>> originConstellationEdges;
     std::vector<point3d> targetStarsCords;
     std::vector <std::vector <float>> targetConstellationEdges;
-    bool morphed = false;
+    std::vector<point3d> prevStarsCords;
+    bool morphing = false;
     float morphProgress = 0.0f;
 
     std::vector<point3d> starsCords;
@@ -159,6 +160,7 @@ public:
 
         originStarsCords = _starsCords;
         originConstellationEdges = _constellationEdges;
+        prevStarsCords = _starsCords;
 
         starsCords = _starsCords;
         starsHealth = _starsHealth;
@@ -224,12 +226,12 @@ public:
 
     void Morph(const Constellation& c)
     {
-        if (!morphed)
+        if (!morphing)
         {
-
-            morphed = true;
+            morphing = true;
             morphProgress = -0.12f;
 
+            prevStarsCords = starsCords;
             targetStarsCords = c.originStarsCords;
             targetConstellationEdges = c.originConstellationEdges;
 
@@ -240,7 +242,7 @@ public:
 
     void RenderMorph(float deltaTime)
     {
-        if (morphed)
+        if (morphing)
         {
             morphProgress += deltaTime / 1000.0f;
 
@@ -264,9 +266,9 @@ public:
                 for (int i = 0; i < starsCords.size(); i++) {
 
                     point3d origin;
-                    if (i < originStarsCords.size())
+                    if (i < prevStarsCords.size())
                     {
-                        origin = originStarsCords[i];
+                        origin = prevStarsCords[i];
                     }
                     else
                     {
@@ -283,7 +285,7 @@ public:
 
                     point3d p = starsCords[i];
                     starsCords[i] = p.lerp(
-                        (localUp * sin(time * 200) + localRight * cos(time * 200)) * 0.15f,
+                        (localUp * sin(time * 10) + localRight * cos(time * 10)) * 0.15f,
                         morphProgress);
                 }
             }
@@ -305,7 +307,7 @@ public:
                         point3d localRight = (right * n).normalized();
 
                         starsCords.push_back(
-                            (localUp * sin(time * 200) + localRight * cos(time * 200)) * 0.15f);
+                            (localUp * sin(time * 10) + localRight * cos(time * 10)) * 0.15f);
                     }
                 }
 
@@ -321,6 +323,11 @@ public:
                     point3d p = starsCords[i];
                     starsCords[i] = p.lerp(targetStarsCords[i], morphProgress - 1.0f);
                 }
+            }
+
+            if (morphProgress >= 2.0f)
+            {
+                morphing = false;
             }
         }
     }

@@ -584,7 +584,7 @@ MonthSign player_month = MonthSign::January;
 
 int player_day = 1;
 
-ZodiacSign player_sign = ZodiacSign::SCORPIO;
+ZodiacSign player_sign = ZodiacSign::CANCER;
 
 ZodiacSign getZodiacSign(int day, int month) {
     if ((month == March && day >= 21) || (month == April && day <= 19))       return ARIES;

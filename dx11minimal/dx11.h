@@ -1039,7 +1039,6 @@ namespace Hero
 
 	struct State
 	{
-		
 		XMVECTOR relativeMovement = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR currentRotation = XMQuaternionIdentity();
 		XMVECTOR Forward = XMVectorSet(0, 0, 1, 0);
