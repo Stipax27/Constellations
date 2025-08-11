@@ -1,9 +1,10 @@
-namespace Enemy {
+﻿namespace Enemy {
   
     enum class AIState {
         PATROL,
         CHASE,
-        SEARCH
+        ORBIT,
+        ATTACK
     };
 
     struct EnemyData {
@@ -17,6 +18,14 @@ namespace Enemy {
         float rotationSpeed = 0.1f;
         float patrolProgress = 0.f;
         float patrolRadius = 1000.0f;
+        float orbitRadius = 50000.0f;  // Радиус орбиты вокруг игрока
+        float orbitSpeed = .001f;     // Скорость движения по орбите
+        float attackCooldown = 1000.0f;  // Таймер между атаками
+        float attackInterval = 1000.0f;  // Интервал между атаками (секунды)
+        float attackDuration = 1000.0f;  // Длительность атаки
+        float attackTimer = 0.0f;  
+        point3d lastOrbitPosition;// Таймер атаки
+        bool isAttacking = false;
 
         XMVECTOR currentRotation;
         XMVECTOR ForwardEn;
@@ -35,8 +44,9 @@ namespace Enemy {
         {
             waypoints = {
                 point3d(-50000.0f, 0.0f, 0.0f),
-                point3d(0.0f, 0.0f, 50000.0f),
-                point3d(50000.0f, 1000.0f, 25000.0f)
+                point3d(0.0f, 0.0f, 25000.0f),
+                point3d(25000.0f, 0.0f, 0.0f),
+                point3d(0.0f, 0.0f, -50000.0f)
             };
             UpEn = XMVector3Rotate(defaultUp, currentRotation);
         }
@@ -72,6 +82,8 @@ namespace Enemy {
         void Patrol(float deltaTime, point3d& enemyPositions);
         void Chase(point3d& heroPos, point3d& enemyPositions , float deltaTime);
         void UpdateRotation(point3d direction);
+        void OrbitPlayer(float deltaTime, point3d& heroPos, point3d& enemyPos);
+        void AttackPlayer(float deltaTime, point3d& heroPos, point3d& enemyPos);
     };
 
     static EnemyData enemyData;
