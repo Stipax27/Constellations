@@ -22,7 +22,7 @@
         float orbitSpeed = .0001f;     // Скорость движения по орбите
         float attackCooldown = 1000.0f;  // Таймер между атаками
         float attackInterval = 1000.0f;  // Интервал между атаками (секунды)
-        float attackDuration = 1000.0f;  // Длительность атаки
+        float attackDuration = 2.0f;  // Длительность атаки
         float attackTimer = 0.0f;  
         point3d lastOrbitPosition;// Таймер атаки
         bool isAttacking = false;

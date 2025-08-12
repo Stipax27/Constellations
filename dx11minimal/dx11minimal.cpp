@@ -50,6 +50,7 @@ HWND hWnd;
 #include "mouse.h"
 #include "font.h"
 
+#include "DodgeEnemy.h"
 #include "EnemyData.h"
 #include "EnemyDataCon.h"
 #include "EnemyAi.h"
@@ -58,7 +59,6 @@ HWND hWnd;
 #include "Navigation.h"
 #include "Constellation.h"
 #include "MainWorld.h"
-#include "DodgeEnemy.h"
 #include "StatusGame.h"
 #include "Weapon.h"
 #include "Elements.h"

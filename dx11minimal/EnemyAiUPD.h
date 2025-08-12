@@ -1,5 +1,7 @@
 ﻿namespace Enemy {
-    
+
+    point3d AttakDir;
+
     void SplinePath::BuildSpline(const std::vector<point3d>& waypoints) {
         segments.clear();
         totalLength = 0.0f;
@@ -79,6 +81,7 @@
                 splineInitialized = false;
             }
             else if (data.attackCooldown <= 0.0f) {
+                AttakDir = heroPosition - enemyPositions;
                 data.currentState = AIState::ATTACK;
                 data.attackTimer = 500.f; // Длительность атаки 0.5 секунды
                 data.lastOrbitPosition = enemyPositions;
@@ -89,7 +92,7 @@
             AttackPlayer(deltaTime, heroPosition, enemyPositions);
             if (data.attackTimer <= 0.0f) {
                 data.currentState = AIState::ORBIT;
-                data.attackCooldown = 5000.0f; // Следующая атака через 2 секунды
+                data.attackCooldown = 5000.0f; // Следующая атака через 5 секунды
             }
             break;
         }
@@ -171,8 +174,8 @@
 
     void EnemyAI::AttackPlayer(float deltaTime, point3d& heroPos, point3d& enemyPos) {
         // Быстро летим к игроку
-        point3d attackDir = (heroPos - enemyPos).normalized();
-        enemyPos += attackDir * data.chaseSpeed * 5.0f * deltaTime;
+        point3d attackDir = AttakDir.normalized();
+        enemyPos += (attackDir * data.chaseSpeed * 5.0f * deltaTime)/ data.attackDuration;
 
         // Обновляем матрицу трансформации
         data.enemyConstellationOffset = XMMatrixRotationQuaternion(data.currentRotation) *
@@ -181,10 +184,10 @@
         UpdateRotation(attackDir);
 
         // Проверяем столкновение с игроком
-        if ((heroPos - enemyPos).magnitude() < 0.0f) {
+        if ((heroPos - enemyPos).magnitude() < 30.0f) {
             // Наносим урон игроку (10 единиц за атаку)
             // player.TakeDamage(10.0f);
-
+            ShakingHero(heroPos);
             // Возвращаемся на орбиту досрочно, если достигли игрока
             data.attackTimer = 0.0f;
         }
