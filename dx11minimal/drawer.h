@@ -981,7 +981,7 @@ namespace drawer
             Constellation& playerConst = *starSet[player_sign];
             playerConst.Transform = CreateHeroToWorldMatrix(playerConst);
 
-           
+            
             Constellation& c = *starSet[0]; // Используем текущего врага
 
             c.Transform = CreateEnemyToWorldMatrix(c);

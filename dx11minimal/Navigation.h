@@ -105,7 +105,7 @@ void updateFlyDirection() { // ��������� �������
 }
 // Рабочая зона Лехи, если что-то поменяли, то оставьте коммент на строке с изменением (а прерыдущий код закомменьте), СПАСИБО!!!
 void updateFlySpeed(float deltaTime) {
-    bool isMoving = (flyDirection.x != 0 || flyDirection.y != 0 || flyDirection.z != 0);
+    bool isMoving = (flyDirection.magnitude() != 0);
 
     bool isBoosting = (GetAsyncKeyState(VK_SHIFT) & 0x8000);
     float targetSpeed = 0.2f; // isBoosting ? boostFlySpeed : maxFlySpeed;
