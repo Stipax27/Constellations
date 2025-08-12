@@ -1,4 +1,5 @@
-﻿point3d player_dodge_ofs = { 0,0,0 };
+﻿//ot mouse teleport sozvesdia ne zavisit
+point3d player_dodge_ofs = { 0,0,0 };
 point3d starfield_angles = { 0,0,0 };
 point3d milkyway_angles = { 0,0,100 };
 
@@ -17,7 +18,8 @@ const float SENSIVITY = 0.25f;
 const float CURSOR_ZONE_DELTA = MAX_CURSOR_DEVIATION - CURSOR_IGNORE_ZONE;
 
 
-void updateFlyDirection() { // ��������� ���������� 
+void updateFlyDirection() 
+{ // ��������� ���������� 
     flyDirection = { 0, 0, 0 };
 
     if (GetAsyncKeyState('W') & 0x8000) {
@@ -102,6 +104,7 @@ void updateFlyDirection() { // ��������� �������
     else {
         Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
     }
+    
 }
 
 void updateFlySpeed(float deltaTime) {// ���������� �� ����� �����
@@ -126,8 +129,10 @@ void updateFlySpeed(float deltaTime) {// ���������� �� �
     }
 }
 
-void updatePlayerPosition(float deltaTime) {// ���������� ������� ��
-    if (currentFlySpeed > 0) {
+void updatePlayerPosition(float deltaTime) 
+{
+    if (currentFlySpeed > 0) 
+    {
         // Обновляем Hero::state.constellationOffset
         Hero::state.constellationOffset = Hero::state.constellationOffset *
             XMMatrixTranslation(
