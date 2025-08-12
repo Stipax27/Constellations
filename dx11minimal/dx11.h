@@ -1120,7 +1120,7 @@ namespace Camera
 		state.Right = XMVector3Normalize(XMVector3Cross(heroUp, state.Forward));
 	}
 
-	void Camera()//обновление позиции камеры после обновления позиции созвездия. В Navigation.h, Loop.h, Mouse.h(navigationByMouse 2 раза) и тут тоже есть вызовы.
+	void Camera() //обновление позиции камеры после обновления позиции созвездия. В Navigation.h, Loop.h, Mouse.h(navigationByMouse 2 раза) и тут тоже есть вызовы.
 	{
 		UpdateCameraPosition();
 
