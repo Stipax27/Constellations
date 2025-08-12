@@ -14,12 +14,12 @@
         std::vector<point3d> waypoints;
         int currentWaypoint = 0;
         float patrolSpeed = 10.0f;
-        float chaseSpeed = 20.0f;
+        float chaseSpeed = 10.0f;
         float rotationSpeed = 0.1f;
         float patrolProgress = 0.f;
         float patrolRadius = 1000.0f;
-        float orbitRadius = 50000.0f;  // Радиус орбиты вокруг игрока
-        float orbitSpeed = .001f;     // Скорость движения по орбите
+        float orbitRadius = 15000.0f;  // Радиус орбиты вокруг игрока
+        float orbitSpeed = .0001f;     // Скорость движения по орбите
         float attackCooldown = 1000.0f;  // Таймер между атаками
         float attackInterval = 1000.0f;  // Интервал между атаками (секунды)
         float attackDuration = 1000.0f;  // Длительность атаки

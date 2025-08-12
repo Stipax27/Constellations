@@ -81,7 +81,7 @@
             else if (data.attackCooldown <= 0.0f) {
                 data.currentState = AIState::ATTACK;
                 data.attackTimer = 500.f; // Длительность атаки 0.5 секунды
-                data.lastOrbitPosition = enemyPositions; // Запоминаем позицию перед атакой
+                data.lastOrbitPosition = enemyPositions;
             }
             break;
 
@@ -89,7 +89,7 @@
             AttackPlayer(deltaTime, heroPosition, enemyPositions);
             if (data.attackTimer <= 0.0f) {
                 data.currentState = AIState::ORBIT;
-                data.attackCooldown = 2000.0f; // Следующая атака через 2 секунды
+                data.attackCooldown = 5000.0f; // Следующая атака через 2 секунды
             }
             break;
         }
@@ -130,7 +130,7 @@
 
     void EnemyAI::Chase(point3d& heroPos, point3d& enemyPositions, float deltaTime) {
         point3d direction = (heroPos - enemyPositions).normalized();
-        point3d moveDir = direction * data.chaseSpeed * (deltaTime / 1000.0f);
+        point3d moveDir = direction * data.chaseSpeed * (deltaTime/1000.f);
 
         // Обновляем позицию и матрицу трансформации
         enemyPositions += moveDir;
