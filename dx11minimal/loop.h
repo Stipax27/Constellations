@@ -38,7 +38,7 @@ void mainLoop(float deltaTime)
 
 	//Shaders::vShader(10);
 	//Shaders::pShader(10);
-	//Draw::NullDrawer(1, 1);
+	//context->Draw(6, 0);
 
 	////Draw::OutputRenderTextures();
 	////Draw::NullDrawer(1, 1);

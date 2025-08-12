@@ -481,44 +481,44 @@ namespace Shaders {
 
 	void Init()
 	{
-		CreateVS(0, nameToPatchLPCWSTR("VS.shader"));
-		CreatePS(0, nameToPatchLPCWSTR("PS.shader"));
+		CreateVS(0, nameToPatchLPCWSTR("..\\dx11minimal\\VS.shader"));
+		CreatePS(0, nameToPatchLPCWSTR("..\\dx11minimal\\PS.shader"));
 
-		CreateVS(1, nameToPatchLPCWSTR("VSS.shader"));
-		CreatePS(1, nameToPatchLPCWSTR("PSS.shader"));
+		CreateVS(1, nameToPatchLPCWSTR("..\\dx11minimal\\VSS.shader"));
+		CreatePS(1, nameToPatchLPCWSTR("..\\dx11minimal\\PSS.shader"));
 
-		CreateVS(2, nameToPatchLPCWSTR("VSFS.shader"));
-		CreatePS(2, nameToPatchLPCWSTR("PSFS.shader"));
+		CreateVS(2, nameToPatchLPCWSTR("..\\dx11minimal\\VSFS.shader"));
+		CreatePS(2, nameToPatchLPCWSTR("..\\dx11minimal\\PSFS.shader"));
 
-		CreateVS(3, nameToPatchLPCWSTR("SpaceStars_VS.shader"));
-		CreatePS(3, nameToPatchLPCWSTR("SpaceStars_PS.shader"));
+		CreateVS(3, nameToPatchLPCWSTR("..\\dx11minimal\\SpaceStars_VS.shader"));
+		CreatePS(3, nameToPatchLPCWSTR("..\\dx11minimal\\SpaceStars_PS.shader"));
 
-		CreateVS(4, nameToPatchLPCWSTR("StarLink_VS.shader"));
-		CreatePS(4, nameToPatchLPCWSTR("StarLink_PS.shader"));
+		CreateVS(4, nameToPatchLPCWSTR("..\\dx11minimal\\StarLink_VS.shader"));
+		CreatePS(4, nameToPatchLPCWSTR("..\\dx11minimal\\StarLink_PS.shader"));
 
-		CreateVS(5, nameToPatchLPCWSTR("GalaxyFog_VS.shader"));
-		CreatePS(5, nameToPatchLPCWSTR("GalaxyFog_PS.shader"));
+		CreateVS(5, nameToPatchLPCWSTR("..\\dx11minimal\\GalaxyFog_VS.shader"));
+		CreatePS(5, nameToPatchLPCWSTR("..\\dx11minimal\\GalaxyFog_PS.shader"));
 
-		CreateVS(6, nameToPatchLPCWSTR("Cursor_VS.shader"));
-		CreatePS(6, nameToPatchLPCWSTR("Cursor_PS.shader"));
+		CreateVS(6, nameToPatchLPCWSTR("..\\dx11minimal\\Cursor_VS.shader"));
+		CreatePS(6, nameToPatchLPCWSTR("..\\dx11minimal\\Cursor_PS.shader"));
 
-		CreateVS(7, nameToPatchLPCWSTR("AriesNebula_VS.shader"));
-		CreatePS(7, nameToPatchLPCWSTR("AriesNebula_PS.shader"));
+		CreateVS(7, nameToPatchLPCWSTR("..\\dx11minimal\\AriesNebula_VS.shader"));
+		CreatePS(7, nameToPatchLPCWSTR("..\\dx11minimal\\AriesNebula_PS.shader"));
 
-		CreateVS(8, nameToPatchLPCWSTR("SpeedParticles_VS.shader"));
-		CreatePS(8, nameToPatchLPCWSTR("SpeedParticles_PS.shader"));
+		CreateVS(8, nameToPatchLPCWSTR("..\\dx11minimal\\SpeedParticles_VS.shader"));
+		CreatePS(8, nameToPatchLPCWSTR("..\\dx11minimal\\SpeedParticles_PS.shader"));
 
-		CreateVS(9, nameToPatchLPCWSTR("DotText_VS.shader"));
-		CreatePS(9, nameToPatchLPCWSTR("DotText_PS.shader"));
+		CreateVS(9, nameToPatchLPCWSTR("..\\dx11minimal\\DotText_VS.shader"));
+		CreatePS(9, nameToPatchLPCWSTR("..\\dx11minimal\\DotText_PS.shader"));
 
-		CreateVS(10, nameToPatchLPCWSTR("PP_VS.shader"));
-		CreatePS(10, nameToPatchLPCWSTR("PP_PS.shader"));
+		CreateVS(10, nameToPatchLPCWSTR("..\\dx11minimal\\PP_VS.shader"));
+		CreatePS(10, nameToPatchLPCWSTR("..\\dx11minimal\\PP_PS.shader"));
 
-		CreateVS(11, nameToPatchLPCWSTR("Cross_VS.shader"));
-		CreatePS(11, nameToPatchLPCWSTR("Cross_PS.shader"));
+		CreateVS(11, nameToPatchLPCWSTR("..\\dx11minimal\\Cross_VS.shader"));
+		CreatePS(11, nameToPatchLPCWSTR("..\\dx11minimal\\Cross_PS.shader"));
 
-		CreateVS(12, nameToPatchLPCWSTR("UiParticle_VS.shader"));
-		CreatePS(12, nameToPatchLPCWSTR("UiParticle_PS.shader"));
+		CreateVS(12, nameToPatchLPCWSTR("..\\dx11minimal\\UiParticle_VS.shader"));
+		CreatePS(12, nameToPatchLPCWSTR("..\\dx11minimal\\UiParticle_PS.shader"));
 	}
 
 	void vShader(unsigned int n)

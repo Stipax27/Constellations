@@ -999,7 +999,7 @@ namespace drawer
             std::string curentSignstring = zodiacSignToString(player_sign);
             TextOutA(window.context, window.width * 5 / 6, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());
 
-            drawString("Find Constallations and click on it", window.width / 2, (200. / 1440) * window.height, 1, true);
+            //drawString("Find Constallations and click on it", window.width / 2, (200. / 1440) * window.height, 1, true);
             drawString("Features:\nMouse wheel to zoom in and out", (1700. / 2560) * window.width, (1200. / 1440) * window.height, .7f, false);
 
             playerConst.RenderMorph(deltaTime);
