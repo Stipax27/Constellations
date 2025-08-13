@@ -90,7 +90,7 @@
 
         case AIState::ATTACK:
             AttackPlayer(deltaTime, heroPosition, enemyPositions);
-            if (data.attackTimer <= 0.0f) {
+             if (data.attackTimer <= 0.0f) {
                 data.currentState = AIState::ORBIT;
                 data.attackCooldown = 5000.0f; // Следующая атака через 5 секунды
             }
@@ -184,13 +184,13 @@
         UpdateRotation(attackDir);
 
         // Проверяем столкновение с игроком
-        if ((heroPos - enemyPos).magnitude() < 30.0f) {
-            // Наносим урон игроку (10 единиц за атаку)
-            // player.TakeDamage(10.0f);
-            ShakingHero(heroPos);
+        if ((heroPos - enemyPos).magnitude() < 30000.0f) {
+        
+            data.isAttacking = true;
             // Возвращаемся на орбиту досрочно, если достигли игрока
-            data.attackTimer = 0.0f;
+            //data.attackTimer = 0.0f;
         }
+        
     }
 
     void EnemyAI::UpdateRotation(point3d direction) {
@@ -222,8 +222,8 @@
     }
 }
 
-void updateEnemyPosition(float deltaTime, point3d& heroPosition, point3d& enemyPositions) {
     static Enemy::EnemyAI enemyAI;
+void updateEnemyPosition(float deltaTime, point3d& heroPosition, point3d& enemyPositions) {
     enemyAI.AiUpdate(deltaTime, heroPosition, enemyPositions);
 
     // После обновления позиции получаем актуальную матрицу из EnemyAI

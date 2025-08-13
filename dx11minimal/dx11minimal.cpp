@@ -58,6 +58,7 @@ HWND hWnd;
 
 #include "Navigation.h"
 #include "Constellation.h"
+
 #include "MainWorld.h"
 #include "StatusGame.h"
 #include "Weapon.h"

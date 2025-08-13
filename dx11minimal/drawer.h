@@ -609,7 +609,7 @@ namespace drawer
             point3d newDirection = (mousePos - start).normalized();
 
          
-            attackStars.clear();
+            //attackStars.clear();
 
             
             switch (current_weapon) {
@@ -693,7 +693,7 @@ namespace drawer
             !starSet[currentEnemyID] ||
             starSet[currentEnemyID]->starsCords.empty()) {
             OutputDebugStringA("Invalid attack state - resetting\n");
-            attackStars.clear();
+            //attackStars.clear();
             return;
         }
         
@@ -1069,7 +1069,7 @@ namespace drawer
             DrawHpEnemyBar();
             modelTransform = &placeConstToWorld;//Враг
 
-            if (isShakingHero) {
+            /*if (isShakingHero) {
 
                 float beamTime = 4. * (currentTime - shakeStartTimeHero) / shakeDurationHero;
                 if (beamTime > 1.) beamTime = 1;
@@ -1088,7 +1088,7 @@ namespace drawer
 
                     drawLine(p1, p2);
                 }
-            }
+            }*/
             
             
             //ProjectileUpdate(deltaTime);
@@ -1115,8 +1115,8 @@ namespace drawer
                 attackCooldown = true;
             }
             
-            if (!GetAsyncKeyState(VK_LBUTTON))
-            {
+            
+            
                 if (attack_collision == true and attackCooldown == true)
                 {
                     attack_cooldown = currentTime;
@@ -1150,6 +1150,13 @@ namespace drawer
 
                 updateEnemyPosition(deltaTime , Heropos, Enemypos);
 
+                if (enemyAI.data.isAttacking == true) {
+
+                    playerConst.StartShaking();
+                    enemyAI.data.isAttacking = false;
+                }
+                    playerConst.UpdateShaking();
+
                 //Constellation& c = *starSet[player_sign];
                 //c.Transform = CreateHeroToWorldMatrix(c);
                 //drawСonstellation(*starSet[player_sign]);//Игрок
@@ -1160,16 +1167,8 @@ namespace drawer
                     attack_collision = false;
                     attack_speed = false;
                 }
-            }
-            else
-            {
-                uiFunc = NULL;
-                Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-                Constellation& c = *starSet[currentEnemyID];
-
-                c.Transform = CreateEnemyToWorldMatrix(c);
-                drawСonstellation(*starSet[currentEnemyID],false, 1000.f, 100.f);
-            }
+            
+            
 
             if (GetAsyncKeyState('P')) {
                 gameState = gameState_::WinFight;
@@ -1193,7 +1192,7 @@ namespace drawer
             modelTransform = NULL;
             uiFunc = NULL;
 
-            if (isDamageHero)
+            /*if (isDamageHero)
             {
                 isDamageHero = false;
                 isShakingHero = true;
@@ -1203,7 +1202,7 @@ namespace drawer
             if (currentTime > shakeStartTimeHero + shakeDurationHero)
             {
                 isShakingHero = false;
-            }
+            }*/
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 
             if (starSet.empty() || currentEnemyID < 0 || currentEnemyID >= starSet.size()) {
@@ -1216,8 +1215,9 @@ namespace drawer
             Constellation& player = *starSet[player_sign];
 
             // Обновление атак
-            if (!playerConst.morphing)
+            if (!playerConst.morphing) {
                 HandleMouseClick(heroPosition);
+            }
             UpdateAttack(deltaTime);
             DrawSwordAttack();
 
@@ -1371,7 +1371,7 @@ namespace drawer
             modelTransform = NULL;
             uiFunc = NULL;
 
-            if (isDamageHero)
+            /*if (isDamageHero)
             {
                 isDamageHero = false;
                 isShakingHero = true;
@@ -1381,7 +1381,7 @@ namespace drawer
             if (currentTime > shakeStartTimeHero + shakeDurationHero)
             {
                 isShakingHero = false;
-            }
+            }*/
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 
             Constellation& c = *starSet[player_sign];

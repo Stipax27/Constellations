@@ -46,6 +46,9 @@ public:
     std::vector <std::vector <float>> originConstellationEdges;
     std::vector<point3d> prevStarsCords;
 
+    std::vector<point3d> StarStartSH;
+
+
     Constellation* targetConstellation;
     bool morphing = false;
     float morphProgress = 0.0f;
@@ -332,5 +335,63 @@ public:
             }
         }
     }
+
+    bool isShaking = false;
+    DWORD shakeStartTime = 0;
+    const DWORD shakeDuration = 500; 
+    float shakeIntensity = 0.1f; 
+    std::vector<point3d> originalStarPositions; 
+
+    void StartShaking() {
+        if (!isShaking) {
+            isShaking = true;
+            shakeStartTime = currentTime;
+            originalStarPositions = starsCords; 
+        }
+    }
+        
+    void UpdateShaking() {
+        if (!isShaking) return;
+
+        float elapsed = (float)(currentTime - shakeStartTime);
+
+        // Проверяем, закончилось ли время тряски
+        if (elapsed >= shakeDuration) {
+            isShaking = false;
+            // Возвращаем звёзды на исходные позиции
+            starsCords = originalStarPositions;
+            return;
+        }
+
+        // Параметры для резкой тряски
+        float shakeFrequency = 30.0f; // Частота тряски
+        float decayFactor = 1.0f - (elapsed / shakeDuration); // Затухание со временем
+
+        // Применяем тряску к каждой звезде
+        for (int i = 0; i < starsCords.size(); i++) {
+            // Генерируем резкие случайные смещения
+            point3d randomOffset = point3d(
+                (rand() % 200 - 100) / 100.0f,
+                (rand() % 200 - 100) / 100.0f,
+                (rand() % 200 - 100) / 100.0f
+            );
+
+            // Добавляем колебания с высокой частотой
+            float timeFactor = elapsed * 0.001f * shakeFrequency;
+            point3d waveOffset = point3d(
+                sin(timeFactor * 1.3f + i * 0.7f),
+                sin(timeFactor * 1.7f + i * 0.3f),
+                sin(timeFactor * 2.1f + i * 0.5f)
+            );
+
+            // Комбинируем эффекты
+            point3d totalOffset = (randomOffset + waveOffset * 0.5f) *
+                shakeIntensity * decayFactor;
+
+            // Применяем смещение к исходной позиции
+            starsCords[i] = originalStarPositions[i] + totalOffset;
+        }
+    }
+
 
 };
