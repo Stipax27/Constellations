@@ -852,20 +852,20 @@ namespace drawer
                     XMVectorGetZ(Camera::state.Forward)
                 );
                 point3d up = point3d(
-                    XMVectorGetX(Camera::state.Up),
-                    XMVectorGetY(Camera::state.Up),
-                    XMVectorGetZ(Camera::state.Up)
+                    XMVectorGetX(Hero::state.Up),
+                    XMVectorGetY(Hero::state.Up),
+                    XMVectorGetZ(Hero::state.Up)
                 );
                 point3d right = point3d(
-                    XMVectorGetX(Camera::state.Right),
-                    XMVectorGetY(Camera::state.Right),
-                    XMVectorGetZ(Camera::state.Right)
+                    XMVectorGetX(Hero::state.Right),
+                    XMVectorGetY(Hero::state.Right),
+                    XMVectorGetZ(Hero::state.Right)
                 );
 
                 for (int i = 0; i < (int)(timeDelta / sp_emitDelta); i++)
                 {
                     Particle* particle = new Particle;
-                    particle->pos = camPos + forward * 10000 + (up * GetRandom(-100, 100) + right * GetRandom(-100, 100)).normalized() * 5000;
+                    particle->pos = camPos + forward * 7000 + flyDirection * 3000 + (up * GetRandom(-100, 100) + right * GetRandom(-100, 100)).normalized() * 5000;
                     particle->lifetime = GetRandom(500, 1000);
                     particle->startTime = curTime;
 

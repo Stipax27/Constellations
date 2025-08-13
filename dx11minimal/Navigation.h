@@ -1,8 +1,8 @@
-﻿point3d player_dodge_ofs = { 0,0,0 };
-point3d starfield_angles = { 0,0,0 };
-point3d milkyway_angles = { 0,0,100 };
+﻿point3d flyDirection = point3d();
+point3d flyRightDirection = point3d();
+point3d flyUpDirection = point3d();
 
-point3d flyDirection = { 0, 0, 0 };
+
 //point3d heroPosition = { 0, 0, 0 };
 float currentFlySpeed = 0.0f;
 const float maxFlySpeed = 0.1f;
@@ -17,7 +17,7 @@ const float SENSIVITY = 0.25f;
 const float CURSOR_ZONE_DELTA = MAX_CURSOR_DEVIATION - CURSOR_IGNORE_ZONE;
 
 
-void updateFlyDirection() { // ��������� ���������� 
+void updateFlyDirection() { // ��������� ����������
     flyDirection = { 0, 0, 0 };
 
     if (GetAsyncKeyState('W') & 0x8000) {
@@ -43,6 +43,11 @@ void updateFlyDirection() { // ��������� �������
         flyDirection.x += XMVectorGetX(Hero::state.Right) * 5.f;
         flyDirection.y += XMVectorGetY(Hero::state.Right) * 5.f;
         flyDirection.z += XMVectorGetZ(Hero::state.Right) * 5.f;
+    }
+
+    if (flyDirection.magnitude() > 0)
+    {
+        flyDirection = flyDirection.normalized();
     }
 
     float dPitch = 0.0f, dYaw = 0.0f, dRoll = 0.0f;
@@ -108,7 +113,7 @@ void updateFlySpeed(float deltaTime) {
     bool isMoving = (flyDirection.magnitude() != 0);
 
     bool isBoosting = (GetAsyncKeyState(VK_SHIFT) & 0x8000);
-    float targetSpeed = 0.2f; // isBoosting ? boostFlySpeed : maxFlySpeed;
+    float targetSpeed = 5.0f; // isBoosting ? boostFlySpeed : maxFlySpeed;
 
     if (!isBoosting)
     {
