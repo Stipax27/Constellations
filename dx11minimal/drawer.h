@@ -921,6 +921,73 @@ namespace drawer
         }
     }
 
+    std::vector<StarProjectile> Wave;
+
+    void CreateShockwave(point3d& center, float initialRadius) {
+
+        StarProjectile wave;
+        wave.position = center;
+        wave.radius = initialRadius;
+
+        
+        wave.up = point3d(
+            XMVectorGetX(Camera::state.Up),
+            XMVectorGetY(Camera::state.Up),
+            XMVectorGetZ(Camera::state.Up)
+        );
+
+        point3d forward = point3d(
+            XMVectorGetX(Camera::state.Forward),
+            XMVectorGetY(Camera::state.Forward),
+            XMVectorGetZ(Camera::state.Forward)
+        );
+
+        wave.right = forward.cross(wave.up).normalized();
+        wave.up = wave.right.cross(forward).normalized();
+
+        Wave.push_back(wave);
+    }
+
+    void UpdateShockwave(float deltaTime) {
+        for (auto& wave : Wave) {
+            wave.radius += 5.0f * deltaTime; // Adjust speed as needed
+        }
+
+        // Remove waves that are too big
+        Wave.erase(
+            std::remove_if(Wave.begin(), Wave.end(),
+                [](const StarProjectile& w) {
+                    return w.radius > 20000.0f; // Adjust max radius as needed
+                }),
+            Wave.end()
+        );
+    }
+
+    void RenderShockwave() {
+        Shaders::vShader(4); // Use the same shader as weapon rendering
+        Shaders::pShader(4);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+        for (auto& wave : Wave) {
+            // Draw the shockwave as a circle
+            for (int i = 0; i < 36; i++) {
+                float angle = i * (2 * PI / 36);
+                float nextAngle = (i + 1) * (2 * PI / 36);
+
+                point3d local1(cos(angle), sin(angle), 0);
+                point3d local2(cos(nextAngle), sin(nextAngle), 0);
+
+                point3d point1 = wave.position + (wave.right * local1.x + wave.up * local1.y) * wave.radius;
+                point3d point2 = wave.position + (wave.right * local2.x + wave.up * local2.y) * wave.radius;
+
+                drawLine(point1, point2, 100.f); // Adjust thickness as needed
+            }
+
+            // Optional: Draw center point
+            wave.position.draw(wave.position, 15.0f);
+        }
+    }
+
 
 
 
@@ -1157,6 +1224,11 @@ namespace drawer
                 }
                     playerConst.UpdateShaking();
 
+                if (enemyAI.data.isShockwaveActive) {
+                    CreateShockwave(Enemypos, enemyAI.data.shockwaveRadius);
+                }
+                    UpdateShockwave(deltaTime);
+                    RenderShockwave();
                 //Constellation& c = *starSet[player_sign];
                 //c.Transform = CreateHeroToWorldMatrix(c);
                 //drawСonstellation(*starSet[player_sign]);//Игрок

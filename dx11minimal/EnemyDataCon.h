@@ -4,10 +4,12 @@
         PATROL,
         CHASE,
         ORBIT,
-        ATTACK
+        ATTACK,
+        JUMP_ATTACK
     };
 
     struct EnemyData {
+
         AIState currentState = AIState::PATROL;
         float playerDistance = 0.0f;
         bool playerVisible = false;
@@ -26,6 +28,16 @@
         float attackTimer = 0.0f;  
         point3d lastOrbitPosition;// Таймер атаки
         bool isAttacking = false;
+
+        bool isJumping = false;
+        float jumpHeight = 0.0f;
+        float maxJumpHeight = 5000.0f;
+        float jumpSpeed = 20.0f;
+        bool isShockwaveActive = false;
+        float shockwaveRadius = 0.0f;
+        float maxShockwaveRadius = 100000.0f;
+        float shockwaveSpeed = 300.0f;
+        DWORD shockwaveStartTime = 0;
 
         XMVECTOR currentRotation;
         XMVECTOR ForwardEn;
@@ -84,6 +96,7 @@
         void UpdateRotation(point3d direction);
         void OrbitPlayer(float deltaTime, point3d& heroPos, point3d& enemyPos);
         void AttackPlayer(float deltaTime, point3d& heroPos, point3d& enemyPos);
+        void JumpAttack(float deltaTime, point3d& heroPos, point3d& enemyPos);
     };
 
     static EnemyData enemyData;
