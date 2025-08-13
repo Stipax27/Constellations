@@ -6,10 +6,10 @@ point3d milkyway_angles = { 0,0,100 };
 point3d flyDirection = { 0, 0, 0 };
 //point3d heroPosition = { 0, 0, 0 };
 float currentFlySpeed = 0.0f;
-const float maxFlySpeed = 0.1f;
-const float flyAcceleration = 0.5f;
+const float maxFlySpeed = 10.f;
+const float flyAcceleration = 5.f;
 const float flyDeceleration = 0.002f;
-const float boostFlySpeed = 0.9f;
+const float boostFlySpeed = 9.f;
 const float MOUSE_SENSITIVITY = 0.002f;
 
 const float CURSOR_IGNORE_ZONE = 0.05f;
@@ -107,7 +107,7 @@ void updateFlyDirection()
     
 }
 
-void updateFlySpeed(float deltaTime) {// ���������� �� ����� �����
+void updateFlySpeed(float deltaTime) {// yskorenie
     bool isMoving = (flyDirection.x != 0 || flyDirection.y != 0 || flyDirection.z != 0);
 
     bool isBoosting = (GetAsyncKeyState(VK_SHIFT) & 0x8000);
@@ -131,17 +131,34 @@ void updateFlySpeed(float deltaTime) {// ���������� �� �
 
 void updatePlayerPosition(float deltaTime) 
 {
-    if (currentFlySpeed > 0) 
+    if (currentFlySpeed > 0)
     {
-        // Обновляем Hero::state.constellationOffset
-        Hero::state.constellationOffset = Hero::state.constellationOffset *
-            XMMatrixTranslation(
-                flyDirection.x * currentFlySpeed * deltaTime,
-                flyDirection.y * currentFlySpeed * deltaTime,
-                flyDirection.z * currentFlySpeed * deltaTime
-            );
+        // 1. Создаем вектор направления из flyDirection
+        XMVECTOR moveDir = XMVectorSet(flyDirection.x, flyDirection.y, flyDirection.z, 0.0f);
 
-        // Копируем в Camera::state
-        Camera::state.constellationOffset = Hero::state.constellationOffset;
+        // 2. Нормализуем вектор направления (если он не нулевой)
+        float length = XMVectorGetX(XMVector3Length(moveDir));
+        if (length > 0.001f)
+        {
+            moveDir = XMVector3Normalize(moveDir);
+
+            // 3. Рассчитываем вектор смещения (без дополнительного вращения!)
+            XMVECTOR displacement = XMVectorScale(moveDir, currentFlySpeed * deltaTime);
+
+            // 4. Обновляем позицию героя
+            Hero::state.position = XMVectorAdd(Hero::state.position, displacement);
+        }
+
+        // 5. Обновляем матрицу мира
+        XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(Hero::state.currentRotation);
+        Hero::state.worldMatrix = rotationMatrix * XMMatrixTranslationFromVector(Hero::state.position);
+
+        // 6. Обновляем constellationOffset
+        Hero::state.constellationOffset = XMMatrixTranslationFromVector(Hero::state.position);
+
+        // 7. Нормализуем векторы ориентации
+        Hero::state.Forwardbuf = XMVector3Normalize(Hero::state.Forwardbuf);
+        Hero::state.Up = XMVector3Normalize(Hero::state.Up);
+        Hero::state.Right = XMVector3Normalize(Hero::state.Right);
     }
 }

@@ -109,6 +109,7 @@ public:
         updateFlyDirection(); //hero move for mouse and move on "WASD"
         updateFlySpeed(deltaTime);
         updatePlayerPosition(deltaTime); //bez nego "WASD" toze ne rabotaet
+        Camera::Camera();
 
         XMVECTOR heroPosition = XMVectorSet(
             Hero::state.constellationOffset.r[3].m128_f32[0],

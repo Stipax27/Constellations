@@ -1048,8 +1048,9 @@ namespace Hero
 		XMVECTOR Right = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR at = XMVectorSet(0, 0, 0, 0);
 		XMVECTOR Up = XMVector3Rotate(defaultUp, currentRotation);
-		XMVECTOR heroPosition; //why this is placing here? we don't use it, only in update camera...
 		XMMATRIX constellationOffset = XMMatrixTranslation(0, 0, 0);
+		XMVECTOR position = XMVectorSet(0, 0, 0, 0);  // Прямое хранение позиции
+		XMMATRIX worldMatrix = XMMatrixIdentity();      // Матрица преобразования мира
 
 	} static state;
 
@@ -1065,9 +1066,9 @@ namespace Camera
 		float minDist = 500.0f;
 		float maxDist = 1000.0f;
 		float fovAngle = 60.0f;
-		float verticalOffset = 500.0f;  
+		float verticalOffset = 450.0f;  
 		float horizontalOffset = 0.0f; 
-		float distanceOffset = 500.0f;
+		float distanceOffset = 1000.0f;
 		XMVECTOR relativeMovement = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR currentRotation = XMQuaternionIdentity();
 		XMVECTOR Forward = XMVectorSet(0, 0, 1, 0);
@@ -1083,50 +1084,44 @@ namespace Camera
 	
 	void UpdateCameraPosition()
 	{
-		// Получаем текущую позицию героя WTF WHY CAMERA POS GOING TO HERO POS?
-		Hero::state.heroPosition = XMVectorSet(
-			Camera::state.constellationOffset.r[3].m128_f32[0],
-			Camera::state.constellationOffset.r[3].m128_f32[1],
-			Camera::state.constellationOffset.r[3].m128_f32[2],
-			0.0f
-		);
-
 		
-		XMVECTOR heroForward = Hero::state.Forwardbuf;
-		XMVECTOR heroUp = Hero::state.Up;
-		XMVECTOR heroRight = Hero::state.Right;
+		// 1. Получаем и нормализуем актуальные векторы ориентации героя
+		XMVECTOR heroForward = XMVector3Normalize(Hero::state.Forwardbuf);
+		XMVECTOR heroUp = XMVector3Normalize(Hero::state.Up);
+		XMVECTOR heroRight = XMVector3Normalize(Hero::state.Right);
 
-		
-		XMVECTOR cameraPosition = Hero::state.heroPosition
-			- (heroForward * state.distanceOffset)
-			+ (heroUp * state.verticalOffset)
-			+ (heroRight * state.horizontalOffset);
+		// 2. Вычисляем позицию камеры относительно героя
+		XMVECTOR cameraOffset =
+			(-heroForward * state.distanceOffset) +  // Основное смещение назад
+			(heroUp * state.verticalOffset) +        // Вертикальное смещение
+			(heroRight * state.horizontalOffset);    // Горизонтальное смещение
 
-		
-		XMVECTOR cameraTarget = Hero::state.heroPosition + (heroUp * state.verticalOffset * 0.5f);
+		// 3. Вычисляем окончательную позицию камеры
+		XMVECTOR cameraPosition = Hero::state.position + cameraOffset;
 
-		
+		// 4. Вычисляем точку фокусировки (впереди героя)
+		XMVECTOR cameraTarget = cameraPosition + (heroForward * 15.0f);
+
+		// 5. Обновляем состояние камеры
 		state.Eye = cameraPosition;
 		state.at = cameraTarget;
-		state.Up = heroUp; 
+		state.Up = heroUp;
 
-		
+		// 6. Пересчитываем векторы камеры для корректной работы
 		state.Forward = XMVector3Normalize(cameraTarget - cameraPosition);
 		state.Right = XMVector3Normalize(XMVector3Cross(heroUp, state.Forward));
+
+		// 7. Обновляем матрицу вида
+		ConstBuf::camera.view[0] = XMMatrixTranspose(
+			XMMatrixLookAtLH(state.Eye, state.at, state.Up)
+		);
 	}
 
 	void Camera()//обновление позиции камеры после обновления позиции созвездия. В Navigation.h, Loop.h, Mouse.h(navigationByMouse 2 раза) и тут тоже есть вызовы.
 	{
 		UpdateCameraPosition();
 
-		
-		ConstBuf::camera.view[0] = XMMatrixTranspose(XMMatrixLookAtLH(
-			state.Eye,
-			state.at,
-			state.Up
-		));
-
-		
+		// Обновляем матрицу проекции (если нужно)
 		ConstBuf::camera.proj[0] = XMMatrixTranspose(XMMatrixPerspectiveFovLH(
 			DegreesToRadians(state.fovAngle),
 			iaspect,

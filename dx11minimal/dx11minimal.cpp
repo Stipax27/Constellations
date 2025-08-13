@@ -138,7 +138,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             timer::frameEndTime = timer::GetCounter();
             timer::frameRenderingDuration = timer::frameEndTime - timer::frameBeginTime;
             timer::nextFrameTime = timer::frameBeginTime + FRAME_LEN;
-            Camera::Camera();//добавили общий вызов обновления камеры, чтобы везде не коллить
+            //Camera::Camera();//добавили общий вызов обновления камеры, чтобы везде не коллить
         }
 
         Sleep((DWORD)min(FRAME_LEN, max(FRAME_LEN - timer::frameRenderingDuration, 0)));
