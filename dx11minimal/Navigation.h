@@ -6,8 +6,8 @@ point3d flyUpDirection = point3d(0, 1, 0);
 //point3d heroPosition = { 0, 0, 0 };
 float currentFlySpeed = 0.0f;
 const float maxFlySpeed = 0.1f;
-const float flyAcceleration = 0.5f;
-const float flyDeceleration = 0.002f;
+const float flyAcceleration = 0.01f;
+const float flyDeceleration = 0.0002f;
 const float boostFlySpeed = 0.9f;
 const float MOUSE_SENSITIVITY = 0.002f;
 

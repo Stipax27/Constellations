@@ -416,7 +416,7 @@ namespace drawer
         static DWORD lastInputTime = 0;
         const DWORD inputRepeatDelay = 100;
 
-        if (GetAsyncKeyState('Q')) {
+        /*if (GetAsyncKeyState('Q')) {
             if (currentTime - lastInputTime > inputRepeatDelay) {
                 lastInputTime = currentTime;
                 if (battleStartTime + battleTime + timeModifier + 1000 - currentTime <= MAX_BATTLE_TIME) {
@@ -436,7 +436,7 @@ namespace drawer
         }
         else {
             isRewind = false;
-        }
+        }*/
 
         if (isBattleActive) {
             LONG remainingTime = (LONG)((battleStartTime + battleTime + timeModifier) - currentTime);
@@ -498,6 +498,7 @@ namespace drawer
         float radius;
         point3d up;
         point3d right;
+        weapon_name weapon;
     };
 
     std::vector<StarProjectile> attackStars; // Теперь храним звёзды с их направлениями
@@ -514,7 +515,7 @@ namespace drawer
         for (auto& star : attackStars) 
         {
 
-             switch (current_weapon) 
+             switch (star.weapon)
              {
 
              case weapon_name::Sword: {
@@ -619,6 +620,7 @@ namespace drawer
                         newStar.position = start;
                         newStar.direction = newDirection;
                         newStar.radius = 15.0f;
+                        newStar.weapon = weapon_name::Sword;
 
                         point3d up = point3d(XMVectorGetX(Camera::state.Up),
                             XMVectorGetY(Camera::state.Up),
@@ -642,6 +644,7 @@ namespace drawer
                     newStar.position = start;
                     newStar.direction = newDirection;
                     newStar.radius = 300.0f;
+                    newStar.weapon = weapon_name::Shield;
 
                     newStar.up = point3d(XMVectorGetX(Camera::state.Up),
                         XMVectorGetY(Camera::state.Up),
@@ -667,6 +670,7 @@ namespace drawer
                         newStar.position = start;
                         newStar.direction = newDirection;
                         newStar.radius = 10.0f;
+                        newStar.weapon = weapon_name::Bow;
                         
                         newStar.up = fixedUp;
                         newStar.right = fixedRight;
@@ -1403,6 +1407,7 @@ namespace drawer
 
         }
 
+        drawString("TEST TEXT RENDER", (1700. / 2560)* window.width, (600. / 1440)* window.height, .7f, false, false, -1, true);
 
         Depth::Depth(Depth::depthmode::off);
         if (gameState != gameState_::selectEnemy && gameState != gameState_::Fight && gameState != gameState_::WinFight)
@@ -1425,7 +1430,6 @@ namespace drawer
         DrawRenderObject(cursor);
 
         DrawUiParticles(deltaTime);
-
     }
 }
 
