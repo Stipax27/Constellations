@@ -1,6 +1,6 @@
-﻿point3d flyDirection = point3d();
-point3d flyRightDirection = point3d();
-point3d flyUpDirection = point3d();
+﻿point3d flyDirection = point3d(0, 0, 1);
+point3d flyRightDirection = point3d(1, 0, 0);
+point3d flyUpDirection = point3d(0, 1, 0);
 
 
 //point3d heroPosition = { 0, 0, 0 };
@@ -16,6 +16,18 @@ const float MAX_CURSOR_DEVIATION = 0.3f;
 const float SENSIVITY = 0.25f;
 const float CURSOR_ZONE_DELTA = MAX_CURSOR_DEVIATION - CURSOR_IGNORE_ZONE;
 
+
+void getPerpendicularDirections()
+{
+    point3d world_up = point3d(0, 1, 0);
+
+    if ((flyDirection - world_up).magnitude() < 0.001f || (flyDirection + world_up).magnitude() < 0.001f) {
+        world_up = point3d(1, 0, 0);
+    }
+
+    flyRightDirection = (flyDirection.cross(world_up)).normalized();
+    flyUpDirection = (flyRightDirection.cross(flyDirection)).normalized();
+}
 
 void updateFlyDirection() { // ��������� ����������
     flyDirection = { 0, 0, 0 };
@@ -48,6 +60,7 @@ void updateFlyDirection() { // ��������� �������
     if (flyDirection.magnitude() > 0)
     {
         flyDirection = flyDirection.normalized();
+        getPerpendicularDirections();
     }
 
     float dPitch = 0.0f, dYaw = 0.0f, dRoll = 0.0f;

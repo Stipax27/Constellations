@@ -590,7 +590,6 @@ namespace drawer
                 mciSendString(TEXT("play ..\\dx11minimal\\Oven_NEW.mp3"), NULL, 0, NULL);
             }
             lastAttackTime = currentTime;
-
            
             start = point3d(
                 XMVectorGetX(heroPosition),
@@ -609,7 +608,7 @@ namespace drawer
             point3d newDirection = (mousePos - start).normalized();
 
          
-            attackStars.clear();
+            //attackStars.clear();
 
             
             switch (current_weapon) {
@@ -693,7 +692,7 @@ namespace drawer
             !starSet[currentEnemyID] ||
             starSet[currentEnemyID]->starsCords.empty()) {
             OutputDebugStringA("Invalid attack state - resetting\n");
-            attackStars.clear();
+           // attackStars.clear();
             return;
         }
         
@@ -833,9 +832,9 @@ namespace drawer
 
     void CreateSpeedParticles()
     {
+        DWORD curTime = timer::GetCounter();
         if (currentFlySpeed >= sp_minFlySpeed && flyDirection.magnitude() > 0)
         {
-            DWORD curTime = timer::GetCounter();
             DWORD timeDelta = curTime - sp_lastEmitTime;
             if (timeDelta >= sp_emitDelta)
             {
@@ -851,27 +850,21 @@ namespace drawer
                     XMVectorGetY(Camera::state.Forward),
                     XMVectorGetZ(Camera::state.Forward)
                 );
-                point3d up = point3d(
-                    XMVectorGetX(Hero::state.Up),
-                    XMVectorGetY(Hero::state.Up),
-                    XMVectorGetZ(Hero::state.Up)
-                );
-                point3d right = point3d(
-                    XMVectorGetX(Hero::state.Right),
-                    XMVectorGetY(Hero::state.Right),
-                    XMVectorGetZ(Hero::state.Right)
-                );
 
                 for (int i = 0; i < (int)(timeDelta / sp_emitDelta); i++)
                 {
                     Particle* particle = new Particle;
-                    particle->pos = camPos + forward * 7000 + flyDirection * 3000 + (up * GetRandom(-100, 100) + right * GetRandom(-100, 100)).normalized() * 5000;
-                    particle->lifetime = GetRandom(500, 1000);
+                    particle->pos = camPos + forward * 6000 + flyDirection * 4000 + (flyUpDirection * GetRandom(-100, 100) + flyRightDirection * GetRandom(-100, 100)).normalized() * 5000;
+                    particle->lifetime = GetRandom(750, 1250);
                     particle->startTime = curTime;
 
                     speedParticles.push_back(particle);
                 }
             }
+        }
+        else
+        {
+            sp_lastEmitTime = curTime;
         }
     }
 
@@ -909,6 +902,7 @@ namespace drawer
                 ConstBuf::ConstToVertex(5);
                 ConstBuf::Update(1, ConstBuf::drawerP);
                 ConstBuf::ConstToPixel(1);
+                ConstBuf::ConstToPixel(5);
 
                 context->Draw(6, 0);
 
