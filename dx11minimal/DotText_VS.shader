@@ -27,6 +27,20 @@ cbuffer objParams : register(b0)
     float drawerV[32];
 };
 
+
+float hash2(uint n) {
+    n = (n << 13u) ^ n;
+    return frac((n * (n * n * 15731u + 789221u) + 1376312589u) * 0.000000000931322574615478515625f);
+}
+
+float3 randomPosition(uint index) {
+    float x = hash2(index * 3u);
+    float y = hash2(index * 3u + 1u);
+    float z = hash2(index * 3u + 2u);
+    return float3(x, y, z);
+}
+
+
 #define PI 3.1415926535897932384626433832795
 
 struct VS_OUTPUT
@@ -35,17 +49,28 @@ struct VS_OUTPUT
 };
 
 
-VS_OUTPUT VS(uint vID : SV_VertexID)
+VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 {
     VS_OUTPUT output;
 
-    uint rectIndex = vID / 6;
+    int segments = gConst[0].z;
+    float progress = gConst[0].w;
+    float r = 1.0f;
+
+    uint rectIndex = iID / segments;
+    float localRect = iID % segments;
     uint localV = vID % 6;
     float2 A = gConst[rectIndex * 2 + 0].xy;
     float2 B = gConst[rectIndex * 2 + 1].xy;
-    float r = 1.0f;
-
     float2 vec = B - A;
+
+    A = lerp(A, B, localRect / segments);
+    B = lerp(A, B, (localRect + 1) / segments);
+
+    float2 offset = (randomPosition(iID + A.x * B.x + A.y * B.y).xy * 2 - 1) * progress;
+    A += offset;
+    B += offset;
+
     float2 dir = normalize(vec);
     float2 perp = float2(-dir.y, dir.x);
 

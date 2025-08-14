@@ -147,10 +147,6 @@
     <ClInclude Include="EnemyAi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GalaxyFog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-   
     <ClInclude Include="RenderObject.h">
       <Filter>Header Files\Render</Filter>
     </ClInclude>
@@ -229,12 +225,6 @@
       <Filter>Shaders\Aries</Filter>
     </None>
     <None Include="AriesNebula_VS.shader">
-      <Filter>Shaders\Aries</Filter>
-    </None>
-    <None Include="AriesNebula2_VS.shader">
-      <Filter>Shaders\Aries</Filter>
-    </None>
-    <None Include="AriesNebula2_PS.shader">
       <Filter>Shaders\Aries</Filter>
     </None>
     <None Include="DotText_PS.shader">
