@@ -1030,6 +1030,7 @@ namespace drawer
     }
 
     void RenderExplosionEffects() {
+
         Shaders::vShader(1);
         Shaders::pShader(1);
         Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
@@ -1037,11 +1038,10 @@ namespace drawer
         // Рисуем частицы взрыва
         for (auto& particle : boomStars) {
             // Цвет остается без изменений (как в оригинале)
-            float colorIntensity = particle.radius / 30.0f;
             ConstBuf::global[1] = XMFLOAT4(
-                1.0f, // R
-                0.3f * colorIntensity, // G
-                0.1f * colorIntensity, // B
+                0, // R
+                0, // G
+                0, // B
                 min(1.0f, particle.radius / 1.0f) // Alpha
             );
 
@@ -1053,8 +1053,7 @@ namespace drawer
         }
 
         // Восстанавливаем стандартный цвет
-        ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-        ConstBuf::Update(5, ConstBuf::global);
+        
     }
 
     void drawWorld(float deltaTime)

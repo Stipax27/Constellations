@@ -184,7 +184,7 @@
         if (data.attackCooldown <= 0.0f && !data.isAttacking) {
            // 50% шанс на прыжковую атаку
                 AttakDir = heroPos - enemyPos;
-                data.currentState = AIState::JUMP_ATTACK;
+                data.currentState = AIState::BOOM_ATTACK;
                 data.attackTimer = 1500.0f;
                 data.lastOrbitPosition = enemyPos;
                 data.isJumping = true;
