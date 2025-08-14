@@ -47,6 +47,11 @@ void updateFlyDirection()
         flyDirection.z += XMVectorGetZ(Hero::state.Right) * 5.f;
     }
 
+    if (flyDirection.magnitude() > 0)
+    {
+        flyDirection = flyDirection.normalized();
+    }
+
     float dPitch = 0.0f, dYaw = 0.0f, dRoll = 0.0f;
 
 
@@ -107,25 +112,56 @@ void updateFlyDirection()
     
 }
 
-void updateFlySpeed(float deltaTime) {// yskorenie
+//void updateFlySpeed(float deltaTime) // yskorenie
+//{
+//    bool isMoving = (flyDirection.x != 0 || flyDirection.y != 0 || flyDirection.z != 0);
+//    static bool wasShiftPressed = false; // Хранит предыдущее состояние
+//    bool isShiftPressed = (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0;
+//
+//        // Если раньше был нажат, а сейчас отпущен - срабатывание
+//        if (wasShiftPressed && !isShiftPressed) 
+//        {
+//            
+//            
+//        }
+//
+//        wasShiftPressed = isShiftPressed; // Обновляем состояние 
+//}
+void updateFlySpeed(float deltaTime) 
+{// yskorenie
     bool isMoving = (flyDirection.x != 0 || flyDirection.y != 0 || flyDirection.z != 0);
-
+    static bool wasShiftPressed = false;
     bool isBoosting = (GetAsyncKeyState(VK_SHIFT) & 0x8000);
     float targetSpeed = isBoosting ? boostFlySpeed : maxFlySpeed;
-
-    if (isMoving)
+    if (!isBoosting)
     {
-        currentFlySpeed += flyAcceleration * deltaTime;
+        if (isMoving)
+        {
+            currentFlySpeed += flyAcceleration * deltaTime;
 
-        if (currentFlySpeed > targetSpeed) {
-            currentFlySpeed = targetSpeed;
+            if (currentFlySpeed > targetSpeed)
+            {
+                currentFlySpeed = targetSpeed;
+            }
+        }
+        else
+        {
+            currentFlySpeed -= flyDeceleration * deltaTime;
+            if (currentFlySpeed < 0)
+            {
+                currentFlySpeed = 0;
+            }
         }
     }
-    else {
-        currentFlySpeed -= flyDeceleration * deltaTime;
-        if (currentFlySpeed < 0) {
-            currentFlySpeed = 0;
-        }
+    else 
+    {
+        wasShiftPressed = isBoosting;
+        currentFlySpeed = 0;
+    }
+    if (!isBoosting && wasShiftPressed)
+    {
+        currentFlySpeed = 1000;
+        wasShiftPressed = false;
     }
 }
 
@@ -136,29 +172,18 @@ void updatePlayerPosition(float deltaTime)
         // 1. Создаем вектор направления из flyDirection
         XMVECTOR moveDir = XMVectorSet(flyDirection.x, flyDirection.y, flyDirection.z, 0.0f);
 
-        // 2. Нормализуем вектор направления (если он не нулевой)
-        float length = XMVectorGetX(XMVector3Length(moveDir));
-        if (length > 0.001f)
-        {
-            moveDir = XMVector3Normalize(moveDir);
+        // 3. Рассчитываем вектор смещения (без дополнительного вращения!)
+        XMVECTOR displacement = XMVectorScale(moveDir, currentFlySpeed * deltaTime);
 
-            // 3. Рассчитываем вектор смещения (без дополнительного вращения!)
-            XMVECTOR displacement = XMVectorScale(moveDir, currentFlySpeed * deltaTime);
-
-            // 4. Обновляем позицию героя
+        // 4. Обновляем позицию героя
             Hero::state.position = XMVectorAdd(Hero::state.position, displacement);
-        }
 
         // 5. Обновляем матрицу мира
         XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(Hero::state.currentRotation);
-        Hero::state.worldMatrix = rotationMatrix * XMMatrixTranslationFromVector(Hero::state.position);
+            Hero::state.worldMatrix = rotationMatrix * XMMatrixTranslationFromVector(Hero::state.position);
 
         // 6. Обновляем constellationOffset
-        Hero::state.constellationOffset = XMMatrixTranslationFromVector(Hero::state.position);
+            Hero::state.constellationOffset = XMMatrixTranslationFromVector(Hero::state.position);
 
-        // 7. Нормализуем векторы ориентации
-        Hero::state.Forwardbuf = XMVector3Normalize(Hero::state.Forwardbuf);
-        Hero::state.Up = XMVector3Normalize(Hero::state.Up);
-        Hero::state.Right = XMVector3Normalize(Hero::state.Right);
     }
 }
