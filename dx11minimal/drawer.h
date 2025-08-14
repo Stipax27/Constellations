@@ -498,6 +498,8 @@ namespace drawer
         float radius;
         point3d up;
         point3d right;
+        float Speed;
+
     };
 
     std::vector<StarProjectile> attackStars; // Теперь храним звёзды с их направлениями
@@ -973,8 +975,87 @@ namespace drawer
         }
     }
 
+    std::vector<StarProjectile> boomStars;
 
+    void CreateExplosionEffects(point3d center, float radius) {
+        // Очищаем старые частицы
+        boomStars.clear();
 
+        const int particleCount = 5000; // Сохраняем количество частиц
+        const float goldenAngle = PI * (3.0f - sqrt(5.0f)); // Золотой угол для равномерного распределения
+
+        // Создаем частицы взрыва с равномерным распределением по сфере
+        for (int i = 0; i < particleCount; i++) {
+            StarProjectile particle;
+
+            // Равномерное распределение точек на сфере (фибоначчиева спираль)
+            float y = 1.0f - (i / float(particleCount - 1)) * 2.0f; // y от 1 до -1
+            float radiusAtY = sqrtf(1.0f - y * y);
+
+            float theta = goldenAngle * i;
+            float x = cosf(theta) * radiusAtY;
+            float z = sinf(theta) * radiusAtY;
+
+            // Начальное положение - все частицы в центре
+            particle.position = center;
+
+            // Направление разлета (нормализованный вектор)
+            particle.direction = point3d(x, y, z).normalized();
+            particle.Speed = GetRandom(1, 50);
+            // Фиксированные параметры (убираем случайность)
+            particle.radius = 1000.0f; // Базовый размер без вариаций
+            particle.up = point3d(0, 1, 0);
+            particle.right = particle.direction.cross(particle.up).normalized();
+
+            boomStars.push_back(particle);
+        }
+    }
+
+    void UpdateExplosionEffects(float deltaTime) {
+        // Обновляем частицы взрыва
+        for (auto& particle : boomStars) {
+            // Движение частиц от центра с постоянной скоростью
+            particle.position += particle.direction * deltaTime * particle.Speed; // Фиксированная скорость
+
+            // Уменьшение размера со временем
+            particle.radius = max(particle.radius * 0.95f, 1.0f);
+        }
+
+        // Удаляем слишком маленькие частицы
+        boomStars.erase(
+            std::remove_if(boomStars.begin(), boomStars.end(),
+                [](const StarProjectile& p) { return p.radius < 2.0f; }),
+            boomStars.end()
+        );
+    }
+
+    void RenderExplosionEffects() {
+        Shaders::vShader(1);
+        Shaders::pShader(1);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+        // Рисуем частицы взрыва
+        for (auto& particle : boomStars) {
+            // Цвет остается без изменений (как в оригинале)
+            float colorIntensity = particle.radius / 30.0f;
+            ConstBuf::global[1] = XMFLOAT4(
+                1.0f, // R
+                0.3f * colorIntensity, // G
+                0.1f * colorIntensity, // B
+                min(1.0f, particle.radius / 1.0f) // Alpha
+            );
+
+            ConstBuf::Update(5, ConstBuf::global);
+            ConstBuf::ConstToPixel(5);
+
+            // Рисуем частицу
+            particle.position.draw(particle.position, particle.radius);
+        }
+
+        // Восстанавливаем стандартный цвет
+        ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
+    }
 
     void drawWorld(float deltaTime)
     {
@@ -1213,6 +1294,13 @@ namespace drawer
                 }
                     UpdateShockwave(deltaTime);
                     RenderShockwave();
+
+                if (enemyAI.data.isBoomExploding) {
+                    CreateExplosionEffects(Enemypos, enemyAI.data.boomRadius);
+                }
+                UpdateExplosionEffects(deltaTime);
+                RenderExplosionEffects();
+
                 //Constellation& c = *starSet[player_sign];
                 //c.Transform = CreateHeroToWorldMatrix(c);
                 //drawСonstellation(*starSet[player_sign]);//Игрок

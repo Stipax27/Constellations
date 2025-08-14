@@ -99,7 +99,11 @@
                 data.isShockwaveActive = false;
             }
             break;
+
+        case AIState::BOOM_ATTACK:
+            Explosion( deltaTime, enemyPositions);
         }
+
     
 
         // Обновляем таймеры
@@ -268,6 +272,64 @@
         data.enemyConstellationOffset = XMMatrixRotationQuaternion(data.currentRotation) *
             XMMatrixTranslation(enemyPos.x, enemyPos.y, enemyPos.z);
     }
+
+    void EnemyAI::Explosion(float deltaTime, point3d& enemyPos) {
+        // Фаза подготовки взрыва
+        if (!data.isBoomExploding) {
+            data.boomCurrentTime += deltaTime;
+
+            // Визуальные эффекты подготовки (пульсация, изменение цвета)
+            float pulse = 0.5f + 0.5f * sinf(data.boomCurrentTime * 0.01f);
+            float scale = 1.0f + pulse * 0.2f;
+
+            // Применяем масштабирование к врагу
+            XMMATRIX scaleMat = XMMatrixScaling(scale, scale, scale);
+            data.enemyConstellationOffset = XMMatrixRotationQuaternion(data.currentRotation) *
+                scaleMat *
+                XMMatrixTranslation(enemyPos.x, enemyPos.y, enemyPos.z);
+
+            // Когда подготовка завершена, начинаем взрыв
+            if (data.boomCurrentTime >= data.boomPrepareTime) {
+                data.isBoomExploding = true;
+                data.boomStartTime = currentTime;
+            }
+        }
+        // Фаза взрыва
+        else {
+            // Увеличиваем радиус взрыва
+            data.boomRadius += (data.maxBoomRadius * (deltaTime / 1000.0f))/5.f;
+
+            // Создаем визуальные эффекты взрыва (можно добавить частицы, свечение)
+            //CreateExplosionEffects(enemyPos, data.boomRadius);
+
+            // Проверяем попадание по игроку
+            point3d heroPos = point3d(
+                XMVectorGetX(Hero::state.constellationOffset.r[3]),
+                XMVectorGetY(Hero::state.constellationOffset.r[3]),
+                XMVectorGetZ(Hero::state.constellationOffset.r[3])
+            );
+
+            float distance = (heroPos - enemyPos).magnitude();
+            if (distance < data.boomRadius + 30000.0f) {
+                // Наносим урон игроку
+                // player->TakeDamage(20);
+            }
+
+            // Завершаем атаку, когда взрыв достиг максимума
+            if (data.boomRadius >= data.maxBoomRadius) {
+                data.isBoomExploding = false;
+                data.isBoomPreparing = false;
+                data.boomCurrentTime = 0.0f;
+                data.boomRadius = 0.0f;
+                data.attackTimer = 0.0f;
+
+                // Восстанавливаем нормальный масштаб
+                data.enemyConstellationOffset = XMMatrixRotationQuaternion(data.currentRotation) *
+                    XMMatrixTranslation(enemyPos.x, enemyPos.y, enemyPos.z);
+            }
+        }
+    }
+
 
     void EnemyAI::UpdateRotation(point3d direction) {
         if (direction.magnitude() > 0.1f) {

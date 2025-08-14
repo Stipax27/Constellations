@@ -5,7 +5,8 @@
         CHASE,
         ORBIT,
         ATTACK,
-        JUMP_ATTACK
+        JUMP_ATTACK,
+        BOOM_ATTACK
     };
 
     struct EnemyData {
@@ -38,6 +39,17 @@
         float maxShockwaveRadius = 100000.0f;
         float shockwaveSpeed = 300.0f;
         DWORD shockwaveStartTime = 0;
+
+        bool isBoomPreparing = false;
+        bool isBoomExploding = false;
+        float boomPrepareTime = 5000.0f;
+        float boomCurrentTime = 0.0f;
+        float boomRadius = 0.0f;
+        float maxBoomRadius = 50000.0f;
+        DWORD boomStartTime = 0;
+        
+
+
 
         XMVECTOR currentRotation;
         XMVECTOR ForwardEn;
@@ -97,6 +109,7 @@
         void OrbitPlayer(float deltaTime, point3d& heroPos, point3d& enemyPos);
         void AttackPlayer(float deltaTime, point3d& heroPos, point3d& enemyPos);
         void JumpAttack(float deltaTime, point3d& heroPos, point3d& enemyPos);
+        void Explosion(float deltaTime, point3d& enemyPos);
     };
 
     static EnemyData enemyData;
