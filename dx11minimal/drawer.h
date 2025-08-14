@@ -923,27 +923,14 @@ namespace drawer
 
     std::vector<StarProjectile> Wave;
 
-    void CreateShockwave(point3d& center, float initialRadius) {
-
+    void CreateShockwave(point3d& center, float initialRadius, point3d& HeroPos) {
         StarProjectile wave;
-        wave.position = center;
+        wave.position = { center.x, center.y + 4000, center.z };
         wave.radius = initialRadius;
 
-        
-        wave.up = point3d(
-            XMVectorGetX(Camera::state.Up),
-            XMVectorGetY(Camera::state.Up),
-            XMVectorGetZ(Camera::state.Up)
-        );
-
-        point3d forward = point3d(
-            XMVectorGetX(Camera::state.Forward),
-            XMVectorGetY(Camera::state.Forward),
-            XMVectorGetZ(Camera::state.Forward)
-        );
-
-        wave.right = forward.cross(wave.up).normalized();
-        wave.up = wave.right.cross(forward).normalized();
+        // Жёстко задаём ориентацию для горизонтальной волны
+        wave.up = point3d(0, 1, 0);    // Вверх по оси Y (вертикаль)
+        wave.right = point3d(1, 0, 0); // Вправо по оси X (горизонталь)
 
         Wave.push_back(wave);
     }
@@ -964,30 +951,27 @@ namespace drawer
     }
 
     void RenderShockwave() {
-        Shaders::vShader(4); // Use the same shader as weapon rendering
+        Shaders::vShader(4);
         Shaders::pShader(4);
         Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 
         for (auto& wave : Wave) {
-            // Draw the shockwave as a circle
+            // Рисуем идеально горизонтальный круг
             for (int i = 0; i < 36; i++) {
                 float angle = i * (2 * PI / 36);
                 float nextAngle = (i + 1) * (2 * PI / 36);
 
-                point3d local1(cos(angle), sin(angle), 0);
-                point3d local2(cos(nextAngle), sin(nextAngle), 0);
+                // Точки на окружности в XZ-плоскости (Y=0)
+                point3d point1 = wave.position + point3d(cos(angle), 0, sin(angle)) * wave.radius;
+                point3d point2 = wave.position + point3d(cos(nextAngle), 0, sin(nextAngle)) * wave.radius;
 
-                point3d point1 = wave.position + (wave.right * local1.x + wave.up * local1.y) * wave.radius;
-                point3d point2 = wave.position + (wave.right * local2.x + wave.up * local2.y) * wave.radius;
-
-                drawLine(point1, point2, 100.f); // Adjust thickness as needed
+                drawLine(point1, point2, 1000.f);
             }
 
-            // Optional: Draw center point
-            wave.position.draw(wave.position, 15.0f);
+            // Центр волны
+            //wave.position.draw(wave.position, 15.0f);
         }
     }
-
 
 
 
@@ -1225,7 +1209,7 @@ namespace drawer
                     playerConst.UpdateShaking();
 
                 if (enemyAI.data.isShockwaveActive) {
-                    CreateShockwave(Enemypos, enemyAI.data.shockwaveRadius);
+                    CreateShockwave(Enemypos, enemyAI.data.shockwaveRadius , Heropos);
                 }
                     UpdateShockwave(deltaTime);
                     RenderShockwave();
