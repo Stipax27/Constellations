@@ -926,8 +926,6 @@ namespace drawer
     void drawWorld(float deltaTime)
     {
         textStyle.color = RGB(0, 191, 255);
-        Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
-        Draw::ClearDepth();
 
         XMVECTOR heroPosition = Hero::state.constellationOffset.r[3];
         XMVECTOR enemyPositions = Enemy::enemyData.enemyConstellationOffset.r[3];

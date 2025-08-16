@@ -181,7 +181,7 @@ namespace Textures
 
 	textureDesc Texture[max_tex];
 
-	byte currentRT = 0;
+	int currentRT = 0;
 
 	void CreateTex(int i)
 	{
@@ -382,7 +382,7 @@ namespace Textures
 
 	void RenderTarget(int target, unsigned int level = 0)
 	{
-		currentRT = (int)target;
+		currentRT = target;
 
 		auto depthStencil = Texture[(int)target].depth ? Texture[(int)target].DepthStencilView[0] : 0;
 
@@ -946,9 +946,9 @@ void Dx11Init()
 	//main RT
 	Textures::Create(0, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), false, true);
 	//rt1
-	Textures::Create(1, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), false, true);
+	Textures::Create(1, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
 	//rt2
-	Textures::Create(2, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), false, true);
+	Textures::Create(2, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
 }
 
 
