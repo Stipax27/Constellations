@@ -119,6 +119,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     timer::StartCounter();
     ShowCursor(FALSE);
 
+    CreateParticledText("TEST TEXT RENDER", (1700. / 2560) * window.width, (600. / 1440) * window.height, .7f, false);
+
     // Main message loop:
     while (msg.message != WM_QUIT)
     {

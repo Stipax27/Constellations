@@ -1405,8 +1405,6 @@ namespace drawer
 
         }
 
-        drawString("TEST TEXT RENDER", (1700. / 2560)* window.width, (600. / 1440)* window.height, .7f, false, false, -1, true);
-
         Depth::Depth(Depth::depthmode::off);
         if (gameState != gameState_::selectEnemy && gameState != gameState_::Fight && gameState != gameState_::WinFight)
         {
@@ -1418,6 +1416,7 @@ namespace drawer
         {
             cursor->vs_id = 11;
             cursor->ps_id = 11;
+            DeleteParticledText("TEST TEXT RENDER");
         }
 
         ConstBuf::global[0] = XMFLOAT4(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1), 0.0f, 1.0f);
@@ -1428,6 +1427,7 @@ namespace drawer
         DrawRenderObject(cursor);
 
         DrawUiParticles(deltaTime);
+        RenderParticledText(deltaTime);
     }
 }
 

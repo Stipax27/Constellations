@@ -44,8 +44,9 @@ void mainLoop(float deltaTime)
 	Shaders::pShader(10);
 	context->Draw(6, 0);
 
-	//Draw::OutputRenderTextures();
-	//Draw::NullDrawer(1, 1);
+	/*Shaders::pShader(100);
+	Draw::OutputRenderTextures();
+	context->Draw(6, 0);*/
 	//--------------------------------
 
 	Draw::Present();

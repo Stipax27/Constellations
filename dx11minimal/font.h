@@ -276,6 +276,7 @@ float drawLetter(int letter, float x, float y, float scale, bool getSize = false
 
     ConstBuf::Update(5, ConstBuf::global);
     ConstBuf::ConstToVertex(5);
+    ConstBuf::ConstToPixel(5);
 
     ConstBuf::Update(0, ConstBuf::drawerV);
     ConstBuf::ConstToVertex(0);
@@ -345,7 +346,7 @@ point3d drawString(const char* str, float x, float y, float scale, bool centered
 
         while (i < letters_count && str[i] != '\n')
         {
-            float sz = drawLetter(str[i] - 32, x - offset, y, scale, getSize, animated) + tracking;
+            float sz = drawLetter(str[i] - 32, x - offset, y, scale, getSize, animated, progress) + tracking;
             x += sz;
             stringWidth += sz;
             i++;
@@ -363,18 +364,27 @@ point3d drawString(const char* str, float x, float y, float scale, bool centered
     return { maxStringWidth ,y - base_y,0 };
 }
 
+enum RenderTextState {
+    creating,
+    idle,
+    deleting
+};
+
 struct RenderText
 {
-    char* str;
+    const char* str;
     float x;
     float y;
     float scale;
     bool centered;
+    float progress;
+    RenderTextState state;
 };
 
 vector<RenderText*> renderTextList;
+float textCreateSpeed = 1.5f;
 
-void CreateParticledText(char* str, float x, float y, float scale, bool centered)
+void CreateParticledText(const char* str, float x, float y, float scale, bool centered)
 {
     RenderText* renderText = new RenderText;
     renderText->str = str;
@@ -382,28 +392,65 @@ void CreateParticledText(char* str, float x, float y, float scale, bool centered
     renderText->y = y;
     renderText->scale = scale;
     renderText->centered = centered;
+    renderText->progress = 1.0f;
+    renderText->state = RenderTextState::creating;
 
     renderTextList.push_back(renderText);
 }
 
-void DeleteParticleText(char str)
+void DeleteParticledText(const char* str)
 {
     for (int i = 0; i < renderTextList.size(); i++)
     {
         RenderText* renderText = renderTextList[i];
-        if (*renderText->str == str)
+        if (*renderText->str == *str)
         {
+            renderText->state = RenderTextState::deleting;
             return;
         }
     }
 }
 
-void RenderParticledText()
+void RenderParticledText(float deltaTime)
 {
-    for (int i = 0; i < renderTextList.size(); i++)
+    deltaTime /= 1000;
+
+    int i = 0;
+    while (i < renderTextList.size())
     {
         RenderText* renderText = renderTextList[i];
-        drawString(renderText->str, renderText->x, renderText->y, renderText->scale, renderText->centered, false, -1, true, 0.0f);
+
+        switch (renderText->state)
+        {
+
+        case RenderTextState::creating:
+            renderText->progress = max(renderText->progress - textCreateSpeed * deltaTime * ((1 - renderText->progress) * 0.5f + 0.5f), 0);
+            if (renderText->progress == 0)
+            {
+                renderText->state = RenderTextState::idle;
+            }
+            i++;
+            break;
+
+        case RenderTextState::deleting:
+            renderText->progress = min(renderText->progress + textCreateSpeed * deltaTime, 1);
+            if (renderText->progress == 1)
+            {
+                renderTextList.erase(renderTextList.begin() + i);
+            }
+            else
+            {
+                i++;
+            }
+            break;
+
+        case RenderTextState::idle:
+            i++;
+            break;
+
+        }
+
+        drawString(renderText->str, renderText->x, renderText->y, renderText->scale, renderText->centered, false, -1, true, renderText->progress);
     }
 }
 

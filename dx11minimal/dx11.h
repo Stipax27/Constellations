@@ -519,6 +519,10 @@ namespace Shaders {
 
 		CreateVS(12, nameToPatchLPCWSTR("..\\dx11minimal\\UiParticle_VS.shader"));
 		CreatePS(12, nameToPatchLPCWSTR("..\\dx11minimal\\UiParticle_PS.shader"));
+
+		//-----------------------------------------------
+
+		CreatePS(100, nameToPatchLPCWSTR("..\\dx11minimal\\Lensing_PS.shader"));
 	}
 
 	void vShader(unsigned int n)

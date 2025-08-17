@@ -67,7 +67,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     A = lerp(A, B, localRect / segments);
     B = lerp(A, B, (localRect + 1) / segments);
 
-    float2 offset = (randomPosition(iID + A.x * B.x + A.y * B.y).xy * 2 - 1) * progress;
+    float2 offset = (randomPosition(iID + A.x * B.x + A.y * B.y).xy * 2 - 1) * progress * 75;
     A += offset;
     B += offset;
 
