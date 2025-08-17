@@ -1056,6 +1056,57 @@ namespace drawer
         
     }
 
+    void InputHook(float deltaTime, point3d _hero, point3d _enemy) {
+
+        bool isHooked = false;
+        float currentSpeed = 0.0f;
+        float maxSpeed = 2000.0f;
+        float acceleration = 5000.0f;
+        float deceleration = 3000.0f;
+        float minDistance = 200.0f;
+
+        point3d Dir = _enemy - _hero;
+        float distance = Dir.magnitude();
+        point3d FlyDir = Dir.normalized();
+
+       
+        if (GetAsyncKeyState(VK_RBUTTON) && distance < 10000.0f && !isHooked) {
+            isHooked = true;
+            currentSpeed = maxSpeed * 0.2f; 
+        }
+
+       
+        if (isHooked) {
+           
+            if (currentSpeed < maxSpeed) {
+
+                currentSpeed += acceleration * deltaTime;
+
+                if (currentSpeed > maxSpeed) 
+                {
+                    currentSpeed = maxSpeed;
+                }
+            }
+
+          
+            _hero += FlyDir * currentSpeed * deltaTime;
+
+           
+            if (distance < minDistance) {
+                isHooked = false;
+                currentSpeed = 0.0f;
+            }
+            else if (distance > 10000.0f) {
+                isHooked = false;
+                currentSpeed = 0.0f;
+            }
+        }
+
+      
+        Hero::state.constellationOffset = XMMatrixRotationQuaternion(Hero::state.currentRotation) *
+            XMMatrixTranslation(_hero.x, _hero.y, _hero.z);
+    }
+
     void drawWorld(float deltaTime)
     {
         textStyle.color = RGB(0, 191, 255);
@@ -1379,6 +1430,8 @@ namespace drawer
 
             
             updateEnemyPosition(deltaTime, Heropos, Enemypos, playerHP);
+
+            InputHook(deltaTime, Heropos, Enemypos);
 
             string HP = std::to_string(playerHP);
             drawString(HP.c_str(), window.width / 2, window.height / 2, 1, true);

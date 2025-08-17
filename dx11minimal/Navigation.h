@@ -157,7 +157,7 @@ void updateFlySpeed(float deltaTime)
     }
     else 
     {
-        Hero::state.timeShiftPressed += 4;
+        Hero::state.timeShiftPressed += 1;
         wasShiftPressed = isBoosting;
         currentFlySpeed = 0;
     }
