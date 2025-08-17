@@ -769,6 +769,7 @@ namespace drawer
             if (!isPressed)
             {
                 isPressed = true;
+                DeleteParticledText("TEST TEXT RENDER");
                 ProcessSound("Mouse_click1.wav");
                 point3d mousePos = point3d(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1),0);
                 DWORD curTime = timer::GetCounter();
@@ -1416,7 +1417,6 @@ namespace drawer
         {
             cursor->vs_id = 11;
             cursor->ps_id = 11;
-            DeleteParticledText("TEST TEXT RENDER");
         }
 
         ConstBuf::global[0] = XMFLOAT4(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1), 0.0f, 1.0f);

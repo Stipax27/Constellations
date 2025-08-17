@@ -433,7 +433,7 @@ void RenderParticledText(float deltaTime)
             break;
 
         case RenderTextState::deleting:
-            renderText->progress = min(renderText->progress + textCreateSpeed * deltaTime, 1);
+            renderText->progress = min(renderText->progress + textCreateSpeed * deltaTime * ((1 - renderText->progress) * 0.5f + 0.5f), 1);
             if (renderText->progress == 1)
             {
                 renderTextList.erase(renderTextList.begin() + i);
