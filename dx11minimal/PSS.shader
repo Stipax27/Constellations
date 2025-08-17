@@ -50,7 +50,7 @@ float star(float2 uv)
     float c = saturate(1. - 1. * length(uv));
     c = pow(c, 3);
     c *= saturate(1. - 228. * abs(uv.x) * abs(uv.y));
-    c += pow(sin(length(uv * 3.14)), 118) * .03;
+    c += pow(max(sin(length(uv * 3.14)), 0), 118) * .03;
     return max(c, 0);
 }
 
