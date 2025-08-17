@@ -1067,7 +1067,7 @@ namespace drawer
 
        //d2dRenderTarget->BeginDraw();
         CreateSpeedParticles();
-        DrawSpeedParticles();
+        //DrawSpeedParticles();
 
         //d2dRenderTarget->BeginDraw();
         switch (gameState)

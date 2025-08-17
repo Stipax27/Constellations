@@ -481,44 +481,44 @@ namespace Shaders {
 
 	void Init()
 	{
-		CreateVS(0, nameToPatchLPCWSTR("VS.shader"));
-		CreatePS(0, nameToPatchLPCWSTR("PS.shader"));
+		CreateVS(0, nameToPatchLPCWSTR("..\\dx11minimal\\VS.shader"));
+		CreatePS(0, nameToPatchLPCWSTR("..\\dx11minimal\\PS.shader"));
 
-		CreateVS(1, nameToPatchLPCWSTR("VSS.shader"));
-		CreatePS(1, nameToPatchLPCWSTR("PSS.shader"));
+		CreateVS(1, nameToPatchLPCWSTR("..\\dx11minimal\\VSS.shader"));
+		CreatePS(1, nameToPatchLPCWSTR("..\\dx11minimal\\PSS.shader"));
 
-		CreateVS(2, nameToPatchLPCWSTR("VSFS.shader"));
-		CreatePS(2, nameToPatchLPCWSTR("PSFS.shader"));
+		CreateVS(2, nameToPatchLPCWSTR("..\\dx11minimal\\VSFS.shader"));
+		CreatePS(2, nameToPatchLPCWSTR("..\\dx11minimal\\PSFS.shader"));
 
 		CreateVS(3, nameToPatchLPCWSTR("SpaceStars_VS.shader"));
 		CreatePS(3, nameToPatchLPCWSTR("SpaceStars_PS.shader"));
 
-		CreateVS(4, nameToPatchLPCWSTR("StarLink_VS.shader"));
-		CreatePS(4, nameToPatchLPCWSTR("StarLink_PS.shader"));
+		CreateVS(4, nameToPatchLPCWSTR("..\\dx11minimal\\StarLink_VS.shader"));
+		CreatePS(4, nameToPatchLPCWSTR("..\\dx11minimal\\StarLink_PS.shader"));
 
-		CreateVS(5, nameToPatchLPCWSTR("GalaxyFog_VS.shader"));
-		CreatePS(5, nameToPatchLPCWSTR("GalaxyFog_PS.shader"));
+		CreateVS(5, nameToPatchLPCWSTR("..\\dx11minimal\\GalaxyFog_VS.shader"));
+		CreatePS(5, nameToPatchLPCWSTR("..\\dx11minimal\\GalaxyFog_PS.shader"));
 
-		CreateVS(6, nameToPatchLPCWSTR("Cursor_VS.shader"));
-		CreatePS(6, nameToPatchLPCWSTR("Cursor_PS.shader"));
+		CreateVS(6, nameToPatchLPCWSTR("..\\dx11minimal\\Cursor_VS.shader"));
+		CreatePS(6, nameToPatchLPCWSTR("..\\dx11minimal\\Cursor_PS.shader"));
 
-		CreateVS(7, nameToPatchLPCWSTR("AriesNebula_VS.shader"));
-		CreatePS(7, nameToPatchLPCWSTR("AriesNebula_PS.shader"));
+		CreateVS(7, nameToPatchLPCWSTR("..\\dx11minimal\\AriesNebula_VS.shader"));
+		CreatePS(7, nameToPatchLPCWSTR("..\\dx11minimal\\AriesNebula_PS.shader"));
 
-		CreateVS(8, nameToPatchLPCWSTR("SpeedParticles_VS.shader"));
-		CreatePS(8, nameToPatchLPCWSTR("SpeedParticles_PS.shader"));
+		CreateVS(8, nameToPatchLPCWSTR("..\\dx11minimal\\SpeedParticles_VS.shader"));
+		CreatePS(8, nameToPatchLPCWSTR("..\\dx11minimal\\SpeedParticles_PS.shader"));
 
-		CreateVS(9, nameToPatchLPCWSTR("DotText_VS.shader"));
-		CreatePS(9, nameToPatchLPCWSTR("DotText_PS.shader"));
+		CreateVS(9, nameToPatchLPCWSTR("..\\dx11minimal\\DotText_VS.shader"));
+		CreatePS(9, nameToPatchLPCWSTR("..\\dx11minimal\\DotText_PS.shader"));
 
-		CreateVS(10, nameToPatchLPCWSTR("PP_VS.shader"));
-		CreatePS(10, nameToPatchLPCWSTR("PP_PS.shader"));
+		CreateVS(10, nameToPatchLPCWSTR("..\\dx11minimal\\PP_VS.shader"));
+		CreatePS(10, nameToPatchLPCWSTR("..\\dx11minimal\\PP_PS.shader"));
 
-		CreateVS(11, nameToPatchLPCWSTR("Cross_VS.shader"));
-		CreatePS(11, nameToPatchLPCWSTR("Cross_PS.shader"));
+		CreateVS(11, nameToPatchLPCWSTR("..\\dx11minimal\\Cross_VS.shader"));
+		CreatePS(11, nameToPatchLPCWSTR("..\\dx11minimal\\Cross_PS.shader"));
 
-		CreateVS(12, nameToPatchLPCWSTR("UiParticle_VS.shader"));
-		CreatePS(12, nameToPatchLPCWSTR("UiParticle_PS.shader"));
+		CreateVS(12, nameToPatchLPCWSTR("..\\dx11minimal\\UiParticle_VS.shader"));
+		CreatePS(12, nameToPatchLPCWSTR("..\\dx11minimal\\UiParticle_PS.shader"));
 	}
 
 	void vShader(unsigned int n)
@@ -1041,14 +1041,15 @@ namespace Hero
 	{
 		XMVECTOR relativeMovement = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR currentRotation = XMQuaternionIdentity();
-		XMVECTOR Forward = XMVectorSet(0, 0, 1, 0);
+		//XMVECTOR Forward = XMVectorSet(0, 0, 1, 0);
 		XMVECTOR Forwardbuf = XMVectorSet(0, 0, 1, 0);
 		XMVECTOR defaultUp = XMVectorSet(0, -1, 0, 0);
 		XMVECTOR Right = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR at = XMVectorSet(0, 0, 0, 0);
 		XMVECTOR Up = XMVector3Rotate(defaultUp, currentRotation);
-		XMVECTOR heroPosition;
 		XMMATRIX constellationOffset = XMMatrixTranslation(0, 0, 0);
+		XMVECTOR position = XMVectorSet(0, 0, 0, 0);  // Прямое хранение позиции
+		XMMATRIX worldMatrix = XMMatrixIdentity();      // Матрица преобразования мира
 
 		
 		
@@ -1069,13 +1070,12 @@ namespace Camera
 		float minDist = 500.0f;
 		float maxDist = 1000.0f;
 		float fovAngle = 60.0f;
-		float verticalOffset = 500.0f;  
+		float verticalOffset = 450.0f;  
 		float horizontalOffset = 0.0f; 
-		float distanceOffset = 500.0f;
+		float distanceOffset = 1000.0f;
 		XMVECTOR relativeMovement = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR currentRotation = XMQuaternionIdentity();
 		XMVECTOR Forward = XMVectorSet(0, 0, 1, 0);
-		//XMVECTOR Forwardbuf = XMVectorSet(0, 0, 1, 0);//аналог форварда локальный тут
 		XMVECTOR defaultUp = XMVectorSet(0, -1, 0, 0);
 		XMVECTOR Right = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR at = XMVectorSet(0, 0, 0, 0);
@@ -1088,50 +1088,44 @@ namespace Camera
 	
 	void UpdateCameraPosition()
 	{
-		// Получаем текущую позицию героя
-		Hero::state.heroPosition = XMVectorSet(
-			Camera::state.constellationOffset.r[3].m128_f32[0],
-			Camera::state.constellationOffset.r[3].m128_f32[1],
-			Camera::state.constellationOffset.r[3].m128_f32[2],
-			0.0f
-		);
-
 		
-		XMVECTOR heroForward = Hero::state.Forwardbuf;
-		XMVECTOR heroUp = Hero::state.Up;
-		XMVECTOR heroRight = Hero::state.Right;
+		// 1. Получаем и нормализуем актуальные векторы ориентации героя
+		XMVECTOR heroForward = XMVector3Normalize(Hero::state.Forwardbuf);
+		XMVECTOR heroUp = XMVector3Normalize(Hero::state.Up);
+		XMVECTOR heroRight = XMVector3Normalize(Hero::state.Right);
 
-		
-		XMVECTOR cameraPosition = Hero::state.heroPosition
-			- (heroForward * state.distanceOffset)
-			+ (heroUp * state.verticalOffset)
-			+ (heroRight * state.horizontalOffset);
+		// 2. Вычисляем позицию камеры относительно героя
+		XMVECTOR cameraOffset =
+			(-heroForward * state.distanceOffset) +  // Основное смещение назад
+			(heroUp * state.verticalOffset) +        // Вертикальное смещение
+			(heroRight * state.horizontalOffset);    // Горизонтальное смещение
 
-		
-		XMVECTOR cameraTarget = Hero::state.heroPosition + (heroUp * state.verticalOffset * 0.5f);
+		// 3. Вычисляем окончательную позицию камеры
+		XMVECTOR cameraPosition = Hero::state.position + cameraOffset;
 
-		
+		// 4. Вычисляем точку фокусировки (впереди героя)
+		XMVECTOR cameraTarget = cameraPosition + (heroForward * 15.0f);
+
+		// 5. Обновляем состояние камеры
 		state.Eye = cameraPosition;
 		state.at = cameraTarget;
-		state.Up = heroUp; 
+		state.Up = heroUp;
 
-		
+		// 6. Пересчитываем векторы камеры для корректной работы
 		state.Forward = XMVector3Normalize(cameraTarget - cameraPosition);
 		state.Right = XMVector3Normalize(XMVector3Cross(heroUp, state.Forward));
+
+		// 7. Обновляем матрицу вида
+		ConstBuf::camera.view[0] = XMMatrixTranspose(
+			XMMatrixLookAtLH(state.Eye, state.at, state.Up)
+		);
 	}
 
 	void Camera()//обновление позиции камеры после обновления позиции созвездия. В Navigation.h, Loop.h, Mouse.h(navigationByMouse 2 раза) и тут тоже есть вызовы.
 	{
 		UpdateCameraPosition();
 
-		
-		ConstBuf::camera.view[0] = XMMatrixTranspose(XMMatrixLookAtLH(
-			state.Eye,
-			state.at,
-			state.Up
-		));
-
-		
+		// Обновляем матрицу проекции (если нужно)
 		ConstBuf::camera.proj[0] = XMMatrixTranspose(XMMatrixPerspectiveFovLH(
 			DegreesToRadians(state.fovAngle),
 			iaspect,
