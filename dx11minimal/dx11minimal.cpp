@@ -54,10 +54,10 @@ HWND hWnd;
 #include "EnemyData.h"
 #include "EnemyDataCon.h"
 #include "EnemyAi.h"
-#include "EnemyAiUPD.h"
 
 #include "Navigation.h"
 #include "Constellation.h"
+#include "EnemyAiUPD.h"
 
 #include "MainWorld.h"
 #include "StatusGame.h"

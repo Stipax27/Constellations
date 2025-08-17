@@ -61,7 +61,7 @@
     }
 
 
-    void EnemyAI::AiUpdate(float deltaTime, point3d& heroPosition, point3d& enemyPositions) {
+    void EnemyAI::AiUpdate(float deltaTime, point3d& heroPosition, point3d& enemyPositions , float player) {
         data.playerDistance = (heroPosition - enemyPositions).magnitude();
         data.playerVisible = (data.playerDistance < 20000.0f);
 
@@ -83,7 +83,7 @@
             break;
 
         case AIState::ATTACK:
-            AttackPlayer(deltaTime, heroPosition, enemyPositions);
+            AttackPlayer(deltaTime, heroPosition, enemyPositions, player);
             if (data.attackTimer <= 0.0f) {
                 data.currentState = AIState::ORBIT;
                 data.attackCooldown = 5000.0f; // Следующая атака через 5 секунды
@@ -91,7 +91,7 @@
             break;
 
         case AIState::JUMP_ATTACK:
-            JumpAttack(deltaTime, heroPosition, enemyPositions);
+            JumpAttack(deltaTime, heroPosition, enemyPositions, player);
             if (data.attackTimer <= 0.0f) {
                 data.currentState = AIState::ORBIT;
                 data.attackCooldown = 5000.0f;
@@ -101,7 +101,7 @@
             break;
 
         case AIState::BOOM_ATTACK:
-            Explosion( deltaTime, enemyPositions);
+            Explosion( deltaTime, enemyPositions, player);
             if (data.attackTimer <= 0.0f) {
                 data.currentState = AIState::ORBIT;
 
@@ -219,7 +219,7 @@
         }
     }
 
-    void EnemyAI::AttackPlayer(float deltaTime, point3d& heroPos, point3d& enemyPos) {
+    void EnemyAI::AttackPlayer(float deltaTime, point3d& heroPos, point3d& enemyPos , float player) {
         // Быстро летим к игроку
         point3d attackDir = AttakDir.normalized();
         enemyPos += (attackDir * data.chaseSpeed * 5.0f * deltaTime) / data.attackDuration;
@@ -231,16 +231,17 @@
         UpdateRotation(attackDir);
 
         // Проверяем столкновение с игроком
-        if ((heroPos - enemyPos).magnitude() < 300.0f) {
-
+        if ((heroPos - enemyPos).magnitude() < 1000.0f) {
+            player -= 1.f;
             data.isAttacking = true;
+            
             // Возвращаемся на орбиту досрочно, если достигли игрока
             //data.attackTimer = 0.0f;
         }
 
     }
 
-    void EnemyAI::JumpAttack(float deltaTime, point3d& heroPos, point3d& enemyPos) {
+    void EnemyAI::JumpAttack(float deltaTime, point3d& heroPos, point3d& enemyPos , float player) {
         // Фаза прыжка вверх
         if (!data.isShockwaveActive && data.jumpHeight < data.maxJumpHeight) {
             data.jumpHeight += data.jumpSpeed * deltaTime;
@@ -271,9 +272,8 @@
             data.shockwaveRadius += data.shockwaveSpeed * deltaTime;
 
             // Проверяем попадание по игроку
-            if ((heroPos - enemyPos).magnitude() < data.shockwaveRadius + 3000.0f) {
-                // Наносим урон игроку
-                // player->TakeDamage(10);
+            if ((heroPos - enemyPos).magnitude() < data.shockwaveRadius) {
+                player -= 2.f;
                 data.isAttacking = true;
             }
 
@@ -289,7 +289,7 @@
             XMMatrixTranslation(enemyPos.x, enemyPos.y, enemyPos.z);
     }
 
-    void EnemyAI::Explosion(float deltaTime, point3d& enemyPos) {
+    void EnemyAI::Explosion(float deltaTime, point3d& enemyPos , float player) {
         // Фаза подготовки взрыва
         if (!data.isBoomExploding) {
             data.boomCurrentTime += deltaTime;
@@ -327,8 +327,7 @@
 
             float distance = (heroPos - enemyPos).magnitude();
             if (distance < data.boomRadius + 3000.0f) {
-                // Наносим урон игроку
-                // player->TakeDamage(20);
+                player -= 5.f;
                 data.isAttacking = true;
             }
 
@@ -378,8 +377,8 @@
 }
 
 static Enemy::EnemyAI enemyAI;
-void updateEnemyPosition(float deltaTime, point3d& heroPosition, point3d& enemyPositions) {
-    enemyAI.AiUpdate(deltaTime, heroPosition, enemyPositions);
+void updateEnemyPosition(float deltaTime, point3d& heroPosition, point3d& enemyPositions , float player) {
+    enemyAI.AiUpdate(deltaTime, heroPosition, enemyPositions , player);
 
     // После обновления позиции получаем актуальную матрицу из EnemyAI
     Enemy::enemyData.enemyConstellationOffset = enemyAI.data.enemyConstellationOffset;

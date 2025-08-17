@@ -1279,7 +1279,7 @@ namespace drawer
                     XMVectorGetZ(enemyPositions)
                 );
 
-                updateEnemyPosition(deltaTime , Heropos, Enemypos);
+               
 
                 if (enemyAI.data.isAttacking == true) {
 
@@ -1362,6 +1362,7 @@ namespace drawer
                 HandleMouseClick(heroPosition);
             }
             UpdateAttack(deltaTime);
+
             DrawSwordAttack();
 
             // Проверка условий победы/поражения
@@ -1374,7 +1375,14 @@ namespace drawer
                 gameState = gameState_::EndFight;
             }
 
+            float playerHP = getConstellationHP(player);
 
+            
+            updateEnemyPosition(deltaTime, Heropos, Enemypos, playerHP);
+
+            string HP = std::to_string(playerHP);
+            drawString(HP.c_str(), window.width / 2, window.height / 2, 1, true);
+            
             Constellation& c = *starSet[player_sign];
             c.Transform = CreateHeroToWorldMatrix(c);
             drawСonstellation(*starSet[player_sign]);

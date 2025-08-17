@@ -36,7 +36,7 @@
         float jumpSpeed = 20.0f;
         bool isShockwaveActive = false;
         float shockwaveRadius = 0.0f;
-        float maxShockwaveRadius = 100000.0f;
+        float maxShockwaveRadius = 10000.0f;
         float shockwaveSpeed = 300.0f;
         DWORD shockwaveStartTime = 0;
 
@@ -102,14 +102,14 @@
         bool splineInitialized = false;
         float splineProgress = 0.0f;
 
-        void AiUpdate(float deltaTime, point3d& heroPosition, point3d& enemyPositions);
+        void AiUpdate(float deltaTime, point3d& heroPosition, point3d& enemyPositions, float player);
         void Patrol(float deltaTime, point3d& enemyPositions);
         void Chase(point3d& heroPos, point3d& enemyPositions , float deltaTime);
         void UpdateRotation(point3d direction);
         void OrbitPlayer(float deltaTime, point3d& heroPos, point3d& enemyPos);
-        void AttackPlayer(float deltaTime, point3d& heroPos, point3d& enemyPos);
-        void JumpAttack(float deltaTime, point3d& heroPos, point3d& enemyPos);
-        void Explosion(float deltaTime, point3d& enemyPos);
+        void AttackPlayer(float deltaTime, point3d& heroPos, point3d& enemyPos , float player);
+        void JumpAttack(float deltaTime, point3d& heroPos, point3d& enemyPos, float player);
+        void Explosion(float deltaTime, point3d& enemyPos, float player);
     };
 
     static EnemyData enemyData;
