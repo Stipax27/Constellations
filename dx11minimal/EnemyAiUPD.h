@@ -102,6 +102,10 @@
 
         case AIState::BOOM_ATTACK:
             Explosion( deltaTime, enemyPositions);
+            if (data.attackTimer <= 0.0f) {
+                data.currentState = AIState::ORBIT;
+
+            }
         }
 
     
@@ -161,7 +165,7 @@
         // Вычисляем тангенциальное направление для орбитального движения
         point3d tangentDir = point3d(-dirToPlayer.z, 0.0f, dirToPlayer.x).normalized();
 
-        // Корректируем расстояние до игрока
+        // Корректируем расстояние до игроку
         float distanceCorrection = 0.0f;
         if (currentDist > data.orbitRadius * 1.1f) {
             distanceCorrection = 0.5f; // Приближаемся
@@ -180,27 +184,38 @@
 
         UpdateRotation(dirToPlayer);
 
-        // Проверка на прыжковую атаку (более надежная версия)
+        // Проверка на атаку
         if (data.attackCooldown <= 0.0f && !data.isAttacking) {
-           // 50% шанс на прыжковую атаку
+            // Генерируем случайное число от 0 до 100
+            int attackType = rand() % 100;
+
+            if (attackType < 50) { // 50% - обычная атака
                 AttakDir = heroPos - enemyPos;
-                data.currentState = AIState::BOOM_ATTACK;
+                data.currentState = AIState::ATTACK;
+                data.attackTimer = 500.f;
+                data.lastOrbitPosition = enemyPos;
+                data.attackCooldown = 0.0f;
+                
+            }
+            else if (attackType < 80) { // 30% - атака в прыжке (50-79)
+                AttakDir = heroPos - enemyPos;
+                data.currentState = AIState::JUMP_ATTACK;
                 data.attackTimer = 1500.0f;
                 data.lastOrbitPosition = enemyPos;
                 data.isJumping = true;
                 data.jumpHeight = 0.0f;
-                data.attackCooldown = 0.0f; // Сбрасываем cooldown
-                data.isAttacking = true; // Устанавливаем флаг атаки
-            
-            //else {
-            //    // Обычная атака
-            //    AttakDir = heroPos - enemyPos;
-            //    data.currentState = AIState::ATTACK;
-            //    data.attackTimer = 500.f;
-            //    data.lastOrbitPosition = enemyPos;
-            //    data.attackCooldown = 0.0f;
-            //    data.isAttacking = true;
-            //}
+                data.attackCooldown = 0.0f;
+                
+            }
+            else { // 20% - взрыв (80-99)
+                AttakDir = heroPos - enemyPos;
+                data.currentState = AIState::BOOM_ATTACK;
+                data.attackTimer = 5000.0f;
+                data.lastOrbitPosition = enemyPos;
+                data.attackCooldown = 0.0f;
+                data.isBoomExploding = true;
+                
+            }
         }
     }
 
@@ -216,7 +231,7 @@
         UpdateRotation(attackDir);
 
         // Проверяем столкновение с игроком
-        if ((heroPos - enemyPos).magnitude() < 30000.0f) {
+        if ((heroPos - enemyPos).magnitude() < 300.0f) {
 
             data.isAttacking = true;
             // Возвращаемся на орбиту досрочно, если достигли игрока
@@ -256,9 +271,10 @@
             data.shockwaveRadius += data.shockwaveSpeed * deltaTime;
 
             // Проверяем попадание по игроку
-            if ((heroPos - enemyPos).magnitude() < data.shockwaveRadius + 30000.0f) {
+            if ((heroPos - enemyPos).magnitude() < data.shockwaveRadius + 3000.0f) {
                 // Наносим урон игроку
                 // player->TakeDamage(10);
+                data.isAttacking = true;
             }
 
             // Завершаем атаку, когда волна достигла максимума
@@ -310,9 +326,10 @@
             );
 
             float distance = (heroPos - enemyPos).magnitude();
-            if (distance < data.boomRadius + 30000.0f) {
+            if (distance < data.boomRadius + 3000.0f) {
                 // Наносим урон игроку
                 // player->TakeDamage(20);
+                data.isAttacking = true;
             }
 
             // Завершаем атаку, когда взрыв достиг максимума

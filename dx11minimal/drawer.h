@@ -1288,13 +1288,13 @@ namespace drawer
                 }
                     playerConst.UpdateShaking();
 
-                if (enemyAI.data.isShockwaveActive) {
+                if (enemyAI.data.isShockwaveActive == true) {
                     CreateShockwave(Enemypos, enemyAI.data.shockwaveRadius , Heropos);
                 }
                     UpdateShockwave(deltaTime);
                     RenderShockwave();
 
-                if (enemyAI.data.isBoomExploding) {
+                if (enemyAI.data.isBoomExploding == true) {
                     CreateExplosionEffects(Enemypos, enemyAI.data.boomRadius);
                 }
                 UpdateExplosionEffects(deltaTime);
