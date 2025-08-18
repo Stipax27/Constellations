@@ -507,6 +507,8 @@ namespace drawer
     void UpdateAttackStars(float deltaTime) {
         
         for (auto& star : attackStars) {
+
+
             star.position += star.direction.normalized() * 5.0f * deltaTime;
         }
     }
@@ -618,6 +620,11 @@ namespace drawer
             switch (current_weapon) {
                 case weapon_name::Sword: {
                 
+                    Hero::state.isAttackRotating = true;
+                    Hero::state.attackStartTime = currentTime;
+                    Hero::state.attackRotationProgress = 0.0f;
+
+                    // Остальной код атаки мечом...
                     for (int i = 0; i < 25; i++) {
                         StarProjectile newStar;
                         newStar.position = start;
@@ -636,6 +643,7 @@ namespace drawer
 
                         attackStars.push_back(newStar);
                     }
+
                     ProcessSound("Sword.wav");
                     break;
                 }
@@ -654,7 +662,10 @@ namespace drawer
                     newStar.up = newStar.right.cross(newDirection).normalized();
 
                     attackStars.push_back(newStar);
+
+
                     ProcessSound("ShieldStan3.wav");
+
                     break;
                 }
 
@@ -678,6 +689,7 @@ namespace drawer
 
                         attackStars.push_back(newStar);
                     }
+
                     ProcessSound("Bow.wav");
                     break;
                 }
@@ -730,6 +742,17 @@ namespace drawer
         }
 
         UpdateAttackStars(deltaTime);
+
+        if (current_weapon == weapon_name::Shield) {
+
+            attackStars.erase(
+                std::remove_if(attackStars.begin(), attackStars.end(),
+                    [](const StarProjectile& star) {
+                        return (star.position - start).magnitude() > 3000.0f;
+                    }),
+                attackStars.end());
+        
+        }
 
         attackStars.erase(
             std::remove_if(attackStars.begin(), attackStars.end(),
@@ -1059,10 +1082,13 @@ namespace drawer
 
     void InputHook(float deltaTime, point3d _hero, point3d _enemy) {
 
+        Shaders::vShader(4);
+        Shaders::pShader(4);
+
         static bool isHooked = false;
         static float currentSpeed = 0.0f;
-        const float maxSpeed = 50.0f;
-        const float acceleration = 5000.0f;
+        const float maxSpeed = 10.0f;
+        const float acceleration = 2000.0f;
         const float minDistance = 500.0f;
 
         
@@ -1076,13 +1102,15 @@ namespace drawer
         float distance = XMVectorGetX(XMVector3Length(Dir));
 
        
-        if (GetAsyncKeyState(VK_RBUTTON) & 0x8000 && distance < 10000.0f && !isHooked) {
+        if (GetAsyncKeyState(VK_RBUTTON) & 0x8000 && distance < 30000.0f && !isHooked) {
             isHooked = true;
             currentSpeed = maxSpeed * 0.2f;
         }
 
+        
+
         if (isHooked) {
-            
+            drawLine(_hero, _enemy, 5.f);
             if (currentSpeed < maxSpeed) {
                 currentSpeed += acceleration * deltaTime;
                 currentSpeed = min(currentSpeed, maxSpeed);
@@ -1412,6 +1440,7 @@ namespace drawer
             // Обновление атак
             if (!playerConst.morphing) {
                 HandleMouseClick(heroPosition);
+                Hero::UpdateAttackRotation(deltaTime);
             }
             UpdateAttack(deltaTime);
 

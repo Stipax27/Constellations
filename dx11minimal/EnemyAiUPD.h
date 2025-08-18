@@ -349,6 +349,7 @@
 
     void EnemyAI::UpdateRotation(point3d direction) {
         if (direction.magnitude() > 0.1f) {
+
             XMVECTOR targetDir = XMVectorSet(direction.x, direction.y, direction.z, 0.0f);
             targetDir = XMVector3Normalize(targetDir);
 

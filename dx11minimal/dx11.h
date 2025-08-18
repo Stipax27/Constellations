@@ -1042,20 +1042,70 @@ namespace Hero
 		float timeShiftPressed;
 		XMVECTOR relativeMovement = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR currentRotation = XMQuaternionIdentity();
-		//XMVECTOR Forward = XMVectorSet(0, 0, 1, 0);
 		XMVECTOR Forwardbuf = XMVectorSet(0, 0, 1, 0);
 		XMVECTOR defaultUp = XMVectorSet(0, -1, 0, 0);
 		XMVECTOR Right = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR at = XMVectorSet(0, 0, 0, 0);
 		XMVECTOR Up = XMVector3Rotate(defaultUp, currentRotation);
 		XMMATRIX constellationOffset = XMMatrixTranslation(0, 0, 0);
-		XMVECTOR position = XMVectorSet(0, 0, 0, 0);  // Прямое хранение позиции
-		XMMATRIX worldMatrix = XMMatrixIdentity();      // Матрица преобразования мира
+		XMVECTOR position = XMVectorSet(0, 0, 0, 0);
+		XMMATRIX worldMatrix = XMMatrixIdentity();
 
 		
-		
+		float attackRotationProgress = 0.0f;
+		bool isAttackRotating = false;
+		DWORD attackStartTime = 0;
+
 	} static state;
 
+
+	void UpdateAttackRotation(float deltaTime)
+	{
+		if (state.isAttackRotating)
+		{
+			float attackDuration = 10.f; // Длительность анимации в секундах
+			state.attackRotationProgress = min(1.0f, (currentTime - state.attackStartTime) / (attackDuration * 1000));
+
+			// Вращение на 90 градусов вокруг оси X (вниз)
+			float rotationAngle = XMConvertToRadians(90.0f * state.attackRotationProgress);
+			XMVECTOR attackRotation = XMQuaternionRotationAxis(XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), rotationAngle);
+
+			// Комбинируем с текущим вращением
+			state.currentRotation = XMQuaternionMultiply(state.currentRotation, attackRotation);
+
+			// Обновляем матрицы
+			state.Up = XMVector3Rotate(state.defaultUp, state.currentRotation);
+			state.constellationOffset = XMMatrixRotationQuaternion(state.currentRotation) *
+				XMMatrixTranslationFromVector(state.position);
+			state.worldMatrix = state.constellationOffset;
+
+			// Завершение анимации
+			if (state.attackRotationProgress >= 1.0f)
+			{
+				state.isAttackRotating = false;
+			}
+		}
+		else if (state.attackRotationProgress > 0.0f)
+		{
+			// Плавный возврат в исходное положение
+			const float returnSpeed = 2.0f; // Скорость возврата
+			state.attackRotationProgress = max(0.0f, state.attackRotationProgress - returnSpeed * deltaTime);
+
+			// Вращение обратно
+			float returnAngle = XMConvertToRadians(90.0f * state.attackRotationProgress);
+			XMVECTOR returnRotation = XMQuaternionRotationAxis(XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), returnAngle);
+
+			// Применяем вращение
+			XMVECTOR baseRotation = XMQuaternionIdentity(); // Исходная ориентация
+			state.currentRotation = XMQuaternionMultiply(baseRotation, returnRotation);
+
+			// Обновляем матрицы
+			state.Up = XMVector3Rotate(state.defaultUp, state.currentRotation);
+			state.constellationOffset = XMMatrixRotationQuaternion(state.currentRotation) *
+				XMMatrixTranslationFromVector(state.position);
+			state.worldMatrix = state.constellationOffset;
+		}
+	}
 	
 	
 
