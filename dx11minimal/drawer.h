@@ -524,9 +524,9 @@ namespace drawer
                     Shaders::vShader(1);
                     Shaders::pShader(1);
                     
-                        point3d end = star.position + star.direction * 500.f;
+                        point3d end = star.position + star.direction * 1000.f;
                         drawLine(star.position, end, 3.f);
-                        star.position.draw(star.position, 15.0f);
+                        star.position.draw(star.position, 20.0f);
                     
                     break;
                 }
@@ -582,6 +582,7 @@ namespace drawer
     const float projectileSpeed = 2.0f;
     point3d mouseRay;
     point3d start;
+
     
     void HandleMouseClick(XMVECTOR heroPosition) {
         if (GetAsyncKeyState(VK_LBUTTON) && 0x8000 && currentTime - lastAttackTime > 500) {
@@ -1058,53 +1059,53 @@ namespace drawer
 
     void InputHook(float deltaTime, point3d _hero, point3d _enemy) {
 
-        bool isHooked = false;
-        float currentSpeed = 0.0f;
-        float maxSpeed = 2000.0f;
-        float acceleration = 5000.0f;
-        float deceleration = 3000.0f;
-        float minDistance = 200.0f;
+        static bool isHooked = false;
+        static float currentSpeed = 0.0f;
+        const float maxSpeed = 50.0f;
+        const float acceleration = 5000.0f;
+        const float minDistance = 500.0f;
 
-        point3d Dir = _enemy - _hero;
-        float distance = Dir.magnitude();
-        point3d FlyDir = Dir.normalized();
+        
+        XMFLOAT3 heroFloat3(_hero.x, _hero.y, _hero.z);
+        XMFLOAT3 enemyFloat3(_enemy.x, _enemy.y, _enemy.z);
+
+        XMVECTOR heroPos = XMLoadFloat3(&heroFloat3);
+        XMVECTOR enemyPos = XMLoadFloat3(&enemyFloat3);
+
+        XMVECTOR Dir = enemyPos - heroPos;
+        float distance = XMVectorGetX(XMVector3Length(Dir));
 
        
-        if (GetAsyncKeyState(VK_RBUTTON) && distance < 10000.0f && !isHooked) {
+        if (GetAsyncKeyState(VK_RBUTTON) & 0x8000 && distance < 10000.0f && !isHooked) {
             isHooked = true;
-            currentSpeed = maxSpeed * 0.2f; 
+            currentSpeed = maxSpeed * 0.2f;
+        }
+
+        if (isHooked) {
+            
+            if (currentSpeed < maxSpeed) {
+                currentSpeed += acceleration * deltaTime;
+                currentSpeed = min(currentSpeed, maxSpeed);
+            }
+
+           
+            if (distance <= minDistance) {
+                isHooked = false;
+                currentSpeed = 0.0f;
+            }
+            else {
+               
+                XMVECTOR FlyDir = XMVector3Normalize(Dir);
+                Hero::state.position += FlyDir * currentSpeed * deltaTime;
+            }
         }
 
        
-        if (isHooked) {
-           
-            if (currentSpeed < maxSpeed) {
-
-                currentSpeed += acceleration * deltaTime;
-
-                if (currentSpeed > maxSpeed) 
-                {
-                    currentSpeed = maxSpeed;
-                }
-            }
-
-          
-            _hero += FlyDir * currentSpeed * deltaTime;
-
-           
-            if (distance < minDistance) {
-                isHooked = false;
-                currentSpeed = 0.0f;
-            }
-            else if (distance > 10000.0f) {
-                isHooked = false;
-                currentSpeed = 0.0f;
-            }
-        }
-
-      
         Hero::state.constellationOffset = XMMatrixRotationQuaternion(Hero::state.currentRotation) *
-            XMMatrixTranslation(_hero.x, _hero.y, _hero.z);
+            XMMatrixTranslationFromVector(Hero::state.position);
+
+        Hero::state.worldMatrix = XMMatrixRotationQuaternion(Hero::state.currentRotation) *
+            XMMatrixTranslationFromVector(Hero::state.position);
     }
 
     void drawWorld(float deltaTime)

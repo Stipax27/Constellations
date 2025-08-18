@@ -49,6 +49,20 @@ void updateFlyDirection()
         flyDirection.y += XMVectorGetY(Hero::state.Right) * 5.f;
         flyDirection.z += XMVectorGetZ(Hero::state.Right) * 5.f;
     }
+    if (GetAsyncKeyState(VK_SPACE) & 0x8000) {
+
+        flyDirection.x += XMVectorGetX(Hero::state.Up) * 5.f;
+        flyDirection.y += XMVectorGetY(Hero::state.Up) * 5.f;
+        flyDirection.z += XMVectorGetZ(Hero::state.Up) * 5.f;
+    }
+    if (GetAsyncKeyState(VK_CONTROL) & 0x8000) {
+    
+
+        flyDirection.x -= XMVectorGetX(Hero::state.Up) * 5.f;
+        flyDirection.y -= XMVectorGetY(Hero::state.Up) * 5.f;
+        flyDirection.z -= XMVectorGetZ(Hero::state.Up) * 5.f;
+
+    }
 
     if (flyDirection.magnitude() > 0)
     {
