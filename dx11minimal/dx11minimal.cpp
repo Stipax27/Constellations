@@ -51,15 +51,16 @@ HWND hWnd;
 #include "mouse.h"
 #include "font.h"
 
+#include "DodgeEnemy.h"
 #include "EnemyData.h"
 #include "EnemyDataCon.h"
 #include "EnemyAi.h"
-#include "EnemyAiUPD.h"
 
 #include "Navigation.h"
 #include "Constellation.h"
+#include "EnemyAiUPD.h"
+
 #include "MainWorld.h"
-#include "DodgeEnemy.h"
 #include "StatusGame.h"
 #include "Weapon.h"
 #include "Elements.h"
@@ -146,6 +147,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             timer::frameEndTime = timer::GetCounter();
             timer::frameRenderingDuration = timer::frameEndTime - timer::frameBeginTime;
             timer::nextFrameTime = timer::frameBeginTime + FRAME_LEN;
+            //Camera::Camera();//добавили общий вызов обновления камеры, чтобы везде не коллить
         }
 
         Sleep((DWORD)min(FRAME_LEN, max(FRAME_LEN - timer::frameRenderingDuration, 0)));
