@@ -165,6 +165,9 @@
     <ClInclude Include="EnemyAiUPD.h">
       <Filter>Header Files\Structures</Filter>
     </ClInclude>
+    <ClInclude Include="TextureGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dx11minimal.cpp">

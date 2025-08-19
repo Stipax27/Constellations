@@ -222,6 +222,7 @@
     </None>
     <ClInclude Include="RenderObject.h" />
     <ClInclude Include="StatusGame.h" />
+    <ClInclude Include="TextureGenerator.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="utils.h" />
     <None Include="VSS.shader">

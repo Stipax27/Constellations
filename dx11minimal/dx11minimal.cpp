@@ -41,6 +41,7 @@ HWND hWnd;
 #include "dx11.h"
 #include "Player.h"
 
+#include "TextureGenerator.h"
 #include "Point3d.h"
 #include "RenderObject.h"
 
