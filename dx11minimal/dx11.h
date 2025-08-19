@@ -152,8 +152,8 @@ namespace Textures
 	enum tType { flat, cube };
 	
 
-	DXGI_FORMAT dxTFormat[4] = { DXGI_FORMAT_R8G8B8A8_UNORM ,DXGI_FORMAT_R8G8B8A8_SNORM ,DXGI_FORMAT_R16G16B16A16_FLOAT ,DXGI_FORMAT_R32G32B32A32_FLOAT };
-	enum tFormat { u8, s8, s16, s32 };
+	DXGI_FORMAT dxTFormat[] = { DXGI_FORMAT_R8G8B8A8_UNORM ,DXGI_FORMAT_R8G8B8A8_SNORM ,DXGI_FORMAT_R16G16B16A16_FLOAT ,DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R8_SNORM };
+	enum tFormat { u8, s8, s16, s32, r8 };
 	D3D11_TEXTURE2D_DESC tdesc;
 	D3D11_SHADER_RESOURCE_VIEW_DESC svDesc;
 	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
@@ -523,6 +523,10 @@ namespace Shaders {
 		//-----------------------------------------------
 
 		CreatePS(100, nameToPatchLPCWSTR("..\\dx11minimal\\Lensing_PS.shader"));
+
+		//-----------------------------------------------
+
+		CreatePS(200, nameToPatchLPCWSTR("..\\dx11minimal\\PerlinNoise.shader"));
 	}
 
 	void vShader(unsigned int n)
@@ -953,6 +957,9 @@ void Dx11Init()
 	Textures::Create(1, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
 	//rt2
 	Textures::Create(2, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
+
+	//perlin noise rt
+	Textures::Create(3, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(4096, 4096), true, false);
 }
 
 

@@ -4,6 +4,13 @@ void mainLoop(float deltaTime)
 {
 	frameConst();
 
+	Textures::RenderTarget(3, 0);
+	Shaders::vShader(10);
+	Shaders::pShader(200);
+	context->Draw(6, 0);
+	Textures::CreateMipMap();
+	context->VSSetShaderResources(0, 1, &Textures::Texture[3].TextureResView);
+
 	InputAssembler::IA(InputAssembler::topology::triList);
 	Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
 	Textures::RenderTarget(1, 0);

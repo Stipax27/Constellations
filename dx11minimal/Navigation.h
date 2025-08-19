@@ -6,7 +6,7 @@ float currentFlySpeed = 0.0f;
 const float maxFlySpeed = 10.f;
 const float flyAcceleration = 5.f;
 const float flyDeceleration = 0.002f;
-const float boostFlySpeed = 15.f;
+const float boostFlySpeed = 50.f;
 const float MOUSE_SENSITIVITY = 0.002f;
 
 const float CURSOR_IGNORE_ZONE = 0.05f;

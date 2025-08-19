@@ -7,7 +7,7 @@ namespace TextureGenerator {
     // Параметры текстуры
     const UINT width = 4096;
     const UINT height = 4096;
-    const UINT pixelSize = 1; // A
+    const UINT pixelSize = 4; // A
 
     // Генератор шума (простой псевдослучайный)
     float Noise(int x, int y, int seed = 0) {
@@ -46,7 +46,7 @@ namespace TextureGenerator {
         desc.Height = height;
         desc.MipLevels = 1;
         desc.ArraySize = 1;
-        desc.Format = DXGI_FORMAT_R32_TYPELESS; // 32-битный формат
+        desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // 32-битный формат
         desc.SampleDesc.Count = 1;
         desc.Usage = D3D11_USAGE_IMMUTABLE; // Оптимизация для статичной текстуры
         desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
@@ -59,7 +59,9 @@ namespace TextureGenerator {
         // Создание текстуры
         ID3D11Texture2D* noiseTexture = nullptr;
         HRESULT hr = device->CreateTexture2D(&desc, &initData, &noiseTexture);
-        if (FAILED(hr)) { /* Обработка ошибки */ }
+        if (FAILED(hr)) {
+
+        }
 
         return noiseTexture;
     }
