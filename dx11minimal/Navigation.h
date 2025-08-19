@@ -2,7 +2,6 @@
 point3d flyRightDirection = point3d(1, 0, 0);
 point3d flyUpDirection = point3d(0, 1, 0);
 
-point3d flyDirection = { 0, 0, 0 };
 float currentFlySpeed = 0.0f;
 const float maxFlySpeed = 10.f;
 const float flyAcceleration = 5.f;

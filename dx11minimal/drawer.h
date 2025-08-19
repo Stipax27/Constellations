@@ -854,8 +854,7 @@ namespace drawer
     vector<Particle*> speedParticles = vector<Particle*>{};
 
     int sp_rate = 50;
-    float sp_minFlySpeed = 0.0f;
-    float sp_emitDelta = 1000 / sp_rate;
+    float sp_minFlySpeed = 0.5f;
     DWORD sp_lastEmitTime = 0;
 
     void CreateSpeedParticles()
@@ -863,6 +862,7 @@ namespace drawer
         DWORD curTime = timer::GetCounter();
         if (currentFlySpeed >= sp_minFlySpeed && flyDirection.magnitude() > 0)
         {
+            float sp_emitDelta = 1000 / (sp_rate * currentFlySpeed);
             DWORD timeDelta = curTime - sp_lastEmitTime;
             if (timeDelta >= sp_emitDelta)
             {
