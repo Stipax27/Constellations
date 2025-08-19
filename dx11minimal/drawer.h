@@ -854,13 +854,13 @@ namespace drawer
     vector<Particle*> speedParticles = vector<Particle*>{};
 
     int sp_rate = 50;
-    float sp_minFlySpeed = 0.5f;
+    float sp_minFlySpeed = maxFlySpeed;
     DWORD sp_lastEmitTime = 0;
 
     void CreateSpeedParticles()
     {
         DWORD curTime = timer::GetCounter();
-        if (currentFlySpeed >= sp_minFlySpeed && flyDirection.magnitude() > 0)
+        if (currentFlySpeed > sp_minFlySpeed && flyDirection.magnitude() > 0)
         {
             float speedRatio = currentFlySpeed / maxFlySpeed;
             float sp_emitDelta = 1000 / (sp_rate * speedRatio);
@@ -883,8 +883,8 @@ namespace drawer
                 for (int i = 0; i < (int)(timeDelta / sp_emitDelta); i++)
                 {
                     Particle* particle = new Particle;
-                    particle->pos = camPos + forward * 6000 + flyDirection * 4000 + (flyUpDirection * GetRandom(-100, 100) + flyRightDirection * GetRandom(-100, 100)).normalized() * 5000;
-                    particle->lifetime = GetRandom(250, 750) / speedRatio;
+                    particle->pos = camPos + forward * 7000 + flyDirection * 6000 + (flyUpDirection * GetRandom(-100, 100) + flyRightDirection * GetRandom(-100, 100)).normalized() * 5000;
+                    particle->lifetime = GetRandom(400, 800) / speedRatio;
                     particle->startTime = curTime;
 
                     speedParticles.push_back(particle);

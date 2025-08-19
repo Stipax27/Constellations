@@ -14,6 +14,18 @@ const float MAX_CURSOR_DEVIATION = 0.3f;
 const float SENSIVITY = 0.25f;
 const float CURSOR_ZONE_DELTA = MAX_CURSOR_DEVIATION - CURSOR_IGNORE_ZONE;
 
+void getPerpendicularDirections()
+{
+    point3d world_up = point3d(0, 1, 0);
+
+    if ((flyDirection - world_up).magnitude() < 0.001f || (flyDirection + world_up).magnitude() < 0.001f) {
+        world_up = point3d(1, 0, 0);
+    }
+
+    flyRightDirection = (flyDirection.cross(world_up)).normalized();
+    flyUpDirection = (flyRightDirection.cross(flyDirection)).normalized();
+}
+
 int moveBlockTime = 400; // time for dash, and block movement
 float localTime = -10000000000000; //localTime from updateFlyPosition
 void updateFlyDirection() 
@@ -66,6 +78,7 @@ void updateFlyDirection()
     if (flyDirection.magnitude() > 0)
     {
         flyDirection = flyDirection.normalized();
+        getPerpendicularDirections();
     }
 
     float dPitch = 0.0f, dYaw = 0.0f, dRoll = 0.0f;
