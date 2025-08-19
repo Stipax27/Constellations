@@ -862,7 +862,8 @@ namespace drawer
         DWORD curTime = timer::GetCounter();
         if (currentFlySpeed >= sp_minFlySpeed && flyDirection.magnitude() > 0)
         {
-            float sp_emitDelta = 1000 / (sp_rate * currentFlySpeed);
+            float speedRatio = currentFlySpeed / maxFlySpeed;
+            float sp_emitDelta = 1000 / (sp_rate * speedRatio);
             DWORD timeDelta = curTime - sp_lastEmitTime;
             if (timeDelta >= sp_emitDelta)
             {
@@ -883,7 +884,7 @@ namespace drawer
                 {
                     Particle* particle = new Particle;
                     particle->pos = camPos + forward * 6000 + flyDirection * 4000 + (flyUpDirection * GetRandom(-100, 100) + flyRightDirection * GetRandom(-100, 100)).normalized() * 5000;
-                    particle->lifetime = GetRandom(750, 1250);
+                    particle->lifetime = GetRandom(250, 750) / speedRatio;
                     particle->startTime = curTime;
 
                     speedParticles.push_back(particle);
