@@ -23,8 +23,6 @@ void getPerpendicularDirections()
     flyUpDirection = (flyRightDirection.cross(flyDirection)).normalized();
 }
 
-int moveBlockTime = 1000; // time for dash, and block movement
-float localTime = -10000000000000; //localTime from updateFlyPosition
 void updateFlyDirection() 
 { // ��������� ���������� 
     if (currentFlySpeed > maxFlySpeed) 
@@ -146,24 +144,25 @@ float localDeltaTime;
 
 void updateFlySpeed(float deltaTime)
 {
+    deltaTime /= 1000;
     bool isBoosting = (GetAsyncKeyState(VK_SHIFT) & 0x8000);
-    speed = max(speed + acc, 0);
+    speed = max(speed + acc * deltaTime, 0);
 
     if (!isBoosting && !wasShiftPressed)
     {
-        currentFlySpeed = max(currentFlySpeed + acc, maxFlySpeed);
+        currentFlySpeed = max(currentFlySpeed + acc * deltaTime, maxFlySpeed);
     }
 
     if (isBoosting && !wasShiftPressed)
     {
         wasShiftPressed = true;
-        acc = 2; //тут должна быть переменная зависящая от фпс и времени
+        acc = 40; //тут должна быть переменная зависящая от фпс и времени
         localTime = currentTime;
     }
 
     if (isBoosting)
     {
-        currentFlySpeed = max(currentFlySpeed*0.9,0);
+        currentFlySpeed = max(currentFlySpeed * 0.9,0);
     }
 
     if (!isBoosting && wasShiftPressed)
@@ -172,7 +171,7 @@ void updateFlySpeed(float deltaTime)
         wasShiftPressed = false;
         boostingFlySpeed = 10; //тут должна быть переменная зависящая от времени зажатия шифта
         currentFlySpeed = boostingFlySpeed + speed;
-        acc = -5;//тут должна быть переменная зависящая от фпс и времени
+        acc = -20;//тут должна быть переменная зависящая от фпс и времени
      
     }
     

@@ -19,7 +19,17 @@ float noise( float3 x ) {
     return a - 0.5;
 }
 
+struct VS_OUTPUT
+{
+    float4 pos : SV_POSITION;
+    float2 uv : TEXCOORD0;
+};
+
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-    return float4(1, 1, 1, 1);
+    float2 uv = input.uv;
+
+    float n = noise(float3(uv.x, uv.y, 0) * 64 + float3(41.547, 14.631, 51.591));
+
+    return float4(n, n, n, 1);
 }

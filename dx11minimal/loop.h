@@ -4,6 +4,11 @@ void mainLoop(float deltaTime)
 {
 	frameConst();
 
+	InputAssembler::IA(InputAssembler::topology::triList);
+	Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
+	Depth::Depth(Depth::depthmode::off);
+	Rasterizer::Cull(Rasterizer::cullmode::off);
+
 	Textures::RenderTarget(3, 0);
 	Shaders::vShader(10);
 	Shaders::pShader(200);
@@ -11,12 +16,9 @@ void mainLoop(float deltaTime)
 	Textures::CreateMipMap();
 	context->VSSetShaderResources(0, 1, &Textures::Texture[3].TextureResView);
 
-	InputAssembler::IA(InputAssembler::topology::triList);
-	Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
+	Depth::Depth(Depth::depthmode::on);
 	Textures::RenderTarget(1, 0);
 
-	Depth::Depth(Depth::depthmode::on);
-	Rasterizer::Cull(Rasterizer::cullmode::off);
 	Shaders::vShader(0);
 	Shaders::pShader(0);
 	ConstBuf::ConstToVertex(4);
