@@ -257,8 +257,9 @@ public:
 
 };
 
-point3d TransformPoint(const point3d& p, const XMMATRIX& m) {
+point3d TransformPoint(const point3d& p, const XMMATRIX& m, const XMMATRIX& d) {
     XMVECTOR v = XMVectorSet(p.x, p.y, p.z, 1.0f);
+    XMMATRIX b = m * Hero::state.constellationSubOffset;
     v = XMVector3Transform(v, m);
     return {
         XMVectorGetX(v),

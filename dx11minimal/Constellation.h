@@ -31,7 +31,8 @@ class Constellation {
 public:
 
     XMMATRIX Transform;
-    
+    XMMATRIX TransformOffset;
+
     point3d position;
     float scale = 200;
     point3d angle;

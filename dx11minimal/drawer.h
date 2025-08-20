@@ -45,8 +45,8 @@ namespace drawer
         int starsEdgesCount = starEdges.size();
         for (int i = 0; i < starsEdgesCount; i++)
         {
-            point3d point1 = TransformPoint(starArray[starEdges[i][0]], Constellation.Transform);
-            point3d point2 = TransformPoint(starArray[starEdges[i][1]], Constellation.Transform);
+            point3d point1 = TransformPoint(starArray[starEdges[i][0]], Constellation.Transform, Constellation.TransformOffset);
+            point3d point2 = TransformPoint(starArray[starEdges[i][1]], Constellation.Transform, Constellation.TransformOffset);
 
             if (!Constellation.morphing && Constellation.starsCords.size() == Constellation.originStarsCords.size())
             {
@@ -102,7 +102,7 @@ namespace drawer
         {
             point3d point;
             point = starArray[i];
-            point3d worldPoint = TransformPoint(point, Constellation.Transform);
+            point3d worldPoint = TransformPoint(point, Constellation.Transform, Constellation.TransformOffset);
 
             XMVECTOR p = XMVECTOR{ worldPoint.x,worldPoint.y,worldPoint.z,1 };
             p = XMVector4Transform(p, XMMatrixTranspose(ConstBuf::camera.view[0]) * XMMatrixTranspose(ConstBuf::camera.proj[0]));
@@ -587,6 +587,9 @@ namespace drawer
 
     
     void HandleMouseClick(XMVECTOR heroPosition) {
+
+        
+
         if (GetAsyncKeyState(VK_LBUTTON) && 0x8000 && currentTime - lastAttackTime > 500) {
 
             if (gameState == gameState_::selectEnemy) {
@@ -619,7 +622,9 @@ namespace drawer
             
             switch (current_weapon) {
                 case weapon_name::Sword: {
-                
+
+                    Hero::StartAttackRotation();
+
                     Hero::state.isAttackRotating = true;
                     Hero::state.attackStartTime = currentTime;
                     Hero::state.attackRotationProgress = 0.0f;
@@ -643,7 +648,7 @@ namespace drawer
 
                         attackStars.push_back(newStar);
                     }
-
+                   
                     ProcessSound("Sword.wav");
                     break;
                 }
@@ -720,7 +725,7 @@ namespace drawer
                 if (enemy.starsHealth[i] <= 0) continue;
 
               
-                point3d starWorldPos = TransformPoint(enemy.starsCords[i], enemy.Transform);
+                point3d starWorldPos = TransformPoint(enemy.starsCords[i], enemy.Transform, enemy.TransformOffset);
 
                 
                 for (auto& star : attackStars) {
@@ -1147,7 +1152,7 @@ namespace drawer
 
        //d2dRenderTarget->BeginDraw();
         CreateSpeedParticles();
-        //DrawSpeedParticles();
+        DrawSpeedParticles();
 
         //d2dRenderTarget->BeginDraw();
         switch (gameState)
@@ -1440,6 +1445,7 @@ namespace drawer
             // Обновление атак
             if (!playerConst.morphing) {
                 HandleMouseClick(heroPosition);
+
                 Hero::UpdateAttackRotation(deltaTime);
             }
             UpdateAttack(deltaTime);

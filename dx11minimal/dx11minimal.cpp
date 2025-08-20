@@ -37,7 +37,9 @@ bool isBattleActive = false;
 DWORD battleStartTime;
 
 HWND hWnd;
+
 #include "utils.h"
+
 #include "dx11.h"
 #include "Player.h"
 

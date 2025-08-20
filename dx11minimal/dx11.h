@@ -150,7 +150,7 @@ namespace Textures
 #define mainRTIndex 0
 
 	enum tType { flat, cube };
-	
+
 
 	DXGI_FORMAT dxTFormat[4] = { DXGI_FORMAT_R8G8B8A8_UNORM ,DXGI_FORMAT_R8G8B8A8_SNORM ,DXGI_FORMAT_R16G16B16A16_FLOAT ,DXGI_FORMAT_R32G32B32A32_FLOAT };
 	enum tFormat { u8, s8, s16, s32 };
@@ -536,7 +536,7 @@ namespace Shaders {
 namespace Sampler
 {
 	enum class filter { linear, point, minPoint_magLinear };
-	enum class addr {clamp,wrap};
+	enum class addr { clamp, wrap };
 
 	ID3D11SamplerState* pSampler[3][2][2];//filter, addressU, addressV
 	ID3D11SamplerState* pSamplerComp;//for shadowmapping
@@ -942,7 +942,7 @@ void Dx11Init()
 	ConstBuf::Init();
 	Sampler::Init();
 	Shaders::Init();
-	
+
 	//main RT
 	Textures::Create(0, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), false, true);
 	//rt1
@@ -979,7 +979,7 @@ namespace Draw
 		ConstBuf::Update(1, ConstBuf::drawerP);
 		ConstBuf::ConstToPixel(1);
 
-		context->DrawInstanced(quadCount*50 , instances, 0, 0);
+		context->DrawInstanced(quadCount * 50, instances, 0, 0);
 	}
 
 	void Drawer(int quadCount)
@@ -998,20 +998,20 @@ namespace Draw
 		context->PSSetShaderResources(0, 1, &Textures::Texture[3 - index].TextureResView);
 	}
 
-	void OutputRenderTextures(){
+	void OutputRenderTextures() {
 		int index = Textures::currentRT;
 		Textures::RenderTarget(0, 0);
 		context->PSSetShaderResources(0, 1, &Textures::Texture[index].TextureResView);
 	}
 
-	void elipse(int quadCount, unsigned int instances = 1)//
+	void elipse(int quadCount, unsigned int instances = 1)
 	{
 		ConstBuf::Update(0, ConstBuf::drawerV);
 		ConstBuf::ConstToVertex(0);
 		ConstBuf::Update(1, ConstBuf::drawerP);
 		ConstBuf::ConstToPixel(1);
 
-		context->DrawInstanced(quadCount * 6 , instances, 0, 0);
+		context->DrawInstanced(quadCount * 6, instances, 0, 0);
 	}
 
 	void Present()
@@ -1025,7 +1025,7 @@ namespace Draw
 void frameConst()
 {
 	ConstBuf::frame.time = XMFLOAT4{ (float)(timer::frameBeginTime * .01) ,0,0,0 };
-	ConstBuf::frame.aspect = XMFLOAT4{ aspect,iaspect, float(width), float(height)};
+	ConstBuf::frame.aspect = XMFLOAT4{ aspect,iaspect, float(width), float(height) };
 	ConstBuf::UpdateFrame();
 }
 
@@ -1034,96 +1034,127 @@ float DegreesToRadians(float degrees)
 {
 	return degrees * PI / 180.f;
 }
+
+namespace Camera
+{
+	void DetachCamera();
+	void AttachCamera();
+}
+
 namespace Hero
 {
-
 	struct State
 	{
 		float timeShiftPressed;
+
 		XMVECTOR relativeMovement = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR currentRotation = XMQuaternionIdentity();
+		XMVECTOR rotationBeforeAttack = XMQuaternionIdentity();
 		XMVECTOR Forwardbuf = XMVectorSet(0, 0, 1, 0);
 		XMVECTOR defaultUp = XMVectorSet(0, -1, 0, 0);
 		XMVECTOR Right = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR at = XMVectorSet(0, 0, 0, 0);
 		XMVECTOR Up = XMVector3Rotate(defaultUp, currentRotation);
 		XMMATRIX constellationOffset = XMMatrixTranslation(0, 0, 0);
+		XMMATRIX constellationSubOffset = XMMatrixTranslation(0, 0, 0);
 		XMVECTOR position = XMVectorSet(0, 0, 0, 0);
 		XMMATRIX worldMatrix = XMMatrixIdentity();
 
-		
 		float attackRotationProgress = 0.0f;
 		bool isAttackRotating = false;
 		DWORD attackStartTime = 0;
 
 	} static state;
 
+	void StartAttackRotation()
+	{
+		if (!state.isAttackRotating)
+		{
+			state.isAttackRotating = true;
+			state.attackStartTime = currentTime;
+			state.attackRotationProgress = 0.0f;
+			state.rotationBeforeAttack = state.currentRotation;
+
+			Camera::DetachCamera();
+		}
+	}
 
 	void UpdateAttackRotation(float deltaTime)
 	{
 		if (state.isAttackRotating)
 		{
-			float attackDuration = 10.f; // Длительность анимации в секундах
-			state.attackRotationProgress = min(1.0f, (currentTime - state.attackStartTime) / (attackDuration * 1000));
+			float attackDuration = 3.f;
 
-			// Вращение на 90 градусов вокруг оси X (вниз)
-			float rotationAngle = XMConvertToRadians(90.0f * state.attackRotationProgress);
-			XMVECTOR attackRotation = XMQuaternionRotationAxis(XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), rotationAngle);
+			state.attackRotationProgress = min(1.0f,(currentTime - state.attackStartTime) / (attackDuration * 1000));
 
-			// Комбинируем с текущим вращением
-			state.currentRotation = XMQuaternionMultiply(state.currentRotation, attackRotation);
+			// Вращение на 360 градусов вокруг оси Y
+			float rotationAngle = XMConvertToRadians(360.0f * state.attackRotationProgress);
+			XMVECTOR attackRotation = XMQuaternionRotationAxis(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), rotationAngle);
+
+			// Применяем вращение к текущему вращению героя
+			state.currentRotation = XMQuaternionMultiply(state.rotationBeforeAttack, attackRotation);
 
 			// Обновляем матрицы
 			state.Up = XMVector3Rotate(state.defaultUp, state.currentRotation);
-			state.constellationOffset = XMMatrixRotationQuaternion(state.currentRotation) *
+			state.constellationSubOffset = XMMatrixRotationQuaternion(state.currentRotation) *
 				XMMatrixTranslationFromVector(state.position);
-			state.worldMatrix = state.constellationOffset;
+			state.worldMatrix = state.constellationSubOffset;
 
 			// Завершение анимации
 			if (state.attackRotationProgress >= 1.0f)
 			{
 				state.isAttackRotating = false;
+				Camera::AttachCamera();
 			}
 		}
 		else if (state.attackRotationProgress > 0.0f)
 		{
 			// Плавный возврат в исходное положение
-			const float returnSpeed = 2.0f; // Скорость возврата
+			const float returnSpeed = 2.0f;
 			state.attackRotationProgress = max(0.0f, state.attackRotationProgress - returnSpeed * deltaTime);
 
-			// Вращение обратно
-			float returnAngle = XMConvertToRadians(90.0f * state.attackRotationProgress);
-			XMVECTOR returnRotation = XMQuaternionRotationAxis(XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), returnAngle);
-
-			// Применяем вращение
-			XMVECTOR baseRotation = XMQuaternionIdentity(); // Исходная ориентация
-			state.currentRotation = XMQuaternionMultiply(baseRotation, returnRotation);
+			// Плавно возвращаемся к сохраненному вращению
+			float t = state.attackRotationProgress;
+			state.currentRotation = XMQuaternionSlerp(state.rotationBeforeAttack, state.currentRotation, t);
 
 			// Обновляем матрицы
 			state.Up = XMVector3Rotate(state.defaultUp, state.currentRotation);
-			state.constellationOffset = XMMatrixRotationQuaternion(state.currentRotation) *
+			state.constellationSubOffset = XMMatrixRotationQuaternion(state.currentRotation) *
 				XMMatrixTranslationFromVector(state.position);
-			state.worldMatrix = state.constellationOffset;
+			state.worldMatrix = state.constellationSubOffset;
+
+			if (state.attackRotationProgress <= 0.0f)
+			{
+				// Полностью восстанавливаем исходное вращение
+				state.currentRotation = state.rotationBeforeAttack;
+				state.Up = XMVector3Rotate(state.defaultUp, state.currentRotation);
+				state.constellationSubOffset = XMMatrixRotationQuaternion(state.currentRotation) *
+					XMMatrixTranslationFromVector(state.position);
+				state.worldMatrix = state.constellationSubOffset;
+			}
 		}
 	}
-	
-	
-
 }
 
 namespace Camera
 {
 	struct State
 	{
-		int n = 0; //угол поворота
+		int n = 0;
 		bool mouse = false;
 		float camDist = 500.0f;
 		float minDist = 500.0f;
 		float maxDist = 1000.0f;
 		float fovAngle = 60.0f;
-		float verticalOffset = 180.0f;  
-		float horizontalOffset = 0.0f; 
+		float verticalOffset = 180.0f;  // Отрицательное значение для правильного положения
+		float horizontalOffset = 0.0f;
 		float distanceOffset = 600.0f;
+
+		bool isDetached = false;
+		XMVECTOR detachedPosition;
+		XMVECTOR detachedTarget;
+		XMVECTOR detachedUp;
+		XMVECTOR heroPositionAtDetach; // Сохраняем позицию героя в момент отвязки
 		XMVECTOR relativeMovement = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR currentRotation = XMQuaternionIdentity();
 		XMVECTOR Forward = XMVectorSet(0, 0, 1, 0);
@@ -1136,47 +1167,75 @@ namespace Camera
 		XMVECTOR EyeBack = XMVectorSet(0, 0, -1, 0);
 	} static state;
 
-	
+	void DetachCamera()
+	{
+		if (!state.isDetached)
+		{
+			state.isDetached = true;
+			// Сохраняем текущее состояние камеры и позицию героя
+			state.detachedPosition = state.Eye;
+			state.detachedTarget = state.at;
+			state.detachedUp = state.Up;
+			state.heroPositionAtDetach = Hero::state.position;
+		}
+	}
+
+	void AttachCamera()
+	{
+		if (state.isDetached)
+		{
+			state.isDetached = false;
+		}
+	}
+
 	void UpdateCameraPosition()
 	{
-		
-		// 1. Получаем и нормализуем актуальные векторы ориентации героя
+		if (state.isDetached)
+		{
+			// Если камера отвязана, перемещаем ее вместе с героем, но сохраняем ориентацию
+			XMVECTOR heroPositionDelta = Hero::state.position - state.heroPositionAtDetach;
+
+			state.Eye = state.detachedPosition + heroPositionDelta;
+			state.at = state.detachedTarget + heroPositionDelta;
+
+			// Обновляем позицию героя для следующего кадра
+			state.heroPositionAtDetach = Hero::state.position;
+
+			ConstBuf::camera.view[0] = XMMatrixTranspose(
+				XMMatrixLookAtLH(state.Eye, state.at, state.Up)
+			);
+			return;
+		}
+
+		// Оригинальный код для привязанной камеры
 		XMVECTOR heroForward = XMVector3Normalize(Hero::state.Forwardbuf);
 		XMVECTOR heroUp = XMVector3Normalize(Hero::state.Up);
 		XMVECTOR heroRight = XMVector3Normalize(Hero::state.Right);
 
-		// 2. Вычисляем позицию камеры относительно героя
 		XMVECTOR cameraOffset =
-			(-heroForward * state.distanceOffset) +  // Основное смещение назад
-			(heroUp * state.verticalOffset) +        // Вертикальное смещение
-			(heroRight * state.horizontalOffset);    // Горизонтальное смещение
+			(-heroForward * state.distanceOffset) +
+			(heroUp * state.verticalOffset) +
+			(heroRight * state.horizontalOffset);
 
-		// 3. Вычисляем окончательную позицию камеры
 		XMVECTOR cameraPosition = Hero::state.position + cameraOffset;
-
-		// 4. Вычисляем точку фокусировки (впереди героя)
 		XMVECTOR cameraTarget = cameraPosition + (heroForward * 15.0f);
 
-		// 5. Обновляем состояние камеры
 		state.Eye = cameraPosition;
 		state.at = cameraTarget;
 		state.Up = heroUp;
 
-		// 6. Пересчитываем векторы камеры для корректной работы
 		state.Forward = XMVector3Normalize(cameraTarget - cameraPosition);
 		state.Right = XMVector3Normalize(XMVector3Cross(heroUp, state.Forward));
 
-		// 7. Обновляем матрицу вида
 		ConstBuf::camera.view[0] = XMMatrixTranspose(
 			XMMatrixLookAtLH(state.Eye, state.at, state.Up)
 		);
 	}
 
-	void Camera()//обновление позиции камеры после обновления позиции созвездия. В Navigation.h, Loop.h, Mouse.h(navigationByMouse 2 раза) и тут тоже есть вызовы.
+	void Camera()
 	{
 		UpdateCameraPosition();
 
-		// Обновляем матрицу проекции (если нужно)
 		ConstBuf::camera.proj[0] = XMMatrixTranspose(XMMatrixPerspectiveFovLH(
 			DegreesToRadians(state.fovAngle),
 			iaspect,
@@ -1187,12 +1246,11 @@ namespace Camera
 		ConstBuf::UpdateCamera();
 		ConstBuf::ConstToVertex(3);
 		ConstBuf::ConstToPixel(3);
-		
 	}
-	
+
 	void HandleMouseWheel(int delta)
 	{
 		state.distanceOffset -= delta * 5.0f;
-		state.distanceOffset = clamp(state.distanceOffset, state.minDist, state.maxDist);
+		state.distanceOffset = max(state.minDist, min(state.distanceOffset, state.maxDist));
 	}
 }
