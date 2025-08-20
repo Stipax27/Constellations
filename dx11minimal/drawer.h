@@ -589,8 +589,8 @@ namespace drawer
 
             if (gameState == gameState_::selectEnemy) {
                 gameState = gameState_::Fight;
-                mciSendString(TEXT("stop ..\\dx11minimal\\GG_C.mp3"), NULL, 0, NULL);
-                mciSendString(TEXT("play ..\\dx11minimal\\Oven_NEW.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
             }
             lastAttackTime = currentTime;
            
@@ -642,7 +642,7 @@ namespace drawer
                         attackStars.push_back(newStar);
                     }
 
-                    ProcessSound("Sword.wav");
+                    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Sword.wav");
                     break;
                 }
 
@@ -663,7 +663,7 @@ namespace drawer
                     attackStars.push_back(newStar);
 
 
-                    ProcessSound("ShieldStan3.wav");
+                    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\ShieldStan3.wav");
 
                     break;
                 }
@@ -690,7 +690,7 @@ namespace drawer
                         attackStars.push_back(newStar);
                     }
 
-                    ProcessSound("Bow.wav");
+                    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Bow.wav");
                     break;
                 }
             }
@@ -732,7 +732,7 @@ namespace drawer
                         enemy.starsHealth[i] -= 1.f;
                         std::string enemyH = "HP: " + std::to_string(enemy.starsHealth[i]);
                         drawString(enemyH.c_str(), window.width / 4, window.height / 4, 1.f,true);
-                        ProcessSound("Damage.wav");
+                        ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Damage.wav");
                         break;
                     }
                 }
@@ -793,7 +793,7 @@ namespace drawer
             {
                 isPressed = true;
                 DeleteParticledText("TEST TEXT RENDER");
-                ProcessSound("Mouse_click1.wav");
+                ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Mouse_click1.wav");
                 point3d mousePos = point3d(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1),0);
                 DWORD curTime = timer::GetCounter();
 
@@ -1390,8 +1390,8 @@ namespace drawer
 
             if (GetAsyncKeyState('P')) {
                 gameState = gameState_::WinFight;
-                mciSendString(TEXT("stop ..\\dx11minimal\\Oven_NEW.mp3"), NULL, 0, NULL);
-                mciSendString(TEXT("play ..\\dx11minimal\\GG_C.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
             }
 
             if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true)
@@ -1444,8 +1444,8 @@ namespace drawer
             // Проверка условий победы/поражения
             if (getConstellationHP(enemy) <= 0) {
                 gameState = gameState_::WinFight;
-                mciSendString(TEXT("stop ..\\dx11minimal\\Oven_NEW.mp3"), NULL, 0, NULL);
-                mciSendString(TEXT("play ..\\dx11minimal\\GG_C.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
             }
             else if (getConstellationHP(player) <= 0) {
                 gameState = gameState_::EndFight;

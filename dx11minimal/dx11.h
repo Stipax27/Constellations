@@ -481,52 +481,52 @@ namespace Shaders {
 
 	void Init()
 	{
-		CreateVS(0, nameToPatchLPCWSTR("..\\dx11minimal\\VS.shader"));
-		CreatePS(0, nameToPatchLPCWSTR("..\\dx11minimal\\PS.shader"));
+		CreateVS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VS.shader"));
+		CreatePS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PS.shader"));
 
-		CreateVS(1, nameToPatchLPCWSTR("..\\dx11minimal\\VSS.shader"));
-		CreatePS(1, nameToPatchLPCWSTR("..\\dx11minimal\\PSS.shader"));
+		CreateVS(1, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VSS.shader"));
+		CreatePS(1, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PSS.shader"));
 
-		CreateVS(2, nameToPatchLPCWSTR("..\\dx11minimal\\VSFS.shader"));
-		CreatePS(2, nameToPatchLPCWSTR("..\\dx11minimal\\PSFS.shader"));
+		CreateVS(2, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VSFS.shader"));
+		CreatePS(2, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PSFS.shader"));
 
-		CreateVS(3, nameToPatchLPCWSTR("..\\dx11minimal\\SpaceStars_VS.shader"));
-		CreatePS(3, nameToPatchLPCWSTR("..\\dx11minimal\\SpaceStars_PS.shader"));
+		CreateVS(3, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SpaceStars_VS.shader"));
+		CreatePS(3, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SpaceStars_PS.shader"));
 
-		CreateVS(4, nameToPatchLPCWSTR("..\\dx11minimal\\StarLink_VS.shader"));
-		CreatePS(4, nameToPatchLPCWSTR("..\\dx11minimal\\StarLink_PS.shader"));
+		CreateVS(4, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarLink_VS.shader"));
+		CreatePS(4, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarLink_PS.shader"));
 
-		CreateVS(5, nameToPatchLPCWSTR("..\\dx11minimal\\GalaxyFog_VS.shader"));
-		CreatePS(5, nameToPatchLPCWSTR("..\\dx11minimal\\GalaxyFog_PS.shader"));
+		CreateVS(5, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\GalaxyFog_VS.shader"));
+		CreatePS(5, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\GalaxyFog_PS.shader"));
 
-		CreateVS(6, nameToPatchLPCWSTR("..\\dx11minimal\\Cursor_VS.shader"));
-		CreatePS(6, nameToPatchLPCWSTR("..\\dx11minimal\\Cursor_PS.shader"));
+		CreateVS(6, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Cursor_VS.shader"));
+		CreatePS(6, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Cursor_PS.shader"));
 
-		CreateVS(7, nameToPatchLPCWSTR("..\\dx11minimal\\AriesNebula_VS.shader"));
-		CreatePS(7, nameToPatchLPCWSTR("..\\dx11minimal\\AriesNebula_PS.shader"));
+		CreateVS(7, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\AriesNebula_VS.shader"));
+		CreatePS(7, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\AriesNebula_PS.shader"));
 
-		CreateVS(8, nameToPatchLPCWSTR("..\\dx11minimal\\SpeedParticles_VS.shader"));
-		CreatePS(8, nameToPatchLPCWSTR("..\\dx11minimal\\SpeedParticles_PS.shader"));
+		CreateVS(8, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SpeedParticles_VS.shader"));
+		CreatePS(8, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SpeedParticles_PS.shader"));
 
-		CreateVS(9, nameToPatchLPCWSTR("..\\dx11minimal\\DotText_VS.shader"));
-		CreatePS(9, nameToPatchLPCWSTR("..\\dx11minimal\\DotText_PS.shader"));
+		CreateVS(9, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\DotText_VS.shader"));
+		CreatePS(9, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\DotText_PS.shader"));
 
-		CreateVS(10, nameToPatchLPCWSTR("..\\dx11minimal\\PP_VS.shader"));
-		CreatePS(10, nameToPatchLPCWSTR("..\\dx11minimal\\PP_PS.shader"));
+		CreateVS(10, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PP_VS.shader"));
+		CreatePS(10, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PP_PS.shader"));
 
-		CreateVS(11, nameToPatchLPCWSTR("..\\dx11minimal\\Cross_VS.shader"));
-		CreatePS(11, nameToPatchLPCWSTR("..\\dx11minimal\\Cross_PS.shader"));
+		CreateVS(11, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Cross_VS.shader"));
+		CreatePS(11, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Cross_PS.shader"));
 
-		CreateVS(12, nameToPatchLPCWSTR("..\\dx11minimal\\UiParticle_VS.shader"));
-		CreatePS(12, nameToPatchLPCWSTR("..\\dx11minimal\\UiParticle_PS.shader"));
-
-		//-----------------------------------------------
-
-		CreatePS(100, nameToPatchLPCWSTR("..\\dx11minimal\\Lensing_PS.shader"));
+		CreateVS(12, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\UiParticle_VS.shader"));
+		CreatePS(12, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\UiParticle_PS.shader"));
 
 		//-----------------------------------------------
 
-		CreatePS(200, nameToPatchLPCWSTR("..\\dx11minimal\\PerlinNoise.shader"));
+		CreatePS(100, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Lensing_PS.shader"));
+
+		//-----------------------------------------------
+
+		CreatePS(200, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PerlinNoise.shader"));
 	}
 
 	void vShader(unsigned int n)
