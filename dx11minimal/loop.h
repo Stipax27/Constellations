@@ -12,6 +12,7 @@ void mainLoop(float deltaTime)
 	Textures::RenderTarget(3, 0);
 	Shaders::vShader(10);
 	Shaders::pShader(200);
+	Draw::Clear({ 0.0f, 0.0f, 0.0f, 1.0f });
 	context->Draw(6, 0);
 	Textures::CreateMipMap();
 	context->VSSetShaderResources(0, 1, &Textures::Texture[3].TextureResView);
