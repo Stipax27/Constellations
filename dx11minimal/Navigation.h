@@ -188,25 +188,24 @@ void updateFlySpeed(float deltaTime)
 
 
 
-void updatePlayerPosition(float deltaTime) 
+void updatePlayerPosition(float deltaTime)
 {
     if (currentFlySpeed > 0)
     {
-        // 1. Создаем вектор направления из flyDirection
+        // 1. Создаем и нормализуем вектор направления
         XMVECTOR moveDir = XMVectorSet(flyDirection.x, flyDirection.y, flyDirection.z, 0.0f);
+        moveDir = XMVector3Normalize(moveDir);
 
-        // 2. Рассчитываем вектор смещения (без дополнительного вращения!)
+        // 2. Рассчитываем смещение
         XMVECTOR displacement = XMVectorScale(moveDir, currentFlySpeed * deltaTime);
 
-        // 3. Обновляем позицию героя
-            Hero::state.position = XMVectorAdd(Hero::state.position, displacement);
+        // 3. Обновляем ТОЛЬКО позицию
+        Hero::state.position = XMVectorAdd(Hero::state.position, displacement);
 
-        // 4. Обновляем матрицу мира
-        XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(Hero::state.currentRotation);
-            Hero::state.worldMatrix = rotationMatrix * XMMatrixTranslationFromVector(Hero::state.position);
+        // 4. Обновляем ОСНОВНОЕ смещение (позицию)
+        Hero::state.constellationOffset = XMMatrixTranslationFromVector(Hero::state.position);
 
-        // 5. Обновляем constellationOffset
-            Hero::state.constellationOffset = XMMatrixTranslationFromVector(Hero::state.position);
-
+        // 5. Обновляем итоговую мировую матрицу
+        Hero::state.worldMatrix = Hero::state.constellationOffset * Hero::state.constellationSubOffset;
     }
 }

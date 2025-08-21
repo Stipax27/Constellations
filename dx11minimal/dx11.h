@@ -1057,6 +1057,7 @@ namespace Hero
 		XMVECTOR Up = XMVector3Rotate(defaultUp, currentRotation);
 		XMMATRIX constellationOffset = XMMatrixTranslation(0, 0, 0);
 		XMMATRIX constellationSubOffset = XMMatrixTranslation(0, 0, 0);
+
 		XMVECTOR position = XMVectorSet(0, 0, 0, 0);
 		XMMATRIX worldMatrix = XMMatrixIdentity();
 
@@ -1084,21 +1085,25 @@ namespace Hero
 		if (state.isAttackRotating)
 		{
 			float attackDuration = 3.f;
-
-			state.attackRotationProgress = min(1.0f,(currentTime - state.attackStartTime) / (attackDuration * 1000));
+			state.attackRotationProgress = min(1.0f, (currentTime - state.attackStartTime) / (attackDuration * 1000));
 
 			// Вращение на 360 градусов вокруг оси Y
 			float rotationAngle = XMConvertToRadians(360.0f * state.attackRotationProgress);
 			XMVECTOR attackRotation = XMQuaternionRotationAxis(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), rotationAngle);
 
-			// Применяем вращение к текущему вращению героя
+			// Применяем вращение ТОЛЬКО к текущему вращению
 			state.currentRotation = XMQuaternionMultiply(state.rotationBeforeAttack, attackRotation);
 
-			// Обновляем матрицы
+			// Обновляем ТОЛЬКО вращение в дочернем смещении
+			state.constellationSubOffset = XMMatrixRotationQuaternion(state.currentRotation);
+
+			// Обновляем итоговую мировую матрицу
+			state.worldMatrix = state.constellationOffset * state.constellationSubOffset;
+
+			// Обновляем направления (для камеры и визуализации)
 			state.Up = XMVector3Rotate(state.defaultUp, state.currentRotation);
-			state.constellationSubOffset = XMMatrixRotationQuaternion(state.currentRotation) *
-				XMMatrixTranslationFromVector(state.position);
-			state.worldMatrix = state.constellationSubOffset;
+			state.Forwardbuf = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), state.currentRotation);
+			state.Right = XMVector3Rotate(XMVectorSet(-1, 0, 0, 0), state.currentRotation);
 
 			// Завершение анимации
 			if (state.attackRotationProgress >= 1.0f)
@@ -1114,23 +1119,28 @@ namespace Hero
 			state.attackRotationProgress = max(0.0f, state.attackRotationProgress - returnSpeed * deltaTime);
 
 			// Плавно возвращаемся к сохраненному вращению
-			float t = state.attackRotationProgress;
-			state.currentRotation = XMQuaternionSlerp(state.rotationBeforeAttack, state.currentRotation, t);
+			state.currentRotation = XMQuaternionSlerp(state.rotationBeforeAttack, state.currentRotation,
+				state.attackRotationProgress);
 
-			// Обновляем матрицы
+			// Обновляем ТОЛЬКО вращение
+			state.constellationSubOffset = XMMatrixRotationQuaternion(state.currentRotation);
+			state.worldMatrix = state.constellationOffset * state.constellationSubOffset;
+
+			// Обновляем направления
 			state.Up = XMVector3Rotate(state.defaultUp, state.currentRotation);
-			state.constellationSubOffset = XMMatrixRotationQuaternion(state.currentRotation) *
-				XMMatrixTranslationFromVector(state.position);
-			state.worldMatrix = state.constellationSubOffset;
+			state.Forwardbuf = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), state.currentRotation);
+			state.Right = XMVector3Rotate(XMVectorSet(-1, 0, 0, 0), state.currentRotation);
 
 			if (state.attackRotationProgress <= 0.0f)
 			{
 				// Полностью восстанавливаем исходное вращение
 				state.currentRotation = state.rotationBeforeAttack;
+				state.constellationSubOffset = XMMatrixRotationQuaternion(state.currentRotation);
+				state.worldMatrix = state.constellationOffset * state.constellationSubOffset;
+
 				state.Up = XMVector3Rotate(state.defaultUp, state.currentRotation);
-				state.constellationSubOffset = XMMatrixRotationQuaternion(state.currentRotation) *
-					XMMatrixTranslationFromVector(state.position);
-				state.worldMatrix = state.constellationSubOffset;
+				state.Forwardbuf = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), state.currentRotation);
+				state.Right = XMVector3Rotate(XMVectorSet(-1, 0, 0, 0), state.currentRotation);
 			}
 		}
 	}

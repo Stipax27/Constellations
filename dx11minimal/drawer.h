@@ -600,10 +600,12 @@ namespace drawer
             lastAttackTime = currentTime;
 
            
+            XMVECTOR worldPosition = Hero::state.worldMatrix.r[3]; // 4-й столбец содержит позицию
+
             start = point3d(
-                XMVectorGetX(heroPosition),
-                XMVectorGetY(heroPosition),
-                XMVectorGetZ(heroPosition)
+                XMVectorGetX(worldPosition),
+                XMVectorGetY(worldPosition),
+                XMVectorGetZ(worldPosition)
             );
 
             point3d camPos = point3d(
@@ -623,7 +625,7 @@ namespace drawer
             switch (current_weapon) {
                 case weapon_name::Sword: {
 
-                    Hero::StartAttackRotation();
+                   // Hero::StartAttackRotation();
 
                     Hero::state.isAttackRotating = true;
                     Hero::state.attackStartTime = currentTime;

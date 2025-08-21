@@ -257,10 +257,13 @@ public:
 
 };
 
-point3d TransformPoint(const point3d& p, const XMMATRIX& m, const XMMATRIX& d) {
+point3d TransformPoint(const point3d& p, const XMMATRIX& constellationTransform, const XMMATRIX& transformOffset) {
     XMVECTOR v = XMVectorSet(p.x, p.y, p.z, 1.0f);
-    XMMATRIX b = m * Hero::state.constellationSubOffset;
-    v = XMVector3Transform(v, m);
+    
+    // Применяем: основная позиция + вращение + трансформация созвездия + смещение
+    XMMATRIX finalTransform = Hero::state.worldMatrix * constellationTransform * transformOffset;
+    v = XMVector3Transform(v, finalTransform);
+    
     return {
         XMVectorGetX(v),
         XMVectorGetY(v),
