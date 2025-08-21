@@ -169,6 +169,7 @@ namespace drawer
     {
         Shaders::vShader(object->vs_id);
         Shaders::pShader(object->ps_id);
+        Shaders::gShader(object->gs_id);
         Blend::Blending(object->blendmode, object->blendop);
 
         point3d camPos = point3d(XMVectorGetX(Camera::state.Eye), XMVectorGetY(Camera::state.Eye), XMVectorGetZ(Camera::state.Eye));
