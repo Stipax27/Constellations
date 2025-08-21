@@ -22,6 +22,7 @@ void mainLoop(float deltaTime)
 
 	Shaders::vShader(0);
 	Shaders::pShader(0);
+	Shaders::gShader(0);
 	ConstBuf::ConstToVertex(4);
 	ConstBuf::ConstToPixel(4);
 	if (!Camerainit)
