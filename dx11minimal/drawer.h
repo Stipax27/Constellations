@@ -585,38 +585,41 @@ namespace drawer
     point3d start;
     
     void HandleMouseClick(XMVECTOR heroPosition) {
-        if (GetAsyncKeyState(VK_LBUTTON) && 0x8000 && currentTime - lastAttackTime > 500) {
+        if (currentTime - lastAttackTime > 500)
+        {
+            if (GetAsyncKeyState(VK_LBUTTON) && 0x8000) {
 
-            if (gameState == gameState_::selectEnemy) {
-                gameState = gameState_::Fight;
-                mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
-                mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
-            }
-            lastAttackTime = currentTime;
-           
-            start = point3d(
-                XMVectorGetX(heroPosition),
-                XMVectorGetY(heroPosition),
-                XMVectorGetZ(heroPosition)
-            );
+                if (gameState == gameState_::selectEnemy) {
+                    gameState = gameState_::Fight;
+                    mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
+                    mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
+                }
+                lastAttackTime = currentTime;
+                //backMorphLock = false;
 
-            point3d camPos = point3d(
-                XMVectorGetX(Camera::state.Eye),
-                XMVectorGetY(Camera::state.Eye),
-                XMVectorGetZ(Camera::state.Eye)
-            );
+                start = point3d(
+                    XMVectorGetX(heroPosition),
+                    XMVectorGetY(heroPosition),
+                    XMVectorGetZ(heroPosition)
+                );
 
-            mouseRay = GetMouseRay(mouse.pos);
-            point3d mousePos = camPos + mouseRay * 6000;
-            point3d newDirection = (mousePos - start).normalized();
+                point3d camPos = point3d(
+                    XMVectorGetX(Camera::state.Eye),
+                    XMVectorGetY(Camera::state.Eye),
+                    XMVectorGetZ(Camera::state.Eye)
+                );
 
-         
-            //attackStars.clear();
+                mouseRay = GetMouseRay(mouse.pos);
+                point3d mousePos = camPos + mouseRay * 6000;
+                point3d newDirection = (mousePos - start).normalized();
 
-            
-            switch (current_weapon) {
+
+                //attackStars.clear();
+
+
+                switch (current_weapon) {
                 case weapon_name::Sword: {
-                
+
                     Hero::state.isAttackRotating = true;
                     Hero::state.attackStartTime = currentTime;
                     Hero::state.attackRotationProgress = 0.0f;
@@ -647,7 +650,7 @@ namespace drawer
                 }
 
                 case weapon_name::Shield: {
-                
+
                     StarProjectile newStar;
                     newStar.position = start;
                     newStar.direction = newDirection;
@@ -669,7 +672,7 @@ namespace drawer
                 }
 
                 case weapon_name::Bow: {
-                    
+
                     point3d fixedUp = point3d(XMVectorGetX(Camera::state.Up),
                         XMVectorGetY(Camera::state.Up),
                         XMVectorGetZ(Camera::state.Up));
@@ -682,10 +685,10 @@ namespace drawer
                         newStar.direction = newDirection;
                         newStar.radius = 10.0f;
                         newStar.weapon = weapon_name::Bow;
-                        
+
                         newStar.up = fixedUp;
                         newStar.right = fixedRight;
-                        
+
 
                         attackStars.push_back(newStar);
                     }
@@ -693,10 +696,15 @@ namespace drawer
                     ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Bow.wav");
                     break;
                 }
-            }
+                }
 
-            isAttacking = true;
-            //current_weapon = weapon_name::None;
+                isAttacking = true;
+                current_weapon = weapon_name::None;
+            }
+            /*else if (!backMorphLock)
+            {
+                current_weapon = weapon_name::None;
+            }*/
         }
     }
 
@@ -880,20 +888,25 @@ namespace drawer
                     XMVectorGetZ(Camera::state.Forward)
                 );
 
-                for (int i = 0; i < (int)(timeDelta / sp_emitDelta); i++)
+                for (int i = 0; i < min((int)(timeDelta / sp_emitDelta), 256); i++)
                 {
                     Particle* particle = new Particle;
                     particle->pos = camPos + forward * 7000 + flyDirection * 6000 + (flyUpDirection * GetRandom(-100, 100) + flyRightDirection * GetRandom(-100, 100)).normalized() * 5000;
-                    particle->lifetime = GetRandom(400, 800) / speedRatio;
+                    particle->lifetime = GetRandom(400, 800) / pow(speedRatio, 0.75);
                     particle->startTime = curTime;
+                    particle->vel = flyDirection;
 
                     speedParticles.push_back(particle);
                 }
             }
         }
-        else
+        else if (!wasShiftPressed)
         {
             sp_lastEmitTime = curTime;
+        }
+        else
+        {
+            sp_lastEmitTime -= deltaTime;
         }
     }
 
@@ -920,9 +933,10 @@ namespace drawer
             {
                 if (flyDirection.magnitude() > 0)
                 {
-                    particle->vel = -flyDirection * 0.1f;
+                    //particle->vel = flyDirection * currentFlySpeed / 5;
+                    particle->vel = particle->vel.normalized() * currentFlySpeed / 5;
                 }
-                //particle->pos += particle->vel * deltaTime;
+                particle->pos += particle->vel * deltaTime;
 
                 ConstBuf::global[0] = XMFLOAT4(particle->pos.x, particle->pos.y, particle->pos.z, 1.0f - (float)(curTime - particle->startTime) / (float)particle->lifetime);
                 ConstBuf::global[2] = XMFLOAT4(particle->vel.x, particle->vel.y, particle->vel.z, 0);

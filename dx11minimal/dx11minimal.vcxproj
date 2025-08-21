@@ -154,6 +154,9 @@
     <ClInclude Include="PhysicLoop.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Point3d.h" />
+    <None Include="Shaders\AriesNebula_GS.shader">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
     <None Include="Shaders\AriesNebula_PS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>

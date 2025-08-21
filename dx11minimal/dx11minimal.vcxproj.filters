@@ -263,6 +263,9 @@
     <None Include="Shaders\PerlinNoise.shader">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Shaders\AriesNebula_GS.shader">
+      <Filter>Shaders\Aries</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\StarLink_PS.shader">

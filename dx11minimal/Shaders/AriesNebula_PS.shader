@@ -68,43 +68,6 @@ float noise( float3 x ) {
 }
 
 
-float3 HSLToRGB(float3 hsl) {
-    float h = hsl.x; // Hue [0, 1]
-    float s = hsl.y; // Saturation [0, 1]
-    float l = hsl.z; // Lightness [0, 1]
-
-    float c = (1 - abs(2 * l - 1)) * s; // Chroma
-    float x = c * (1 - abs(fmod(h * 6, 2) - 1));
-    float m = l - c * 0.5;
-
-    float3 rgb;
-    if (h < 1.0 / 6.0) {
-        rgb = float3(c, x, 0);
-    } else if (h < 2.0 / 6.0) {
-        rgb = float3(x, c, 0);
-    } else if (h < 3.0 / 6.0) {
-        rgb = float3(0, c, x);
-    } else if (h < 4.0 / 6.0) {
-        rgb = float3(0, x, c);
-    } else if (h < 5.0 / 6.0) {
-        rgb = float3(x, 0, c);
-    } else {
-        rgb = float3(c, 0, x);
-    }
-
-    return rgb + m;
-}
-
-float3 ApplyRainbowEffect(float4 worldpos) {
-    float hue = frac(time * 0.005 + worldpos.x / 100000 + worldpos.z / 250000);
-    float saturation = 0.5;
-    float lightness = 0.5;
-
-    float3 hsl = float3(hue, saturation, lightness);
-    return HSLToRGB(hsl);
-}
-
-
 float4 PS(VS_OUTPUT input) : SV_Target
 {
     float2 uv = input.uv;

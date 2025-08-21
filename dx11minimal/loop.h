@@ -15,10 +15,10 @@ void mainLoop(float deltaTime)
 	Draw::Clear({ 0.0f, 0.0f, 0.0f, 1.0f });
 	context->Draw(6, 0);
 	Textures::CreateMipMap();
-	context->VSSetShaderResources(0, 1, &Textures::Texture[3].TextureResView);
 
-	Depth::Depth(Depth::depthmode::on);
 	Textures::RenderTarget(1, 0);
+	context->VSSetShaderResources(0, 1, &Textures::Texture[3].TextureResView);
+	Depth::Depth(Depth::depthmode::on);
 
 	Shaders::vShader(0);
 	Shaders::pShader(0);

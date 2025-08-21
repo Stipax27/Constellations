@@ -405,7 +405,7 @@ namespace Textures
 namespace Shaders {
 
 	typedef struct {
-		ID3D11VertexShader* pShader;
+		ID3D11VertexShader* vShader;
 		ID3DBlob* pBlob;
 	} VertexShader;
 
@@ -414,8 +414,14 @@ namespace Shaders {
 		ID3DBlob* pBlob;
 	} PixelShader;
 
+	typedef struct {
+		ID3D11GeometryShader* gShader;
+		ID3DBlob* pBlob;
+	} GeometryShader;
+
 	VertexShader VS[255];
 	PixelShader PS[255];
+	GeometryShader GS[255];
 
 	ID3DBlob* pErrorBlob;
 
@@ -460,9 +466,8 @@ namespace Shaders {
 
 		if (hr == S_OK)
 		{
-			hr = device->CreateVertexShader(VS[i].pBlob->GetBufferPointer(), VS[i].pBlob->GetBufferSize(), NULL, &VS[i].pShader);
+			hr = device->CreateVertexShader(VS[i].pBlob->GetBufferPointer(), VS[i].pBlob->GetBufferSize(), NULL, &VS[i].vShader);
 		}
-
 	}
 
 	void CreatePS(int i, LPCWSTR name)
@@ -476,7 +481,19 @@ namespace Shaders {
 		{
 			hr = device->CreatePixelShader(PS[i].pBlob->GetBufferPointer(), PS[i].pBlob->GetBufferSize(), NULL, &PS[i].pShader);
 		}
+	}
 
+	void CreateGS(int i, LPCWSTR name)
+	{
+		HRESULT hr;
+
+		hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "GS", "gs_4_1", NULL, NULL, &GS[i].pBlob, &pErrorBlob);
+		CompilerLog(name, hr, "geometry shader compiled: ");
+
+		if (hr == S_OK)
+		{
+			hr = device->CreateGeometryShader(GS[i].pBlob->GetBufferPointer(), GS[i].pBlob->GetBufferSize(), NULL, &GS[i].gShader);
+		}
 	}
 
 	void Init()
@@ -504,6 +521,7 @@ namespace Shaders {
 
 		CreateVS(7, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\AriesNebula_VS.shader"));
 		CreatePS(7, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\AriesNebula_PS.shader"));
+		CreateGS(7, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\AriesNebula_GS.shader"));
 
 		CreateVS(8, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SpeedParticles_VS.shader"));
 		CreatePS(8, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SpeedParticles_PS.shader"));
@@ -531,7 +549,7 @@ namespace Shaders {
 
 	void vShader(unsigned int n)
 	{
-		context->VSSetShader(VS[n].pShader, NULL, 0);
+		context->VSSetShader(VS[n].vShader, NULL, 0);
 	}
 
 	void pShader(unsigned int n)
@@ -959,7 +977,7 @@ void Dx11Init()
 	Textures::Create(2, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
 
 	//perlin noise rt
-	Textures::Create(3, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(4096, 4096), true, false);
+	Textures::Create(3, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(4096, 4096), true, true);
 }
 
 
