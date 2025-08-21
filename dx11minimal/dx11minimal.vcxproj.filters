@@ -266,9 +266,6 @@
     <None Include="Shaders\AriesNebula_GS.shader">
       <Filter>Shaders\Aries</Filter>
     </None>
-    <None Include="Shaders\Static_GS.shader">
-      <Filter>Shaders</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\StarLink_PS.shader">

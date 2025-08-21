@@ -156,6 +156,7 @@ namespace drawer
     {
         Shaders::vShader(1);
         Shaders::pShader(1);
+        Shaders::gShader(0);
 
         drawStarPulse(Constellation, colorOverride, finalStarRad);
 

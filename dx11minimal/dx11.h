@@ -500,7 +500,7 @@ namespace Shaders {
 	{
 		CreateVS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VS.shader"));
 		CreatePS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PS.shader"));
-		CreateGS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Static_GS.shader"));
+		//CreateGS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Static_GS.shader"));
 
 		CreateVS(1, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VSS.shader"));
 		CreatePS(1, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PSS.shader"));
