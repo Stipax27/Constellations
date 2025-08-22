@@ -894,7 +894,7 @@ namespace drawer
                 {
                     Particle* particle = new Particle;
                     particle->pos = camPos + forward * 7000 + flyDirection * 6000 + (flyUpDirection * GetRandom(-100, 100) + flyRightDirection * GetRandom(-100, 100)).normalized() * 5000;
-                    particle->lifetime = GetRandom(400, 800) / pow(speedRatio, 0.75);
+                    particle->lifetime = GetRandom(400, 800) / pow(speedRatio, 0.25);
                     particle->startTime = curTime;
                     particle->vel = flyDirection;
 
@@ -1339,68 +1339,68 @@ namespace drawer
             
             
             
-                if (attack_collision == true and attackCooldown == true)
-                {
-                    attack_cooldown = currentTime;
-                    attackCooldown = false;
-                    check_attack = false;
-                    attackStartTime = currentTime;
+            if (attack_collision == true and attackCooldown == true)
+            {
+                attack_cooldown = currentTime;
+                attackCooldown = false;
+                check_attack = false;
+                attackStartTime = currentTime;
                     
-                }
-                Constellation& h = *starSet[currentEnemyID];
-                h.Transform = CreateEnemyToWorldMatrix(h);
-                Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-                drawСonstellation(*starSet[currentEnemyID],false, 1000.f, 100.f);
+            }
+            Constellation& h = *starSet[currentEnemyID];
+            h.Transform = CreateEnemyToWorldMatrix(h);
+            Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+            drawСonstellation(*starSet[currentEnemyID],false, 1000.f, 100.f);
 
-                //linksDivider = 15;
-                modelTransform = &placeHeroToWorld;
-                uiFunc = &heroUI;
-                Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+            //linksDivider = 15;
+            modelTransform = &placeHeroToWorld;
+            uiFunc = &heroUI;
+            Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 
                 
-                point3d Heropos = point3d(
-                    XMVectorGetX(heroPosition),
-                    XMVectorGetY(heroPosition),
-                    XMVectorGetZ(heroPosition)
-                );
+            point3d Heropos = point3d(
+                XMVectorGetX(heroPosition),
+                XMVectorGetY(heroPosition),
+                XMVectorGetZ(heroPosition)
+            );
 
-                point3d Enemypos = point3d(
-                    XMVectorGetX(enemyPositions),
-                    XMVectorGetY(enemyPositions),
-                    XMVectorGetZ(enemyPositions)
-                );
+            point3d Enemypos = point3d(
+                XMVectorGetX(enemyPositions),
+                XMVectorGetY(enemyPositions),
+                XMVectorGetZ(enemyPositions)
+            );
 
                
 
-                if (enemyAI.data.isAttacking == true) {
+            if (enemyAI.data.isAttacking == true) {
 
-                    playerConst.StartShaking();
-                    enemyAI.data.isAttacking = false;
-                }
-                    playerConst.UpdateShaking();
+                playerConst.StartShaking();
+                enemyAI.data.isAttacking = false;
+            }
+                playerConst.UpdateShaking();
 
-                if (enemyAI.data.isShockwaveActive == true) {
-                    CreateShockwave(Enemypos, enemyAI.data.shockwaveRadius , Heropos);
-                }
-                    UpdateShockwave(deltaTime);
-                    RenderShockwave();
+            if (enemyAI.data.isShockwaveActive == true) {
+                CreateShockwave(Enemypos, enemyAI.data.shockwaveRadius , Heropos);
+            }
+                UpdateShockwave(deltaTime);
+                RenderShockwave();
 
-                if (enemyAI.data.isBoomExploding == true) {
-                    CreateExplosionEffects(Enemypos, enemyAI.data.boomRadius);
-                }
-                UpdateExplosionEffects(deltaTime);
-                RenderExplosionEffects();
+            if (enemyAI.data.isBoomExploding == true) {
+                CreateExplosionEffects(Enemypos, enemyAI.data.boomRadius);
+            }
+            UpdateExplosionEffects(deltaTime);
+            RenderExplosionEffects();
 
-                //Constellation& c = *starSet[player_sign];
-                //c.Transform = CreateHeroToWorldMatrix(c);
-                //drawСonstellation(*starSet[player_sign]);//Игрок
+            //Constellation& c = *starSet[player_sign];
+            //c.Transform = CreateHeroToWorldMatrix(c);
+            //drawСonstellation(*starSet[player_sign]);//Игрок
 
-                if (attack_collision == true)
-                {
-                    check_attack = true;
-                    attack_collision = false;
-                    attack_speed = false;
-                }
+            if (attack_collision == true)
+            {
+                check_attack = true;
+                attack_collision = false;
+                attack_speed = false;
+            }
             
             
 

@@ -40,25 +40,14 @@ cbuffer objParams : register(b0)
 
 #define PI 3.1415926535897932384626433832795
 
-float hash2(uint n) {
-    n = (n << 13u) ^ n;
-    return frac((n * (n * n * 15731u + 789221u) + 1376312589u) * 0.000000000931322574615478515625f);
-}
-
-float3 randomPosition(uint index) {
-    float x = hash2(index * 3u);
-    float y = hash2(index * 3u + 1u);
-    float z = hash2(index * 3u + 2u);
-    return float3(x, y, z);
-}
 
 uint getPointLevel(uint index) {
     if (index < 3) {
-        return 0;
+        return 1;
     }
 
     float d = 9 * 9 - 4 * 3 * (4 - 2 * index);
-    return (-9 + sqrt(d)) / (2 * 3);
+    return ceil((-9 + sqrt(d)) / (2 * 3));
 }
 
 uint getSectorsOfLevel(uint level) {
@@ -68,13 +57,14 @@ uint getSectorsOfLevel(uint level) {
 float3 spiral(uint index) {
     uint level = getPointLevel(index);
     uint sectors = getSectorsOfLevel(level);
-    uint localIndex = index - getSectorsOfLevel(max(level - 1, 0));
+    uint localIndex = index - getSectorsOfLevel(level - 1);
 
     float angle = PI * 2 / sectors * localIndex;
-    float radius = 384 * (level + 1) / 6;
+    float radius = 384 * level / 6;
 
     return float3(sin(angle), 0, cos(angle)) * radius;
 }
+
 
 struct VS_OUTPUT
 {
@@ -88,7 +78,6 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 {
     VS_OUTPUT output;
 
-    //uint starID = vID / 6;
     uint vertexInQuad = vID % 6;
 
     float2 quadPos[6] = {
@@ -107,21 +96,19 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     starPos.y = cos(starPos.x / 100000 * PI) * cos(starPos.z / 100000 * PI) * -7500 + (par * lerp(16000, 12000, AriesNebulaLerpFactor)) / (lerp(60000000, 50000000, AriesNebulaLerpFactor) + par);
     
     starPos.y += perlinTexture.SampleLevel(perlinSamplerState, starPos.xz / (range * 2) + 0.5, 1).r * lerp(5000, 4000, AriesNebulaLerpFactor);
-    //starPos.y += noise(starPos.xzy * 0.131 * lerp(8, 5, AriesNebulaLerpFactor) * 0.00011 + float3(41.547, 14.631, 51.591) + time.x * -0.005) * lerp(5000, 4000, AriesNebulaLerpFactor);
 
     float3 voronoi = voronoiTexture.SampleLevel(voronoiSamplerState, starPos.xz / (range * 2) + 0.5, 1);
     starPos.y -= voronoi.x * voronoi.y * voronoi.z * lerp(35000, 10000, AriesNebulaLerpFactor);
 
-    //float3 n = voronoiNoise(starPos.xz * 0.131 * lerp(18, 12, AriesNebulaLerpFactor) * 0.00011 + time.x * 0.005 + float2(41.547, 14.631));
-    //starPos.y -= n.x * n.y * n.z * lerp(35000, 10000, AriesNebulaLerpFactor);
-
+    starPos.y += (sin(starPos.x * PI / range * 5 + time.x * 0.05) + cos(starPos.z * PI / range * 5 + time.x * 0.05)) * 300;
+    starPos.y += cos((starPos.x + starPos.z) * PI / range * 2 + time.x * -0.05) * 600;
 
     // //-----
 
     float4 viewPos = mul(float4(starPos, 1.0f), view[0]);
     float4 projPos = mul(viewPos, proj[0]);
     //projPos.xy /= max(projPos.w, 0);
-    projPos.xy += quadPos[vertexInQuad] * float2(aspect.x, 1) * 384;
+    projPos.xy += quadPos[vertexInQuad] * float2(aspect.x, 1) * 400;
 
     output.uv = quadPos[vertexInQuad];
     output.pos = projPos;

@@ -985,7 +985,6 @@ void Dx11Init()
 
 	//perlin noise rt
 	Textures::Create(3, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(256, 256), true, false);
-
 	//voronoi noise rt
 	Textures::Create(4, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
 }
