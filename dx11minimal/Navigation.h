@@ -29,50 +29,48 @@ void updateFlyDirection()
     {
         return;
     }
-    flyDirection = { 0, 0, 0 };
+    point3d Direction = { 0, 0, 0 };
 
     if (GetAsyncKeyState('W') & 0x8000) {
         // ��������� ������ ����������� ������ (��� ������������)
-        flyDirection.x += XMVectorGetX(Hero::state.Forwardbuf) * 10.0f;
-        flyDirection.y += XMVectorGetY(Hero::state.Forwardbuf) * 10.0f;
-        flyDirection.z += XMVectorGetZ(Hero::state.Forwardbuf) * 10.0f;
+        Direction.x += XMVectorGetX(Hero::state.Forwardbuf) * 10.0f;
+        Direction.y += XMVectorGetY(Hero::state.Forwardbuf) * 10.0f;
+        Direction.z += XMVectorGetZ(Hero::state.Forwardbuf) * 10.0f;
     }
     if (GetAsyncKeyState('S') & 0x8000) {
         // �������� ����� - �������� �����������
-        flyDirection.x -= XMVectorGetX(Hero::state.Forwardbuf) * 10.0f;
-        flyDirection.y -= XMVectorGetY(Hero::state.Forwardbuf) * 10.0f;
-        flyDirection.z -= XMVectorGetZ(Hero::state.Forwardbuf) * 10.0f;
+        Direction.x -= XMVectorGetX(Hero::state.Forwardbuf) * 10.0f;
+        Direction.y -= XMVectorGetY(Hero::state.Forwardbuf) * 10.0f;
+        Direction.z -= XMVectorGetZ(Hero::state.Forwardbuf) * 10.0f;
     }
     if (GetAsyncKeyState('A') & 0x8000) {
         // ��������� ������ ����������� ������ (��� ������������)
-        flyDirection.x -= XMVectorGetX(Hero::state.Right) * 5.f;
-        flyDirection.y -= XMVectorGetY(Hero::state.Right) * 5.f;
-        flyDirection.z -= XMVectorGetZ(Hero::state.Right) * 5.f;
+        Direction.x -= XMVectorGetX(Hero::state.Right) * 5.f;
+        Direction.y -= XMVectorGetY(Hero::state.Right) * 5.f;
+        Direction.z -= XMVectorGetZ(Hero::state.Right) * 5.f;
     }
     if (GetAsyncKeyState('D') & 0x8000) {
         // �������� ����� - �������� �����������
-        flyDirection.x += XMVectorGetX(Hero::state.Right) * 5.f;
-        flyDirection.y += XMVectorGetY(Hero::state.Right) * 5.f;
-        flyDirection.z += XMVectorGetZ(Hero::state.Right) * 5.f;
+        Direction.x += XMVectorGetX(Hero::state.Right) * 5.f;
+        Direction.y += XMVectorGetY(Hero::state.Right) * 5.f;
+        Direction.z += XMVectorGetZ(Hero::state.Right) * 5.f;
     }
     if (GetAsyncKeyState(VK_SPACE) & 0x8000) {
 
-        flyDirection.x += XMVectorGetX(Hero::state.Up) * 5.f;
-        flyDirection.y += XMVectorGetY(Hero::state.Up) * 5.f;
-        flyDirection.z += XMVectorGetZ(Hero::state.Up) * 5.f;
+        Direction.x += XMVectorGetX(Hero::state.Up) * 5.f;
+        Direction.y += XMVectorGetY(Hero::state.Up) * 5.f;
+        Direction.z += XMVectorGetZ(Hero::state.Up) * 5.f;
     }
     if (GetAsyncKeyState(VK_CONTROL) & 0x8000) {
-    
 
-        flyDirection.x -= XMVectorGetX(Hero::state.Up) * 5.f;
-        flyDirection.y -= XMVectorGetY(Hero::state.Up) * 5.f;
-        flyDirection.z -= XMVectorGetZ(Hero::state.Up) * 5.f;
-
+        Direction.x -= XMVectorGetX(Hero::state.Up) * 5.f;
+        Direction.y -= XMVectorGetY(Hero::state.Up) * 5.f;
+        Direction.z -= XMVectorGetZ(Hero::state.Up) * 5.f;
     }
 
-    if (flyDirection.magnitude() > 0)
+    if (Direction.magnitude() > 0)
     {
-        flyDirection = flyDirection.normalized();
+        Direction = Direction.normalized();
         getPerpendicularDirections();
     }
     flyDirection = flyDirection.lerp(Direction, 0.1f);
