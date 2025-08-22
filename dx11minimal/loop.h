@@ -1,4 +1,5 @@
 ﻿bool Camerainit = false;
+bool preRender = true;
 
 void mainLoop(float deltaTime)
 {
@@ -9,15 +10,27 @@ void mainLoop(float deltaTime)
 	Depth::Depth(Depth::depthmode::off);
 	Rasterizer::Cull(Rasterizer::cullmode::off);
 
-	Textures::RenderTarget(3, 0);
-	Shaders::vShader(10);
-	Shaders::pShader(200);
-	Draw::Clear({ 0.0f, 0.0f, 0.0f, 1.0f });
-	context->Draw(6, 0);
-	Textures::CreateMipMap();
+	if (preRender)
+	{
+		preRender = false;
+
+		Textures::RenderTarget(3, 0);
+		Shaders::vShader(10);
+		Shaders::pShader(200);
+		Draw::Clear({ 0.0f, 0.0f, 0.0f, 1.0f });
+		context->Draw(6, 0);
+		Textures::CreateMipMap();
+
+		Textures::RenderTarget(4, 0);
+		Shaders::pShader(201);
+		Draw::Clear({ 0.0f, 0.0f, 0.0f, 1.0f });
+		context->Draw(6, 0);
+		Textures::CreateMipMap();
+	}
 
 	Textures::RenderTarget(1, 0);
 	context->VSSetShaderResources(0, 1, &Textures::Texture[3].TextureResView);
+	context->VSSetShaderResources(1, 1, &Textures::Texture[4].TextureResView);
 	Depth::Depth(Depth::depthmode::on);
 
 	Shaders::vShader(0);

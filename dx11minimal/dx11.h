@@ -546,6 +546,7 @@ namespace Shaders {
 		//-----------------------------------------------
 
 		CreatePS(200, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PerlinNoise.shader"));
+		CreatePS(201, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VoronoiNoise.shader"));
 	}
 
 	void vShader(unsigned int n)
@@ -983,7 +984,10 @@ void Dx11Init()
 	Textures::Create(2, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
 
 	//perlin noise rt
-	Textures::Create(3, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(4096, 4096), true, true);
+	Textures::Create(3, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(256, 256), true, false);
+
+	//voronoi noise rt
+	Textures::Create(4, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
 }
 
 

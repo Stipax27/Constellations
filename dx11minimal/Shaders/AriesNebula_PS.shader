@@ -80,7 +80,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
 
     float3 color = lerp(upperColor, lowerColor, max(min(lerp((input.worldpos.y - 3000) / 1500, input.worldpos.y / 1000, AriesNebulaLerpFactor), 1), 0));
 
-    float brightness = exp(-dot(uv, uv) * 20) * 0.03f;
+    float brightness = exp(-dot(uv, uv) * 20) * 0.1f;
 
     float offset = max(length(input.worldpos.xz) - 40000, 0);
     float sat = max(1 - offset / 10000, 0);

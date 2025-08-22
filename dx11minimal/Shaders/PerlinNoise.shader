@@ -29,7 +29,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
 {
     float2 uv = input.uv;
 
-    float n = noise(float3(uv.x, uv.y, 0) * 64 + float3(41.547, 14.631, 51.591));
+    float n = noise(float3(uv.x, uv.y, 0) * 16 + float3(41.547, 14.631, 51.591));
 
     return float4(n, n, n, 1);
 }

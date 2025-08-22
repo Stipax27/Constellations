@@ -120,13 +120,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     timer::StartCounter();
     ShowCursor(FALSE);
 
-    /*Textures::RenderTarget(3, 0);
-    Shaders::vShader(10);
-    Shaders::pShader(200);
-    context->Draw(6, 0);
-    Textures::CreateMipMap();
-    context->VSSetShaderResources(0, 1, &Textures::Texture[3].TextureResView);*/
-
     CreateParticledText("TEST TEXT RENDER", (1700. / 2560) * window.width, (600. / 1440) * window.height, .7f, false);
 
     // Main message loop:
