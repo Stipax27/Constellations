@@ -75,6 +75,7 @@ void updateFlyDirection()
         flyDirection = flyDirection.normalized();
         getPerpendicularDirections();
     }
+    flyDirection = flyDirection.lerp(Direction, 0.1f);
 
     float dPitch = 0.0f, dYaw = 0.0f, dRoll = 0.0f;
 
@@ -143,7 +144,7 @@ float localTime;
 float localDeltaTime;
 
 void updateFlySpeed(float deltaTime)
-{
+{ 
     deltaTime /= 1000;
     bool isBoosting = (GetAsyncKeyState(VK_SHIFT) & 0x8000);
     speed = max(speed + acc * deltaTime, 0);
@@ -171,7 +172,7 @@ void updateFlySpeed(float deltaTime)
         wasShiftPressed = false;
         boostingFlySpeed = 10; //тут должна быть переменная зависящая от времени зажатия шифта
         currentFlySpeed = boostingFlySpeed + speed;
-        acc = -20;//тут должна быть переменная зависящая от фпс и времени
+        acc = -40;//тут должна быть переменная зависящая от фпс и времени
      
     }
     
