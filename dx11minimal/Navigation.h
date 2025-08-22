@@ -20,37 +20,38 @@ void updateFlyDirection()
     {
         return;
     }
-    flyDirection = { 0, 0, 0 };
+    point3d Direction = { 0, 0, 0 };
 
     if (GetAsyncKeyState('W') & 0x8000) {
         // ��������� ������ ����������� ������ (��� ������������)
-        flyDirection.x += XMVectorGetX(Hero::state.Forwardbuf) * 10.0f;
-        flyDirection.y += XMVectorGetY(Hero::state.Forwardbuf) * 10.0f;
-        flyDirection.z += XMVectorGetZ(Hero::state.Forwardbuf) * 10.0f;
+        Direction.x += XMVectorGetX(Hero::state.Forwardbuf) * 10.0f;
+        Direction.y += XMVectorGetY(Hero::state.Forwardbuf) * 10.0f;
+        Direction.z += XMVectorGetZ(Hero::state.Forwardbuf) * 10.0f;
     }
     if (GetAsyncKeyState('S') & 0x8000) {
         // �������� ����� - �������� �����������
-        flyDirection.x -= XMVectorGetX(Hero::state.Forwardbuf) * 10.0f;
-        flyDirection.y -= XMVectorGetY(Hero::state.Forwardbuf) * 10.0f;
-        flyDirection.z -= XMVectorGetZ(Hero::state.Forwardbuf) * 10.0f;
+        Direction.x -= XMVectorGetX(Hero::state.Forwardbuf) * 10.0f;
+        Direction.y -= XMVectorGetY(Hero::state.Forwardbuf) * 10.0f;
+        Direction.z -= XMVectorGetZ(Hero::state.Forwardbuf) * 10.0f;
     }
     if (GetAsyncKeyState('A') & 0x8000) {
         // ��������� ������ ����������� ������ (��� ������������)
-        flyDirection.x -= XMVectorGetX(Hero::state.Right) * 5.f;
-        flyDirection.y -= XMVectorGetY(Hero::state.Right) * 5.f;
-        flyDirection.z -= XMVectorGetZ(Hero::state.Right) * 5.f;
+        Direction.x -= XMVectorGetX(Hero::state.Right) * 5.f;
+        Direction.y -= XMVectorGetY(Hero::state.Right) * 5.f;
+        Direction.z -= XMVectorGetZ(Hero::state.Right) * 5.f;
     }
     if (GetAsyncKeyState('D') & 0x8000) {
         // �������� ����� - �������� �����������
-        flyDirection.x += XMVectorGetX(Hero::state.Right) * 5.f;
-        flyDirection.y += XMVectorGetY(Hero::state.Right) * 5.f;
-        flyDirection.z += XMVectorGetZ(Hero::state.Right) * 5.f;
+        Direction.x += XMVectorGetX(Hero::state.Right) * 5.f;
+        Direction.y += XMVectorGetY(Hero::state.Right) * 5.f;
+        Direction.z += XMVectorGetZ(Hero::state.Right) * 5.f;
     }
 
-    if (flyDirection.magnitude() > 0)
+    if (Direction.magnitude() > 0)
     {
-        flyDirection = flyDirection.normalized();
+        Direction = Direction.normalized();
     }
+    flyDirection = flyDirection.lerp(Direction, 0.1f);
 
     float dPitch = 0.0f, dYaw = 0.0f, dRoll = 0.0f;
 
@@ -119,19 +120,20 @@ float localTime;
 float localDeltaTime;
 
 void updateFlySpeed(float deltaTime)
-{
+{ 
+    deltaTime /= 1000;
     bool isBoosting = (GetAsyncKeyState(VK_SHIFT) & 0x8000);
-    speed = max(speed + acc, 0);
+    speed = max(speed + acc * deltaTime, 0);
 
     if (!isBoosting && !wasShiftPressed)
     {
-        currentFlySpeed = max(currentFlySpeed + acc, maxFlySpeed);
+        currentFlySpeed = max(currentFlySpeed + acc * deltaTime, maxFlySpeed);
     }
 
     if (isBoosting && !wasShiftPressed)
     {
         wasShiftPressed = true;
-        acc = 2; //тут должна быть переменная зависящая от фпс и времени
+        acc = 40; //тут должна быть переменная зависящая от фпс и времени
         localTime = currentTime;
     }
 
@@ -146,7 +148,7 @@ void updateFlySpeed(float deltaTime)
         wasShiftPressed = false;
         boostingFlySpeed = 10; //тут должна быть переменная зависящая от времени зажатия шифта
         currentFlySpeed = boostingFlySpeed + speed;
-        acc = -5;//тут должна быть переменная зависящая от фпс и времени
+        acc = -40;//тут должна быть переменная зависящая от фпс и времени
      
     }
     

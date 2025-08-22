@@ -28,7 +28,7 @@ int currentDayIndex = -1;
 int currentMonthIndex = -1;
 int currentColorIndex = -1;
 const int numColors = 7;
-float camDist = 100;
+float camDist = 100;//we have this in camera state
 DWORD currentTime;
 DWORD lastFrameTime = 0;
 DWORD deltaTime = 0;
