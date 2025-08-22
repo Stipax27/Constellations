@@ -552,7 +552,7 @@ RenderObject* cursor;
 void initWorld()
 {
     ariesNebula = new RenderObject(7, 7, 10000000.0f, 100000.0f, 16, 6, 5000000);
-    ariesNebula->gs_id = 7;
+    //ariesNebula->gs_id = 7;
 
     backgroundStars = new RenderObject(2, 2, -1.0f, -1.0f, 0, 6, 10000);
     spaceStars = new RenderObject(3, 3, -1.0f, -1.0f, 0, 6, 1000);

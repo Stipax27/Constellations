@@ -197,7 +197,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     float par = starPos.x * starPos.x + starPos.z * starPos.z;
     starPos.y = cos(starPos.x / 100000 * PI) * cos(starPos.z / 100000 * PI) * -7500 + (par * lerp(16000, 12000, AriesNebulaLerpFactor)) / (lerp(60000000, 50000000, AriesNebulaLerpFactor) + par);
     
-    //starPos.y += renderTexture.Sample(samplerState, input.uv).r;
+    //starPos.y += renderTexture.SampleLevel(samplerState, starPos.xz, 1, 1).r;
     //starPos.y += noise(starPos.xzy * 0.131 * lerp(8, 5, AriesNebulaLerpFactor) * 0.00011 + float3(41.547, 14.631, 51.591) + time.x * -0.005) * lerp(5000, 4000, AriesNebulaLerpFactor);
 
     //float3 n = voronoiNoise(starPos.xz * 0.131 * lerp(18, 12, AriesNebulaLerpFactor) * 0.00011 + time.x * 0.005 + float2(41.547, 14.631));
