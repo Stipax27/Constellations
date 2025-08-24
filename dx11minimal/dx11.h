@@ -1041,6 +1041,8 @@ namespace Camera
 	void AttachCamera();
 }
 
+
+
 namespace Hero
 {
 	struct State
@@ -1055,29 +1057,34 @@ namespace Hero
 		XMVECTOR Right = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR at = XMVectorSet(0, 0, 0, 0);
 		XMVECTOR Up = XMVector3Rotate(defaultUp, currentRotation);
+
 		XMMATRIX constellationOffset = XMMatrixTranslation(0, 0, 0);
-		XMMATRIX constellationSubOffset = XMMatrixTranslation(0, 0, 0);
+		XMMATRIX constellationSubOffset = XMMatrixRotationY(0);
 
 		XMVECTOR position = XMVectorSet(0, 0, 0, 0);
 		XMMATRIX worldMatrix = XMMatrixIdentity();
 
+		XMMATRIX meshRotationMatrix = XMMatrixIdentity();
+		float meshRotationAngle = 0.0f;
+		float meshRotationSpeed = 2.0f; 
+		bool isMeshRotating = false;
+
+		XMMATRIX rotationMatrix = XMMatrixIdentity();
 		float attackRotationProgress = 0.0f;
 		bool isAttackRotating = false;
 		DWORD attackStartTime = 0;
-
+		float rotationSpeed = 3.f;
+		
 	} static state;
 
-	void StartAttackRotation()
+	void StartMeshRotation()
 	{
-		if (!state.isAttackRotating)
-		{
-			state.isAttackRotating = true;
-			state.attackStartTime = currentTime;
-			state.attackRotationProgress = 0.0f;
-			state.rotationBeforeAttack = state.currentRotation;
+		state.isMeshRotating = true;
+	}
 
-			Camera::DetachCamera();
-		}
+	void StopMeshRotation()
+	{
+		state.isMeshRotating = false;
 	}
 
 	void UpdateAttackRotation(float deltaTime)
@@ -1142,6 +1149,41 @@ namespace Hero
 				state.Forwardbuf = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), state.currentRotation);
 				state.Right = XMVector3Rotate(XMVectorSet(-1, 0, 0, 0), state.currentRotation);
 			}
+		}
+	}
+
+	void RotateHeroMesh(float angleDegrees)
+	{
+		// Вращаем только матрицу вращения
+		Hero::state.rotationMatrix *= XMMatrixRotationY(XMConvertToRadians(angleDegrees));
+
+		// Обновляем мировую матрицу: Смещение * Вращение
+		Hero::state.worldMatrix = Hero::state.constellationOffset * Hero::state.rotationMatrix;
+	}
+
+	void UpdateMeshRotation(float deltaTime)
+	{
+		static float totalTime = 0;
+		totalTime += deltaTime;
+
+		
+
+		if (state.isMeshRotating)
+		{
+			// Обновляем угол вращения
+			state.meshRotationAngle += state.meshRotationSpeed * deltaTime;
+
+			// Создаем матрицу вращения вокруг оси Y
+			state.meshRotationMatrix = XMMatrixRotationY(
+				XMConvertToRadians(state.meshRotationAngle)
+			);
+
+			// ОБНОВЛЯЕМ ИТОГОВУЮ МАТРИЦУ: Позиция * Вращение
+			state.worldMatrix = state.constellationOffset * state.meshRotationMatrix;
+
+			// ОБНОВЛЯЕМ КОНСТАНТНЫЙ БУФЕР для шейдера
+			ConstBuf::drawerMat.model = XMMatrixTranspose(state.worldMatrix);
+			ConstBuf::UpdateDrawerMat();
 		}
 	}
 }

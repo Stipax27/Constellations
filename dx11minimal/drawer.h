@@ -625,7 +625,7 @@ namespace drawer
             switch (current_weapon) {
                 case weapon_name::Sword: {
 
-                   // Hero::StartAttackRotation();
+                    Hero::StartMeshRotation();
 
                     Hero::state.isAttackRotating = true;
                     Hero::state.attackStartTime = currentTime;
@@ -704,6 +704,10 @@ namespace drawer
 
             isAttacking = true;
             //current_weapon = weapon_name::None;
+        }
+        else {
+            Hero::StopMeshRotation();
+
         }
     }
 
@@ -1448,7 +1452,14 @@ namespace drawer
             if (!playerConst.morphing) {
                 HandleMouseClick(heroPosition);
 
-                Hero::UpdateAttackRotation(deltaTime);
+              Hero::UpdateMeshRotation(deltaTime);
+              static float totalTime = 0;
+              totalTime += deltaTime;
+              if (totalTime > 1.0f) // Каждую секунду
+              {
+                  drawString(("Mesh rotation angle: " + std::to_string(Hero::state.meshRotationAngle) + "\n").c_str(), 1000, 1000, 1.f, true);
+                  totalTime = 0;
+              }
             }
             UpdateAttack(deltaTime);
 
