@@ -80,7 +80,7 @@ float star(float2 uv)
     c = saturate(c - saturate(1 - 100 * ((abs(uv.x) - 0.1) * (abs(uv.y) - 0.1))));
 
     c += saturate(1 - 100 * abs(uv.x) * abs(uv.y));
-    c -= saturate(ceil(1 - length(uv) * 4));
+    c -= min(saturate(ceil(1 - length(uv) * 4)), c);
     //c -= saturate(1 - length(uv) * 2);
 
     //c = pow(uv.x / pow(uv.y, 2), 10);

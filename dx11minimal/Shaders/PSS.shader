@@ -50,8 +50,8 @@ float star(float2 uv)
     float c = saturate(1. - 1. * length(uv));
     c = pow(c, 3);
     c *= saturate(1. - 228. * abs(uv.x) * abs(uv.y));
-    c += pow(sin(length(uv * 3.14)), 118) * .03;
-    return c;
+    c += pow(max(sin(length(uv * 3.14)), 0), 118) * .03;
+    return max(c, 0);
 }
 
 float4 PS(VS_OUTPUT input) : SV_Target
@@ -60,6 +60,6 @@ float4 PS(VS_OUTPUT input) : SV_Target
     c += star(rotZ(float3(input.uv,0),45*3.14/180).xy*1.5);
     c *= gConst[1].w;
 
-    return float4(c, c, c*1.2, 1);
+    return float4(c, c, c*1.2, c);
 
 }

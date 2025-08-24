@@ -31,7 +31,8 @@ struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
     float2 uv : TEXCOORD0;
-
+    uint   starID : COLOR0;
+    float4 worldpos : POSITION1;
 };
 
 float3 rotZ(float3 pos, float a)
@@ -50,34 +51,31 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output;
 
-    float lifeAspect = 1 - gConst[0].w;
-    float sz = 0.02;
-    float length = 7500;
-
     float4 p1 = gConst[0];
-    float4 p2 = p1 + normalize(gConst[2]) * length * lifeAspect;
+    float4 p2 = gConst[1];
 
     float4 pointsProj[] = {
-        mul(mul(float4(p1.xyz, 1), view[0]), proj[0]),
-        mul(mul(float4(p2.xyz, 1), view[0]), proj[0])
+        mul(mul(float4(p1.xyz, 1.0f), view[0]), proj[0]),
+        mul(mul(float4(p2.xyz, 1.0f), view[0]), proj[0])
     };
-    pointsProj[0].xy /= max(pointsProj[0].w, 0);
-    pointsProj[1].xy /= max(pointsProj[1].w, 0);
 
-    float2 quadUV[6] = { //If I won't understand it in month I'll give 100 rubles to Nikita
+    float4 direction = pointsProj[1] - pointsProj[0];
+    float2 perpendicular = normalize(float2(direction.y, -direction.x) * float2(aspect.x, 1));
+
+    float2 quadUV[6] = {
         float2(-1, -1), float2(1, -1), float2(-1, 1),
         float2(1, -1), float2(-1, 1), float2(1, 1)
     };
 
-    float2 direction = pointsProj[1].xy - pointsProj[0].xy;
-    float2 perpendicular = normalize(float2(direction.y, -direction.x) * float2(aspect.x, 1));
+    float4 pos = gConst[vID % 2];
 
-    float2 pos = pointsProj[vID % 2];
+    float4 viewPos = mul(float4(pos.xyz, 1.0f), view[0]);
+    float4 projPos = mul(viewPos, proj[0]);
 
-    pos += perpendicular * quadUV[vID].y * float2(aspect.x, 1) * sz;
+    projPos.xy += perpendicular * quadUV[vID].y * gConst[0].w * float2(aspect.x, 1);
 
     output.uv = quadUV[vID];
-    output.pos = float4(pos, 0, 1);
+    output.pos = projPos;
 
     return output;
 }

@@ -14,6 +14,7 @@ public:
 };
 
 weapon_ weapon[5];
+//bool backMorphLock = false;
 
 
 
@@ -52,10 +53,14 @@ void initWeapon() {
 }
 
 void SelectWeapon(Constellation* playerConst) {
+    weapon_name lastWeapon = current_weapon;
     if (GetAsyncKeyState('1')) current_weapon = weapon_name::Sword;
     if (GetAsyncKeyState('2')) current_weapon = weapon_name::Shield;
     if (GetAsyncKeyState('3')) current_weapon = weapon_name::Bow;
     if (GetAsyncKeyState('4')) current_weapon = weapon_name::Staff;
+
+    /*if (lastWeapon != current_weapon && (int)current_weapon > 0)
+        backMorphLock = true;*/
 
     if ((int)current_weapon > 0)
         playerConst->Morph(starSet[11 + (int)current_weapon]);

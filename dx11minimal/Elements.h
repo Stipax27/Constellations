@@ -193,7 +193,7 @@ void enemyAttack(Constellation& Constellation) {
         if (starHealth[i] < 0) starHealth[i] = 0;
     }
 
-    isDamageHero = true;
+    //isDamageHero = true;
 }
 
 void enemyFight()
