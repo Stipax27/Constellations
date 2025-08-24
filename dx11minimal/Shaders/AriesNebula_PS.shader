@@ -1,3 +1,6 @@
+Texture2D perlinTexture : register(t0);
+SamplerState perlinSamplerState : register(s0);
+
 cbuffer factors : register(b6)
 {
     float AriesNebulaLerpFactor;
@@ -32,11 +35,6 @@ cbuffer params : register(b1)
     float r, g, b;
 };
 
-float hash11(uint n) {
-    n = (n << 13u) ^ n;
-    return frac((n * (n * n * 15731u + 789221u) + 1376312589u) * 0.000000000931322574615478515625f);
-}
-
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
@@ -46,45 +44,24 @@ struct VS_OUTPUT
 };
 
 
-float hash( float n ) {
-    return frac(sin(n)*43758.5453);
-}
-     
-float noise( float3 x ) {
-    float3 p = floor(x);
-    float3 f = frac(x);
-
-    f *= f;
-     
-    f = f*f*(3.0-2.0*f);
-    float n = p.x + p.y*57.0 + 113.0*p.z;
-     
-    float a = lerp(lerp(lerp( hash(n+0.0), hash(n+1.0),f.x),
-            lerp( hash(n+57.0), hash(n+58.0),f.x),f.y),
-            lerp(lerp( hash(n+113.0), hash(n+114.0),f.x),
-            lerp( hash(n+170.0), hash(n+171.0),f.x),f.y),f.z);
-
-    return a - 0.65;
-}
-
-
 float4 PS(VS_OUTPUT input) : SV_Target
 {
     float2 uv = input.uv;
 
-    float n = noise(input.worldpos * 0.131 * 20 * 0.00011);
+    float range = 50000;
 
-    float3 lowerColor = lerp(lerp(float3(1, 0.25, 0.25), float3(1, 0.95, 0.2), n), lerp(float3(0.25, 1, 0.25), float3(1, 0, 1), n + 0.4), AriesNebulaLerpFactor);
+    float n = saturate(perlinTexture.Sample(perlinSamplerState, input.worldpos.xz / (range * 2) + 0.5).r - 0.3);
 
+    float3 lowerColor = lerp(lerp(float3(1, 0.25, 0.25), float3(1, 0.95, 0.2), n), lerp(float3(0.25, 1, 0.25), float3(1, 0, 1), n), AriesNebulaLerpFactor);
     float3 upperColor = lerp(float3(1, 1, 1), float3(0.8, 0.5, 0.05), AriesNebulaLerpFactor);
-
     float3 color = lerp(upperColor, lowerColor, max(min(lerp((input.worldpos.y - 3000) / 1500, input.worldpos.y / 1000, AriesNebulaLerpFactor), 1), 0));
-
     float brightness = exp(-dot(uv, uv) * 20) * 0.1f;
 
     float offset = max(length(input.worldpos.xz) - 40000, 0);
     float sat = max(1 - offset / 10000, 0);
     brightness *= sat;
 
-    return float4(color, 1) * float4(brightness, brightness, brightness * 1.4, 1) * (1 + 0.9 * sin(input.starID * 1.2 + time.x * 0.1));
+    float shine = 1 + 0.4 * sin(log2(input.starID * 0.25) + time.x * -0.1);
+
+    return saturate(float4(color, 1) * float4(brightness, brightness, brightness * 1.4, 1) * shine);
 }

@@ -98,10 +98,10 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     starPos.y += perlinTexture.SampleLevel(perlinSamplerState, starPos.xz / (range * 2) + 0.5, 1).r * lerp(5000, 4000, AriesNebulaLerpFactor);
 
     float3 voronoi = voronoiTexture.SampleLevel(voronoiSamplerState, starPos.xz / (range * 2) + 0.5, 1);
-    starPos.y -= voronoi.x * voronoi.y * voronoi.z * lerp(35000, 10000, AriesNebulaLerpFactor);
+    starPos.y -= voronoi.x * voronoi.y * voronoi.z * lerp(35000, 7500, AriesNebulaLerpFactor);
 
-    starPos.y += (sin(starPos.x * PI / range * 5 + time.x * 0.05) + cos(starPos.z * PI / range * 5 + time.x * 0.05)) * 300;
-    starPos.y += cos((starPos.x + starPos.z) * PI / range * 2 + time.x * -0.05) * 600;
+    starPos.y += (sin(starPos.x * PI / range * 5 + time.x * 0.05) + cos(starPos.z * PI / range * 5 + time.x * 0.05)) * lerp(300, 150, AriesNebulaLerpFactor);
+    starPos.y += cos((starPos.x + starPos.z) * PI / range * 2 + time.x * -0.05) * lerp(600, 300, AriesNebulaLerpFactor);
 
     // //-----
 
@@ -115,12 +115,4 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     output.starID = iID;
     output.worldpos = float4(starPos, 1);
     return output;
-
-    //float4 viewPos = mul(float4(starPos, 1.0f), view[0]);
-    //float4 projPos = mul(viewPos, proj[0]);
-    //output.uv = quadPos[vertexInQuad];
-    //output.pos = projPos;
-    //output.starID = iID;
-    //output.worldpos = float4(starPos, 1);
-    //return output;
 }

@@ -179,7 +179,8 @@ namespace drawer
         if (camDist < object->renderDistance || object->renderDistance < 0)
         {
             if (object->instances > 1)
-                context->DrawInstanced(object->vertexes, object->instances * (1 - min(camDist / object->lodDistanceStep, 1) / object->lodCount), 0, 0);
+                //context->DrawInstanced(object->vertexes, object->instances * (1 - min(camDist / object->lodDistanceStep, 1) / object->lodCount), 0, 0);
+                context->DrawInstanced(object->vertexes, object->instances, 0, 0);
             else
                 context->Draw(object->instances * object->vertexes, 0);
         }

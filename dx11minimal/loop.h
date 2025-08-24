@@ -30,6 +30,7 @@ void mainLoop(float deltaTime)
 
 	Textures::RenderTarget(1, 0);
 	context->VSSetShaderResources(0, 1, &Textures::Texture[3].TextureResView);
+	context->PSSetShaderResources(0, 1, &Textures::Texture[3].TextureResView);
 	context->VSSetShaderResources(1, 1, &Textures::Texture[4].TextureResView);
 	Depth::Depth(Depth::depthmode::on);
 
