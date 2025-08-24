@@ -60,7 +60,7 @@ float3 spiral(uint index) {
     uint localIndex = index - getSectorsOfLevel(level - 1);
 
     float angle = PI * 2 / sectors * localIndex;
-    float radius = 384 * level / 6;
+    float radius = 400 * level / 6;
 
     return float3(sin(angle), 0, cos(angle)) * radius;
 }
@@ -88,6 +88,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     //calc star position
 
     float range = 50000;
+    float size = 800;
     //starPos = spiral(iID) * range * 2 - range;
     float3 starPos = spiral(iID);
     starPos.y = 1000;
@@ -108,7 +109,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     float4 viewPos = mul(float4(starPos, 1.0f), view[0]);
     float4 projPos = mul(viewPos, proj[0]);
     //projPos.xy /= max(projPos.w, 0);
-    projPos.xy += quadPos[vertexInQuad] * float2(aspect.x, 1) * 400;
+    projPos.xy += quadPos[vertexInQuad] * float2(aspect.x, 1) * size;
 
     output.uv = quadPos[vertexInQuad];
     output.pos = projPos;
