@@ -1453,13 +1453,7 @@ namespace drawer
                 HandleMouseClick(heroPosition);
 
               Hero::UpdateMeshRotation(deltaTime);
-              static float totalTime = 0;
-              totalTime += deltaTime;
-              if (totalTime > 1.0f) // Каждую секунду
-              {
-                  drawString(("Mesh rotation angle: " + std::to_string(Hero::state.meshRotationAngle) + "\n").c_str(), 1000, 1000, 1.f, true);
-                  totalTime = 0;
-              }
+              
             }
             UpdateAttack(deltaTime);
 
