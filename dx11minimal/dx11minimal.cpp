@@ -48,6 +48,7 @@ HWND hWnd;
 #include "MainWindow.h"
 #include "Point3d.h"
 #include "mouse.h"
+#include "UI.h"
 #include "font.h"
 #include "EnemyAi.h"
 #include "Navigation.h"

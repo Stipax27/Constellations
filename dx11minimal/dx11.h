@@ -519,6 +519,9 @@ namespace Shaders {
 
 		CreateVS(12, nameToPatchLPCWSTR("UiParticle_VS.shader"));
 		CreatePS(12, nameToPatchLPCWSTR("UiParticle_PS.shader"));
+
+		CreateVS(13, nameToPatchLPCWSTR("UI_VS.shader"));
+		CreatePS(13, nameToPatchLPCWSTR("UI_PS.shader"));
 	}
 
 	void vShader(unsigned int n)
