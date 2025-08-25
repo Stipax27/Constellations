@@ -1,4 +1,5 @@
 ﻿bool Camerainit = false;
+bool preRender = true;
 
 void mainLoop(float deltaTime)
 {
@@ -6,12 +7,36 @@ void mainLoop(float deltaTime)
 
 	InputAssembler::IA(InputAssembler::topology::triList);
 	Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
-	Textures::RenderTarget(0, 0);
-
-	Depth::Depth(Depth::depthmode::on);
+	Depth::Depth(Depth::depthmode::off);
 	Rasterizer::Cull(Rasterizer::cullmode::off);
+
+	if (preRender)
+	{
+		preRender = false;
+
+		Textures::RenderTarget(3, 0);
+		Shaders::vShader(10);
+		Shaders::pShader(200);
+		Draw::Clear({ 0.0f, 0.0f, 0.0f, 1.0f });
+		context->Draw(6, 0);
+		Textures::CreateMipMap();
+
+		Textures::RenderTarget(4, 0);
+		Shaders::pShader(201);
+		Draw::Clear({ 0.0f, 0.0f, 0.0f, 1.0f });
+		context->Draw(6, 0);
+		Textures::CreateMipMap();
+	}
+
+	Textures::RenderTarget(1, 0);
+	context->VSSetShaderResources(0, 1, &Textures::Texture[3].TextureResView);
+	context->PSSetShaderResources(0, 1, &Textures::Texture[3].TextureResView);
+	context->VSSetShaderResources(1, 1, &Textures::Texture[4].TextureResView);
+	Depth::Depth(Depth::depthmode::on);
+
 	Shaders::vShader(0);
 	Shaders::pShader(0);
+	Shaders::gShader(0);
 	ConstBuf::ConstToVertex(4);
 	ConstBuf::ConstToPixel(4);
 	if (!Camerainit)
@@ -21,28 +46,32 @@ void mainLoop(float deltaTime)
 	}
 	Camera::Camera();//добавили общий вызов обновления камеры, чтобы везде не коллить
 
+	Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
+	Draw::ClearDepth();
+
 	drawer::drawWorld(deltaTime);
 
 	//--------------------------------
-	//Textures::CreateMipMap();
+	Textures::CreateMipMap();
 
-	////Draw::SwitchRenderTextures();
-	//Draw::OutputRenderTextures();
+	//Draw::SwitchRenderTextures();
+	Draw::OutputRenderTextures();
 
-	//Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
-	//Depth::Depth(Depth::depthmode::off);
-	//Rasterizer::Cull(Rasterizer::cullmode::off);
+	Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
+	Depth::Depth(Depth::depthmode::off);
+	Rasterizer::Cull(Rasterizer::cullmode::off);
 
-	///*InputAssembler::IA(InputAssembler::topology::triList);
-	//Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
-	//Textures::RenderTarget(0, 0);*/
+	/*InputAssembler::IA(InputAssembler::topology::triList);
+	Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
+	Textures::RenderTarget(0, 0);*/
 
-	//Shaders::vShader(10);
-	//Shaders::pShader(10);
-	//context->Draw(6, 0);
+	Shaders::vShader(10);
+	Shaders::pShader(10);
+	context->Draw(6, 0);
 
-	////Draw::OutputRenderTextures();
-	////Draw::NullDrawer(1, 1);
+	/*Shaders::pShader(100);
+	Draw::OutputRenderTextures();
+	context->Draw(6, 0);*/
 	//--------------------------------
 
 	Draw::Present();

@@ -32,22 +32,25 @@ cbuffer objParams : register(b0)
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
+    float2 uv : TEXCOORD0;
+    uint   starID : COLOR0;
+    float4 worldpos : POSITION1;
 };
 
 
-VS_OUTPUT VS(uint vID : SV_VertexID)
+VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 {
     VS_OUTPUT output;
 
     const int arcSteps = 4;
     float angleStep = PI / (arcSteps - 1);
     const int vertsPerRoundedRect = (arcSteps - 1) * 3 * 2 + 6;
-    uint rectIndex = vID / vertsPerRoundedRect;
+    //uint rectIndex = vID / vertsPerRoundedRect;
     uint localV = vID % vertsPerRoundedRect;
     float2 arcA[arcSteps];
     float2 arcB[arcSteps];
-    float2 A = gConst[rectIndex * 2 + 0].xy;
-    float2 B = gConst[rectIndex * 2 + 1].xy;
+    float2 A = gConst[iID * 2 + 0].xy;
+    float2 B = gConst[iID * 2 + 1].xy;
     float r = 1.3f;
     float2 vec = B - A;
     float2 dir = normalize(vec);

@@ -2,20 +2,14 @@
 point3d flyRightDirection = point3d(1, 0, 0);
 point3d flyUpDirection = point3d(0, 1, 0);
 
-
-//point3d heroPosition = { 0, 0, 0 };
-float currentFlySpeed = 0.0f;
-const float maxFlySpeed = 0.1f;
-const float flyAcceleration = 0.01f;
-const float flyDeceleration = 0.0002f;
-const float boostFlySpeed = 0.9f;
+float currentFlySpeed = 10.0f;
+float boostingFlySpeed;
+const float maxFlySpeed = 15.f;
 const float MOUSE_SENSITIVITY = 0.002f;
-
 const float CURSOR_IGNORE_ZONE = 0.05f;
 const float MAX_CURSOR_DEVIATION = 0.3f;
 const float SENSIVITY = 0.25f;
 const float CURSOR_ZONE_DELTA = MAX_CURSOR_DEVIATION - CURSOR_IGNORE_ZONE;
-
 
 void getPerpendicularDirections()
 {
@@ -29,39 +23,57 @@ void getPerpendicularDirections()
     flyUpDirection = (flyRightDirection.cross(flyDirection)).normalized();
 }
 
-void updateFlyDirection() { // ��������� ����������
-    flyDirection = { 0, 0, 0 };
+void updateFlyDirection() 
+{ // ��������� ���������� 
+    if (currentFlySpeed > maxFlySpeed) 
+    {
+        return;
+    }
+    point3d Direction = { 0, 0, 0 };
 
     if (GetAsyncKeyState('W') & 0x8000) {
         // ��������� ������ ����������� ������ (��� ������������)
-        flyDirection.x += XMVectorGetX(Hero::state.Forwardbuf) * 10.0f;
-        flyDirection.y += XMVectorGetY(Hero::state.Forwardbuf) * 10.0f;
-        flyDirection.z += XMVectorGetZ(Hero::state.Forwardbuf) * 10.0f;
+        Direction.x += XMVectorGetX(Hero::state.Forwardbuf) * 10.0f;
+        Direction.y += XMVectorGetY(Hero::state.Forwardbuf) * 10.0f;
+        Direction.z += XMVectorGetZ(Hero::state.Forwardbuf) * 10.0f;
     }
     if (GetAsyncKeyState('S') & 0x8000) {
         // �������� ����� - �������� �����������
-        flyDirection.x -= XMVectorGetX(Hero::state.Forwardbuf) * 10.0f;
-        flyDirection.y -= XMVectorGetY(Hero::state.Forwardbuf) * 10.0f;
-        flyDirection.z -= XMVectorGetZ(Hero::state.Forwardbuf) * 10.0f;
+        Direction.x -= XMVectorGetX(Hero::state.Forwardbuf) * 10.0f;
+        Direction.y -= XMVectorGetY(Hero::state.Forwardbuf) * 10.0f;
+        Direction.z -= XMVectorGetZ(Hero::state.Forwardbuf) * 10.0f;
     }
     if (GetAsyncKeyState('A') & 0x8000) {
         // ��������� ������ ����������� ������ (��� ������������)
-        flyDirection.x -= XMVectorGetX(Hero::state.Right) * 5.f;
-        flyDirection.y -= XMVectorGetY(Hero::state.Right) * 5.f;
-        flyDirection.z -= XMVectorGetZ(Hero::state.Right) * 5.f;
+        Direction.x -= XMVectorGetX(Hero::state.Right) * 5.f;
+        Direction.y -= XMVectorGetY(Hero::state.Right) * 5.f;
+        Direction.z -= XMVectorGetZ(Hero::state.Right) * 5.f;
     }
     if (GetAsyncKeyState('D') & 0x8000) {
         // �������� ����� - �������� �����������
-        flyDirection.x += XMVectorGetX(Hero::state.Right) * 5.f;
-        flyDirection.y += XMVectorGetY(Hero::state.Right) * 5.f;
-        flyDirection.z += XMVectorGetZ(Hero::state.Right) * 5.f;
+        Direction.x += XMVectorGetX(Hero::state.Right) * 5.f;
+        Direction.y += XMVectorGetY(Hero::state.Right) * 5.f;
+        Direction.z += XMVectorGetZ(Hero::state.Right) * 5.f;
+    }
+    if (GetAsyncKeyState(VK_SPACE) & 0x8000) {
+
+        Direction.x += XMVectorGetX(Hero::state.Up) * 5.f;
+        Direction.y += XMVectorGetY(Hero::state.Up) * 5.f;
+        Direction.z += XMVectorGetZ(Hero::state.Up) * 5.f;
+    }
+    if (GetAsyncKeyState(VK_CONTROL) & 0x8000) {
+
+        Direction.x -= XMVectorGetX(Hero::state.Up) * 5.f;
+        Direction.y -= XMVectorGetY(Hero::state.Up) * 5.f;
+        Direction.z -= XMVectorGetZ(Hero::state.Up) * 5.f;
     }
 
-    if (flyDirection.magnitude() > 0)
+    if (Direction.magnitude() > 0)
     {
-        flyDirection = flyDirection.normalized();
+        Direction = Direction.normalized();
         getPerpendicularDirections();
     }
+    flyDirection = flyDirection.lerp(Direction, 0.1f);
 
     float dPitch = 0.0f, dYaw = 0.0f, dRoll = 0.0f;
 
@@ -120,51 +132,115 @@ void updateFlyDirection() { // ��������� �������
     else {
         Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
     }
+    
 }
-// Рабочая зона Лехи, если что-то поменяли, то оставьте коммент на строке с изменением (а прерыдущий код закомменьте), СПАСИБО!!!
-void updateFlySpeed(float deltaTime) {
-    bool isMoving = (flyDirection.magnitude() != 0);
 
+int acc = 0; 
+bool wasShiftPressed = false;
+float speed;
+float localTime;
+float localDeltaTime;
+
+void updateFlySpeed(float deltaTime)
+{ 
+    deltaTime /= 1000;
     bool isBoosting = (GetAsyncKeyState(VK_SHIFT) & 0x8000);
-    float targetSpeed = 5.0f; // isBoosting ? boostFlySpeed : maxFlySpeed;
+    speed = max(speed + acc * deltaTime, 0);
 
-    if (!isBoosting)
+    if (!isBoosting && !wasShiftPressed)
     {
-        if (isMoving)
-        {
-            currentFlySpeed += flyAcceleration * deltaTime;
-
-            if (currentFlySpeed > targetSpeed)
-            {
-                currentFlySpeed = targetSpeed;
-            }
-        }
-        else
-        {
-            currentFlySpeed -= flyDeceleration * deltaTime;
-            if (currentFlySpeed < 0)
-            {
-                currentFlySpeed = 0;
-            }
-        }
+        currentFlySpeed = max(currentFlySpeed + acc * deltaTime, maxFlySpeed);
     }
-    else
+
+    if (isBoosting && !wasShiftPressed)
     {
+        wasShiftPressed = true;
+        acc = 40; //тут должна быть переменная зависящая от фпс и времени
+        localTime = currentTime;
+    }
+
+    if (isBoosting)
+    {
+        currentFlySpeed = max(currentFlySpeed * 0.9,0);
+    }
+
+    if (!isBoosting && wasShiftPressed)
+    {
+        localDeltaTime = currentTime - localTime;
+        wasShiftPressed = false;
+        boostingFlySpeed = 10; //тут должна быть переменная зависящая от времени зажатия шифта
+        currentFlySpeed = boostingFlySpeed + speed;
+        acc = -40;//тут должна быть переменная зависящая от фпс и времени
+     
+    }
+    
+    
+
+    
+
+    //if (!isBoosting)
+    //{
+    //    //currentFlySpeed = min(currentFlySpeed * 1.5, boostFlySpeed);
+
+    //    if (isMoving)
+    //    {
+
+    //        currentFlySpeed = min(currentFlySpeed*1.05, maxFlySpeed);
+
+    //    }
+    //    else
+    //    {
+    //        currentFlySpeed = max(currentFlySpeed*0.8, 0);
+    //        
+    //    }
+
+    //    if (wasShiftPressed)
+    //    {
+    //        currentFlySpeed = Hero::state.timeShiftPressed;
+    //        wasShiftPressed = false;
+    //        localTime = currentTime;
+    //        Hero::state.timeShiftPressed = 0;
+
+    //    }
+    //}
+    //else
+    //{
+    //    Hero::state.timeShiftPressed += 3;
+    //    wasShiftPressed = true;
+    //    currentFlySpeed = 0;
+    //}
+
+    /*if (!isBoosting && wasShiftPressed)
+    {
+        currentFlySpeed = Hero::state.timeShiftPressed;
+        wasShiftPressed = false;
+        localTime = currentTime;
+        Hero::state.timeShiftPressed = 0;
+        
+    }*/
+}
+
+
+void updatePlayerPosition(float deltaTime) 
+{
+    if (currentFlySpeed > 0)
+    {
+        // 1. Создаем вектор направления из flyDirection
+        XMVECTOR moveDir = XMVectorSet(flyDirection.x, flyDirection.y, flyDirection.z, 0.0f);
+
+        // 2. Рассчитываем вектор смещения (без дополнительного вращения!)
+        XMVECTOR displacement = XMVectorScale(moveDir, currentFlySpeed * deltaTime);
+
+        // 3. Обновляем позицию героя
+            Hero::state.position = XMVectorAdd(Hero::state.position, displacement);
+
+        // 4. Обновляем матрицу мира
+        XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(Hero::state.currentRotation);
+            Hero::state.worldMatrix = rotationMatrix * XMMatrixTranslationFromVector(Hero::state.position);
+
+        // 5. Обновляем constellationOffset
+            Hero::state.constellationOffset = XMMatrixTranslationFromVector(Hero::state.position);
 
     }
 }
 
-void updatePlayerPosition(float deltaTime) {// ���������� ������� ��
-    if (currentFlySpeed > 0) {
-        // Обновляем Hero::state.constellationOffset
-        Hero::state.constellationOffset = Hero::state.constellationOffset *
-            XMMatrixTranslation(
-                flyDirection.x * currentFlySpeed * deltaTime,
-                flyDirection.y * currentFlySpeed * deltaTime,
-                flyDirection.z * currentFlySpeed * deltaTime
-            );
-
-        // Копируем в Camera::state
-        Camera::state.constellationOffset = Hero::state.constellationOffset;
-    }
-}

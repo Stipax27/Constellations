@@ -152,8 +152,8 @@ namespace Textures
 	enum tType { flat, cube };
 	
 
-	DXGI_FORMAT dxTFormat[4] = { DXGI_FORMAT_R8G8B8A8_UNORM ,DXGI_FORMAT_R8G8B8A8_SNORM ,DXGI_FORMAT_R16G16B16A16_FLOAT ,DXGI_FORMAT_R32G32B32A32_FLOAT };
-	enum tFormat { u8, s8, s16, s32 };
+	DXGI_FORMAT dxTFormat[] = { DXGI_FORMAT_R8G8B8A8_UNORM ,DXGI_FORMAT_R8G8B8A8_SNORM ,DXGI_FORMAT_R16G16B16A16_FLOAT ,DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R8_SNORM };
+	enum tFormat { u8, s8, s16, s32, r8 };
 	D3D11_TEXTURE2D_DESC tdesc;
 	D3D11_SHADER_RESOURCE_VIEW_DESC svDesc;
 	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
@@ -181,7 +181,7 @@ namespace Textures
 
 	textureDesc Texture[max_tex];
 
-	byte currentRT = 0;
+	int currentRT = 0;
 
 	void CreateTex(int i)
 	{
@@ -382,7 +382,7 @@ namespace Textures
 
 	void RenderTarget(int target, unsigned int level = 0)
 	{
-		currentRT = (int)target;
+		currentRT = target;
 
 		auto depthStencil = Texture[(int)target].depth ? Texture[(int)target].DepthStencilView[0] : 0;
 
@@ -405,7 +405,7 @@ namespace Textures
 namespace Shaders {
 
 	typedef struct {
-		ID3D11VertexShader* pShader;
+		ID3D11VertexShader* vShader;
 		ID3DBlob* pBlob;
 	} VertexShader;
 
@@ -414,8 +414,14 @@ namespace Shaders {
 		ID3DBlob* pBlob;
 	} PixelShader;
 
+	typedef struct {
+		ID3D11GeometryShader* gShader;
+		ID3DBlob* pBlob;
+	} GeometryShader;
+
 	VertexShader VS[255];
 	PixelShader PS[255];
+	GeometryShader GS[255];
 
 	ID3DBlob* pErrorBlob;
 
@@ -460,9 +466,8 @@ namespace Shaders {
 
 		if (hr == S_OK)
 		{
-			hr = device->CreateVertexShader(VS[i].pBlob->GetBufferPointer(), VS[i].pBlob->GetBufferSize(), NULL, &VS[i].pShader);
+			hr = device->CreateVertexShader(VS[i].pBlob->GetBufferPointer(), VS[i].pBlob->GetBufferSize(), NULL, &VS[i].vShader);
 		}
-
 	}
 
 	void CreatePS(int i, LPCWSTR name)
@@ -476,59 +481,87 @@ namespace Shaders {
 		{
 			hr = device->CreatePixelShader(PS[i].pBlob->GetBufferPointer(), PS[i].pBlob->GetBufferSize(), NULL, &PS[i].pShader);
 		}
+	}
 
+	void CreateGS(int i, LPCWSTR name)
+	{
+		HRESULT hr;
+
+		hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "GS", "gs_4_1", NULL, NULL, &GS[i].pBlob, &pErrorBlob);
+		CompilerLog(name, hr, "geometry shader compiled: ");
+
+		if (hr == S_OK)
+		{
+			hr = device->CreateGeometryShader(GS[i].pBlob->GetBufferPointer(), GS[i].pBlob->GetBufferSize(), NULL, &GS[i].gShader);
+		}
 	}
 
 	void Init()
 	{
-		CreateVS(0, nameToPatchLPCWSTR("..\\dx11minimal\\VS.shader"));
-		CreatePS(0, nameToPatchLPCWSTR("..\\dx11minimal\\PS.shader"));
+		CreateVS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VS.shader"));
+		CreatePS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PS.shader"));
+		//CreateGS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Static_GS.shader"));
 
-		CreateVS(1, nameToPatchLPCWSTR("..\\dx11minimal\\VSS.shader"));
-		CreatePS(1, nameToPatchLPCWSTR("..\\dx11minimal\\PSS.shader"));
+		CreateVS(1, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VSS.shader"));
+		CreatePS(1, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PSS.shader"));
 
-		CreateVS(2, nameToPatchLPCWSTR("..\\dx11minimal\\VSFS.shader"));
-		CreatePS(2, nameToPatchLPCWSTR("..\\dx11minimal\\PSFS.shader"));
+		CreateVS(2, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VSFS.shader"));
+		CreatePS(2, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PSFS.shader"));
 
-		CreateVS(3, nameToPatchLPCWSTR("..\\dx11minimal\\SpaceStars_VS.shader"));
-		CreatePS(3, nameToPatchLPCWSTR("..\\dx11minimal\\SpaceStars_PS.shader"));
+		CreateVS(3, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SpaceStars_VS.shader"));
+		CreatePS(3, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SpaceStars_PS.shader"));
 
-		CreateVS(4, nameToPatchLPCWSTR("..\\dx11minimal\\StarLink_VS.shader"));
-		CreatePS(4, nameToPatchLPCWSTR("..\\dx11minimal\\StarLink_PS.shader"));
+		CreateVS(4, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarLink_VS.shader"));
+		CreatePS(4, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarLink_PS.shader"));
 
-		CreateVS(5, nameToPatchLPCWSTR("..\\dx11minimal\\GalaxyFog_VS.shader"));
-		CreatePS(5, nameToPatchLPCWSTR("..\\dx11minimal\\GalaxyFog_PS.shader"));
+		CreateVS(5, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\GalaxyFog_VS.shader"));
+		CreatePS(5, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\GalaxyFog_PS.shader"));
 
-		CreateVS(6, nameToPatchLPCWSTR("..\\dx11minimal\\Cursor_VS.shader"));
-		CreatePS(6, nameToPatchLPCWSTR("..\\dx11minimal\\Cursor_PS.shader"));
+		CreateVS(6, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Cursor_VS.shader"));
+		CreatePS(6, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Cursor_PS.shader"));
 
-		CreateVS(7, nameToPatchLPCWSTR("..\\dx11minimal\\AriesNebula_VS.shader"));
-		CreatePS(7, nameToPatchLPCWSTR("..\\dx11minimal\\AriesNebula_PS.shader"));
+		CreateVS(7, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\AriesNebula_VS.shader"));
+		CreatePS(7, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\AriesNebula_PS.shader"));
+		CreateGS(7, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\AriesNebula_GS.shader"));
 
-		CreateVS(8, nameToPatchLPCWSTR("..\\dx11minimal\\SpeedParticles_VS.shader"));
-		CreatePS(8, nameToPatchLPCWSTR("..\\dx11minimal\\SpeedParticles_PS.shader"));
+		CreateVS(8, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SpeedParticles_VS.shader"));
+		CreatePS(8, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SpeedParticles_PS.shader"));
 
-		CreateVS(9, nameToPatchLPCWSTR("..\\dx11minimal\\DotText_VS.shader"));
-		CreatePS(9, nameToPatchLPCWSTR("..\\dx11minimal\\DotText_PS.shader"));
+		CreateVS(9, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\DotText_VS.shader"));
+		CreatePS(9, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\DotText_PS.shader"));
 
-		CreateVS(10, nameToPatchLPCWSTR("..\\dx11minimal\\PP_VS.shader"));
-		CreatePS(10, nameToPatchLPCWSTR("..\\dx11minimal\\PP_PS.shader"));
+		CreateVS(10, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PP_VS.shader"));
+		CreatePS(10, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PP_PS.shader"));
 
-		CreateVS(11, nameToPatchLPCWSTR("..\\dx11minimal\\Cross_VS.shader"));
-		CreatePS(11, nameToPatchLPCWSTR("..\\dx11minimal\\Cross_PS.shader"));
+		CreateVS(11, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Cross_VS.shader"));
+		CreatePS(11, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Cross_PS.shader"));
 
-		CreateVS(12, nameToPatchLPCWSTR("..\\dx11minimal\\UiParticle_VS.shader"));
-		CreatePS(12, nameToPatchLPCWSTR("..\\dx11minimal\\UiParticle_PS.shader"));
+		CreateVS(12, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\UiParticle_VS.shader"));
+		CreatePS(12, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\UiParticle_PS.shader"));
+
+		//-----------------------------------------------
+
+		CreatePS(100, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Lensing_PS.shader"));
+
+		//-----------------------------------------------
+
+		CreatePS(200, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PerlinNoise.shader"));
+		CreatePS(201, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VoronoiNoise.shader"));
 	}
 
 	void vShader(unsigned int n)
 	{
-		context->VSSetShader(VS[n].pShader, NULL, 0);
+		context->VSSetShader(VS[n].vShader, NULL, 0);
 	}
 
 	void pShader(unsigned int n)
 	{
 		context->PSSetShader(PS[n].pShader, NULL, 0);
+	}
+
+	void gShader(unsigned int n)
+	{
+		context->GSSetShader(GS[n].gShader, NULL, 0);
 	}
 
 }
@@ -859,7 +892,7 @@ void InitD2D(HWND hwnd)
 namespace Device
 {
 
-#define DirectXDebugMode false
+#define DirectXDebugMode true
 
 	D3D_DRIVER_TYPE	driverType = D3D_DRIVER_TYPE_NULL;
 
@@ -946,9 +979,14 @@ void Dx11Init()
 	//main RT
 	Textures::Create(0, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), false, true);
 	//rt1
-	Textures::Create(1, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), false, true);
+	Textures::Create(1, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
 	//rt2
-	Textures::Create(2, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), false, true);
+	Textures::Create(2, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
+
+	//perlin noise rt
+	Textures::Create(3, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
+	//voronoi noise rt
+	Textures::Create(4, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
 }
 
 
@@ -1039,21 +1077,73 @@ namespace Hero
 
 	struct State
 	{
+		float timeShiftPressed;
 		XMVECTOR relativeMovement = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR currentRotation = XMQuaternionIdentity();
-		XMVECTOR Forward = XMVectorSet(0, 0, 1, 0);
 		XMVECTOR Forwardbuf = XMVectorSet(0, 0, 1, 0);
 		XMVECTOR defaultUp = XMVectorSet(0, -1, 0, 0);
 		XMVECTOR Right = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR at = XMVectorSet(0, 0, 0, 0);
 		XMVECTOR Up = XMVector3Rotate(defaultUp, currentRotation);
-		XMVECTOR heroPosition;
 		XMMATRIX constellationOffset = XMMatrixTranslation(0, 0, 0);
+		XMVECTOR position = XMVectorSet(0, 0, 0, 0);
+		XMMATRIX worldMatrix = XMMatrixIdentity();
 
 		
-		
+		float attackRotationProgress = 0.0f;
+		bool isAttackRotating = false;
+		DWORD attackStartTime = 0;
+
 	} static state;
 
+
+	void UpdateAttackRotation(float deltaTime)
+	{
+		if (state.isAttackRotating)
+		{
+			float attackDuration = 10.f; // Длительность анимации в секундах
+			state.attackRotationProgress = min(1.0f, (currentTime - state.attackStartTime) / (attackDuration * 1000));
+
+			// Вращение на 90 градусов вокруг оси X (вниз)
+			float rotationAngle = XMConvertToRadians(90.0f * state.attackRotationProgress);
+			XMVECTOR attackRotation = XMQuaternionRotationAxis(XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), rotationAngle);
+
+			// Комбинируем с текущим вращением
+			state.currentRotation = XMQuaternionMultiply(state.currentRotation, attackRotation);
+
+			// Обновляем матрицы
+			state.Up = XMVector3Rotate(state.defaultUp, state.currentRotation);
+			state.constellationOffset = XMMatrixRotationQuaternion(state.currentRotation) *
+				XMMatrixTranslationFromVector(state.position);
+			state.worldMatrix = state.constellationOffset;
+
+			// Завершение анимации
+			if (state.attackRotationProgress >= 1.0f)
+			{
+				state.isAttackRotating = false;
+			}
+		}
+		else if (state.attackRotationProgress > 0.0f)
+		{
+			// Плавный возврат в исходное положение
+			const float returnSpeed = 2.0f; // Скорость возврата
+			state.attackRotationProgress = max(0.0f, state.attackRotationProgress - returnSpeed * deltaTime);
+
+			// Вращение обратно
+			float returnAngle = XMConvertToRadians(90.0f * state.attackRotationProgress);
+			XMVECTOR returnRotation = XMQuaternionRotationAxis(XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), returnAngle);
+
+			// Применяем вращение
+			XMVECTOR baseRotation = XMQuaternionIdentity(); // Исходная ориентация
+			state.currentRotation = XMQuaternionMultiply(baseRotation, returnRotation);
+
+			// Обновляем матрицы
+			state.Up = XMVector3Rotate(state.defaultUp, state.currentRotation);
+			state.constellationOffset = XMMatrixRotationQuaternion(state.currentRotation) *
+				XMMatrixTranslationFromVector(state.position);
+			state.worldMatrix = state.constellationOffset;
+		}
+	}
 	
 	
 
@@ -1069,13 +1159,12 @@ namespace Camera
 		float minDist = 500.0f;
 		float maxDist = 1000.0f;
 		float fovAngle = 60.0f;
-		float verticalOffset = 500.0f;  
+		float verticalOffset = 180.0f;  
 		float horizontalOffset = 0.0f; 
-		float distanceOffset = 500.0f;
+		float distanceOffset = 600.0f;
 		XMVECTOR relativeMovement = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR currentRotation = XMQuaternionIdentity();
 		XMVECTOR Forward = XMVectorSet(0, 0, 1, 0);
-		//XMVECTOR Forwardbuf = XMVectorSet(0, 0, 1, 0);//аналог форварда локальный тут
 		XMVECTOR defaultUp = XMVectorSet(0, -1, 0, 0);
 		XMVECTOR Right = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR at = XMVectorSet(0, 0, 0, 0);
@@ -1088,50 +1177,44 @@ namespace Camera
 	
 	void UpdateCameraPosition()
 	{
-		// Получаем текущую позицию героя
-		Hero::state.heroPosition = XMVectorSet(
-			Camera::state.constellationOffset.r[3].m128_f32[0],
-			Camera::state.constellationOffset.r[3].m128_f32[1],
-			Camera::state.constellationOffset.r[3].m128_f32[2],
-			0.0f
-		);
-
 		
-		XMVECTOR heroForward = Hero::state.Forwardbuf;
-		XMVECTOR heroUp = Hero::state.Up;
-		XMVECTOR heroRight = Hero::state.Right;
+		// 1. Получаем и нормализуем актуальные векторы ориентации героя
+		XMVECTOR heroForward = XMVector3Normalize(Hero::state.Forwardbuf);
+		XMVECTOR heroUp = XMVector3Normalize(Hero::state.Up);
+		XMVECTOR heroRight = XMVector3Normalize(Hero::state.Right);
 
-		
-		XMVECTOR cameraPosition = Hero::state.heroPosition
-			- (heroForward * state.distanceOffset)
-			+ (heroUp * state.verticalOffset)
-			+ (heroRight * state.horizontalOffset);
+		// 2. Вычисляем позицию камеры относительно героя
+		XMVECTOR cameraOffset =
+			(-heroForward * state.distanceOffset) +  // Основное смещение назад
+			(heroUp * state.verticalOffset) +        // Вертикальное смещение
+			(heroRight * state.horizontalOffset);    // Горизонтальное смещение
 
-		
-		XMVECTOR cameraTarget = Hero::state.heroPosition + (heroUp * state.verticalOffset * 0.5f);
+		// 3. Вычисляем окончательную позицию камеры
+		XMVECTOR cameraPosition = Hero::state.position + cameraOffset;
 
-		
+		// 4. Вычисляем точку фокусировки (впереди героя)
+		XMVECTOR cameraTarget = cameraPosition + (heroForward * 15.0f);
+
+		// 5. Обновляем состояние камеры
 		state.Eye = cameraPosition;
 		state.at = cameraTarget;
-		state.Up = heroUp; 
+		state.Up = heroUp;
 
-		
+		// 6. Пересчитываем векторы камеры для корректной работы
 		state.Forward = XMVector3Normalize(cameraTarget - cameraPosition);
 		state.Right = XMVector3Normalize(XMVector3Cross(heroUp, state.Forward));
+
+		// 7. Обновляем матрицу вида
+		ConstBuf::camera.view[0] = XMMatrixTranspose(
+			XMMatrixLookAtLH(state.Eye, state.at, state.Up)
+		);
 	}
 
 	void Camera() //обновление позиции камеры после обновления позиции созвездия. В Navigation.h, Loop.h, Mouse.h(navigationByMouse 2 раза) и тут тоже есть вызовы.
 	{
 		UpdateCameraPosition();
 
-		
-		ConstBuf::camera.view[0] = XMMatrixTranspose(XMMatrixLookAtLH(
-			state.Eye,
-			state.at,
-			state.Up
-		));
-
-		
+		// Обновляем матрицу проекции (если нужно)
 		ConstBuf::camera.proj[0] = XMMatrixTranspose(XMMatrixPerspectiveFovLH(
 			DegreesToRadians(state.fovAngle),
 			iaspect,

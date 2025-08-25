@@ -154,92 +154,95 @@
     <ClInclude Include="PhysicLoop.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Point3d.h" />
-    <None Include="AriesNebula2_PS.shader">
+    <None Include="Shaders\AriesNebula_GS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="AriesNebula2_VS.shader">
+    <None Include="Shaders\AriesNebula_PS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="AriesNebula_PS.shader">
+    <None Include="Shaders\AriesNebula_VS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="AriesNebula_VS.shader">
+    <None Include="Shaders\Cross_PS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="Cross_PS.shader">
+    <None Include="Shaders\Cross_VS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="Cross_VS.shader">
+    <None Include="Shaders\Cursor_PS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="Cursor_PS.shader">
+    <None Include="Shaders\Cursor_VS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="Cursor_VS.shader">
+    <None Include="Shaders\DotText_PS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="DotText_PS.shader">
+    <None Include="Shaders\DotText_VS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="DotText_VS.shader">
+    <None Include="Shaders\GalaxyFog_PS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="GalaxyFog_PS.shader">
+    <None Include="Shaders\GalaxyFog_VS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="GalaxyFog_VS.shader">
+    <None Include="Shaders\Lensing_PS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="Lensing_PS.shader">
+    <None Include="Shaders\PerlinNoise.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="PP_PS.shader">
+    <None Include="Shaders\PP_PS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="PP_VS.shader">
+    <None Include="Shaders\PP_VS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="PSS.shader">
+    <None Include="Shaders\PSS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="PSFS.shader">
+    <None Include="Shaders\PSFS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="SpeedParticles_PS.shader">
+    <None Include="Shaders\SpeedParticles_PS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="SpeedParticles_VS.shader">
+    <None Include="Shaders\SpeedParticles_VS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="StarLink_VS.shader">
+    <None Include="Shaders\StarLink_VS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="SpaceStars_PS.shader">
+    <None Include="Shaders\SpaceStars_PS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="UiParticle_PS.shader">
+    <None Include="Shaders\UiParticle_PS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="UiParticle_VS.shader">
+    <None Include="Shaders\UiParticle_VS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="VSFS.shader">
+    <None Include="Shaders\VSFS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
     <ClInclude Include="RenderObject.h" />
     <ClInclude Include="StatusGame.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="utils.h" />
-    <None Include="VSS.shader">
+    <None Include="Shaders\VSS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
     <ClInclude Include="Weapon.h" />
-    <None Include="PS.shader">
+    <None Include="Shaders\PS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
-    <None Include="VS.shader">
+    <None Include="Shaders\VS.shader">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="Shaders\VoronoiNoise.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
   </ItemGroup>
@@ -251,18 +254,18 @@
     <ResourceCompile Include="dx11minimal.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="dx11minimal.ico" />
+    <Image Include="Resourses\Images\dx11minimal.ico" />
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="StarLink_PS.shader">
+    <FxCompile Include="Shaders\StarLink_PS.shader">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="SpaceStars_VS.shader">
+    <FxCompile Include="Shaders\SpaceStars_VS.shader">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

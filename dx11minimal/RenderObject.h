@@ -5,6 +5,7 @@
 struct RenderObject {
 	int vs_id;
 	int ps_id;
+	int gs_id;
 	float renderDistance;
 	float lodDistance;
 	int lodCount;
@@ -26,6 +27,7 @@ struct RenderObject {
 		blendmode(Blendmode), blendop(Blendop), pos(Pos)
 
 	{
+		gs_id = 0;
 		lodDistanceStep = min(renderDistance, lodDistance) / LodCount;
 	}
 
