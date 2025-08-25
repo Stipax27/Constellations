@@ -39,11 +39,10 @@ void GS(triangle VS_OUTPUT input[3], inout TriangleStream< VS_OUTPUT > output)
 		// if ((i + 1) % 3 == 0) {
 		// 	output.RestartStrip();
 		// }
-
 	//}
 
 	VS_OUTPUT inElement = input[0];
-	inElement.pos += float4(100, 0, 0, 0);
+	//inElement.pos += float4(100, 0, 0, 0);
 
 	output.Append( inElement );
 	output.Append( input[1] );
