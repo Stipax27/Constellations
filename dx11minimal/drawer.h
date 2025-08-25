@@ -1296,7 +1296,7 @@ namespace drawer
             drawCurrentElement();
 
 
-           drawRect(2.0f, 2.0f); // прямоугольник шириной 200px и высотой 100px по центру экрана
+           drawRect(20.0f, 20.0f, 1000.0f, 800.0f); // прямоугольник шириной 200px и высотой 100px по центру экрана, на пикселях 1000 по абсциссе и 800 по ординате
 
            drawString("Weapon selection:\nButton 1 - Sword \nButton 2 - Shield \nButton 3 - Bow ", (1700. / 2560) * window.width, (1100. / 1440) * window.height, .7f, false);
            drawString("Rewind time:\nbutton - R", (500. / 2560) * window.width, (1250. / 1440) * window.height, .7f, false);

@@ -1,6 +1,6 @@
 cbuffer global : register(b5)
 {
-    float4 gConst[2]; // gConst[0] = (width, height, 0, 0), gConst[1] = (screenWidth, screenHeight, 0, 0)
+    float4 gConst[3]; // gConst[0] = (width, height, 0, 0), gConst[1] = (screenWidth, screenHeight, 0, 0), gConst[2] = (x, y, 0, 0)
 };
 
 struct VS_OUTPUT
@@ -20,10 +20,11 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     float2 size = gConst[0].xy;
     float2 screenSize = gConst[1].xy;
+    float2 pos = gConst[2].xy;
 
     // Центр экрана
-    float2 basePos = (screenSize - size) * 0.5f;
-
+    float2 basePos = pos - size;
+   
     float2 screenPos = basePos + quadPos[vID] * size;
 
     // переводим в NDC
