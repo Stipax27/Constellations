@@ -18,8 +18,8 @@ float2 quadPos[6] = {
 };
 float size = 0.02;
 
-[maxvertexcount(6)]
-void GS(triangle VS_OUTPUT input[3], inout TriangleStream< VS_OUTPUT > output)
+[maxvertexcount(3)]
+void GS(point VS_OUTPUT input[1], inout TriangleStream< VS_OUTPUT > output)
 {
 	//VS_OUTPUT inElement = input[0];
 	//float4 pos = inElement.pos;
@@ -41,11 +41,18 @@ void GS(triangle VS_OUTPUT input[3], inout TriangleStream< VS_OUTPUT > output)
 		// }
 	//}
 
+	//for (uint i = 0; i < 3; i++) {
 	VS_OUTPUT inElement = input[0];
-	//inElement.pos += float4(100, 0, 0, 0);
+	VS_OUTPUT inElement1 = input[0];
+	VS_OUTPUT inElement2 = input[0];
+
+	inElement1.pos += float4(100, 0, 0, 0);
+	inElement2.pos += float4(0, 100, 0, 0);
 
 	output.Append( inElement );
-	output.Append( input[1] );
-	output.Append( input[2] );
+	output.Append( inElement1 );
+	output.Append( inElement2 );
+
 	output.RestartStrip();
+	//}
 }
