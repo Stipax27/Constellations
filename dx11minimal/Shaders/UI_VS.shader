@@ -22,8 +22,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     float2 screenSize = gConst[1].xy;
     float2 pos = gConst[2].xy;
 
-    // Центр экрана
-    float2 basePos = pos - size;
+    float2 basePos = pos + size;
    
     float2 screenPos = basePos + quadPos[vID] * size;
 

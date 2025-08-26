@@ -1196,6 +1196,7 @@ namespace drawer
         case gameState_::selectEnemy:
         {
             //DrawTEST();
+            drawStaminaBar(energy);
 
 
             Camera::state.mouse = true;
@@ -1254,6 +1255,7 @@ namespace drawer
         case gameState_::Fight:
         {
 
+            drawStaminaBar(energy);
 
 
             if (isBattleActive == false) {
@@ -1369,7 +1371,7 @@ namespace drawer
             Constellation& h = *starSet[currentEnemyID];
             h.Transform = CreateEnemyToWorldMatrix(h);
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-            drawСonstellation(*starSet[currentEnemyID],false, 1000.f, 100.f);
+            drawConstellation(*starSet[currentEnemyID],false, 1000.f, 100.f);
 
             //linksDivider = 15;
             modelTransform = &placeHeroToWorld;
@@ -1511,8 +1513,7 @@ namespace drawer
 
             drawCurrentElement();
 
-
-           drawRect(20.0f, 20.0f, 1000.0f, 800.0f); // прямоугольник шириной 200px и высотой 100px по центру экрана, на пикселях 1000 по абсциссе и 800 по ординате
+           //drawRect(20.0f, 20.0f, 1000.0f, 800.0f); // прямоугольник шириной 200px и высотой 100px по центру экрана, на пикселях 1000 по абсциссе и 800 по ординате
 
            drawString("Weapon selection:\nButton 1 - Sword \nButton 2 - Shield \nButton 3 - Bow ", (1700. / 2560) * window.width, (1100. / 1440) * window.height, .7f, false);
            drawString("Rewind time:\nbutton - R", (500. / 2560) * window.width, (1250. / 1440) * window.height, .7f, false);
