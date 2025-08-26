@@ -625,11 +625,9 @@ namespace drawer
             switch (current_weapon) {
                 case weapon_name::Sword: {
 
-                    Hero::StartMeshRotation();
+                    
 
-                    Hero::state.isAttackRotating = true;
-                    Hero::state.attackStartTime = currentTime;
-                    Hero::state.attackRotationProgress = 0.0f;
+                   
 
                     // Остальной код атаки мечом...
                     for (int i = 0; i < 25; i++) {
@@ -706,7 +704,7 @@ namespace drawer
             //current_weapon = weapon_name::None;
         }
         else {
-            Hero::StopMeshRotation();
+            
 
         }
     }
@@ -1447,13 +1445,16 @@ namespace drawer
             // Безопасный вызов функций атаки
             Constellation& enemy = *starSet[currentEnemyID];
             Constellation& player = *starSet[player_sign];
-
+           
             // Обновление атак
             if (!playerConst.morphing) {
-                HandleMouseClick(heroPosition);
+                HandleMouseClick(heroPosition); // Убрать, если функция не определена
 
-              Hero::UpdateMeshRotation(deltaTime);
-              
+                Hero::StartRotationAnimation(90.0f, 0.0f, 0.0f);  // Поворот на 90 градусов по Y
+                Hero::UpdateRotationAnimation(deltaTime);          // Обновление анимации
+                Hero::UpdateContinuousRotation(deltaTime);
+
+                Camera::UpdateCameraPosition(); // Обновление позиции камеры
             }
             UpdateAttack(deltaTime);
 
