@@ -22,5 +22,6 @@ void drawRect(float width, float height, float x, float y)
 
 void drawStaminaBar(float energy) {
 
-    drawRect(energy / 2, 20.0f, float(window.width) * 0.5f - 200.f, float(window.height) * 0.3f); // прямоугольник шириной 200px и высотой 100px по центру экрана, на пикселях 1000 по абсциссе и 800 по ординате
+    drawRect(energy / 2, 10.0f, (1700. / 2560) * window.width, (1100. / 1440) * window.height - 50.f); // прямоугольник шириной 200px и высотой 100px по центру экрана, на пикселях 1000 по абсциссе и 800 по ординате
+    drawRect(150, 1.0f, (1700. / 2560) * window.width, (1100. / 1440) * window.height - 25.f);
 };
