@@ -13,24 +13,20 @@ struct VS_OUTPUT
 };
 
 [maxvertexcount(3)]
-void GS(triangle VS_OUTPUT input[3], inout TriangleStream< VS_OUTPUT > output)
+void GS(point VS_OUTPUT input[1], inout TriangleStream< VS_OUTPUT > output)
 {
 	float2 quadPos[6] = {
 		float2(-1, -1), float2(1, -1), float2(-1, 1),
 		float2(1, -1), float2(1, 1), float2(-1, 1)
 	};
-	float size = 0.02;
+	float size = 100;
 
 	// for (uint i = 0; i < 3; i++) {
 	// 	VS_OUTPUT inElement = input[0];
-	// 	inElement.pos.xy += quadPos[i];
+	// 	inElement.pos.xy += quadPos[i] * size;
 	// 	output.Append( inElement );
 	// }
 	// output.RestartStrip();
-
-	// input[0].pos += float4(25000, 0, 0, 0);
-	// input[1].pos += float4(25000, 0, 0, 0);
-	// input[2].pos += float4(25000, 0, 0, 0);
 
 	output.Append( input[0] );
 	output.Append( input[1] );
