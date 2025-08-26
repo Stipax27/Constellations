@@ -871,7 +871,7 @@ namespace drawer
     void CreateSpeedParticles()
     {
         DWORD curTime = timer::GetCounter();
-        if (currentFlySpeed > sp_minFlySpeed && flyDirection.magnitude() > 0)
+        if (currentFlySpeed > sp_minFlySpeed && flyDirection.magnitude() > 0.9)
         {
             float speedRatio = currentFlySpeed / maxFlySpeed;
             float sp_emitDelta = 1000 / (sp_rate * speedRatio);
