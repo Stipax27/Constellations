@@ -31,20 +31,9 @@ struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
     float2 uv : TEXCOORD0;
-
+    uint   starID : COLOR0;
+    float4 worldpos : POSITION1;
 };
-
-float3 rotZ(float3 pos, float a)
-{
-    float3x3 m =
-    {
-        cos(a), -sin(a),0,
-        sin(a), cos(a), 0,
-        0, 0, 1
-    };
-    pos = mul(pos, m);
-    return pos;
-}
 
 VS_OUTPUT VS(uint vID : SV_VertexID)
 {
@@ -59,7 +48,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     float4 viewPos = mul(float4(gConst[0].xyz, 1.0f), view[0]);
     float4 projPos = mul(viewPos, proj[0]);
 
-    projPos.xy += quadUV[vID]*float2(aspect.x,1)*4*sz;
+    projPos.xy += quadUV[vID] * float2(aspect.x,1) * 4 * sz;
 
     output.uv = quadUV[vID];
     output.pos = projPos;

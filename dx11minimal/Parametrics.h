@@ -40,7 +40,7 @@ void placeConstToWorld(point3d& p, Constellation& Constellation)
 void placeHeroToWorld(point3d& p, Constellation& Constellation)
 {
     Constellation.scale = 0.13f;
-    ShakingHero(p);
+    //ShakingHero(p);
     p.move(0, 0, 0. / Constellation.scale);
 
     // fightMove();
@@ -188,7 +188,6 @@ void starIntersectUI(point3d& point, Constellation& Constellation, int i)
             {
                 attack_collision = true;
             }
-            //SelectObject(window.context, brush);
         }
         else
         {
@@ -211,7 +210,6 @@ void starIntersectUI(point3d& point, Constellation& Constellation, int i)
                 attack_collision = true;
 
             }
-            //SelectObject(window.context, brush);
         }
         else
         {
@@ -231,7 +229,6 @@ void starIntersectUI(point3d& point, Constellation& Constellation, int i)
             {
                 attack_collision = true;
             }
-            //SelectObject(window.context, brush);
         }
         else
         {

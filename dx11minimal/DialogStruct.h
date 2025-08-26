@@ -38,7 +38,7 @@ void initContentData() {
     narratives.push_back({ "He instinctively tries to perform at least some action, \n as if wanting to wake up from a cold oblivion. \n A pleasant pulsation begins to spread through his being." });
     narratives.push_back({ "A pair of palms slid off his face,\n opening his eyes and allowing him to see the space around him that filled with dim light sources. \n His mind was trying to assess the situation around him,\n creating even more questions that he didn't know the answers to. \n It was if a shadow had enveloped his mind, leaving only fragmented thoughts..." });
     narratives.push_back({ "At this most desperate moment, he suddenly felt someone's powerful presence. \n A bright creature appeared in front of him, starting to resonate with his mind." });
-
+    
     // Основная цепочка диалогов
     Dialog d0("Zenith: \"I can hear the questions in your tiny mind, and I have the answers. \n I am Zenith, the being who rules this world, and You are my creation, which  '\n'I have formed for a specific purpose. '\n' You have appeared in a place beyond your limited understanding. \n The boundless space around you is a canvas on which the world takes shape, and you are just a shell. \n But even such an insignificant creature has a reason to exist...  \nFor example, to fulfill the will of your creator.\"");
 

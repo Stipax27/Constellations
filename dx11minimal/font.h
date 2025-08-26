@@ -1,6 +1,7 @@
 ﻿
 #include <vector>
 #include <wrl/client.h>
+using namespace std;
 
 std::vector<float> letter_01 = { 16409.33f,400.93f,16412.6f,126.78f,16267.9f,223.6f,16385.4f,308.46f };
 std::vector<float> letter_02 = { 16074.25f,398.76f,16074.25f,135.48f,16218.95f,222.51f,16094.92f,298.67f };
@@ -234,9 +235,9 @@ void preprocessFont()
 
 }
 
-float drawLetter(int letter, float x, float y, float scale, bool getSize = false)
+float drawLetter(int letter, float x, float y, float scale, bool getSize = false, bool animated = false, float progress = 0.0f)
 {
-
+    const int arcSteps = 4;
     memset(ConstBuf::global, 0, sizeof(ConstBuf::global));
     if (getSize)
     {
@@ -250,24 +251,46 @@ float drawLetter(int letter, float x, float y, float scale, bool getSize = false
 
     const std::vector<float>* pts = font[letter];
     int nPoints = (int)pts->size() / 2;
+    int instances = nPoints - 1;
 
+    for (int i = 0; i < nPoints - 1; i++)
+    {
+        float px0 = x + pts->at(i * 2) * scale;
+        float py0 = y + pts->at(i * 2 + 1) * scale;
 
-for (int i = 0; i < nPoints - 1; i++)
-{
-    float px0 = x + pts->at(i * 2) * scale;
-    float py0 = y + pts->at(i * 2 + 1) * scale;
+        float px1 = x + pts->at((i + 1) * 2) * scale;
+        float py1 = y + pts->at((i + 1) * 2 + 1) * scale;
 
-    float px1 = x + pts->at((i + 1) * 2) * scale;
-    float py1 = y + pts->at((i + 1) * 2 + 1) * scale;
+        ConstBuf::global[i * 2 + 0] = XMFLOAT4(px0, py0, 0.0f, 1.0f);
+        ConstBuf::global[i * 2 + 1] = XMFLOAT4(px1, py1, 0.0f, 1.0f);
 
-    ConstBuf::global[i * 2 + 0] = XMFLOAT4(px0, py0, 0.0f, 1.0f);
-    ConstBuf::global[i * 2 + 1] = XMFLOAT4(px1, py1, 0.0f, 1.0f);
-}
+        if (animated)
+        {
+            //int segments = max((point3d(px1, py1, 0) - point3d(px0, py0, 0)).magnitude(), 1);
+            int segments = 10;
+            instances += segments;
+            ConstBuf::global[0].z = segments;
+            ConstBuf::global[0].w = progress;
+        }
+    }
 
     ConstBuf::Update(5, ConstBuf::global);
     ConstBuf::ConstToVertex(5);
+    ConstBuf::ConstToPixel(5);
 
-    Draw::NullDrawer(nPoints-1 , 1); 
+    ConstBuf::Update(0, ConstBuf::drawerV);
+    ConstBuf::ConstToVertex(0);
+    ConstBuf::Update(1, ConstBuf::drawerP);
+    ConstBuf::ConstToPixel(1);
+
+    if (animated)
+    {
+        context->DrawInstanced(6, instances, 0, 0);
+    }
+    else
+    {
+        context->DrawInstanced(6 + (arcSteps - 1) * 3, instances, 0, 0);
+    }
 
     return letter_width[letter] * scale;
 }
@@ -280,7 +303,7 @@ void letterProject(point3d& p)
     p.x = x;
     p.y = y;
 }
-point3d drawString(const char* str, float x, float y, float scale, bool centered, bool getSize = false, int count = -1, bool animated = false)
+point3d drawString(const char* str, float x, float y, float scale, bool centered, bool getSize = false, int count = -1, bool animated = false, float progress = 0.0f)
 {
     int shaderID = 0;
     if (animated)
@@ -323,7 +346,7 @@ point3d drawString(const char* str, float x, float y, float scale, bool centered
 
         while (i < letters_count && str[i] != '\n')
         {
-            float sz = drawLetter(str[i] - 32, x - offset, y, scale, getSize) + tracking;
+            float sz = drawLetter(str[i] - 32, x - offset, y, scale, getSize, animated, progress) + tracking;
             x += sz;
             stringWidth += sz;
             i++;
@@ -339,9 +362,97 @@ point3d drawString(const char* str, float x, float y, float scale, bool centered
    // DeleteObject(pen);
 
     return { maxStringWidth ,y - base_y,0 };
-
 }
 
+enum RenderTextState {
+    creating,
+    idle,
+    deleting
+};
+
+struct RenderText
+{
+    const char* str;
+    float x;
+    float y;
+    float scale;
+    bool centered;
+    float progress;
+    RenderTextState state;
+};
+
+vector<RenderText*> renderTextList;
+float textCreateSpeed = 1.5f;
+
+void CreateParticledText(const char* str, float x, float y, float scale, bool centered)
+{
+    RenderText* renderText = new RenderText;
+    renderText->str = str;
+    renderText->x = x;
+    renderText->y = y;
+    renderText->scale = scale;
+    renderText->centered = centered;
+    renderText->progress = 1.0f;
+    renderText->state = RenderTextState::creating;
+
+    renderTextList.push_back(renderText);
+}
+
+void DeleteParticledText(const char* str)
+{
+    for (int i = 0; i < renderTextList.size(); i++)
+    {
+        RenderText* renderText = renderTextList[i];
+        if (*renderText->str == *str)
+        {
+            renderText->state = RenderTextState::deleting;
+            return;
+        }
+    }
+}
+
+void RenderParticledText(float deltaTime)
+{
+    deltaTime /= 1000;
+
+    int i = 0;
+    while (i < renderTextList.size())
+    {
+        RenderText* renderText = renderTextList[i];
+
+        switch (renderText->state)
+        {
+
+        case RenderTextState::creating:
+            renderText->progress = max(renderText->progress - textCreateSpeed * deltaTime * ((1 - renderText->progress) * 0.5f + 0.5f), 0);
+            if (renderText->progress == 0)
+            {
+                renderText->state = RenderTextState::idle;
+            }
+            i++;
+            break;
+
+        case RenderTextState::deleting:
+            renderText->progress = min(renderText->progress + textCreateSpeed * deltaTime * ((1 - renderText->progress) * 0.5f + 0.5f), 1);
+            if (renderText->progress == 1)
+            {
+                renderTextList.erase(renderTextList.begin() + i);
+            }
+            else
+            {
+                i++;
+            }
+            break;
+
+        case RenderTextState::idle:
+            i++;
+            break;
+
+        }
+
+        drawString(renderText->str, renderText->x, renderText->y, renderText->scale, renderText->centered, false, -1, true, renderText->progress);
+    }
+}
 
 struct {
     COLORREF color;

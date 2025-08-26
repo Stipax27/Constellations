@@ -28,9 +28,6 @@
     <Filter Include="Shaders\StarLink">
       <UniqueIdentifier>{805d6cf2-516d-4e6a-8f08-95c845959c4d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders\BackgroundStars">
-      <UniqueIdentifier>{fe668379-b7cd-428f-8864-ae6d68f81cd7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\GalaxyFog">
       <UniqueIdentifier>{e666e124-5f59-4272-9859-7a0554e5ea21}</UniqueIdentifier>
     </Filter>
@@ -54,6 +51,12 @@
     </Filter>
     <Filter Include="Header Files\Render">
       <UniqueIdentifier>{ee3f03ef-3e75-4c94-ab66-a57a1d190bf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Particles">
+      <UniqueIdentifier>{a2bffbc4-a2f9-47bb-95fc-7be21af45ca2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\SpaceStars">
+      <UniqueIdentifier>{fe668379-b7cd-428f-8864-ae6d68f81cd7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -144,14 +147,23 @@
     <ClInclude Include="EnemyAi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GalaxyFog.h">
+    <ClInclude Include="RenderObject.h">
+      <Filter>Header Files\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicLoop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AriesNebula.h">
       <Filter>Header Files\Locations</Filter>
     </ClInclude>
-    <ClInclude Include="RenderObject.h">
-      <Filter>Header Files\Render</Filter>
+    <ClInclude Include="EnemyData.h">
+      <Filter>Header Files\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyDataCon.h">
+      <Filter>Header Files\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyAiUPD.h">
+      <Filter>Header Files\Structures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -168,99 +180,102 @@
     <Image Include="small.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="dx11minimal.ico">
+    <Image Include="Resourses\Images\dx11minimal.ico">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="PS.shader">
+    <None Include="Shaders\PS.shader">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="PSS.shader">
+    <None Include="Shaders\PSS.shader">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="VS.shader">
+    <None Include="Shaders\VS.shader">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="VSS.shader">
+    <None Include="Shaders\VSS.shader">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="PSFS.shader">
+    <None Include="Shaders\PSFS.shader">
       <Filter>Shaders\Starfield</Filter>
     </None>
-    <None Include="VSFS.shader">
+    <None Include="Shaders\VSFS.shader">
       <Filter>Shaders\Starfield</Filter>
     </None>
-    <None Include="StarLink_VS.shader">
+    <None Include="Shaders\StarLink_VS.shader">
       <Filter>Shaders\StarLink</Filter>
     </None>
-    <None Include="BackgroundStars_PS.shader">
-      <Filter>Shaders\BackgroundStars</Filter>
+    <None Include="Shaders\SpaceStars_PS.shader">
+      <Filter>Shaders\SpaceStars</Filter>
     </None>
-    <None Include="GalaxyFog_PS.shader">
+    <None Include="Shaders\GalaxyFog_PS.shader">
       <Filter>Shaders\GalaxyFog</Filter>
     </None>
-    <None Include="GalaxyFog_VS.shader">
+    <None Include="Shaders\GalaxyFog_VS.shader">
       <Filter>Shaders\GalaxyFog</Filter>
     </None>
-    <None Include="Cursor_VS.shader">
+    <None Include="Shaders\Cursor_VS.shader">
       <Filter>Shaders\Cursor</Filter>
     </None>
-    <None Include="Cursor_PS.shader">
+    <None Include="Shaders\Cursor_PS.shader">
       <Filter>Shaders\Cursor</Filter>
     </None>
-    <None Include="AriesNebula_PS.shader">
+    <None Include="Shaders\AriesNebula_PS.shader">
       <Filter>Shaders\Aries</Filter>
     </None>
-    <None Include="AriesNebula_VS.shader">
+    <None Include="Shaders\AriesNebula_VS.shader">
       <Filter>Shaders\Aries</Filter>
     </None>
-    <None Include="AriesNebula2_VS.shader">
-      <Filter>Shaders\Aries</Filter>
-    </None>
-    <None Include="AriesNebula2_PS.shader">
-      <Filter>Shaders\Aries</Filter>
-    </None>
-    <None Include="DotText_PS.shader">
+    <None Include="Shaders\DotText_PS.shader">
       <Filter>Shaders\UI</Filter>
     </None>
-    <None Include="DotText_VS.shader">
+    <None Include="Shaders\DotText_VS.shader">
       <Filter>Shaders\UI</Filter>
     </None>
-    <None Include="PP_VS.shader">
+    <None Include="Shaders\PP_VS.shader">
       <Filter>Shaders\PostProcess</Filter>
     </None>
-    <None Include="Lensing_PS.shader">
+    <None Include="Shaders\Lensing_PS.shader">
       <Filter>Shaders\PostProcess</Filter>
     </None>
-    <None Include="PP_PS.shader">
+    <None Include="Shaders\PP_PS.shader">
       <Filter>Shaders\PostProcess</Filter>
     </None>
-    <None Include="Cross_VS.shader">
+    <None Include="Shaders\Cross_VS.shader">
       <Filter>Shaders\Cursor</Filter>
     </None>
-    <None Include="Cross_PS.shader">
+    <None Include="Shaders\Cross_PS.shader">
       <Filter>Shaders\Cursor</Filter>
     </None>
-    <None Include="UiParticle_VS.shader">
+    <None Include="Shaders\UiParticle_VS.shader">
       <Filter>Shaders\UI</Filter>
     </None>
-    <None Include="UiParticle_PS.shader">
+    <None Include="Shaders\UiParticle_PS.shader">
       <Filter>Shaders\UI</Filter>
     </None>
-    <None Include="Bar_VS.shader">
-      <Filter>Shaders\UI</Filter>
+    <None Include="Shaders\SpeedParticles_VS.shader">
+      <Filter>Shaders\Particles</Filter>
     </None>
-    <None Include="Bar_PS.shader">
-      <Filter>Shaders\UI</Filter>
+    <None Include="Shaders\SpeedParticles_PS.shader">
+      <Filter>Shaders\Particles</Filter>
+    </None>
+    <None Include="Shaders\PerlinNoise.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\AriesNebula_GS.shader">
+      <Filter>Shaders\Aries</Filter>
+    </None>
+    <None Include="Shaders\VoronoiNoise.shader">
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="StarLink_PS.shader">
+    <FxCompile Include="Shaders\StarLink_PS.shader">
       <Filter>Shaders\StarLink</Filter>
     </FxCompile>
-    <FxCompile Include="BackgroundStars_VS.shader">
-      <Filter>Shaders\BackgroundStars</Filter>
+    <FxCompile Include="Shaders\SpaceStars_VS.shader">
+      <Filter>Shaders\SpaceStars</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
