@@ -1070,6 +1070,14 @@ namespace Hero
 		float meshRotationSpeed = .3f;
 		bool isMeshRotating = false;
 
+		XMVECTOR localOffsetRotation = XMQuaternionIdentity();
+		XMVECTOR targetLocalRotation = XMQuaternionIdentity();
+		float localRotationSpeed = 0.5f; 
+		float localRotationProgress = 0.0f;
+
+		// Для плавной интерполяции
+		XMVECTOR localRotationVelocity = XMVectorZero();
+		float localRotationSmoothness = 0.05f;
 		XMMATRIX rotationMatrix = XMMatrixIdentity();
 		float attackRotationProgress = 0.0f;
 		bool isAttackRotating = false;
@@ -1129,167 +1137,67 @@ namespace Hero
 		state.isMeshRotating = false;
 	}
 
-	void UpdateAttackRotation(float deltaTime)
+	void RotateLocalOffset(float yawDegrees, float pitchDegrees, float rollDegrees, float deltaTime)
 	{
-		if (state.isAttackRotating)
-		{
-			float attackDuration = 3.f;
-			state.attackRotationProgress = min(1.0f, (GetTickCount() - state.attackStartTime) / (attackDuration * 1000));
+		// Создаем кватернионы для каждого вращения
+		XMVECTOR yawRotation = XMQuaternionRotationAxis(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f),
+			XMConvertToRadians(yawDegrees));
+		XMVECTOR pitchRotation = XMQuaternionRotationAxis(XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f),
+			XMConvertToRadians(pitchDegrees));
+		XMVECTOR rollRotation = XMQuaternionRotationAxis(XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f),
+			XMConvertToRadians(rollDegrees));
 
-			// Нелинейное вращение с ускорением в начале и замедлением в конце
-			float progressEased = state.attackRotationProgress < 0.5f ?
-				2.0f * state.attackRotationProgress * state.attackRotationProgress :
-				1.0f - 2.0f * (1.0f - state.attackRotationProgress) * (1.0f - state.attackRotationProgress);
+		// Комбинируем вращения
+		XMVECTOR newRotation = XMQuaternionMultiply(yawRotation, pitchRotation);
+		newRotation = XMQuaternionMultiply(newRotation, rollRotation);
 
-			// Вращение на 360 градусов вокруг оси Y
-			float rotationAngle = XMConvertToRadians(360.0f * progressEased);
-			XMVECTOR attackRotation = XMQuaternionRotationAxis(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), rotationAngle);
-
-			// Применяем вращение с нелинейной интерполяцией
-			state.currentRotation = XMQuaternionMultiply(state.rotationBeforeAttack, attackRotation);
-
-			// Обновляем ТОЛЬКО вращение в дочернем смещении
-			state.constellationSubOffset = XMMatrixRotationQuaternion(state.currentRotation);
-
-			// Обновляем итоговую мировую матрицу
-			state.worldMatrix = state.constellationOffset * state.constellationSubOffset;
-
-			// Обновляем направления (для камеры и визуализации)
-			state.Up = XMVector3Rotate(state.defaultUp, state.currentRotation);
-			state.Forwardbuf = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), state.currentRotation);
-			state.Right = XMVector3Rotate(XMVectorSet(-1, 0, 0, 0), state.currentRotation);
-
-			// Завершение анимации
-			if (state.attackRotationProgress >= 1.0f)
-			{
-				state.isAttackRotating = false;
-				Camera::AttachCamera();
-			}
-		}
-		else if (state.attackRotationProgress > 0.0f)
-		{
-			// Нелинейное возвращение с плавным замедлением
-			const float returnSpeed = 2.0f;
-			float decayFactor = expf(-returnSpeed * deltaTime);
-			state.attackRotationProgress *= decayFactor;
-
-			if (state.attackRotationProgress < 0.01f)
-			{
-				state.attackRotationProgress = 0.0f;
-				// Полностью восстанавливаем исходное вращение
-				state.currentRotation = state.rotationBeforeAttack;
-			}
-			else
-			{
-				// Плавно возвращаемся к сохраненному вращению с нелинейной интерполяцией
-				state.currentRotation = NonLinearSlerp(state.rotationBeforeAttack, state.currentRotation,
-					state.attackRotationProgress, 1.5f);
-			}
-
-			// Обновляем ТОЛЬКО вращение
-			state.constellationSubOffset = XMMatrixRotationQuaternion(state.currentRotation);
-			state.worldMatrix = state.constellationOffset * state.constellationSubOffset;
-
-			// Обновляем направления
-			state.Up = XMVector3Rotate(state.defaultUp, state.currentRotation);
-			state.Forwardbuf = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), state.currentRotation);
-			state.Right = XMVector3Rotate(XMVectorSet(-1, 0, 0, 0), state.currentRotation);
-		}
+		// Устанавливаем целевое вращение
+		state.targetLocalRotation = XMQuaternionMultiply(state.localOffsetRotation, newRotation);
+		state.localRotationProgress = 0.0f;
 	}
 
-	void RotateHeroMesh(float angleDegrees)
+	// Обновление локального вращения с интерполяцией
+	void UpdateLocalRotation(float deltaTime)
 	{
-		// Создаем кватернион вращения
-		XMVECTOR rotationQuat = XMQuaternionRotationAxis(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f),
-			XMConvertToRadians(angleDegrees));
-
-		// Применяем вращение к текущему вращению
-		state.currentRotation = XMQuaternionMultiply(state.currentRotation, rotationQuat);
-
-		// Обновляем матрицу вращения
-		state.rotationMatrix = XMMatrixRotationQuaternion(state.currentRotation);
-
-		// Обновляем мировую матрицу: Смещение * Вращение
-		state.worldMatrix = state.constellationOffset * state.rotationMatrix;
-
-		// Обновляем направления
-		state.Up = XMVector3Rotate(state.defaultUp, state.currentRotation);
-		state.Forwardbuf = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), state.currentRotation);
-		state.Right = XMVector3Rotate(XMVectorSet(-1, 0, 0, 0), state.currentRotation);
-	}
-
-	void UpdateMeshRotation(float deltaTime)
-	{
-		if (state.isMeshRotating)
+		if (!XMQuaternionEqual(state.localOffsetRotation, state.targetLocalRotation))
 		{
-			// Нелинейное обновление угла вращения с ускорением
-			float acceleration = state.meshRotationSpeed * deltaTime;
-			state.meshRotationAngle += acceleration * (1.0f + state.meshRotationAngle * 0.1f);
-
-			// Создаем кватернион вращения вокруг оси Y
-			XMVECTOR rotationQuat = XMQuaternionRotationAxis(
-				XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f),
-				XMConvertToRadians(state.meshRotationAngle)
+			// Плавная интерполяция к целевому вращению
+			state.localOffsetRotation = SmoothDampQuaternion(
+				state.localOffsetRotation,
+				state.targetLocalRotation,
+				state.localRotationVelocity,
+				state.localRotationSmoothness,
+				deltaTime
 			);
 
-			// Обновляем текущее вращение
-			state.currentRotation = rotationQuat;
+			// Обновляем дочерний оффсет с локальным вращением
+			state.constellationSubOffset = XMMatrixRotationQuaternion(
+				XMQuaternionMultiply(state.currentRotation, state.localOffsetRotation)
+			);
 
-			// Создаем матрицу вращения из кватерниона
-			state.meshRotationMatrix = XMMatrixRotationQuaternion(state.currentRotation);
-
-			// ОБНОВЛЯЕМ ИТОГОВУЮ МАТРИЦУ: Позиция * Вращение
-			state.worldMatrix = state.constellationOffset * state.meshRotationMatrix;
-
-			// ОБНОВЛЯЕМ КОНСТАНТНЫЙ БУФЕР для шейдера
-			ConstBuf::drawerMat.model = XMMatrixTranspose(state.worldMatrix);
-			ConstBuf::UpdateDrawerMat();
-
-			// Обновляем направления
-			state.Up = XMVector3Rotate(state.defaultUp, state.currentRotation);
-			state.Forwardbuf = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), state.currentRotation);
-			state.Right = XMVector3Rotate(XMVectorSet(-1, 0, 0, 0), state.currentRotation);
+			// Обновляем мировую матрицу
+			state.worldMatrix = state.constellationOffset * state.constellationSubOffset;
 		}
 	}
 
-	// Функция для плавного поворота к цели
-	void RotateTowardsTarget(XMVECTOR targetDirection, float deltaTime)
+	// Функция для медленного автоматического вращения
+	void SlowAutoRotate(float deltaTime)
 	{
-		// Нормализуем целевое направление
-		targetDirection = XMVector3Normalize(targetDirection);
+		// Медленное вращение вокруг оси Y (например, 5 градусов в секунду)
+		float rotationSpeed = 5.0f * deltaTime;
+		XMVECTOR autoRotation = XMQuaternionRotationAxis(
+			XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f),
+			XMConvertToRadians(rotationSpeed)
+		);
 
-		// Получаем текущее направление вперед
-		XMVECTOR currentForward = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), state.currentRotation);
+		// Применяем к локальному вращению
+		state.localOffsetRotation = XMQuaternionMultiply(state.localOffsetRotation, autoRotation);
 
-		// Вычисляем угол между текущим и целевым направлением
-		float dot = XMVectorGetX(XMVector3Dot(currentForward, targetDirection));
-		float angle = acosf(fminf(fmaxf(dot, -1.0f), 1.0f));
-
-		if (angle > 0.001f)
-		{
-			// Вычисляем ось вращения
-			XMVECTOR axis = XMVector3Cross(currentForward, targetDirection);
-			axis = XMVector3Normalize(axis);
-
-			// Нелинейная скорость вращения (быстрее для больших углов)
-			float rotationSpeed = state.rotationSpeed * (1.0f + angle * 0.5f) * deltaTime;
-			float rotationAngle = fminf(angle, rotationSpeed);
-
-			// Создаем кватернион вращения
-			XMVECTOR rotationQuat = XMQuaternionRotationAxis(axis, rotationAngle);
-
-			// Применяем вращение
-			state.currentRotation = XMQuaternionMultiply(state.currentRotation, rotationQuat);
-			state.currentRotation = XMQuaternionNormalize(state.currentRotation);
-
-			// Обновляем матрицы и направления
-			state.constellationSubOffset = XMMatrixRotationQuaternion(state.currentRotation);
-			state.worldMatrix = state.constellationOffset * state.constellationSubOffset;
-
-			state.Up = XMVector3Rotate(state.defaultUp, state.currentRotation);
-			state.Forwardbuf = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), state.currentRotation);
-			state.Right = XMVector3Rotate(XMVectorSet(-1, 0, 0, 0), state.currentRotation);
-		}
+		// Обновляем матрицы
+		state.constellationSubOffset = XMMatrixRotationQuaternion(
+			XMQuaternionMultiply(state.currentRotation, state.localOffsetRotation)
+		);
+		state.worldMatrix = state.constellationOffset * state.constellationSubOffset;
 	}
 }
 
@@ -1326,6 +1234,8 @@ namespace Camera
 		// Для плавного вращения камеры
 		float cameraSmoothness = 0.1f;
 		XMVECTOR cameraRotationVelocity = XMVectorZero();
+		bool independentRotation = true;
+		float cameraFollowSpeed = 0.3f;
 
 	} static state;
 
@@ -1352,13 +1262,7 @@ namespace Camera
 	// Плавное вращение камеры с использованием кватернионов
 	void SmoothRotateCamera(XMVECTOR targetRotation, float deltaTime)
 	{
-		state.currentRotation = Hero::SmoothDampQuaternion(
-			state.currentRotation,
-			targetRotation,
-			state.cameraRotationVelocity,
-			state.cameraSmoothness,
-			deltaTime
-		);
+		state.currentRotation = Hero::SmoothDampQuaternion(state.currentRotation,targetRotation,state.cameraRotationVelocity,state.cameraSmoothness,deltaTime);
 
 		// Обновляем направления камеры
 		state.Up = XMVector3Rotate(state.defaultUp, state.currentRotation);
@@ -1381,28 +1285,56 @@ namespace Camera
 			return;
 		}
 
-		// Плавное следование за вращением героя
-		XMVECTOR targetCameraRotation = Hero::state.currentRotation;
-		SmoothRotateCamera(targetCameraRotation, 0.016f); // Пример deltaTime
+		if (state.independentRotation)
+		{
+			// Камера сохраняет свою ориентацию, не следуя за вращением героя
+			XMVECTOR heroForward = XMVector3Normalize(Hero::state.Forwardbuf);
+			XMVECTOR heroUp = XMVector3Normalize(Hero::state.Up);
+			XMVECTOR heroRight = XMVector3Normalize(Hero::state.Right);
 
-		XMVECTOR heroForward = XMVector3Normalize(Hero::state.Forwardbuf);
-		XMVECTOR heroUp = XMVector3Normalize(Hero::state.Up);
-		XMVECTOR heroRight = XMVector3Normalize(Hero::state.Right);
+			// Но используем текущие направления героя для позиционирования
+			XMVECTOR cameraOffset =
+				(-heroForward * state.distanceOffset) +
+				(heroUp * state.verticalOffset) +
+				(heroRight * state.horizontalOffset);
 
-		XMVECTOR cameraOffset =
-			(-heroForward * state.distanceOffset) +
-			(heroUp * state.verticalOffset) +
-			(heroRight * state.horizontalOffset);
+			XMVECTOR cameraPosition = Hero::state.position + cameraOffset;
+			XMVECTOR cameraTarget = cameraPosition + heroForward * 15.0f;
 
-		XMVECTOR cameraPosition = Hero::state.position + cameraOffset;
-		XMVECTOR cameraTarget = cameraPosition + (heroForward * 15.0f);
+			state.Eye = cameraPosition;
+			state.at = cameraTarget;
 
-		state.Eye = cameraPosition;
-		state.at = cameraTarget;
-		state.Up = heroUp;
+			// Сохраняем свою ориентацию Up вектора
+			state.Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f); // Или другой фиксированный Up
 
-		state.Forward = XMVector3Normalize(cameraTarget - cameraPosition);
-		state.Right = XMVector3Normalize(XMVector3Cross(heroUp, state.Forward));
+			state.Forward = XMVector3Normalize(cameraTarget - cameraPosition);
+			state.Right = XMVector3Normalize(XMVector3Cross(state.Up, state.Forward));
+		}
+		else
+		{
+			// Оригинальное поведение - камера следует за вращением
+			XMVECTOR targetCameraRotation = Hero::state.currentRotation;
+			SmoothRotateCamera(targetCameraRotation, 0.016f);
+
+			XMVECTOR heroForward = XMVector3Normalize(Hero::state.Forwardbuf);
+			XMVECTOR heroUp = XMVector3Normalize(Hero::state.Up);
+			XMVECTOR heroRight = XMVector3Normalize(Hero::state.Right);
+
+			XMVECTOR cameraOffset =
+				(-heroForward * state.distanceOffset) +
+				(heroUp * state.verticalOffset) +
+				(heroRight * state.horizontalOffset);
+
+			XMVECTOR cameraPosition = Hero::state.position + cameraOffset;
+			XMVECTOR cameraTarget = cameraPosition + (heroForward * 15.0f);
+
+			state.Eye = cameraPosition;
+			state.at = cameraTarget;
+			state.Up = heroUp;
+
+			state.Forward = XMVector3Normalize(cameraTarget - cameraPosition);
+			state.Right = XMVector3Normalize(XMVector3Cross(heroUp, state.Forward));
+		}
 
 		ConstBuf::camera.view[0] = XMMatrixTranspose(
 			XMMatrixLookAtLH(state.Eye, state.at, state.Up)
@@ -1424,7 +1356,10 @@ namespace Camera
 		ConstBuf::ConstToVertex(3);
 		ConstBuf::ConstToPixel(3);
 	}
-
+	void ToggleCameraMode()
+	{
+		state.independentRotation = !state.independentRotation;
+	}
 	void HandleMouseWheel(int delta)
 	{
 		// Нелинейное изменение расстояния с плавным ускорением

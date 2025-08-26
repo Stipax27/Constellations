@@ -1447,13 +1447,17 @@ namespace drawer
             // Безопасный вызов функций атаки
             Constellation& enemy = *starSet[currentEnemyID];
             Constellation& player = *starSet[player_sign];
-
+            if (GetAsyncKeyState('C') & 0x8000)
+            {
+                Camera::ToggleCameraMode();
+            }
             // Обновление атак
             if (!playerConst.morphing) {
                 HandleMouseClick(heroPosition);
+                Hero::RotateLocalOffset(45.0f, 0.0f, 0.0f, deltaTime);
 
-              Hero::UpdateMeshRotation(deltaTime);
-              
+                Hero::UpdateLocalRotation(deltaTime);
+                Camera::UpdateCameraPosition();
             }
             UpdateAttack(deltaTime);
 
