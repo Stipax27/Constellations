@@ -871,7 +871,7 @@ namespace drawer
     void CreateSpeedParticles()
     {
         DWORD curTime = timer::GetCounter();
-        if (currentFlySpeed > sp_minFlySpeed && flyDirection.magnitude() > 0.9)
+        if (currentFlySpeed > sp_minFlySpeed && flyDirection.magnitude() > 0.5)
         {
             float speedRatio = currentFlySpeed / maxFlySpeed;
             float sp_emitDelta = 1000 / (sp_rate * speedRatio);
@@ -1200,6 +1200,7 @@ namespace drawer
             DrawRenderObject(backgroundStars);
             DrawRenderObject(spaceStars);
             DrawRenderObject(ariesNebula);
+            DrawRenderObject(blackHole);
 
             Constellation& playerConst = *starSet[player_sign];
             playerConst.Transform = CreateHeroToWorldMatrix(playerConst);
@@ -1283,6 +1284,7 @@ namespace drawer
             DrawRenderObject(backgroundStars);
             DrawRenderObject(spaceStars);
             DrawRenderObject(ariesNebula);
+            DrawRenderObject(blackHole);
 
 
             modelTransform = &placeConstToWorld;
@@ -1555,6 +1557,7 @@ namespace drawer
             DrawRenderObject(backgroundStars);
             DrawRenderObject(spaceStars);
             DrawRenderObject(ariesNebula);
+            DrawRenderObject(blackHole);
 
 
             modelTransform = &placeConstToWorld;

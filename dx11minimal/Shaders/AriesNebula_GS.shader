@@ -13,7 +13,7 @@ struct VS_OUTPUT
 };
 
 [maxvertexcount(3)]
-void GS(point VS_OUTPUT input[1], inout TriangleStream< VS_OUTPUT > output)
+void GS(triangle VS_OUTPUT input[3], inout TriangleStream< VS_OUTPUT > output)
 {
 	float2 quadPos[6] = {
 		float2(-1, -1), float2(1, -1), float2(-1, 1),

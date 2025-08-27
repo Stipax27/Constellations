@@ -539,6 +539,9 @@ namespace Shaders {
 		CreateVS(12, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\UiParticle_VS.shader"));
 		CreatePS(12, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\UiParticle_PS.shader"));
 
+		CreateVS(14, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\BlackHole_Body_VS.shader"));
+		CreatePS(14, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\BlackHole_Body_PS.shader"));
+
 		//-----------------------------------------------
 
 		CreatePS(100, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Lensing_PS.shader"));
