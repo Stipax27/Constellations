@@ -1153,7 +1153,7 @@ namespace Hero
 	void UpdateContinuousRotation(float deltaTime)
 	{
 		// Медленное вращение вокруг оси Y (10 градусов в секунду)
-		float rotationSpeed = 10.0f * deltaTime;
+		float rotationSpeed = .003f * deltaTime;
 		XMVECTOR rotation = XMQuaternionRotationAxis(
 			XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f),
 			XMConvertToRadians(rotationSpeed)
