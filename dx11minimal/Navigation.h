@@ -158,24 +158,32 @@ void updateFlySpeed(float deltaTime)
     //drawString((std::to_string(deltaTime / 17.f)).c_str(), 1000.f, 800.f, .7f, false);
 
 
-    if (energy < 1.f) {
+    if (energy <= 0.f) {
         //isBoosting = false;
         haveEnergy = false;
     }
 
+    deltaTime /= 1000;
+    speed = max(speed + acc * deltaTime, 0);
+
     if (haveEnergy) {
 
-        deltaTime /= 1000;
-        speed = max(speed + acc * deltaTime, 0);
+        //drawString("suja!!!", 1000.f, 560.f, .7f, false);
+
 
         if (!isBoosting && !wasShiftPressed)
         {
+            drawString("state1", 1000.f, 580.f, .7f, false);
 
             currentFlySpeed = max(currentFlySpeed + acc * deltaTime, maxFlySpeed);
         }
 
         if (isBoosting && !wasShiftPressed)
         {
+            drawString("state2", 1000.f, 600.f, .7f, false);
+
+            speed = 0;
+            currentFlySpeed = 10;
             wasShiftPressed = true;
             acc = 40; //тут должна быть переменная зависящая от фпс и времени
             localTime = currentTime;
@@ -183,6 +191,9 @@ void updateFlySpeed(float deltaTime)
 
         if (isBoosting)
         {
+            
+            drawString("state3", 1000.f, 620.f, .7f, false);
+
             energy -= 1.5;
 
             currentFlySpeed = max(currentFlySpeed * 0.9, 0);
@@ -190,7 +201,7 @@ void updateFlySpeed(float deltaTime)
 
         if (!isBoosting && wasShiftPressed)
         {
-            //energy -= deltaTime * 1000;
+            drawString("state4", 1000.f, 640.f, .7f, false);
 
             localDeltaTime = currentTime - localTime;
             wasShiftPressed = false;
