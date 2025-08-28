@@ -53,8 +53,8 @@ void mainLoop(float deltaTime)
 	//--------------------------------
 	Textures::CreateMipMap();
 
-	Draw::SwitchRenderTextures();
-	//Draw::OutputRenderTextures();
+	//Draw::SwitchRenderTextures();
+	Draw::OutputRenderTextures();
 
 	Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
 	Depth::Depth(Depth::depthmode::off);
@@ -68,9 +68,9 @@ void mainLoop(float deltaTime)
 	Shaders::pShader(10);
 	context->Draw(6, 0);
 
-	Shaders::pShader(100);
-	Draw::OutputRenderTextures();
-	context->Draw(6, 0);
+	//Shaders::pShader(100);
+	//Draw::OutputRenderTextures();
+	//context->Draw(6, 0);
 	//--------------------------------
 
 	Draw::Present();
