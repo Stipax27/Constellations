@@ -127,7 +127,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Animations.h" />
     <ClInclude Include="AriesNebula.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Constellation.h" />
     <ClInclude Include="DialogStruct.h" />
     <ClInclude Include="DiologTEXT.h" />
@@ -226,6 +228,7 @@
     <None Include="VSFS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
+    <ClInclude Include="Quaternions.h" />
     <ClInclude Include="RenderObject.h" />
     <ClInclude Include="StatusGame.h" />
     <ClInclude Include="timer.h" />

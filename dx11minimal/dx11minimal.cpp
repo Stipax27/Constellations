@@ -41,7 +41,10 @@ HWND hWnd;
 #include "utils.h"
 
 #include "dx11.h"
+#include "Quaternions.h"
+#include "Animations.h"
 #include "Player.h"
+#include "Camera.h"
 
 #include "Point3d.h"
 #include "RenderObject.h"

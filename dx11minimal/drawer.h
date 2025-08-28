@@ -1209,8 +1209,10 @@ namespace drawer
            
             drawСonstellation(c,false,1000.f,100.f);
 
-            if (!playerConst.morphing)
+            if (!playerConst.morphing) {
                 HandleMouseClick(heroPosition);
+
+            }
             UpdateAttack(deltaTime);
             DrawSwordAttack();
 
@@ -1368,7 +1370,15 @@ namespace drawer
                     XMVectorGetZ(enemyPositions)
                 );
 
-               
+                if (!playerConst.morphing) {
+                    HandleMouseClick(heroPosition); // Убрать, если функция не определена
+
+                    Hero::StartRotationAnimation(45.0f, 45.0f, 0.0f);  // Поворот на 90 градусов по Y
+                    Hero::UpdateRotationAnimation(deltaTime);          // Обновление анимации
+                    Hero::UpdateContinuousRotation(deltaTime);
+
+                    //Camera::UpdateCameraPosition(); // Обновление позиции камеры
+                }
 
                 if (enemyAI.data.isAttacking == true) {
 
@@ -1447,15 +1457,7 @@ namespace drawer
             Constellation& player = *starSet[player_sign];
            
             // Обновление атак
-            if (!playerConst.morphing) {
-                HandleMouseClick(heroPosition); // Убрать, если функция не определена
-
-                Hero::StartRotationAnimation(90.0f, 0.0f, 0.0f);  // Поворот на 90 градусов по Y
-                Hero::UpdateRotationAnimation(deltaTime);          // Обновление анимации
-                Hero::UpdateContinuousRotation(deltaTime);
-
-                Camera::UpdateCameraPosition(); // Обновление позиции камеры
-            }
+            
             UpdateAttack(deltaTime);
 
             DrawSwordAttack();

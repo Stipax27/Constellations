@@ -206,6 +206,6 @@ void updatePlayerPosition(float deltaTime)
         Hero::state.constellationOffset = XMMatrixTranslationFromVector(Hero::state.position);
 
         // 5. Обновляем итоговую мировую матрицу
-        Hero::state.worldMatrix = Hero::state.constellationOffset * Hero::state.constellationSubOffset;
+        Hero::state.worldMatrix = Hero::state.constellationOffset;
     }
 }
