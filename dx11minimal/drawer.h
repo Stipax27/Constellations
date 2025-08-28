@@ -810,7 +810,6 @@ namespace drawer
             if (!isPressed)
             {
                 isPressed = true;
-                DeleteParticledText("TEST TEXT RENDER");
                 ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Mouse_click1.wav");
                 point3d mousePos = point3d(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1),0);
                 DWORD curTime = timer::GetCounter();
@@ -1175,6 +1174,14 @@ namespace drawer
             StartMenu();
             break;
 
+        case gameState_::Settings:
+            SettingsState();
+            break;
+
+        case gameState_::Authors:
+            AuthorsState();
+            break;
+
         case gameState_::MonthSelection:
             menuMonthprocessing();
             break;
@@ -1183,6 +1190,8 @@ namespace drawer
             menuMonthprocessing();
             menuDayprocessing();
             break;
+
+
 
         case gameState_::confirmSign:
             Depth::Depth(Depth::depthmode::off);

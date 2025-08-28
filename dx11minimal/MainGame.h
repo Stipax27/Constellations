@@ -37,8 +37,15 @@ bool drawClickableText(
     point3d sz = drawString(text.c_str(), x, y, scale, true, true);
 
     // Проверяем наведение мыши
-    bool isHovered = (mouse.pos.x > x - sz.x / 2 && mouse.pos.x < x + sz.x / 2 &&
-        mouse.pos.y > y && mouse.pos.y < y + sz.y);
+    bool isHovered;
+    if (center) {
+        isHovered = (mouse.pos.x > x - sz.x / 2 && mouse.pos.x < x + sz.x / 2 &&
+            mouse.pos.y > y && mouse.pos.y < y + sz.y);
+    }
+    else {
+        isHovered = (mouse.pos.x > x && mouse.pos.x < x + sz.x &&
+            mouse.pos.y > y && mouse.pos.y < y + sz.y);
+    }
 
     // Проигрываем звук только при первом наведении на этот текст
     if (isHovered && lastHoveredText != text) {
@@ -57,19 +64,59 @@ bool drawClickableText(
     return isHovered && (GetAsyncKeyState(VK_LBUTTON) & 0x8000);
 }
 
-bool drawParticledClickableText()
+#include <unordered_set>
+#include <functional>
+
+bool drawParticledClickableText(
+    const char* text,
+    int x = 0, int y = 0,
+    float scale = 1.f,
+    bool centered = false
+)
 {
-    bool textBool = false;
+    static std::string lastHoveredText;
+    static std::unordered_set<size_t> createdCoordinates;
+ 
+    point3d sz = drawString(text, x, y, scale, false, true);
 
-    CreateParticledText("MHM", 500.f, 500.f, 1.f, false);
+    bool isHovered;
+    if (centered) {
+        isHovered = (mouse.pos.x > x - sz.x / 2 && mouse.pos.x < x + sz.x / 2 &&
+            mouse.pos.y > y && mouse.pos.y < y + sz.y);
+    }
+    else {
+        isHovered = (mouse.pos.x > x && mouse.pos.x < x + sz.x &&
+            mouse.pos.y > y && mouse.pos.y < y + sz.y);
+    }
 
-    if (!textBool) {
-        textBool = true;
+    if (isHovered && lastHoveredText != text) {
+        ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Mouse_select.wav");
+        lastHoveredText = text;
+    }
+    else if (!isHovered && lastHoveredText == text) {
+        lastHoveredText.clear();
+    }
+  
+    bool allMatch = false;
 
-        CreateParticledText("MHM", 500.f, 500.f, 1.f, false);
-    };
+    for (int i = 0; i < renderTextList.size(); i++)
+    {
+        // Если нашли совпадение
+        if (renderTextList[i]->str == text &&
+            renderTextList[i]->x == x &&
+            renderTextList[i]->y == y)
+        {
+            allMatch = true;
+            break;
+        }
+    }
 
-    return true;
+    // Создаем только если НЕТ совпадения
+    if (!allMatch) {
+        CreateParticledText(text, x, y, scale, centered);
+    }
+
+    return isHovered && (GetAsyncKeyState(VK_LBUTTON) & 0x8000);
 }
 
 void drawCircularMenu(float circleRadius, float speed, string* items, int size, menu_type selectedType) {
@@ -191,16 +238,36 @@ void StartMenu()
         exitButtonInitialized = true;
     }
 
-    if (drawParticledClickableText())
-    {
+    const char* text = "Play";
+    const char* text1 = "Settings";
+    const char* text2 = "Authors";
 
+    if (drawParticledClickableText(text, window.width / 2, window.height / 2, 1.f, true))
+    {
+        DeleteParticledText(text);
+        DeleteParticledText(text1);
+        DeleteParticledText(text2);
+
+        gameState = gameState_::DialogStruct;
     }
 
-    //if (drawParticledClickableText("Play", true, RGB(0, 191, 255), window.width / 2, window.height / 2))
-    //{
-    //        gameState = gameState_::MonthSelection;
+    if (drawParticledClickableText(text1, window.width / 2, window.height / 2 + 200, 1.f, true))
+    {
+        DeleteParticledText(text);
+        DeleteParticledText(text1);
+        DeleteParticledText(text2);
 
-    //}
+        gameState = gameState_::Settings;
+    }
+
+    if (drawParticledClickableText(text2, window.width / 2, window.height / 2 + 300, 1.f, true))
+    {
+        DeleteParticledText(text);
+        DeleteParticledText(text1);
+        DeleteParticledText(text2);
+        gameState = gameState_::Authors;
+    }
+
     //if (drawClickableText("Play", true, RGB(0, 191, 255), window.width / 2, window.height / 2))
     //{
     //    gameState = gameState_::MonthSelection;
@@ -226,9 +293,29 @@ void StartMenu()
     {
         ExitProcess(0);
     }
+
+
 }
 
+void SettingsState()
+{
+    const char* text = "Back";
+    if (drawParticledClickableText(text, window.width / 2, window.height / 2 - 100, 1.f, true))
+    {
+        DeleteParticledText(text);
+        gameState = gameState_::MainMenu;
+    }
+}
 
+void AuthorsState()
+{
+    const char* text = "Back";
+    if (drawParticledClickableText(text, window.width / 2, window.height / 2 - 100, 1.f, true))
+    {
+        DeleteParticledText(text);
+        gameState = gameState_::MainMenu;
+    }
+}
 
 void winFight()
 {
