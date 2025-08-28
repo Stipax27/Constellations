@@ -1254,6 +1254,8 @@ namespace drawer
 
         case gameState_::Fight:
         {
+            //CreateParticledText("ANOTHER TEST", (1700. / 2560) * window.width, (600. / 1440) * window.height + 200.f, .7f, false);
+
 
             drawStaminaBar(energy);
 
@@ -1696,6 +1698,8 @@ namespace drawer
         ConstBuf::Update(1, ConstBuf::drawerP);
         ConstBuf::ConstToPixel(1);
         DrawRenderObject(cursor);
+
+        //CreateParticledText("ANOTHER TEST", (1700. / 2560)* window.width, (600. / 1440)* window.height + 200.f, .7f, false);
 
         DrawUiParticles(deltaTime);
         RenderParticledText(deltaTime);

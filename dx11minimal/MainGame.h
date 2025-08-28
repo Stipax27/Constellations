@@ -57,6 +57,21 @@ bool drawClickableText(
     return isHovered && (GetAsyncKeyState(VK_LBUTTON) & 0x8000);
 }
 
+bool drawParticledClickableText()
+{
+    bool textBool = false;
+
+    CreateParticledText("MHM", 500.f, 500.f, 1.f, false);
+
+    if (!textBool) {
+        textBool = true;
+
+        CreateParticledText("MHM", 500.f, 500.f, 1.f, false);
+    };
+
+    return true;
+}
+
 void drawCircularMenu(float circleRadius, float speed, string* items, int size, menu_type selectedType) {
 
     circleRadius *= window.width / 2560.;
@@ -166,6 +181,8 @@ void TestDrawLine()
     Draw::NullDrawer(1, 1);
 }
 
+bool textBool = false;
+
 void StartMenu()
 {
     if (!exitButtonInitialized) {
@@ -174,10 +191,20 @@ void StartMenu()
         exitButtonInitialized = true;
     }
 
-    if (drawClickableText("Play", true, RGB(0, 191, 255), window.width / 2, window.height / 2))
+    if (drawParticledClickableText())
     {
-        gameState = gameState_::MonthSelection;
+
     }
+
+    //if (drawParticledClickableText("Play", true, RGB(0, 191, 255), window.width / 2, window.height / 2))
+    //{
+    //        gameState = gameState_::MonthSelection;
+
+    //}
+    //if (drawClickableText("Play", true, RGB(0, 191, 255), window.width / 2, window.height / 2))
+    //{
+    //    gameState = gameState_::MonthSelection;
+    //}
 
     std::string EXIT = "Quit ((";
 
