@@ -173,14 +173,14 @@ void updateFlySpeed(float deltaTime)
 
         if (!isBoosting && !wasShiftPressed)
         {
-            drawString("state1", 1000.f, 580.f, .7f, false);
+            //drawString("state1", 1000.f, 580.f, .7f, false);
 
             currentFlySpeed = max(currentFlySpeed + acc * deltaTime, maxFlySpeed);
         }
 
         if (isBoosting && !wasShiftPressed)
         {
-            drawString("state2", 1000.f, 600.f, .7f, false);
+            //drawString("state2", 1000.f, 600.f, .7f, false);
 
             speed = 0;
             currentFlySpeed = 10;
@@ -192,7 +192,7 @@ void updateFlySpeed(float deltaTime)
         if (isBoosting)
         {
             
-            drawString("state3", 1000.f, 620.f, .7f, false);
+            //drawString("state3", 1000.f, 620.f, .7f, false);
 
             energy -= 1.5;
 
@@ -201,7 +201,7 @@ void updateFlySpeed(float deltaTime)
 
         if (!isBoosting && wasShiftPressed)
         {
-            drawString("state4", 1000.f, 640.f, .7f, false);
+            //drawString("state4", 1000.f, 640.f, .7f, false);
 
             localDeltaTime = currentTime - localTime;
             wasShiftPressed = false;

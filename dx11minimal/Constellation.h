@@ -279,11 +279,11 @@ public:
                     {
                         origin = targetConstellation->originStarsCords[i];
                     }
-
+                    rand();
                     point3d n = point3d(
-                        noise(point3d(origin.y, origin.z, origin.x) + i * 0.1f),
-                        noise(point3d(origin.z, origin.x, origin.y) + i * 0.1f),
-                        noise(point3d(origin.x, origin.y, origin.z) + i * 0.1f)
+                        noise(point3d(origin.y, origin.z, origin.x) + i * 30.1f),
+                        noise(point3d(origin.z, origin.x, origin.y) + i * 30.2f),
+                        noise(point3d(origin.x, origin.y, origin.z) + i * 30.3f)
                     ) * 2;
                     point3d localUp = (up * n).normalized();
                     point3d localRight = (right * n).normalized();
@@ -312,7 +312,8 @@ public:
                         point3d localRight = (right * n).normalized();
 
                         starsCords.push_back(
-                            (localUp * sin(time * 10) + localRight * cos(time * 10)) * 0.15f);
+                            (localUp * sin(time * 10) + localRight * cos(time * 10)) * 0.15f
+                        );
                     }
                 }
 

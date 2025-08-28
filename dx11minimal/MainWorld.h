@@ -582,7 +582,7 @@ enum class gameState_ {
     MainMenu, Settings, Authors, MonthSelection, DaySelection, confirmSign, selectEnemy, Fight, EndFight, DialogStruct, WinFight, Exploring
 };
 
-gameState_  gameState = gameState_::MainMenu;
+gameState_  gameState = gameState_::Fight;
 Constellation* currentEnemy = &Aries;
 ZodiacSign currentEnemyID = ZodiacSign::ARIES;
 
