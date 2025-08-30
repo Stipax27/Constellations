@@ -93,34 +93,37 @@ void menuProject(point3d& p)
     p.y = y;
 }
 
-void constSelectUI(point3d& point, Constellation& Constellation, int i)
-{
-    float dx = point.x - mouse.pos.x;
-    float dy = point.y - mouse.pos.y;
-    float lenght = sqrt(dx * dx + dy * dy);
 
-    if (GetAsyncKeyState(VK_LBUTTON))
-    {
-        if (lenght < starSize)
-        {
-            // Only transition if this is an enemy constellation (not player's)
-            if (Constellation.ID != player_sign)
-            {
-                gameState = gameState_::Fight;
-                currentEnemy = &Constellation;
-                currentEnemyID = (ZodiacSign)Constellation.ID;
-
-                // Initialize fight-specific variables
-                    isBattleActive = true;
-                battleStartTime = currentTime;
-
-                // Reset camera for fight
-                Camera::state.camDist = 100;
-                Camera::state.mouse = true;
-            }
-        }
-    }
-}
+// DEAD FUNC
+// 
+//void constSelectUI(point3d& point, Constellation& Constellation, int i)
+//{
+//    float dx = point.x - mouse.pos.x;
+//    float dy = point.y - mouse.pos.y;
+//    float lenght = sqrt(dx * dx + dy * dy);
+//
+//    if (GetAsyncKeyState(VK_LBUTTON))
+//    {
+//        if (lenght < starSize)
+//        {
+//            // Only transition if this is an enemy constellation (not player's)
+//            if (Constellation.ID != player_sign)
+//            {
+//                gameState = gameState_::Fight;
+//                currentEnemy = &Constellation;
+//                currentEnemyID = (ZodiacSign)Constellation.ID;
+//
+//                // Initialize fight-specific variables
+//                    isBattleActive = true;
+//                battleStartTime = currentTime;
+//
+//                // Reset camera for fight
+//                Camera::state.camDist = 100;
+//                Camera::state.mouse = true;
+//            }
+//        }
+//    }
+//}
 
 float get_lenghts(point3d& point1, point3d& point2)
 {

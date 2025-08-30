@@ -226,12 +226,15 @@
     <None Include="Shaders\UiParticle_VS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
+    <None Include="Shaders\UI_PS.shader" />
+    <None Include="Shaders\UI_VS.shader" />
     <None Include="Shaders\VSFS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
     <ClInclude Include="RenderObject.h" />
     <ClInclude Include="StatusGame.h" />
     <ClInclude Include="timer.h" />
+    <ClInclude Include="UI.h" />
     <ClInclude Include="utils.h" />
     <None Include="Shaders\VSS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

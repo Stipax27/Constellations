@@ -141,43 +141,77 @@ float speed;
 float localTime;
 float localDeltaTime;
 
+LONG energy = 100;
 void updateFlySpeed(float deltaTime)
 { 
-    deltaTime /= 1000;
+    //drawString("HI GUYS AMERICAAAAAA", 1000.f, 800.f, .7f, false);
+
+    bool haveEnergy = true;
+
     bool isBoosting = (GetAsyncKeyState(VK_SHIFT) & 0x8000);
+
+    if (energy < 300 && currentFlySpeed < 20 && !isBoosting) {
+        energy += LONG((deltaTime / 17.f ));
+    }
+
+    drawString((std::to_string(energy)).c_str(), 1000.f, 800.f, .7f, false);
+    //drawString((std::to_string(deltaTime / 17.f)).c_str(), 1000.f, 800.f, .7f, false);
+
+
+    if (energy <= 0.f) {
+        //isBoosting = false;
+        haveEnergy = false;
+    }
+
+    deltaTime /= 1000;
     speed = max(speed + acc * deltaTime, 0);
 
-    if (!isBoosting && !wasShiftPressed)
-    {
-        currentFlySpeed = max(currentFlySpeed + acc * deltaTime, maxFlySpeed);
+    if (haveEnergy) {
+
+        //drawString("suja!!!", 1000.f, 560.f, .7f, false);
+
+
+        if (!isBoosting && !wasShiftPressed)
+        {
+            //drawString("state1", 1000.f, 580.f, .7f, false);
+
+            currentFlySpeed = max(currentFlySpeed + acc * deltaTime, maxFlySpeed);
+        }
+
+        if (isBoosting && !wasShiftPressed)
+        {
+            //drawString("state2", 1000.f, 600.f, .7f, false);
+
+            speed = 0;
+            currentFlySpeed = 10;
+            wasShiftPressed = true;
+            acc = 40; //тут должна быть переменная зависящая от фпс и времени
+            localTime = currentTime;
+        }
+
+        if (isBoosting)
+        {
+            
+            //drawString("state3", 1000.f, 620.f, .7f, false);
+
+            energy -= 1.5;
+
+            currentFlySpeed = max(currentFlySpeed * 0.9, 0);
+        }
+
+        if (!isBoosting && wasShiftPressed)
+        {
+            //drawString("state4", 1000.f, 640.f, .7f, false);
+
+            localDeltaTime = currentTime - localTime;
+            wasShiftPressed = false;
+            boostingFlySpeed = 10; //тут должна быть переменная зависящая от времени зажатия шифта
+            currentFlySpeed = boostingFlySpeed + speed;
+            acc = -40;//тут должна быть переменная зависящая от фпс и времени
+
+        }
     }
-
-    if (isBoosting && !wasShiftPressed)
-    {
-        wasShiftPressed = true;
-        acc = 40; //тут должна быть переменная зависящая от фпс и времени
-        localTime = currentTime;
-    }
-
-    if (isBoosting)
-    {
-        currentFlySpeed = max(currentFlySpeed * 0.9,0);
-    }
-
-    if (!isBoosting && wasShiftPressed)
-    {
-        localDeltaTime = currentTime - localTime;
-        wasShiftPressed = false;
-        boostingFlySpeed = 10; //тут должна быть переменная зависящая от времени зажатия шифта
-        currentFlySpeed = boostingFlySpeed + speed;
-        acc = -40;//тут должна быть переменная зависящая от фпс и времени
-     
-    }
-    
-    
-
-    
-
+    //}
     //if (!isBoosting)
     //{
     //    //currentFlySpeed = min(currentFlySpeed * 1.5, boostFlySpeed);
