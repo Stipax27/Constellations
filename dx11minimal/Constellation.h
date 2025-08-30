@@ -3,6 +3,30 @@
 int constellationsCounter = 0;
 
 
+float hashf(float n)
+{
+    return fract(sin(n) * 43758.5453f);
+}
+
+float noise(point3d point)
+{
+    point3d p = point.floor3();
+    point3d f = point.fract();
+
+    f *= f;
+
+    f = f * f * (3.0f - 2.0f * f.x);
+    float n = p.x + p.y * 57.0f + 113.0f * p.z;
+
+    float a = lerp(lerp(lerp(hashf(n + 0.0f), hashf(n + 1.0f), f.x),
+        lerp(hashf(n + 57.0f), hashf(n + 58.0f), f.x), f.y),
+        lerp(lerp(hashf(n + 113.0f), hashf(n + 114.0f), f.x),
+            lerp(hashf(n + 170.0f), hashf(n + 171.0f), f.x), f.y), f.z);
+
+    return a - 0.5f;
+}
+
+
 class Constellation {
 public:
 
@@ -20,9 +44,13 @@ public:
 
     std::vector<point3d> originStarsCords;
     std::vector <std::vector <float>> originConstellationEdges;
-    std::vector<point3d> targetStarsCords;
-    std::vector <std::vector <float>> targetConstellationEdges;
-    bool morphed = false;
+    std::vector<point3d> prevStarsCords;
+
+    std::vector<point3d> StarStartSH;
+
+
+    Constellation* targetConstellation;
+    bool morphing = false;
     float morphProgress = 0.0f;
 
     std::vector<point3d> starsCords;
@@ -50,18 +78,18 @@ public:
 
     friend XMMATRIX CreateEnemyToWorldMatrix(Constellation& c)
     {
-        updateEnemyPosition(deltaTime);
+        
         c.scale = 20000;
 
-        XMVECTOR currentPos = XMVectorSet(
-            Enemy::enemyAi.enemyConstellationOffset.r[3].m128_f32[0],
-            Enemy::enemyAi.enemyConstellationOffset.r[3].m128_f32[1],
-            Enemy::enemyAi.enemyConstellationOffset.r[3].m128_f32[2],
-            1.0f
-        );
+            XMVECTOR currentPos = XMVectorSet(
+                Enemy::enemyData.enemyConstellationOffset.r[3].m128_f32[0],  // ? ��� Enemy::
+                Enemy::enemyData.enemyConstellationOffset.r[3].m128_f32[1],
+                Enemy::enemyData.enemyConstellationOffset.r[3].m128_f32[2],
+                1.0f
+            );
 
         XMMATRIX translation = XMMatrixTranslationFromVector(currentPos);
-        XMMATRIX rotation = XMMatrixRotationQuaternion(Enemy::enemyAi.currentRotation);
+        XMMATRIX rotation = XMMatrixRotationQuaternion(Enemy::enemyData.currentRotation);
         XMMATRIX scale = XMMatrixScaling(c.scale, c.scale, c.scale);
 
         return  scale * rotation * translation;
@@ -82,9 +110,10 @@ public:
         float deltaTime = currentTime - lastTime;
         lastTime = currentTime;
         if (deltaTime > 100.0f) deltaTime = 100.0f;
-        updateFlyDirection();
+        updateFlyDirection(); //hero move for mouse and move on "WASD"
         updateFlySpeed(deltaTime);
-        updatePlayerPosition(deltaTime);
+        updatePlayerPosition(deltaTime); //bez nego "WASD" toze ne rabotaet
+        Camera::Camera();
 
         XMVECTOR heroPosition = XMVectorSet(
             Hero::state.constellationOffset.r[3].m128_f32[0],
@@ -92,6 +121,7 @@ public:
             Hero::state.constellationOffset.r[3].m128_f32[2],
             0.0f
         );
+      
 
         // 2. Матрица перемещения в начало координат
         XMMATRIX toOrigin = XMMatrixTranslationFromVector(-heroPosition);
@@ -135,6 +165,8 @@ public:
 
         originStarsCords = _starsCords;
         originConstellationEdges = _constellationEdges;
+        prevStarsCords = _starsCords;
+        targetConstellation = this;
 
         starsCords = _starsCords;
         starsHealth = _starsHealth;
@@ -198,104 +230,169 @@ public:
 
     //////////////////////////////////////////////////////////////////////////////////
 
-    void Morph(const Constellation& c)
+    void Morph(Constellation* c)
     {
-        if (!morphed)
+        if (!morphing && targetConstellation != c)
         {
+            morphing = true;
+            morphProgress = -0.1f;
 
-            morphed = true;
-            morphProgress = 0;
-
-            targetStarsCords = c.originStarsCords;
-            targetConstellationEdges = c.originConstellationEdges;
-
-            constellationEdges.clear();
-
-            /*starsCords.clear();
-            for (int i = 0; i < targetStarsCords.size(); i++) {
-                if (i < originStarsCords.size())
-                {
-                    starsCords.push_back(originStarsCords[i]);
-                }
-                else
-                {
-                    starsCords.push_back(targetStarsCords[i]);
-                }
-            }
+            prevStarsCords = starsCords;
+            targetConstellation = c;
 
             constellationEdges.clear();
-            for (int i = 0; i < targetConstellationEdges.size(); i++) {
-                if (i < originConstellationEdges.size())
-                {
-                    constellationEdges.push_back(originConstellationEdges[i]);
-                }
-                else
-                {
-                    constellationEdges.push_back(targetConstellationEdges[i]);
-                }
-            }*/
 
         }
     }
 
     void RenderMorph(float deltaTime)
     {
-        if (morphed)
+        if (morphing)
         {
             morphProgress += deltaTime / 1000.0f;
+
+            point3d up = point3d(
+                XMVectorGetX(Camera::state.Up),
+                XMVectorGetY(Camera::state.Up),
+                XMVectorGetZ(Camera::state.Up)
+            );
+            point3d right = point3d(
+                XMVectorGetX(Camera::state.Right),
+                XMVectorGetY(Camera::state.Right),
+                XMVectorGetZ(Camera::state.Right)
+            );
 
             if (morphProgress <= 1.0f)
             {
                 //starsCords = originStarsCords;
                 //constellationEdges = originConstellationEdges;
 
-                
-
+                float time = timer::GetCounter() / 500;
                 for (int i = 0; i < starsCords.size(); i++) {
+
+                    point3d origin;
+                    if (i < prevStarsCords.size())
+                    {
+                        origin = prevStarsCords[i];
+                    }
+                    else
+                    {
+                        origin = targetConstellation->originStarsCords[i];
+                    }
+
+                    point3d n = point3d(
+                        noise(point3d(origin.y, origin.z, origin.x) + i * 0.1f),
+                        noise(point3d(origin.z, origin.x, origin.y) + i * 0.1f),
+                        noise(point3d(origin.x, origin.y, origin.z) + i * 0.1f)
+                    ) * 2;
+                    point3d localUp = (up * n).normalized();
+                    point3d localRight = (right * n).normalized();
+
                     point3d p = starsCords[i];
                     starsCords[i] = p.lerp(
-                        point3d(noise(point3d(p.y, p.z, p.x)), noise(point3d(p.x, p.z, p.y)), noise(point3d(p.z, p.x, p.y))),
+                        (localUp * sin(time * 10) + localRight * cos(time * 10)) * 0.15f,
                         morphProgress);
                 }
             }
             else if (morphProgress <= 2.0f)
             {
-                if (starsCords.size() != targetStarsCords.size())
+                if (starsCords.size() != targetConstellation->originStarsCords.size())
                 {
                     starsCords.clear();
-                    for (int i = 0; i < targetStarsCords.size(); i++) {
-                        if (i < originStarsCords.size())
-                        {
-                            starsCords.push_back(point3d());
-                        }
-                        else
-                        {
-                            starsCords.push_back(point3d());
-                        }
+                    float time = timer::GetCounter() / 500;
+                    for (int i = 0; i < targetConstellation->originStarsCords.size(); i++) {
+                        point3d origin = targetConstellation->originStarsCords[i];
+
+                        point3d n = point3d(
+                            noise(point3d(origin.y, origin.z, origin.x) + i * 0.1f),
+                            noise(point3d(origin.z, origin.x, origin.y) + i * 0.1f),
+                            noise(point3d(origin.x, origin.y, origin.z) + i * 0.1f)
+                        ) * 2;
+                        point3d localUp = (up * n).normalized();
+                        point3d localRight = (right * n).normalized();
+
+                        starsCords.push_back(
+                            (localUp * sin(time * 10) + localRight * cos(time * 10)) * 0.15f);
                     }
                 }
 
-                if (constellationEdges.size() != targetConstellationEdges.size())
+                if (constellationEdges.size() != targetConstellation->originConstellationEdges.size())
                 {
                     constellationEdges.clear();
-                    for (int i = 0; i < targetConstellationEdges.size(); i++) {
-                        if (i < originConstellationEdges.size())
-                        {
-                            constellationEdges.push_back(originConstellationEdges[i]);
-                        }
-                        else
-                        {
-                            constellationEdges.push_back(targetConstellationEdges[i]);
-                        }
+                    for (int i = 0; i < targetConstellation->originConstellationEdges.size(); i++) {
+                        constellationEdges.push_back(targetConstellation->originConstellationEdges[i]);
                     }
                 }
 
-                for (int i = 0; i < targetStarsCords.size(); i++) {
+                for (int i = 0; i < targetConstellation->originStarsCords.size(); i++) {
                     point3d p = starsCords[i];
-                    starsCords[i] = p.lerp(targetStarsCords[i], morphProgress - 1.0f);
+                    starsCords[i] = p.lerp(targetConstellation->originStarsCords[i], morphProgress - 1.0f);
                 }
+            }
+
+            if (morphProgress >= 2.0f)
+            {
+                morphing = false;
             }
         }
     }
+
+    bool isShaking = false;
+    DWORD shakeStartTime = 0;
+    const DWORD shakeDuration = 500; 
+    float shakeIntensity = 0.1f; 
+    std::vector<point3d> originalStarPositions; 
+
+    void StartShaking() {
+        if (!isShaking) {
+            isShaking = true;
+            shakeStartTime = currentTime;
+            originalStarPositions = starsCords; 
+        }
+    }
+        
+    void UpdateShaking() {
+        if (!isShaking) return;
+
+        float elapsed = (float)(currentTime - shakeStartTime);
+
+        // Проверяем, закончилось ли время тряски
+        if (elapsed >= shakeDuration) {
+            isShaking = false;
+            // Возвращаем звёзды на исходные позиции
+            starsCords = originalStarPositions;
+            return;
+        }
+
+        // Параметры для резкой тряски
+        float shakeFrequency = 30.0f; // Частота тряски
+        float decayFactor = 1.0f - (elapsed / shakeDuration); // Затухание со временем
+
+        // Применяем тряску к каждой звезде
+        for (int i = 0; i < starsCords.size(); i++) {
+            // Генерируем резкие случайные смещения
+            point3d randomOffset = point3d(
+                (rand() % 200 - 100) / 100.0f,
+                (rand() % 200 - 100) / 100.0f,
+                (rand() % 200 - 100) / 100.0f
+            );
+
+            // Добавляем колебания с высокой частотой
+            float timeFactor = elapsed * 0.001f * shakeFrequency;
+            point3d waveOffset = point3d(
+                sin(timeFactor * 1.3f + i * 0.7f),
+                sin(timeFactor * 1.7f + i * 0.3f),
+                sin(timeFactor * 2.1f + i * 0.5f)
+            );
+
+            // Комбинируем эффекты
+            point3d totalOffset = (randomOffset + waveOffset * 0.5f) *
+                shakeIntensity * decayFactor;
+
+            // Применяем смещение к исходной позиции
+            starsCords[i] = originalStarPositions[i] + totalOffset;
+        }
+    }
+
 
 };

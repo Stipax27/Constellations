@@ -20,7 +20,7 @@ void InitGame()
     game.month = 13;
     startTime = currentTime;
 
-    mciSendString(TEXT("play ..\\dx11minimal\\GG_C.mp3"), NULL, 0, NULL);
+    mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
 }
 
 bool drawClickableText(
@@ -42,7 +42,7 @@ bool drawClickableText(
 
     // Проигрываем звук только при первом наведении на этот текст
     if (isHovered && lastHoveredText != text) {
-        ProcessSound("Mouse_select.wav");
+        ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Mouse_select.wav");
         lastHoveredText = text;
     }
     // Сбрасываем запомненный текст, если мышь не над ним

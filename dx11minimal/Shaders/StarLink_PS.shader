@@ -37,6 +37,8 @@ struct VS_OUTPUT
 float4 PS(VS_OUTPUT input) : SV_Target
 {
     float y = input.uv.y;
-    float c = 1 - sqrt(sqrt(abs(y)));
-    return float4(c, c, c, 1.0f);
+    float c = saturate(1 - sqrt(sqrt(abs(y))));
+    float4 color = gConst[2] * c;
+
+    return color;
 }

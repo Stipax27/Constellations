@@ -2,6 +2,8 @@ struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
     float2 uv : TEXCOORD0;
+    uint   starID : COLOR0;
+    float4 worldpos : POSITION1;
 };
 
 VS_OUTPUT VS(uint vID : SV_VertexID)

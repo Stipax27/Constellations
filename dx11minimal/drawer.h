@@ -48,29 +48,44 @@ namespace drawer
             point3d point1 = TransformPoint(starArray[starEdges[i][0]], Constellation.Transform);
             point3d point2 = TransformPoint(starArray[starEdges[i][1]], Constellation.Transform);
 
-            if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0)
+            if (!Constellation.morphing && Constellation.starsCords.size() == Constellation.originStarsCords.size())
             {
-                // Устанавливаем яркий цвет для линий между неповрежденными звездами
-                ConstBuf::global[0] = XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f); // Желтый
+                if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0)
+                {
+                    // Устанавливаем яркий цвет для линий между неповрежденными звездами
+                    ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // Белый
+                    ConstBuf::Update(5, ConstBuf::global);
+                    ConstBuf::ConstToPixel(5);
+
+                    drawLine(point1, point2, sz * 1.5f); // Увеличиваем толщину линии
+
+                    // Восстанавливаем стандартный цвет
+                    ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+                    ConstBuf::Update(5, ConstBuf::global);
+                }
+                else if (starHealth[starEdges[i][0]] > 0 || starHealth[starEdges[i][1]] > 0)
+                {
+                    // Полуповрежденные линии - тонкие и бледные
+                    ConstBuf::global[2] = XMFLOAT4(0.7f, 0.7f, 0.7f, 0.5f);
+                    ConstBuf::Update(5, ConstBuf::global);
+                    ConstBuf::ConstToPixel(5);
+
+                    drawLine(point1, point2, sz * 0.5f);
+
+                    ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+                    ConstBuf::Update(5, ConstBuf::global);
+                }
+            }
+            else
+            {
+                ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // Белый
                 ConstBuf::Update(5, ConstBuf::global);
                 ConstBuf::ConstToPixel(5);
 
                 drawLine(point1, point2, sz * 1.5f); // Увеличиваем толщину линии
 
                 // Восстанавливаем стандартный цвет
-                ConstBuf::global[0] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-                ConstBuf::Update(5, ConstBuf::global);
-            }
-            else if (starHealth[starEdges[i][0]] > 0 || starHealth[starEdges[i][1]] > 0)
-            {
-                // Полуповрежденные линии - тонкие и бледные
-                ConstBuf::global[0] = XMFLOAT4(0.7f, 0.7f, 0.7f, 0.5f);
-                ConstBuf::Update(5, ConstBuf::global);
-                ConstBuf::ConstToPixel(5);
-
-                drawLine(point1, point2, sz * 0.5f);
-
-                ConstBuf::global[0] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+                ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
                 ConstBuf::Update(5, ConstBuf::global);
             }
         }
@@ -103,23 +118,26 @@ namespace drawer
             float currentRadius = finalStarRad;
             XMFLOAT4 starColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // Белый по умолчанию
 
-            if (starHealth[i] > 0)
+            if (i < starHealth.size())
             {
-                // Для неповрежденных звезд - пульсация и другой цвет
-                float pulse = 0.5f + 0.5f * sinf(currentTime * 0.005f);
-                currentRadius += pulse * 5.0f;
+                if (starHealth[i] > 0)
+                {
+                    // Для неповрежденных звезд - пульсация и другой цвет
+                    float pulse = 0.5f + 0.5f * sinf(currentTime * 0.005f);
+                    currentRadius += pulse * 5.0f;
 
-                // Можно использовать другой цвет, например желтый
-                starColor = XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f); // Желтый
-            }
-            else
-            {
-                // Для поврежденных звезд - серый цвет
-                starColor = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.7f); // Серый с прозрачностью
+                    // Можно использовать другой цвет, например желтый
+                    starColor = XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f); // Желтый
+                }
+                else
+                {
+                    // Для поврежденных звезд - серый цвет
+                    starColor = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.25f); // Серый с прозрачностью
+                }
             }
 
             // Устанавливаем цвет звезды
-            ConstBuf::global[0] = starColor;
+            ConstBuf::global[1] = starColor;
             ConstBuf::Update(5, ConstBuf::global);
             ConstBuf::ConstToPixel(5);
 
@@ -129,7 +147,7 @@ namespace drawer
             }
 
             // Восстанавливаем стандартный цвет
-            ConstBuf::global[0] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+            ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
             ConstBuf::Update(5, ConstBuf::global);
         }
     }
@@ -138,6 +156,7 @@ namespace drawer
     {
         Shaders::vShader(1);
         Shaders::pShader(1);
+        Shaders::gShader(0);
 
         drawStarPulse(Constellation, colorOverride, finalStarRad);
 
@@ -147,38 +166,24 @@ namespace drawer
         drawLinks(Constellation,sz);
     }
 
-    void drawStarField()
+    void DrawRenderObject(RenderObject* object)
     {
-        Shaders::vShader(2);
-        Shaders::pShader(2);
-        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-        Draw::Starfield(1);
-    }
+        Shaders::vShader(object->vs_id);
+        Shaders::pShader(object->ps_id);
+        Shaders::gShader(object->gs_id);
+        Blend::Blending(object->blendmode, object->blendop);
 
-    void drawStars()
-    {
-        Shaders::vShader(3);
-        Shaders::pShader(3);
-        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-        Draw::Starfield(1);
-    }
+        point3d camPos = point3d(XMVectorGetX(Camera::state.Eye), XMVectorGetY(Camera::state.Eye), XMVectorGetZ(Camera::state.Eye));
+        float camDist = (camPos - object->pos).magnitude();
 
-    void drawGalaxyFog(int shaderID)
-    {
-        Shaders::vShader(shaderID);
-        Shaders::pShader(shaderID);
-        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-        Draw::GalaxyFog(5000000);
-    }
-
-    void drawCursor(int shaderID)
-    {
-        Shaders::vShader(shaderID);
-        Shaders::pShader(shaderID);
-        Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
-
-        ConstBuf::global[0] = XMFLOAT4(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1), 0.0f, 1.0f);
-        Draw::Cursor();
+        if (camDist < object->renderDistance || object->renderDistance < 0)
+        {
+            if (object->instances > 1)
+                //context->DrawInstanced(object->vertexes, object->instances * (1 - min(camDist / object->lodDistanceStep, 1) / object->lodCount), 0, 0);
+                context->DrawInstanced(object->vertexes, object->instances, 0, 0);
+            else
+                context->Draw(object->instances * object->vertexes, 0);
+        }
     }
 
     const COLORREF colors[] =
@@ -194,52 +199,6 @@ namespace drawer
 
 
 
-    void morphWepon(std::vector <point3d>& starArray1, std::vector<std::vector<float>> starEdges1, std::vector <point3d>& starArray2, std::vector<std::vector<float>> starEdges2, std::vector <point3d>& morphArray, std::vector <std::vector <float>> Morp_indices, std::vector <float> Morp_health)
-    {
-        morphArray.clear();
-        Morp_indices.clear();
-        Morp_health.clear();
-        int sz1 = starArray1.size();
-        int sz2 = starArray2.size();
-        int sz3 = starEdges1.size();
-        int sz4 = starEdges2.size();
-        if (sz1 < sz2)
-        {
-            for (int i = 0; i < sz1;i++)
-            {
-                float morphSpeed = 0.01;
-                morphArray.push_back(point3d::lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(currentTime * morphSpeed))));
-            }
-        }
-        else
-        {
-            for (int i = 0; i < sz2;i++)
-            {
-                float morphSpeed = 0.01;
-                morphArray.push_back(point3d::lerp(starArray1[i], starArray2[i], (0.5 + 0.5 * sin(currentTime * morphSpeed))));
-            }
-        }
-        if (sz3 > sz4)
-        {
-            for (float i = 0; i < sz4;i++)
-            {
-                Morp_indices.push_back({ i, i + 1 });
-            }
-        }
-        else
-        {
-            for (float i = 0; i < sz3;i++)
-            {
-                Morp_indices.push_back({ i, i + 1 });
-            }
-        }
-        for (int i = 0; i < 15;i++)
-        {
-            Morp_health.push_back(1);
-        }
-
-        //drawСonstellation(morphArray, Morp_indices, Morp_health); Отключено
-    }
 
     void drawPlayerСonstellationToMenu()
     {
@@ -254,112 +213,6 @@ namespace drawer
         float t = currentTime * 0.001;
         c.Transform = XMMatrixScaling(120, 120, 120) * XMMatrixRotationY(t) * XMMatrixTranslation(0, 0, 500);
         drawСonstellation(*starSet[player_sign]);
-    }
-
-   
-    void drawSwordLine(float CenterX, float CenterY)
-    {
-        float Length = 100;
-
-        modelProject = &NullProject;
-
-
-        point3d Sword1, Sword2;
-
-        Sword1.x = CenterX + Length;
-        Sword1.y = CenterY + Length;
-        Sword1.z = 0;
-
-        Sword2.x = CenterX - Length;
-        Sword2.y = CenterY - Length;
-        Sword2.z = 0;
-
-        Shaders::vShader(4);
-        Shaders::pShader(4);
-
-        drawLine(Sword1, Sword2);
-
-    }
-
-    void drawShieldCircle(float CenterX, float CenterY,float CenterZ)
-    {
-        float shieldRadius = 100;
-
-        // Центр = oldmouse (круг растёт из этой точки)
-        float centerX = CenterX;
-        float centerY = CenterY;
-        modelProject = &NullProject;
-
-        for (int i = 0; i < 36; i++) {
-            float angle = i * (2 * PI / 36);  // 36 точек для гладкого круга
-            float nextAngle = (i + 1) * (2 * PI / 36);
-
-            point3d shield1, shield2;
-
-            shield1.x = centerX + shieldRadius * cos(angle);
-            shield1.y = centerY + shieldRadius * sin(angle);
-            shield1.z = CenterZ;
-
-            shield2.x = centerX + shieldRadius * cos(nextAngle);
-            shield2.y = centerY + shieldRadius * sin(nextAngle);
-            shield2.z = CenterZ;
-
-
-            drawLine(shield1, shield2);
-
-
-        }
-    }
-
-    void drawBowLine(float CenterX, float CenterY)
-    {
-        float shieldRadius = 20;
-
-        // Центр = oldmouse (круг растёт из этой точки)
-        float centerX = CenterX;
-        float centerY = CenterY;
-        modelProject = &NullProject;
-
-        for (int i = 0; i < 36; i++) {
-            float angle = i * (2 * PI / 36);  // 36 точек для гладкого круга
-            float nextAngle = (i + 1) * (2 * PI / 36);
-
-            point3d shield1, shield2;
-
-            shield1.x = centerX + shieldRadius * cos(angle);
-            shield1.y = centerY + shieldRadius * sin(angle);
-            shield1.z = 0;
-
-            shield2.x = centerX + shieldRadius * cos(nextAngle);
-            shield2.y = centerY + shieldRadius * sin(nextAngle);
-            shield2.z = 0;
-
-
-            drawLine(shield1, shield2);
-
-
-        }
-    }
-    void drawArrow(float CenterX, float CenterY)
-    {
-        float Length = 50;
-
-        float centerX = CenterX;
-        float centerY = CenterY;
-        modelProject = &NullProject;
-
-        point3d Arrow1, Arrow2;
-
-        Arrow1.x = centerX + Length;
-        Arrow1.y = centerY + Length;
-        Arrow1.z = 0;
-
-        Arrow2.x = centerX;
-        Arrow2.y = centerY;
-        Arrow2.z = 0;
-
-        drawLine(Arrow1, Arrow2);
-
     }
 
 
@@ -566,7 +419,7 @@ namespace drawer
         static DWORD lastInputTime = 0;
         const DWORD inputRepeatDelay = 100;
 
-        if (GetAsyncKeyState('Q')) {
+        /*if (GetAsyncKeyState('Q')) {
             if (currentTime - lastInputTime > inputRepeatDelay) {
                 lastInputTime = currentTime;
                 if (battleStartTime + battleTime + timeModifier + 1000 - currentTime <= MAX_BATTLE_TIME) {
@@ -586,7 +439,7 @@ namespace drawer
         }
         else {
             isRewind = false;
-        }
+        }*/
 
         if (isBattleActive) {
             LONG remainingTime = (LONG)((battleStartTime + battleTime + timeModifier) - currentTime);
@@ -624,14 +477,14 @@ namespace drawer
     bool CheckRaySphereCollision(const point3d& rayStart, const point3d& rayDir,
         const point3d& sphereCenter, float sphereRadius)
     {
-        // Проверка валидности входных параметров
+      
         if (sphereRadius <= 0 || isnan(rayDir.x))return false;
         
 
             point3d toSphere = sphereCenter - rayStart;
             float projection = toSphere.dot(rayDir);
 
-            // Если сфера позади луча и не пересекается
+            
             if (projection < 0 && toSphere.magnitude() > sphereRadius) {
                 return false;
             }
@@ -644,28 +497,88 @@ namespace drawer
 
     struct StarProjectile {
         point3d position;
-        point3d direction;  // Индивидуальное направление для каждой звезды
+        point3d direction; 
+        float radius;
+        point3d up;
+        point3d right;
+        weapon_name weapon;
+        float Speed;
+
     };
 
     std::vector<StarProjectile> attackStars; // Теперь храним звёзды с их направлениями
 
     void UpdateAttackStars(float deltaTime) {
-        // Обновляем позиции звёзд по их индивидуальным направлениям
+        
         for (auto& star : attackStars) {
-            star.position += star.direction.normalized() * 50.0f * deltaTime;
+            star.position += star.direction.normalized() * 5.0f * deltaTime;
         }
     }
 
     void DrawAttackStars() {
-        // Отрисовываем все звёзды
-        for (StarProjectile& star : attackStars) {
-            // Рисуем линию от начальной позиции до текущей
-            point3d endPos = star.position + star.direction * 100.f; // Удлиняем для визуализации
-            drawLine(star.position, endPos, 3.f);
 
-            // Рисуем саму звезду
-            star.position.draw(star.position, 15.0f);
+        for (auto& star : attackStars) 
+        {
+
+             switch (star.weapon)
+             {
+
+             case weapon_name::Sword: {
+
+                    Shaders::vShader(1);
+                    Shaders::pShader(1);
+                    
+                        point3d end = star.position + star.direction * 1000.f;
+                        drawLine(star.position, end, 3.f);
+                        star.position.draw(star.position, 20.0f);
+                    
+                    break;
+                }
+
+                case weapon_name::Shield: {
+
+                    Shaders::vShader(1);
+                    Shaders::pShader(1);
+                   
+
+                        for (int i = 0; i < 36; i++) {
+                            float angle = i * (2 * PI / 36);
+                            float nextAngle = (i + 1) * (2 * PI / 36);
+
+                            point3d local1(cos(angle), sin(angle), 0);
+                            point3d local2(cos(nextAngle), sin(nextAngle), 0);
+
+                            point3d shield1 = star.position + (star.right * local1.x + star.up * local1.y) * star.radius;
+                            point3d shield2 = star.position + (star.right * local2.x + star.up * local2.y) * star.radius;
+
+                            drawLine(shield1, shield2, 10.f);
+                        }
+                        star.position.draw(star.position, 15.0f);
+                    
+                    break;
+                }
+
+                case weapon_name::Bow: {
+                    Shaders::vShader(4);
+                    Shaders::pShader(4);
+
+                    point3d arrowStart = star.position;
+                    point3d arrowEnd = star.position + star.direction * 500.f;
+
+                    drawLine(arrowStart, arrowEnd, 3.f);
+
+                    point3d tip1 = arrowEnd + star.right * 10.f - star.direction * 20.f;
+                    point3d tip2 = arrowEnd - star.right * 10.f - star.direction * 20.f;
+
+                    drawLine(arrowEnd, tip1, 2.f);
+                    drawLine(arrowEnd, tip2, 2.f);
+                    drawLine(tip1, tip2, 2.f);
+                    break;
+                }
+
+             }
         }
+       
     }
 
     bool isAttacking = false;
@@ -673,62 +586,128 @@ namespace drawer
     const float projectileSpeed = 2.0f;
     point3d mouseRay;
     point3d start;
-    void HandleMouseClick() {
+    
+    void HandleMouseClick(XMVECTOR heroPosition) {
+        if (currentTime - lastAttackTime > 500)
+        {
+            if (GetAsyncKeyState(VK_LBUTTON) && 0x8000) {
 
-        if (!Hero::state.constellationOffset.r || !Camera::state.Eye.m128_f32[0]) {
-            OutputDebugStringA("Hero or Camera not initialized!\n");
-            return;
-        }
-        if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 && currentTime - lastAttackTime > 500) {
+                if (gameState == gameState_::selectEnemy) {
+                    gameState = gameState_::Fight;
+                    mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
+                    mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
+                }
+                lastAttackTime = currentTime;
+                //backMorphLock = false;
 
-            if (gameState == gameState_::selectEnemy) {
-                gameState = gameState_::Fight;
-                mciSendString(TEXT("stop ..\\dx11minimal\\GG_C.mp3"), NULL, 0, NULL);
-                mciSendString(TEXT("play ..\\dx11minimal\\Oven_NEW.mp3"), NULL, 0, NULL);
+                start = point3d(
+                    XMVectorGetX(heroPosition),
+                    XMVectorGetY(heroPosition),
+                    XMVectorGetZ(heroPosition)
+                );
+
+                point3d camPos = point3d(
+                    XMVectorGetX(Camera::state.Eye),
+                    XMVectorGetY(Camera::state.Eye),
+                    XMVectorGetZ(Camera::state.Eye)
+                );
+
+                mouseRay = GetMouseRay(mouse.pos);
+                point3d mousePos = camPos + mouseRay * 6000;
+                point3d newDirection = (mousePos - start).normalized();
+
+
+                //attackStars.clear();
+
+
+                switch (current_weapon) {
+                case weapon_name::Sword: {
+
+                    Hero::state.isAttackRotating = true;
+                    Hero::state.attackStartTime = currentTime;
+                    Hero::state.attackRotationProgress = 0.0f;
+
+                    // Остальной код атаки мечом...
+                    for (int i = 0; i < 25; i++) {
+                        StarProjectile newStar;
+                        newStar.position = start;
+                        newStar.direction = newDirection;
+                        newStar.radius = 15.0f;
+                        newStar.weapon = weapon_name::Sword;
+
+                        point3d up = point3d(XMVectorGetX(Camera::state.Up),
+                            XMVectorGetY(Camera::state.Up),
+                            XMVectorGetZ(Camera::state.Up));
+                        point3d right = point3d(XMVectorGetX(Camera::state.Right),
+                            XMVectorGetY(Camera::state.Right),
+                            XMVectorGetZ(Camera::state.Right));
+
+                        newStar.position += up * (i * 15 - 150);
+                        newStar.position += right * (i * 15 - 150);
+
+                        attackStars.push_back(newStar);
+                    }
+
+                    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Sword.wav");
+                    break;
+                }
+
+                case weapon_name::Shield: {
+
+                    StarProjectile newStar;
+                    newStar.position = start;
+                    newStar.direction = newDirection;
+                    newStar.radius = 300.0f;
+                    newStar.weapon = weapon_name::Shield;
+
+                    newStar.up = point3d(XMVectorGetX(Camera::state.Up),
+                        XMVectorGetY(Camera::state.Up),
+                        XMVectorGetZ(Camera::state.Up));
+                    newStar.right = newDirection.cross(newStar.up).normalized();
+                    newStar.up = newStar.right.cross(newDirection).normalized();
+
+                    attackStars.push_back(newStar);
+
+
+                    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\ShieldStan3.wav");
+
+                    break;
+                }
+
+                case weapon_name::Bow: {
+
+                    point3d fixedUp = point3d(XMVectorGetX(Camera::state.Up),
+                        XMVectorGetY(Camera::state.Up),
+                        XMVectorGetZ(Camera::state.Up));
+                    point3d fixedRight = newDirection.cross(fixedUp).normalized();
+                    fixedUp = fixedRight.cross(newDirection).normalized();
+
+                    for (int i = 0; i < 5; i++) {
+                        StarProjectile newStar;
+                        newStar.position = start;
+                        newStar.direction = newDirection;
+                        newStar.radius = 10.0f;
+                        newStar.weapon = weapon_name::Bow;
+
+                        newStar.up = fixedUp;
+                        newStar.right = fixedRight;
+
+
+                        attackStars.push_back(newStar);
+                    }
+
+                    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Bow.wav");
+                    break;
+                }
+                }
+
+                isAttacking = true;
+                current_weapon = weapon_name::None;
             }
-            lastAttackTime = currentTime;
-
-            // Получаем позицию героя
-            XMVECTOR heroPosition = Hero::state.constellationOffset.r[3];
-            start = point3d(
-                XMVectorGetX(heroPosition),
-                XMVectorGetY(heroPosition),
-                XMVectorGetZ(heroPosition)
-            );
-
-            // Вычисляем направление атаки от камеры к курсору
-            point3d camPos = point3d(
-                XMVectorGetX(Camera::state.Eye),
-                XMVectorGetY(Camera::state.Eye),
-                XMVectorGetZ(Camera::state.Eye)
-            );
-
-            mouseRay = GetMouseRay(mouse.pos);
-            point3d mousePos = camPos + mouseRay * 6000;
-            point3d newDirection = (mousePos - start).normalized();
-
-            // Создаём звёзды с этим направлением
-            for (int i = 0; i < 25; i++) {
-                StarProjectile newStar;
-                newStar.position = start;
-                newStar.direction = newDirection; // Фиксируем направление при создании
-
-                // Добавляем небольшой разброс позиции
-                point3d up = point3d(XMVectorGetX(Camera::state.Up),
-                    XMVectorGetY(Camera::state.Up),
-                    XMVectorGetZ(Camera::state.Up));
-                point3d right = point3d(XMVectorGetX(Camera::state.Right),
-                    XMVectorGetY(Camera::state.Right),
-                    XMVectorGetZ(Camera::state.Right));
-
-                newStar.position += up * (i * 15 - 150); 
-                newStar.position += right * (i * 15 - 150);
-
-                attackStars.push_back(newStar);
-            }
-
-            isAttacking = true;
-            ProcessSound("Sword.wav");
+            /*else if (!backMorphLock)
+            {
+                current_weapon = weapon_name::None;
+            }*/
         }
     }
 
@@ -740,7 +719,7 @@ namespace drawer
             !starSet[currentEnemyID] ||
             starSet[currentEnemyID]->starsCords.empty()) {
             OutputDebugStringA("Invalid attack state - resetting\n");
-            attackStars.clear();
+            //attackStars.clear();
             return;
         }
         
@@ -751,20 +730,20 @@ namespace drawer
             for (int i = 0; i < enemy.starsCords.size(); i++) {
                 if (enemy.starsHealth[i] <= 0) continue;
 
-                // Получаем мировые координаты звезды с учетом трансформации
+              
                 point3d starWorldPos = TransformPoint(enemy.starsCords[i], enemy.Transform);
 
-                // Для каждого снаряда проверяем расстояние до звезды
+                
                 for (auto& star : attackStars) {
                     float distance = (star.position - starWorldPos).magnitude();
 
-                    // Используем явное сравнение расстояния с радиусом звезды
+                
                     if (CheckRaySphereCollision(star.position, star.direction,
-                        starWorldPos, 1000.f)) { // 1000.f - радиус звезды
+                        starWorldPos, 1000.f)) { 
                         enemy.starsHealth[i] -= 1.f;
                         std::string enemyH = "HP: " + std::to_string(enemy.starsHealth[i]);
                         drawString(enemyH.c_str(), window.width / 4, window.height / 4, 1.f,true);
-                        ProcessSound("Damage.wav");
+                        ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Damage.wav");
                         break;
                     }
                 }
@@ -774,6 +753,17 @@ namespace drawer
         }
 
         UpdateAttackStars(deltaTime);
+
+        if (current_weapon == weapon_name::Shield) {
+
+            attackStars.erase(
+                std::remove_if(attackStars.begin(), attackStars.end(),
+                    [](const StarProjectile& star) {
+                        return (star.position - start).magnitude() > 3000.0f;
+                    }),
+                attackStars.end());
+        
+        }
 
         attackStars.erase(
             std::remove_if(attackStars.begin(), attackStars.end(),
@@ -787,8 +777,6 @@ namespace drawer
     void DrawSwordAttack() {
         if (isAttacking) return;
 
-        Shaders::vShader(1);
-        Shaders::pShader(1);
         Blend::Blending(Blend::blendmode::on);
        
         DrawAttackStars();
@@ -797,7 +785,7 @@ namespace drawer
     
 
 
-    struct uiParticle
+    struct Particle
     {
         point3d pos;
         point3d vel;
@@ -805,7 +793,7 @@ namespace drawer
         DWORD lifetime;
     };
 
-    vector<uiParticle*> uiParticles = vector<uiParticle*>{};
+    vector<Particle*> uiParticles = vector<Particle*>{};
     bool isPressed = false;
     void CreateCursorParticles()
     {
@@ -815,13 +803,14 @@ namespace drawer
             if (!isPressed)
             {
                 isPressed = true;
-                ProcessSound("Mouse_click1.wav");
+                DeleteParticledText("TEST TEXT RENDER");
+                ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Mouse_click1.wav");
                 point3d mousePos = point3d(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1),0);
                 DWORD curTime = timer::GetCounter();
 
                 for (int i = 0; i < 20; i++)
                 {
-                    uiParticle* particle = new uiParticle;
+                    Particle* particle = new Particle;
                     particle->pos = mousePos;
                     particle->vel = point3d(GetRandom(-100, 100), GetRandom(-100, 100), 0).normalized()* point3d(aspect, 1, 0) * (float)GetRandom(8, 30) / 100.0f * 0.002f;
                     particle->lifetime = GetRandom(500, 1500);
@@ -847,7 +836,7 @@ namespace drawer
         DWORD curTime = timer::GetCounter();
         while (i < uiParticles.size())
         {
-            uiParticle* particle = uiParticles[i];
+            Particle* particle = uiParticles[i];
 
             if (curTime - particle->startTime < particle->lifetime)
             {
@@ -873,13 +862,306 @@ namespace drawer
     }
 
 
+    vector<Particle*> speedParticles = vector<Particle*>{};
+
+    int sp_rate = 50;
+    float sp_minFlySpeed = maxFlySpeed;
+    DWORD sp_lastEmitTime = 0;
+
+    void CreateSpeedParticles()
+    {
+        DWORD curTime = timer::GetCounter();
+        if (currentFlySpeed > sp_minFlySpeed && flyDirection.magnitude() > 0.5)
+        {
+            float speedRatio = currentFlySpeed / maxFlySpeed;
+            float sp_emitDelta = 1000 / (sp_rate * speedRatio);
+            DWORD timeDelta = curTime - sp_lastEmitTime;
+            if (timeDelta >= sp_emitDelta)
+            {
+                sp_lastEmitTime = curTime;
+
+                point3d camPos = point3d(
+                    XMVectorGetX(Camera::state.Eye),
+                    XMVectorGetY(Camera::state.Eye),
+                    XMVectorGetZ(Camera::state.Eye)
+                );
+                point3d forward = point3d(
+                    XMVectorGetX(Camera::state.Forward),
+                    XMVectorGetY(Camera::state.Forward),
+                    XMVectorGetZ(Camera::state.Forward)
+                );
+
+                for (int i = 0; i < min((int)(timeDelta / sp_emitDelta), 256); i++)
+                {
+                    Particle* particle = new Particle;
+                    particle->pos = camPos + forward * 7000 + flyDirection * 6000 + (flyUpDirection * GetRandom(-100, 100) + flyRightDirection * GetRandom(-100, 100)).normalized() * 5000;
+                    particle->lifetime = GetRandom(400, 800) / pow(speedRatio, 0.25);
+                    particle->startTime = curTime;
+                    particle->vel = flyDirection;
+
+                    speedParticles.push_back(particle);
+                }
+            }
+        }
+        else if (!wasShiftPressed)
+        {
+            sp_lastEmitTime = curTime;
+        }
+        else
+        {
+            sp_lastEmitTime -= deltaTime;
+        }
+    }
+
+    void DrawSpeedParticles()
+    {
+        Shaders::vShader(8);
+        Shaders::pShader(8);
+        Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
+        Depth::Depth(Depth::depthmode::off);
+
+        point3d forward = point3d(
+            XMVectorGetX(Camera::state.Forward),
+            XMVectorGetY(Camera::state.Forward),
+            XMVectorGetZ(Camera::state.Forward)
+        );
+
+        int i = 0;
+        DWORD curTime = timer::GetCounter();
+        while (i < speedParticles.size())
+        {
+            Particle* particle = speedParticles[i];
+
+            if (curTime - particle->startTime < particle->lifetime)
+            {
+                if (flyDirection.magnitude() > 0)
+                {
+                    //particle->vel = flyDirection * currentFlySpeed / 5;
+                    particle->vel = particle->vel.normalized() * currentFlySpeed / 5;
+                }
+                particle->pos += particle->vel * deltaTime;
+
+                ConstBuf::global[0] = XMFLOAT4(particle->pos.x, particle->pos.y, particle->pos.z, 1.0f - (float)(curTime - particle->startTime) / (float)particle->lifetime);
+                ConstBuf::global[2] = XMFLOAT4(particle->vel.x, particle->vel.y, particle->vel.z, 0);
+
+                ConstBuf::Update(5, ConstBuf::global);
+                ConstBuf::ConstToVertex(5);
+                ConstBuf::Update(1, ConstBuf::drawerP);
+                ConstBuf::ConstToPixel(1);
+                ConstBuf::ConstToPixel(5);
+
+                context->Draw(6, 0);
+
+                i++;
+            }
+            else
+            {
+                speedParticles.erase(speedParticles.begin() + i);
+            }
+        }
+    }
+
+    std::vector<StarProjectile> Wave;
+
+    void CreateShockwave(point3d& center, float initialRadius, point3d& HeroPos) {
+        StarProjectile wave;
+        wave.position = { center.x, center.y + 4000, center.z };
+        wave.radius = initialRadius;
+
+        // Жёстко задаём ориентацию для горизонтальной волны
+        wave.up = point3d(0, 1, 0);    // Вверх по оси Y (вертикаль)
+        wave.right = point3d(1, 0, 0); // Вправо по оси X (горизонталь)
+
+        Wave.push_back(wave);
+    }
+
+    void UpdateShockwave(float deltaTime) {
+        for (auto& wave : Wave) {
+            wave.radius += 5.0f * deltaTime; // Adjust speed as needed
+        }
+
+        // Remove waves that are too big
+        Wave.erase(
+            std::remove_if(Wave.begin(), Wave.end(),
+                [](const StarProjectile& w) {
+                    return w.radius > 20000.0f; // Adjust max radius as needed
+                }),
+            Wave.end()
+        );
+    }
+
+    void RenderShockwave() {
+        Shaders::vShader(4);
+        Shaders::pShader(4);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+        for (auto& wave : Wave) {
+            // Рисуем идеально горизонтальный круг
+            for (int i = 0; i < 36; i++) {
+                float angle = i * (2 * PI / 36);
+                float nextAngle = (i + 1) * (2 * PI / 36);
+
+                // Точки на окружности в XZ-плоскости (Y=0)
+                point3d point1 = wave.position + point3d(cos(angle), 0, sin(angle)) * wave.radius;
+                point3d point2 = wave.position + point3d(cos(nextAngle), 0, sin(nextAngle)) * wave.radius;
+
+                drawLine(point1, point2, 1000.f);
+            }
+
+            // Центр волны
+            //wave.position.draw(wave.position, 15.0f);
+        }
+    }
+
+    std::vector<StarProjectile> boomStars;
+
+    void CreateExplosionEffects(point3d center, float radius) {
+        // Очищаем старые частицы
+        boomStars.clear();
+
+        const int particleCount = 5000; // Сохраняем количество частиц
+        const float goldenAngle = PI * (3.0f - sqrt(5.0f)); // Золотой угол для равномерного распределения
+
+        // Создаем частицы взрыва с равномерным распределением по сфере
+        for (int i = 0; i < particleCount; i++) {
+            StarProjectile particle;
+
+            // Равномерное распределение точек на сфере (фибоначчиева спираль)
+            float y = 1.0f - (i / float(particleCount - 1)) * 2.0f; // y от 1 до -1
+            float radiusAtY = sqrtf(1.0f - y * y);
+
+            float theta = goldenAngle * i;
+            float x = cosf(theta) * radiusAtY;
+            float z = sinf(theta) * radiusAtY;
+
+            // Начальное положение - все частицы в центре
+            particle.position = center;
+
+            // Направление разлета (нормализованный вектор)
+            particle.direction = point3d(x, y, z).normalized();
+            particle.Speed = GetRandom(1, 50);
+            // Фиксированные параметры (убираем случайность)
+            particle.radius = 1000.0f; // Базовый размер без вариаций
+            particle.up = point3d(0, 1, 0);
+            particle.right = particle.direction.cross(particle.up).normalized();
+
+            boomStars.push_back(particle);
+        }
+    }
+
+    void UpdateExplosionEffects(float deltaTime) {
+        // Обновляем частицы взрыва
+        for (auto& particle : boomStars) {
+            // Движение частиц от центра с постоянной скоростью
+            particle.position += particle.direction * deltaTime * particle.Speed; // Фиксированная скорость
+
+            // Уменьшение размера со временем
+            particle.radius = max(particle.radius * 0.95f, 1.0f);
+        }
+
+        // Удаляем слишком маленькие частицы
+        boomStars.erase(
+            std::remove_if(boomStars.begin(), boomStars.end(),
+                [](const StarProjectile& p) { return p.radius < 2.0f; }),
+            boomStars.end()
+        );
+    }
+
+    void RenderExplosionEffects() {
+
+        Shaders::vShader(1);
+        Shaders::pShader(1);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+        // Рисуем частицы взрыва
+        for (auto& particle : boomStars) {
+            // Цвет остается без изменений (как в оригинале)
+            ConstBuf::global[1] = XMFLOAT4(
+                0, // R
+                0, // G
+                0, // B
+                min(1.0f, particle.radius / 1.0f) // Alpha
+            );
+
+            ConstBuf::Update(5, ConstBuf::global);
+            ConstBuf::ConstToPixel(5);
+
+            // Рисуем частицу
+            particle.position.draw(particle.position, particle.radius);
+        }
+
+        // Восстанавливаем стандартный цвет
+        
+    }
+
+    void InputHook(float deltaTime, point3d _hero, point3d _enemy) {
+
+        Shaders::vShader(4);
+        Shaders::pShader(4);
+
+        static bool isHooked = false;
+        static float currentSpeed = 0.0f;
+        const float maxSpeed = 10.0f;
+        const float acceleration = 2000.0f;
+        const float minDistance = 500.0f;
+
+        
+        XMFLOAT3 heroFloat3(_hero.x, _hero.y, _hero.z);
+        XMFLOAT3 enemyFloat3(_enemy.x, _enemy.y, _enemy.z);
+
+        XMVECTOR heroPos = XMLoadFloat3(&heroFloat3);
+        XMVECTOR enemyPos = XMLoadFloat3(&enemyFloat3);
+
+        XMVECTOR Dir = enemyPos - heroPos;
+        float distance = XMVectorGetX(XMVector3Length(Dir));
+
+       
+        if (GetAsyncKeyState(VK_RBUTTON) & 0x8000 && distance < 30000.0f && !isHooked) {
+            isHooked = true;
+            currentSpeed = maxSpeed * 0.2f;
+        }
+
+        
+
+        if (isHooked) {
+            drawLine(_hero, _enemy, 5.f);
+            if (currentSpeed < maxSpeed) {
+                currentSpeed += acceleration * deltaTime;
+                currentSpeed = min(currentSpeed, maxSpeed);
+            }
+
+           
+            if (distance <= minDistance) {
+                isHooked = false;
+                currentSpeed = 0.0f;
+            }
+            else {
+               
+                XMVECTOR FlyDir = XMVector3Normalize(Dir);
+                Hero::state.position += FlyDir * currentSpeed * deltaTime;
+            }
+        }
+
+       
+        Hero::state.constellationOffset = XMMatrixRotationQuaternion(Hero::state.currentRotation) *
+            XMMatrixTranslationFromVector(Hero::state.position);
+
+        Hero::state.worldMatrix = XMMatrixRotationQuaternion(Hero::state.currentRotation) *
+            XMMatrixTranslationFromVector(Hero::state.position);
+    }
+
     void drawWorld(float deltaTime)
     {
         textStyle.color = RGB(0, 191, 255);
-        Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
-        Draw::ClearDepth();
+
+        XMVECTOR heroPosition = Hero::state.constellationOffset.r[3];
+        XMVECTOR enemyPositions = Enemy::enemyData.enemyConstellationOffset.r[3];
 
        //d2dRenderTarget->BeginDraw();
+        CreateSpeedParticles();
+        DrawSpeedParticles();
+
+        //d2dRenderTarget->BeginDraw();
         switch (gameState)
         {
         case gameState_::MainMenu:
@@ -910,16 +1192,20 @@ namespace drawer
             Depth::Depth(Depth::depthmode::off);
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 
-            drawStarField();
-            Shaders::vShader(1);
-            Shaders::pShader(1);
+            ConstBuf::Update(0, ConstBuf::drawerV);
+            ConstBuf::ConstToVertex(0);
+            ConstBuf::Update(1, ConstBuf::drawerP);
+            ConstBuf::ConstToPixel(1);
 
-            drawGalaxyFog(7);
+            DrawRenderObject(backgroundStars);
+            DrawRenderObject(spaceStars);
+            DrawRenderObject(ariesNebula);
+            //DrawRenderObject(blackHole);
 
             Constellation& playerConst = *starSet[player_sign];
             playerConst.Transform = CreateHeroToWorldMatrix(playerConst);
 
-           
+            
             Constellation& c = *starSet[0]; // Используем текущего врага
 
             c.Transform = CreateEnemyToWorldMatrix(c);
@@ -927,7 +1213,8 @@ namespace drawer
            
             drawСonstellation(c,false,1000.f,100.f);
 
-            HandleMouseClick();
+            if (!playerConst.morphing)
+                HandleMouseClick(heroPosition);
             UpdateAttack(deltaTime);
             DrawSwordAttack();
 
@@ -936,12 +1223,9 @@ namespace drawer
             std::string curentSignstring = zodiacSignToString(player_sign);
             TextOutA(window.context, window.width * 5 / 6, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());
 
-            drawString("Find Constallations and click on him", window.width / 2, (200. / 1440) * window.height, 1, true);
+            //drawString("Find Constallations and click on it", window.width / 2, (200. / 1440) * window.height, 1, true);
             drawString("Features:\nMouse wheel to zoom in and out", (1700. / 2560) * window.width, (1200. / 1440) * window.height, .7f, false);
 
-            if (GetAsyncKeyState('M')) {
-                playerConst.Morph(c);
-            }
             playerConst.RenderMorph(deltaTime);
 
             isBattleActive = false;
@@ -964,6 +1248,9 @@ namespace drawer
                 gameState = gameState_::selectEnemy;
                 break;
             }
+
+            Constellation& playerConst = *starSet[player_sign];
+            playerConst.RenderMorph(deltaTime);
             
             if (t) {
                 t = false;
@@ -971,7 +1258,7 @@ namespace drawer
             }
             Camera::state.mouse = true;
             Depth::Depth(Depth::depthmode::off);
-            SelectWeapon();
+            SelectWeapon(&playerConst);
             SelectElement();
 
             DrawCombatStats();
@@ -989,9 +1276,15 @@ namespace drawer
             uiFunc = &starIntersectUI;
 
 
-            drawStarField();
-            //drawStars();
-            drawGalaxyFog(7);
+            ConstBuf::Update(0, ConstBuf::drawerV);
+            ConstBuf::ConstToVertex(0);
+            ConstBuf::Update(1, ConstBuf::drawerP);
+            ConstBuf::ConstToPixel(1);
+
+            DrawRenderObject(backgroundStars);
+            DrawRenderObject(spaceStars);
+            DrawRenderObject(ariesNebula);
+            //DrawRenderObject(blackHole);
 
 
             modelTransform = &placeConstToWorld;
@@ -1001,7 +1294,7 @@ namespace drawer
             DrawHpEnemyBar();
             modelTransform = &placeConstToWorld;//Враг
 
-            if (isShakingHero) {
+            /*if (isShakingHero) {
 
                 float beamTime = 4. * (currentTime - shakeStartTimeHero) / shakeDurationHero;
                 if (beamTime > 1.) beamTime = 1;
@@ -1020,7 +1313,7 @@ namespace drawer
 
                     drawLine(p1, p2);
                 }
-            }
+            }*/
             
             
             //ProjectileUpdate(deltaTime);
@@ -1047,51 +1340,77 @@ namespace drawer
                 attackCooldown = true;
             }
             
-            if (!GetAsyncKeyState(VK_LBUTTON))
+            
+            
+            if (attack_collision == true and attackCooldown == true)
             {
-                if (attack_collision == true and attackCooldown == true)
-                {
-                    attack_cooldown = currentTime;
-                    attackCooldown = false;
-                    check_attack = false;
-                    attackStartTime = currentTime;
+                attack_cooldown = currentTime;
+                attackCooldown = false;
+                check_attack = false;
+                attackStartTime = currentTime;
                     
-                }
-                Constellation& h = *starSet[currentEnemyID];
-                h.Transform = CreateEnemyToWorldMatrix(h);
-                Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-                drawСonstellation(*starSet[currentEnemyID],false, 1000.f, 100.f);
-
-                //linksDivider = 15;
-                modelTransform = &placeHeroToWorld;
-                uiFunc = &heroUI;
-                Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-
-                //Constellation& c = *starSet[player_sign];
-                //c.Transform = CreateHeroToWorldMatrix(c);
-                //drawСonstellation(*starSet[player_sign]);//Игрок
-
-                if (attack_collision == true)
-                {
-                    check_attack = true;
-                    attack_collision = false;
-                    attack_speed = false;
-                }
             }
-            else
+            Constellation& h = *starSet[currentEnemyID];
+            h.Transform = CreateEnemyToWorldMatrix(h);
+            Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+            drawСonstellation(*starSet[currentEnemyID],false, 1000.f, 100.f);
+
+            //linksDivider = 15;
+            modelTransform = &placeHeroToWorld;
+            uiFunc = &heroUI;
+            Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+                
+            point3d Heropos = point3d(
+                XMVectorGetX(heroPosition),
+                XMVectorGetY(heroPosition),
+                XMVectorGetZ(heroPosition)
+            );
+
+            point3d Enemypos = point3d(
+                XMVectorGetX(enemyPositions),
+                XMVectorGetY(enemyPositions),
+                XMVectorGetZ(enemyPositions)
+            );
+
+               
+
+            if (enemyAI.data.isAttacking == true) {
+
+                playerConst.StartShaking();
+                enemyAI.data.isAttacking = false;
+            }
+                playerConst.UpdateShaking();
+
+            if (enemyAI.data.isShockwaveActive == true) {
+                CreateShockwave(Enemypos, enemyAI.data.shockwaveRadius , Heropos);
+            }
+                UpdateShockwave(deltaTime);
+                RenderShockwave();
+
+            if (enemyAI.data.isBoomExploding == true) {
+                CreateExplosionEffects(Enemypos, enemyAI.data.boomRadius);
+            }
+            UpdateExplosionEffects(deltaTime);
+            RenderExplosionEffects();
+
+            //Constellation& c = *starSet[player_sign];
+            //c.Transform = CreateHeroToWorldMatrix(c);
+            //drawСonstellation(*starSet[player_sign]);//Игрок
+
+            if (attack_collision == true)
             {
-                uiFunc = NULL;
-                Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-                Constellation& c = *starSet[currentEnemyID];
-
-                c.Transform = CreateEnemyToWorldMatrix(c);
-                drawСonstellation(*starSet[currentEnemyID],false, 1000.f, 100.f);
+                check_attack = true;
+                attack_collision = false;
+                attack_speed = false;
             }
+            
+            
 
             if (GetAsyncKeyState('P')) {
                 gameState = gameState_::WinFight;
-                mciSendString(TEXT("stop ..\\dx11minimal\\Oven_NEW.mp3"), NULL, 0, NULL);
-                mciSendString(TEXT("play ..\\dx11minimal\\GG_C.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
             }
 
             if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true)
@@ -1110,7 +1429,7 @@ namespace drawer
             modelTransform = NULL;
             uiFunc = NULL;
 
-            if (isDamageHero)
+            /*if (isDamageHero)
             {
                 isDamageHero = false;
                 isShakingHero = true;
@@ -1120,7 +1439,7 @@ namespace drawer
             if (currentTime > shakeStartTimeHero + shakeDurationHero)
             {
                 isShakingHero = false;
-            }
+            }*/
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 
             if (starSet.empty() || currentEnemyID < 0 || currentEnemyID >= starSet.size()) {
@@ -1133,21 +1452,34 @@ namespace drawer
             Constellation& player = *starSet[player_sign];
 
             // Обновление атак
-            HandleMouseClick();
+            if (!playerConst.morphing) {
+                HandleMouseClick(heroPosition);
+                Hero::UpdateAttackRotation(deltaTime);
+            }
             UpdateAttack(deltaTime);
+
             DrawSwordAttack();
 
             // Проверка условий победы/поражения
             if (getConstellationHP(enemy) <= 0) {
                 gameState = gameState_::WinFight;
-                mciSendString(TEXT("stop ..\\dx11minimal\\Oven_NEW.mp3"), NULL, 0, NULL);
-                mciSendString(TEXT("play ..\\dx11minimal\\GG_C.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
             }
             else if (getConstellationHP(player) <= 0) {
                 gameState = gameState_::EndFight;
             }
 
+            float playerHP = getConstellationHP(player);
 
+            
+            updateEnemyPosition(deltaTime, Heropos, Enemypos, playerHP);
+
+            InputHook(deltaTime, Heropos, Enemypos);
+
+            string HP = std::to_string(playerHP);
+            drawString(HP.c_str(), window.width / 2, window.height / 2, 1, true);
+            
             Constellation& c = *starSet[player_sign];
             c.Transform = CreateHeroToWorldMatrix(c);
             drawСonstellation(*starSet[player_sign]);
@@ -1217,9 +1549,15 @@ namespace drawer
             uiFunc = &starIntersectUI;
 
 
-            drawStarField();
-            //drawStars();
-            drawGalaxyFog(7);
+            ConstBuf::Update(0, ConstBuf::drawerV);
+            ConstBuf::ConstToVertex(0);
+            ConstBuf::Update(1, ConstBuf::drawerP);
+            ConstBuf::ConstToPixel(1);
+
+            DrawRenderObject(backgroundStars);
+            DrawRenderObject(spaceStars);
+            DrawRenderObject(ariesNebula);
+            //DrawRenderObject(blackHole);
 
 
             modelTransform = &placeConstToWorld;
@@ -1282,7 +1620,7 @@ namespace drawer
             modelTransform = NULL;
             uiFunc = NULL;
 
-            if (isDamageHero)
+            /*if (isDamageHero)
             {
                 isDamageHero = false;
                 isShakingHero = true;
@@ -1292,7 +1630,7 @@ namespace drawer
             if (currentTime > shakeStartTimeHero + shakeDurationHero)
             {
                 isShakingHero = false;
-            }
+            }*/
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 
             Constellation& c = *starSet[player_sign];
@@ -1320,20 +1658,28 @@ namespace drawer
 
         }
 
-
         Depth::Depth(Depth::depthmode::off);
         if (gameState != gameState_::selectEnemy && gameState != gameState_::Fight && gameState != gameState_::WinFight)
         {
-            drawCursor(6);
+            cursor->vs_id = 6;
+            cursor->ps_id = 6;
             CreateCursorParticles();
         }
         else
         {
-            drawCursor(11);
+            cursor->vs_id = 11;
+            cursor->ps_id = 11;
         }
 
-        DrawUiParticles(deltaTime);
+        ConstBuf::global[0] = XMFLOAT4(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1), 0.0f, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
+        ConstBuf::ConstToVertex(5);
+        ConstBuf::Update(1, ConstBuf::drawerP);
+        ConstBuf::ConstToPixel(1);
+        DrawRenderObject(cursor);
 
+        DrawUiParticles(deltaTime);
+        RenderParticledText(deltaTime);
     }
 }
 

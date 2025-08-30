@@ -14,6 +14,8 @@ struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
     float2 uv : TEXCOORD0;
+    uint   starID : COLOR0;
+    float4 worldpos : POSITION1;
 };
 
 
@@ -21,7 +23,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output;
 
-    float size = 0.025 * gConst[0].w;
+    float size = 0.03;
     float2 quadPos[6] = {
         float2(-1, -1), float2(1, -1), float2(-1, 1),
         float2(1, -1), float2(1, 1), float2(-1, 1)

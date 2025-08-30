@@ -544,8 +544,21 @@ std::vector <Constellation*> starSet = {
 &Staff
 };
 
+RenderObject* ariesNebula;
+RenderObject* backgroundStars;
+RenderObject* spaceStars;
+RenderObject* cursor;
+RenderObject* blackHole;
+
 void initWorld()
 {
+    ariesNebula = new RenderObject(7, 7, 10000000.0f, 16, 100000.0f, 6, 900000);
+    //ariesNebula->gs_id = 7;
+
+    backgroundStars = new RenderObject(2, 2, -1.0f, -1.0f, 0, 6, 10000);
+    spaceStars = new RenderObject(3, 3, -1.0f, -1.0f, 0, 6, 1000);
+    cursor = new RenderObject(6, 6, -1.0f, -1.0f, 0, 6, 1, Blend::blendmode::alpha);
+    blackHole = new RenderObject(14, 14, 1000000.0f, 4, 50000.0f, 6, 1, Blend::blendmode::alpha, Blend::blendop::sub);
 
     for (int i = 0; i < 15; i++)
     {
@@ -579,7 +592,7 @@ MonthSign player_month = MonthSign::January;
 
 int player_day = 1;
 
-ZodiacSign player_sign = ZodiacSign::SCORPIO;
+ZodiacSign player_sign = ZodiacSign::CANCER;
 
 ZodiacSign getZodiacSign(int day, int month) {
     if ((month == March && day >= 21) || (month == April && day <= 19))       return ARIES;

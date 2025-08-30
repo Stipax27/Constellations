@@ -79,11 +79,11 @@ struct VS_OUTPUT
 };
 
 
-VS_OUTPUT VS(uint vID : SV_VertexID)
+VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 {
     VS_OUTPUT output;
 
-    uint starID = vID / 6;
+    //uint starID = vID / 6;
     uint vertexInQuad = vID % 6;
 
     float2 quadPos[6] = {
@@ -93,15 +93,18 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     //calc star position
 
-    float size = 7;
-    float range = 1500.0f;
+    float size = 16;
+    float range = 2000.0f;
     float4 camPos = -view[0]._m30_m31_m32_m33;
     //float3 starPos = float3(
     //    perlinNoise(camPos),
     //    perlinNoise(camPos + float3(0, 100.0f, 0)),
     //    perlinNoise(camPos + float3(0, 0, 100.0f))
     //) * range;
-    float3 starPos = randomPosition(starID) * range * 2 - range;
+    float3 starPos = randomPosition(iID);
+
+    float3 deltaPos = starPos - camPos / range;
+    deltaPos *= range * 2 - range;
 
     //-----
     float4 viewPos = mul(float4(starPos, 1.0f), view[0]);
@@ -110,7 +113,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     output.uv = quadPos[vertexInQuad];
     output.pos = projPos;
-    output.starID = starID;
+    output.starID = iID;
     output.worldpos = float4(starPos, 1);
     return output;
 }

@@ -50,11 +50,11 @@ struct VS_OUTPUT
 };
 
 
-VS_OUTPUT VS(uint vID : SV_VertexID)
+VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 {
     VS_OUTPUT output;
 
-    uint starID = vID / 6;
+    //uint starID = vID / 6;
     uint vertexInQuad = vID % 6;
 
     float2 quadPos[6] = {
@@ -66,7 +66,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     float size = 7.0f;
     float range = 2000.0f;
-    float3 starPos = normalize(randomPosition(starID) * range * 2 - range) * range;
+    float3 starPos = normalize(randomPosition(iID) * range * 2 - range) * range;
 
     float4x4 v = view[0];
     v._m30_m31_m32_m33 = 0.0f;
@@ -80,7 +80,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     output.uv = quadPos[vertexInQuad];
     output.pos = projPos;
-    output.starID = starID;
+    output.starID = iID;
     output.worldpos = float4(starPos, 1);
     return output;
 }

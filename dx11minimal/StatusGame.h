@@ -49,8 +49,6 @@ void SaveCurrentState() {
     currentState.enemyHP = starSet[currentEnemyID]->hp;
     currentState.enemyStarsHealth = starSet[currentEnemyID]->starsHealth;
     currentState.enemystarCords = starSet[currentEnemyID]->starsCords;
-    currentState.player_dodge_ofs = player_dodge_ofs;
-    currentState.starfield_angles = starfield_angles;
 
     if (battleHistory.empty()) {
         battleHistory.push_back(currentState);
@@ -93,9 +91,6 @@ bool RewindOneStepBack() {
     starSet[currentEnemyID]->hp = prevState.enemyHP;
     starSet[currentEnemyID]->starsHealth = prevState.enemyStarsHealth;
     starSet[currentEnemyID]->starsCords = prevState.enemystarCords;
-
-    player_dodge_ofs = prevState.player_dodge_ofs;
-    starfield_angles = prevState.starfield_angles;
 
     return true;
 }

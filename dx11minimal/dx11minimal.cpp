@@ -28,7 +28,7 @@ int currentDayIndex = -1;
 int currentMonthIndex = -1;
 int currentColorIndex = -1;
 const int numColors = 7;
-float camDist = 100;
+float camDist = 100;//we have this in camera state
 DWORD currentTime;
 DWORD lastFrameTime = 0;
 DWORD deltaTime = 0;
@@ -41,17 +41,25 @@ HWND hWnd;
 #include "dx11.h"
 #include "Player.h"
 
+#include "Point3d.h"
+#include "RenderObject.h"
+
 #include "AriesNebula.h"
 
 #include "MainWindow.h"
-#include "Point3d.h"
 #include "mouse.h"
 #include "font.h"
+
+#include "DodgeEnemy.h"
+#include "EnemyData.h"
+#include "EnemyDataCon.h"
 #include "EnemyAi.h"
+
 #include "Navigation.h"
 #include "Constellation.h"
+#include "EnemyAiUPD.h"
+
 #include "MainWorld.h"
-#include "DodgeEnemy.h"
 #include "StatusGame.h"
 #include "Weapon.h"
 #include "Elements.h"
@@ -64,8 +72,6 @@ HWND hWnd;
 #include "loop.h"
 
 #include "dx11minimal.h"
-
-#include "WorldRender.h"
 
 
 #define MAX_LOADSTRING 100
@@ -114,6 +120,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     timer::StartCounter();
     ShowCursor(FALSE);
 
+    CreateParticledText("TEST TEXT RENDER", (1700. / 2560) * window.width, (600. / 1440) * window.height, .7f, false);
+
     // Main message loop:
     while (msg.message != WM_QUIT)
     {
@@ -138,10 +146,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             timer::frameEndTime = timer::GetCounter();
             timer::frameRenderingDuration = timer::frameEndTime - timer::frameBeginTime;
             timer::nextFrameTime = timer::frameBeginTime + FRAME_LEN;
-            Camera::Camera();//добавили общий вызов обновления камеры, чтобы везде не коллить
+            //Camera::Camera();//добавили общий вызов обновления камеры, чтобы везде не коллить
         }
 
-        Sleep((DWORD)min(FRAME_LEN, max(FRAME_LEN - timer::frameRenderingDuration, 0)));
+        //Sleep((DWORD)min(FRAME_LEN, max(FRAME_LEN - timer::frameRenderingDuration, 0)));
     }
 
     return (int) msg.wParam;
