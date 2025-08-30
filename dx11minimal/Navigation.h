@@ -209,6 +209,7 @@ void updateFlySpeed(float deltaTime)
             currentFlySpeed = boostingFlySpeed + speed;
             acc = -40;//тут должна быть переменная зависящая от фпс и времени
 
+            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Whoosh.wav");
         }
     }
     //}
