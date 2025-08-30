@@ -1200,7 +1200,7 @@ namespace drawer
             DrawRenderObject(backgroundStars);
             DrawRenderObject(spaceStars);
             DrawRenderObject(ariesNebula);
-            DrawRenderObject(blackHole);
+            //DrawRenderObject(blackHole);
 
             Constellation& playerConst = *starSet[player_sign];
             playerConst.Transform = CreateHeroToWorldMatrix(playerConst);
@@ -1284,7 +1284,7 @@ namespace drawer
             DrawRenderObject(backgroundStars);
             DrawRenderObject(spaceStars);
             DrawRenderObject(ariesNebula);
-            DrawRenderObject(blackHole);
+            //DrawRenderObject(blackHole);
 
 
             modelTransform = &placeConstToWorld;
@@ -1557,7 +1557,7 @@ namespace drawer
             DrawRenderObject(backgroundStars);
             DrawRenderObject(spaceStars);
             DrawRenderObject(ariesNebula);
-            DrawRenderObject(blackHole);
+            //DrawRenderObject(blackHole);
 
 
             modelTransform = &placeConstToWorld;
