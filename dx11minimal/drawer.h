@@ -152,7 +152,7 @@ namespace drawer
         }
     }
 
-    void drawСonstellation(Constellation& Constellation, bool colorOverride = false , float finalStarRad = 10.f, float sz =2.f)
+    void drawConstellation(Constellation& Constellation, bool colorOverride = false , float finalStarRad = 10.f, float sz =2.f)
     {
         Shaders::vShader(1);
         Shaders::pShader(1);
@@ -212,7 +212,7 @@ namespace drawer
         Constellation& c = *starSet[n];
         float t = currentTime * 0.001;
         c.Transform = XMMatrixScaling(120, 120, 120) * XMMatrixRotationY(t) * XMMatrixTranslation(0, 0, 500);
-        drawСonstellation(*starSet[player_sign]);
+        drawConstellation(*starSet[player_sign]);
     }
 
 
@@ -323,6 +323,11 @@ namespace drawer
 
     void DrawHpHeroBar()
     {
+        //Shaders::vShader(1);
+        //Shaders::pShader(1);
+        //drawString("TEST", (1. / 2) * window.width, (1. / 2) * window.height, .7f, false);
+
+
         auto player_const = *starSet[player_sign];
         auto maxHP = player_const.maxHP;
         auto progress = getConstellationHP(*starSet[player_sign]) / maxHP;
@@ -414,7 +419,9 @@ namespace drawer
     void UpdateGame() {
         static const DWORD MAX_BATTLE_TIME = 4 * 60 * 1000;
         static const DWORD MAX_REWIND = 30 * 1000;
-        static DWORD battleTime = 60 * 5 * 1000;
+        //static DWORD battleTime = 60 * 5 * 1000;
+        static DWORD battleTime = 120 * 1000;
+
         static DWORD timeModifier = 0;
         static DWORD lastInputTime = 0;
         const DWORD inputRepeatDelay = 100;
@@ -454,7 +461,7 @@ namespace drawer
             if (remainingTime > 0) {
 
                 DrawHpHeroBar();
-                std::string timeStr = "Time: " + std::to_string(remainingTime / 1000);
+                std::string timeStr = "Time " + (std::to_string(remainingTime / 1000 / 60)) + ":" + std::to_string(remainingTime / 1000 % 60 );
                 drawString(timeStr.c_str(), window.width / 1.1, 45, 1.f, true);
 
                 if (getConstellationHP(*starSet[currentEnemyID]) < 0)
@@ -803,7 +810,6 @@ namespace drawer
             if (!isPressed)
             {
                 isPressed = true;
-                DeleteParticledText("TEST TEXT RENDER");
                 ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Mouse_click1.wav");
                 point3d mousePos = point3d(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1),0);
                 DWORD curTime = timer::GetCounter();
@@ -871,7 +877,7 @@ namespace drawer
     void CreateSpeedParticles()
     {
         DWORD curTime = timer::GetCounter();
-        if (currentFlySpeed > sp_minFlySpeed && flyDirection.magnitude() > 0)
+        if (currentFlySpeed > sp_minFlySpeed && flyDirection.magnitude() > 0.5)
         {
             float speedRatio = currentFlySpeed / maxFlySpeed;
             float sp_emitDelta = 1000 / (sp_rate * speedRatio);
@@ -1168,6 +1174,14 @@ namespace drawer
             StartMenu();
             break;
 
+        case gameState_::Settings:
+            SettingsState();
+            break;
+
+        case gameState_::Authors:
+            AuthorsState();
+            break;
+
         case gameState_::MonthSelection:
             menuMonthprocessing();
             break;
@@ -1176,6 +1190,8 @@ namespace drawer
             menuMonthprocessing();
             menuDayprocessing();
             break;
+
+
 
         case gameState_::confirmSign:
             Depth::Depth(Depth::depthmode::off);
@@ -1188,6 +1204,10 @@ namespace drawer
 
         case gameState_::selectEnemy:
         {
+            //DrawTEST();
+            drawStaminaBar(energy);
+
+
             Camera::state.mouse = true;
             Depth::Depth(Depth::depthmode::off);
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
@@ -1200,6 +1220,7 @@ namespace drawer
             DrawRenderObject(backgroundStars);
             DrawRenderObject(spaceStars);
             DrawRenderObject(ariesNebula);
+            //DrawRenderObject(blackHole);
 
             Constellation& playerConst = *starSet[player_sign];
             playerConst.Transform = CreateHeroToWorldMatrix(playerConst);
@@ -1210,14 +1231,14 @@ namespace drawer
             c.Transform = CreateEnemyToWorldMatrix(c);
             
            
-            drawСonstellation(c,false,1000.f,100.f);
+            drawConstellation(c,false,1000.f,100.f);
 
             if (!playerConst.morphing)
                 HandleMouseClick(heroPosition);
             UpdateAttack(deltaTime);
             DrawSwordAttack();
 
-            drawСonstellation(playerConst);
+            drawConstellation(playerConst);
 
             std::string curentSignstring = zodiacSignToString(player_sign);
             TextOutA(window.context, window.width * 5 / 6, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());
@@ -1238,11 +1259,22 @@ namespace drawer
             initContentData();
             renderContent();
             handleInput();
-
+            
             break;
 
         case gameState_::Fight:
         {
+            //CreateParticledText("ANOTHER TEST", (1700. / 2560) * window.width, (600. / 1440) * window.height + 200.f, .7f, false);
+
+
+            drawStaminaBar(energy);
+
+
+            if (isBattleActive == false) {
+                isBattleActive = true;
+                battleStartTime = currentTime;
+            }
+
             if (starSet.empty() || currentEnemyID < 0 || currentEnemyID >= starSet.size()) {
                 gameState = gameState_::selectEnemy;
                 break;
@@ -1283,6 +1315,7 @@ namespace drawer
             DrawRenderObject(backgroundStars);
             DrawRenderObject(spaceStars);
             DrawRenderObject(ariesNebula);
+            //DrawRenderObject(blackHole);
 
 
             modelTransform = &placeConstToWorld;
@@ -1351,7 +1384,7 @@ namespace drawer
             Constellation& h = *starSet[currentEnemyID];
             h.Transform = CreateEnemyToWorldMatrix(h);
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-            drawСonstellation(*starSet[currentEnemyID],false, 1000.f, 100.f);
+            drawConstellation(*starSet[currentEnemyID],false, 1000.f, 100.f);
 
             //linksDivider = 15;
             modelTransform = &placeHeroToWorld;
@@ -1480,7 +1513,7 @@ namespace drawer
             
             Constellation& c = *starSet[player_sign];
             c.Transform = CreateHeroToWorldMatrix(c);
-            drawСonstellation(*starSet[player_sign]);
+            drawConstellation(*starSet[player_sign]);
 
             std::string curentSignstring = zodiacSignToString(currentEnemyID);
             drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);
@@ -1492,6 +1525,8 @@ namespace drawer
             drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 10., 1, true);
 
             drawCurrentElement();
+
+           //drawRect(20.0f, 20.0f, 1000.0f, 800.0f); // прямоугольник шириной 200px и высотой 100px по центру экрана, на пикселях 1000 по абсциссе и 800 по ординате
 
            drawString("Weapon selection:\nButton 1 - Sword \nButton 2 - Shield \nButton 3 - Bow ", (1700. / 2560) * window.width, (1100. / 1440) * window.height, .7f, false);
            drawString("Rewind time:\nbutton - R", (500. / 2560) * window.width, (1250. / 1440) * window.height, .7f, false);
@@ -1555,6 +1590,7 @@ namespace drawer
             DrawRenderObject(backgroundStars);
             DrawRenderObject(spaceStars);
             DrawRenderObject(ariesNebula);
+            //DrawRenderObject(blackHole);
 
 
             modelTransform = &placeConstToWorld;
@@ -1579,7 +1615,7 @@ namespace drawer
                 Constellation& h = *starSet[currentEnemyID];
                 h.Transform = CreateEnemyToWorldMatrix(h);
                 Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-                drawСonstellation(*starSet[currentEnemyID]);
+                drawConstellation(*starSet[currentEnemyID]);
 
                 //linksDivider = 15;
                 modelTransform = &placeHeroToWorld;
@@ -1604,7 +1640,7 @@ namespace drawer
                 Constellation& c = *starSet[currentEnemyID];
 
                 c.Transform = CreateEnemyToWorldMatrix(c);
-                drawСonstellation(*starSet[currentEnemyID]);
+                drawConstellation(*starSet[currentEnemyID]);
             }
 
             modelTransform = &placeConstToWorld;
@@ -1632,7 +1668,7 @@ namespace drawer
 
             Constellation& c = *starSet[player_sign];
             c.Transform = CreateHeroToWorldMatrix(c);
-            drawСonstellation(*starSet[player_sign]);
+            drawConstellation(*starSet[player_sign]);
 
             std::string curentSignstring = zodiacSignToString(currentEnemyID);
             drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);
@@ -1674,6 +1710,8 @@ namespace drawer
         ConstBuf::Update(1, ConstBuf::drawerP);
         ConstBuf::ConstToPixel(1);
         DrawRenderObject(cursor);
+
+        //CreateParticledText("ANOTHER TEST", (1700. / 2560)* window.width, (600. / 1440)* window.height + 200.f, .7f, false);
 
         DrawUiParticles(deltaTime);
         RenderParticledText(deltaTime);

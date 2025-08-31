@@ -29,9 +29,8 @@ void mainLoop(float deltaTime)
 	}
 
 	Textures::RenderTarget(1, 0);
-	context->VSSetShaderResources(0, 1, &Textures::Texture[3].TextureResView);
-	context->PSSetShaderResources(0, 1, &Textures::Texture[3].TextureResView);
-	context->VSSetShaderResources(1, 1, &Textures::Texture[4].TextureResView);
+	Textures::TextureToShader(3, 0);
+	Textures::TextureToShader(4, 1, targetshader::vertex);
 	Depth::Depth(Depth::depthmode::on);
 
 	Shaders::vShader(0);
@@ -69,9 +68,9 @@ void mainLoop(float deltaTime)
 	Shaders::pShader(10);
 	context->Draw(6, 0);
 
-	/*Shaders::pShader(100);
-	Draw::OutputRenderTextures();
-	context->Draw(6, 0);*/
+	//Shaders::pShader(100);
+	//Draw::OutputRenderTextures();
+	//context->Draw(6, 0);
 	//--------------------------------
 
 	Draw::Present();

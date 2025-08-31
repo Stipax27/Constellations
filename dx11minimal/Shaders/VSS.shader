@@ -35,18 +35,6 @@ struct VS_OUTPUT
     float4 worldpos : POSITION1;
 };
 
-float3 rotZ(float3 pos, float a)
-{
-    float3x3 m =
-    {
-        cos(a), -sin(a),0,
-        sin(a), cos(a), 0,
-        0, 0, 1
-    };
-    pos = mul(pos, m);
-    return pos;
-}
-
 VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output;
