@@ -8,6 +8,7 @@ struct PhysicBody : Component
 {
 	float mass = 1.0f;
 	point3d velocity = point3d();
+	point3d angVelocity = point3d();
 	bool useGravity = true;
 };
 

@@ -1,3 +1,6 @@
+#ifndef _PHYSIC_SYSTEM_
+#define _PHYSIC_SYSTEM_
+
 //////////////
 // INCLUDES //
 //////////////
@@ -22,13 +25,13 @@ public:
 
 
 
-	void Initialize() override
+	void Initialize()
 	{
 		gravityVector = new point3d(0.0f, -GravityAcceleration, 0.0f);
 	}
 
 
-	void Shutdown() override
+	void Shutdown()
 	{
 		if (gravityVector)
 		{
@@ -38,27 +41,31 @@ public:
 	}
 
 
-	void Update(vector<Entity*>& entities, float deltaTime) override
+	bool Update(vector<Entity*>& entities, float deltaTime)
 	{
 		size_t size = entities.size();
 		for (int i = 0; i < size; i++)
 		{
 			Entity* entity = entities[i];
-			PhysicBody* physicBody = entity->GetComponent<PhysicBody>();
 			Transform* transform = entity->GetComponent<Transform>();
-			if (physicBody != nullptr && transform != nullptr)
+			PhysicBody* physicBody = entity->GetComponent<PhysicBody>();
+			if (transform != nullptr && physicBody != nullptr)
 			{
-
 				if (physicBody->useGravity)
 				{
 					physicBody->velocity += *gravityVector * deltaTime;
 				}
 
 				transform->position += physicBody->velocity * deltaTime;
+				transform->rotation += physicBody->angVelocity * deltaTime;
 			}
 		}
+
+		return true;
 	}
 
 private:
-	point3d* gravityVector;
+	vec3* gravityVector;
 };
+
+#endif

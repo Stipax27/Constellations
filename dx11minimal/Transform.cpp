@@ -9,7 +9,7 @@ struct Transform : Component
 {
 	point3d position = point3d();
 	point3d rotation = point3d();
-	point3d scale = point3d();
+	point3d scale = point3d(1.0f, 1.0f, 1.0f);
 };
 
 #endif
