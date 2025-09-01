@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="cameraclass.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="Constellation.h" />
     <ClInclude Include="DialogStruct.h" />
@@ -144,6 +145,7 @@
     <ClInclude Include="font.h" />
     <ClInclude Include="FpsCounter.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="LevelManagerClass.h" />
     <ClInclude Include="loop.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="MainWindow.h" />
@@ -262,6 +264,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cameraclass.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="dx11minimal.cpp" />
     <ClCompile Include="Entity.cpp" />
