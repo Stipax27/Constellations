@@ -38,6 +38,7 @@ void mainLoop(float deltaTime)
 	Shaders::gShader(0);
 	ConstBuf::ConstToVertex(4);
 	ConstBuf::ConstToPixel(4);
+
 	if (!Camerainit)
 	{
 		Camerainit = true;

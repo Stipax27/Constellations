@@ -7,12 +7,7 @@
 //////////////
 // INCLUDES //
 //////////////
-#include "d3dclass.h"
 #include "cameraclass.h"
-#include "lightclass.h"
-#include "pointlightclass.h"
-#include "bitmapclass.h"
-#include "shadermanagerclass.h"
 
 #include "world.h"
 #include "system.h"
@@ -49,15 +44,12 @@ public:
 	LevelManagerClass(const LevelManagerClass&);
 	~LevelManagerClass();
 
-	bool Initialize(int, int, HWND);
+	bool Initialize();
 	void Shutdown();
 	bool Frame();
 
 private:
 	World* m_World;
-	D3DClass* m_Direct3D;
-	BitmapClass* m_Bitmap;
-	ShaderManagerClass* m_ShaderManager;
 };
 
 #endif

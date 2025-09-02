@@ -13,6 +13,10 @@
 #include "entity.h"
 #include "system.h"
 
+#include "cameraclass.h"
+
+using namespace std;
+
 /////////////
 // GLOBALS //
 /////////////
@@ -26,14 +30,17 @@ const float RENDER_DT = 1.0f / 144.0f; // 144 FPS
 class World
 {
 public:
+	CameraClass* m_Camera;
+
+public:
 	World();
 	World(const World&);
 	~World();
 
-	template <typename T>
-	T* AddPhysicSystem()
+	template <typename T, typename... Args>
+	T* AddPhysicSystem(Args&&... args)
 	{
-		auto system = make_unique<T>();
+		auto system = make_unique<T>(forward<Args>(args)...);
 		T* raw_ptr = system.get();
 		system->Initialize();
 		physicSystems.push_back(move(system));
@@ -41,10 +48,10 @@ public:
 		return raw_ptr;
 	}
 
-	template <typename T>
-	T* AddRenderSystem()
+	template <typename T, typename... Args>
+	T* AddRenderSystem(Args&&... args)
 	{
-		auto system = make_unique<T>();
+		auto system = make_unique<T>(forward<Args>(args)...);
 		T* raw_ptr = system.get();
 		system->Initialize();
 		renderSystems.push_back(move(system));
@@ -54,9 +61,10 @@ public:
 
 	Entity* CreateEntity();
 
+	bool Initialize();
 	void Shutdown();
-	void UpdatePhysic();
-	void UpdateRender();
+	bool UpdatePhysic();
+	bool UpdateRender();
 	void CleanMem();
 private:
 	vector<Entity*> entities;

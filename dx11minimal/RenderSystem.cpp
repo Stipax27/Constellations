@@ -27,13 +27,9 @@ const float PI = 3.14159265358979f;
 class RenderSystem : public System
 {
 public:
-	RenderSystem(D3DClass* direct3d, CameraClass* camera, LightClass* light, PointLightClass* pointLights, int numPointLights)
+	RenderSystem(CameraClass* camera)
 	{
-		m_Direct3D = direct3d;
 		m_Camera = camera;
-		m_Light = light;
-		m_PointLights = pointLights;
-		m_numPointLights = numPointLights;
 	}
 
 
@@ -44,29 +40,9 @@ public:
 
 	void Shutdown()
 	{
-		if (m_Direct3D)
-		{
-			m_Direct3D = 0;
-		}
-
 		if (m_Camera)
 		{
 			m_Camera = 0;
-		}
-
-		if (m_Light)
-		{
-			m_Light = 0;
-		}
-
-		if (m_PointLights)
-		{
-			m_PointLights = 0;
-		}
-
-		if (m_numPointLights)
-		{
-			m_numPointLights = 0;
 		}
 	}
 
@@ -172,11 +148,7 @@ public:
 	}
 
 private:
-	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
-	LightClass* m_Light;
-	PointLightClass* m_PointLights;
-	int m_numPointLights;
 };
 
 #endif
