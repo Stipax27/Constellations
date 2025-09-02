@@ -7,13 +7,12 @@
 #include<cmath>
 #include "system.h"
 #include "Transform.cpp"
-#include "Mesh.cpp"
+#include "Sprite.cpp"
 
 #include "d3dclass.h"
 #include "cameraclass.h"
 #include "lightclass.h"
 #include "pointlightclass.h"
-#include "shadermanagerclass.h"
 
 #include "DirectXMath.h"
 
@@ -28,14 +27,13 @@ const float PI = 3.14159265358979f;
 class RenderSystem : public System
 {
 public:
-	RenderSystem(D3DClass* direct3d, ShaderManagerClass* shaderManager, CameraClass* camera, LightClass* light, PointLightClass* pointLights, int numPointLights)
+	RenderSystem(D3DClass* direct3d, CameraClass* camera, LightClass* light, PointLightClass* pointLights, int numPointLights)
 	{
 		m_Direct3D = direct3d;
 		m_Camera = camera;
 		m_Light = light;
 		m_PointLights = pointLights;
 		m_numPointLights = numPointLights;
-		m_ShaderManager = shaderManager;
 	}
 
 
@@ -70,11 +68,6 @@ public:
 		{
 			m_numPointLights = 0;
 		}
-
-		if (m_ShaderManager)
-		{
-			m_ShaderManager = 0;
-		}
 	}
 
 
@@ -88,6 +81,7 @@ public:
 		{
 			Entity* entity = entities[i];
 			Transform* transform = entity->GetComponent<Transform>();
+
 			Mesh* mesh = entity->GetComponent<Mesh>();
 			if (transform != nullptr && mesh != nullptr)
 			{
@@ -183,7 +177,6 @@ private:
 	LightClass* m_Light;
 	PointLightClass* m_PointLights;
 	int m_numPointLights;
-	ShaderManagerClass* m_ShaderManager;
 };
 
 #endif

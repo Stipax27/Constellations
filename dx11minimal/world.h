@@ -57,6 +57,7 @@ public:
 	void Shutdown();
 	void UpdatePhysic();
 	void UpdateRender();
+	void CleanMem();
 private:
 	vector<Entity*> entities;
 	vector<unique_ptr<System>> physicSystems;

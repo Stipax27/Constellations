@@ -62,3 +62,21 @@ void World::UpdateRender()
 		renderSystems[i]->Update(entities, 0.01f);
 	}
 }
+
+void World::CleanMem()
+{
+	size_t size = entities.size();
+	int i = 0;
+	while (i < size)
+	{
+		Entity* entity = entities[i];
+		if (entity == nullptr)
+		{
+			entities.erase(entities.begin() + i);
+		}
+		else
+		{
+			i++;
+		}
+	}
+}

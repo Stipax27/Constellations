@@ -19,6 +19,9 @@
 class Entity
 {
 public:
+	string name;
+
+public:
 	Entity();
 	Entity(const Entity&);
 	~Entity();
@@ -61,8 +64,22 @@ public:
 		return false;
 	}
 
+	void Destroy();
+
+	int GetId();
+	Entity* GetParent();
+
+	void AddChild(Entity*);
+	Entity* GetChildByName(string, bool);
+	vector<Entity*> GetChildrenByName(string, bool);
+	vector<Entity*> GetChildren(bool);
+
 private:
+	int id;
+	Entity* parent;
+
 	unordered_map<type_index, Component*> components;
+	vector<Entity*> children;
 };
 
 #endif
