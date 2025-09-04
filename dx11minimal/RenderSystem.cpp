@@ -9,19 +9,11 @@
 #include "Transform.cpp"
 #include "Sprite.cpp"
 
-#include "d3dclass.h"
 #include "cameraclass.h"
-#include "lightclass.h"
-#include "pointlightclass.h"
 
-#include "DirectXMath.h"
+#include "dx11.h"
 
 using namespace DirectX;
-
-/////////////
-// GLOBALS //
-/////////////
-const float PI = 3.14159265358979f;
 
 
 class RenderSystem : public System
@@ -49,8 +41,19 @@ public:
 
 	bool Update(vector<Entity*>& entities, float deltaTime)
 	{
+		XMMATRIX viewMatrix, projectionMatrix, orthoMatrix;
+
 		// Clear the buffers to begin the scene.
-		m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+		Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
+		Draw::ClearDepth();
+
+		// Generate the view matrix based on the camera's position.
+		m_Camera->Render();
+
+		// Get the world, view, and projection matrices from the camera and d3d objects.
+		m_Camera->GetViewMatrix(viewMatrix);
+		m_Direct3D->GetProjectionMatrix(projectionMatrix);
+		m_Direct3D->GetOrthoMatrix(orthoMatrix);
 
 		size_t size = entities.size();
 		for (int i = 0; i < size; i++)
@@ -58,23 +61,14 @@ public:
 			Entity* entity = entities[i];
 			Transform* transform = entity->GetComponent<Transform>();
 
-			Mesh* mesh = entity->GetComponent<Mesh>();
-			if (transform != nullptr && mesh != nullptr)
+			Sprite* sprite = entity->GetComponent<Sprite>();
+			if (transform != nullptr && sprite != nullptr)
 			{
 
-				XMMATRIX worldMatrix, viewMatrix, projectionMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix, orthoMatrix;
-				XMFLOAT4 pointLightColor[4], pointLightPosition[4];
-				int i;
+				XMMATRIX worldMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix;
 				bool result;
 
-				// Generate the view matrix based on the camera's position.
-				m_Camera->Render();
-
-				// Get the world, view, and projection matrices from the camera and d3d objects.
 				m_Direct3D->GetWorldMatrix(worldMatrix);
-				m_Camera->GetViewMatrix(viewMatrix);
-				m_Direct3D->GetProjectionMatrix(projectionMatrix);
-				m_Direct3D->GetOrthoMatrix(orthoMatrix);
 
 				//// Turn off the Z buffer to begin all 2D rendering.
 				//m_Direct3D->TurnZBufferOff();
@@ -116,23 +110,13 @@ public:
 				worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
 				// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-				mesh->model.Render(m_Direct3D->GetDeviceContext());
+				sprite->model.Render(m_Direct3D->GetDeviceContext());
 
-				// Get the light properties.
-				for (i = 0; i < m_numPointLights; i++)
-				{
-					// Create the diffuse color array from the four light colors.
-					pointLightColor[i] = m_PointLights[i].GetDiffuseColor();
-
-					// Create the light position array from the four light positions.
-					pointLightPosition[i] = m_PointLights[i].GetPosition();
-				}
+				Shaders::vShader(sprite->vShader);
+				Shaders::pShader(sprite->pShader);
 
 				// Render the model using shader.
-				result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), mesh->model.GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, mesh->model.GetTexture(),
-					m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
-					m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower(),
-					pointLightColor, pointLightPosition);
+				result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), mesh->model.GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, mesh->model.GetTexture(), m_Camera->GetPosition());
 				if (!result)
 				{
 					return false;
@@ -142,7 +126,7 @@ public:
 		}
 
 		// Present the rendered scene to the screen.
-		m_Direct3D->EndScene();
+		Draw::Present();
 
 		return true;
 	}

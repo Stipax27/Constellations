@@ -1,4 +1,6 @@
-﻿#include "math.h"
+﻿#pragma once
+
+#include "math.h"
 #include "utils.h"
 
 class point4d {

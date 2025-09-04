@@ -65,7 +65,7 @@ public:
 	}
 
 private:
-	vec3* gravityVector;
+	point3d* gravityVector;
 };
 
 #endif

@@ -1,4 +1,5 @@
-﻿
+﻿#pragma once
+
 float nearPlaneClip = 0;
 
 constexpr float def_size = 10;
