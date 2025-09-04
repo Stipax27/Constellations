@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AriesNebula.h" />
     <ClInclude Include="cameraclass.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="Constellation.h" />
