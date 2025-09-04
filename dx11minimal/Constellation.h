@@ -64,7 +64,6 @@ public:
     char currentMoveDirection;
     DWORD moveStartTime;
     bool isMoveActive;
-
     
 
     friend XMMATRIX CreateConstToWorldMatrix(const Constellation& c)

@@ -110,7 +110,7 @@ public:
 				worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
 				// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-				sprite->model.Render(m_Direct3D->GetDeviceContext());
+				//sprite->model.Render(m_Direct3D->GetDeviceContext());
 
 				Shaders::vShader(sprite->vShader);
 				Shaders::pShader(sprite->pShader);
