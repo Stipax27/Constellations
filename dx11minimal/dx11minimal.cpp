@@ -44,6 +44,8 @@ HWND hWnd;
 #include "Point3d.h"
 #include "RenderObject.h"
 
+#include "AriesNebula.h"
+
 #include "MainWindow.h"
 #include "mouse.h"
 #include "UI.h"

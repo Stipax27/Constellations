@@ -41,7 +41,7 @@ public:
 
 	bool Update(vector<Entity*>& entities, float deltaTime)
 	{
-		XMMATRIX viewMatrix, projectionMatrix, orthoMatrix;
+		XMMATRIX viewMatrix, projectionMatrix;
 
 		// Clear the buffers to begin the scene.
 		Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
@@ -52,8 +52,7 @@ public:
 
 		// Get the world, view, and projection matrices from the camera and d3d objects.
 		m_Camera->GetViewMatrix(viewMatrix);
-		m_Direct3D->GetProjectionMatrix(projectionMatrix);
-		m_Direct3D->GetOrthoMatrix(orthoMatrix);
+		View::GetProjectionMatrix(projectionMatrix);
 
 		size_t size = entities.size();
 		for (int i = 0; i < size; i++)
@@ -68,7 +67,7 @@ public:
 				XMMATRIX worldMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix;
 				bool result;
 
-				m_Direct3D->GetWorldMatrix(worldMatrix);
+				View::GetWorldMatrix(worldMatrix);
 
 				//// Turn off the Z buffer to begin all 2D rendering.
 				//m_Direct3D->TurnZBufferOff();

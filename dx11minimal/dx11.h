@@ -1240,3 +1240,20 @@ namespace Camera
 		state.distanceOffset = clamp(state.distanceOffset, state.minDist, state.maxDist);
 	}
 }
+
+namespace View {
+	XMMATRIX m_projectionMatrix;
+	XMMATRIX m_worldMatrix;
+
+	void GetProjectionMatrix(XMMATRIX& projectionMatrix)
+	{
+		projectionMatrix = m_projectionMatrix;
+		return;
+	}
+
+	void GetWorldMatrix(XMMATRIX& worldMatrix)
+	{
+		worldMatrix = m_worldMatrix;
+		return;
+	}
+}
