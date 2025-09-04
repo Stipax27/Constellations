@@ -22,6 +22,11 @@ public:
 	RenderSystem(CameraClass* camera)
 	{
 		m_Camera = camera;
+
+		InputAssembler::IA(InputAssembler::topology::triList);
+		Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
+		Depth::Depth(Depth::depthmode::off);
+		Rasterizer::Cull(Rasterizer::cullmode::off);
 	}
 
 
@@ -115,7 +120,7 @@ public:
 				Shaders::pShader(sprite->pShader);
 
 				// Render the model using shader.
-				result = m_ShaderManager->RenderShader(m_Direct3D->GetDeviceContext(), mesh->model.GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, mesh->model.GetTexture(), m_Camera->GetPosition());
+				result = m_ShaderManager->RenderShader(mesh->model.GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, mesh->model.GetTexture(), m_Camera->GetPosition());
 				if (!result)
 				{
 					return false;
