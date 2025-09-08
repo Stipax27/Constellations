@@ -25,7 +25,7 @@ void placeToWorld(point3d& p, Constellation& Constellation)
 
 void placeConstToWorld(point3d& p, Constellation& Constellation)
 {
-    Shaking(p);
+    //Shaking(p);
 
     p.move(0, 0, 3000. / Constellation.scale);
     p.rotateX(p, Constellation.angle.x);
@@ -40,10 +40,7 @@ void placeConstToWorld(point3d& p, Constellation& Constellation)
 void placeHeroToWorld(point3d& p, Constellation& Constellation)
 {
     Constellation.scale = 0.13f;
-    //ShakingHero(p);
     p.move(0, 0, 0. / Constellation.scale);
-
-    // fightMove();
 
     p *= Constellation.scale;
 

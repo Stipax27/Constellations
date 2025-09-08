@@ -1,48 +1,13 @@
-п»ї
-struct {
-    HWND hWnd;//С…СЌРЅРґР» РѕРєРЅР°
-    HDC device_context, context;// РґРІР° РєРѕРЅС‚РµРєСЃС‚Р° СѓСЃС‚СЂРѕР№СЃС‚РІР° (РґР»СЏ Р±СѓС„РµСЂРёР·Р°С†РёРё)
-    int width, height;//СЃСЋРґР° СЃРѕС…СЂР°РЅРёРј СЂР°Р·РјРµСЂС‹ РѕРєРЅР° РєРѕС‚РѕСЂРѕРµ СЃРѕР·РґР°СЃС‚ РїСЂРѕРіСЂР°РјРјР°
-} window;
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
-float getX(float x)
-{
-    return x * window.width;
-}
+#include <wtypes.h>
 
-float getY(float y)
-{
-    return y * window.height;
-}
+class WindowClass {
+public:
+    HWND hWnd;//хэндл окна
+    HDC device_context, context;// два контекста устройства (для буферизации)
+    int width, height;//сюда сохраним размеры окна которое создаст программа
+};
 
-void InitWindow()
-{
-    SetProcessDPIAware();
-
-    hInst = (HINSTANCE)GetModuleHandle(0);
-    int width = GetSystemMetrics(SM_CXSCREEN);
-    int height = GetSystemMetrics(SM_CYSCREEN);
-
-    HBRUSH brush = CreateSolidBrush(RGB(0, 0, 0));
-    WNDCLASSEX wcex = {sizeof(WNDCLASSEX),CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS,WndProc,0, 0,hInst,NULL,LoadCursor(NULL, IDC_ARROW),brush,NULL,"fx",NULL};
-
-    RegisterClassEx(&wcex);
-
-    HWND hWnd = CreateWindow("fx", "fx",WS_POPUP | WS_VISIBLE | WS_MAXIMIZE,0, 0,width, height,NULL, NULL,hInst, NULL);
-
-    ShowWindow(hWnd, SW_SHOW);
-    UpdateWindow(hWnd);
-
-    RECT r;
-    GetClientRect(hWnd, &r);
-
-    window.hWnd = hWnd;
-    window.device_context = GetDC(hWnd);
-    window.width = r.right - r.left;
-    window.height = r.bottom - r.top;
-
-    // ? GDI Р±СѓС„РµСЂ РѕС‚РєР»СЋС‡С‘РЅ
-    window.context = nullptr;
-}
-
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+#endif

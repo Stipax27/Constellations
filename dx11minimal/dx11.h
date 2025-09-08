@@ -1,20 +1,20 @@
-﻿#pragma once
-
-#pragma comment(lib, "d3d10.lib")
+﻿#pragma comment(lib, "d3d10.lib")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "xaudio2.lib")
+#pragma comment(lib, "d2d1.lib")
 
 #include <d3d11.h>
+#include <d2d1.h>
 #include <d3dcompiler.h>
 #include "DirectXMath.h"
 #include <DirectXPackedVector.h>
 #include <debugapi.h>
 
 #include "utils.h"
-#include <d2d1.h>
+#include "timer.h"
 
 using namespace DirectX;
 
@@ -32,57 +32,6 @@ static inline int32 _log2(float x)
 
 	return log2;
 }
-
-/*namespace timer
-{
-	double PCFreq = 0.0;
-	__int64 counterStart = 0;
-
-	double startTime = 0;
-	double frameBeginTime = 0;
-	double frameEndTime = 0;
-	double nextFrameTime = 0;
-	double frameRenderingDuration = 0.0;
-	int timeCursor = 0;
-
-	void StartCounter()
-	{
-		LARGE_INTEGER li;
-		QueryPerformanceFrequency(&li);
-		PCFreq = double(li.QuadPart) / 1000.0;
-
-		QueryPerformanceCounter(&li);
-		counterStart = li.QuadPart;
-	}
-
-
-
-
-	void mainImage( out vec4 fragColor, in vec2 fragCoord )
-{
-	// Normalized pixel coordinates (from 0 to 1)
-	vec2 uv = fragCoord/iResolution.x-.5;
-
-	// Time varying pixel color
-	float x= length(uv);
-	vec3 col = (abs(1./(abs(x*115.))*1.6*(1.-abs(x))))*(1.-abs(x))*vec3(1.,1.,1.);
-	col=pow(col,vec3(.4));
-
-	// Output to screen
-	fragColor = vec4(col,1.0);
-}
-
-
-
-
-	double GetCounter()
-	{
-		LARGE_INTEGER li;
-		QueryPerformanceCounter(&li);
-		return double(li.QuadPart - counterStart) / PCFreq;
-	}
-
-}*/
 
 ID3D11Device* device = NULL;
 ID3D11DeviceContext* context = NULL;
@@ -1113,7 +1062,7 @@ namespace Hero
 		if (state.isAttackRotating)
 		{
 			float attackDuration = 10.f; // Длительность анимации в секундах
-			state.attackRotationProgress = min(1.0f, (currentTime - state.attackStartTime) / (attackDuration * 1000));
+			state.attackRotationProgress = min(1.0f, (timer::currentTime - state.attackStartTime) / (attackDuration * 1000));
 
 			// Вращение на 90 градусов вокруг оси X (вниз)
 			float rotationAngle = XMConvertToRadians(90.0f * state.attackRotationProgress);

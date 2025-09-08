@@ -1,10 +1,9 @@
 ﻿#pragma once
 
-#include "dx11.h"
+#include <sstream>
+#include "DirectXMath.h"
 
-float nearPlaneClip = 0;
-
-constexpr float def_size = 10;
+using namespace DirectX;
 
 class point3d {
 public:
@@ -65,8 +64,16 @@ public:
             fabs(y - other.y) < 0.001f &&
             fabs(z - other.z) < 0.001f;
     }
+
     bool operator!=(const point3d& other) const {
         return !(*this == other);
+    }
+
+    point3d& operator=(const point3d& other) {
+        x = other.x;
+        y = other.y;
+        z = other.z;
+        return *this;
     }
 
 
@@ -154,28 +161,6 @@ public:
     float Dot(const point3d& other) const {
         return x * other.x + y * other.y + z * other.z;
     }
-    
-    void draw(point3d& p, float sz = def_size)
-    {
-        //if (p.z < nearPlaneClip) return;
-
-        ConstBuf::ConstToVertex(4);
-        ConstBuf::ConstToPixel(4);
-        // Camera::Camera();
-
-        
-        ConstBuf::global[0] = XMFLOAT4(p.x, p.y, p.z, sz);
-        ConstBuf::Update(5, ConstBuf::global);
-        ConstBuf::ConstToVertex(5);
-
-       Draw::elipse(1);
-
-        //Shaders::vShader(0);
-        //Shaders::pShader(0);
-        //Draw::NullDrawer(0, 1);
-        // ��������� ������. sz = ������ ������.
-
-    }
 
 
     void move(float _x, float _y, float _z)
@@ -257,7 +242,8 @@ public:
         return x * other.x + y * other.y + z * other.z;
     }
 
-
+private:
+    const float PI = 3.1415926535897932384626433832795f;
 };
 
 point3d TransformPoint(const point3d& p, const XMMATRIX& m) {
@@ -269,8 +255,3 @@ point3d TransformPoint(const point3d& p, const XMMATRIX& m) {
         XMVectorGetZ(v)
     };
 }
-
-
-point3d operator*(float scalar, const point3d& point) {
-    return point * scalar;
-};

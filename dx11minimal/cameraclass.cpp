@@ -33,6 +33,13 @@ void CameraClass::SetRotation(float x, float y, float z)
 	return;
 }
 
+
+void CameraClass::SetFov(float FoV)
+{
+	fov = FoV;
+}
+
+
 XMFLOAT3 CameraClass::GetPosition()
 {
 	return XMFLOAT3(m_positionX, m_positionY, m_positionZ);
@@ -97,8 +104,12 @@ void CameraClass::Render()
 	return;
 }
 
-void CameraClass::GetViewMatrix(XMMATRIX& viewMatrix)
+XMMATRIX CameraClass::GetViewMatrix()
 {
-	viewMatrix = m_viewMatrix;
-	return;
+	return m_viewMatrix;
+}
+
+XMMATRIX CameraClass::GetProjectionMatrix()
+{
+	return m_projectionMatrix;
 }

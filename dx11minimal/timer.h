@@ -5,12 +5,14 @@ namespace timer
 	double PCFreq = 0.0;
 	__int64 counterStart = 0;
 
-	double startTime = 0;
 	double frameBeginTime = 0;
 	double frameEndTime = 0;
 	double nextFrameTime = 0;
 	double frameRenderingDuration = 0.0;
-	int timeCursor = 0;
+
+	DWORD currentTime = 0;
+	DWORD lastFrameTime = 0;
+	DWORD deltaTime = 0;
 
 	void StartCounter()
 	{

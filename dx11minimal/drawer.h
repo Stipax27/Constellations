@@ -915,7 +915,7 @@ namespace drawer
         }
         else
         {
-            sp_lastEmitTime -= deltaTime;
+            sp_lastEmitTime -= timer::deltaTime;
         }
     }
 
@@ -945,7 +945,7 @@ namespace drawer
                     //particle->vel = flyDirection * currentFlySpeed / 5;
                     particle->vel = particle->vel.normalized() * currentFlySpeed / 5;
                 }
-                particle->pos += particle->vel * deltaTime;
+                particle->pos += particle->vel * timer::deltaTime;
 
                 ConstBuf::global[0] = XMFLOAT4(particle->pos.x, particle->pos.y, particle->pos.z, 1.0f - (float)(curTime - particle->startTime) / (float)particle->lifetime);
                 ConstBuf::global[2] = XMFLOAT4(particle->vel.x, particle->vel.y, particle->vel.z, 0);
@@ -1351,9 +1351,9 @@ namespace drawer
             //FireProjectile();
             //WeaponRender();
 
-            lastFrameTime = currentTime;
+            timer::lastFrameTime = currentTime;
 
-            if (isDamageTaken)
+            /*if (isDamageTaken)
             {
                 isDamageTaken = false;
                 isShaking = true;
@@ -1363,7 +1363,7 @@ namespace drawer
             if (currentTime > shakeStartTime + shakeDuration)
             {
                 isShaking = false;
-            }
+            }*/
 
             if (currentTime > attack_cooldown + 5000)
             {
@@ -1446,7 +1446,7 @@ namespace drawer
 
             if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true)
             {
-                isDamageTaken = true;
+                //isDamageTaken = true;
                 attack_start = false;
             }
 
@@ -1600,7 +1600,7 @@ namespace drawer
             //DrawHpEnemyBar();
             modelTransform = &placeConstToWorld;//Враг
 
-            lastFrameTime = currentTime;
+            timer::lastFrameTime = currentTime;
 
             if (!GetAsyncKeyState(VK_LBUTTON))
             {

@@ -105,9 +105,9 @@ public:
 
     friend XMMATRIX CreateHeroToWorldMatrix(const Constellation& c)
     {
-        static float lastTime = currentTime;
-        float deltaTime = currentTime - lastTime;
-        lastTime = currentTime;
+        static float lastTime = timer::currentTime;
+        float deltaTime = timer::currentTime - lastTime;
+        lastTime = timer::currentTime;
         if (deltaTime > 100.0f) deltaTime = 100.0f;
         updateFlyDirection(); //hero move for mouse and move on "WASD"
         updateFlySpeed(deltaTime);
@@ -147,7 +147,7 @@ public:
 
     friend XMMATRIX CreatefightProjectMatrix(const Constellation& c)
     {
-        int fadeInTime = currentTime - startTime;
+        int fadeInTime = timer::currentTime - startTime;
         float startCamDist = 100;
         float finCamDist = 3000;
 
@@ -346,7 +346,7 @@ public:
     void StartShaking() {
         if (!isShaking) {
             isShaking = true;
-            shakeStartTime = currentTime;
+            shakeStartTime = timer::currentTime;
             originalStarPositions = starsCords; 
         }
     }
@@ -354,7 +354,7 @@ public:
     void UpdateShaking() {
         if (!isShaking) return;
 
-        float elapsed = (float)(currentTime - shakeStartTime);
+        float elapsed = (float)(timer::currentTime - shakeStartTime);
 
         // Проверяем, закончилось ли время тряски
         if (elapsed >= shakeDuration) {

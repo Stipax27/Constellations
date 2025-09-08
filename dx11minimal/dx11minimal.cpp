@@ -1,22 +1,17 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 
-const float PI = 3.1415926535897;
 #include "framework.h"
 #include "windows.h"
-#include "vector"
 #include <stdexcept>
 #include "math.h"
 #include <stdlib.h>
 #include <iostream>
-#include <string>
 #include <cmath>
 #include <sstream>
 #include <algorithm>
 #include <deque>
 #include "timer.h"
-#include <d2d1.h>
 #include <mmsystem.h> 
-#pragma comment(lib, "d2d1.lib")
 
 HINSTANCE hInst;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -29,25 +24,17 @@ int currentMonthIndex = -1;
 int currentColorIndex = -1;
 const int numColors = 7;
 float camDist = 100;//we have this in camera state
-DWORD currentTime;
-DWORD lastFrameTime = 0;
-DWORD deltaTime = 0;
-ID2D1SolidColorBrush* d2dBrush = nullptr;
+
 bool isBattleActive = false;
 DWORD battleStartTime;
 
-HWND hWnd;
 #include "Point3d.h"
-#include "RenderObject.h"
 
 #include "AriesNebula.h"
 
-#include "MainWindow.h"
-#include "mouse.h"
 #include "UI.h"
 #include "font.h"
 
-#include "DodgeEnemy.h"
 #include "EnemyData.h"
 #include "EnemyDataCon.h"
 #include "EnemyAi.h"
@@ -70,8 +57,8 @@ HWND hWnd;
 
 #include "resource.h"
 
+#include "dx11.h"
 #include "LevelManagerClass.cpp"
-
 
 #define MAX_LOADSTRING 100
                             // current instance
@@ -80,7 +67,7 @@ WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
-BOOL                InitInstance(HINSTANCE, int);
+BOOL                InitInstance(HINSTANCE, int, WindowStruct*);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
@@ -104,12 +91,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDC_DX11MINIMAL, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
+    LevelManagerClass levelManager = LevelManagerClass();
+    levelManager.Initialize();
+
     // Perform application initialization:
-    if (!InitInstance (hInstance, nCmdShow))
+    if (!InitInstance (hInstance, nCmdShow, levelManager.window))
     {
         return FALSE;
     }
-    //InitWindow();
     Dx11Init();
     InitGame();
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_DX11MINIMAL));
@@ -118,9 +107,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     timer::StartCounter();
     ShowCursor(FALSE);
-
-    LevelManagerClass levelManager = LevelManagerClass();
-    levelManager.Initialize();
 
     // Main message loop:
     while (msg.message != WM_QUIT)
@@ -136,20 +122,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         if (time >= timer::nextFrameTime)
         {
-            currentTime= timer::GetCounter();
-            deltaTime = currentTime - lastFrameTime;
-            lastFrameTime = currentTime;
+            timer::currentTime = timer::GetCounter();
+            timer::deltaTime = timer::currentTime - timer::lastFrameTime;
+            timer::lastFrameTime = timer::currentTime;
 
             timer::frameBeginTime = timer::GetCounter();
-            mouse.Input();
 
             levelManager.Frame();
 
-            mainLoop(deltaTime);
+            mainLoop(timer::deltaTime);
+
             timer::frameEndTime = timer::GetCounter();
             timer::frameRenderingDuration = timer::frameEndTime - timer::frameBeginTime;
             timer::nextFrameTime = timer::frameBeginTime + FRAME_LEN;
-            //Camera::Camera();//добавили общий вызов обновления камеры, чтобы везде не коллить
         }
 
         //Sleep((DWORD)min(FRAME_LEN, max(FRAME_LEN - timer::frameRenderingDuration, 0)));
@@ -198,7 +183,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //        In this function, we save the instance handle in a global variable and
 //        create and display the main program window.
 //
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
+BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, WindowStruct* window)
 {
     hInst = hInstance;
 
@@ -211,19 +196,19 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     WNDCLASSEX wcex = { sizeof(WNDCLASSEX), CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS, WndProc, 0,0, hInst, NULL, LoadCursor(NULL, IDC_ARROW), brush, NULL, "fx", NULL };
     RegisterClassEx(&wcex);
 
-    window.hWnd = CreateWindow("fx", "fx", WS_POPUP | WS_VISIBLE | WS_MAXIMIZE, 0, 0, width, height, NULL, NULL, hInst, NULL);
-    if (!window.hWnd) return FALSE;
+    window->hWnd = CreateWindow("fx", "fx", WS_POPUP | WS_VISIBLE | WS_MAXIMIZE, 0, 0, width, height, NULL, NULL, hInst, NULL);
+    if (!window->hWnd) return FALSE;
 
-    ShowWindow(window.hWnd, SW_SHOW);
-    UpdateWindow(window.hWnd);
+    ShowWindow(window->hWnd, SW_SHOW);
+    UpdateWindow(window->hWnd);
 
     RECT r;
-    GetClientRect(window.hWnd, &r);
-    window.device_context = GetDC(window.hWnd);
-    window.width = r.right - r.left;
-    window.height = r.bottom - r.top;
+    GetClientRect(window->hWnd, &r);
+    window->device_context = GetDC(window->hWnd);
+    window->width = r.right - r.left;
+    window->height = r.bottom - r.top;
 
-    hWnd = window.hWnd; // <- чтобы DirectX тоже использовал это окно
+    hWnd = window->hWnd; // <- чтобы DirectX тоже использовал это окно
 
     return TRUE;
 }

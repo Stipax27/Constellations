@@ -259,7 +259,7 @@
             if (enemyPos.y <= data.lastOrbitPosition.y) {
                 enemyPos.y = data.lastOrbitPosition.y;
                 data.isShockwaveActive = true;
-                data.shockwaveStartTime = currentTime;
+                data.shockwaveStartTime = timer::currentTime;
                 data.shockwaveRadius = 0.0f;
 
                 // Восстанавливаем нормальную ориентацию
@@ -307,7 +307,7 @@
             // Когда подготовка завершена, начинаем взрыв
             if (data.boomCurrentTime >= data.boomPrepareTime) {
                 data.isBoomExploding = true;
-                data.boomStartTime = currentTime;
+                data.boomStartTime = timer::currentTime;
             }
         }
         // Фаза взрыва

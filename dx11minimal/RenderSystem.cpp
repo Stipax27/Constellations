@@ -13,8 +13,6 @@
 
 #include "dx11.h"
 
-using namespace DirectX;
-
 
 class RenderSystem : public System
 {
@@ -46,7 +44,7 @@ public:
 
 	bool Update(vector<Entity*>& entities, float deltaTime)
 	{
-		XMMATRIX viewMatrix, projectionMatrix;
+		XMMATRIX projectionMatrix;
 
 		// Clear the buffers to begin the scene.
 		Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
@@ -56,7 +54,7 @@ public:
 		m_Camera->Render();
 
 		// Get the world, view, and projection matrices from the camera and d3d objects.
-		m_Camera->GetViewMatrix(viewMatrix);
+		XMMATRIX viewMatrix = m_Camera->GetViewMatrix();
 		View::GetProjectionMatrix(projectionMatrix);
 
 		size_t size = entities.size();

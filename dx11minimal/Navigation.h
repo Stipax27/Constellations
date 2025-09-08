@@ -186,7 +186,7 @@ void updateFlySpeed(float deltaTime)
             currentFlySpeed = 10;
             wasShiftPressed = true;
             acc = 40; //тут должна быть переменная зависящая от фпс и времени
-            localTime = currentTime;
+            localTime = timer::currentTime;
         }
 
         if (isBoosting)
@@ -203,7 +203,7 @@ void updateFlySpeed(float deltaTime)
         {
             //drawString("state4", 1000.f, 640.f, .7f, false);
 
-            localDeltaTime = currentTime - localTime;
+            localDeltaTime = timer::currentTime - localTime;
             wasShiftPressed = false;
             boostingFlySpeed = 10; //тут должна быть переменная зависящая от времени зажатия шифта
             currentFlySpeed = boostingFlySpeed + speed;

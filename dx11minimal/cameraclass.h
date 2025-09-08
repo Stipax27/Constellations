@@ -5,7 +5,7 @@
 //////////////
 // INCLUDES //
 //////////////
-#include "dx11.h"
+#include "DirectXMath.h"
 using namespace DirectX;
 
 /////////////
@@ -26,17 +26,22 @@ public:
 
 	void SetPosition(float, float, float);
 	void SetRotation(float, float, float);
+	void SetFov(float);
 
 	XMFLOAT3 GetPosition();
 	XMFLOAT3 GetRotation();
 
 	void Render();
-	void GetViewMatrix(XMMATRIX&);
+	XMMATRIX GetViewMatrix();
+	XMMATRIX GetProjectionMatrix();
 
 private:
 	float m_positionX, m_positionY, m_positionZ;
 	float m_rotationX, m_rotationY, m_rotationZ;
+	float fov;
+
 	XMMATRIX m_viewMatrix;
+	XMMATRIX m_projectionMatrix;
 };
 
 #endif

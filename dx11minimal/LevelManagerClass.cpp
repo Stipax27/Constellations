@@ -2,7 +2,10 @@
 
 LevelManagerClass::LevelManagerClass()
 {
+	window = 0;
+
 	m_World = 0;
+	m_Mouse = 0;
 }
 
 LevelManagerClass::LevelManagerClass(const LevelManagerClass& other)
@@ -21,6 +24,11 @@ bool LevelManagerClass::Initialize()
 	char modelFilename[128];
 	char textureFilename[128];
 	bool result;
+
+	window = new WindowStruct;
+
+	m_Mouse = new MouseClass;
+	m_Mouse->Initialize();
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING START //
@@ -70,6 +78,18 @@ void LevelManagerClass::Shutdown()
 		m_World = 0;
 	}
 
+	if (m_Mouse)
+	{
+		delete m_Mouse;
+		m_Mouse = 0;
+	}
+
+	if (window)
+	{
+		delete window;
+		window = 0;
+	}
+
 	return;
 }
 
@@ -77,6 +97,8 @@ void LevelManagerClass::Shutdown()
 bool LevelManagerClass::Frame()
 {
 	bool result;
+
+	m_Mouse->Update();
 
 	result = m_World->UpdatePhysic();
 	if (!result)

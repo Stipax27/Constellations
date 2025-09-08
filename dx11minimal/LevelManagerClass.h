@@ -24,6 +24,8 @@
 #include "CollisionSystem.cpp"
 #include "RenderSystem.cpp"
 
+#include "MouseClass.cpp"
+
 /////////////
 // GLOBALS //
 /////////////
@@ -37,8 +39,17 @@ const float SCREEN_NEAR = 0.3f;
 // Class name: LevelManagerClass
 ////////////////////////////////////////////////////////////////////////////////
 
+struct WindowStruct {
+	HWND hWnd; // window handle
+	HDC device_context, context; // 2 device contexts (for bufferization)
+	int width, height; // saving window sizes the program created
+};
+
 class LevelManagerClass
 {
+public:
+	WindowStruct* window;
+
 public:
 	LevelManagerClass();
 	LevelManagerClass(const LevelManagerClass&);
@@ -50,6 +61,7 @@ public:
 
 private:
 	World* m_World;
+	MouseClass* m_Mouse;
 };
 
 #endif

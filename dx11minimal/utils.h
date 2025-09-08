@@ -1,4 +1,6 @@
-﻿float saturate(float x)
+﻿#pragma once
+
+float saturate(float x)
 {
     return max(min(x, 1.), 0.);// размеры экрана.
 }

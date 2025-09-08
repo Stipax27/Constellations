@@ -133,7 +133,6 @@
     <ClInclude Include="Constellation.h" />
     <ClInclude Include="DialogStruct.h" />
     <ClInclude Include="DiologTEXT.h" />
-    <ClInclude Include="DodgeEnemy.h" />
     <ClInclude Include="drawer.h" />
     <ClInclude Include="dx11.h" />
     <ClInclude Include="Elements.h" />
@@ -148,7 +147,7 @@
     <ClInclude Include="LevelManagerClass.h" />
     <ClInclude Include="loop.h" />
     <ClInclude Include="MainGame.h" />
-    <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="mainwindow.h" />
     <ClInclude Include="MainWorld.h" />
     <ClInclude Include="mtx.h" />
     <ClInclude Include="Navigation.h" />
@@ -241,7 +240,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
     <ClInclude Include="Point4d.h" />
-    <ClInclude Include="RenderObject.h" />
     <ClInclude Include="StatusGame.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="UI.h" />
@@ -268,6 +266,7 @@
     <ClCompile Include="dx11minimal.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="LevelManagerClass.cpp" />
+    <ClCompile Include="MouseClass.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="PhysicBody.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />
@@ -276,7 +275,7 @@
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="World.cpp" />
-    <ClInclude Include="mouse.h" />
+    <ClInclude Include="mouseclass.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="dx11minimal.rc" />
