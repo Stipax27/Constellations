@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "dx11.h"
+
 float nearPlaneClip = 0;
 
 constexpr float def_size = 10;

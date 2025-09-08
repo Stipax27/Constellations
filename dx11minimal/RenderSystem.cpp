@@ -119,13 +119,11 @@ public:
 				Shaders::vShader(sprite->vShader);
 				Shaders::pShader(sprite->pShader);
 
-				// Render the model using shader.
-				result = m_ShaderManager->RenderShader(mesh->model.GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, mesh->model.GetTexture(), m_Camera->GetPosition());
-				if (!result)
-				{
-					return false;
-				}
+				ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
+				ConstBuf::Update(5, ConstBuf::global);
+				ConstBuf::ConstToVertex(5);
 
+				context->Draw(6, 0);
 			}
 		}
 

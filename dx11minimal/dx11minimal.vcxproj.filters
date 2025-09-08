@@ -69,9 +69,6 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dx11minimal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="dx11.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -115,9 +112,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Parametrics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="drawer.h">
@@ -165,9 +159,72 @@
     <ClInclude Include="EnemyAiUPD.h">
       <Filter>Header Files\Structures</Filter>
     </ClInclude>
+    <ClInclude Include="cameraclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelManagerClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mtx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="system.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="world.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Point4d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dx11minimal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cameraclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelManagerClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicBody.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlaneCollider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereCollider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -269,6 +326,9 @@
     <None Include="Shaders\VoronoiNoise.shader">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Shaders\BlackHole_Body_PS.shader" />
+    <None Include="Shaders\UI_PS.shader" />
+    <None Include="Shaders\UI_VS.shader" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\StarLink_PS.shader">
@@ -277,5 +337,6 @@
     <FxCompile Include="Shaders\SpaceStars_VS.shader">
       <Filter>Shaders\SpaceStars</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\BlackHole_Body_VS.shader" />
   </ItemGroup>
 </Project>

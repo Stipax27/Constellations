@@ -37,10 +37,6 @@ bool isBattleActive = false;
 DWORD battleStartTime;
 
 HWND hWnd;
-#include "utils.h"
-#include "dx11.h"
-#include "Player.h"
-
 #include "Point3d.h"
 #include "RenderObject.h"
 
@@ -72,7 +68,9 @@ HWND hWnd;
 
 #include "loop.h"
 
-#include "dx11minimal.h"
+#include "resource.h"
+
+#include "LevelManagerClass.cpp"
 
 
 #define MAX_LOADSTRING 100
@@ -121,6 +119,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     timer::StartCounter();
     ShowCursor(FALSE);
 
+    LevelManagerClass levelManager = LevelManagerClass();
+    levelManager.Initialize();
+
     // Main message loop:
     while (msg.message != WM_QUIT)
     {
@@ -141,6 +142,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
             timer::frameBeginTime = timer::GetCounter();
             mouse.Input();
+
+            levelManager.Frame();
+
             mainLoop(deltaTime);
             timer::frameEndTime = timer::GetCounter();
             timer::frameRenderingDuration = timer::frameEndTime - timer::frameBeginTime;
@@ -150,6 +154,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         //Sleep((DWORD)min(FRAME_LEN, max(FRAME_LEN - timer::frameRenderingDuration, 0)));
     }
+
+    levelManager.Shutdown();
 
     return (int) msg.wParam;
 }

@@ -136,7 +136,6 @@
     <ClInclude Include="DodgeEnemy.h" />
     <ClInclude Include="drawer.h" />
     <ClInclude Include="dx11.h" />
-    <ClInclude Include="dx11minimal.h" />
     <ClInclude Include="Elements.h" />
     <ClInclude Include="EnemyAi.h" />
     <ClInclude Include="EnemyAiUPD.h" />
@@ -157,7 +156,6 @@
     <ClInclude Include="ParticleObject.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="PhysicLoop.h" />
-    <ClInclude Include="Player.h" />
     <ClInclude Include="Point3d.h" />
     <ClInclude Include="system.h" />
     <ClInclude Include="world.h" />

@@ -5,7 +5,7 @@
 //////////////
 // INCLUDES //
 //////////////
-#include <directxmath.h>
+#include "dx11.h"
 using namespace DirectX;
 
 /////////////

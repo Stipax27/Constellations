@@ -1,4 +1,6 @@
-﻿#pragma comment(lib, "d3d10.lib")
+﻿#pragma once
+
+#pragma comment(lib, "d3d10.lib")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "dxguid.lib")
@@ -10,6 +12,9 @@
 #include "DirectXMath.h"
 #include <DirectXPackedVector.h>
 #include <debugapi.h>
+
+#include "utils.h"
+#include <d2d1.h>
 
 using namespace DirectX;
 

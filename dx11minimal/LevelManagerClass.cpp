@@ -45,8 +45,8 @@ bool LevelManagerClass::Initialize()
 	physicBody->velocity = point3d(0.0f, 0.0f, 0.0f);
 	//star->AddComponent<SphereCollider>();
 	sprite = star->AddComponent<Sprite>();
-	sprite->vShader = 2;
-	sprite->pShader = 2;
+	sprite->vShader = 1;
+	sprite->pShader = 1;
 
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();

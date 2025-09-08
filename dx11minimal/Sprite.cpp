@@ -2,7 +2,6 @@
 #define _SPRITE_C_
 
 #include "component.h"
-#include "point3d.h"
 
 
 struct Sprite : Component
