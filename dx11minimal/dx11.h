@@ -1,5 +1,9 @@
 ﻿#pragma once
 
+#ifndef DX11_H
+#define DX11_H
+
+
 #include <d3d11.h>
 #include <d2d1.h>
 #include <d3dcompiler.h>
@@ -194,7 +198,7 @@ namespace ConstBuf
 	} frame;//update per frame
 
 	//b5
-	XMFLOAT4 global[constCount];//update once on start
+	extern XMFLOAT4 global[constCount];//update once on start
 
 	//b6
 	struct {
@@ -361,3 +365,5 @@ namespace View {
 
 	void GetWorldMatrix(XMMATRIX&);
 }
+
+#endif // !DX11_H

@@ -513,6 +513,8 @@ ID3D11Buffer* ConstBuf::buffer[7];
 float ConstBuf::drawerV[constCount];
 float ConstBuf::drawerP[constCount];
 
+XMFLOAT4 ConstBuf::global[constCount];
+
 int ConstBuf::roundUp(int n, int r)
 {
 	return 	n - (n % r) + r;
