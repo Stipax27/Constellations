@@ -856,7 +856,7 @@ namespace Device
 
 	D3D_DRIVER_TYPE	driverType = D3D_DRIVER_TYPE_NULL;
 
-	void Init()
+	void Init(HWND hwnd)
 	{
 		HRESULT hr;
 
@@ -873,7 +873,7 @@ namespace Device
 		sd.BufferDesc.RefreshRate.Denominator = 1;
 		sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		sd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
-		sd.OutputWindow = hWnd;
+		sd.OutputWindow = hwnd;
 		sd.SampleDesc.Count = 1;
 		sd.SampleDesc.Quality = 0;
 		sd.Windowed = true;
@@ -919,16 +919,16 @@ namespace InputAssembler
 
 }
 
-void Dx11Init()
+void Dx11Init(HWND hwnd)
 {
 	RECT rect;
-	GetClientRect(hWnd, &rect);
+	GetClientRect(hwnd, &rect);
 	width = rect.right - rect.left;
 	height = rect.bottom - rect.top;
 	aspect = float(height) / float(width);
 	iaspect = float(width) / float(height);
 
-	Device::Init();
+	Device::Init(hwnd);
 	Rasterizer::Init();
 	Depth::Init();
 	Blend::Init();
@@ -1027,7 +1027,6 @@ void frameConst()
 	ConstBuf::UpdateFrame();
 }
 
-#define PI 3.1415926535897932384626433832795f
 float DegreesToRadians(float degrees)
 {
 	return degrees * PI / 180.f;
@@ -1198,12 +1197,6 @@ namespace Camera
 namespace View {
 	XMMATRIX m_projectionMatrix;
 	XMMATRIX m_worldMatrix;
-
-	void GetProjectionMatrix(XMMATRIX& projectionMatrix)
-	{
-		projectionMatrix = m_projectionMatrix;
-		return;
-	}
 
 	void GetWorldMatrix(XMMATRIX& worldMatrix)
 	{

@@ -241,9 +241,6 @@ public:
     float dot(const point3d& other) const {
         return x * other.x + y * other.y + z * other.z;
     }
-
-private:
-    const float PI = 3.1415926535897932384626433832795f;
 };
 
 point3d TransformPoint(const point3d& p, const XMMATRIX& m) {

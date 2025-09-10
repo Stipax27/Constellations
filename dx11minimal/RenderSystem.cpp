@@ -44,8 +44,6 @@ public:
 
 	bool Update(vector<Entity*>& entities, float deltaTime)
 	{
-		XMMATRIX projectionMatrix;
-
 		// Clear the buffers to begin the scene.
 		Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
 		Draw::ClearDepth();
@@ -55,7 +53,7 @@ public:
 
 		// Get the world, view, and projection matrices from the camera and d3d objects.
 		XMMATRIX viewMatrix = m_Camera->GetViewMatrix();
-		View::GetProjectionMatrix(projectionMatrix);
+		XMMATRIX projectionMatrix = m_Camera->GetProjectionMatrix();
 
 		size_t size = entities.size();
 		for (int i = 0; i < size; i++)

@@ -132,7 +132,6 @@
     <ClInclude Include="component.h" />
     <ClInclude Include="Constellation.h" />
     <ClInclude Include="DialogStruct.h" />
-    <ClInclude Include="DiologTEXT.h" />
     <ClInclude Include="drawer.h" />
     <ClInclude Include="dx11.h" />
     <ClInclude Include="Elements.h" />
@@ -147,7 +146,6 @@
     <ClInclude Include="LevelManagerClass.h" />
     <ClInclude Include="loop.h" />
     <ClInclude Include="MainGame.h" />
-    <ClInclude Include="mainwindow.h" />
     <ClInclude Include="MainWorld.h" />
     <ClInclude Include="mtx.h" />
     <ClInclude Include="Navigation.h" />

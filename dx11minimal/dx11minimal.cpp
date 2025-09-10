@@ -1,4 +1,5 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
+#define PI 3.1415926535897932384626433832795f
 
 #include "framework.h"
 #include "windows.h"
@@ -22,38 +23,36 @@ float circleRadius;
 int currentDayIndex = -1;
 int currentMonthIndex = -1;
 int currentColorIndex = -1;
-const int numColors = 7;
 float camDist = 100;//we have this in camera state
 
 bool isBattleActive = false;
 DWORD battleStartTime;
 
-#include "Point3d.h"
+//#include "Point3d.h"
 
-#include "AriesNebula.h"
+//#include "AriesNebula.h"
 
-#include "UI.h"
-#include "font.h"
+//#include "UI.h"
+//#include "font.h"
 
-#include "EnemyData.h"
-#include "EnemyDataCon.h"
-#include "EnemyAi.h"
+//#include "EnemyData.h"
+//#include "EnemyDataCon.h"
+//#include "EnemyAi.h"
 
-#include "Navigation.h"
-#include "Constellation.h"
-#include "EnemyAiUPD.h"
+//#include "Navigation.h"
+//#include "Constellation.h"
+//#include "EnemyAiUPD.h"
 
-#include "MainWorld.h"
-#include "StatusGame.h"
-#include "Weapon.h"
-#include "Elements.h"
-#include "MainGame.h"
-#include "DiologTEXT.h"
-#include "DialogStruct.h"
-#include "Parametrics.h"
-#include "drawer.h"
+//#include "MainWorld.h"
+//#include "StatusGame.h"
+//#include "Weapon.h"
+//#include "Elements.h"
+//#include "MainGame.h"
+//#include "DialogStruct.h"
+//#include "Parametrics.h"
+//#include "drawer.h"
 
-#include "loop.h"
+//#include "loop.h"
 
 #include "resource.h"
 
@@ -99,8 +98,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     {
         return FALSE;
     }
-    Dx11Init();
-    InitGame();
+    Dx11Init(levelManager.window->hWnd);
+    //InitGame();
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_DX11MINIMAL));
 
     MSG msg = { 0 };
@@ -130,7 +129,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
             levelManager.Frame();
 
-            mainLoop(timer::deltaTime);
+            //mainLoop(timer::deltaTime);
 
             timer::frameEndTime = timer::GetCounter();
             timer::frameRenderingDuration = timer::frameEndTime - timer::frameBeginTime;
@@ -207,8 +206,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, WindowStruct* window)
     window->device_context = GetDC(window->hWnd);
     window->width = r.right - r.left;
     window->height = r.bottom - r.top;
-
-    hWnd = window->hWnd; // <- чтобы DirectX тоже использовал это окно
 
     return TRUE;
 }
