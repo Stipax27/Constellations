@@ -48,8 +48,8 @@ namespace Rasterizer
 	enum class cullmode { off, front, back, wireframe };
 	ID3D11RasterizerState* rasterState[4];
 
-	void Cull(cullmode mode);
-	void Scissors(rect r);
+	void Cull(cullmode);
+	void Scissors(rect);
 	void Init();
 
 }
@@ -94,19 +94,19 @@ namespace Textures
 
 	int currentRT = 0;
 
-	void CreateTex(int i);
-	void ShaderRes(int i);
-	void rtView(int i);
-	void Depth(int i);
-	void shaderResDepth(int i);
-	void Create(int i, tType type, tFormat format, XMFLOAT2 size, bool mipMaps, bool depth);
+	void CreateTex(int);
+	void ShaderRes(int);
+	void rtView(int);
+	void Depth(int);
+	void shaderResDepth(int);
+	void Create(int, tType, tFormat, XMFLOAT2, bool, bool);
 	void UnbindAll();
-	void SetViewport(int texId, byte level = 0);
-	void CopyColor(int dst, int src);
-	void CopyDepth(int dst, int src);
-	void TextureToShader(int tex, unsigned int slot, targetshader tA = targetshader::both);
+	void SetViewport(int, byte);
+	void CopyColor(int, int);
+	void CopyDepth(int, int);
+	void TextureToShader(int, unsigned int, targetshader);
 	void CreateMipMap();
-	void RenderTarget(int target, unsigned int level = 0);
+	void RenderTarget(int, unsigned int);
 
 }
 
@@ -136,16 +136,16 @@ namespace Shaders {
 
 	wchar_t shaderPathW[MAX_PATH];
 
-	LPCWSTR nameToPatchLPCWSTR(const char* path);
-	void Log(const char* message);
-	void CompilerLog(LPCWSTR source, HRESULT hr, const char* message);
-	void CreateVS(int i, LPCWSTR name);
-	void CreatePS(int i, LPCWSTR name);
-	void CreateGS(int i, LPCWSTR name);
+	LPCWSTR nameToPatchLPCWSTR(const char*);
+	void Log(const char*);
+	void CompilerLog(LPCWSTR, HRESULT, const char*);
+	void CreateVS(int, LPCWSTR);
+	void CreatePS(int, LPCWSTR);
+	void CreateGS(int, LPCWSTR);
 	void Init();
-	void vShader(unsigned int n);
-	void pShader(unsigned int n);
-	void gShader(unsigned int n);
+	void vShader(unsigned int);
+	void pShader(unsigned int);
+	void gShader(unsigned int);
 
 }
 
@@ -158,8 +158,8 @@ namespace Sampler
 	ID3D11SamplerState* pSamplerComp;//for shadowmapping
 
 	void Init();
-	void Sampler(targetshader shader, unsigned int slot, filter filterType, addr addressU, addr addressV);
-	void SamplerComp(unsigned int slot);
+	void Sampler(targetshader, unsigned int, filter, addr, addr);
+	void SamplerComp(unsigned int);
 }
 
 namespace ConstBuf
@@ -202,21 +202,19 @@ namespace ConstBuf
 		float AriesNebulaLerpFactor;
 	} factors;
 
-	int roundUp(int n, int r);
-
-	void Create(ID3D11Buffer*& buf, int size);
-
+	int roundUp(int, int);
+	void Create(ID3D11Buffer*&, int);
 	void Init();
 
 	template <typename T>
-	void Update(int i, T* data);
+	void Update(int, T*);
 
 	void UpdateFrame();
 	void UpdateDrawerMat();
 	void UpdateCamera();
 	void UpdateFactors();
-	void ConstToVertex(int i);
-	void ConstToPixel(int i);
+	void ConstToVertex(int);
+	void ConstToPixel(int);
 
 	namespace getbyname {
 		enum { drawerV, drawerP, drawerMat, camera, frame, global, factors };
@@ -234,9 +232,9 @@ namespace Blend
 	ID3D11BlendState* blendState[3][5];
 	D3D11_BLEND_DESC bSDesc;
 
-	void CreateMixStates(int j);
+	void CreateMixStates(int);
 	void Init();
-	void Blending(blendmode mode = blendmode::off, blendop operation = blendop::add);
+	void Blending(blendmode, blendop);
 }
 
 namespace Depth
@@ -246,13 +244,13 @@ namespace Depth
 	ID3D11DepthStencilState* pDSState[4];
 
 	void Init();
-	void Depth(depthmode mode);
+	void Depth(depthmode);
 }
 
 ID2D1Factory* d2dFactory = nullptr;
 ID2D1HwndRenderTarget* d2dRenderTarget = nullptr;
 
-void InitD2D(HWND hwnd);
+void InitD2D(HWND);
 
 
 namespace Device
@@ -261,7 +259,7 @@ namespace Device
 
 	D3D_DRIVER_TYPE	driverType = D3D_DRIVER_TYPE_NULL;
 
-	void Init(HWND hwnd);
+	void Init(HWND);
 }
 
 
@@ -269,10 +267,11 @@ namespace InputAssembler
 {
 	enum class topology { triList, lineList, lineStrip };
 
-	void IA(topology topoType);
+	void IA(topology);
 }
 
-void Dx11Init(HWND hwnd);
+
+void Dx11Init(HWND);
 
 
 struct color4 {
@@ -284,18 +283,18 @@ struct color4 {
 
 namespace Draw
 {
-	void Clear(color4 color);
+	void Clear(color4);
 	void ClearDepth();
-	void NullDrawer(int quadCount, unsigned int instances = 1);
-	void Drawer(int quadCount);
+	void NullDrawer(int, unsigned int);
+	void Drawer(int);
 	void SwitchRenderTextures();
 	void OutputRenderTextures();
-	void elipse(int quadCount, unsigned int instances = 1);
+	void elipse(int, unsigned int);
 	void Present();
 }
 
 void frameConst();
-float DegreesToRadians(float degrees);
+float DegreesToRadians(float);
 
 namespace Hero
 {
@@ -322,7 +321,7 @@ namespace Hero
 	} static state;
 
 
-	void UpdateAttackRotation(float deltaTime);
+	void UpdateAttackRotation(float);
 }
 
 namespace Camera
@@ -353,11 +352,12 @@ namespace Camera
 	
 	void UpdateCameraPosition();
 	void Camera();
+	void HandleMouseWheel(int);
 }
 
 namespace View {
 	XMMATRIX m_projectionMatrix;
 	XMMATRIX m_worldMatrix;
 
-	void GetWorldMatrix(XMMATRIX& worldMatrix);
+	void GetWorldMatrix(XMMATRIX&);
 }

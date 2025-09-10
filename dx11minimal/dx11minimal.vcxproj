@@ -271,6 +271,7 @@
     <ClCompile Include="PlaneCollider.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
+    <ClCompile Include="timer.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
