@@ -95,7 +95,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     {
         return FALSE;
     }
-    Dx11Init(levelManager.window->hWnd);
+    
     //InitGame();
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_DX11MINIMAL));
 
