@@ -28,14 +28,14 @@ typedef long int32;
 
 static inline int32 _log2(float x);
 
-ID3D11Device* device = NULL;
-ID3D11DeviceContext* context = NULL;
-IDXGISwapChain* swapChain = NULL;
+extern ID3D11Device* device;
+extern ID3D11DeviceContext* context;
+extern IDXGISwapChain* swapChain;
 
-int width;
-int height;
-float aspect;
-float iaspect;
+extern int width;
+extern int height;
+extern float aspect;
+extern float iaspect;
 
 enum targetshader { vertex, pixel, both };
 
@@ -46,7 +46,7 @@ struct rect {
 namespace Rasterizer
 {
 	enum class cullmode { off, front, back, wireframe };
-	ID3D11RasterizerState* rasterState[4];
+	extern ID3D11RasterizerState* rasterState[4];
 
 	void Cull(cullmode);
 	void Scissors(rect);
@@ -61,18 +61,18 @@ namespace Textures
 #define mainRTIndex 0
 
 	enum tType { flat, cube };
-	
 
-	DXGI_FORMAT dxTFormat[] = { DXGI_FORMAT_R8G8B8A8_UNORM ,DXGI_FORMAT_R8G8B8A8_SNORM ,DXGI_FORMAT_R16G16B16A16_FLOAT ,DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R8_SNORM };
+	extern DXGI_FORMAT dxTFormat[5];
 	enum tFormat { u8, s8, s16, s32, r8 };
-	D3D11_TEXTURE2D_DESC tdesc;
-	D3D11_SHADER_RESOURCE_VIEW_DESC svDesc;
-	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
-	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
 
-	ID3D11RenderTargetView* mrtView[8];
+	extern D3D11_TEXTURE2D_DESC tdesc;
+	extern D3D11_SHADER_RESOURCE_VIEW_DESC svDesc;
+	extern D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+	extern D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
 
-	typedef struct {
+	extern ID3D11RenderTargetView* mrtView[8];
+
+	struct textureDesc {
 
 		ID3D11Texture2D* pTexture;
 		ID3D11ShaderResourceView* TextureResView;
@@ -88,11 +88,11 @@ namespace Textures
 		bool mipMaps;
 		bool depth;
 
-	} textureDesc;
+	};
 
-	textureDesc Texture[max_tex];
+	extern textureDesc Texture[max_tex];
 
-	int currentRT = 0;
+	extern int currentRT;
 
 	void CreateTex(int);
 	void ShaderRes(int);
@@ -107,34 +107,33 @@ namespace Textures
 	void TextureToShader(int, unsigned int, targetshader);
 	void CreateMipMap();
 	void RenderTarget(int, unsigned int);
-
 }
 
 
 namespace Shaders {
 
-	typedef struct {
+	struct VertexShader {
 		ID3D11VertexShader* vShader;
 		ID3DBlob* pBlob;
-	} VertexShader;
+	};
 
-	typedef struct {
+	struct PixelShader {
 		ID3D11PixelShader* pShader;
 		ID3DBlob* pBlob;
-	} PixelShader;
+	};
 
-	typedef struct {
+	struct GeometryShader {
 		ID3D11GeometryShader* gShader;
 		ID3DBlob* pBlob;
-	} GeometryShader;
+	};
 
-	VertexShader VS[255];
-	PixelShader PS[255];
-	GeometryShader GS[255];
+	extern VertexShader VS[255];
+	extern PixelShader PS[255];
+	extern GeometryShader GS[255];
 
-	ID3DBlob* pErrorBlob;
+	extern ID3DBlob* pErrorBlob;
 
-	wchar_t shaderPathW[MAX_PATH];
+	extern wchar_t shaderPathW[MAX_PATH];
 
 	LPCWSTR nameToPatchLPCWSTR(const char*);
 	void Log(const char*);
@@ -154,8 +153,8 @@ namespace Sampler
 	enum class filter { linear, point, minPoint_magLinear };
 	enum class addr {clamp,wrap};
 
-	ID3D11SamplerState* pSampler[3][2][2];//filter, addressU, addressV
-	ID3D11SamplerState* pSamplerComp;//for shadowmapping
+	extern ID3D11SamplerState* pSampler[3][2][2];//filter, addressU, addressV
+	extern ID3D11SamplerState* pSamplerComp;//for shadowmapping
 
 	void Init();
 	void Sampler(targetshader, unsigned int, filter, addr, addr);
@@ -164,15 +163,15 @@ namespace Sampler
 
 namespace ConstBuf
 {
-	ID3D11Buffer* buffer[7];
+	extern ID3D11Buffer* buffer[7];
 
 #define constCount 32
 
 	//b0 - use "params" label in shader
-	float drawerV[constCount];//update per draw call
+	extern float drawerV[constCount];//update per draw call
 
 	//b1 - use "params" label in shader
-	float drawerP[constCount];//update per draw call
+	extern float drawerP[constCount];//update per draw call
 
 	//b2
 	struct {
@@ -229,8 +228,8 @@ namespace Blend
 	enum class blendmode { off, on, alpha };
 	enum class blendop { add, sub, revsub, min, max };
 
-	ID3D11BlendState* blendState[3][5];
-	D3D11_BLEND_DESC bSDesc;
+	extern ID3D11BlendState* blendState[3][5];
+	extern D3D11_BLEND_DESC bSDesc;
 
 	void CreateMixStates(int);
 	void Init();
@@ -241,14 +240,15 @@ namespace Depth
 {
 	enum class depthmode { off, on, readonly, writeonly };
 
-	ID3D11DepthStencilState* pDSState[4];
+	extern ID3D11DepthStencilState* pDSState[4];
 
 	void Init();
 	void Depth(depthmode);
 }
 
-ID2D1Factory* d2dFactory = nullptr;
-ID2D1HwndRenderTarget* d2dRenderTarget = nullptr;
+
+extern ID2D1Factory* d2dFactory;
+extern ID2D1HwndRenderTarget* d2dRenderTarget;
 
 void InitD2D(HWND);
 
@@ -257,7 +257,7 @@ namespace Device
 {
 #define DirectXDebugMode true
 
-	D3D_DRIVER_TYPE	driverType = D3D_DRIVER_TYPE_NULL;
+	extern D3D_DRIVER_TYPE	driverType;
 
 	void Init(HWND);
 }
@@ -356,8 +356,8 @@ namespace Camera
 }
 
 namespace View {
-	XMMATRIX m_projectionMatrix;
-	XMMATRIX m_worldMatrix;
+	extern XMMATRIX m_projectionMatrix;
+	extern XMMATRIX m_worldMatrix;
 
 	void GetWorldMatrix(XMMATRIX&);
 }

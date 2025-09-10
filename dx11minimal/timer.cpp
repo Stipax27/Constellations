@@ -10,6 +10,10 @@ double timer::frameEndTime = 0;
 double timer::nextFrameTime = 0;
 double timer::frameRenderingDuration = 0.0;
 
+DWORD timer::currentTime = 0;
+DWORD timer::lastFrameTime = 0;
+DWORD timer::deltaTime = 0;
+
 
 
 void timer::StartCounter()

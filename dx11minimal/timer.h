@@ -4,17 +4,17 @@
 
 namespace timer
 {
-	double PCFreq;
-	__int64 counterStart;
+	extern double PCFreq;
+	extern __int64 counterStart;
 	
-	double frameBeginTime;
-	double frameEndTime;
-	double nextFrameTime;
-	double frameRenderingDuration;
+	extern double frameBeginTime;
+	extern double frameEndTime;
+	extern double nextFrameTime;
+	extern double frameRenderingDuration;
 	
-	DWORD currentTime;
-	DWORD lastFrameTime;
-	DWORD deltaTime;
+	extern DWORD currentTime;
+	extern DWORD lastFrameTime;
+	extern DWORD deltaTime;
 
 	void StartCounter();
 	double GetCounter();

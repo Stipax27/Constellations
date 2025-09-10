@@ -11,6 +11,19 @@ static inline int32 _log2(float x)
 
 //////////////////////////////////////////////////////////////////////////////////
 
+ID3D11Device* device = NULL;
+ID3D11DeviceContext* context = NULL;
+IDXGISwapChain* swapChain = NULL;
+
+int width;
+int height;
+float aspect;
+float iaspect;
+
+//////////////////////////////////////////////////////////////////////////////////
+
+ID3D11RasterizerState* Rasterizer::rasterState[4];
+
 void Rasterizer::Cull(cullmode mode)
 {
 	context->RSSetState(rasterState[(int)mode]);
@@ -52,6 +65,19 @@ void Rasterizer::Init()
 }
 
 //////////////////////////////////////////////////////////////////////////////////
+
+DXGI_FORMAT Textures::dxTFormat[5] = { DXGI_FORMAT_R8G8B8A8_UNORM ,DXGI_FORMAT_R8G8B8A8_SNORM ,DXGI_FORMAT_R16G16B16A16_FLOAT ,DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R8_SNORM };
+
+D3D11_TEXTURE2D_DESC Textures::tdesc;
+D3D11_SHADER_RESOURCE_VIEW_DESC Textures::svDesc;
+D3D11_RENDER_TARGET_VIEW_DESC Textures::renderTargetViewDesc;
+D3D11_DEPTH_STENCIL_VIEW_DESC Textures::descDSV;
+
+ID3D11RenderTargetView* Textures::mrtView[8];
+
+Textures::textureDesc Textures::Texture[max_tex];
+
+int Textures::currentRT = 0;
 
 void Textures::CreateTex(int i)
 {
@@ -270,6 +296,13 @@ void Textures::RenderTarget(int target, unsigned int level = 0)
 
 //////////////////////////////////////////////////////////////////////////////////
 
+Shaders::VertexShader Shaders::VS[255];
+Shaders::PixelShader Shaders::PS[255];
+Shaders::GeometryShader Shaders::GS[255];
+
+ID3DBlob* Shaders::pErrorBlob;
+wchar_t Shaders::shaderPathW[MAX_PATH];
+
 LPCWSTR Shaders::nameToPatchLPCWSTR(const char* path)
 {
 	int len = MultiByteToWideChar(CP_ACP, 0, path, -1, NULL, 0);
@@ -415,6 +448,9 @@ void Shaders::gShader(unsigned int n)
 
 //////////////////////////////////////////////////////////////////////////////////
 
+ID3D11SamplerState* Sampler::pSampler[3][2][2];
+ID3D11SamplerState* Sampler::pSamplerComp;
+
 void Sampler::Init()
 {
 	D3D11_SAMPLER_DESC sampDesc;
@@ -471,6 +507,11 @@ void Sampler::SamplerComp(unsigned int slot)
 }
 
 //////////////////////////////////////////////////////////////////////////////////
+
+ID3D11Buffer* ConstBuf::buffer[7];
+
+float ConstBuf::drawerV[constCount];
+float ConstBuf::drawerP[constCount];
 
 int ConstBuf::roundUp(int n, int r)
 {
@@ -539,6 +580,9 @@ void ConstBuf::ConstToPixel(int i)
 
 //////////////////////////////////////////////////////////////////////////////////
 
+ID3D11BlendState* Blend::blendState[3][5];
+D3D11_BLEND_DESC Blend::bSDesc;
+
 void Blend::CreateMixStates(int j)
 {
 	for (int i = 0; i < 5; i++)
@@ -592,6 +636,8 @@ void Blend::Blending(blendmode mode = blendmode::off, blendop operation = blendo
 
 //////////////////////////////////////////////////////////////////////////////////
 
+ID3D11DepthStencilState* Depth::pDSState[4];
+
 void Depth::Init()
 {
 	D3D11_DEPTH_STENCIL_DESC dsDesc;
@@ -643,6 +689,9 @@ void Depth::Depth(depthmode mode)
 
 //////////////////////////////////////////////////////////////////////////////////
 
+ID2D1Factory* d2dFactory = nullptr;
+ID2D1HwndRenderTarget* d2dRenderTarget = nullptr;
+
 void InitD2D(HWND hwnd)
 {
 	// Шаг 1: Создание фабрики
@@ -663,6 +712,8 @@ void InitD2D(HWND hwnd)
 }
 
 //////////////////////////////////////////////////////////////////////////////////
+
+D3D_DRIVER_TYPE	Device::driverType = D3D_DRIVER_TYPE_NULL;
 
 void Device::Init(HWND hwnd)
 {
@@ -935,6 +986,9 @@ void Camera::HandleMouseWheel(int delta)
 }
 
 //////////////////////////////////////////////////////////////////////////////////
+
+XMMATRIX View::m_projectionMatrix;
+XMMATRIX View::m_worldMatrix;
 
 void View::GetWorldMatrix(XMMATRIX& worldMatrix)
 {

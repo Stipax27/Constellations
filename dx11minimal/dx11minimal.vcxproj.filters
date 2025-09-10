@@ -84,9 +84,6 @@
     <ClInclude Include="MainWorld.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DodgeEnemy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Navigation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -105,9 +102,6 @@
     <ClInclude Include="MainGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DiologTEXT.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DialogStruct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -115,12 +109,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="drawer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MainWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mouse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="loop.h">
@@ -140,9 +128,6 @@
     </ClInclude>
     <ClInclude Include="EnemyAi.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderObject.h">
-      <Filter>Header Files\Render</Filter>
     </ClInclude>
     <ClInclude Include="PhysicLoop.h">
       <Filter>Header Files</Filter>
@@ -225,6 +210,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="World.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dx11.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
