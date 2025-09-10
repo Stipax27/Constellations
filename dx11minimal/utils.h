@@ -1,4 +1,5 @@
-﻿#pragma once
+﻿#ifndef UTILS_H
+#define UTILS_H
 
 #include <corecrt_math.h>
 
@@ -8,3 +9,5 @@ float clamp(float x, float a, float b);
 float smoothstep(float edge0, float edge1, float x);
 float fract(float a);
 float lerp(float x1, float x2, float a);
+
+#endif // !UTILS_H

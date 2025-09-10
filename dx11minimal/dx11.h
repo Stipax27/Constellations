@@ -210,7 +210,10 @@ namespace ConstBuf
 	void Init();
 
 	template <typename T>
-	void Update(int, T*);
+	void Update(int i, T* data)
+	{
+		context->UpdateSubresource(buffer[i], 0, NULL, data, 0, 0);
+	}
 
 	void UpdateFrame();
 	void UpdateDrawerMat();

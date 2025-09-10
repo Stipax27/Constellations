@@ -535,24 +535,18 @@ void ConstBuf::Create(ID3D11Buffer*& buf, int size)
 
 void ConstBuf::Init()
 {
-	ConstBuf::Create(buffer[0], sizeof(drawerV));
-	ConstBuf::Create(buffer[1], sizeof(drawerP));
-	ConstBuf::Create(buffer[2], sizeof(drawerMat));
-	ConstBuf::Create(buffer[3], sizeof(camera));
-	ConstBuf::Create(buffer[4], sizeof(frame));
-	ConstBuf::Create(buffer[5], sizeof(global));
-	ConstBuf::Create(buffer[6], sizeof(factors));
-}
-
-template <typename T>
-void ConstBuf::Update(int i, T* data)
-{
-	context->UpdateSubresource(buffer[i], 0, NULL, data, 0, 0);
+	ConstBuf::Create(ConstBuf::buffer[0], sizeof(drawerV));
+	ConstBuf::Create(ConstBuf::buffer[1], sizeof(drawerP));
+	ConstBuf::Create(ConstBuf::buffer[2], sizeof(drawerMat));
+	ConstBuf::Create(ConstBuf::buffer[3], sizeof(camera));
+	ConstBuf::Create(ConstBuf::buffer[4], sizeof(frame));
+	ConstBuf::Create(ConstBuf::buffer[5], sizeof(global));
+	ConstBuf::Create(ConstBuf::buffer[6], sizeof(factors));
 }
 
 void ConstBuf::UpdateFrame()
 {
-	context->UpdateSubresource(buffer[4], 0, NULL, &frame, 0, 0);
+	context->UpdateSubresource(ConstBuf::buffer[4], 0, NULL, &frame, 0, 0);
 }
 
 void ConstBuf::UpdateDrawerMat()
@@ -572,12 +566,12 @@ void ConstBuf::UpdateFactors()
 
 void ConstBuf::ConstToVertex(int i)
 {
-	context->VSSetConstantBuffers(i, 1, &buffer[i]);
+	context->VSSetConstantBuffers(i, 1, &ConstBuf::buffer[i]);
 }
 
 void ConstBuf::ConstToPixel(int i)
 {
-	context->PSSetConstantBuffers(i, 1, &buffer[i]);
+	context->PSSetConstantBuffers(i, 1, &ConstBuf::buffer[i]);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
