@@ -19,6 +19,8 @@ public:
     void Initialize();
     void Update();
     point3d GetMouseRay(point3d);
+private:
+    
 };
 
 void ProcessSound(const char* name)//проигрывание аудиофайла в формате .wav, файл должен лежать в той же папке где и программа

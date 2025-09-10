@@ -55,8 +55,6 @@ DWORD battleStartTime;
 //#include "loop.h"
 
 #include "resource.h"
-
-#include "dx11.h"
 #include "LevelManagerClass.cpp"
 
 #define MAX_LOADSTRING 100

@@ -11,7 +11,7 @@
 
 #include "cameraclass.h"
 
-#include "dx11.h"
+//#include "dx11.h"
 
 
 class RenderSystem : public System
