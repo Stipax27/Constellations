@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include "DirectXMath.h"
+#include "utils.h"
 
 using namespace DirectX;
 

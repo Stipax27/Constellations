@@ -261,10 +261,10 @@
   <ItemGroup>
     <ClCompile Include="cameraclass.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
+    <ClCompile Include="dx11.cpp" />
     <ClCompile Include="dx11minimal.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="LevelManagerClass.cpp" />
-    <ClCompile Include="MouseClass.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="PhysicBody.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />
@@ -273,7 +273,6 @@
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="World.cpp" />
-    <ClInclude Include="mouseclass.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="dx11minimal.rc" />

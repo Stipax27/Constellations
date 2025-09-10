@@ -1,13 +1,12 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
-#define PI 3.1415926535897932384626433832795f
 
 #include "framework.h"
 #include "windows.h"
 #include <stdexcept>
-#include "math.h"
+//#include "math.h"
 #include <stdlib.h>
 #include <iostream>
-#include <cmath>
+//#include <cmath>
 #include <sstream>
 #include <algorithm>
 #include <deque>
@@ -55,7 +54,7 @@ DWORD battleStartTime;
 //#include "loop.h"
 
 #include "resource.h"
-#include "LevelManagerClass.cpp"
+#include "LevelManagerClass.h"
 
 #define MAX_LOADSTRING 100
                             // current instance

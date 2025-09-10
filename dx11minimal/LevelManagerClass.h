@@ -7,8 +7,6 @@
 //////////////
 // INCLUDES //
 //////////////
-#include "dx11.h"
-
 #include "cameraclass.h"
 
 #include "world.h"
@@ -26,7 +24,6 @@
 #include "CollisionSystem.cpp"
 #include "RenderSystem.cpp"
 
-#include "MouseClass.cpp"
 
 /////////////
 // GLOBALS //
@@ -58,7 +55,7 @@ public:
 	void Update() {
 		POINT p;
 		GetCursorPos(&p);
-		ScreenToClient(m_Window->hWnd, &p); // ”правление мышью.
+		ScreenToClient(m_Window->hWnd, &p);
 
 		pos = { (float)p.x, (float)p.y, 0.f };
 	}
@@ -96,6 +93,7 @@ class LevelManagerClass
 {
 public:
 	WindowStruct* window;
+	MouseStruct* mouse;
 
 public:
 	LevelManagerClass();
@@ -113,7 +111,6 @@ public:
 
 private:
 	World* m_World;
-	MouseClass* m_Mouse;
 };
 
 #endif

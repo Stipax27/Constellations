@@ -1,9 +1,6 @@
 ﻿#pragma once
 
-float saturate(float x)
-{
-    return max(min(x, 1.), 0.);// размеры экрана.
-}
+#define PI 3.1415926535897932384626433832795f
 
 float clamp(float x, float a, float b)
 {

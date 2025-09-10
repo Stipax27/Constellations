@@ -3,9 +3,9 @@
 LevelManagerClass::LevelManagerClass()
 {
 	window = 0;
+	mouse = 0;
 
 	m_World = 0;
-	m_Mouse = 0;
 }
 
 LevelManagerClass::LevelManagerClass(const LevelManagerClass& other)
@@ -26,13 +26,7 @@ bool LevelManagerClass::Initialize()
 	bool result;
 
 	window = new WindowStruct;
-
-	m_Mouse = new MouseClass;
-	m_Mouse->Initialize();
-
-	//////////////////////////////////////////////////////////////////////////////////////////////
-	// WORLD CREATING START //
-	//////////////////////////////////////////////////////////////////////////////////////////////
+	mouse = new MouseStruct;
 
 	m_World = new World;
 	result = m_World->Initialize();
@@ -40,6 +34,12 @@ bool LevelManagerClass::Initialize()
 	{
 		return false;
 	}
+
+	mouse->Initialize(window, m_World->m_Camera);
+
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	// WORLD CREATING START //
+	//////////////////////////////////////////////////////////////////////////////////////////////
 
 	Sprite* sprite;
 	Transform* transform;
@@ -78,10 +78,10 @@ void LevelManagerClass::Shutdown()
 		m_World = 0;
 	}
 
-	if (m_Mouse)
+	if (mouse)
 	{
-		delete m_Mouse;
-		m_Mouse = 0;
+		delete mouse;
+		mouse = 0;
 	}
 
 	if (window)
@@ -98,7 +98,7 @@ bool LevelManagerClass::Frame()
 {
 	bool result;
 
-	m_Mouse->Update();
+	mouse->Update();
 
 	result = m_World->UpdatePhysic();
 	if (!result)
