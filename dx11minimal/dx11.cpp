@@ -15,11 +15,6 @@ ID3D11Device* device = NULL;
 ID3D11DeviceContext* context = NULL;
 IDXGISwapChain* swapChain = NULL;
 
-int width;
-int height;
-float aspect;
-float iaspect;
-
 //////////////////////////////////////////////////////////////////////////////////
 
 ID3D11RasterizerState* Rasterizer::rasterState[4];
@@ -35,7 +30,7 @@ void Rasterizer::Scissors(rect r)
 	context->RSSetScissorRects(1, &rect);
 }
 
-void Rasterizer::Init()
+void Rasterizer::Init(int width, int height)
 {
 	D3D11_RASTERIZER_DESC rasterizerState;
 	rasterizerState.FillMode = D3D11_FILL_SOLID;
@@ -711,12 +706,9 @@ void InitD2D(HWND hwnd)
 
 D3D_DRIVER_TYPE	Device::driverType = D3D_DRIVER_TYPE_NULL;
 
-void Device::Init(HWND hwnd)
+void Device::Init(HWND hwnd, int width, int height)
 {
 	HRESULT hr;
-
-	aspect = float(height) / float(width);
-	iaspect = float(width) / float(height);
 
 	DXGI_SWAP_CHAIN_DESC sd;
 	ZeroMemory(&sd, sizeof(sd));
@@ -767,33 +759,26 @@ void InputAssembler::IA(topology topoType)
 
 //////////////////////////////////////////////////////////////////////////////////
 
-void Dx11Init(HWND hwnd)
+void Dx11Init(HWND hwnd, int width, int height)
 {
-	RECT rect;
-	GetClientRect(hwnd, &rect);
-	width = rect.right - rect.left;
-	height = rect.bottom - rect.top;
-	aspect = float(height) / float(width);
-	iaspect = float(width) / float(height);
-
-	Device::Init(hwnd);
-	Rasterizer::Init();
+	Device::Init(hwnd, width, height);
+	Rasterizer::Init(width, height);
 	Depth::Init();
 	Blend::Init();
 	ConstBuf::Init();
 	Sampler::Init();
 	Shaders::Init();
 
-	//main RT
+	// main RT
 	Textures::Create(0, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), false, true);
-	//rt1
+	// rt1
 	Textures::Create(1, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
-	//rt2
+	// rt2
 	Textures::Create(2, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
 
-	//perlin noise rt
+	// perlin noise rt
 	Textures::Create(3, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
-	//voronoi noise rt
+	// voronoi noise rt
 	Textures::Create(4, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
 }
 
@@ -858,13 +843,6 @@ void Draw::Present()
 }
 
 //////////////////////////////////////////////////////////////////////////////////
-
-void frameConst()
-{
-	ConstBuf::frame.time = XMFLOAT4{ (float)(timer::frameBeginTime * .01) ,0,0,0 };
-	ConstBuf::frame.aspect = XMFLOAT4{ aspect,iaspect, float(width), float(height) };
-	ConstBuf::UpdateFrame();
-}
 
 float DegreesToRadians(float degrees)
 {
@@ -963,12 +941,12 @@ void Camera::Camera() //обновление позиции камеры после обновлени€ позиции созве
 	Camera::UpdateCameraPosition();
 
 	// ќбновл€ем матрицу проекции (если нужно)
-	ConstBuf::camera.proj[0] = XMMatrixTranspose(XMMatrixPerspectiveFovLH(
+	/*ConstBuf::camera.proj[0] = XMMatrixTranspose(XMMatrixPerspectiveFovLH(
 		DegreesToRadians(state.fovAngle),
 		iaspect,
 		0.01f,
 		10000.0f
-	));
+	));*/
 
 	ConstBuf::UpdateCamera();
 	ConstBuf::ConstToVertex(3);

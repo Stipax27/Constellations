@@ -111,5 +111,12 @@ XMMATRIX CameraClass::GetViewMatrix()
 
 XMMATRIX CameraClass::GetProjectionMatrix()
 {
+	/*ConstBuf::camera.proj[0] = XMMatrixTranspose(XMMatrixPerspectiveFovLH(
+		DegreesToRadians(state.fovAngle),
+		iaspect,
+		0.01f,
+		10000.0f
+	));*/
+
 	return m_projectionMatrix;
 }

@@ -36,11 +36,6 @@ extern ID3D11Device* device;
 extern ID3D11DeviceContext* context;
 extern IDXGISwapChain* swapChain;
 
-extern int width;
-extern int height;
-extern float aspect;
-extern float iaspect;
-
 enum targetshader { vertex, pixel, both };
 
 struct rect {
@@ -54,7 +49,7 @@ namespace Rasterizer
 
 	void Cull(cullmode);
 	void Scissors(rect);
-	void Init();
+	void Init(int, int);
 
 }
 
@@ -266,7 +261,7 @@ namespace Device
 
 	extern D3D_DRIVER_TYPE	driverType;
 
-	void Init(HWND);
+	void Init(HWND, int, int);
 }
 
 
@@ -278,7 +273,7 @@ namespace InputAssembler
 }
 
 
-void Dx11Init(HWND);
+void Dx11Init(HWND, int, int);
 
 
 struct color4 {
@@ -300,7 +295,6 @@ namespace Draw
 	void Present();
 }
 
-void frameConst();
 float DegreesToRadians(float);
 
 namespace Hero

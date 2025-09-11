@@ -77,6 +77,11 @@ bool World::UpdatePhysic()
 bool World::UpdateRender()
 {
 	bool result;
+
+	// Updating time in const buffer
+	ConstBuf::frame.time = XMFLOAT4{ (float)(timer::frameBeginTime * 0.01f), 0, 0, 0 };
+	ConstBuf::UpdateFrame();
+
 	size_t size = renderSystems.size();
 	for (int i = 0; i < size; i++)
 	{

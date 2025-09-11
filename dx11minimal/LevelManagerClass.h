@@ -42,6 +42,20 @@ struct WindowStruct {
 	HWND hWnd; // window handle
 	HDC device_context, context; // 2 device contexts (for bufferization)
 	int width, height; // saving window sizes the program created
+	float aspect, iaspect;
+
+	void Initialize() {
+		RECT rect;
+		GetClientRect(hWnd, &rect);
+
+		width = rect.right - rect.left;
+		height = rect.bottom - rect.top;
+		aspect = float(height) / float(width);
+		iaspect = float(width) / float(height);
+
+		// window params into const buffer
+		ConstBuf::frame.aspect = XMFLOAT4{ aspect, iaspect, float(width), float(height) };
+	}
 };
 
 struct MouseStruct {
@@ -100,8 +114,10 @@ public:
 	LevelManagerClass(const LevelManagerClass&);
 	~LevelManagerClass();
 
+	void InitWindow();
 	bool Initialize();
 	void Shutdown();
+
 	bool Frame();
 
 	void ProcessSound(const char* name)//проигрывание аудиофайла в формате .wav, файл должен лежать в той же папке где и программа

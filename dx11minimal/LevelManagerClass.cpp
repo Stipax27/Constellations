@@ -18,6 +18,13 @@ LevelManagerClass::~LevelManagerClass()
 }
 
 
+void LevelManagerClass::InitWindow()
+{
+	window = new WindowStruct;
+	window->Initialize();
+}
+
+
 bool LevelManagerClass::Initialize()
 {
 	char bitmapFilename[128];
@@ -25,8 +32,7 @@ bool LevelManagerClass::Initialize()
 	char textureFilename[128];
 	bool result;
 
-	window = new WindowStruct;
-	mouse = new MouseStruct;
+	InitWindow();
 
 	m_World = new World;
 	result = m_World->Initialize();
@@ -35,9 +41,10 @@ bool LevelManagerClass::Initialize()
 		return false;
 	}
 
+	mouse = new MouseStruct;
 	mouse->Initialize(window, m_World->m_Camera);
 
-	Dx11Init(window->hWnd);
+	Dx11Init(window->hWnd, window->width, window->height);
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING START //

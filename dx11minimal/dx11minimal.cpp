@@ -88,13 +88,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MyRegisterClass(hInstance);
 
     LevelManagerClass levelManager = LevelManagerClass();
-    levelManager.Initialize();
+    levelManager.InitWindow();
 
     // Perform application initialization:
     if (!InitInstance (hInstance, nCmdShow, levelManager.window))
     {
         return FALSE;
     }
+
+    levelManager.Initialize();
     
     //InitGame();
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_DX11MINIMAL));
