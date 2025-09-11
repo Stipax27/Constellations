@@ -48,6 +48,8 @@ struct WindowStruct {
 		RECT rect;
 		GetClientRect(hWnd, &rect);
 
+		device_context = GetDC(hWnd);
+
 		width = rect.right - rect.left;
 		height = rect.bottom - rect.top;
 		aspect = float(height) / float(width);

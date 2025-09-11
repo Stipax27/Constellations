@@ -200,11 +200,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, WindowStruct* window)
     ShowWindow(window->hWnd, SW_SHOW);
     UpdateWindow(window->hWnd);
 
-    RECT r;
-    GetClientRect(window->hWnd, &r);
-    window->device_context = GetDC(window->hWnd);
-    window->width = r.right - r.left;
-    window->height = r.bottom - r.top;
+    window->Initialize();
 
     return TRUE;
 }

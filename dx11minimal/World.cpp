@@ -27,8 +27,8 @@ bool World::Initialize()
 		return false;
 	}
 
-	m_Camera->SetPosition(0.0f, 3.0f, -12.0f);
-	m_Camera->SetRotation(15.0f, 0.0f, 0.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -12.0f);
+	m_Camera->SetRotation(0.0f, 0.0f, 0.0f);
 
 	return true;
 }
