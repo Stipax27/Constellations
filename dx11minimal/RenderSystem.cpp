@@ -49,10 +49,6 @@ public:
 		// Generate the view matrix based on the camera's position.
 		m_Camera->Render();
 
-		// Get the world, view, and projection matrices from the camera and d3d objects.
-		XMMATRIX viewMatrix = m_Camera->GetViewMatrix();
-		XMMATRIX projectionMatrix = m_Camera->GetProjectionMatrix();
-
 		size_t size = entities.size();
 		for (int i = 0; i < size; i++)
 		{
@@ -63,10 +59,8 @@ public:
 			if (transform != nullptr && sprite != nullptr)
 			{
 
-				XMMATRIX worldMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix;
+				XMMATRIX rotateMatrix, translateMatrix, scaleMatrix, srMatrix;
 				bool result;
-
-				View::GetWorldMatrix(worldMatrix);
 
 				//// Turn off the Z buffer to begin all 2D rendering.
 				//m_Direct3D->TurnZBufferOff();
@@ -105,7 +99,7 @@ public:
 
 				// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
 				srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
-				worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+				XMMATRIX worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
 				// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 				//sprite->model.Render(m_Direct3D->GetDeviceContext());

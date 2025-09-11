@@ -36,7 +36,7 @@ bool LevelManagerClass::Initialize()
 	InitWindow();
 
 	m_World = new World;
-	result = m_World->Initialize();
+	result = m_World->Initialize(window->iaspect);
 	if (!result)
 	{
 		return false;

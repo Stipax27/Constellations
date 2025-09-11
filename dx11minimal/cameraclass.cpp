@@ -2,6 +2,20 @@
 
 CameraClass::CameraClass()
 {
+}
+
+CameraClass::CameraClass(const CameraClass& other)
+{
+}
+
+
+CameraClass::~CameraClass()
+{
+}
+
+
+void CameraClass::Initialize(float iAspect)
+{
 	m_positionX = 0.0f;
 	m_positionY = 0.0f;
 	m_positionZ = 0.0f;
@@ -9,12 +23,12 @@ CameraClass::CameraClass()
 	m_rotationX = 0.0f;
 	m_rotationY = 0.0f;
 	m_rotationZ = 0.0f;
+
+	iaspect = iAspect;
+
+	SetFov(70);
 }
 
-
-CameraClass::~CameraClass()
-{
-}
 
 void CameraClass::SetPosition(float x, float y, float z)
 {
@@ -37,6 +51,7 @@ void CameraClass::SetRotation(float x, float y, float z)
 void CameraClass::SetFov(float FoV)
 {
 	fov = FoV;
+	UpdateProjectionMatrix();
 }
 
 
@@ -50,6 +65,7 @@ XMFLOAT3 CameraClass::GetRotation()
 {
 	return XMFLOAT3(m_rotationX, m_rotationY, m_rotationZ);
 }
+
 
 void CameraClass::Render()
 {
@@ -101,22 +117,37 @@ void CameraClass::Render()
 	// Finally create the view matrix from the three updated vectors.
 	m_viewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
 
-	return;
+	ConstBuf::camera.view[0] = XMMatrixTranspose(m_viewMatrix);
+	ConstBuf::UpdateCamera();
 }
+
 
 XMMATRIX CameraClass::GetViewMatrix()
 {
 	return m_viewMatrix;
 }
 
+
 XMMATRIX CameraClass::GetProjectionMatrix()
 {
-	/*ConstBuf::camera.proj[0] = XMMatrixTranspose(XMMatrixPerspectiveFovLH(
-		DegreesToRadians(state.fovAngle),
+	return m_projectionMatrix;
+}
+
+
+float CameraClass::GetFov()
+{
+	return fov;
+}
+
+
+void CameraClass::UpdateProjectionMatrix()
+{
+	m_projectionMatrix = XMMatrixPerspectiveFovLH(
+		degreesToRadians(fov),
 		iaspect,
 		0.01f,
 		10000.0f
-	));*/
+	);
 
-	return m_projectionMatrix;
+	ConstBuf::camera.proj[0] = XMMatrixTranspose(m_projectionMatrix);
 }

@@ -5,8 +5,8 @@
 //////////////
 // INCLUDES //
 //////////////
-#include "DirectXMath.h"
-using namespace DirectX;
+#include "utils.h"
+#include "dx11.h"
 
 /////////////
 // GLOBALS //
@@ -24,12 +24,15 @@ public:
 	CameraClass(const CameraClass&);
 	~CameraClass();
 
+	void Initialize(float);
+
 	void SetPosition(float, float, float);
 	void SetRotation(float, float, float);
 	void SetFov(float);
 
 	XMFLOAT3 GetPosition();
 	XMFLOAT3 GetRotation();
+	float GetFov();
 
 	void Render();
 	XMMATRIX GetViewMatrix();
@@ -39,9 +42,13 @@ private:
 	float m_positionX, m_positionY, m_positionZ;
 	float m_rotationX, m_rotationY, m_rotationZ;
 	float fov;
+	float iaspect;
 
 	XMMATRIX m_viewMatrix;
 	XMMATRIX m_projectionMatrix;
+
+private:
+	void UpdateProjectionMatrix();
 };
 
 #endif

@@ -552,6 +552,8 @@ void ConstBuf::UpdateDrawerMat()
 void ConstBuf::UpdateCamera()
 {
 	context->UpdateSubresource(ConstBuf::buffer[3], 0, NULL, &camera, 0, 0);
+	ConstBuf::ConstToVertex(3);
+	ConstBuf::ConstToPixel(3);
 }
 
 void ConstBuf::UpdateFactors()
@@ -949,23 +951,10 @@ void Camera::Camera() //обновление позиции камеры после обновления позиции созве
 	));*/
 
 	ConstBuf::UpdateCamera();
-	ConstBuf::ConstToVertex(3);
-	ConstBuf::ConstToPixel(3);
 }
 
 void Camera::HandleMouseWheel(int delta)
 {
 	state.distanceOffset -= delta * 5.0f;
 	state.distanceOffset = clamp(state.distanceOffset, state.minDist, state.maxDist);
-}
-
-//////////////////////////////////////////////////////////////////////////////////
-
-XMMATRIX View::m_projectionMatrix;
-XMMATRIX View::m_worldMatrix;
-
-void View::GetWorldMatrix(XMMATRIX& worldMatrix)
-{
-	worldMatrix = m_worldMatrix;
-	return;
 }

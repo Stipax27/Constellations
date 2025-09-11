@@ -356,11 +356,4 @@ namespace Camera
 	void HandleMouseWheel(int);
 }
 
-namespace View {
-	extern XMMATRIX m_projectionMatrix;
-	extern XMMATRIX m_worldMatrix;
-
-	void GetWorldMatrix(XMMATRIX&);
-}
-
 #endif // !DX11_H

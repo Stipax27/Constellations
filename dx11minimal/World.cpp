@@ -19,13 +19,10 @@ World::~World()
 }
 
 
-bool World::Initialize()
+bool World::Initialize(float iaspect)
 {
 	m_Camera = new CameraClass;
-	if (!m_Camera)
-	{
-		return false;
-	}
+	m_Camera->Initialize(iaspect);
 
 	m_Camera->SetPosition(0.0f, 0.0f, -12.0f);
 	m_Camera->SetRotation(0.0f, 0.0f, 0.0f);

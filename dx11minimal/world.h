@@ -61,7 +61,7 @@ public:
 
 	Entity* CreateEntity();
 
-	bool Initialize();
+	bool Initialize(float);
 	void Shutdown();
 	bool UpdatePhysic();
 	bool UpdateRender();
