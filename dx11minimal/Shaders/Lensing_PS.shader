@@ -31,4 +31,6 @@ float4 PS(VS_OUTPUT input) : SV_Target
 
     float R_s = (2 * G * mass) / (c * c);
     float A_e = (4 * G * mass) / (c * c);
+
+    return float4(1, 1, 1, 1);
 }

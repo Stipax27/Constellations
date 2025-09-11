@@ -46,7 +46,9 @@ public:
 		Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
 		Draw::ClearDepth();
 
+		Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
 		Depth::Depth(Depth::depthmode::on);
+		Rasterizer::Cull(Rasterizer::cullmode::off);
 
 		// Generate the view matrix based on the camera's position.
 		m_Camera->Render();
@@ -113,9 +115,13 @@ public:
 				ConstBuf::Update(5, ConstBuf::global);
 				ConstBuf::ConstToVertex(5);
 
-				context->Draw(6, 0);
+				Draw::Drawer(1);
 			}
 		}
+
+		Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
+		Depth::Depth(Depth::depthmode::off);
+		Rasterizer::Cull(Rasterizer::cullmode::off);
 
 		// Present the rendered scene to the screen.
 		Draw::Present();
