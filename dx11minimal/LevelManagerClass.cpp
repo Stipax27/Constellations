@@ -58,7 +58,7 @@ bool LevelManagerClass::Initialize()
 
 	Entity* star = m_World->CreateEntity();
 	transform = star->AddComponent<Transform>();
-	transform->position = point3d(0.0f, 3.0f, 0.0f);
+	transform->position = point3d(0.0f, 0.0f, 0.0f);
 	//physicBody = star->AddComponent<PhysicBody>();
 	//physicBody->velocity = point3d(0.0f, 0.0f, 0.0f);
 	//star->AddComponent<SphereCollider>();

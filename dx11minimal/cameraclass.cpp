@@ -145,7 +145,7 @@ void CameraClass::UpdateProjectionMatrix()
 	m_projectionMatrix = XMMatrixPerspectiveFovLH(
 		degreesToRadians(fov),
 		iaspect,
-		0.01f,
+		0.1f,
 		10000.0f
 	);
 

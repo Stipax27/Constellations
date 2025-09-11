@@ -22,6 +22,8 @@ using namespace std;
 /////////////
 const float PHYSICS_DT = 1.0f / 60.0f; // 60 FPS
 const float RENDER_DT = 1.0f / 144.0f; // 144 FPS
+const float SCREEN_DEPTH = 10000.0f;
+const float SCREEN_NEAR = 0.1f;
 
 
 ////////////////////////////////////////////////////////////////////////////////
