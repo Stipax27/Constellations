@@ -43,7 +43,8 @@ public:
 	bool Update(vector<Entity*>& entities, float deltaTime)
 	{
 		// Clear the buffers to begin the scene.
-		Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
+		//Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
+		Draw::Clear({ 0.5f, 0.0f, 0.0f, 1.0f });
 		Draw::ClearDepth();
 
 		Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
