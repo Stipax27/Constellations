@@ -47,8 +47,11 @@ public:
 		Draw::ClearDepth();
 
 		Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
-		Depth::Depth(Depth::depthmode::on);
+		Depth::Depth(Depth::depthmode::off);
 		Rasterizer::Cull(Rasterizer::cullmode::off);
+
+		Textures::RenderTarget(1, 0);
+		Depth::Depth(Depth::depthmode::on);
 
 		// Generate the view matrix based on the camera's position.
 		m_Camera->Render();
@@ -119,9 +122,16 @@ public:
 			}
 		}
 
+		Textures::CreateMipMap();
+		Draw::OutputRenderTextures();
+
 		Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
 		Depth::Depth(Depth::depthmode::off);
 		Rasterizer::Cull(Rasterizer::cullmode::off);
+
+		Shaders::vShader(10);
+		Shaders::pShader(10);
+		context->Draw(6, 0);
 
 		// Present the rendered scene to the screen.
 		Draw::Present();
