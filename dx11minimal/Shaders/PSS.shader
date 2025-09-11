@@ -56,6 +56,8 @@ float star(float2 uv)
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
+    return float4(1, 0, 0, 1);
+
     float c = star(input.uv);
     c += star(rotZ(float3(input.uv,0),45*3.14/180).xy*1.5);
     c *= gConst[1].w;

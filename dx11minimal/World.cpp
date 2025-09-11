@@ -88,6 +88,8 @@ bool World::UpdateRender()
 			return false;
 		}
 	}
+
+	return true;
 }
 
 void World::CleanMem()

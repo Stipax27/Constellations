@@ -46,6 +46,8 @@ public:
 		Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
 		Draw::ClearDepth();
 
+		Depth::Depth(Depth::depthmode::on);
+
 		// Generate the view matrix based on the camera's position.
 		m_Camera->Render();
 
