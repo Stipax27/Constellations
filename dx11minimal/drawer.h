@@ -521,7 +521,7 @@ namespace drawer
             star.position += star.direction.normalized() * 5.0f * deltaTime;
         }
     }
-
+   
     void DrawAttackStars() {
 
         for (auto& star : attackStars) 
@@ -529,6 +529,28 @@ namespace drawer
 
              switch (star.weapon)
              {
+
+             case weapon_name::Fists: {
+
+                 Shaders::vShader(1);
+                 Shaders::pShader(1);
+
+                 for (int i = 0; i < 36; i++) {
+                     float angle = i * (2 * PI / 36);
+                     float nextAngle = (i + 1) * (2 * PI / 36);
+
+                     point3d local1(cos(angle), sin(angle), 0);
+                     point3d local2(cos(nextAngle), sin(nextAngle), 0);
+
+                     point3d shield1 = star.position + (star.right * local1.x + star.up * local1.y) * star.radius;
+                     point3d shield2 = star.position + (star.right * local2.x + star.up * local2.y) * star.radius;
+
+                     drawLine(shield1, shield2, 10.f);
+                 }
+                 star.position.draw(star.position, 50.0f);
+
+                 break;
+             }
 
              case weapon_name::Sword: {
 
@@ -594,122 +616,158 @@ namespace drawer
     point3d mouseRay;
     point3d start;
     
+
+    float chargeStartTime = 0;
+    bool isCharging = false;
+    const float MAX_CHARGE_TIME = 2000.0f; 
+    const float MIN_ATTACK_RADIUS = 15.0f; 
+    const float MAX_ATTACK_RADIUS = 1000.0f; 
+    float finalRadius;
     void HandleMouseClick(XMVECTOR heroPosition) {
-        if (currentTime - lastAttackTime > 500)
-        {
-            if (GetAsyncKeyState(VK_LBUTTON) && 0x8000) {
 
-                if (gameState == gameState_::selectEnemy) {
-                    gameState = gameState_::Fight;
-                    mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
-                    mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
-                }
-                lastAttackTime = currentTime;
-                //backMorphLock = false;
+        if (GetAsyncKeyState(VK_LBUTTON) & 0x8000) {
+            if (!isCharging) {
+                
+                isCharging = true;
+                chargeStartTime = currentTime;
+            }
+            float chargeDuration = currentTime - chargeStartTime;
+            float chargeRatio = min(chargeDuration / MAX_CHARGE_TIME, 1.0f);
+            finalRadius = MIN_ATTACK_RADIUS + chargeRatio * (MAX_ATTACK_RADIUS - MIN_ATTACK_RADIUS);
+        }
+        else {
+           
+            if (isCharging) {
+                isCharging = false;
 
-                start = point3d(
-                    XMVectorGetX(heroPosition),
-                    XMVectorGetY(heroPosition),
-                    XMVectorGetZ(heroPosition)
-                );
+                if (currentTime - lastAttackTime > 500) {
+                    if (gameState == gameState_::selectEnemy) {
+                        gameState = gameState_::Fight;
+                        mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
+                        mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
+                    }
+                    lastAttackTime = currentTime;
 
-                point3d camPos = point3d(
-                    XMVectorGetX(Camera::state.Eye),
-                    XMVectorGetY(Camera::state.Eye),
-                    XMVectorGetZ(Camera::state.Eye)
-                );
+                 
+                    
 
-                mouseRay = GetMouseRay(mouse.pos);
-                point3d mousePos = camPos + mouseRay * 6000;
-                point3d newDirection = (mousePos - start).normalized();
+                    start = point3d(
+                        XMVectorGetX(heroPosition),
+                        XMVectorGetY(heroPosition),
+                        XMVectorGetZ(heroPosition)
+                    );
 
+                    point3d camPos = point3d(
+                        XMVectorGetX(Camera::state.Eye),
+                        XMVectorGetY(Camera::state.Eye),
+                        XMVectorGetZ(Camera::state.Eye)
+                    );
 
-                //attackStars.clear();
+                    mouseRay = GetMouseRay(mouse.pos);
+                    point3d mousePos = camPos + mouseRay * 6000;
+                    point3d newDirection = (mousePos - start).normalized();
 
+                    switch (current_weapon) {
 
-                switch (current_weapon) {
-                case weapon_name::Sword: {
-
-                    Hero::state.isAttackRotating = true;
-                    Hero::state.attackStartTime = currentTime;
-                    Hero::state.attackRotationProgress = 0.0f;
-
-                    // Остальной код атаки мечом...
-                    for (int i = 0; i < 25; i++) {
+                    case weapon_name::Fists: {
                         StarProjectile newStar;
-                        newStar.position = start;
+                        newStar.position = start - point3d{200,0,0};
                         newStar.direction = newDirection;
-                        newStar.radius = 15.0f;
-                        newStar.weapon = weapon_name::Sword;
+                        newStar.radius = finalRadius;
+                        newStar.weapon = weapon_name::Fists;
 
-                        point3d up = point3d(XMVectorGetX(Camera::state.Up),
+                        newStar.up = point3d(XMVectorGetX(Camera::state.Up),
                             XMVectorGetY(Camera::state.Up),
                             XMVectorGetZ(Camera::state.Up));
-                        point3d right = point3d(XMVectorGetX(Camera::state.Right),
-                            XMVectorGetY(Camera::state.Right),
-                            XMVectorGetZ(Camera::state.Right));
-
-                        newStar.position += up * (i * 15 - 150);
-                        newStar.position += right * (i * 15 - 150);
+                        newStar.right = newDirection.cross(newStar.up).normalized();
+                        newStar.up = newStar.right.cross(newDirection).normalized();
 
                         attackStars.push_back(newStar);
+                        break;
+                    }
+                    case weapon_name::Sword: {
+
+                        Hero::state.isAttackRotating = true;
+                        Hero::state.attackStartTime = currentTime;
+                        Hero::state.attackRotationProgress = 0.0f;
+
+                        // Остальной код атаки мечом...
+                        for (int i = 0; i < 25; i++) {
+                            StarProjectile newStar;
+                            newStar.position = start;
+                            newStar.direction = newDirection;
+                            newStar.radius = 15.0f;
+                            newStar.weapon = weapon_name::Sword;
+
+                            point3d up = point3d(XMVectorGetX(Camera::state.Up),
+                                XMVectorGetY(Camera::state.Up),
+                                XMVectorGetZ(Camera::state.Up));
+                            point3d right = point3d(XMVectorGetX(Camera::state.Right),
+                                XMVectorGetY(Camera::state.Right),
+                                XMVectorGetZ(Camera::state.Right));
+
+                            newStar.position += up * (i * 15 - 150);
+                            newStar.position += right * (i * 15 - 150);
+
+                            attackStars.push_back(newStar);
+                        }
+
+                        ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Sword.wav");
+                        break;
                     }
 
-                    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Sword.wav");
-                    break;
-                }
+                    case weapon_name::Shield: {
 
-                case weapon_name::Shield: {
-
-                    StarProjectile newStar;
-                    newStar.position = start;
-                    newStar.direction = newDirection;
-                    newStar.radius = 300.0f;
-                    newStar.weapon = weapon_name::Shield;
-
-                    newStar.up = point3d(XMVectorGetX(Camera::state.Up),
-                        XMVectorGetY(Camera::state.Up),
-                        XMVectorGetZ(Camera::state.Up));
-                    newStar.right = newDirection.cross(newStar.up).normalized();
-                    newStar.up = newStar.right.cross(newDirection).normalized();
-
-                    attackStars.push_back(newStar);
-
-
-                    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\ShieldStan3.wav");
-
-                    break;
-                }
-
-                case weapon_name::Bow: {
-
-                    point3d fixedUp = point3d(XMVectorGetX(Camera::state.Up),
-                        XMVectorGetY(Camera::state.Up),
-                        XMVectorGetZ(Camera::state.Up));
-                    point3d fixedRight = newDirection.cross(fixedUp).normalized();
-                    fixedUp = fixedRight.cross(newDirection).normalized();
-
-                    for (int i = 0; i < 5; i++) {
                         StarProjectile newStar;
                         newStar.position = start;
                         newStar.direction = newDirection;
-                        newStar.radius = 10.0f;
-                        newStar.weapon = weapon_name::Bow;
+                        newStar.radius = finalRadius;
+                        newStar.weapon = weapon_name::Shield;
 
-                        newStar.up = fixedUp;
-                        newStar.right = fixedRight;
-
+                        newStar.up = point3d(XMVectorGetX(Camera::state.Up),
+                            XMVectorGetY(Camera::state.Up),
+                            XMVectorGetZ(Camera::state.Up));
+                        newStar.right = newDirection.cross(newStar.up).normalized();
+                        newStar.up = newStar.right.cross(newDirection).normalized();
 
                         attackStars.push_back(newStar);
+
+
+                        ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\ShieldStan3.wav");
+
+                        break;
                     }
 
-                    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Bow.wav");
-                    break;
-                }
+                    case weapon_name::Bow: {
+
+                        point3d fixedUp = point3d(XMVectorGetX(Camera::state.Up),
+                            XMVectorGetY(Camera::state.Up),
+                            XMVectorGetZ(Camera::state.Up));
+                        point3d fixedRight = newDirection.cross(fixedUp).normalized();
+                        fixedUp = fixedRight.cross(newDirection).normalized();
+
+                        for (int i = 0; i < 5; i++) {
+                            StarProjectile newStar;
+                            newStar.position = start;
+                            newStar.direction = newDirection;
+                            newStar.radius = 1000.0f;
+                            newStar.weapon = weapon_name::Bow;
+
+                            newStar.up = fixedUp;
+                            newStar.right = fixedRight;
+
+
+                            attackStars.push_back(newStar);
+                        }
+
+                        ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Bow.wav");
+                        break;
+                    }
+                    }
                 }
 
                 isAttacking = true;
-                current_weapon = weapon_name::None;
+                current_weapon = weapon_name::Fists;
             }
             /*else if (!backMorphLock)
             {
@@ -1485,7 +1543,7 @@ namespace drawer
             // Обновление атак
             if (!playerConst.morphing) {
                 HandleMouseClick(heroPosition);
-                Hero::UpdateAttackRotation(deltaTime);
+                //Hero::UpdateAttackRotation(deltaTime);
             }
             UpdateAttack(deltaTime);
 

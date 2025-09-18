@@ -1,6 +1,6 @@
 DWORD attackTime;
 enum class weapon_name {
-    None, Sword, Shield, Bow, Staff
+    Fists, Sword, Shield, Bow, Staff
 };
 
 struct weapon_ {
@@ -18,14 +18,14 @@ weapon_ weapon[5];
 
 
 
-weapon_name current_weapon = weapon_name::None;
+weapon_name current_weapon = weapon_name::Fists;
 
 void initWeapon() {
-    weapon[(int)weapon_name::None].damage = 0;
-    weapon[(int)weapon_name::None].defense = 0;
-    weapon[(int)weapon_name::None].attackSpeed = 0;
-    weapon[(int)weapon_name::None].name = "none";
-    weapon[(int)weapon_name::None].constellation = &Sword;
+    weapon[(int)weapon_name::Fists].damage = 0;
+    weapon[(int)weapon_name::Fists].defense = 0;
+    weapon[(int)weapon_name::Fists].attackSpeed = 0;
+    weapon[(int)weapon_name::Fists].name = "Fist";
+    weapon[(int)weapon_name::Fists].constellation = &Sword;
 
     weapon[(int)weapon_name::Sword].damage = 0.4f;
     weapon[(int)weapon_name::Sword].defense = 0.4f;
