@@ -47,6 +47,7 @@ public:
 		Draw::Clear({ 0.0f, 0.2f, 0.0f, 1.0f });
 		Draw::ClearDepth();
 
+		InputAssembler::IA(InputAssembler::topology::triList);
 		Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
 		Depth::Depth(Depth::depthmode::off);
 		Rasterizer::Cull(Rasterizer::cullmode::off);
@@ -56,6 +57,7 @@ public:
 
 		// Generate the view matrix based on the camera's position.
 		m_Camera->Render();
+		m_Camera->AddRotation(0, 1, 0);
 
 		size_t size = entities.size();
 		for (int i = 0; i < size; i++)
@@ -115,7 +117,7 @@ public:
 				Shaders::vShader(sprite->vShader);
 				Shaders::pShader(sprite->pShader);
 
-				ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
+				ConstBuf::global[0] = XMFLOAT4(0, 0, 0, 1);
 				ConstBuf::Update(5, ConstBuf::global);
 				ConstBuf::ConstToVertex(5);
 

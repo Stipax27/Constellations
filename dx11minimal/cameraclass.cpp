@@ -48,6 +48,24 @@ void CameraClass::SetRotation(float x, float y, float z)
 }
 
 
+void CameraClass::AddPosition(float x = 0.0f, float y = 0.0f, float z = 0.0f)
+{
+	m_positionX += x;
+	m_positionY += y;
+	m_positionZ += z;
+	return;
+}
+
+
+void CameraClass::AddRotation(float x = 0.0f, float y = 0.0f, float z = 0.0f)
+{
+	m_rotationX += x;
+	m_rotationY += y;
+	m_rotationZ += z;
+	return;
+}
+
+
 void CameraClass::SetFov(float FoV)
 {
 	fov = FoV;
@@ -118,7 +136,11 @@ void CameraClass::Render()
 	m_viewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
 
 	ConstBuf::camera.view[0] = XMMatrixTranspose(m_viewMatrix);
+	UpdateProjectionMatrix();
+
 	ConstBuf::UpdateCamera();
+	ConstBuf::ConstToVertex(3);
+	ConstBuf::ConstToPixel(3);
 }
 
 

@@ -552,8 +552,6 @@ void ConstBuf::UpdateDrawerMat()
 void ConstBuf::UpdateCamera()
 {
 	context->UpdateSubresource(ConstBuf::buffer[3], 0, NULL, &camera, 0, 0);
-	ConstBuf::ConstToVertex(3);
-	ConstBuf::ConstToPixel(3);
 }
 
 void ConstBuf::UpdateFactors()

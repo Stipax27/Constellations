@@ -30,6 +30,9 @@ public:
 	void SetRotation(float, float, float);
 	void SetFov(float);
 
+	void AddPosition(float, float, float);
+	void AddRotation(float, float, float);
+
 	XMFLOAT3 GetPosition();
 	XMFLOAT3 GetRotation();
 	float GetFov();
