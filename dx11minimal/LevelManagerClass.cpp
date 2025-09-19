@@ -47,6 +47,9 @@ bool LevelManagerClass::Initialize()
 
 	Dx11Init(window->hWnd, window->width, window->height);
 
+	// window params into const buffer
+	ConstBuf::frame.aspect = XMFLOAT4(window->aspect, window->iaspect, float(window->width), float(window->height));
+
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING START //
 	//////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,6 +113,10 @@ bool LevelManagerClass::Frame()
 	bool result;
 
 	mouse->Update();
+
+	XMFLOAT4 i = XMFLOAT4{ window->aspect, window->iaspect, float(window->width), float(window->height) };
+	ConstBuf::frame.aspect = i;
+	float a = ConstBuf::frame.aspect.x;
 
 	result = m_World->UpdatePhysic();
 	if (!result)

@@ -51,9 +51,6 @@ struct WindowStruct {
 		height = rect.bottom - rect.top;
 		aspect = float(height) / float(width);
 		iaspect = float(width) / float(height);
-
-		// window params into const buffer
-		ConstBuf::frame.aspect = XMFLOAT4{ aspect, iaspect, float(width), float(height) };
 	}
 };
 
