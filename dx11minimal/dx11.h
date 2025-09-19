@@ -1,6 +1,4 @@
-﻿#pragma once
-
-#ifndef DX11_H
+﻿#ifndef DX11_H
 #define DX11_H
 
 
@@ -10,6 +8,8 @@
 #include "DirectXMath.h"
 #include <DirectXPackedVector.h>
 #include <debugapi.h>
+#include <algorithm>
+#include <deque>
 
 #pragma comment(lib, "d3d10.lib")
 #pragma comment(lib, "d3d11.lib")
@@ -183,7 +183,6 @@ namespace ConstBuf
 		XMMATRIX world[2];
 		XMMATRIX view[2];
 		XMMATRIX proj[2];
-		float    camDist;
 	} camera;//update per camera set
 
 	//b4

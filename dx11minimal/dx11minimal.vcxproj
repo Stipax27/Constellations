@@ -128,32 +128,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AriesNebula.h" />
     <ClInclude Include="cameraclass.h" />
     <ClInclude Include="component.h" />
-    <ClInclude Include="Constellation.h" />
-    <ClInclude Include="DialogStruct.h" />
-    <ClInclude Include="drawer.h" />
     <ClInclude Include="dx11.h" />
-    <ClInclude Include="Elements.h" />
-    <ClInclude Include="EnemyAi.h" />
-    <ClInclude Include="EnemyAiUPD.h" />
-    <ClInclude Include="EnemyData.h" />
-    <ClInclude Include="EnemyDataCon.h" />
     <ClInclude Include="entity.h" />
-    <ClInclude Include="font.h" />
     <ClInclude Include="FpsCounter.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="LevelManagerClass.h" />
-    <ClInclude Include="loop.h" />
-    <ClInclude Include="MainGame.h" />
-    <ClInclude Include="MainWorld.h" />
     <ClInclude Include="mtx.h" />
-    <ClInclude Include="Navigation.h" />
-    <ClInclude Include="Parametrics.h" />
     <ClInclude Include="ParticleObject.h" />
     <ClInclude Include="ParticleSystem.h" />
-    <ClInclude Include="PhysicLoop.h" />
     <ClInclude Include="Point3d.h" />
     <ClInclude Include="system.h" />
     <ClInclude Include="world.h" />
@@ -239,14 +223,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
     <ClInclude Include="Point4d.h" />
-    <ClInclude Include="StatusGame.h" />
     <ClInclude Include="timer.h" />
-    <ClInclude Include="UI.h" />
     <ClInclude Include="utils.h" />
     <None Include="Shaders\VSS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <ClInclude Include="Weapon.h" />
     <None Include="Shaders\PS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
