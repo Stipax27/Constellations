@@ -11,9 +11,9 @@ cbuffer frame : register(b4)
 
 cbuffer camera : register(b3)
 {
-    float4x4 world[2];
-    float4x4 view[2];
-    float4x4 proj[2];
+    //float4x4 world[2];
+    float4x4 view;
+    float4x4 proj;
 };
 
 cbuffer drawMat : register(b2)
@@ -39,17 +39,19 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output;
     float sz = 1;
+    float4 pos = float4(0, 0, 0, 1);
 
     float2 quadUV[6] = {
         float2(-1, -1), float2(1, -1), float2(-1, 1),
         float2(1, -1), float2(1, 1), float2(-1, 1)
     };
-        
-    float4 viewPos = mul(float4(0, 0, 0, 1.0f), view[0]);
-    float4 projPos = mul(viewPos, proj[0]);
 
-    //projPos.xy += quadUV[vID] * float2(aspect.x, 1) * sz;
-    projPos.xy += quadUV[vID] * sz;
+    //pos.xy += quadUV[vID] * sz;
+        
+    float4 viewPos = mul(pos, view);
+    float4 projPos = mul(viewPos, proj);
+
+    projPos.xy += quadUV[vID] * float2(aspect.x, 1) * sz;
 
     output.uv = quadUV[vID];
     output.pos = projPos;

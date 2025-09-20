@@ -135,7 +135,7 @@ void CameraClass::Render()
 	// Finally create the view matrix from the three updated vectors.
 	m_viewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
 
-	ConstBuf::camera.view[0] = XMMatrixTranspose(m_viewMatrix);
+	ConstBuf::camera.view = XMMatrixTranspose(m_viewMatrix);
 	UpdateProjectionMatrix();
 
 	ConstBuf::UpdateCamera();
@@ -171,5 +171,5 @@ void CameraClass::UpdateProjectionMatrix()
 		10000.0f
 	);
 
-	ConstBuf::camera.proj[0] = XMMatrixTranspose(m_projectionMatrix);
+	ConstBuf::camera.proj = XMMatrixTranspose(m_projectionMatrix);
 }

@@ -114,9 +114,13 @@ bool LevelManagerClass::Frame()
 
 	mouse->Update();
 
+	float x = 1;
+
 	XMFLOAT4 i = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 	ConstBuf::frame.aspect = i;
 	float a = ConstBuf::frame.aspect.x;
+
+	x = i.x;
 
 	result = m_World->UpdatePhysic();
 	if (!result)

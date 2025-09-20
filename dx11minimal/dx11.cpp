@@ -505,10 +505,27 @@ void Sampler::SamplerComp(unsigned int slot)
 
 ID3D11Buffer* ConstBuf::buffer[7];
 
+//b0
 float ConstBuf::drawerV[constCount];
+
+//b1
 float ConstBuf::drawerP[constCount];
 
+//b2
+ConstBuf::DrawerMat ConstBuf::drawerMat;
+
+//b3 
+ConstBuf::Camera ConstBuf::camera;
+
+//b4
+ConstBuf::Frame ConstBuf::frame;
+
+//b5
 XMFLOAT4 ConstBuf::global[constCount];
+
+//b6
+ConstBuf::Factors ConstBuf::factors;
+
 
 int ConstBuf::roundUp(int n, int r)
 {
@@ -931,7 +948,7 @@ void Camera::UpdateCameraPosition()
 	state.Right = XMVector3Normalize(XMVector3Cross(heroUp, state.Forward));
 
 	// 7. Обновляем матрицу вида
-	ConstBuf::camera.view[0] = XMMatrixTranspose(
+	ConstBuf::camera.view = XMMatrixTranspose(
 		XMMatrixLookAtLH(state.Eye, state.at, state.Up)
 	);
 }

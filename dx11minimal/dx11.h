@@ -162,6 +162,30 @@ namespace Sampler
 
 namespace ConstBuf
 {
+	// buffer structures
+	
+	struct DrawerMat {
+		XMMATRIX model;
+		float hilight;
+	};
+
+	struct Camera {
+		//XMMATRIX world[2];
+		XMMATRIX view;
+		XMMATRIX proj;
+	};
+
+	struct Frame {
+		XMFLOAT4 time;
+		XMFLOAT4 aspect;
+	};
+
+	struct Factors {
+		float AriesNebulaLerpFactor;
+	};
+
+	//----------------------------------------------------------------
+
 	extern ID3D11Buffer* buffer[7];
 
 #define constCount 32
@@ -173,31 +197,19 @@ namespace ConstBuf
 	extern float drawerP[constCount];//update per draw call
 
 	//b2
-	struct {
-		XMMATRIX model;
-		float hilight;
-	} drawerMat;//update per draw call
+	extern DrawerMat drawerMat;
 
 	//b3 
-	struct {
-		XMMATRIX world[2];
-		XMMATRIX view[2];
-		XMMATRIX proj[2];
-	} camera;//update per camera set
+	extern Camera camera;
 
 	//b4
-	struct {
-		XMFLOAT4 time;
-		XMFLOAT4 aspect;
-	} frame;//update per frame
+	extern Frame frame;
 
 	//b5
 	extern XMFLOAT4 global[constCount];//update once on start
 
 	//b6
-	struct {
-		float AriesNebulaLerpFactor;
-	} factors;
+	extern Factors factors;
 
 	int roundUp(int, int);
 	void Create(ID3D11Buffer*&, int);
