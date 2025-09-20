@@ -61,11 +61,27 @@ bool LevelManagerClass::Initialize()
 
 	Entity* star = m_World->CreateEntity();
 	transform = star->AddComponent<Transform>();
-	transform->position = point3d(0.0f, 0.0f, 0.0f);
-	transform->scale = point3d(5, 5, 5);
+	transform->position = point3d(-3.0f, 0.0f, 0.0f);
+	transform->scale = point3d(2, 0, 0);
 	//physicBody = star->AddComponent<PhysicBody>();
 	//physicBody->velocity = point3d(0.0f, 0.0f, 0.0f);
 	//star->AddComponent<SphereCollider>();
+	sprite = star->AddComponent<Sprite>();
+	sprite->vShader = 1;
+	sprite->pShader = 1;
+
+	star = m_World->CreateEntity();
+	transform = star->AddComponent<Transform>();
+	transform->position = point3d(0.0f, 0.0f, 0.0f);
+	transform->scale = point3d(3, 0, 0);
+	sprite = star->AddComponent<Sprite>();
+	sprite->vShader = 1;
+	sprite->pShader = 1;
+
+	star = m_World->CreateEntity();
+	transform = star->AddComponent<Transform>();
+	transform->position = point3d(3.0f, 0.0f, 0.0f);
+	transform->scale = point3d(1, 0, 0);
 	sprite = star->AddComponent<Sprite>();
 	sprite->vShader = 1;
 	sprite->pShader = 1;
