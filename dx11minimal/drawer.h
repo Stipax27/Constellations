@@ -510,6 +510,8 @@ namespace drawer
         point3d right;
         weapon_name weapon;
         float Speed;
+        bool isNew; 
+        DWORD creationTime; 
 
     };
     static DWORD lastAttackTime = 0;
@@ -535,39 +537,52 @@ namespace drawer
                  Shaders::vShader(1);
                  Shaders::pShader(1);
 
-                 float timeSinceAttack = (currentTime - lastAttackTime);
+                 // Проверяем, новая ли это частица (создана при нажатии ЛКМ)
+                 if (star.isNew) {
+                     float timeSinceCreation = (currentTime - star.creationTime);
 
-                 // Волна
-                 float waveRadius = star.radius * (timeSinceAttack / 200.0f);
-                 if (waveRadius > 0 && waveRadius < star.radius * 3) {
-                     for (int i = 0; i < 36; i++) {
-                         float angle = i * (2 * PI / 36);
-                         point3d wavePoint = star.position +
-                             (star.right * cos(angle) + star.up * sin(angle)) * waveRadius;
+                     // Анимация взрыва только для новых частиц в течение 600ms
+                     if (timeSinceCreation < 600) {
+                         // Волна
+                         float waveRadius = star.radius * (timeSinceCreation / 200.0f);
+                         if (waveRadius > 0 && waveRadius < star.radius * 3) {
+                             for (int i = 0; i < 36; i++) {
+                                 float angle = i * (2 * PI / 36);
+                                 point3d wavePoint = star.position +
+                                     (star.right * cos(angle) + star.up * sin(angle)) * waveRadius;
 
-                         float waveAlpha = 1.0f - (waveRadius / (star.radius * 3));
-                         wavePoint.draw(wavePoint, 4.0f * waveAlpha);
+                                 float waveAlpha = 1.0f - (waveRadius / (star.radius * 3));
+                                 wavePoint.draw(wavePoint, 15.0f * waveAlpha);
+                             }
+                         }
+
+                         // Случайные частицы
+                         static std::random_device rd;
+                         static std::mt19937 gen(rd());
+                         static std::uniform_real_distribution<float> dist(-1.0f, 1.0f);
+
+                         for (int i = 0; i < 12; i++) {
+                             point3d randomDir(dist(gen), dist(gen), 0);
+                             randomDir = randomDir.normalized();
+
+                             float particleDist = star.radius * (timeSinceCreation / 400.0f) * (0.8f + dist(gen) * 0.4f);
+                             point3d particlePos = star.position + randomDir * particleDist;
+
+                             float particleAlpha = 1.0f - (timeSinceCreation / 600.0f);
+                             if (particleAlpha > 0) {
+                                 particlePos.draw(particlePos, 30.0f * particleAlpha);
+                             }
+                         }
+                     }
+
+                     // Снимаем флаг "новой" после завершения анимации
+                     if (timeSinceCreation >= 600) {
+                         star.isNew = false;
                      }
                  }
 
-                 // Случайные частицы
-                 static std::random_device rd;
-                 static std::mt19937 gen(rd());
-                 static std::uniform_real_distribution<float> dist(-1.0f, 1.0f);
-
-
-                 for (int i = 0; i < 12; i++) {
-                     point3d randomDir(dist(gen), dist(gen), 0);
-                     randomDir = randomDir.normalized();
-
-                     float particleDist = star.radius * (timeSinceAttack / 400.0f) * (0.8f + dist(gen) * 0.4f);
-                     point3d particlePos = star.position + randomDir * particleDist;
-
-                     float particleAlpha = 1.0f - (timeSinceAttack / 600.0f);
-                     if (particleAlpha > 0) {
-                         particlePos.draw(particlePos, 6.0f * particleAlpha);
-                     }
-                 }
+                 // Обычная отрисовка частицы (всегда)
+                 star.position.draw(star.position, star.radius * 0.2f);
                  break;
              }
 
@@ -640,7 +655,7 @@ namespace drawer
     bool isCharging = false;
     const float MAX_CHARGE_TIME = 2000.0f; 
     const float MIN_ATTACK_RADIUS = 15.0f; 
-    const float MAX_ATTACK_RADIUS = 1000.0f; 
+    const float MAX_ATTACK_RADIUS = 10000.0f; 
     float finalRadius;
     static bool wasPressed = false;
     static bool useLeftFist = true;
@@ -707,10 +722,12 @@ namespace drawer
                     switch (current_weapon) {
                     case weapon_name::Fists: {
                         StarProjectile newStar;
-                        newStar.position = fistPosition; // Используем выбранную позицию
+                        newStar.position = fistPosition;
                         newStar.direction = newDirection;
                         newStar.radius = finalRadius;
                         newStar.weapon = weapon_name::Fists;
+                        newStar.isNew = true; // Помечаем как новую
+                        newStar.creationTime = currentTime; // Запоминаем время создания
 
                         newStar.up = point3d(XMVectorGetX(Camera::state.Up),
                             XMVectorGetY(Camera::state.Up),
@@ -719,14 +736,6 @@ namespace drawer
                         newStar.up = newStar.right.cross(newDirection).normalized();
 
                         attackStars.push_back(newStar);
-
-                        // Можно добавить звуковой эффект для разных рук
-                        if (useLeftFist) {
-                            // Звук левой руки
-                        }
-                        else {
-                            // Звук правой руки
-                        }
                         break;
                     }
                     case weapon_name::Sword: {
