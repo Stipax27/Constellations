@@ -74,4 +74,11 @@ void mainLoop(float deltaTime)
 	//--------------------------------
 
 	Draw::Present();
+
+	if (heroScale < targetHeroScale) {
+		heroScale = min(heroScale + SCALE_SPEED, targetHeroScale);
+	}
+	else if (heroScale > targetHeroScale) {
+		heroScale = max(heroScale - SCALE_SPEED, targetHeroScale);
+	}
 }

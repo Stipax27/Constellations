@@ -37,6 +37,12 @@ ID2D1SolidColorBrush* d2dBrush = nullptr;
 bool isBattleActive = false;
 DWORD battleStartTime;
 
+ float heroScale = 1.f;
+ float targetHeroScale = 1.5f;
+ const float MIN_HERO_SCALE = 1.0f;
+ const float MAX_HERO_SCALE = 10.5f;
+ const float SCALE_SPEED = 2000.f;
+
 HWND hWnd;
 #include "utils.h"
 #include "dx11.h"

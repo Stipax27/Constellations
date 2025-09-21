@@ -3,6 +3,7 @@ point3d attackDirection;
 
 namespace drawer
 {
+
     int GetRandom(int min = 1, int max = 0)
     {
         if (max > min)
@@ -154,6 +155,10 @@ namespace drawer
 
     void drawConstellation(Constellation& Constellation, bool colorOverride = false , float finalStarRad = 10.f, float sz =2.f)
     {
+        if (&Constellation == starSet[player_sign]) {
+            finalStarRad *= heroScale;
+            sz *= heroScale;
+        }
         Shaders::vShader(1);
         Shaders::pShader(1);
         Shaders::gShader(0);
@@ -614,9 +619,9 @@ namespace drawer
                             point3d shield1 = star.position + (star.right * local1.x + star.up * local1.y) * star.radius;
                             point3d shield2 = star.position + (star.right * local2.x + star.up * local2.y) * star.radius;
 
-                            drawLine(shield1, shield2, 10.f);
+                            drawLine(shield1, shield2, 30.f);
                         }
-                        star.position.draw(star.position, 15.0f);
+                        star.position.draw(star.position, 45.0f);
                     
                     break;
                 }
@@ -660,6 +665,10 @@ namespace drawer
     static bool wasPressed = false;
     static bool useLeftFist = true;
 
+
+    
+    
+
     void HandleMouseClick(XMVECTOR heroPosition) {
          // Переменная для чередования рук
 
@@ -673,18 +682,24 @@ namespace drawer
 
         wasPressed = isPressed;
 
-        if (isPressed) {
+        if(isPressed) {
             if (!isCharging) {
                 isCharging = true;
                 chargeStartTime = currentTime;
             }
+
             float chargeDuration = currentTime - chargeStartTime;
             float chargeRatio = min(chargeDuration / MAX_CHARGE_TIME, 1.0f);
             finalRadius = MIN_ATTACK_RADIUS + chargeRatio * (MAX_ATTACK_RADIUS - MIN_ATTACK_RADIUS);
+
+            // Увеличиваем масштаб героя пропорционально времени задержки
+            targetHeroScale = MIN_HERO_SCALE + chargeRatio * (MAX_HERO_SCALE - MIN_HERO_SCALE);
         }
         else {
             if (isCharging) {
                 isCharging = false;
+
+                targetHeroScale = MIN_HERO_SCALE;
 
                 if (currentTime - lastAttackTime > 500) {
                     if (gameState == gameState_::selectEnemy) {
@@ -710,6 +725,8 @@ namespace drawer
                     point3d mousePos = camPos + mouseRay * 6000;
                     point3d newDirection = (mousePos - start).normalized();
 
+                   
+
                     // Определяем позицию кулака в зависимости от текущей руки
                     point3d fistPosition;
                     if (useLeftFist) {
@@ -719,6 +736,8 @@ namespace drawer
                         fistPosition = start - point3d{ 200, 0, 0 }; // Правый кулак
                     }
 
+                    
+                   
                     switch (current_weapon) {
                     case weapon_name::Fists: {
                         StarProjectile newStar;
@@ -1342,7 +1361,7 @@ namespace drawer
             c.Transform = CreateEnemyToWorldMatrix(c);
             
            
-            drawConstellation(c,false,1000.f,100.f);
+            drawConstellation(c,false,1000.f,1000.f);
 
             if (!playerConst.morphing)
                 HandleMouseClick(heroPosition);
@@ -1634,6 +1653,9 @@ namespace drawer
 
             curentSignstring = "current weapon: " + weapon[(int)current_weapon].name;
             drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 10., 1, true);
+             
+            std::string H = std::to_string(heroScale);
+            drawString(H.c_str(),1200,100,1.f,true);
 
             drawCurrentElement();
 
