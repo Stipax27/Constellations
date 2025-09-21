@@ -521,7 +521,8 @@ namespace drawer
             star.position += star.direction.normalized() * 5.0f * deltaTime;
         }
     }
-   
+    
+
     void DrawAttackStars() {
 
         for (auto& star : attackStars) 
@@ -551,10 +552,10 @@ namespace drawer
                  }
 
                  // Случайные частицы
+                 
                  static std::random_device rd;
                  static std::mt19937 gen(rd());
                  static std::uniform_real_distribution<float> dist(-1.0f, 1.0f);
-
 
                  for (int i = 0; i < 12; i++) {
                      point3d randomDir(dist(gen), dist(gen), 0);
