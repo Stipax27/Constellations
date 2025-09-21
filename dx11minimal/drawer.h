@@ -528,7 +528,8 @@ namespace drawer
             star.position += star.direction.normalized() * 5.0f * deltaTime;
         }
     }
-   
+    
+
     void DrawAttackStars() {
 
         for (auto& star : attackStars) 
