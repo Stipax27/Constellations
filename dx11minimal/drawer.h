@@ -512,7 +512,7 @@ namespace drawer
         float Speed;
 
     };
-
+    static DWORD lastAttackTime = 0;
     std::vector<StarProjectile> attackStars; // Теперь храним звёзды с их направлениями
 
     void UpdateAttackStars(float deltaTime) {
@@ -535,20 +535,39 @@ namespace drawer
                  Shaders::vShader(1);
                  Shaders::pShader(1);
 
-                 for (int i = 0; i < 36; i++) {
-                     float angle = i * (2 * PI / 36);
-                     float nextAngle = (i + 1) * (2 * PI / 36);
+                 float timeSinceAttack = (currentTime - lastAttackTime);
 
-                     point3d local1(cos(angle), sin(angle), 0);
-                     point3d local2(cos(nextAngle), sin(nextAngle), 0);
+                 // Волна
+                 float waveRadius = star.radius * (timeSinceAttack / 200.0f);
+                 if (waveRadius > 0 && waveRadius < star.radius * 3) {
+                     for (int i = 0; i < 36; i++) {
+                         float angle = i * (2 * PI / 36);
+                         point3d wavePoint = star.position +
+                             (star.right * cos(angle) + star.up * sin(angle)) * waveRadius;
 
-                     point3d shield1 = star.position + (star.right * local1.x + star.up * local1.y) * star.radius;
-                     point3d shield2 = star.position + (star.right * local2.x + star.up * local2.y) * star.radius;
-
-                     drawLine(shield1, shield2, 10.f);
+                         float waveAlpha = 1.0f - (waveRadius / (star.radius * 3));
+                         wavePoint.draw(wavePoint, 4.0f * waveAlpha);
+                     }
                  }
-                 star.position.draw(star.position, 50.0f);
 
+                 // Случайные частицы
+                 static std::random_device rd;
+                 static std::mt19937 gen(rd());
+                 static std::uniform_real_distribution<float> dist(-1.0f, 1.0f);
+
+
+                 for (int i = 0; i < 12; i++) {
+                     point3d randomDir(dist(gen), dist(gen), 0);
+                     randomDir = randomDir.normalized();
+
+                     float particleDist = star.radius * (timeSinceAttack / 400.0f) * (0.8f + dist(gen) * 0.4f);
+                     point3d particlePos = star.position + randomDir * particleDist;
+
+                     float particleAlpha = 1.0f - (timeSinceAttack / 600.0f);
+                     if (particleAlpha > 0) {
+                         particlePos.draw(particlePos, 6.0f * particleAlpha);
+                     }
+                 }
                  break;
              }
 
@@ -611,7 +630,7 @@ namespace drawer
     }
 
     bool isAttacking = false;
-    static DWORD lastAttackTime = 0;
+    
     const float projectileSpeed = 2.0f;
     point3d mouseRay;
     point3d start;
@@ -623,11 +642,24 @@ namespace drawer
     const float MIN_ATTACK_RADIUS = 15.0f; 
     const float MAX_ATTACK_RADIUS = 1000.0f; 
     float finalRadius;
-    void HandleMouseClick(XMVECTOR heroPosition) {
+    static bool wasPressed = false;
+    static bool useLeftFist = true;
 
-        if (GetAsyncKeyState(VK_LBUTTON) & 0x8000) {
+    void HandleMouseClick(XMVECTOR heroPosition) {
+         // Переменная для чередования рук
+
+        bool isPressed = (GetAsyncKeyState(VK_LBUTTON) & 0x8000) != 0;
+
+        // Обнаружение момента нажатия
+        if (isPressed && !wasPressed) {
+            // Меняем руку при каждом нажатии
+            useLeftFist = !useLeftFist;
+        }
+
+        wasPressed = isPressed;
+
+        if (isPressed) {
             if (!isCharging) {
-                
                 isCharging = true;
                 chargeStartTime = currentTime;
             }
@@ -636,7 +668,6 @@ namespace drawer
             finalRadius = MIN_ATTACK_RADIUS + chargeRatio * (MAX_ATTACK_RADIUS - MIN_ATTACK_RADIUS);
         }
         else {
-           
             if (isCharging) {
                 isCharging = false;
 
@@ -647,9 +678,6 @@ namespace drawer
                         mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
                     }
                     lastAttackTime = currentTime;
-
-                 
-                    
 
                     start = point3d(
                         XMVectorGetX(heroPosition),
@@ -667,11 +695,19 @@ namespace drawer
                     point3d mousePos = camPos + mouseRay * 6000;
                     point3d newDirection = (mousePos - start).normalized();
 
-                    switch (current_weapon) {
+                    // Определяем позицию кулака в зависимости от текущей руки
+                    point3d fistPosition;
+                    if (useLeftFist) {
+                        fistPosition = start + point3d{ 200, 0, 0 }; // Левый кулак
+                    }
+                    else {
+                        fistPosition = start - point3d{ 200, 0, 0 }; // Правый кулак
+                    }
 
+                    switch (current_weapon) {
                     case weapon_name::Fists: {
                         StarProjectile newStar;
-                        newStar.position = start - point3d{200,0,0};
+                        newStar.position = fistPosition; // Используем выбранную позицию
                         newStar.direction = newDirection;
                         newStar.radius = finalRadius;
                         newStar.weapon = weapon_name::Fists;
@@ -683,6 +719,14 @@ namespace drawer
                         newStar.up = newStar.right.cross(newDirection).normalized();
 
                         attackStars.push_back(newStar);
+
+                        // Можно добавить звуковой эффект для разных рук
+                        if (useLeftFist) {
+                            // Звук левой руки
+                        }
+                        else {
+                            // Звук правой руки
+                        }
                         break;
                     }
                     case weapon_name::Sword: {
