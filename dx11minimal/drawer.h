@@ -696,7 +696,7 @@ namespace drawer
 
             // Увеличиваем масштаб героя пропорционально времени задержки
             targetHeroScale = MIN_HERO_SCALE + chargeRatio * (MAX_HERO_SCALE - MIN_HERO_SCALE);
-
+            Camera::state.distanceOffset *= 1.02f;
             player.SetStarSpacing(targetHeroScale);
         }
         else {
@@ -712,7 +712,8 @@ namespace drawer
                         mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
                     }
                     lastAttackTime = currentTime;
-
+                    Camera::state.distanceOffset = 600.f;
+                    player.SetStarSpacing(1.f);
                     start = point3d(
                         XMVectorGetX(heroPosition),
                         XMVectorGetY(heroPosition),
@@ -1627,21 +1628,7 @@ namespace drawer
 
             DrawSwordAttack();
 
-            if (GetAsyncKeyState('G') & 0x8000) {
-                static DWORD lastPressTime = 0;
-                if (currentTime - lastPressTime > 200) { // Защита от повторного нажатия
-                     // Увеличиваем в 2 раза
-                    lastPressTime = currentTime;
-                }
-            }
-
-            if (GetAsyncKeyState('H') & 0x8000) {
-                static DWORD lastPressTime = 0;
-                if (currentTime - lastPressTime > 200) {
-                    player.SetStarSpacing(1.0f); // Возвращаем к нормальному размеру
-                    lastPressTime = currentTime;
-                }
-            }
+         
             // Проверка условий победы/поражения
             if (getConstellationHP(enemy) <= 0) {
                 gameState = gameState_::WinFight;
