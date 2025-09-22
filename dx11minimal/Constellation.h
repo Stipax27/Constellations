@@ -415,8 +415,8 @@ public:
         starSpacing = spacing;
 
         starsCords.clear();
-        for (int i = 0; i < originStarsCords.size(); i++) {
-            starsCords.push_back(originStarsCords[i] * starSpacing);
+        for (int i = 0; i < targetConstellation->originStarsCords.size(); i++) {
+            starsCords.push_back(targetConstellation->originStarsCords[i] * starSpacing);
         }
 
         setStarsRenderedCords(angle.x, angle.y, angle.z);

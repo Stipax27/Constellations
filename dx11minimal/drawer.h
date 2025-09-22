@@ -671,7 +671,7 @@ namespace drawer
     
     
 
-    void HandleMouseClick(XMVECTOR heroPosition) {
+    void HandleMouseClick(XMVECTOR heroPosition, Constellation& player) {
          // Переменная для чередования рук
 
         bool isPressed = (GetAsyncKeyState(VK_LBUTTON) & 0x8000) != 0;
@@ -696,6 +696,8 @@ namespace drawer
 
             // Увеличиваем масштаб героя пропорционально времени задержки
             targetHeroScale = MIN_HERO_SCALE + chargeRatio * (MAX_HERO_SCALE - MIN_HERO_SCALE);
+
+            player.SetStarSpacing(targetHeroScale);
         }
         else {
             if (isCharging) {
@@ -1367,7 +1369,7 @@ namespace drawer
             drawConstellation(c,false,1000.f,1000.f);
 
             if (!playerConst.morphing)
-                HandleMouseClick(heroPosition);
+                HandleMouseClick(heroPosition, playerConst);
             UpdateAttack(deltaTime);
             DrawSwordAttack();
 
@@ -1617,7 +1619,7 @@ namespace drawer
 
             // Обновление атак
             if (!playerConst.morphing) {
-                HandleMouseClick(heroPosition);
+                HandleMouseClick(heroPosition, playerConst);
                 //Hero::UpdateAttackRotation(deltaTime);
                 
             }
@@ -1628,7 +1630,7 @@ namespace drawer
             if (GetAsyncKeyState('G') & 0x8000) {
                 static DWORD lastPressTime = 0;
                 if (currentTime - lastPressTime > 200) { // Защита от повторного нажатия
-                    player.SetStarSpacing(10.0f); // Увеличиваем в 2 раза
+                     // Увеличиваем в 2 раза
                     lastPressTime = currentTime;
                 }
             }
