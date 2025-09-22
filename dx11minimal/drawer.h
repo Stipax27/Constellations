@@ -508,6 +508,14 @@ namespace drawer
         return distanceSquared < (sphereRadius * sphereRadius);
     }
 
+    struct BowTracerParticle {
+        point3d position;
+        float size;
+        DWORD creationTime;
+        float lifetime;
+    };
+
+    std::vector<BowTracerParticle> bowTracerParticles;
     struct StarProjectile {
         point3d position;
         point3d direction; 
@@ -520,13 +528,42 @@ namespace drawer
         DWORD creationTime; 
 
     };
+    float finalRadius;
     static DWORD lastAttackTime = 0;
     std::vector<StarProjectile> attackStars; // Теперь храним звёзды с их направлениями
+
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    static std::uniform_real_distribution<float> dist(-1.0f, 1.0f);
+
 
     void UpdateAttackStars(float deltaTime) {
         
         for (auto& star : attackStars) {
-            star.position += star.direction.normalized() * 5.0f * deltaTime;
+            star.position += star.direction.normalized() * 8.0f * deltaTime;
+            point3d posrand = point3d{ ((float)GetRandom(-200,200)),((float)GetRandom(-200,200)),((float)GetRandom(-200,200)) };
+            // Для лука создаем новые частицы трассера вдоль пути
+            if (star.weapon == weapon_name::Bow && (currentTime - star.creationTime) % 30 == 0) {
+                BowTracerParticle tracer;
+                tracer.position = star.position + posrand;
+                tracer.size = star.radius * 0.2f;
+                tracer.creationTime = currentTime;
+                tracer.lifetime = 4000.0f;
+                bowTracerParticles.push_back(tracer);
+            }
+        }
+
+        // Обновляем частицы трассера
+        for (auto it = bowTracerParticles.begin(); it != bowTracerParticles.end();) {
+            float elapsed = currentTime - it->creationTime;
+            if (elapsed > it->lifetime) {
+                it = bowTracerParticles.erase(it);
+            }
+            else {
+                // Постепенно уменьшаем размер
+                it->size *= 0.98f;
+                ++it;
+            }
         }
     }
     
@@ -541,8 +578,8 @@ namespace drawer
 
              case weapon_name::Fists: {
 
-                 Shaders::vShader(1);
-                 Shaders::pShader(1);
+                 Shaders::vShader(15);
+                 Shaders::pShader(15);
 
                  // Проверяем, новая ли это частица (создана при нажатии ЛКМ)
                  if (star.isNew) {
@@ -562,11 +599,6 @@ namespace drawer
                                  wavePoint.draw(wavePoint, 15.0f * waveAlpha);
                              }
                          }
-
-                         // Случайные частицы
-                         static std::random_device rd;
-                         static std::mt19937 gen(rd());
-                         static std::uniform_real_distribution<float> dist(-1.0f, 1.0f);
 
                          for (int i = 0; i < 12; i++) {
                              point3d randomDir(dist(gen), dist(gen), 0);
@@ -595,20 +627,21 @@ namespace drawer
 
              case weapon_name::Sword: {
 
-                    Shaders::vShader(1);
-                    Shaders::pShader(1);
-                    
-                        point3d end = star.position + star.direction * 1000.f;
+                    Shaders::vShader(15);
+                    Shaders::pShader(15);
+                    float timeSinceCreation = (currentTime - star.creationTime);
+
+                    point3d end = star.position + star.direction;
                         drawLine(star.position, end, 3.f);
-                        star.position.draw(star.position, 20.0f);
+                        star.position.draw(star.position , finalRadius);
                     
                     break;
                 }
 
                 case weapon_name::Shield: {
 
-                    Shaders::vShader(1);
-                    Shaders::pShader(1);
+                    Shaders::vShader(15);
+                    Shaders::pShader(15);
                    
 
                         for (int i = 0; i < 36; i++) {
@@ -623,26 +656,49 @@ namespace drawer
 
                             drawLine(shield1, shield2, 30.f);
                         }
-                        star.position.draw(star.position, 45.0f);
+                        star.position.draw(star.position, finalRadius);
                     
                     break;
                 }
 
                 case weapon_name::Bow: {
+
+                    Shaders::vShader(15);
+                    Shaders::pShader(15);
+
+                    // Отрисовываем трассерные частицы сначала (чтобы были под стрелой)
+                    for (auto& tracer : bowTracerParticles) {
+                        float elapsed = currentTime - tracer.creationTime;
+                        float alpha = 5.0f - (elapsed / tracer.lifetime);
+
+                        // Устанавливаем прозрачность через размер
+                        float renderSize = tracer.size * alpha;
+                        if (renderSize > 0.5f) {
+                            tracer.position.draw(tracer.position, renderSize);
+                        }
+                    }
+
+                    // Отрисовываем основную стрелу
+                    point3d arrowStart = star.position;
+                    point3d arrowEnd = star.position + star.direction * finalRadius * 3.f;
+
+                    // Ядро стрелы - яркая звезда
+                    star.position.draw(star.position, finalRadius * 0.8f);
+
+                    // Внешнее свечение
+                    star.position.draw(star.position, finalRadius * 1.2f);
+
+                    // Линия трассера
                     Shaders::vShader(4);
                     Shaders::pShader(4);
+                    drawLine(arrowStart, arrowEnd, finalRadius * 2.f);
 
-                    point3d arrowStart = star.position;
-                    point3d arrowEnd = star.position + star.direction * 500.f;
+                    // Наконечник стрелы
+                    Shaders::vShader(1);
+                    Shaders::pShader(1);
+                    point3d tip = arrowEnd - star.direction * finalRadius * 0.5f;
+                    tip.draw(tip, finalRadius * 0.4f);
 
-                    drawLine(arrowStart, arrowEnd, 3.f);
-
-                    point3d tip1 = arrowEnd + star.right * 10.f - star.direction * 20.f;
-                    point3d tip2 = arrowEnd - star.right * 10.f - star.direction * 20.f;
-
-                    drawLine(arrowEnd, tip1, 2.f);
-                    drawLine(arrowEnd, tip2, 2.f);
-                    drawLine(tip1, tip2, 2.f);
                     break;
                 }
 
@@ -662,8 +718,8 @@ namespace drawer
     bool isCharging = false;
     const float MAX_CHARGE_TIME = 2000.0f; 
     const float MIN_ATTACK_RADIUS = 15.0f; 
-    const float MAX_ATTACK_RADIUS = 10000.0f; 
-    float finalRadius;
+    const float MAX_ATTACK_RADIUS = 1000.0f; 
+    
     static bool wasPressed = false;
     static bool useLeftFist = true;
 
@@ -714,6 +770,7 @@ namespace drawer
                     lastAttackTime = currentTime;
                     Camera::state.distanceOffset = 600.f;
                     player.SetStarSpacing(1.f);
+
                     start = point3d(
                         XMVectorGetX(heroPosition),
                         XMVectorGetY(heroPosition),
@@ -727,7 +784,7 @@ namespace drawer
                     );
 
                     mouseRay = GetMouseRay(mouse.pos);
-                    point3d mousePos = camPos + mouseRay * 6000;
+                    point3d mousePos = (camPos + mouseRay * 6000 * Camera::state.distanceOffset);
                     point3d newDirection = (mousePos - start).normalized();
 
                    
@@ -772,9 +829,9 @@ namespace drawer
                         // Остальной код атаки мечом...
                         for (int i = 0; i < 25; i++) {
                             StarProjectile newStar;
-                            newStar.position = start;
+                            newStar.position = start - point3d{-finalRadius,-finalRadius,0};
                             newStar.direction = newDirection;
-                            newStar.radius = 15.0f;
+                            newStar.radius = finalRadius;
                             newStar.weapon = weapon_name::Sword;
 
                             point3d up = point3d(XMVectorGetX(Camera::state.Up),
@@ -784,8 +841,8 @@ namespace drawer
                                 XMVectorGetY(Camera::state.Right),
                                 XMVectorGetZ(Camera::state.Right));
 
-                            newStar.position += up * (i * 15 - 150);
-                            newStar.position += right * (i * 15 - 150);
+                            newStar.position += up * (i * finalRadius - (finalRadius * 10.f));
+                            newStar.position += right * (i * finalRadius - (finalRadius*10.f));
 
                             attackStars.push_back(newStar);
                         }
@@ -823,19 +880,27 @@ namespace drawer
                             XMVectorGetZ(Camera::state.Up));
                         point3d fixedRight = newDirection.cross(fixedUp).normalized();
                         fixedUp = fixedRight.cross(newDirection).normalized();
+                        
+                        // Создаем основную стрелу
+                        StarProjectile newStar;
+                        newStar.position = start;
+                        newStar.direction = newDirection;
+                        newStar.radius = finalRadius;
+                        newStar.weapon = weapon_name::Bow;
+                        newStar.up = fixedUp;
+                        newStar.right = fixedRight;
+                        newStar.creationTime = currentTime;
 
-                        for (int i = 0; i < 5; i++) {
-                            StarProjectile newStar;
-                            newStar.position = start;
-                            newStar.direction = newDirection;
-                            newStar.radius = 1000.0f;
-                            newStar.weapon = weapon_name::Bow;
+                        attackStars.push_back(newStar);
 
-                            newStar.up = fixedUp;
-                            newStar.right = fixedRight;
-
-
-                            attackStars.push_back(newStar);
+                        // Создаем начальные частицы для трассера
+                        for (int i = 0; i < 8; i++) {
+                            BowTracerParticle tracer;
+                            tracer.position = start ;
+                            tracer.size = finalRadius * 0.3f;
+                            tracer.creationTime = currentTime;
+                            tracer.lifetime = 300.0f + (rand() % 200); // Случайное время жизни
+                            bowTracerParticles.push_back(tracer);
                         }
 
                         ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Bow.wav");
@@ -914,6 +979,14 @@ namespace drawer
                     return (star.position - start).magnitude() > 18000.0f;
                 }),
             attackStars.end());
+
+        bowTracerParticles.erase(
+            std::remove_if(bowTracerParticles.begin(), bowTracerParticles.end(),
+                [](const BowTracerParticle& tracer) {
+                    return (currentTime - tracer.creationTime) > tracer.lifetime;
+                }),
+            bowTracerParticles.end()
+        );
     }
 
 
