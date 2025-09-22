@@ -38,6 +38,9 @@ public:
     float distance;
     point3d lookvector = point3d(0,0,1);
 
+    float overallScale = 1.0f;
+    float starSpacing = 1.0f;
+
     float hp;
     float maxHP;
     float defens;
@@ -69,10 +72,12 @@ public:
 
     friend XMMATRIX CreateConstToWorldMatrix(const Constellation& c)
     {
-        float zOffset = 1000.0f / c.scale;
+        float zOffset = 1000.0f / (c.scale * c.overallScale);
         XMMATRIX translateZ = XMMatrixTranslation(0, 0, zOffset);
-        XMMATRIX rotate = XMMatrixRotationRollPitchYaw(c.angle.x, c.angle.y,c.angle.z);
-        XMMATRIX scale = XMMatrixScaling(c.scale, c.scale, c.scale);
+        XMMATRIX rotate = XMMatrixRotationRollPitchYaw(c.angle.x, c.angle.y, c.angle.z);
+        XMMATRIX scale = XMMatrixScaling(c.scale * c.overallScale,
+            c.scale * c.overallScale,
+            c.scale * c.overallScale);
         return translateZ * rotate * scale;
     }
 
@@ -165,19 +170,20 @@ public:
 
         originStarsCords = _starsCords;
         originConstellationEdges = _constellationEdges;
-        prevStarsCords = _starsCords;
-        targetConstellation = this;
 
-        starsCords = _starsCords;
+        
+        for (int i = 0; i < originStarsCords.size(); i++) {
+            starsCords.push_back(originStarsCords[i] * starSpacing);
+        }
+
+        prevStarsCords = starsCords;
+        targetConstellation = this;
         starsHealth = _starsHealth;
         constellationEdges = _constellationEdges;
         ID = constellationsCounter;
-        
-        //name = zodiacSignToString((ZodiacSign)ID);
 
         maxHP = 0;
-        for (int i = 0;i < starsHealth.size();i++)
-        {
+        for (int i = 0; i < starsHealth.size(); i++) {
             maxHP += starsHealth[i];
         }
 
@@ -203,16 +209,14 @@ public:
     }
 
     void Arrange(point3d& p) const {
-
         p -= position;
-
-        p.move(0, 0, 3000. / scale);
+        p.move(0, 0, 3000.0f / scale);
 
         p.rotateX(p, angle.x);
         p.rotateY(p, angle.y);
         p.rotateZ(p, angle.z);
 
-        p *= 3000;
+        p *= 3000.0f; 
 
         p += position;
     }
@@ -221,8 +225,10 @@ public:
         angle = { angleX, angleY, angleZ };
         starsRenderedCords = starsCords;
 
+        
         for (int i = 0; i < starsCords.size(); i++) {
             point3d p = starsRenderedCords[i];
+            p *= starSpacing; 
             Arrange(p);
             starsRenderedCords[i] = p;
         }
@@ -238,10 +244,13 @@ public:
             morphProgress = -0.1f;
 
             prevStarsCords = starsCords;
+            
+            for (auto& star : prevStarsCords) {
+                star *= starSpacing;
+            }
+
             targetConstellation = c;
-
             constellationEdges.clear();
-
         }
     }
 
@@ -395,5 +404,21 @@ public:
         }
     }
 
+    void SetOverallScale(float newScale) {
+        overallScale = newScale;
 
+        // При необходимости можно также обновить позиции звезд
+        setStarsRenderedCords(angle.x, angle.y, angle.z);
+    }
+
+    void SetStarSpacing(float spacing) {
+        starSpacing = spacing;
+
+        starsCords.clear();
+        for (int i = 0; i < originStarsCords.size(); i++) {
+            starsCords.push_back(originStarsCords[i] * starSpacing);
+        }
+
+        setStarsRenderedCords(angle.x, angle.y, angle.z);
+    }
 };

@@ -159,6 +159,7 @@ namespace drawer
             finalStarRad *= heroScale;
             sz *= heroScale;
         }
+
         Shaders::vShader(1);
         Shaders::pShader(1);
         Shaders::gShader(0);
@@ -674,7 +675,7 @@ namespace drawer
          // Переменная для чередования рук
 
         bool isPressed = (GetAsyncKeyState(VK_LBUTTON) & 0x8000) != 0;
-
+       
         // Обнаружение момента нажатия
         if (isPressed && !wasPressed) {
             // Меняем руку при каждом нажатии
@@ -741,6 +742,7 @@ namespace drawer
                    
                     switch (current_weapon) {
                     case weapon_name::Fists: {
+                        
                         StarProjectile newStar;
                         newStar.position = fistPosition;
                         newStar.direction = newDirection;
@@ -1617,11 +1619,27 @@ namespace drawer
             if (!playerConst.morphing) {
                 HandleMouseClick(heroPosition);
                 //Hero::UpdateAttackRotation(deltaTime);
+                
             }
             UpdateAttack(deltaTime);
 
             DrawSwordAttack();
 
+            if (GetAsyncKeyState('G') & 0x8000) {
+                static DWORD lastPressTime = 0;
+                if (currentTime - lastPressTime > 200) { // Защита от повторного нажатия
+                    player.SetStarSpacing(10.0f); // Увеличиваем в 2 раза
+                    lastPressTime = currentTime;
+                }
+            }
+
+            if (GetAsyncKeyState('H') & 0x8000) {
+                static DWORD lastPressTime = 0;
+                if (currentTime - lastPressTime > 200) {
+                    player.SetStarSpacing(1.0f); // Возвращаем к нормальному размеру
+                    lastPressTime = currentTime;
+                }
+            }
             // Проверка условий победы/поражения
             if (getConstellationHP(enemy) <= 0) {
                 gameState = gameState_::WinFight;
