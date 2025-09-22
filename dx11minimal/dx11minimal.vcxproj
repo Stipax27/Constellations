@@ -243,6 +243,7 @@
   <ItemGroup>
     <ClCompile Include="cameraclass.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
+    <ClCompile Include="Constellation.cpp" />
     <ClCompile Include="dx11.cpp" />
     <ClCompile Include="dx11minimal.cpp" />
     <ClCompile Include="Entity.cpp" />
