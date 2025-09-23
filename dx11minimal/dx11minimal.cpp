@@ -43,6 +43,8 @@ DWORD battleStartTime;
  const float MAX_HERO_SCALE = 10.5f;
  const float SCALE_SPEED = 2000.f;
 
+ float currentDamage = 1.f;
+
 HWND hWnd;
 #include "utils.h"
 #include "dx11.h"
@@ -65,6 +67,7 @@ HWND hWnd;
 
 #include "Navigation.h"
 #include "Constellation.h"
+
 #include "EnemyAiUPD.h"
 
 #include "MainWorld.h"

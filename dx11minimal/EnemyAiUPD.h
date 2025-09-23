@@ -61,7 +61,7 @@
     }
 
 
-    void EnemyAI::AiUpdate(float deltaTime, point3d& heroPosition, point3d& enemyPositions , float player) {
+    void EnemyAI::AiUpdate(float deltaTime, point3d& heroPosition, point3d& enemyPositions , float& player) {
         data.playerDistance = (heroPosition - enemyPositions).magnitude();
         data.playerVisible = (data.playerDistance < 20000.0f);
 
@@ -219,7 +219,7 @@
         }
     }
 
-    void EnemyAI::AttackPlayer(float deltaTime, point3d& heroPos, point3d& enemyPos , float player) {
+    void EnemyAI::AttackPlayer(float deltaTime, point3d& heroPos, point3d& enemyPos , float& player) {
         // Быстро летим к игроку
         point3d attackDir = AttakDir.normalized();
         enemyPos += (attackDir * data.chaseSpeed * 5.0f * deltaTime) / data.attackDuration;
@@ -241,7 +241,7 @@
 
     }
 
-    void EnemyAI::JumpAttack(float deltaTime, point3d& heroPos, point3d& enemyPos , float player) {
+    void EnemyAI::JumpAttack(float deltaTime, point3d& heroPos, point3d& enemyPos , float& player) {
         // Фаза прыжка вверх
         if (!data.isShockwaveActive && data.jumpHeight < data.maxJumpHeight) {
             data.jumpHeight += data.jumpSpeed * deltaTime;
@@ -289,7 +289,7 @@
             XMMatrixTranslation(enemyPos.x, enemyPos.y, enemyPos.z);
     }
 
-    void EnemyAI::Explosion(float deltaTime, point3d& enemyPos , float player) {
+    void EnemyAI::Explosion(float deltaTime, point3d& enemyPos , float& player) {
         // Фаза подготовки взрыва
         if (!data.isBoomExploding) {
             data.boomCurrentTime += deltaTime;
@@ -325,14 +325,16 @@
                 XMVectorGetZ(Hero::state.constellationOffset.r[3])
             );
 
-            float distance = (heroPos - enemyPos).magnitude();
-            if (distance < data.boomRadius + 3000.0f) {
-                player -= 5.f;
-                data.isAttacking = true;
-            }
+            
 
             // Завершаем атаку, когда взрыв достиг максимума
             if (data.boomRadius >= data.maxBoomRadius) {
+
+                float distance = (heroPos - enemyPos).magnitude();
+                if (distance < data.boomRadius + 3000.0f) {
+                    player -= 5.f;
+                    data.isAttacking = true;
+                }
                 data.isBoomExploding = false;
                 data.isBoomPreparing = false;
                 data.boomCurrentTime = 0.0f;
@@ -378,7 +380,7 @@
 }
 
 static Enemy::EnemyAI enemyAI;
-void updateEnemyPosition(float deltaTime, point3d& heroPosition, point3d& enemyPositions , float player) {
+void updateEnemyPosition(float deltaTime, point3d& heroPosition, point3d& enemyPositions , float& player) {
     enemyAI.AiUpdate(deltaTime, heroPosition, enemyPositions , player);
 
     // После обновления позиции получаем актуальную матрицу из EnemyAI

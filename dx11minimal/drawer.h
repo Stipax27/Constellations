@@ -466,7 +466,7 @@ namespace drawer
 
             if (remainingTime > 0) {
 
-                DrawHpHeroBar();
+                //DrawHpHeroBar();
                 std::string timeStr = "Time " + (std::to_string(remainingTime / 1000 / 60)) + ":" + std::to_string(remainingTime / 1000 % 60 );
                 drawString(timeStr.c_str(), window.width / 1.1, 45, 1.f, true);
 
@@ -488,24 +488,33 @@ namespace drawer
     }
 
     bool CheckRaySphereCollision(const point3d& rayStart, const point3d& rayDir,
-        const point3d& sphereCenter, float sphereRadius)
+        const point3d& sphereCenter, float sphereRadius, float maxDistance)
     {
-      
-        if (sphereRadius <= 0 || isnan(rayDir.x))return false;
-        
+        if (sphereRadius <= 0 || maxDistance <= 0)
+            return false;
 
-            point3d toSphere = sphereCenter - rayStart;
-            float projection = toSphere.dot(rayDir);
+        point3d toSphere = sphereCenter - rayStart;
+        float projection = toSphere.dot(rayDir);
 
-            
-            if (projection < 0 && toSphere.magnitude() > sphereRadius) {
-                return false;
-            }
+        // Если сфера позади начала луча
+        if (projection < 0) {
+            // Проверяем, не окружает ли сфера начало луча
+            return toSphere.dot(toSphere) <= sphereRadius * sphereRadius;
+        }
 
+        // Если ближайшая точка дальше максимальной дистанции
+        if (projection > maxDistance) {
+            // Проверяем коллизию с конечной точкой луча
+            point3d rayEnd = rayStart + rayDir * maxDistance;
+            point3d toEnd = rayEnd - sphereCenter;
+            return toEnd.dot(toEnd) <= sphereRadius * sphereRadius;
+        }
+
+        // Проверяем расстояние от ближайшей точки до центра сферы
         point3d closestPoint = rayStart + rayDir * projection;
-            float distanceSquared = (closestPoint - sphereCenter).dot(closestPoint - sphereCenter);
+        float distanceSquared = (closestPoint - sphereCenter).dot(closestPoint - sphereCenter);
 
-        return distanceSquared < (sphereRadius * sphereRadius);
+        return distanceSquared <= sphereRadius * sphereRadius;
     }
 
     struct BowTracerParticle {
@@ -540,7 +549,7 @@ namespace drawer
     void UpdateAttackStars(float deltaTime) {
         
         for (auto& star : attackStars) {
-            star.position += star.direction.normalized() * 8.0f * deltaTime;
+            star.position += star.direction.normalized() * 20.0f * deltaTime;
             point3d posrand = point3d{ ((float)GetRandom(-200,200)),((float)GetRandom(-200,200)),((float)GetRandom(-200,200)) };
             // Для лука создаем новые частицы трассера вдоль пути
             if (star.weapon == weapon_name::Bow && (currentTime - star.creationTime) % 30 == 0) {
@@ -669,7 +678,7 @@ namespace drawer
                     // Отрисовываем трассерные частицы сначала (чтобы были под стрелой)
                     for (auto& tracer : bowTracerParticles) {
                         float elapsed = currentTime - tracer.creationTime;
-                        float alpha = 5.0f - (elapsed / tracer.lifetime);
+                        float alpha = 1.0f - (elapsed / tracer.lifetime);
 
                         // Устанавливаем прозрачность через размер
                         float renderSize = tracer.size * alpha;
@@ -723,8 +732,8 @@ namespace drawer
     static bool wasPressed = false;
     static bool useLeftFist = true;
 
-
-    
+    const float MIN_ATTACK_DAMAGE = 0.1f;
+    const float MAX_ATTACK_DAMAGE = 0.5f;
     
 
     void HandleMouseClick(XMVECTOR heroPosition, Constellation& player) {
@@ -752,8 +761,11 @@ namespace drawer
 
             // Увеличиваем масштаб героя пропорционально времени задержки
             targetHeroScale = MIN_HERO_SCALE + chargeRatio * (MAX_HERO_SCALE - MIN_HERO_SCALE);
+
             Camera::state.distanceOffset *= 1.02f;
             player.SetStarSpacing(targetHeroScale);
+
+            currentDamage = MIN_ATTACK_DAMAGE + chargeRatio * (MAX_ATTACK_DAMAGE - MIN_ATTACK_DAMAGE);
         }
         else {
             if (isCharging) {
@@ -761,7 +773,7 @@ namespace drawer
 
                 targetHeroScale = MIN_HERO_SCALE;
 
-                if (currentTime - lastAttackTime > 500) {
+                if (currentTime - lastAttackTime > 400) {
                     if (gameState == gameState_::selectEnemy) {
                         gameState = gameState_::Fight;
                         mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
@@ -919,8 +931,9 @@ namespace drawer
         }
     }
 
+        std::string enemyH;
+        std::string indexStar;
     void UpdateAttack(float deltaTime) {
-
         if (starSet.empty() ||
             currentEnemyID < 0 ||
             currentEnemyID >= starSet.size() ||
@@ -934,11 +947,11 @@ namespace drawer
         if (!starSet[currentEnemyID]) return;
         if (isAttacking) {
             Constellation& enemy = *starSet[currentEnemyID];
-
+            
             for (int i = 0; i < enemy.starsCords.size(); i++) {
                 if (enemy.starsHealth[i] <= 0) continue;
 
-              
+                
                 point3d starWorldPos = TransformPoint(enemy.starsCords[i], enemy.Transform);
 
                 
@@ -947,19 +960,35 @@ namespace drawer
 
                 
                     if (CheckRaySphereCollision(star.position, star.direction,
-                        starWorldPos, 1000.f)) { 
-                        enemy.starsHealth[i] -= 1.f;
-                        std::string enemyH = "HP: " + std::to_string(enemy.starsHealth[i]);
-                        drawString(enemyH.c_str(), window.width / 4, window.height / 4, 1.f,true);
+                        starWorldPos, 1000.f,30000.f)) { 
+
+                        if (current_weapon == weapon_name::Sword) {
+                            enemy.starsHealth[i] -= currentDamage*1.2f;
+                        }
+                        else if (current_weapon == weapon_name::Shield) {
+                            enemy.starsHealth[i] -= currentDamage*1.1f;
+                        }
+                        else if (current_weapon == weapon_name::Bow) {
+                            enemy.starsHealth[i] -= currentDamage*2.f;
+                        }
+                        else if (current_weapon == weapon_name::Fists) {
+
+                            enemy.starsHealth[i] -= currentDamage;
+                        }
+                        
+                        enemyH = "Star: " + std::to_string(i+1)+ " HP: " + std::to_string(enemy.starsHealth[i]);
+                        
                         ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Damage.wav");
                         break;
                     }
                 }
+                
+                
             }
-
+            
             isAttacking = false;
         }
-
+        
         UpdateAttackStars(deltaTime);
 
         if (current_weapon == weapon_name::Shield) {
@@ -976,7 +1005,7 @@ namespace drawer
         attackStars.erase(
             std::remove_if(attackStars.begin(), attackStars.end(),
                 [](const StarProjectile& star) {
-                    return (star.position - start).magnitude() > 18000.0f;
+                    return (star.position - start).magnitude() > 40000.0f;
                 }),
             attackStars.end());
 
@@ -1194,7 +1223,7 @@ namespace drawer
         for (auto& wave : Wave) {
             wave.radius += 5.0f * deltaTime; // Adjust speed as needed
         }
-
+        
         // Remove waves that are too big
         Wave.erase(
             std::remove_if(Wave.begin(), Wave.end(),
@@ -1365,6 +1394,11 @@ namespace drawer
             XMMatrixTranslationFromVector(Hero::state.position);
     }
 
+    Constellation& enemy = *starSet[currentEnemyID];
+    Constellation& player = *starSet[player_sign];
+
+    float playerHP = getConstellationHP(player);
+    float EnemyHP = getConstellationHP(enemy);
     void drawWorld(float deltaTime)
     {
         textStyle.color = RGB(0, 191, 255);
@@ -1372,6 +1406,7 @@ namespace drawer
         XMVECTOR heroPosition = Hero::state.constellationOffset.r[3];
         XMVECTOR enemyPositions = Enemy::enemyData.enemyConstellationOffset.r[3];
 
+        
        //d2dRenderTarget->BeginDraw();
         CreateSpeedParticles();
         DrawSpeedParticles();
@@ -1531,7 +1566,7 @@ namespace drawer
 
             srand(currentTime);
 
-            DrawHpEnemyBar();
+            //DrawHpEnemyBar();
             modelTransform = &placeConstToWorld;//Враг
 
             /*if (isShakingHero) {
@@ -1619,6 +1654,7 @@ namespace drawer
 
                 playerConst.StartShaking();
                 enemyAI.data.isAttacking = false;
+                
             }
                 playerConst.UpdateShaking();
 
@@ -1688,8 +1724,7 @@ namespace drawer
             }
 
             // Безопасный вызов функций атаки
-            Constellation& enemy = *starSet[currentEnemyID];
-            Constellation& player = *starSet[player_sign];
+            
 
             // Обновление атак
             if (!playerConst.morphing) {
@@ -1708,52 +1743,50 @@ namespace drawer
                 mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
                 mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
             }
-            else if (getConstellationHP(player) <= 0) {
-                gameState = gameState_::EndFight;
-            }
-
-            float playerHP = getConstellationHP(player);
-
             
             updateEnemyPosition(deltaTime, Heropos, Enemypos, playerHP);
-
+            if (playerHP < 0.f) {
+                gameState = gameState_::EndFight;
+            }
             InputHook(deltaTime, Heropos, Enemypos);
 
-            string HP = std::to_string(playerHP);
-            drawString(HP.c_str(), window.width / 2, window.height / 2, 1, true);
+            string heroHP = std::to_string(playerHP);
+            drawString(heroHP.c_str(), window.width / 2, window.height -100, 1, true);
             
             Constellation& c = *starSet[player_sign];
             c.Transform = CreateHeroToWorldMatrix(c);
             drawConstellation(*starSet[player_sign]);
+            drawString(enemyH.c_str(), window.width / 2, 100, 2.f, true);
+            //std::string enemyHP= std::to_string(EnemyHP);
+            //drawString(enemyHP.c_str(), window.width / 2, 100,2.f,true);
+            //std::string curentSignstring = zodiacSignToString(currentEnemyID);
+            //drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);
+            //
+            //curentSignstring = zodiacSignToString(player_sign);
+            //drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 7., 1, true);
+            //
+            //curentSignstring = "current weapon: " + weapon[(int)current_weapon].name;
+            //drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 10., 1, true);
+            // 
+            //std::string H = std::to_string(heroScale);
+            //drawString(H.c_str(),1200,100,1.f,true);
 
-            std::string curentSignstring = zodiacSignToString(currentEnemyID);
-            drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);
-
-            curentSignstring = zodiacSignToString(player_sign);
-            drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 7., 1, true);
-
-            curentSignstring = "current weapon: " + weapon[(int)current_weapon].name;
-            drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 10., 1, true);
-             
-            std::string H = std::to_string(heroScale);
-            drawString(H.c_str(),1200,100,1.f,true);
-
-            drawCurrentElement();
+            //drawCurrentElement();
 
            //drawRect(20.0f, 20.0f, 1000.0f, 800.0f); // прямоугольник шириной 200px и высотой 100px по центру экрана, на пикселях 1000 по абсциссе и 800 по ординате
 
-           drawString("Weapon selection:\nButton 1 - Sword \nButton 2 - Shield \nButton 3 - Bow ", (1700. / 2560) * window.width, (1100. / 1440) * window.height, .7f, false);
-           drawString("Rewind time:\nbutton - R", (500. / 2560) * window.width, (1250. / 1440) * window.height, .7f, false);
-           drawString("TUTORIAL:\nTo hit an enemy with a sword,\npress LMB and draw a line along the enemy star\nTo hit with a shield,\npress LMB and draw a line that will draw a circle that attacks stars\nTo hit with a bow,\npress LMB on the star and draw a vector in any direction from the star.", (60. / 2560) * window.width, (60. / 1440) * window.height, .7f, false);
-
-            float cdTimeOut = 1. - (currentTime - attack_cooldown) / 5000.;
-            cdTimeOut *= 10;
-            std::string cdTimeOutText = std::to_string((int)cdTimeOut);
-            if (cdTimeOut > 0)
-            {
-               drawString("recharge", window.width * .9, window.height * .85, 1., false);
-               drawString(cdTimeOutText.c_str(), window.width * .9, window.height * .9, 3., false);
-            }
+           //drawString("Weapon selection:\nButton 1 - Sword \nButton 2 - Shield \nButton 3 - Bow ", (1700. / 2560) * window.width, (1100. / 1440) * window.height, .7f, false);
+           //drawString("Rewind time:\nbutton - R", (500. / 2560) * window.width, (1250. / 1440) * window.height, .7f, false);
+           //drawString("TUTORIAL:\nTo hit an enemy with a sword,\npress LMB and draw a line along the enemy star\nTo hit with a shield,\npress LMB and draw a line that will draw a circle that attacks stars\nTo hit with a bow,\npress LMB on the star and draw a vector in any direction from the star.", (60. / 2560) * window.width, (60. / 1440) * window.height, .7f, false);
+           //
+           // float cdTimeOut = 1. - (currentTime - attack_cooldown) / 5000.;
+           // cdTimeOut *= 10;
+           // std::string cdTimeOutText = std::to_string((int)cdTimeOut);
+           // if (cdTimeOut > 0)
+           // {
+           //    drawString("recharge", window.width * .9, window.height * .85, 1., false);
+           //    drawString(cdTimeOutText.c_str(), window.width * .9, window.height * .9, 3., false);
+           // }
 
             UpdateGame();
 
