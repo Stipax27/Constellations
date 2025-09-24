@@ -487,35 +487,7 @@ namespace drawer
         }
     }
 
-    bool CheckRaySphereCollision(const point3d& rayStart, const point3d& rayDir,
-        const point3d& sphereCenter, float sphereRadius, float maxDistance)
-    {
-        if (sphereRadius <= 0 || maxDistance <= 0)
-            return false;
-
-        point3d toSphere = sphereCenter - rayStart;
-        float projection = toSphere.dot(rayDir);
-
-        // Если сфера позади начала луча
-        if (projection < 0) {
-            // Проверяем, не окружает ли сфера начало луча
-            return toSphere.dot(toSphere) <= sphereRadius * sphereRadius;
-        }
-
-        // Если ближайшая точка дальше максимальной дистанции
-        if (projection > maxDistance) {
-            // Проверяем коллизию с конечной точкой луча
-            point3d rayEnd = rayStart + rayDir * maxDistance;
-            point3d toEnd = rayEnd - sphereCenter;
-            return toEnd.dot(toEnd) <= sphereRadius * sphereRadius;
-        }
-
-        // Проверяем расстояние от ближайшей точки до центра сферы
-        point3d closestPoint = rayStart + rayDir * projection;
-        float distanceSquared = (closestPoint - sphereCenter).dot(closestPoint - sphereCenter);
-
-        return distanceSquared <= sphereRadius * sphereRadius;
-    }
+    
 
     struct BowTracerParticle {
         point3d position;
@@ -545,6 +517,63 @@ namespace drawer
     static std::mt19937 gen(rd());
     static std::uniform_real_distribution<float> dist(-1.0f, 1.0f);
 
+    bool CheckWeaponCollision(const StarProjectile& weapon, const point3d& sphereCenter, float sphereRadius)
+    {
+        switch (weapon.weapon) {
+
+        case weapon_name::Fists: {
+            // Сфера для кулака
+            float distance = (weapon.position - sphereCenter).magnitude();
+            return distance <= (weapon.radius + sphereRadius);
+        }
+
+        case weapon_name::Sword: {
+            // Капсула для меча (линия с радиусом)
+            point3d swordStart = weapon.position;
+            point3d swordEnd = weapon.position + weapon.direction * weapon.radius * 3.f; // Длина меча
+            point3d swordDir = (swordEnd - swordStart).normalized();
+            float swordLength = (swordEnd - swordStart).magnitude();
+
+            point3d toSphere = sphereCenter - swordStart;
+            float projection = toSphere.dot(swordDir);
+
+            // Ограничиваем проекцию длиной меча
+            projection = max(0.0f, min(projection, swordLength));
+
+            point3d closestPoint = swordStart + swordDir * projection;
+            float distance = (closestPoint - sphereCenter).magnitude();
+
+            return distance <= (weapon.radius + sphereRadius); // weapon.radius - толщина меча
+        }
+
+        case weapon_name::Shield: {
+            // Диск/круг для щита
+            point3d toSphere = sphereCenter - weapon.position;
+
+            // Проекция на плоскость щита
+            float distanceToPlane = fabs(toSphere.dot(weapon.up));
+
+            // Если сфера слишком далеко от плоскости щита - нет коллизии
+            if (distanceToPlane > sphereRadius) return false;
+
+            // Проекция на плоскость щита
+            point3d projected = sphereCenter - weapon.up * toSphere.dot(weapon.up);
+            float distanceInPlane = (projected - weapon.position).magnitude();
+
+            // Проверяем попадание в диск щита
+            return distanceInPlane <= (weapon.radius + sphereRadius);
+        }
+
+        case weapon_name::Bow: {
+            // Сфера для стрелы (как кулак, но можно сделать более сложную)
+            float distance = (weapon.position - sphereCenter).magnitude();
+            return distance <= (weapon.radius + sphereRadius);
+        }
+
+        default:
+            return false;
+        }
+    }
 
     void UpdateAttackStars(float deltaTime) {
         
@@ -959,8 +988,7 @@ namespace drawer
                     float distance = (star.position - starWorldPos).magnitude();
 
                 
-                    if (CheckRaySphereCollision(star.position, star.direction,
-                        starWorldPos, 1000.f,30000.f)) { 
+                    if (CheckWeaponCollision(star, starWorldPos, 1000.f)) { 
 
                         if (current_weapon == weapon_name::Sword) {
                             enemy.starsHealth[i] -= currentDamage*1.2f;
