@@ -105,6 +105,8 @@ namespace drawer
             point = starArray[i];
             point3d worldPoint = TransformPoint(point, Constellation.Transform);
 
+            float currentRadius = (i < Constellation.starsRadius.size()) ? Constellation.starsRadius[i] : finalStarRad;
+
             XMVECTOR p = XMVECTOR{ worldPoint.x,worldPoint.y,worldPoint.z,1 };
             p = XMVector4Transform(p, XMMatrixTranspose(ConstBuf::camera.view[0]) * XMMatrixTranspose(ConstBuf::camera.proj[0]));
 
@@ -116,7 +118,7 @@ namespace drawer
             screenPoint.y *= window.height;
 
             // Изменяем цвет или размер для неповрежденных звезд
-            float currentRadius = finalStarRad;
+            //float currentRadius = finalStarRad;
             XMFLOAT4 starColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // Белый по умолчанию
 
             if (i < starHealth.size())
@@ -142,8 +144,7 @@ namespace drawer
             ConstBuf::Update(5, ConstBuf::global);
             ConstBuf::ConstToPixel(5);
 
-            if (currentRadius > 0)
-            {
+            if (currentRadius > 0) {
                 point.draw(worldPoint, currentRadius);
             }
 
@@ -764,6 +765,8 @@ namespace drawer
     const float MIN_ATTACK_DAMAGE = 0.1f;
     const float MAX_ATTACK_DAMAGE = 0.5f;
     
+    float CameraScale = 1.f;
+    float chargeRatio;
 
     void HandleMouseClick(XMVECTOR heroPosition, Constellation& player) {
          // Переменная для чередования рук
@@ -785,15 +788,17 @@ namespace drawer
             }
 
             float chargeDuration = currentTime - chargeStartTime;
-            float chargeRatio = min(chargeDuration / MAX_CHARGE_TIME, 1.0f);
+            chargeRatio = min(chargeDuration / MAX_CHARGE_TIME, 1.0f);
             finalRadius = MIN_ATTACK_RADIUS + chargeRatio * (MAX_ATTACK_RADIUS - MIN_ATTACK_RADIUS);
 
             // Увеличиваем масштаб героя пропорционально времени задержки
             targetHeroScale = MIN_HERO_SCALE + chargeRatio * (MAX_HERO_SCALE - MIN_HERO_SCALE);
 
-            Camera::state.distanceOffset *= 1.02f;
-            player.SetStarSpacing(targetHeroScale);
+            CameraScale = 600.f + chargeRatio * (800.f - 600.f);
 
+            Camera::state.distanceOffset *= CameraScale;
+            player.SetStarSpacing(targetHeroScale);
+            //player.SetOverallScale();
             currentDamage = MIN_ATTACK_DAMAGE + chargeRatio * (MAX_ATTACK_DAMAGE - MIN_ATTACK_DAMAGE);
         }
         else {
@@ -809,7 +814,8 @@ namespace drawer
                         mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
                     }
                     lastAttackTime = currentTime;
-                    Camera::state.distanceOffset = 600.f;
+                    CameraScale = 80.f - chargeRatio * (800.f - 600.f);
+                    Camera::state.distanceOffset *= CameraScale;
                     player.SetStarSpacing(1.f);
 
                     start = point3d(
@@ -962,62 +968,66 @@ namespace drawer
 
         std::string enemyH;
         std::string indexStar;
-    void UpdateAttack(float deltaTime) {
-        if (starSet.empty() ||
-            currentEnemyID < 0 ||
-            currentEnemyID >= starSet.size() ||
-            !starSet[currentEnemyID] ||
-            starSet[currentEnemyID]->starsCords.empty()) {
-            OutputDebugStringA("Invalid attack state - resetting\n");
-            //attackStars.clear();
-            return;
-        }
-        
-        if (!starSet[currentEnemyID]) return;
-        if (isAttacking) {
+        void UpdateAttack(float deltaTime) {
+            if (starSet.empty() ||
+                currentEnemyID < 0 ||
+                currentEnemyID >= starSet.size() ||
+                !starSet[currentEnemyID] ||
+                starSet[currentEnemyID]->starsCords.empty()) {
+                OutputDebugStringA("Invalid attack state - resetting\n");
+                return;
+            }
+
+            if (!starSet[currentEnemyID]) return;
+
             Constellation& enemy = *starSet[currentEnemyID];
-            
+
+            // Сбрасываем масштаб врага в начале кадра
+            //enemy.SetStarRadius(0,1.0f);
+
             for (int i = 0; i < enemy.starsCords.size(); i++) {
                 if (enemy.starsHealth[i] <= 0) continue;
 
-                
                 point3d starWorldPos = TransformPoint(enemy.starsCords[i], enemy.Transform);
 
-                
+                // Проверяем все выстрелы на приближение к этой звезде
                 for (auto& star : attackStars) {
                     float distance = (star.position - starWorldPos).magnitude();
 
-                
-                    if (CheckWeaponCollision(star, starWorldPos, 1000.f)) { 
+                    // Если выстрел близко к звезде - увеличиваем её
+                    //if (distance < 3000.f) {
+                    //    // Плавное увеличение в зависимости от расстояния
+                    //    float scaleFactor = 1.0f + (3000.f - distance) / 3000.f * 5.0f; // Увеличиваем до 6x
+                    //    //enemy.SetStarRadius(0,scaleFactor);
+                    //        
+                    //    // Также можно увеличить конкретную звезду
+                    //    enemy.starsRadius[i] = 1000.f * scaleFactor; // Увеличиваем радиус звезды
+                    //}
 
+                    if (CheckWeaponCollision(star, starWorldPos, 2000.f)) {
+                        enemy.SetStarRadius(i, 10000.f);
                         if (current_weapon == weapon_name::Sword) {
-                            enemy.starsHealth[i] -= currentDamage*1.2f;
+                            enemy.starsHealth[i] -= currentDamage * .5f;
                         }
                         else if (current_weapon == weapon_name::Shield) {
-                            enemy.starsHealth[i] -= currentDamage*1.1f;
+                            enemy.starsHealth[i] -= currentDamage * .1f;
                         }
                         else if (current_weapon == weapon_name::Bow) {
-                            enemy.starsHealth[i] -= currentDamage*2.f;
+                            enemy.starsHealth[i] -= currentDamage * 1.f;
                         }
                         else if (current_weapon == weapon_name::Fists) {
-
-                            enemy.starsHealth[i] -= currentDamage;
+                            enemy.starsHealth[i] -= currentDamage*.2f;
                         }
-                        
-                        enemyH = "Star: " + std::to_string(i+1)+ " HP: " + std::to_string(enemy.starsHealth[i]);
-                        
+
+                        enemyH = "Star: " + std::to_string(i + 1) + " HP: " + std::to_string(enemy.starsHealth[i]);
                         ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Damage.wav");
                         break;
                     }
                 }
-                
-                
             }
-            
+
             isAttacking = false;
-        }
-        
-        UpdateAttackStars(deltaTime);
+            UpdateAttackStars(deltaTime);
 
         if (current_weapon == weapon_name::Shield) {
 

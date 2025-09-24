@@ -38,12 +38,26 @@ bool isBattleActive = false;
 DWORD battleStartTime;
 
  float heroScale = 1.f;
- float targetHeroScale = 1.5f;
+ //float targetHeroScale = 1.5f;
  const float MIN_HERO_SCALE = 1.0f;
  const float MAX_HERO_SCALE = 10.5f;
  const float SCALE_SPEED = 2000.f;
 
  float currentDamage = 1.f;
+
+
+ float targetCameraDistance = 600.f; // Целевое расстояние камеры
+ float currentCameraDistance = 600.f; // Текущее расстояние камеры
+ float cameraReturnSpeed = .005f; // Скорость возврата камеры
+
+ float targetHeroScale = MIN_HERO_SCALE; // Целевой масштаб героя
+ float currentHeroScale = MIN_HERO_SCALE; // Текущий масштаб героя
+ float heroScaleReturnSpeed = 0.00008f; // Скорость возврата масштаба
+
+ DWORD attackEndTime = 0; // Время окончания атаки
+ const DWORD returnDuration = 5000; // Длительность возврата в мс
+
+
 
 HWND hWnd;
 #include "utils.h"
