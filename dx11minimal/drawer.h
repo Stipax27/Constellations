@@ -769,7 +769,7 @@ namespace drawer
     float chargeRatio;
 
     const float MIN_CAMERA_DIST = 600.f;
-    const float MAX_CAMERA_DIST = 1000.f;
+    const float MAX_CAMERA_DIST = 10000.f;
 
     void HandleMouseClick(XMVECTOR heroPosition, Constellation& player) {
          // Переменная для чередования рук
@@ -798,8 +798,11 @@ namespace drawer
             targetHeroScale = MIN_HERO_SCALE + chargeRatio * (MAX_HERO_SCALE - MIN_HERO_SCALE);
 
             targetCameraDistance = MIN_CAMERA_DIST + chargeRatio * (MAX_CAMERA_DIST - MIN_CAMERA_DIST);
-
-            Camera::state.distanceOffset +=40.0f ;
+            std::string T = std::to_string(chargeRatio);
+            drawString(T.c_str(), 1200, 100, 1.f, true);
+            Camera::state.distanceOffset = targetCameraDistance;
+            
+            
             player.SetStarSpacing(targetHeroScale);
             //player.SetOverallScale();
             currentDamage = MIN_ATTACK_DAMAGE + chargeRatio * (MAX_ATTACK_DAMAGE - MIN_ATTACK_DAMAGE);
@@ -807,10 +810,14 @@ namespace drawer
         else {
             if (isCharging) {
                 isCharging = false;
-
+                float chargeDuration = currentTime - chargeStartTime;
+                chargeRatio = max(chargeDuration / MAX_CHARGE_TIME, 1.0f);
                 targetHeroScale = MIN_HERO_SCALE;
                 CameraScale = MIN_ATTACK_DAMAGE;
+                targetCameraDistance = MAX_CAMERA_DIST - chargeRatio * (MAX_CAMERA_DIST - MIN_CAMERA_DIST);
 
+                std::string P = std::to_string(targetCameraDistance);
+                drawString(P.c_str(), 1200, 300, 1.f, true);
                 if (currentTime - lastAttackTime > 400) {
                     if (gameState == gameState_::selectEnemy) {
                         gameState = gameState_::Fight;
@@ -818,7 +825,9 @@ namespace drawer
                         mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
                     }
                     lastAttackTime = currentTime;
-                   Camera::state.distanceOffset = 600.f;
+
+                   Camera::state.distanceOffset = targetCameraDistance;
+                   
                     player.SetStarSpacing(1.f);
 
                     start = point3d(
