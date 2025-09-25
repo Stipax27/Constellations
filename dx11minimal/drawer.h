@@ -770,54 +770,90 @@ namespace drawer
 
     const float MIN_CAMERA_DIST = 600.f;
     const float MAX_CAMERA_DIST = 10000.f;
+    std::string P;
+
+    
+    bool isCameraReturning = false;
+
+    float currentCameraDistance = MIN_CAMERA_DIST;
+    float cameraReturnStartDistance = MIN_CAMERA_DIST;
+    DWORD cameraReturnStartTime = 0;
+    
+    float cameraReturnSpeed = 2.0f;
+
+
+    float currentHeroScale = MIN_HERO_SCALE;
+    float heroScaleReturnStart = MIN_HERO_SCALE;
+    DWORD heroScaleReturnStartTime = 0;
+    bool isHeroScaleReturning = false;
+    float heroScaleReturnSpeed = 2.0f;
+
+
+    float currentStarRadius = 20.0f;
+    float starRadiusReturnStart = 20.0f;
+    DWORD starRadiusReturnStartTime = 0;
+    bool isStarRadiusReturning = false;
+    float starRadiusReturnSpeed = 2.0f;
+    const float MIN_STAR_RADIUS = 20.0f;
+    const float MAX_STAR_RADIUS = 1000.0f;
 
     void HandleMouseClick(XMVECTOR heroPosition, Constellation& player) {
-         // Переменная для чередования рук
-
         bool isPressed = (GetAsyncKeyState(VK_LBUTTON) & 0x8000) != 0;
-       
+
         // Обнаружение момента нажатия
         if (isPressed && !wasPressed) {
-            // Меняем руку при каждом нажатии
             useLeftFist = !useLeftFist;
         }
-
         wasPressed = isPressed;
 
-        if(isPressed) {
+        if (isPressed) {
             if (!isCharging) {
                 isCharging = true;
                 chargeStartTime = currentTime;
+                isCameraReturning = false;
+                isHeroScaleReturning = false;
+                isStarRadiusReturning = false; // Отменяем возврат размера звезд
             }
 
             float chargeDuration = currentTime - chargeStartTime;
             chargeRatio = min(chargeDuration / MAX_CHARGE_TIME, 1.0f);
             finalRadius = MIN_ATTACK_RADIUS + chargeRatio * (MAX_ATTACK_RADIUS - MIN_ATTACK_RADIUS);
 
-            // Увеличиваем масштаб героя пропорционально времени задержки
+            // Увеличиваем масштаб героя, камеры и звезд пропорционально времени задержки
             targetHeroScale = MIN_HERO_SCALE + chargeRatio * (MAX_HERO_SCALE - MIN_HERO_SCALE);
-
             targetCameraDistance = MIN_CAMERA_DIST + chargeRatio * (MAX_CAMERA_DIST - MIN_CAMERA_DIST);
-            std::string T = std::to_string(chargeRatio);
-            drawString(T.c_str(), 1200, 100, 1.f, true);
-            Camera::state.distanceOffset = targetCameraDistance;
-            
-            
-            player.SetStarSpacing(targetHeroScale);
-            //player.SetOverallScale();
+            currentStarRadius = MIN_STAR_RADIUS + chargeRatio * (MAX_STAR_RADIUS - MIN_STAR_RADIUS);
+
+            // Непосредственно применяем все изменения
+            currentCameraDistance = targetCameraDistance;
+            currentHeroScale = targetHeroScale;
+
+            Camera::state.distanceOffset = currentCameraDistance;
+            player.SetStarSpacing(currentHeroScale);
+
+            // Применяем новый размер ко всем звездам игрока
+            for (int i = 0; i < player.starsCords.size(); i++) {
+                player.SetStarRadius(i, currentStarRadius);
+            }
+
             currentDamage = MIN_ATTACK_DAMAGE + chargeRatio * (MAX_ATTACK_DAMAGE - MIN_ATTACK_DAMAGE);
         }
         else {
             if (isCharging) {
                 isCharging = false;
-                float chargeDuration = currentTime - chargeStartTime;
-                chargeRatio = max(chargeDuration / MAX_CHARGE_TIME, 1.0f);
-                targetHeroScale = MIN_HERO_SCALE;
-                CameraScale = MIN_ATTACK_DAMAGE;
-                targetCameraDistance = MAX_CAMERA_DIST - chargeRatio * (MAX_CAMERA_DIST - MIN_CAMERA_DIST);
+                isCameraReturning = true;
+                isHeroScaleReturning = true;
+                isStarRadiusReturning = true; // Запускаем возврат размера звезд
 
-                std::string P = std::to_string(targetCameraDistance);
-                drawString(P.c_str(), 1200, 300, 1.f, true);
+                cameraReturnStartTime = currentTime;
+                heroScaleReturnStartTime = currentTime;
+                starRadiusReturnStartTime = currentTime;
+
+                // Сохраняем текущие значения для плавного возврата
+                cameraReturnStartDistance = currentCameraDistance;
+                heroScaleReturnStart = currentHeroScale;
+                starRadiusReturnStart = currentStarRadius;
+
                 if (currentTime - lastAttackTime > 400) {
                     if (gameState == gameState_::selectEnemy) {
                         gameState = gameState_::Fight;
@@ -825,10 +861,6 @@ namespace drawer
                         mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
                     }
                     lastAttackTime = currentTime;
-
-                   Camera::state.distanceOffset = targetCameraDistance;
-                   
-                    player.SetStarSpacing(1.f);
 
                     start = point3d(
                         XMVectorGetX(heroPosition),
@@ -846,29 +878,24 @@ namespace drawer
                     point3d mousePos = (camPos + mouseRay * 6000 * Camera::state.distanceOffset);
                     point3d newDirection = (mousePos - start).normalized();
 
-                   
-
                     // Определяем позицию кулака в зависимости от текущей руки
                     point3d fistPosition;
                     if (useLeftFist) {
-                        fistPosition = start + point3d{ 200, 0, 0 }; // Левый кулак
+                        fistPosition = start + point3d{ 200, 0, 0 };
                     }
                     else {
-                        fistPosition = start - point3d{ 200, 0, 0 }; // Правый кулак
+                        fistPosition = start - point3d{ 200, 0, 0 };
                     }
 
-                    
-                   
                     switch (current_weapon) {
                     case weapon_name::Fists: {
-                        
                         StarProjectile newStar;
                         newStar.position = fistPosition;
                         newStar.direction = newDirection;
                         newStar.radius = finalRadius;
                         newStar.weapon = weapon_name::Fists;
-                        newStar.isNew = true; // Помечаем как новую
-                        newStar.creationTime = currentTime; // Запоминаем время создания
+                        newStar.isNew = true;
+                        newStar.creationTime = currentTime;
 
                         newStar.up = point3d(XMVectorGetX(Camera::state.Up),
                             XMVectorGetY(Camera::state.Up),
@@ -880,15 +907,13 @@ namespace drawer
                         break;
                     }
                     case weapon_name::Sword: {
-
                         Hero::state.isAttackRotating = true;
                         Hero::state.attackStartTime = currentTime;
                         Hero::state.attackRotationProgress = 0.0f;
 
-                        // Остальной код атаки мечом...
                         for (int i = 0; i < 25; i++) {
                             StarProjectile newStar;
-                            newStar.position = start - point3d{-finalRadius,-finalRadius,0};
+                            newStar.position = start - point3d{ -finalRadius,-finalRadius,0 };
                             newStar.direction = newDirection;
                             newStar.radius = finalRadius;
                             newStar.weapon = weapon_name::Sword;
@@ -901,7 +926,7 @@ namespace drawer
                                 XMVectorGetZ(Camera::state.Right));
 
                             newStar.position += up * (i * finalRadius - (finalRadius * 10.f));
-                            newStar.position += right * (i * finalRadius - (finalRadius*10.f));
+                            newStar.position += right * (i * finalRadius - (finalRadius * 10.f));
 
                             attackStars.push_back(newStar);
                         }
@@ -911,7 +936,6 @@ namespace drawer
                     }
 
                     case weapon_name::Shield: {
-
                         StarProjectile newStar;
                         newStar.position = start;
                         newStar.direction = newDirection;
@@ -925,22 +949,17 @@ namespace drawer
                         newStar.up = newStar.right.cross(newDirection).normalized();
 
                         attackStars.push_back(newStar);
-
-
                         ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\ShieldStan3.wav");
-
                         break;
                     }
 
                     case weapon_name::Bow: {
-
                         point3d fixedUp = point3d(XMVectorGetX(Camera::state.Up),
                             XMVectorGetY(Camera::state.Up),
                             XMVectorGetZ(Camera::state.Up));
                         point3d fixedRight = newDirection.cross(fixedUp).normalized();
                         fixedUp = fixedRight.cross(newDirection).normalized();
-                        
-                        // Создаем основную стрелу
+
                         StarProjectile newStar;
                         newStar.position = start;
                         newStar.direction = newDirection;
@@ -952,13 +971,12 @@ namespace drawer
 
                         attackStars.push_back(newStar);
 
-                        // Создаем начальные частицы для трассера
                         for (int i = 0; i < 8; i++) {
                             BowTracerParticle tracer;
-                            tracer.position = start ;
+                            tracer.position = start;
                             tracer.size = finalRadius * 0.3f;
                             tracer.creationTime = currentTime;
-                            tracer.lifetime = 300.0f + (rand() % 200); // Случайное время жизни
+                            tracer.lifetime = 300.0f + (rand() % 200);
                             bowTracerParticles.push_back(tracer);
                         }
 
@@ -971,13 +989,79 @@ namespace drawer
                 isAttacking = true;
                 current_weapon = weapon_name::Fists;
             }
-            /*else if (!backMorphLock)
-            {
-                current_weapon = weapon_name::None;
-            }*/
         }
     }
 
+    void UpdateCameraScaleAndStarRadiusReturn(float deltaTime) {
+        // Обработка возврата камеры
+        if (isCameraReturning) {
+            float returnProgress = (currentTime - cameraReturnStartTime) / 1000.0f * cameraReturnSpeed;
+            returnProgress = min(returnProgress, 1.0f);
+
+            currentCameraDistance = lerp(cameraReturnStartDistance, MIN_CAMERA_DIST, returnProgress);
+            Camera::state.distanceOffset = currentCameraDistance;
+
+            if (returnProgress >= 1.0f) {
+                isCameraReturning = false;
+                currentCameraDistance = MIN_CAMERA_DIST;
+                Camera::state.distanceOffset = currentCameraDistance;
+            }
+        }
+
+        // Обработка возврата размера героя
+        if (isHeroScaleReturning) {
+            float returnProgress = (currentTime - heroScaleReturnStartTime) / 1000.0f * heroScaleReturnSpeed;
+            returnProgress = min(returnProgress, 1.0f);
+
+            currentHeroScale = lerp(heroScaleReturnStart, MIN_HERO_SCALE, returnProgress);
+
+            if (starSet[player_sign]) {
+                starSet[player_sign]->SetStarSpacing(currentHeroScale);
+            }
+
+            if (returnProgress >= 1.0f) {
+                isHeroScaleReturning = false;
+                currentHeroScale = MIN_HERO_SCALE;
+                if (starSet[player_sign]) {
+                    starSet[player_sign]->SetStarSpacing(MIN_HERO_SCALE);
+                }
+            }
+        }
+
+        // Обработка возврата размера звезд
+        if (isStarRadiusReturning) {
+            float returnProgress = (currentTime - starRadiusReturnStartTime) / 1000.0f * starRadiusReturnSpeed;
+            returnProgress = min(returnProgress, 1.0f);
+
+            currentStarRadius = lerp(starRadiusReturnStart, MIN_STAR_RADIUS, returnProgress);
+
+            // Применяем новый размер ко всем звездам игрока
+            if (starSet[player_sign]) {
+                Constellation& player = *starSet[player_sign];
+                for (int i = 0; i < player.starsCords.size(); i++) {
+                    player.SetStarRadius(i, currentStarRadius);
+                }
+            }
+
+            
+
+            if (returnProgress >= 1.0f) {
+                isStarRadiusReturning = false;
+                currentStarRadius = MIN_STAR_RADIUS;
+
+                // Устанавливаем финальный размер звезд
+                if (starSet[player_sign]) {
+                    Constellation& player = *starSet[player_sign];
+                    for (int i = 0; i < player.starsCords.size(); i++) {
+                        player.SetStarRadius(i, MIN_STAR_RADIUS);
+                    }
+                }
+                
+            }
+        }
+    }
+
+    
         std::string enemyH;
         std::string indexStar;
         void UpdateAttack(float deltaTime) {
@@ -1456,6 +1540,9 @@ namespace drawer
         XMVECTOR heroPosition = Hero::state.constellationOffset.r[3];
         XMVECTOR enemyPositions = Enemy::enemyData.enemyConstellationOffset.r[3];
 
+        for (int i = 0; i < player.starsCords.size(); i++) {
+            player.SetStarRadius(i, currentStarRadius);
+        }
         
        //d2dRenderTarget->BeginDraw();
         CreateSpeedParticles();
@@ -1498,6 +1585,10 @@ namespace drawer
 
         case gameState_::selectEnemy:
         {
+            for (int i = 0; i < enemy.starsCords.size(); i++) {
+
+                enemy.SetStarRadius(i, 1000.f);
+            }
             //DrawTEST();
             drawStaminaBar(energy);
 
@@ -1558,9 +1649,17 @@ namespace drawer
 
         case gameState_::Fight:
         {
+
+            for (int i = 0; i < enemy.starsCords.size();i++) {
+            
+            enemy.SetStarRadius(i,1000.f);
+            }
+            
             //CreateParticledText("ANOTHER TEST", (1700. / 2560) * window.width, (600. / 1440) * window.height + 200.f, .7f, false);
-
-
+            std::string P = std::to_string(currentCameraDistance);
+            drawString(P.c_str(), 1200, 300, 1.f, true);
+            UpdateCameraScaleAndStarRadiusReturn(deltaTime);
+            //UpdateCameraReturn(deltaTime);
             drawStaminaBar(energy);
 
 

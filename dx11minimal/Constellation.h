@@ -176,7 +176,7 @@ public:
         
         for (int i = 0; i < originStarsCords.size(); i++) {
             starsCords.push_back(originStarsCords[i] * starSpacing);
-            //starsRadius.push_back(100.f); 
+            starsRadius.push_back(100.f); 
         }
 
         prevStarsCords = starsCords;
