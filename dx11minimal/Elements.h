@@ -138,12 +138,12 @@ void drawCurrentElement() {
 void DrawCombatStats() {
     float combinedDamage = CalculateCombinedDamage();
 
-    std::string damageText = "Damage: " + std::to_string(combinedDamage);
-    drawString(damageText.c_str(), window.width / 4, window.height - 400, 1, true);
+    //std::string damageText = "Damage: " + std::to_string(combinedDamage);
+    //drawString(damageText.c_str(), window.width / 4, window.height - 400, 1, true);
 
     COLORREF oldColor = SetTextColor(window.context, elements[(int)current_element].color);
     std::string elementText = elements[(int)current_element].name + " " + weapon[(int)current_weapon].name;
-    drawString(elementText.c_str(), window.width / 4, window.height - 180, 1.2f, true);
+    //drawString(elementText.c_str(), window.width / 4, window.height - 180, 1.2f, true);
     SetTextColor(window.context, oldColor);
 }
 

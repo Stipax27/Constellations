@@ -154,8 +154,8 @@ void updateFlySpeed(float deltaTime)
         energy += LONG((deltaTime / 17.f ));
     }
 
-    drawString((std::to_string(energy)).c_str(), 1000.f, 800.f, .7f, false);
-    //drawString((std::to_string(deltaTime / 17.f)).c_str(), 1000.f, 800.f, .7f, false);
+    drawString((std::to_string(energy)).c_str(), 1500.f, 750.f, .7f, false);
+    drawString("Energy", 1300.f, 750.f, .7f, false);
 
 
     if (energy <= 0.f) {

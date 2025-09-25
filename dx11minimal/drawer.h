@@ -794,8 +794,8 @@ namespace drawer
     DWORD starRadiusReturnStartTime = 0;
     bool isStarRadiusReturning = false;
     float starRadiusReturnSpeed = 2.0f;
-    const float MIN_STAR_RADIUS = 20.0f;
-    const float MAX_STAR_RADIUS = 1000.0f;
+    //const float MIN_STAR_RADIUS = 20.0f;
+    //const float MAX_STAR_RADIUS = 1000.0f;
 
     void HandleMouseClick(XMVECTOR heroPosition, Constellation& player) {
         bool isPressed = (GetAsyncKeyState(VK_LBUTTON) & 0x8000) != 0;
@@ -822,7 +822,7 @@ namespace drawer
             // Увеличиваем масштаб героя, камеры и звезд пропорционально времени задержки
             targetHeroScale = MIN_HERO_SCALE + chargeRatio * (MAX_HERO_SCALE - MIN_HERO_SCALE);
             targetCameraDistance = MIN_CAMERA_DIST + chargeRatio * (MAX_CAMERA_DIST - MIN_CAMERA_DIST);
-            currentStarRadius = MIN_STAR_RADIUS + chargeRatio * (MAX_STAR_RADIUS - MIN_STAR_RADIUS);
+            //currentStarRadius = MIN_STAR_RADIUS + chargeRatio * (MAX_STAR_RADIUS - MIN_STAR_RADIUS);
 
             // Непосредственно применяем все изменения
             currentCameraDistance = targetCameraDistance;
@@ -832,9 +832,9 @@ namespace drawer
             player.SetStarSpacing(currentHeroScale);
 
             // Применяем новый размер ко всем звездам игрока
-            for (int i = 0; i < player.starsCords.size(); i++) {
+            /*for (int i = 0; i < player.starsCords.size(); i++) {
                 player.SetStarRadius(i, currentStarRadius);
-            }
+            }*/
 
             currentDamage = MIN_ATTACK_DAMAGE + chargeRatio * (MAX_ATTACK_DAMAGE - MIN_ATTACK_DAMAGE);
         }
@@ -843,16 +843,16 @@ namespace drawer
                 isCharging = false;
                 isCameraReturning = true;
                 isHeroScaleReturning = true;
-                isStarRadiusReturning = true; // Запускаем возврат размера звезд
+                //isStarRadiusReturning = true; // Запускаем возврат размера звезд
 
                 cameraReturnStartTime = currentTime;
                 heroScaleReturnStartTime = currentTime;
-                starRadiusReturnStartTime = currentTime;
+                //starRadiusReturnStartTime = currentTime;
 
                 // Сохраняем текущие значения для плавного возврата
                 cameraReturnStartDistance = currentCameraDistance;
                 heroScaleReturnStart = currentHeroScale;
-                starRadiusReturnStart = currentStarRadius;
+                //starRadiusReturnStart = currentStarRadius;
 
                 if (currentTime - lastAttackTime > 400) {
                     if (gameState == gameState_::selectEnemy) {
@@ -992,7 +992,7 @@ namespace drawer
         }
     }
 
-    void UpdateCameraScaleAndStarRadiusReturn(float deltaTime) {
+    void UpdateCameraScaleAndStarRadiusReturn(float deltaTime, Constellation& player) {
         // Обработка возврата камеры
         if (isCameraReturning) {
             float returnProgress = (currentTime - cameraReturnStartTime) / 1000.0f * cameraReturnSpeed;
@@ -1015,50 +1015,50 @@ namespace drawer
 
             currentHeroScale = lerp(heroScaleReturnStart, MIN_HERO_SCALE, returnProgress);
 
-            if (starSet[player_sign]) {
-                starSet[player_sign]->SetStarSpacing(currentHeroScale);
-            }
+            
+                player.SetStarSpacing(currentHeroScale);
+            
 
             if (returnProgress >= 1.0f) {
                 isHeroScaleReturning = false;
                 currentHeroScale = MIN_HERO_SCALE;
-                if (starSet[player_sign]) {
-                    starSet[player_sign]->SetStarSpacing(MIN_HERO_SCALE);
-                }
+                
+                   player.SetStarSpacing(MIN_HERO_SCALE);
+               
             }
         }
 
         // Обработка возврата размера звезд
-        if (isStarRadiusReturning) {
-            float returnProgress = (currentTime - starRadiusReturnStartTime) / 1000.0f * starRadiusReturnSpeed;
-            returnProgress = min(returnProgress, 1.0f);
+        //if (isStarRadiusReturning) {
+        //    float returnProgress = (currentTime - starRadiusReturnStartTime) / 1000.0f * starRadiusReturnSpeed;
+        //    returnProgress = min(returnProgress, 1.0f);
 
-            currentStarRadius = lerp(starRadiusReturnStart, MIN_STAR_RADIUS, returnProgress);
+        //    currentStarRadius = lerp(starRadiusReturnStart, MIN_STAR_RADIUS, returnProgress);
 
-            // Применяем новый размер ко всем звездам игрока
-            if (starSet[player_sign]) {
-                Constellation& player = *starSet[player_sign];
-                for (int i = 0; i < player.starsCords.size(); i++) {
-                    player.SetStarRadius(i, currentStarRadius);
-                }
-            }
+        //    // Применяем новый размер ко всем звездам игрока
+        //    if (starSet[player_sign]) {
+        //        Constellation& player = *starSet[player_sign];
+        //        for (int i = 0; i < player.starsCords.size(); i++) {
+        //            player.SetStarRadius(i, currentStarRadius);
+        //        }
+        //    }
 
-            
+        //    
 
-            if (returnProgress >= 1.0f) {
-                isStarRadiusReturning = false;
-                currentStarRadius = MIN_STAR_RADIUS;
+        //    if (returnProgress >= 1.0f) {
+        //        isStarRadiusReturning = false;
+        //        currentStarRadius = MIN_STAR_RADIUS;
 
-                // Устанавливаем финальный размер звезд
-                if (starSet[player_sign]) {
-                    Constellation& player = *starSet[player_sign];
-                    for (int i = 0; i < player.starsCords.size(); i++) {
-                        player.SetStarRadius(i, MIN_STAR_RADIUS);
-                    }
-                }
-                
-            }
-        }
+        //        // Устанавливаем финальный размер звезд
+        //        if (starSet[player_sign]) {
+        //            Constellation& player = *starSet[player_sign];
+        //            for (int i = 0; i < player.starsCords.size(); i++) {
+        //                player.SetStarRadius(i, MIN_STAR_RADIUS);
+        //            }
+        //        }
+        //        
+        //    }
+        //}
     }
 
     
@@ -1539,7 +1539,15 @@ namespace drawer
 
         XMVECTOR heroPosition = Hero::state.constellationOffset.r[3];
         XMVECTOR enemyPositions = Enemy::enemyData.enemyConstellationOffset.r[3];
-
+        for (int i = 0; i < Sword.starsCords.size(); i++) {
+            Sword.SetStarRadius(i, currentStarRadius);
+        }
+        for (int i = 0; i < Shield.starsCords.size(); i++) {
+            Shield.SetStarRadius(i, currentStarRadius);
+        }
+        for (int i = 0; i < Bow.starsCords.size(); i++) {
+            Bow.SetStarRadius(i, currentStarRadius);
+        }
         for (int i = 0; i < player.starsCords.size(); i++) {
             player.SetStarRadius(i, currentStarRadius);
         }
@@ -1656,9 +1664,10 @@ namespace drawer
             }
             
             //CreateParticledText("ANOTHER TEST", (1700. / 2560) * window.width, (600. / 1440) * window.height + 200.f, .7f, false);
-            std::string P = std::to_string(currentCameraDistance);
-            drawString(P.c_str(), 1200, 300, 1.f, true);
-            UpdateCameraScaleAndStarRadiusReturn(deltaTime);
+            std::string P = std::to_string(chargeRatio);
+            drawString(P.c_str(), 600, 750, 1.f, true);
+            drawString("Power", 450, 750, 1.f, true);
+            UpdateCameraScaleAndStarRadiusReturn(deltaTime, player);
             //UpdateCameraReturn(deltaTime);
             drawStaminaBar(energy);
 
@@ -1901,11 +1910,16 @@ namespace drawer
 
             string heroHP = std::to_string(playerHP);
             drawString(heroHP.c_str(), window.width / 2, window.height -100, 1, true);
+            drawString("HP", 820, 960, 2.f, true);
             
             Constellation& c = *starSet[player_sign];
             c.Transform = CreateHeroToWorldMatrix(c);
             drawConstellation(*starSet[player_sign]);
             drawString(enemyH.c_str(), window.width / 2, 100, 2.f, true);
+            drawString("ARIES", window.width / 2, 50, 2.f, true);
+            if (GetAsyncKeyState('I')) {
+                gameState = gameState_::Exploring;
+            }
             //std::string enemyHP= std::to_string(EnemyHP);
             //drawString(enemyHP.c_str(), window.width / 2, 100,2.f,true);
             //std::string curentSignstring = zodiacSignToString(currentEnemyID);
@@ -2067,10 +2081,13 @@ namespace drawer
             drawConstellation(*starSet[player_sign]);
 
             std::string curentSignstring = zodiacSignToString(currentEnemyID);
-            drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);
+            //drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);
 
+            drawString("You Win!", window.width / 2., window.height / 4, 7.f, true);
+
+            drawString("Aries Is Defeated!", window.width / 2., window.height / 6, 4.f, true);
             curentSignstring = zodiacSignToString(player_sign);
-            drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 7., 1, true);
+            //drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 7., 1, true);
 
 
             //drawCurrentElement();
@@ -2081,7 +2098,25 @@ namespace drawer
         }
         case gameState_::Exploring:
         {
+            std::string enemyHP= std::to_string(EnemyHP);
+           drawString(enemyHP.c_str(), window.width / 2, 100,2.f,true);
+           std::string curentSignstring = zodiacSignToString(currentEnemyID);
+           drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);
+           
+           curentSignstring = zodiacSignToString(player_sign);
+           drawString(curentSignstring.c_str(), window.width / 2+120, window.height - window.height / 7., 1.2f, true);
+           drawString("You Constellation:", window.width / 2-140, window.height - window.height / 7., 1.f, true);
+           //curentSignstring = "current weapon: " + weapon[(int)current_weapon].name;
+           //drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 10., 1, true);
+            
+           
 
+          //drawRect(20.0f, 20.0f, 1000.0f, 800.0f); // прямоугольник шириной 200px и высотой 100px по центру экрана, на пикселях 1000 по абсциссе и 800 по ординате
+
+          drawString("Weapon selection:\nButton 1 - Sword \nButton 2 - Shield \nButton 3 - Bow ", (500. / 2560) * window.width, (800. / 1440) * window.height, .7f, false);
+          //drawString("Rewind time:\nbutton - R", (500. / 2560) * window.width, (1250. / 1440) * window.height, .7f, false);
+          drawString("TUTORIAL:\nTo hit an enemy with a sword,\npress LMB and draw a line along the enemy star\nTo hit with a shield,\npress LMB and draw a line that will draw a circle that attacks stars\nTo hit with a bow,\npress LMB on the star and draw a vector in any direction from the star.", (500. / 2560) * window.width, (500. / 1440) * window.height, .7f, false);
+          drawString("Attack LMB", (1000. / 2560)* window.width, (800. / 1440)* window.height, .7f, false);
             break;
         }
 
