@@ -768,6 +768,9 @@ namespace drawer
     float CameraScale = 1.f;
     float chargeRatio;
 
+    const float MIN_CAMERA_DIST = 600.f;
+    const float MAX_CAMERA_DIST = 1000.f;
+
     void HandleMouseClick(XMVECTOR heroPosition, Constellation& player) {
          // Переменная для чередования рук
 
@@ -794,9 +797,9 @@ namespace drawer
             // Увеличиваем масштаб героя пропорционально времени задержки
             targetHeroScale = MIN_HERO_SCALE + chargeRatio * (MAX_HERO_SCALE - MIN_HERO_SCALE);
 
-            CameraScale = 600.f + chargeRatio * (800.f - 600.f);
+            targetCameraDistance = MIN_CAMERA_DIST + chargeRatio * (MAX_CAMERA_DIST - MIN_CAMERA_DIST);
 
-            Camera::state.distanceOffset *= CameraScale;
+            Camera::state.distanceOffset +=40.0f ;
             player.SetStarSpacing(targetHeroScale);
             //player.SetOverallScale();
             currentDamage = MIN_ATTACK_DAMAGE + chargeRatio * (MAX_ATTACK_DAMAGE - MIN_ATTACK_DAMAGE);
@@ -806,6 +809,7 @@ namespace drawer
                 isCharging = false;
 
                 targetHeroScale = MIN_HERO_SCALE;
+                CameraScale = MIN_ATTACK_DAMAGE;
 
                 if (currentTime - lastAttackTime > 400) {
                     if (gameState == gameState_::selectEnemy) {
@@ -814,8 +818,7 @@ namespace drawer
                         mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
                     }
                     lastAttackTime = currentTime;
-                    CameraScale = 80.f - chargeRatio * (800.f - 600.f);
-                    Camera::state.distanceOffset *= CameraScale;
+                   Camera::state.distanceOffset = 600.f;
                     player.SetStarSpacing(1.f);
 
                     start = point3d(
