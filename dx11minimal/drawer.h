@@ -1551,8 +1551,8 @@ namespace drawer
         for (int i = 0; i < player.starsCords.size(); i++) {
             player.SetStarRadius(i, currentStarRadius);
         }
-        
-       //d2dRenderTarget->BeginDraw();
+
+        //d2dRenderTarget->BeginDraw();
         CreateSpeedParticles();
         DrawSpeedParticles();
 
@@ -1618,13 +1618,13 @@ namespace drawer
             Constellation& playerConst = *starSet[player_sign];
             playerConst.Transform = CreateHeroToWorldMatrix(playerConst);
 
-            
+
             Constellation& c = *starSet[0]; // Используем текущего врага
 
             c.Transform = CreateEnemyToWorldMatrix(c);
-            
-           
-            drawConstellation(c,false,1000.f,1000.f);
+
+
+            drawConstellation(c, false, 1000.f, 1000.f);
 
             if (!playerConst.morphing)
                 HandleMouseClick(heroPosition, playerConst);
@@ -1644,25 +1644,25 @@ namespace drawer
             isBattleActive = false;
             break;
 
-           // drawString("X", 0, 0, 1, false);
-           // drawString(std::to_string(mouse.pos.y).c_str(), 0, 0, 1, false);
+            // drawString("X", 0, 0, 1, false);
+            // drawString(std::to_string(mouse.pos.y).c_str(), 0, 0, 1, false);
 
         }
         case gameState_::DialogStruct:
             initContentData();
             renderContent();
             handleInput();
-            
+
             break;
 
         case gameState_::Fight:
         {
 
             for (int i = 0; i < enemy.starsCords.size();i++) {
-            
-            enemy.SetStarRadius(i,1000.f);
+
+                enemy.SetStarRadius(i, 1000.f);
             }
-            
+
             //CreateParticledText("ANOTHER TEST", (1700. / 2560) * window.width, (600. / 1440) * window.height + 200.f, .7f, false);
             std::string P = std::to_string(chargeRatio);
             drawString(P.c_str(), 600, 750, 1.f, true);
@@ -1684,7 +1684,7 @@ namespace drawer
 
             Constellation& playerConst = *starSet[player_sign];
             playerConst.RenderMorph(deltaTime);
-            
+
             if (t) {
                 t = false;
                 Camera::state.camDist = 100;
@@ -1701,8 +1701,8 @@ namespace drawer
                 AttackVector();
             }
 
-           //StartBattle();
-           //enemyFight();
+            //StartBattle();
+            //enemyFight();
 
             modelTransform = &placeToWorld;
             modelProject = &fightProject;
@@ -1747,8 +1747,8 @@ namespace drawer
                     drawLine(p1, p2);
                 }
             }*/
-            
-            
+
+
             //ProjectileUpdate(deltaTime);
             //FireProjectile();
             //WeaponRender();
@@ -1769,31 +1769,31 @@ namespace drawer
 
             if (currentTime > attack_cooldown + 5000)
             {
-                
+
                 attackCooldown = true;
             }
-            
-            
-            
+
+
+
             if (attack_collision == true and attackCooldown == true)
             {
                 attack_cooldown = currentTime;
                 attackCooldown = false;
                 check_attack = false;
                 attackStartTime = currentTime;
-                    
+
             }
             Constellation& h = *starSet[currentEnemyID];
             h.Transform = CreateEnemyToWorldMatrix(h);
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-            drawConstellation(*starSet[currentEnemyID],false, 1000.f, 100.f);
+            drawConstellation(*starSet[currentEnemyID], false, 1000.f, 100.f);
 
             //linksDivider = 15;
             modelTransform = &placeHeroToWorld;
             uiFunc = &heroUI;
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 
-                
+
             point3d Heropos = point3d(
                 XMVectorGetX(heroPosition),
                 XMVectorGetY(heroPosition),
@@ -1806,21 +1806,21 @@ namespace drawer
                 XMVectorGetZ(enemyPositions)
             );
 
-               
+
 
             if (enemyAI.data.isAttacking == true) {
 
                 playerConst.StartShaking();
                 enemyAI.data.isAttacking = false;
-                
+
             }
-                playerConst.UpdateShaking();
+            playerConst.UpdateShaking();
 
             if (enemyAI.data.isShockwaveActive == true) {
-                CreateShockwave(Enemypos, enemyAI.data.shockwaveRadius , Heropos);
+                CreateShockwave(Enemypos, enemyAI.data.shockwaveRadius, Heropos);
             }
-                UpdateShockwave(deltaTime);
-                RenderShockwave();
+            UpdateShockwave(deltaTime);
+            RenderShockwave();
 
             if (enemyAI.data.isBoomExploding == true) {
                 CreateExplosionEffects(Enemypos, enemyAI.data.boomRadius);
@@ -1838,8 +1838,8 @@ namespace drawer
                 attack_collision = false;
                 attack_speed = false;
             }
-            
-            
+
+
 
             if (GetAsyncKeyState('P')) {
                 gameState = gameState_::WinFight;
@@ -1882,26 +1882,26 @@ namespace drawer
             }
 
             // Безопасный вызов функций атаки
-            
+
 
             // Обновление атак
             if (!playerConst.morphing) {
                 HandleMouseClick(heroPosition, playerConst);
                 //Hero::UpdateAttackRotation(deltaTime);
-                
+
             }
             UpdateAttack(deltaTime);
 
             DrawSwordAttack();
 
-         
+
             // Проверка условий победы/поражения
             if (getConstellationHP(enemy) <= 0) {
                 gameState = gameState_::WinFight;
                 mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
                 mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
             }
-            
+
             updateEnemyPosition(deltaTime, Heropos, Enemypos, playerHP);
             if (playerHP < 0.f) {
                 gameState = gameState_::EndFight;
@@ -1909,15 +1909,16 @@ namespace drawer
             InputHook(deltaTime, Heropos, Enemypos);
 
             string heroHP = std::to_string(playerHP);
-            drawString(heroHP.c_str(), window.width / 2, window.height -100, 1, true);
+            drawString(heroHP.c_str(), window.width / 2, window.height - 100, 1, true);
             drawString("HP", 820, 960, 2.f, true);
-            
+
             Constellation& c = *starSet[player_sign];
             c.Transform = CreateHeroToWorldMatrix(c);
             drawConstellation(*starSet[player_sign]);
             drawString(enemyH.c_str(), window.width / 2, 100, 2.f, true);
             drawString("ARIES", window.width / 2, 50, 2.f, true);
-            if (GetAsyncKeyState('I')) {
+            drawString("Press < T > to enter tutorial", (100. / 2560) * window.width, (100. / 1440) * window.height, 1.f, false);
+            if (GetAsyncKeyState('T')) {
                 gameState = gameState_::Exploring;
             }
             //std::string enemyHP= std::to_string(EnemyHP);
@@ -2065,10 +2066,10 @@ namespace drawer
 
             /*if (isDamageHero)
             {
-                isDamageHero = false;
-                isShakingHero = true;
+                isDamageHero = false;//
+                isShakingHero = true;//
                 shakeStartTimeHero = currentTime;
-            }
+            }//
 
             if (currentTime > shakeStartTimeHero + shakeDurationHero)
             {
@@ -2083,9 +2084,9 @@ namespace drawer
             std::string curentSignstring = zodiacSignToString(currentEnemyID);
             //drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);
 
-            drawString("You Win!", window.width / 2., window.height / 4, 7.f, true);
+            drawString("You Win!", window.width / 2., window.height / 4-100, 7.f, true);
 
-            drawString("Aries Is Defeated!", window.width / 2., window.height / 6, 4.f, true);
+            drawString("Aries Is Defeated!", window.width / 2., window.height / 6-100, 4.f, true);
             curentSignstring = zodiacSignToString(player_sign);
             //drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 7., 1, true);
 
@@ -2098,29 +2099,81 @@ namespace drawer
         }
         case gameState_::Exploring:
         {
-            std::string enemyHP= std::to_string(EnemyHP);
-           drawString(enemyHP.c_str(), window.width / 2, 100,2.f,true);
-           std::string curentSignstring = zodiacSignToString(currentEnemyID);
-           drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);
-           
-           curentSignstring = zodiacSignToString(player_sign);
-           drawString(curentSignstring.c_str(), window.width / 2+120, window.height - window.height / 7., 1.2f, true);
-           drawString("You Constellation:", window.width / 2-140, window.height - window.height / 7., 1.f, true);
-           //curentSignstring = "current weapon: " + weapon[(int)current_weapon].name;
-           //drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 10., 1, true);
-            
-           
+            //std::string enemyHP = std::to_string(EnemyHP);
+            //drawString(enemyHP.c_str(), window.width / 2 + 100, 100, 2.f, true);
+            //std::string curentSignstring = zodiacSignToString(currentEnemyID);
+            //drawString(curentSignstring.c_str(), window.width / 2, 200., 2.f, false);
+            //drawString("You'r Enemy is ", (750. / 2560) * window.width, (259. / 1440) * window.height, 2.f, false);
+            //drawString("HP Enemy ", (820. / 2560) * window.width, (130. / 1440) * window.height, 2.f, false);
+            //curentSignstring = zodiacSignToString(player_sign);
+            //drawString(curentSignstring.c_str(), window.width / 2 + 120, window.height - window.height / 7., 1.2f, true);
+            //drawString("You Constellation is:", window.width / 2 - 150, window.height - window.height / 7., 1.f, true);
 
-          //drawRect(20.0f, 20.0f, 1000.0f, 800.0f); // прямоугольник шириной 200px и высотой 100px по центру экрана, на пикселях 1000 по абсциссе и 800 по ординате
+            //curentSignstring = "current weapon: " + weapon[(int)current_weapon].name;
+            //drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 10., 1, true);
+            //drawString("Destroy all the stars", (1250. / 2560) * window.width, (1100. / 1440) * window.height, 2.f, true);
 
-          drawString("Weapon selection:\nButton 1 - Sword \nButton 2 - Shield \nButton 3 - Bow ", (500. / 2560) * window.width, (800. / 1440) * window.height, .7f, false);
-          //drawString("Rewind time:\nbutton - R", (500. / 2560) * window.width, (1250. / 1440) * window.height, .7f, false);
-          drawString("TUTORIAL:\nTo hit an enemy with a sword,\npress LMB and draw a line along the enemy star\nTo hit with a shield,\npress LMB and draw a line that will draw a circle that attacks stars\nTo hit with a bow,\npress LMB on the star and draw a vector in any direction from the star.", (500. / 2560) * window.width, (500. / 1440) * window.height, .7f, false);
-          drawString("Attack LMB", (1000. / 2560)* window.width, (800. / 1440)* window.height, .7f, false);
+
+            //drawRect(20.0f, 20.0f, 1000.0f, 800.0f); // прямоугольник шириной 200px и высотой 100px по центру экрана, на пикселях 1000 по абсциссе и 800 по ординате
+
+
+            //drawString("Rewind time:\nbutton - R", (500. / 2560) * window.width, (1250. / 1440) * window.height, .7f, false);
+
+
+            drawString("<<CONTROLS>>", (1280. / 2560)* window.width, (300. / 1440)* window.height, 2.f, true);
+            drawString("<WASD> to move", (1280. / 2560) * window.width, (500. / 1440) * window.height, 1.f, true);
+            drawString("To move Up press <Space> and To move Down press <Ctrl> ", (1280. / 2560) * window.width, (600. / 1440) * window.height, 1.f, true);
+            drawString("To rotate You'r Constellation press <Q> or <E>", (1280. / 2560) * window.width, (700. / 1440) * window.height, 1.f, true);
+            drawString("To rotate Camera move the <Mouse>", (1280. / 2560) * window.width, (800. / 1440) * window.height, 1.f, true);
+            drawString("Hold <Shift> to make a Dash", (1280. / 2560) * window.width, (900. / 1440) * window.height, 1.f, true);
+
+            drawString("Press < TAB > to exit tutorial", (100. / 2560) * window.width, (50. / 1440) * window.height, 1.f, false);
+            if (GetAsyncKeyState(VK_TAB)) {
+                gameState = gameState_::Fight;
+            }
+            drawString("Press < Right arrow > to flip the page forward", (1280. / 2560) * window.width, (1100. / 1440) * window.height, 1.f, true);
+            drawString("Press < Left arrow > to flip the page back", (1280. / 2560)* window.width, (1200. / 1440)* window.height, 1.f, true);
+
+            drawString("Next Page", (2300. / 2560)* window.width, (1350. / 1440)* window.height, 1.f, true);
+            if (GetAsyncKeyState(VK_RIGHT)) {
+                gameState = gameState_::Exploring1;
+            }
             break;
         }
+        case gameState_::Exploring1:
+            drawString("Press < TAB > to exit tutorial", (100. / 2560) * window.width, (50. / 1440) * window.height, 1.f, false);
+            if (GetAsyncKeyState(VK_TAB)) {
+                gameState = gameState_::Fight;
+            }
+            drawString("Previous Page", (300. / 2560)* window.width, (1350. / 1440)* window.height, 1.f, true);
+
+            
+            if (GetAsyncKeyState(VK_LEFT)) {
+                gameState = gameState_::Exploring;
+            }
+            drawString("<<COMBAT MECHANICS>>", (1280. / 2560)* window.width, (300. / 1440)* window.height, 2.f, true);
+            drawString("Weapon selection:\n\nButton <1> - Sword \nButton <2> - Shield \nButton <3> - Bow ", (1300. / 2560) * window.width, (600. / 1440) * window.height, .7f, false);//drawString("TUTORIAL:\nTo hit an enemy with a sword,\npress LMB to strike with sword\nTo hit with a shield,\npress LMB and draw a line that will draw a circle that attacks stars\nTo hit with a bow,\npress LMB on the star and draw a vector in any direction from the star.", (500. / 2560) * window.width, (500. / 1440) * window.height, .7f, false);
+            drawString("To increase the force of your strike, hold down the <LMB>.", (600. / 2560) * window.width, (800. / 1440) * window.height, .7f, false);
+            drawString("Weapon attack:", (700. / 2560)* window.width, (600. / 1440)* window.height, .7f, false);
+            drawString("<LMB> to Attack", (700. / 2560) * window.width, (650. / 1440) * window.height, .7f, false);
+            drawString("<RMB> to use the Lasso", (700. / 2560) * window.width, (700. / 1440) * window.height, .7f, false);
+
+            break;
 
         }
+        //case gameState_::Exploring2:
+        //{
+            /*drawString("Press < TAB > to exit tutorial", (100. / 2560)* window.width, (50. / 1440)* window.height, 1.f, false);
+            if (GetAsyncKeyState(VK_TAB)) {
+                gameState = gameState_::Fight;
+            }
+            
+            drawString("Press < Left arrow > to flip the page back", (100. / 2560)* window.width, (50. / 1440)* window.height, 1.f, false);
+            if (GetAsyncKeyState(VK_LEFT)) {
+                gameState = gameState_::Exploring1;
+            }
+            break;*/
+        //}
 
         Depth::Depth(Depth::depthmode::off);
         if (gameState != gameState_::selectEnemy && gameState != gameState_::Fight && gameState != gameState_::WinFight)
