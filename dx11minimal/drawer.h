@@ -862,6 +862,27 @@ namespace drawer
                     }
                     lastAttackTime = currentTime;
 
+                    float attackCost = 0.0f;
+                    switch (current_weapon) {
+                    case weapon_name::Fists: attackCost = energyCost.fists; break;
+                    case weapon_name::Sword: attackCost = energyCost.sword; break;
+                    case weapon_name::Shield: attackCost = energyCost.shield; break;
+                    case weapon_name::Bow: attackCost = energyCost.bow; break;
+                    }
+
+                    // Умножаем на множитель зарядки
+                    attackCost *= (1.0f + chargeRatio * (energyCost.chargeMultiplier - 1.0f));
+
+                    // ПРОВЕРКА ДОСТАТОЧНОСТИ ЭНЕРГИИ
+                    if (energy < attackCost) {
+                        // Недостаточно энергии - атака не выполняется
+                        //ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\NoEnergy.wav"); // Добавьте звук
+                        isCameraReturning = true;
+                        isHeroScaleReturning = true;
+                        return;
+                    }
+                    energy -= (LONG)attackCost;
+
                     start = point3d(
                         XMVectorGetX(heroPosition),
                         XMVectorGetY(heroPosition),
