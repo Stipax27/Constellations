@@ -64,5 +64,5 @@ float4 PS(VS_OUTPUT input) : SV_Target
 
     float2 uv = input.uv;
     float brightness = exp(-dot(uv, uv) * 20);
-    return float4(brightness, brightness, brightness, brightness) * float4(1, 1, 1.4, 1) * saturate(sin(sqrt(lifeAspect * PI) * 1.78)) * 0.75;
+    return float4(brightness, brightness, brightness, brightness) * float4(10, 10, 30, 1) * saturate(sin(sqrt(lifeAspect * PI) * 1.78)) * 0.75;
 }

@@ -23,46 +23,40 @@ void getPerpendicularDirections()
     flyUpDirection = (flyRightDirection.cross(flyDirection)).normalized();
 }
 
-void updateFlyDirection() 
-{ // ��������� ���������� 
-    if (currentFlySpeed > maxFlySpeed) 
+void updateFlyDirection()
+{
+    if (currentFlySpeed > maxFlySpeed)
     {
         return;
     }
     point3d Direction = { 0, 0, 0 };
 
     if (GetAsyncKeyState('W') & 0x8000) {
-        // ��������� ������ ����������� ������ (��� ������������)
         Direction.x += XMVectorGetX(Hero::state.Forwardbuf) * 10.0f;
         Direction.y += XMVectorGetY(Hero::state.Forwardbuf) * 10.0f;
         Direction.z += XMVectorGetZ(Hero::state.Forwardbuf) * 10.0f;
     }
     if (GetAsyncKeyState('S') & 0x8000) {
-        // �������� ����� - �������� �����������
         Direction.x -= XMVectorGetX(Hero::state.Forwardbuf) * 10.0f;
         Direction.y -= XMVectorGetY(Hero::state.Forwardbuf) * 10.0f;
         Direction.z -= XMVectorGetZ(Hero::state.Forwardbuf) * 10.0f;
     }
     if (GetAsyncKeyState('A') & 0x8000) {
-        // ��������� ������ ����������� ������ (��� ������������)
         Direction.x -= XMVectorGetX(Hero::state.Right) * 5.f;
         Direction.y -= XMVectorGetY(Hero::state.Right) * 5.f;
         Direction.z -= XMVectorGetZ(Hero::state.Right) * 5.f;
     }
     if (GetAsyncKeyState('D') & 0x8000) {
-        // �������� ����� - �������� �����������
         Direction.x += XMVectorGetX(Hero::state.Right) * 5.f;
         Direction.y += XMVectorGetY(Hero::state.Right) * 5.f;
         Direction.z += XMVectorGetZ(Hero::state.Right) * 5.f;
     }
     if (GetAsyncKeyState(VK_SPACE) & 0x8000) {
-
         Direction.x += XMVectorGetX(Hero::state.Up) * 5.f;
         Direction.y += XMVectorGetY(Hero::state.Up) * 5.f;
         Direction.z += XMVectorGetZ(Hero::state.Up) * 5.f;
     }
     if (GetAsyncKeyState(VK_CONTROL) & 0x8000) {
-
         Direction.x -= XMVectorGetX(Hero::state.Up) * 5.f;
         Direction.y -= XMVectorGetY(Hero::state.Up) * 5.f;
         Direction.z -= XMVectorGetZ(Hero::state.Up) * 5.f;
@@ -77,11 +71,10 @@ void updateFlyDirection()
 
     float dPitch = 0.0f, dYaw = 0.0f, dRoll = 0.0f;
 
-
     float x = mouse.pos.x - window.width / 2;
     float y = mouse.pos.y - window.height / 2;
 
-    point3d mousePos = point3d(x / window.width / aspect, y / window.height,0);
+    point3d mousePos = point3d(x / window.width / aspect, y / window.height, 0);
     float length = mousePos.magnitude();
 
     if (length > CURSOR_IGNORE_ZONE)
@@ -96,14 +89,12 @@ void updateFlyDirection()
 
         float dx = (mousePos.x) * SENSIVITY * k;
         float dy = (mousePos.y) * SENSIVITY * k;
-        //
-        // ��������� � ���������
-        dPitch = dy; // ������������ �������� ���� - pitch (����������� dy)
-        dYaw = dx;   // �������������� �������� ���� - yaw
+
+        dPitch = dy;
+        dYaw = dx;
     }
 
-
-    // ��������� Q � E ��� ����� (��������� ��� ����)
+    // УПРАВЛЕНИЕ Q/E ДЛЯ ВРАЩЕНИЯ
     if (GetAsyncKeyState('E')) {
         dRoll -= turnSpeed;
         Camera::state.n = lerp(Camera::state.n, 100, 0.3f);
@@ -113,6 +104,7 @@ void updateFlyDirection()
         Camera::state.n = lerp(Camera::state.n, 100, 0.3f);
     }
 
+    // ПРИМЕНЯЕМ ВРАЩЕНИЕ К ГЕРОЮ (УПРАВЛЯЕТСЯ МЫШЬЮ)
     if (dPitch != 0.0f || dYaw != 0.0f || dRoll != 0.0f) {
         XMVECTOR qPitch = XMQuaternionRotationAxis(Hero::state.Right, dPitch);
         XMVECTOR qYaw = XMQuaternionRotationAxis(Hero::state.Up, dYaw);
@@ -124,135 +116,194 @@ void updateFlyDirection()
         Hero::state.currentRotation = XMQuaternionMultiply(Hero::state.currentRotation, qTotal);
         Hero::state.currentRotation = XMQuaternionNormalize(Hero::state.currentRotation);
 
-        // ��������� ������� �������
+        // ОБНОВЛЯЕМ ВЕКТОРЫ ГЕРОЯ
         Hero::state.Forwardbuf = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), Hero::state.currentRotation);
         Hero::state.Up = XMVector3Rotate(Hero::state.defaultUp, Hero::state.currentRotation);
         Hero::state.Right = XMVector3Cross(Hero::state.Up, Hero::state.Forwardbuf);
+
+        // КАМЕРА БУДЕТ ПЛАВНО СЛЕДОВАТЬ ЗА ЭТИМ ПОВОРОТОМ
     }
     else {
         Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
     }
-    
 }
 
-int acc = 0; 
+int acc = 0;
 bool wasShiftPressed = false;
 float speed;
 float localTime;
 float localDeltaTime;
 
-LONG energy = 100;
+// ДОБАВИМ ПЕРЕМЕННЫЕ ДЛЯ УЛУЧШЕННОГО ЭФФЕКТА КАМЕРЫ
+enum CameraState {
+    CAMERA_NORMAL,
+    CAMERA_PULLING_BACK,    // плавное отдаление
+    CAMERA_CATCHING_UP      // плавное догоняние
+};
+CameraState cameraState = CAMERA_NORMAL;
+
+const float MAX_CAMERA_DISTANCE = 2000.0f; // максимальное отдаление
+const float NORMAL_CAMERA_DISTANCE = 600.0f; // обычная дистанция
+const float PULL_BACK_SPEED = 0.55f; // скорость отдаления
+const float CATCH_UP_SPEED = 0.08f;  // скорость догоняния
+float cameraEffectStartTime = 0;
+const float CAMERA_EFFECT_DURATION = 1500.0f; // длительность эффекта в ms
+
+static DWORD lastRushTime = 0;
+const DWORD RUSH_COOLDOWN = 1000;
+bool canRush = true;
+
+LONG energy = 300;
+
 void updateFlySpeed(float deltaTime)
-{ 
-    //drawString("HI GUYS AMERICAAAAAA", 1000.f, 800.f, .7f, false);
-
-    bool haveEnergy = true;
-
+{
     bool isBoosting = (GetAsyncKeyState(VK_SHIFT) & 0x8000);
 
+    // ВОССТАНОВЛЕНИЕ ЭНЕРГИИ
     if (energy < 300 && currentFlySpeed < 20 && !isBoosting) {
-        energy += LONG((deltaTime / 17.f ));
+        energy += LONG((deltaTime / 17.f));
+        energy = min(energy, 300L);
     }
 
     drawString((std::to_string(energy)).c_str(), 1500.f, 750.f, .7f, false);
     drawString("Energy", 1300.f, 750.f, .7f, false);
 
+    
+    deltaTime /= 1000;
 
-    if (energy <= 0.f) {
-        //isBoosting = false;
-        haveEnergy = false;
+    // ПРОВЕРКА КУЛДАУНА РЫВКА
+    if (energy <= 0 && currentTime - lastRushTime > RUSH_COOLDOWN) {
+        canRush = true;
     }
 
-    deltaTime /= 1000;
-    speed = max(speed + acc * deltaTime, 0);
+    // ОБНОВЛЕНИЕ ЭФФЕКТА КАМЕРЫ
+    if (cameraState != CAMERA_NORMAL) {
+        float effectProgress = (currentTime - cameraEffectStartTime) / CAMERA_EFFECT_DURATION;
 
-    if (haveEnergy) {
+        if (cameraState == CAMERA_PULLING_BACK) {
+            // ФАЗА 1: ПЛАВНОЕ ОТДАЛЕНИЕ КАМЕРЫ
+            float pullProgress = min(effectProgress * 2.0f, 1.0f); // быстрее отдаляем
+            Camera::state.distanceOffset = lerp(NORMAL_CAMERA_DISTANCE, MAX_CAMERA_DISTANCE, pullProgress);
 
-        //drawString("suja!!!", 1000.f, 560.f, .7f, false);
-
-
-        if (!isBoosting && !wasShiftPressed)
-        {
-            //drawString("state1", 1000.f, 580.f, .7f, false);
-
-            currentFlySpeed = max(currentFlySpeed + acc * deltaTime, maxFlySpeed);
+            // Переходим ко второй фазе когда достаточно отдалились
+            if (effectProgress > 0.3f) {
+                cameraState = CAMERA_CATCHING_UP;
+            }
         }
+        else if (cameraState == CAMERA_CATCHING_UP) {
+            // ФАЗА 2: ПЛАВНОЕ ДОГОНЯНИЕ КАМЕРЫ
+            float catchProgress = max(0.0f, (effectProgress - 0.3f) / 0.7f); // нормализуем прогресс
+            Camera::state.distanceOffset = lerp(MAX_CAMERA_DISTANCE, NORMAL_CAMERA_DISTANCE, catchProgress);
 
-        if (isBoosting && !wasShiftPressed)
-        {
-            //drawString("state2", 1000.f, 600.f, .7f, false);
+            // Завершаем эффект когда камера вернулась
+            if (effectProgress >= 1.0f) {
+                cameraState = CAMERA_NORMAL;
+                Camera::state.distanceOffset = NORMAL_CAMERA_DISTANCE;
+            }
+        }
+    }
 
-            speed = 0;
-            currentFlySpeed = 10;
+    // СИСТЕМА РЫВКА ПРИ НУЛЕВОЙ ЭНЕРГИИ
+    if (energy <= 0) {
+        if (isBoosting && !wasShiftPressed && canRush) {
+            // НАЧАЛО НАКОПЛЕНИЯ СКОРОСТИ ДЛЯ РЫВКА
             wasShiftPressed = true;
-            acc = 40; //тут должна быть переменная зависящая от фпс и времени
+            speed = 0;
+            currentFlySpeed = 5;
+            acc = 50;
             localTime = currentTime;
         }
 
-        if (isBoosting)
-        {
-            
-            //drawString("state3", 1000.f, 620.f, .7f, false);
+        if (isBoosting && wasShiftPressed && canRush) {
+            // НАКОПЛЕНИЕ СКОРОСТИ
+            speed += acc * deltaTime;
+            speed = min(speed, 25.0f);
 
-            energy -= 1.5;
-
-            currentFlySpeed = max(currentFlySpeed * 0.9, 0);
+            // ЛЕГКОЕ ОТДАЛЕНИЕ КАМЕРЫ ПРИ ЗАРЯДКЕ
+            if (cameraState == CAMERA_NORMAL) {
+                Camera::state.distanceOffset = lerp(Camera::state.distanceOffset, MAX_CAMERA_DISTANCE * 0.3f, 0.1f);
+            }
         }
 
-        if (!isBoosting && wasShiftPressed)
-        {
-            //drawString("state4", 1000.f, 640.f, .7f, false);
-
-            localDeltaTime = currentTime - localTime;
+        if (!isBoosting && wasShiftPressed && canRush) {
+            // АКТИВАЦИЯ РЫВКА
             wasShiftPressed = false;
-            boostingFlySpeed = 10; //тут должна быть переменная зависящая от времени зажатия шифта
-            currentFlySpeed = boostingFlySpeed + speed;
-            acc = -40;//тут должна быть переменная зависящая от фпс и времени
+            canRush = false;
+            lastRushTime = currentTime;
 
-            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Whoosh.wav");
+            // ЗАПУСКАЕМ ЭФФЕКТ КАМЕРЫ С ДВУМЯ ФАЗАМИ
+            cameraState = CAMERA_PULLING_BACK;
+            cameraEffectStartTime = currentTime;
+
+            float rushSpeed = 80 + speed;
+            currentFlySpeed = min(rushSpeed, 120.0f);
+
+            acc = -30;
+            localTime = currentTime;
+            speed = 0;
+        }
+
+        // БАЗОВОЕ ДВИЖЕНИЕ БЕЗ ЭНЕРГИИ
+        if (!isBoosting && !wasShiftPressed) {
+            currentFlySpeed = max(currentFlySpeed + acc * deltaTime, 8.0f);
+
+            if (currentFlySpeed > 50) {
+                acc = -50;
+            }
+        }
+
+        return;
+    }
+
+    // СТАНДАРТНАЯ СИСТЕМА С ЭНЕРГИЕЙ
+    if (isBoosting && !wasShiftPressed) {
+        // НАЧАЛО БУСТА
+        wasShiftPressed = true;
+        speed = 0;
+        currentFlySpeed = 10;
+        acc = 40;
+        localTime = currentTime;
+
+        
+    }
+
+    if (isBoosting && wasShiftPressed) {
+        // НАКОПЛЕНИЕ СКОРОСТИ И РАСХОД ЭНЕРГИИ
+        speed += acc * deltaTime;
+        speed = min(speed, 35.0f);
+        energy -= 1.5;
+        energy = max(energy, 0L);
+
+        currentFlySpeed = max(currentFlySpeed * 0.9, 5.0f);
+    }
+
+    if (!isBoosting && wasShiftPressed) {
+        // ОТПУСТИЛИ SHIFT - активируем накопленную скорость
+        wasShiftPressed = false;
+        localDeltaTime = currentTime - localTime;
+
+        boostingFlySpeed = 10 + min(speed, 35.0f);
+        currentFlySpeed = min(boostingFlySpeed, 60.0f);
+        acc = -40;
+
+        // ЗАПУСКАЕМ ЭФФЕКТ КАМЕРЫ ДЛЯ ОБЫЧНОГО БУСТА
+        if (cameraState == CAMERA_NORMAL) {
+            cameraState = CAMERA_PULLING_BACK;
+            cameraEffectStartTime = currentTime;
+        }
+
+        //ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Whoosh.wav");
+        speed = 0;
+    }
+
+    // ОБЫЧНОЕ ДВИЖЕНИЕ БЕЗ SHIFT
+    if (!isBoosting && !wasShiftPressed) {
+        currentFlySpeed = max(currentFlySpeed + acc * deltaTime, maxFlySpeed);
+
+        if (currentFlySpeed > 40) {
+            acc = -30;
         }
     }
-    //}
-    //if (!isBoosting)
-    //{
-    //    //currentFlySpeed = min(currentFlySpeed * 1.5, boostFlySpeed);
-
-    //    if (isMoving)
-    //    {
-
-    //        currentFlySpeed = min(currentFlySpeed*1.05, maxFlySpeed);
-
-    //    }
-    //    else
-    //    {
-    //        currentFlySpeed = max(currentFlySpeed*0.8, 0);
-    //        
-    //    }
-
-    //    if (wasShiftPressed)
-    //    {
-    //        currentFlySpeed = Hero::state.timeShiftPressed;
-    //        wasShiftPressed = false;
-    //        localTime = currentTime;
-    //        Hero::state.timeShiftPressed = 0;
-
-    //    }
-    //}
-    //else
-    //{
-    //    Hero::state.timeShiftPressed += 3;
-    //    wasShiftPressed = true;
-    //    currentFlySpeed = 0;
-    //}
-
-    /*if (!isBoosting && wasShiftPressed)
-    {
-        currentFlySpeed = Hero::state.timeShiftPressed;
-        wasShiftPressed = false;
-        localTime = currentTime;
-        Hero::state.timeShiftPressed = 0;
-        
-    }*/
 }
 
 struct EnergyCost {
@@ -263,7 +314,7 @@ struct EnergyCost {
     float chargeMultiplier = 2.0f; // множитель при зарядке
 } energyCost;
 
-void updatePlayerPosition(float deltaTime) 
+void updatePlayerPosition(float deltaTime)
 {
     if (currentFlySpeed > 0)
     {
@@ -274,15 +325,13 @@ void updatePlayerPosition(float deltaTime)
         XMVECTOR displacement = XMVectorScale(moveDir, currentFlySpeed * deltaTime);
 
         // 3. Обновляем позицию героя
-            Hero::state.position = XMVectorAdd(Hero::state.position, displacement);
+        Hero::state.position = XMVectorAdd(Hero::state.position, displacement);
 
         // 4. Обновляем матрицу мира
         XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(Hero::state.currentRotation);
-            Hero::state.worldMatrix = rotationMatrix * XMMatrixTranslationFromVector(Hero::state.position);
+        Hero::state.worldMatrix = rotationMatrix * XMMatrixTranslationFromVector(Hero::state.position);
 
         // 5. Обновляем constellationOffset
-            Hero::state.constellationOffset = XMMatrixTranslationFromVector(Hero::state.position);
-
+        Hero::state.constellationOffset = XMMatrixTranslationFromVector(Hero::state.position);
     }
 }
-

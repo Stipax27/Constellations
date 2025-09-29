@@ -1167,8 +1167,8 @@ namespace Camera
 		float minDist = 500.0f;
 		float maxDist = 1000.0f;
 		float fovAngle = 60.0f;
-		float verticalOffset = 180.0f;  
-		float horizontalOffset = 0.0f; 
+		float verticalOffset = 180.0f;
+		float horizontalOffset = 0.0f;
 		float distanceOffset = 600.0f;
 		XMVECTOR relativeMovement = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR currentRotation = XMQuaternionIdentity();
@@ -1180,49 +1180,63 @@ namespace Camera
 		XMVECTOR Eye;
 		XMMATRIX constellationOffset = XMMatrixTranslation(0, 0, 0);
 		XMVECTOR EyeBack = XMVectorSet(0, 0, -1, 0);
+
+		// ДОБАВИМ ПЕРЕМЕННЫЕ ДЛЯ ПЛАВНОГО СЛЕЖЕНИЯ ЗА МЫШЬЮ
+		XMVECTOR targetRotation = XMQuaternionIdentity(); // целевой поворот камеры
+		float rotationSmoothness = 0.03f; // плавность поворота (0-1)
+		bool isFollowingMouse = true; // следить за направлением мыши
 	} static state;
 
-	
 	void UpdateCameraPosition()
 	{
-		
-		// 1. Получаем и нормализуем актуальные векторы ориентации героя
-		XMVECTOR heroForward = XMVector3Normalize(Hero::state.Forwardbuf);
-		XMVECTOR heroUp = XMVector3Normalize(Hero::state.Up);
-		XMVECTOR heroRight = XMVector3Normalize(Hero::state.Right);
+		// 1. ЕСЛИ ВКЛЮЧЕНО СЛЕЖЕНИЕ ЗА МЫШЬЮ - ПЛАВНО ПОВОРАЧИВАЕМ КАМЕРУ К ГЕРОЮ
+		if (state.isFollowingMouse) {
+			// Берем ориентацию героя (которая управляется мышью)
+			state.targetRotation = Hero::state.currentRotation;
 
-		// 2. Вычисляем позицию камеры относительно героя
+			// ПЛАВНАЯ ИНТЕРПОЛЯЦИЯ КВАРТЕРНИОНОВ
+			state.currentRotation = XMQuaternionSlerp(
+				state.currentRotation,
+				state.targetRotation,
+				state.rotationSmoothness
+			);
+
+			// Нормализуем результат
+			state.currentRotation = XMQuaternionNormalize(state.currentRotation);
+		}
+
+		// 2. ВЫЧИСЛЯЕМ ВЕКТОРЫ ОРИЕНТАЦИИ КАМЕРЫ ИЗ КВАРТЕРНИОНА
+		state.Forward = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), state.currentRotation);
+		state.Up = XMVector3Rotate(state.defaultUp, state.currentRotation);
+		state.Right = XMVector3Cross(state.Up, state.Forward);
+
+		// 3. ВЫЧИСЛЯЕМ ПОЗИЦИЮ КАМЕРЫ ОТНОСИТЕЛЬНО ГЕРОЯ
 		XMVECTOR cameraOffset =
-			(-heroForward * state.distanceOffset) +  // Основное смещение назад
-			(heroUp * state.verticalOffset) +        // Вертикальное смещение
-			(heroRight * state.horizontalOffset);    // Горизонтальное смещение
+			(-state.Forward * state.distanceOffset) +      // Основное смещение назад от камеры
+			(state.Up * state.verticalOffset) +           // Вертикальное смещение
+			(state.Right * state.horizontalOffset);       // Горизонтальное смещение
 
-		// 3. Вычисляем окончательную позицию камеры
+		// 4. ВЫЧИСЛЯЕМ ОКОНЧАТЕЛЬНУЮ ПОЗИЦИЮ КАМЕРЫ
 		XMVECTOR cameraPosition = Hero::state.position + cameraOffset;
 
-		// 4. Вычисляем точку фокусировки (впереди героя)
-		XMVECTOR cameraTarget = cameraPosition + (heroForward * 15.0f);
+		// 5. ВЫЧИСЛЯЕМ ТОЧКУ ФОКУСИРОВКИ (впереди по направлению камеры)
+		XMVECTOR cameraTarget = cameraPosition + (state.Forward * 50.0f);
 
-		// 5. Обновляем состояние камеры
+		// 6. ОБНОВЛЯЕМ СОСТОЯНИЕ КАМЕРЫ
 		state.Eye = cameraPosition;
 		state.at = cameraTarget;
-		state.Up = heroUp;
 
-		// 6. Пересчитываем векторы камеры для корректной работы
-		state.Forward = XMVector3Normalize(cameraTarget - cameraPosition);
-		state.Right = XMVector3Normalize(XMVector3Cross(heroUp, state.Forward));
-
-		// 7. Обновляем матрицу вида
+		// 7. ОБНОВЛЯЕМ МАТРИЦУ ВИДА
 		ConstBuf::camera.view[0] = XMMatrixTranspose(
 			XMMatrixLookAtLH(state.Eye, state.at, state.Up)
 		);
 	}
 
-	void Camera() //обновление позиции камеры после обновления позиции созвездия. В Navigation.h, Loop.h, Mouse.h(navigationByMouse 2 раза) и тут тоже есть вызовы.
+	void Camera()
 	{
 		UpdateCameraPosition();
 
-		// Обновляем матрицу проекции (если нужно)
+		// Обновляем матрицу проекции
 		ConstBuf::camera.proj[0] = XMMatrixTranspose(XMMatrixPerspectiveFovLH(
 			DegreesToRadians(state.fovAngle),
 			iaspect,
@@ -1233,12 +1247,39 @@ namespace Camera
 		ConstBuf::UpdateCamera();
 		ConstBuf::ConstToVertex(3);
 		ConstBuf::ConstToPixel(3);
-		
 	}
-	
+
 	void HandleMouseWheel(int delta)
 	{
 		state.distanceOffset -= delta * 5.0f;
 		state.distanceOffset = clamp(state.distanceOffset, state.minDist, state.maxDist);
+	}
+
+	// ФУНКЦИИ ДЛЯ УПРАВЛЕНИЯ СЛЕЖЕНИЕМ ЗА МЫШЬЮ
+	void SetMouseFollow(bool enable)
+	{
+		state.isFollowingMouse = enable;
+		if (!enable) {
+			// При выключении слежения можно сохранить текущую ориентацию
+			state.targetRotation = state.currentRotation;
+		}
+	}
+
+	void SetRotationSmoothness(float smoothness)
+	{
+		state.rotationSmoothness = clamp(smoothness, 0.005f, 3.3f);
+	}
+
+	// МГНОВЕННОЕ СОВМЕЩЕНИЕ С ГЕРОЕМ (для резких поворотов)
+	void SnapToHeroRotation()
+	{
+		state.currentRotation = Hero::state.currentRotation;
+		state.targetRotation = state.currentRotation;
+	}
+
+	// ПОЛУЧЕНИЕ ТЕКУЩЕЙ ПЛАВНОСТИ
+	float GetRotationSmoothness()
+	{
+		return state.rotationSmoothness;
 	}
 }
