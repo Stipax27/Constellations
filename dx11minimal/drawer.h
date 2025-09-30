@@ -790,12 +790,12 @@ namespace drawer
 
 
     float currentStarRadius = 20.0f;
-    float starRadiusReturnStart = 20.0f;
+    float starRadiusReturnStart = 200.0f;
     DWORD starRadiusReturnStartTime = 0;
     bool isStarRadiusReturning = false;
     float starRadiusReturnSpeed = 2.0f;
-    //const float MIN_STAR_RADIUS = 20.0f;
-    //const float MAX_STAR_RADIUS = 1000.0f;
+    const float MIN_STAR_RADIUS = 20.0f;
+    const float MAX_STAR_RADIUS = 500.0f;
 
     void HandleMouseClick(XMVECTOR heroPosition, Constellation& player) {
         bool isPressed = (GetAsyncKeyState(VK_LBUTTON) & 0x8000) != 0;
@@ -822,7 +822,7 @@ namespace drawer
             // Увеличиваем масштаб героя, камеры и звезд пропорционально времени задержки
             targetHeroScale = MIN_HERO_SCALE + chargeRatio * (MAX_HERO_SCALE - MIN_HERO_SCALE);
             targetCameraDistance = MIN_CAMERA_DIST + chargeRatio * (MAX_CAMERA_DIST - MIN_CAMERA_DIST);
-            //currentStarRadius = MIN_STAR_RADIUS + chargeRatio * (MAX_STAR_RADIUS - MIN_STAR_RADIUS);
+            currentStarRadius = MIN_STAR_RADIUS + chargeRatio * (MAX_STAR_RADIUS - MIN_STAR_RADIUS);
 
             // Непосредственно применяем все изменения
             currentCameraDistance = targetCameraDistance;
@@ -832,9 +832,9 @@ namespace drawer
             player.SetStarSpacing(currentHeroScale);
 
             // Применяем новый размер ко всем звездам игрока
-            /*for (int i = 0; i < player.starsCords.size(); i++) {
-                player.SetStarRadius(i, currentStarRadius);
-            }*/
+            for (int i = 0; i < player.starsCords.size(); i++) {
+                player.SetStarRadius(i, (currentStarRadius));
+            }
 
             currentDamage = MIN_ATTACK_DAMAGE + chargeRatio * (MAX_ATTACK_DAMAGE - MIN_ATTACK_DAMAGE);
         }
@@ -1050,36 +1050,36 @@ namespace drawer
         }
 
         // Обработка возврата размера звезд
-        //if (isStarRadiusReturning) {
-        //    float returnProgress = (currentTime - starRadiusReturnStartTime) / 1000.0f * starRadiusReturnSpeed;
-        //    returnProgress = min(returnProgress, 1.0f);
+        if (isStarRadiusReturning) {
+            float returnProgress = (currentTime - starRadiusReturnStartTime) / 1000.0f * starRadiusReturnSpeed;
+            returnProgress = min(returnProgress, 1.0f);
 
-        //    currentStarRadius = lerp(starRadiusReturnStart, MIN_STAR_RADIUS, returnProgress);
+            currentStarRadius = lerp(starRadiusReturnStart, MIN_STAR_RADIUS, returnProgress);
 
         //    // Применяем новый размер ко всем звездам игрока
-        //    if (starSet[player_sign]) {
-        //        Constellation& player = *starSet[player_sign];
-        //        for (int i = 0; i < player.starsCords.size(); i++) {
-        //            player.SetStarRadius(i, currentStarRadius);
-        //        }
-        //    }
+            if (starSet[player_sign]) {
+                Constellation& player = *starSet[player_sign];
+                for (int i = 0; i < player.starsCords.size(); i++) {
+                    player.SetStarRadius(i, currentStarRadius);
+                }
+            }
 
-        //    
+            
 
-        //    if (returnProgress >= 1.0f) {
-        //        isStarRadiusReturning = false;
-        //        currentStarRadius = MIN_STAR_RADIUS;
+            if (returnProgress >= 1.0f) {
+                isStarRadiusReturning = false;
+                currentStarRadius = MIN_STAR_RADIUS;
 
-        //        // Устанавливаем финальный размер звезд
-        //        if (starSet[player_sign]) {
-        //            Constellation& player = *starSet[player_sign];
-        //            for (int i = 0; i < player.starsCords.size(); i++) {
-        //                player.SetStarRadius(i, MIN_STAR_RADIUS);
-        //            }
-        //        }
-        //        
-        //    }
-        //}
+                // Устанавливаем финальный размер звезд
+                if (starSet[player_sign]) {
+                    Constellation& player = *starSet[player_sign];
+                    for (int i = 0; i < player.starsCords.size(); i++) {
+                        player.SetStarRadius(i, currentStarRadius);
+                    }
+                }
+                
+            }
+        }
     }
 
     
@@ -1122,7 +1122,7 @@ namespace drawer
                     //}
 
                     if (CheckWeaponCollision(star, starWorldPos, 2000.f)) {
-                        enemy.SetStarRadius(i, 10000.f);
+                        //enemy.SetStarRadius(i, 10000.f);
                         if (current_weapon == weapon_name::Sword) {
                             enemy.starsHealth[i] -= currentDamage * .5f;
                         }
