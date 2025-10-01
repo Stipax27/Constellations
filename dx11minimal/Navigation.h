@@ -230,6 +230,7 @@ void updateFlySpeed(float deltaTime)
             wasShiftPressed = false;
             canRush = false;
             lastRushTime = currentTime;
+           
 
             // ЗАПУСКАЕМ ЭФФЕКТ КАМЕРЫ С ДВУМЯ ФАЗАМИ
             cameraState = CAMERA_PULLING_BACK;
@@ -279,6 +280,7 @@ void updateFlySpeed(float deltaTime)
 
     if (!isBoosting && wasShiftPressed) {
         // ОТПУСТИЛИ SHIFT - активируем накопленную скорость
+        
         wasShiftPressed = false;
         localDeltaTime = currentTime - localTime;
 
@@ -292,7 +294,7 @@ void updateFlySpeed(float deltaTime)
             cameraEffectStartTime = currentTime;
         }
 
-        //ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Whoosh.wav");
+        ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Whoosh.wav");
         speed = 0;
     }
 

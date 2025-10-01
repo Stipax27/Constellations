@@ -41,7 +41,7 @@ public:
     float overallScale = 1.0f;
     float starSpacing = 1.0f;
 
-    std::vector<float> starsRadius;
+    float starsRadius;
 
     float hp;
     float maxHP;
@@ -176,7 +176,7 @@ public:
         
         for (int i = 0; i < originStarsCords.size(); i++) {
             starsCords.push_back(originStarsCords[i] * starSpacing);
-            starsRadius.push_back(100.f); 
+           
         }
 
         prevStarsCords = starsCords;
@@ -408,9 +408,9 @@ public:
     }
 
     void SetStarRadius(int starIndex, float radius) {
-        if (starIndex >= 0 && starIndex < starsRadius.size()) {
-            starsRadius[starIndex] = radius;
-        }
+       
+            starsRadius = radius;
+        
     }
 
     void SetStarSpacing(float spacing) {

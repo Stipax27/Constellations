@@ -105,7 +105,7 @@ namespace drawer
             point = starArray[i];
             point3d worldPoint = TransformPoint(point, Constellation.Transform);
 
-            float currentRadius = (i < Constellation.starsRadius.size()) ? Constellation.starsRadius[i] : finalStarRad;
+            float currentRadius = (i < Constellation.starsRadius) ? Constellation.starsRadius : finalStarRad;
 
             XMVECTOR p = XMVECTOR{ worldPoint.x,worldPoint.y,worldPoint.z,1 };
             p = XMVector4Transform(p, XMMatrixTranspose(ConstBuf::camera.view[0]) * XMMatrixTranspose(ConstBuf::camera.proj[0]));
@@ -790,12 +790,13 @@ namespace drawer
 
 
     float currentStarRadius = 20.0f;
-    float starRadiusReturnStart = 200.0f;
+    float starRadiusReturnStart = 500.0f;
     DWORD starRadiusReturnStartTime = 0;
     bool isStarRadiusReturning = false;
-    float starRadiusReturnSpeed = 2.0f;
+    float starRadiusReturnSpeed = 2.f;
     const float MIN_STAR_RADIUS = 20.0f;
-    const float MAX_STAR_RADIUS = 500.0f;
+    const float MAX_STAR_RADIUS = 1000.0f;
+    string C;
 
     void HandleMouseClick(XMVECTOR heroPosition, Constellation& player) {
         bool isPressed = (GetAsyncKeyState(VK_LBUTTON) & 0x8000) != 0;
@@ -812,7 +813,7 @@ namespace drawer
                 chargeStartTime = currentTime;
                 isCameraReturning = false;
                 isHeroScaleReturning = false;
-                isStarRadiusReturning = false; // Отменяем возврат размера звезд
+                isStarRadiusReturning = false;
             }
 
             float chargeDuration = currentTime - chargeStartTime;
@@ -823,6 +824,7 @@ namespace drawer
             targetHeroScale = MIN_HERO_SCALE + chargeRatio * (MAX_HERO_SCALE - MIN_HERO_SCALE);
             targetCameraDistance = MIN_CAMERA_DIST + chargeRatio * (MAX_CAMERA_DIST - MIN_CAMERA_DIST);
             currentStarRadius = MIN_STAR_RADIUS + chargeRatio * (MAX_STAR_RADIUS - MIN_STAR_RADIUS);
+            C = to_string(currentStarRadius);
 
             // Непосредственно применяем все изменения
             currentCameraDistance = targetCameraDistance;
@@ -831,9 +833,9 @@ namespace drawer
             Camera::state.distanceOffset = currentCameraDistance;
             player.SetStarSpacing(currentHeroScale);
 
-            // Применяем новый размер ко всем звездам игрока
+            // ПРИМЕНЯЕМ РАЗМЕР ТОЛЬКО К ИГРОКУ, НЕ К ОРУЖИЯМ
             for (int i = 0; i < player.starsCords.size(); i++) {
-                player.SetStarRadius(i, (currentStarRadius));
+                player.SetStarRadius(i, currentStarRadius);
             }
 
             currentDamage = MIN_ATTACK_DAMAGE + chargeRatio * (MAX_ATTACK_DAMAGE - MIN_ATTACK_DAMAGE);
@@ -843,16 +845,16 @@ namespace drawer
                 isCharging = false;
                 isCameraReturning = true;
                 isHeroScaleReturning = true;
-                //isStarRadiusReturning = true; // Запускаем возврат размера звезд
+                isStarRadiusReturning = true;
 
                 cameraReturnStartTime = currentTime;
                 heroScaleReturnStartTime = currentTime;
-                //starRadiusReturnStartTime = currentTime;
+                starRadiusReturnStartTime = currentTime;
 
                 // Сохраняем текущие значения для плавного возврата
                 cameraReturnStartDistance = currentCameraDistance;
                 heroScaleReturnStart = currentHeroScale;
-                //starRadiusReturnStart = currentStarRadius;
+                starRadiusReturnStart = currentStarRadius;
 
                 if (currentTime - lastAttackTime > 400) {
                     if (gameState == gameState_::selectEnemy) {
@@ -1035,49 +1037,34 @@ namespace drawer
             returnProgress = min(returnProgress, 1.0f);
 
             currentHeroScale = lerp(heroScaleReturnStart, MIN_HERO_SCALE, returnProgress);
-
-            
-                player.SetStarSpacing(currentHeroScale);
-            
+            player.SetStarSpacing(currentHeroScale);
 
             if (returnProgress >= 1.0f) {
                 isHeroScaleReturning = false;
                 currentHeroScale = MIN_HERO_SCALE;
-                
-                   player.SetStarSpacing(MIN_HERO_SCALE);
-               
+                player.SetStarSpacing(MIN_HERO_SCALE);
             }
         }
 
-        // Обработка возврата размера звезд
+        // Обработка возврата размера звезд - ПРИМЕНЯЕМ ТОЛЬКО К ИГРОКУ
         if (isStarRadiusReturning) {
             float returnProgress = (currentTime - starRadiusReturnStartTime) / 1000.0f * starRadiusReturnSpeed;
             returnProgress = min(returnProgress, 1.0f);
 
+            // Плавный возврат к нормальному размеру звезд
             currentStarRadius = lerp(starRadiusReturnStart, MIN_STAR_RADIUS, returnProgress);
 
-        //    // Применяем новый размер ко всем звездам игрока
-            if (starSet[player_sign]) {
-                Constellation& player = *starSet[player_sign];
-                for (int i = 0; i < player.starsCords.size(); i++) {
-                    player.SetStarRadius(i, currentStarRadius);
-                }
+            // Применяем ТОЛЬКО к звездам игрока
+            for (int i = 0; i < player.starsCords.size(); i++) {
+                player.SetStarRadius(i, currentStarRadius);
             }
-
-            
 
             if (returnProgress >= 1.0f) {
                 isStarRadiusReturning = false;
                 currentStarRadius = MIN_STAR_RADIUS;
-
-                // Устанавливаем финальный размер звезд
-                if (starSet[player_sign]) {
-                    Constellation& player = *starSet[player_sign];
-                    for (int i = 0; i < player.starsCords.size(); i++) {
-                        player.SetStarRadius(i, currentStarRadius);
-                    }
+                for (int i = 0; i < player.starsCords.size(); i++) {
+                    player.SetStarRadius(i, MIN_STAR_RADIUS);
                 }
-                
             }
         }
     }
@@ -1560,19 +1547,40 @@ namespace drawer
 
         XMVECTOR heroPosition = Hero::state.constellationOffset.r[3];
         XMVECTOR enemyPositions = Enemy::enemyData.enemyConstellationOffset.r[3];
-        for (int i = 0; i < Sword.starsCords.size(); i++) {
-            Sword.SetStarRadius(i, currentStarRadius);
-        }
-        for (int i = 0; i < Shield.starsCords.size(); i++) {
-            Shield.SetStarRadius(i, currentStarRadius);
-        }
-        for (int i = 0; i < Bow.starsCords.size(); i++) {
-            Bow.SetStarRadius(i, currentStarRadius);
-        }
+
+        // ПРИМЕНЯЕМ РАЗМЕР ТОЛЬКО К ИГРОКУ, НЕ К ОРУЖИЯМ
         for (int i = 0; i < player.starsCords.size(); i++) {
             player.SetStarRadius(i, currentStarRadius);
         }
 
+        // Оружия должны иметь свои собственные размеры
+        // УБЕРИТЕ эти строки или задайте фиксированные размеры для оружий:
+        /*
+        for (int i = 0; i < Sword.starsCords.size(); i++) {
+            Sword.SetStarRadius(i, currentStarRadius); // УБРАТЬ
+        }
+        for (int i = 0; i < Shield.starsCords.size(); i++) {
+            Shield.SetStarRadius(i, currentStarRadius); // УБРАТЬ
+        }
+        for (int i = 0; i < Bow.starsCords.size(); i++) {
+            Bow.SetStarRadius(i, currentStarRadius); // УБРАТЬ
+        }
+        */
+
+        // Вместо этого задайте фиксированные размеры для оружий:
+        const float WEAPON_STAR_RADIUS = 1000.f; // или любой другой подходящий размер
+
+        for (int i = 0; i < Sword.starsCords.size(); i++) {
+            Sword.SetStarRadius(i, WEAPON_STAR_RADIUS);
+        }
+        for (int i = 0; i < Shield.starsCords.size(); i++) {
+            Shield.SetStarRadius(i, WEAPON_STAR_RADIUS);
+        }
+        for (int i = 0; i < Bow.starsCords.size(); i++) {
+            Bow.SetStarRadius(i, WEAPON_STAR_RADIUS);
+        }
+
+        drawString(C.c_str(), 1500, 500, 1.f, true);
         //d2dRenderTarget->BeginDraw();
         CreateSpeedParticles();
         DrawSpeedParticles();
@@ -1688,8 +1696,7 @@ namespace drawer
             std::string P = std::to_string(chargeRatio);
             drawString(P.c_str(), 600, 750, 1.f, true);
             drawString("Power", 450, 750, 1.f, true);
-            UpdateCameraScaleAndStarRadiusReturn(deltaTime, player);
-            //UpdateCameraReturn(deltaTime);
+            
             drawStaminaBar(energy);
 
 
@@ -1911,6 +1918,7 @@ namespace drawer
                 //Hero::UpdateAttackRotation(deltaTime);
 
             }
+            UpdateCameraScaleAndStarRadiusReturn(deltaTime, player);
             UpdateAttack(deltaTime);
 
             DrawSwordAttack();
