@@ -219,26 +219,23 @@
         }
     }
 
-    void EnemyAI::AttackPlayer(float deltaTime, point3d& heroPos, point3d& enemyPos , float& player) {
-        // Быстро летим к игроку
+    void EnemyAI::AttackPlayer(float deltaTime, point3d& heroPos, point3d& enemyPos, float& player) {
         point3d attackDir = AttakDir.normalized();
         enemyPos += (attackDir * data.chaseSpeed * 5.0f * deltaTime) / data.attackDuration;
 
-        // Обновляем матрицу трансформации
-        data.enemyConstellationOffset = XMMatrixRotationQuaternion(data.currentRotation) *
-            XMMatrixTranslation(enemyPos.x, enemyPos.y, enemyPos.z);
+        // Проверяем, заблокирована ли атака
+        bool attackBlocked = (current_weapon == weapon_name::Shield && energy >= energyCost.shieldBlock);
 
-        UpdateRotation(attackDir);
-
-        // Проверяем столкновение с игроком
         if ((heroPos - enemyPos).magnitude() < 1000.0f) {
-            player -= 1.f;
-            data.isAttacking = true;
-            
-            // Возвращаемся на орбиту досрочно, если достигли игрока
-            //data.attackTimer = 0.0f;
+            if (!attackBlocked) {
+                data.isAttacking = true;
+                player -= data.DAMAGE_AI;
+            }
+            else {
+                player -= 0.1f;
+                energy -= 100.f;
+            }
         }
-
     }
 
     void EnemyAI::JumpAttack(float deltaTime, point3d& heroPos, point3d& enemyPos , float& player) {
@@ -270,11 +267,17 @@
         // Фаза ударной волны
         else if (data.isShockwaveActive) {
             data.shockwaveRadius += data.shockwaveSpeed * deltaTime;
-
+            bool attackBlocked = (current_weapon == weapon_name::Shield && energy >= energyCost.shieldBlock);
             // Проверяем попадание по игроку
             if ((heroPos - enemyPos).magnitude() < data.shockwaveRadius) {
-                player -= 2.f;
-                data.isAttacking = true;
+                if (!attackBlocked) {
+                    data.isAttacking = true;
+                    player -= data.DAMAGE_AI*2.f;
+                }
+                else {
+                    player -= 0.1f;
+                    energy -= 200.f;
+                }
             }
 
             // Завершаем атаку, когда волна достигла максимума
@@ -330,10 +333,18 @@
             // Завершаем атаку, когда взрыв достиг максимума
             if (data.boomRadius >= data.maxBoomRadius) {
 
+                bool attackBlocked = (current_weapon == weapon_name::Shield && energy >= energyCost.shieldBlock);
+
                 float distance = (heroPos - enemyPos).magnitude();
                 if (distance < data.boomRadius + 3000.0f) {
-                    player -= 5.f;
-                    data.isAttacking = true;
+                    if (!attackBlocked) {
+                        data.isAttacking = true;
+                        player -= data.DAMAGE_AI;
+                    }
+                    else {
+                        player -= 0.1f;
+                        energy -= 250.f;
+                    }
                 }
                 data.isBoomExploding = false;
                 data.isBoomPreparing = false;

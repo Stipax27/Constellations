@@ -29,6 +29,7 @@
         float attackTimer = 0.0f;  
         point3d lastOrbitPosition;// Таймер атаки
         bool isAttacking = false;
+        float DAMAGE_AI = 1.f;
 
         bool isJumping = false;
         float jumpHeight = 0.0f;

@@ -1536,6 +1536,32 @@ namespace drawer
             XMMatrixTranslationFromVector(Hero::state.position);
     }
 
+    void ShieldBlock() {
+        if (current_weapon == weapon_name::Shield) {
+            // Уменьшаем скорость восстановления энергии при активном щите
+            static DWORD lastShieldEnergyDrain = 0;
+            const DWORD shieldDrainInterval = 100; // ms
+
+            if (currentTime - lastShieldEnergyDrain > shieldDrainInterval) {
+                lastShieldEnergyDrain = currentTime;
+
+                // Постоянное потребление энергии при активном щите
+                float maintenanceCost = energyCost.shield * .2f;
+                if (energy >= maintenanceCost) {
+                    energy -= (LONG)maintenanceCost;
+                }
+                else {
+                    // Автоматическое переключение на кулаки при нехватке энергии
+                    //current_weapon = weapon_name::Fists;
+                    //ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\NoEnergy.wav");
+                }
+            }
+
+            // Защита от атак врага
+            //Enemy::enemyData.DAMAGE_AI *= 0.5f; // Уменьшаем урон от врага наполовину
+        }
+    }
+
     Constellation& enemy = *starSet[currentEnemyID];
     Constellation& player = *starSet[player_sign];
 
@@ -1579,7 +1605,7 @@ namespace drawer
         for (int i = 0; i < Bow.starsCords.size(); i++) {
             Bow.SetStarRadius(i, WEAPON_STAR_RADIUS);
         }
-
+        //ShieldBlock();
         drawString(C.c_str(), 1500, 500, 1.f, true);
         //d2dRenderTarget->BeginDraw();
         CreateSpeedParticles();

@@ -314,6 +314,7 @@ struct EnergyCost {
     float shield = 25.0f;
     float bow = 20.0f;
     float chargeMultiplier = 2.0f; // множитель при зарядке
+    float shieldBlock = 8.0f;
 } energyCost;
 
 void updatePlayerPosition(float deltaTime)
