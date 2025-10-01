@@ -795,7 +795,7 @@ namespace drawer
     bool isStarRadiusReturning = false;
     float starRadiusReturnSpeed = 2.f;
     const float MIN_STAR_RADIUS = 20.0f;
-    const float MAX_STAR_RADIUS = 1000.0f;
+    const float MAX_STAR_RADIUS = 500.0f;
     string C;
 
     void HandleMouseClick(XMVECTOR heroPosition, Constellation& player) {
