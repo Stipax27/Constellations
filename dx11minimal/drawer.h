@@ -1535,7 +1535,7 @@ namespace drawer
 
         for (int layer = 0; layer < layers; layer++) {
             float layerRadius = initialRadius + layer * 2000.0f;
-            float layerHeight = 2000.0f * layer;
+            float layerHeight = 1000.0f * layer;
 
             for (int i = 0; i < starsPerLayer; i++) {
                 StarProjectile wave;
@@ -1549,13 +1549,13 @@ namespace drawer
                     center.z + sinf(spiralAngle) * layerRadius
                 };
 
-                wave.radius = GetRandom(300, 1200);
+                wave.radius = GetRandom(200, 1200);
                 wave.creationTime = currentTime;
                 wave.lifetime = 4000.0f - layer * 500.0f; // Внешние слои живут дольше
 
                 // Направление - вверх и наружу
                 wave.direction = (wave.position - center).normalized() + point3d(0, 0.3f, 0);
-                wave.direction = wave.direction.normalized();
+                wave.direction = -wave.direction.normalized();
                 wave.Speed = GetRandom(15, 25);
 
                 Wave.push_back(wave);
@@ -1734,7 +1734,7 @@ namespace drawer
     point3d enemyAccumulationCenter; // Центр накопления врага
     bool isEnemyAccumulating = false;
     DWORD enemyAccumulationStartTime = 0;
-    const float ENEMY_ACCUMULATION_DURATION = 1500.0f; // Время накопления врага
+    const float ENEMY_ACCUMULATION_DURATION = 5000.0f; // Время накопления врага
 
     // Функция для создания эффекта накопления врага
     void CreateEnemyAccumulationEffect(point3d center, float sphereRadius) {
@@ -2318,10 +2318,9 @@ namespace drawer
             UpdateShockwave(deltaTime);
             RenderShockwave();
 
-            if (enemyAI.data.isBoomExploding == true) {
-                CreateEnemyAccumulationEffect(Enemypos, 12000.0f);
-
-                //CreateExplosionEffects(Enemypos, enemyAI.data.boomRadius);
+            if (enemyAI.data.shouldStartAccumulation) {
+                CreateEnemyAccumulationEffect(enemyAI.data.accumulationPos, 2000.0f);
+                enemyAI.data.shouldStartAccumulation = false;
             }
 
             UpdateEnemyAccumulationEffect(deltaTime);

@@ -216,7 +216,8 @@ namespace Enemy {
                 data.lastOrbitPosition = enemyPos;
                 data.attackCooldown = 0.0f;
                 data.isBoomExploding = true;
-                
+                data.shouldStartAccumulation = true; // НОВЫЙ ФЛАГ
+                data.accumulationPos = enemyPos; // Сохраняем позицию
             }
         }
     }
@@ -297,6 +298,7 @@ namespace Enemy {
     void EnemyAI::Explosion(float deltaTime, point3d& enemyPos , float& player) {
         // Фаза подготовки взрыва
         if (!data.isBoomExploding) {
+            data.isBoomPreparing = true;
             data.boomCurrentTime += deltaTime;
 
             // Визуальные эффекты подготовки (пульсация, изменение цвета)
@@ -312,6 +314,7 @@ namespace Enemy {
             // Когда подготовка завершена, начинаем взрыв
             if (data.boomCurrentTime >= data.boomPrepareTime) {
                 data.isBoomExploding = true;
+                data.isBoomPreparing = false;
                 data.boomStartTime = currentTime;
             }
         }

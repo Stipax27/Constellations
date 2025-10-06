@@ -87,13 +87,13 @@ HWND hWnd;
 #include "MainWorld.h"
 #include "StatusGame.h"
 #include "Weapon.h"
-#include "EnemyAiUPD.h"
+#include "EnemyAiUPD.h"//
 #include "Elements.h"
 #include "MainGame.h"
 #include "DiologTEXT.h"
 #include "DialogStruct.h"
 #include "Parametrics.h"
-#include "drawer.h"
+#include "drawer.h"//
 
 #include "loop.h"
 

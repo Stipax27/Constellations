@@ -41,6 +41,8 @@
         float shockwaveSpeed = 300.0f;
         DWORD shockwaveStartTime = 0;
 
+        bool shouldStartAccumulation;
+        point3d accumulationPos;
         bool isBoomPreparing = false;
         bool isBoomExploding = false;
         float boomPrepareTime = 5000.0f;
