@@ -498,6 +498,7 @@ namespace drawer
     };
 
     std::vector<BowTracerParticle> bowTracerParticles;
+
     struct StarProjectile {
         point3d position;
         point3d direction; 
@@ -508,6 +509,7 @@ namespace drawer
         float Speed;
         bool isNew; 
         DWORD creationTime; 
+        float lifetime;
 
     };
     float finalRadius;
@@ -745,6 +747,172 @@ namespace drawer
         }
        
     }
+    struct AccumulationStar {
+        point3d startPosition;  // Начальная позиция звезды
+        point3d currentPosition; // Текущая позиция
+        point3d targetPosition;  // Целевая позиция в сфере
+        float radius;
+        float speed;
+        DWORD creationTime;
+        bool isActive;
+        XMFLOAT4 color;
+    };
+
+    std::vector<AccumulationStar> accumulationStars;
+    point3d accumulationCenter; // Центр накопления
+    bool isAccumulating = false;
+    DWORD accumulationStartTime = 0;
+    const float ACCUMULATION_DURATION = 1000.0f; // Время накопления в ms
+
+    // Функция для создания эффекта накопления
+    void CreateSpiralAccumulationEffect(point3d center, float sphereRadius) {
+        accumulationStars.clear();
+        accumulationCenter = center;
+        isAccumulating = true;
+        accumulationStartTime = currentTime;
+
+        const int spiralArms = 8;    // Количество спиральных рукавов
+        const int starsPerArm = 25;  // Звёзд на рукав
+
+        for (int arm = 0; arm < spiralArms; arm++) {
+            for (int i = 0; i < starsPerArm; i++) {
+                AccumulationStar star;
+
+                // Спиральное расположение начальных позиций
+                float armAngle = (arm / (float)spiralArms) * 2 * PI;
+                float spiralProgress = (i / (float)starsPerArm);
+                float spiralRadius = sphereRadius * 8.0f * (1.0f - spiralProgress * 0.3f);
+
+                star.startPosition = {
+                    center.x + spiralRadius * cosf(armAngle + spiralProgress * PI * 4),
+                    center.y + GetRandom(-spiralRadius * 0.5f, spiralRadius * 0.5f),
+                    center.z + spiralRadius * sinf(armAngle + spiralProgress * PI * 4)
+                };
+
+                // Целевая позиция - равномерно на сфере
+                float goldenRatio = (1.0f + sqrt(5.0f)) / 2.0f;
+                float targetIndex = arm * starsPerArm + i;
+                float targetY = 1.0f - (targetIndex / (float)(spiralArms * starsPerArm)) * 2.0f;
+                float targetRadius = sqrt(1.0f - targetY * targetY);
+                float targetTheta = 2 * PI * targetIndex / goldenRatio;
+
+                star.targetPosition = {
+                    center.x + sphereRadius * targetRadius * cosf(targetTheta),
+                    center.y + sphereRadius * targetY,
+                    center.z + sphereRadius * targetRadius * sinf(targetTheta)
+                };
+
+                star.currentPosition = star.startPosition;
+                star.radius = GetRandom(150, 450);
+                star.speed = 0.5f + spiralProgress * 1.5f; // Внешние звёзды движутся быстрее
+                star.creationTime = currentTime;
+                star.isActive = true;
+
+                // Цвет зависит от рукава спирали
+                float hue = (arm / (float)spiralArms);
+                star.color = XMFLOAT4(
+                    1.0f,                    // R
+                    0.6f + hue * 0.4f,       // G  
+                    0.3f + hue * 0.7f,       // B
+                    1.0f                     // A
+                );
+
+                accumulationStars.push_back(star);
+            }
+        }
+    }
+
+    // Обновление эффекта накопления
+    void UpdateAccumulationEffect(float deltaTime) {
+        if (!isAccumulating) return;
+
+        float progress = (currentTime - accumulationStartTime) / ACCUMULATION_DURATION;
+        progress = min(progress, 1.0f);
+
+        // Нелинейная интерполяция для более динамичного движения
+        float easeProgress = 1.0f - pow(1.0f - progress, 3.0f);
+
+        for (auto& star : accumulationStars) {
+            if (!star.isActive) continue;
+
+            // Движение к целевой позиции
+            star.currentPosition = star.startPosition.lerp(star.targetPosition, easeProgress);
+
+            // Вращение вокруг центра
+            float rotationAngle = progress * PI * 2.0f;
+            point3d toCenter = accumulationCenter - star.currentPosition;
+            toCenter.rotateY(toCenter,rotationAngle * star.speed);
+            star.currentPosition = accumulationCenter - toCenter;
+
+            // Пульсация размера
+            float pulse = 0.8f + 0.4f * sinf(currentTime * 0.01f + star.speed * 10.0f);
+            star.radius *= pulse;
+
+            // Деактивация звёзд при достижении цели
+            float distanceToTarget = (star.currentPosition - star.targetPosition).magnitude();
+            if (progress >= 0.95f && distanceToTarget < 100.0f) {
+                star.isActive = false;
+            }
+        }
+
+        // Завершение эффекта
+        if (progress >= 1.0f) {
+            isAccumulating = false;
+            // Здесь можно запустить взрыв
+            //CreateExplosionEffects(accumulationCenter, 2000.0f);
+        }
+    }
+
+    // Отрисовка эффекта накопления
+    void RenderAccumulationEffect() {
+        if (!isAccumulating) return;
+
+        Shaders::vShader(1);
+        Shaders::pShader(1);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+        float progress = (currentTime - accumulationStartTime) / ACCUMULATION_DURATION;
+
+        for (auto& star : accumulationStars) {
+            if (!star.isActive) continue;
+
+            // Прозрачность зависит от прогресса
+            float alpha = 1.0f;
+            if (progress > 0.8f) {
+                alpha = 1.0f - (progress - 0.8f) / 0.2f;
+            }
+
+            XMFLOAT4 finalColor = star.color;
+            finalColor.w = alpha;
+
+            ConstBuf::global[1] = finalColor;
+            ConstBuf::Update(5, ConstBuf::global);
+            ConstBuf::ConstToPixel(5);
+
+            // Рисуем звезду
+            star.currentPosition.draw(star.currentPosition, star.radius);
+
+            // Линии к центру для некоторых звёзд
+            if (GetRandom(0, 100) < 30) { // 30% звёзд имеют линии
+                Shaders::vShader(4);
+                Shaders::pShader(4);
+
+                float lineAlpha = alpha * 0.3f;
+                ConstBuf::global[2] = XMFLOAT4(1.0f, 0.9f, 0.7f, lineAlpha);
+                ConstBuf::Update(5, ConstBuf::global);
+                ConstBuf::ConstToPixel(5);
+
+                drawLine(star.currentPosition, accumulationCenter, 50.0f);
+
+                Shaders::vShader(1);
+                Shaders::pShader(1);
+            }
+        }
+
+        // Восстанавливаем стандартный цвет
+        ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
+    }
 
     bool isAttacking = false;
     
@@ -804,6 +972,12 @@ namespace drawer
         // Обнаружение момента нажатия
         if (isPressed && !wasPressed) {
             useLeftFist = !useLeftFist;
+            point3d startPos = point3d(
+                XMVectorGetX(heroPosition),
+                XMVectorGetY(heroPosition),
+                XMVectorGetZ(heroPosition)
+            );
+            //CreateSpiralAccumulationEffect(startPos, 1000.0f);
         }
         wasPressed = isPressed;
 
@@ -819,6 +993,12 @@ namespace drawer
             float chargeDuration = currentTime - chargeStartTime;
             chargeRatio = min(chargeDuration / MAX_CHARGE_TIME, 1.0f);
             finalRadius = MIN_ATTACK_RADIUS + chargeRatio * (MAX_ATTACK_RADIUS - MIN_ATTACK_RADIUS);
+
+            accumulationCenter = point3d(
+                XMVectorGetX(heroPosition),
+                XMVectorGetY(heroPosition),
+                XMVectorGetZ(heroPosition)
+            );
 
             // Увеличиваем масштаб героя, камеры и звезд пропорционально времени задержки
             targetHeroScale = MIN_HERO_SCALE + chargeRatio * (MAX_HERO_SCALE - MIN_HERO_SCALE);
@@ -1349,54 +1529,113 @@ namespace drawer
 
     std::vector<StarProjectile> Wave;
 
-    void CreateShockwave(point3d& center, float initialRadius, point3d& HeroPos) {
-        StarProjectile wave;
-        wave.position = { center.x, center.y + 4000, center.z };
-        wave.radius = initialRadius;
+    void CreateAdvancedShockwave(point3d& center, float initialRadius) {
+        const int layers = 3; // Количество слоёв волны
+        const int starsPerLayer = 30;
 
-        // Жёстко задаём ориентацию для горизонтальной волны
-        wave.up = point3d(0, 1, 0);    // Вверх по оси Y (вертикаль)
-        wave.right = point3d(1, 0, 0); // Вправо по оси X (горизонталь)
+        for (int layer = 0; layer < layers; layer++) {
+            float layerRadius = initialRadius + layer * 2000.0f;
+            float layerHeight = 2000.0f * layer;
 
-        Wave.push_back(wave);
+            for (int i = 0; i < starsPerLayer; i++) {
+                StarProjectile wave;
+
+                float angle = (i / (float)starsPerLayer) * 2 * PI;
+                float spiralAngle = angle + layer * 0.5f; // Спиральный эффект
+
+                wave.position = {
+                    center.x + cosf(spiralAngle) * layerRadius,
+                    center.y + layerHeight + sinf(angle * 4.0f) * 3000.0f, // Сложная форма волны
+                    center.z + sinf(spiralAngle) * layerRadius
+                };
+
+                wave.radius = GetRandom(300, 1200);
+                wave.creationTime = currentTime;
+                wave.lifetime = 4000.0f - layer * 500.0f; // Внешние слои живут дольше
+
+                // Направление - вверх и наружу
+                wave.direction = (wave.position - center).normalized() + point3d(0, 0.3f, 0);
+                wave.direction = wave.direction.normalized();
+                wave.Speed = GetRandom(15, 25);
+
+                Wave.push_back(wave);
+            }
+        }
     }
 
     void UpdateShockwave(float deltaTime) {
-        for (auto& wave : Wave) {
-            wave.radius += 5.0f * deltaTime; // Adjust speed as needed
+        for (auto it = Wave.begin(); it != Wave.end();) {
+            auto& wave = *it;
+
+            // Движение звёзд наружу
+            wave.position += wave.direction * wave.Speed * deltaTime;
+
+            // Увеличение радиуса для эффекта расширения
+            wave.radius *= 1.02f;
+
+            // Пульсация размера
+            float pulse = 0.5f + 0.5f * sinf(currentTime * 0.01f);
+            wave.radius += pulse * 2.0f;
+
+            // Проверка времени жизни
+            if (currentTime - wave.creationTime > wave.lifetime) {
+                it = Wave.erase(it);
+            }
+            else {
+                ++it;
+            }
         }
-        
-        // Remove waves that are too big
-        Wave.erase(
-            std::remove_if(Wave.begin(), Wave.end(),
-                [](const StarProjectile& w) {
-                    return w.radius > 20000.0f; // Adjust max radius as needed
-                }),
-            Wave.end()
-        );
     }
 
     void RenderShockwave() {
-        Shaders::vShader(4);
-        Shaders::pShader(4);
+        Shaders::vShader(1); // Шейдер для звёзд
+        Shaders::pShader(1);
         Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 
         for (auto& wave : Wave) {
-            // Рисуем идеально горизонтальный круг
-            for (int i = 0; i < 36; i++) {
-                float angle = i * (2 * PI / 36);
-                float nextAngle = (i + 1) * (2 * PI / 36);
+            // Вычисляем прозрачность в зависимости от времени жизни
+            float lifeProgress = (currentTime - wave.creationTime) / wave.lifetime;
+            float alpha = 1.0f - lifeProgress;
 
-                // Точки на окружности в XZ-плоскости (Y=0)
-                point3d point1 = wave.position + point3d(cos(angle), 0, sin(angle)) * wave.radius;
-                point3d point2 = wave.position + point3d(cos(nextAngle), 0, sin(nextAngle)) * wave.radius;
+            // Цвет звезды - может меняться от белого к синему/фиолетовому
+            XMFLOAT4 starColor = XMFLOAT4(
+                1.0f, // R
+                0.7f + 0.3f * alpha, // G
+                1.0f, // B
+                alpha * 0.8f // Alpha
+            );
 
-                drawLine(point1, point2, 1000.f);
+            ConstBuf::global[1] = starColor;
+            ConstBuf::Update(5, ConstBuf::global);
+            ConstBuf::ConstToPixel(5);
+
+            // Рисуем звезду
+            wave.position.draw(wave.position, wave.radius);
+
+            // Добавляем линии между соседними звёздами для эффекта созвездия
+            Shaders::vShader(4);
+            Shaders::pShader(4);
+
+            // Можно добавить соединения между близкими звёздами
+            for (auto& otherWave : Wave) {
+                float distance = (wave.position - otherWave.position).magnitude();
+                if (distance < 3000.0f && distance > 500.0f) {
+                    float lineAlpha = alpha * (1.0f - distance / 3000.0f);
+                    ConstBuf::global[2] = XMFLOAT4(0.8f, 0.8f, 1.0f, lineAlpha * 0.3f);
+                    ConstBuf::Update(5, ConstBuf::global);
+                    ConstBuf::ConstToPixel(5);
+
+                    drawLine(wave.position, otherWave.position, 100.0f);
+                }
             }
 
-            // Центр волны
-            //wave.position.draw(wave.position, 15.0f);
+            Shaders::vShader(1);
+            Shaders::pShader(1);
         }
+
+        // Восстанавливаем стандартный цвет
+        ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
     }
 
     std::vector<StarProjectile> boomStars;
@@ -1477,8 +1716,210 @@ namespace drawer
         }
 
         // Восстанавливаем стандартный цвет
-        
+
     }
+
+    struct EnemyAccumulationStar {
+        point3d startPosition;  // Начальная позиция звезды
+        point3d currentPosition; // Текущая позиция
+        point3d targetPosition;  // Целевая позиция в сфере
+        float radius;
+        float speed;
+        DWORD creationTime;
+        bool isActive;
+        XMFLOAT4 color;
+    };
+
+    std::vector<EnemyAccumulationStar> enemyAccumulationStars;
+    point3d enemyAccumulationCenter; // Центр накопления врага
+    bool isEnemyAccumulating = false;
+    DWORD enemyAccumulationStartTime = 0;
+    const float ENEMY_ACCUMULATION_DURATION = 1500.0f; // Время накопления врага
+
+    // Функция для создания эффекта накопления врага
+    void CreateEnemyAccumulationEffect(point3d center, float sphereRadius) {
+        enemyAccumulationStars.clear();
+        enemyAccumulationCenter = center;
+        isEnemyAccumulating = true;
+        enemyAccumulationStartTime = currentTime;
+
+        const int spiralArms = 6;    // Количество спиральных рукавов
+        const int starsPerArm = 20;  // Звёзд на рукав
+
+        for (int arm = 0; arm < spiralArms; arm++) {
+            for (int i = 0; i < starsPerArm; i++) {
+                EnemyAccumulationStar star;
+
+                // Спиральное расположение начальных позиций (красные тоны для врага)
+                float armAngle = (arm / (float)spiralArms) * 2 * PI;
+                float spiralProgress = (i / (float)starsPerArm);
+                float spiralRadius = sphereRadius * 6.0f * (1.0f - spiralProgress * 0.3f);
+
+                star.startPosition = {
+                    center.x + spiralRadius * cosf(armAngle + spiralProgress * PI * 3),
+                    center.y + GetRandom(-spiralRadius * 0.3f, spiralRadius * 0.3f),
+                    center.z + spiralRadius * sinf(armAngle + spiralProgress * PI * 3)
+                };
+
+                // Целевая позиция - равномерно на сфере
+                float goldenRatio = (1.0f + sqrt(5.0f)) / 2.0f;
+                float targetIndex = arm * starsPerArm + i;
+                float targetY = 1.0f - (targetIndex / (float)(spiralArms * starsPerArm)) * 2.0f;
+                float targetRadius = sqrt(1.0f - targetY * targetY);
+                float targetTheta = 2 * PI * targetIndex / goldenRatio;
+
+                star.targetPosition = {
+                    center.x + sphereRadius * targetRadius * cosf(targetTheta),
+                    center.y + sphereRadius * targetY,
+                    center.z + sphereRadius * targetRadius * sinf(targetTheta)
+                };
+
+                star.currentPosition = star.startPosition;
+                star.radius = GetRandom(200, 500);
+                star.speed = 0.3f + spiralProgress * 1.2f;
+                star.creationTime = currentTime;
+                star.isActive = true;
+
+                // Красные тона для врага
+                float hue = (arm / (float)spiralArms);
+                star.color = XMFLOAT4(
+                    1.0f,                    // R
+                    0.2f + hue * 0.3f,       // G  
+                    0.1f + hue * 0.2f,       // B
+                    1.0f                     // A
+                );
+
+                enemyAccumulationStars.push_back(star);
+            }
+        }
+    }
+
+    // Обновление эффекта накопления врага
+    void UpdateEnemyAccumulationEffect(float deltaTime) {
+        if (!isEnemyAccumulating) return;
+
+        float progress = (currentTime - enemyAccumulationStartTime) / ENEMY_ACCUMULATION_DURATION;
+        progress = min(progress, 1.0f);
+
+        // Нелинейная интерполяция для более динамичного движения
+        float easeProgress = 1.0f - pow(1.0f - progress, 2.5f);
+
+        for (auto& star : enemyAccumulationStars) {
+            if (!star.isActive) continue;
+
+            // Движение к целевой позиции
+            star.currentPosition = star.startPosition.lerp(star.targetPosition, easeProgress);
+
+            // Вращение вокруг центра
+            float rotationAngle = progress * PI * 3.0f;
+            point3d toCenter = enemyAccumulationCenter - star.currentPosition;
+
+            // Исправляем вращение
+            point3d rotated = toCenter;
+            rotated.rotateY(rotated,rotationAngle * star.speed);
+            star.currentPosition = enemyAccumulationCenter - rotated;
+
+            // Пульсация размера
+            float pulse = 0.7f + 0.5f * sinf(currentTime * 0.015f + star.speed * 8.0f);
+            float currentRadius = star.radius * pulse;
+
+            // Увеличение размера по мере накопления
+            currentRadius *= (1.0f + progress * 2.0f);
+
+            // Деактивация звёзд при достижении цели
+            float distanceToTarget = (star.currentPosition - star.targetPosition).magnitude();
+            if (progress >= 0.9f && distanceToTarget < 150.0f) {
+                star.isActive = false;
+            }
+        }
+
+        // Завершение эффекта - запуск взрыва
+        if (progress >= 1.0f) {
+            isEnemyAccumulating = false;
+            // Запускаем взрыв врага
+            CreateExplosionEffects(enemyAccumulationCenter, 3000.0f);
+
+            // Наносим урон игроку
+            Constellation& player = *starSet[player_sign];
+            for (int i = 0; i < player.starsHealth.size(); i++) {
+                if (player.starsHealth[i] > 0) {
+                    player.starsHealth[i] -= 0.3f; // Урон от взрыва врага
+                }
+            }
+
+            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Damage.wav");
+        }
+    }
+
+    // Отрисовка эффекта накопления врага
+    void RenderEnemyAccumulationEffect() {
+        if (!isEnemyAccumulating) return;
+
+        Shaders::vShader(1);
+        Shaders::pShader(1);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+        float progress = (currentTime - enemyAccumulationStartTime) / ENEMY_ACCUMULATION_DURATION;
+
+        for (auto& star : enemyAccumulationStars) {
+            if (!star.isActive) continue;
+
+            // Прозрачность зависит от прогресса
+            float alpha = 1.0f;
+            if (progress > 0.8f) {
+                alpha = 1.0f - (progress - 0.8f) / 0.2f;
+            }
+
+            XMFLOAT4 finalColor = star.color;
+            finalColor.w = alpha * 0.9f;
+
+            ConstBuf::global[1] = finalColor;
+            ConstBuf::Update(5, ConstBuf::global);
+            ConstBuf::ConstToPixel(5);
+
+            // Пульсация размера для отрисовки
+            float pulse = 0.7f + 0.5f * sinf(currentTime * 0.015f + star.speed * 8.0f);
+            float renderRadius = star.radius * pulse * (1.0f + progress * 2.0f);
+
+            // Рисуем звезду
+            star.currentPosition.draw(star.currentPosition, renderRadius);
+
+            // Линии к центру для создания эффекта энергии
+            if (GetRandom(0, 100) < 40) {
+                Shaders::vShader(4);
+                Shaders::pShader(4);
+
+                float lineAlpha = alpha * 0.4f * (0.5f + 0.5f * sinf(currentTime * 0.02f));
+                ConstBuf::global[2] = XMFLOAT4(1.0f, 0.3f, 0.1f, lineAlpha);
+                ConstBuf::Update(5, ConstBuf::global);
+                ConstBuf::ConstToPixel(5);
+
+                drawLine(star.currentPosition, enemyAccumulationCenter, 80.0f);
+
+                Shaders::vShader(1);
+                Shaders::pShader(1);
+            }
+        }
+
+        // Рисуем ядро накопления
+        if (progress > 0.3f) {
+            float coreAlpha = progress * 0.8f;
+            float corePulse = 1.0f + 0.3f * sinf(currentTime * 0.025f);
+            float coreRadius = 800.0f * progress * corePulse;
+
+            XMFLOAT4 coreColor = XMFLOAT4(1.0f, 0.1f, 0.05f, coreAlpha);
+            ConstBuf::global[1] = coreColor;
+            ConstBuf::Update(5, ConstBuf::global);
+            ConstBuf::ConstToPixel(5);
+
+            enemyAccumulationCenter.draw(enemyAccumulationCenter, coreRadius);
+        }
+
+        // Восстанавливаем стандартный цвет
+        ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
+    }
+    
 
     void InputHook(float deltaTime, point3d _hero, point3d _enemy) {
 
@@ -1871,14 +2312,21 @@ namespace drawer
             playerConst.UpdateShaking();
 
             if (enemyAI.data.isShockwaveActive == true) {
-                CreateShockwave(Enemypos, enemyAI.data.shockwaveRadius, Heropos);
+                CreateAdvancedShockwave(Enemypos, enemyAI.data.shockwaveRadius);
+                enemyAI.data.isShockwaveActive = false;
             }
             UpdateShockwave(deltaTime);
             RenderShockwave();
 
             if (enemyAI.data.isBoomExploding == true) {
-                CreateExplosionEffects(Enemypos, enemyAI.data.boomRadius);
+                CreateEnemyAccumulationEffect(Enemypos, 12000.0f);
+
+                //CreateExplosionEffects(Enemypos, enemyAI.data.boomRadius);
             }
+
+            UpdateEnemyAccumulationEffect(deltaTime);
+            RenderEnemyAccumulationEffect();
+
             UpdateExplosionEffects(deltaTime);
             RenderExplosionEffects();
 
@@ -1946,6 +2394,11 @@ namespace drawer
             }
             UpdateCameraScaleAndStarRadiusReturn(deltaTime, player);
             UpdateAttack(deltaTime);
+
+            UpdateAccumulationEffect(deltaTime);
+            RenderAccumulationEffect();
+
+
 
             DrawSwordAttack();
 

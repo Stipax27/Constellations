@@ -1,4 +1,6 @@
-﻿namespace Enemy {
+﻿
+
+namespace Enemy {
 
     point3d AttakDir;
 
