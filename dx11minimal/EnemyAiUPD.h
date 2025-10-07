@@ -1,7 +1,4 @@
 ﻿
-void CreateDashPreparationEffect(point3d& enemyPos, point3d& dashDirection);
-void DrawDashDirection(point3d& enemyPos, point3d& dashDirection);
-void CreateAdvancedShockwave(point3d& center, float initialRadius);
 
 namespace Enemy {
 
@@ -142,12 +139,12 @@ namespace Enemy {
         // Обновляем позицию и матрицу трансформации
         enemyPositions += moveDir;
 
-        data.enemyConstellationOffset = XMMatrixRotationQuaternion(data.currentRotation) *
-            XMMatrixTranslation(enemyPositions.x, enemyPositions.y, enemyPositions.z);
-
         if (moveDir.magnitude() > 0.1f) {
             UpdateRotation(moveDir.normalized());
         }
+        data.enemyConstellationOffset = XMMatrixRotationQuaternion(data.currentRotation) *
+            XMMatrixTranslation(enemyPositions.x, enemyPositions.y, enemyPositions.z);
+
     }
 
     void EnemyAI::Chase(point3d& heroPos, point3d& enemyPositions, float deltaTime) {
@@ -195,15 +192,12 @@ namespace Enemy {
             // Генерируем случайное число от 0 до 100
             int attackType = rand() % 100;
 
-            if (attackType < 50) { // 50% - обычная атака с подготовкой
+            if (attackType < 50) { // 50% - обычная атака
+                AttakDir = heroPos - enemyPos;
                 data.currentState = AIState::ATTACK;
-                data.attackTimer = 4000.f; // Увеличиваем время атаки для подготовки
+                data.attackTimer = 3000.f; // Только 1 секунда!
                 data.lastOrbitPosition = enemyPos;
                 data.attackCooldown = 0.0f;
-
-                // Сбрасываем флаги подготовки
-                data.isPreparingDash = false;
-                data.dashPreparationTime = 0.0f;
             }
             else if (attackType < 80) { // 30% - атака в прыжке (50-79)
                 AttakDir = heroPos - enemyPos;
@@ -232,61 +226,37 @@ namespace Enemy {
         // Проверяем таймер
         if (data.attackTimer <= 0.0f) return;
 
-        // Фаза подготовки рывка
-        if (!data.isPreparingDash && data.dashPreparationTime < data.MAX_DASH_PREPARATION) {
-            data.isPreparingDash = true;
-            data.dashDirection = (heroPos - enemyPos).normalized();
-            data.dashPreparationTime = 0.0f;
+        // Обновляем направление к игроку каждый кадр
+        point3d attackDir = (heroPos - enemyPos).normalized();
 
-            // Визуальные эффекты подготовки
-            CreateDashPreparationEffect(enemyPos, data.dashDirection);
-        }
-
-        // Обновляем время подготовки
-        if (data.isPreparingDash) {
-            data.dashPreparationTime += deltaTime;
-
-            // Показываем направление рывка красной линией
-            DrawDashDirection(enemyPos, data.dashDirection);
-
-            // Ждем завершения подготовки
-            if (data.dashPreparationTime >= data.MAX_DASH_PREPARATION) {
-                data.isPreparingDash = false;
-                // Запускаем звук рывка
-                ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\EnemyDash.wav");
-            }
-            return; // Не двигаемся во время подготовки
-        }
-
-        // Фаза самого рывка
-        point3d attackDir = data.dashDirection; // Используем заранее вычисленное направление
-
-        // Увеличиваем скорость во время рывка
-        float moveDistance = data.chaseSpeed * data.dashSpeedMultiplier * deltaTime;
+        // Увеличиваем скорость атаки и дистанцию проверки
+        float moveDistance = data.chaseSpeed * 10.0f * deltaTime; // Увеличили скорость
         enemyPos += attackDir * moveDistance;
 
-        // Проверяем столкновение
+        // Проверяем столкновение с увеличенной дистанцией
         float distanceToPlayer = (heroPos - enemyPos).magnitude();
 
-        if (distanceToPlayer < 3000.0f) {
+        // Увеличиваем дистанцию атаки и добавляем отладочную информацию
+        if (distanceToPlayer < 3000.0f) { // Увеличили с 1000 до 3000
             bool attackBlocked = (current_weapon == weapon_name::Shield && energy >= energyCost.shieldBlock);
 
             if (!attackBlocked) {
                 data.isAttacking = true;
                 player -= data.DAMAGE_AI;
-                // Эффект при успешной атаке
-                CreateAdvancedShockwave(enemyPos, 1500.0f);
+                
             }
             else {
                 player -= 0.1f;
                 energy -= 100.f;
+               
             }
 
             // Завершаем атаку после попадания
             data.attackTimer = 0.0f;
-            data.isPreparingDash = false;
-            data.dashPreparationTime = 0.0f;
+
+           
         }
+        
 
         // Обновляем вращение
         UpdateRotation(attackDir);
@@ -295,8 +265,6 @@ namespace Enemy {
         data.enemyConstellationOffset = XMMatrixRotationQuaternion(data.currentRotation) *
             XMMatrixTranslation(enemyPos.x, enemyPos.y, enemyPos.z);
     }
-
-
 
     void EnemyAI::JumpAttack(float deltaTime, point3d& heroPos, point3d& enemyPos , float& player) {
         // Фаза прыжка вверх

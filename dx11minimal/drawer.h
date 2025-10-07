@@ -1694,8 +1694,8 @@ namespace drawer
 
     void RenderExplosionEffects() {
 
-        Shaders::vShader(1);
-        Shaders::pShader(1);
+        Shaders::vShader(15);
+        Shaders::pShader(15);
         Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 
         // Рисуем частицы взрыва
@@ -1855,7 +1855,7 @@ namespace drawer
     void RenderEnemyAccumulationEffect() {
         if (!isEnemyAccumulating) return;
 
-        Shaders::vShader(1);
+        Shaders::vShader(15);
         Shaders::pShader(1);
         Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 
@@ -1896,8 +1896,8 @@ namespace drawer
 
                 drawLine(star.currentPosition, enemyAccumulationCenter, 80.0f);
 
-                Shaders::vShader(1);
-                Shaders::pShader(1);
+                Shaders::vShader(15);
+                Shaders::pShader(15);
             }
         }
 
@@ -1953,7 +1953,6 @@ namespace drawer
         ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
         ConstBuf::Update(5, ConstBuf::global);
     }
-
     void CreateDashPreparationEffect(point3d& enemyPos, const point3d& direction) {
         // Создаем частицы подготовки вокруг врага
         const int particleCount = 20;
@@ -2063,6 +2062,271 @@ namespace drawer
         }
     }
 
+    struct DamageParticle {
+        point3d position;
+        point3d velocity;
+        float radius;
+        DWORD creationTime;
+        float lifetime;
+        XMFLOAT4 color;
+        bool isActive;
+    };
+
+    std::vector<DamageParticle> heroDamageParticles;
+    bool shouldCreateDamageEffect = false;
+    point3d lastDamageDirection;
+    point3d lastDamagePosition;
+
+    void CreateHeroDamageEffect(point3d heroPos, point3d damageDirection) {
+        const int particleCount = 105; // Количество вылетающих звезд
+
+        for (int i = 0; i < particleCount; i++) {
+            DamageParticle particle;
+
+            // Начальная позиция - вокруг героя
+            float angle = (i / (float)particleCount) * 2 * PI;
+            float distance = 100.0f + GetRandom(0, 300);
+
+            point3d right = damageDirection.cross(point3d(0, 1, 0)).normalized();
+            point3d up = right.cross(damageDirection).normalized();
+
+            point3d offset = right * cosf(angle) * distance + up * sinf(angle) * distance;
+            particle.position = heroPos + offset;
+
+            // Направление вылета - от центра с небольшим разбросом
+            point3d baseDirection = (particle.position - heroPos).normalized();
+            float spread = 0.3f;
+            point3d randomSpread = point3d(
+                GetRandom(-100, 100) * 0.01f * spread,
+                GetRandom(-100, 100) * 0.01f * spread,
+                GetRandom(-100, 100) * 0.01f * spread
+            );
+
+            particle.velocity = (baseDirection + randomSpread).normalized() * GetRandom(5, 15);
+            particle.radius = GetRandom(20, 100);
+            particle.creationTime = currentTime;
+            particle.lifetime = GetRandom(1000, 2000); // 1-2 секунды жизни
+
+            // Цвета от красного к оранжевому
+            float colorVariant = GetRandom(0, 100) * 0.01f;
+            particle.color = XMFLOAT4(
+                1.0f,                    // R
+                0.3f + colorVariant * 0.4f, // G (от 0.3 до 0.7)
+                0.1f,                    // B
+                1.0f                     // A
+            );
+
+            particle.isActive = true;
+            heroDamageParticles.push_back(particle);
+        }
+    }
+
+
+    void UpdateHeroDamageParticles(float deltaTime) {
+        for (auto it = heroDamageParticles.begin(); it != heroDamageParticles.end();) {
+            DamageParticle& particle = *it;
+
+            if (!particle.isActive || (currentTime - particle.creationTime) > particle.lifetime) {
+                it = heroDamageParticles.erase(it);
+                continue;
+            }
+
+            // Движение частицы
+            particle.position += particle.velocity * deltaTime;
+
+            // Замедление со временем
+            particle.velocity *= 0.98f;
+
+            // Уменьшение размера
+            float lifeProgress = (currentTime - particle.creationTime) / particle.lifetime;
+            particle.radius *= 0.99f;
+
+            ++it;
+        }
+    }
+
+    void RenderHeroDamageParticles() {
+        if (heroDamageParticles.empty()) return;
+
+        Shaders::vShader(1);
+        Shaders::pShader(1);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+        for (auto& particle : heroDamageParticles) {
+            if (!particle.isActive) continue;
+
+            float lifeProgress = (currentTime - particle.creationTime) / particle.lifetime;
+            float alpha = 1.0f - lifeProgress;
+
+            // Пульсация размера
+            float pulse = 0.7f + 0.3f * sinf(currentTime * 0.01f);
+            float renderRadius = particle.radius * pulse * alpha;
+
+            // Устанавливаем цвет частицы
+            XMFLOAT4 finalColor = particle.color;
+            finalColor.w = alpha * 0.8f;
+
+            ConstBuf::global[1] = finalColor;
+            ConstBuf::Update(5, ConstBuf::global);
+            ConstBuf::ConstToPixel(5);
+
+            // Рисуем звезду
+            particle.position.draw(particle.position, renderRadius);
+
+            // Добавляем след для некоторых частиц
+            if (GetRandom(0, 100) < 30) {
+                Shaders::vShader(4);
+                Shaders::pShader(4);
+
+                point3d trailEnd = particle.position - particle.velocity.normalized() * 200.0f;
+                float trailAlpha = alpha * 0.3f;
+
+                ConstBuf::global[2] = XMFLOAT4(
+                    particle.color.x,
+                    particle.color.y,
+                    particle.color.z,
+                    trailAlpha
+                );
+                ConstBuf::Update(5, ConstBuf::global);
+                ConstBuf::ConstToPixel(5);
+
+                drawLine(particle.position, trailEnd, 30.0f);
+
+                Shaders::vShader(1);
+                Shaders::pShader(1);
+            }
+        }
+
+        // Восстанавливаем стандартный цвет
+        ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
+    }
+
+    struct MovementParticle {
+        point3d position;
+        point3d velocity;
+        float size;
+        DWORD creationTime;
+        DWORD lifetime;
+        XMFLOAT4 color;
+        float initialSize;
+    };
+
+    std::vector<MovementParticle> movementParticles;
+
+    // Настройки партиклов движения
+    struct MovementParticleSettings {
+        float emitRate = 30.0f;        // Частота генерации (частиц/секунду)
+        float minSpeedThreshold = 5.0f; // Минимальная скорость для генерации
+        float maxSpeedForEmission = 25.0f; // Максимальная скорость для расчета интенсивности
+        float minSize = 50.0f;
+        float maxSize = 200.0f;
+        float minLifetime = 800.0f;
+        float maxLifetime = 1500.0f;
+        float spreadAngle = 45.0f;     // Угол разброса в градусах
+        float distanceFromPlayer = 300.0f; // Дистанция от игрока
+    } movementSettings;
+
+    DWORD lastMovementEmitTime = 0;
+    float movementEmitAccumulator = 0.0f;
+
+    void CreateMovementParticles() {
+        if (currentFlySpeed < 3.0f) return;
+
+        DWORD currentTime = timer::GetCounter();
+        float deltaTime = currentTime - lastMovementEmitTime;
+        lastMovementEmitTime = currentTime;
+
+        // Простая эмиссия без сложных расчетов
+        movementEmitAccumulator += movementSettings.emitRate * (deltaTime / 1000.0f);
+
+        while (movementEmitAccumulator >= 1.0f) {
+            movementEmitAccumulator -= 1.0f;
+
+            MovementParticle particle;
+
+            point3d heroPos = point3d(
+                XMVectorGetX(Hero::state.position),
+                XMVectorGetY(Hero::state.position),
+                XMVectorGetZ(Hero::state.position)
+            );
+
+            // Простая позиция позади игрока
+            particle.position = heroPos - flyDirection.normalized() * 2000.0f +
+                point3d(GetRandom(-1000, 1000), GetRandom(-1000, 1000), GetRandom(-1000, 1000));
+
+            particle.velocity = flyDirection * currentFlySpeed * 300.0f;
+            particle.initialSize = GetRandom(50, 150);
+            particle.size = particle.initialSize;
+            particle.lifetime = GetRandom(800, 1200);
+            particle.creationTime = currentTime;
+            particle.color = XMFLOAT4(0.4f, 0.6f, 1.0f, 0.7f);
+
+            movementParticles.push_back(particle);
+        }
+    }
+
+    void UpdateMovementParticles(float deltaTime) {
+        for (auto it = movementParticles.begin(); it != movementParticles.end();) {
+            MovementParticle& particle = *it;
+
+            float elapsed = currentTime - particle.creationTime;
+            float lifeProgress = elapsed / particle.lifetime;
+
+            if (elapsed > particle.lifetime) {
+                it = movementParticles.erase(it);
+                continue;
+            }
+
+            // Обновление позиции
+            particle.position += particle.velocity * (deltaTime / 1000.0f);
+
+            // Затухание размера и прозрачности
+            particle.size = particle.initialSize * (1.0f - lifeProgress);
+            particle.color.w = 0.8f * (1.0f - lifeProgress);
+
+            // Медленное затухание скорости
+            particle.velocity *= 0.995f;
+
+            ++it;
+        }
+    }
+
+    void DrawMovementParticles() {
+        if (movementParticles.empty()) return;
+
+        Shaders::vShader(1); // Используем шейдер для звезд
+        Shaders::pShader(1);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+        Depth::Depth(Depth::depthmode::on);
+
+        for (auto& particle : movementParticles) {
+            // Устанавливаем цвет и размер частицы
+            ConstBuf::global[1] = particle.color;
+            ConstBuf::Update(5, ConstBuf::global);
+            ConstBuf::ConstToPixel(5);
+
+            // Рисуем частицу как звезду
+            particle.position.draw(particle.position, particle.size);
+
+            // Добавляем свечение для некоторых частиц
+            if (GetRandom(0, 100) < 30) { // 30% частиц имеют свечение
+                float glowSize = particle.size * 1.5f;
+                XMFLOAT4 glowColor = particle.color;
+                glowColor.w *= 0.3f; // Более прозрачное свечение
+
+                ConstBuf::global[1] = glowColor;
+                ConstBuf::Update(5, ConstBuf::global);
+
+                particle.position.draw(particle.position, glowSize);
+            }
+        }
+
+        // Восстанавливаем стандартный цвет
+        ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
+    }
+
     Constellation& enemy = *starSet[currentEnemyID];
     Constellation& player = *starSet[player_sign];
 
@@ -2156,6 +2420,10 @@ namespace drawer
             //DrawTEST();
             drawStaminaBar(energy);
 
+            
+            CreateMovementParticles();
+            UpdateMovementParticles(deltaTime);
+            DrawMovementParticles();
 
             Camera::state.mouse = true;
             Depth::Depth(Depth::depthmode::off);
@@ -2218,7 +2486,9 @@ namespace drawer
 
                 enemy.SetStarRadius(i, 1000.f);
             }
-
+            CreateMovementParticles();
+            UpdateMovementParticles(deltaTime);
+            DrawMovementParticles();
             //CreateParticledText("ANOTHER TEST", (1700. / 2560) * window.width, (600. / 1440) * window.height + 200.f, .7f, false);
             std::string P = std::to_string(chargeRatio);
             drawString(P.c_str(), 600, 750, 1.f, true);
@@ -2308,19 +2578,7 @@ namespace drawer
             //FireProjectile();
             //WeaponRender();
 
-            lastFrameTime = currentTime;
-
-            if (isDamageTaken)
-            {
-                isDamageTaken = false;
-                isShaking = true;
-                shakeStartTime = currentTime;
-            }
-
-            if (currentTime > shakeStartTime + shakeDuration)
-            {
-                isShaking = false;
-            }
+            
 
             if (currentTime > attack_cooldown + 5000)
             {
@@ -2361,14 +2619,37 @@ namespace drawer
                 XMVectorGetZ(enemyPositions)
             );
 
+            lastFrameTime = currentTime;
 
+            if (isDamageTaken)
+            {
+                isDamageTaken = false;
+                isShaking = true;
+                shakeStartTime = currentTime;
+                
+
+            }
+
+            if (currentTime > shakeStartTime + shakeDuration)
+            {
+                isShaking = false;
+            }
 
             if (enemyAI.data.isAttacking == true) {
-
                 playerConst.StartShaking();
                 enemyAI.data.isAttacking = false;
 
+                // СОЗДАЕМ ЭФФЕКТ УРОНА
+                point3d damageDirection = (Heropos - Enemypos).normalized();
+                CreateHeroDamageEffect(Heropos, damageDirection);
+
+                // Визуализация направления атаки (опционально)
+                //DwarHeroGetDamage(Heropos, damageDirection);
             }
+
+            // ОБНОВЛЯЕМ И ОТРИСОВЫВАЕМ ЧАСТИЦЫ УРОНА
+            UpdateHeroDamageParticles(deltaTime);
+            RenderHeroDamageParticles();
             playerConst.UpdateShaking();
 
             if (enemyAI.data.isShockwaveActive == true) {
