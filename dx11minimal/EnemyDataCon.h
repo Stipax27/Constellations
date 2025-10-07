@@ -17,7 +17,7 @@
         std::vector<point3d> waypoints;
         int currentWaypoint = 0;
         float patrolSpeed = 10.0f;
-        float chaseSpeed = 10.0f;
+        float chaseSpeed = 1.0f;
         float rotationSpeed = 0.1f;
         float patrolProgress = 0.f;
         float patrolRadius = 1000.0f;
@@ -30,6 +30,12 @@
         point3d lastOrbitPosition;// Таймер атаки
         bool isAttacking = false;
         float DAMAGE_AI = 1.f;
+
+        bool isPreparingDash = false;
+        point3d dashDirection;
+        float dashPreparationTime = 0.0f;
+        const float MAX_DASH_PREPARATION = 1000.0f; 
+        float dashSpeedMultiplier = 3.0f;
 
         bool isJumping = false;
         float jumpHeight = 0.0f;

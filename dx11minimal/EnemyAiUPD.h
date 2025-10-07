@@ -1,4 +1,7 @@
 ﻿
+void CreateDashPreparationEffect(point3d& enemyPos, point3d& dashDirection);
+void DrawDashDirection(point3d& enemyPos, point3d& dashDirection);
+void CreateAdvancedShockwave(point3d& center, float initialRadius);
 
 namespace Enemy {
 
@@ -88,7 +91,7 @@ namespace Enemy {
             AttackPlayer(deltaTime, heroPosition, enemyPositions, player);
             if (data.attackTimer <= 0.0f) {
                 data.currentState = AIState::ORBIT;
-                data.attackCooldown = 5000.0f; // Следующая атака через 5 секунды
+                data.attackCooldown = 4000.0f; // Следующая атака через 5 секунды
             }
             break;
 
@@ -108,6 +111,7 @@ namespace Enemy {
                 data.currentState = AIState::ORBIT;
 
             }
+            break;
         }
 
     
@@ -187,17 +191,19 @@ namespace Enemy {
         UpdateRotation(dirToPlayer);
 
         // Проверка на атаку
-        if (data.attackCooldown <= 0.0f && !data.isAttacking) {
+        if (data.attackCooldown <= 0.0f) {
             // Генерируем случайное число от 0 до 100
             int attackType = rand() % 100;
 
-            if (attackType < 50) { // 50% - обычная атака
-                AttakDir = heroPos - enemyPos;
+            if (attackType < 50) { // 50% - обычная атака с подготовкой
                 data.currentState = AIState::ATTACK;
-                data.attackTimer = 500.f;
+                data.attackTimer = 4000.f; // Увеличиваем время атаки для подготовки
                 data.lastOrbitPosition = enemyPos;
                 data.attackCooldown = 0.0f;
-                
+
+                // Сбрасываем флаги подготовки
+                data.isPreparingDash = false;
+                data.dashPreparationTime = 0.0f;
             }
             else if (attackType < 80) { // 30% - атака в прыжке (50-79)
                 AttakDir = heroPos - enemyPos;
@@ -223,23 +229,74 @@ namespace Enemy {
     }
 
     void EnemyAI::AttackPlayer(float deltaTime, point3d& heroPos, point3d& enemyPos, float& player) {
-        point3d attackDir = AttakDir.normalized();
-        enemyPos += (attackDir * data.chaseSpeed * 5.0f * deltaTime) / data.attackDuration;
+        // Проверяем таймер
+        if (data.attackTimer <= 0.0f) return;
 
-        // Проверяем, заблокирована ли атака
-        bool attackBlocked = (current_weapon == weapon_name::Shield && energy >= energyCost.shieldBlock);
+        // Фаза подготовки рывка
+        if (!data.isPreparingDash && data.dashPreparationTime < data.MAX_DASH_PREPARATION) {
+            data.isPreparingDash = true;
+            data.dashDirection = (heroPos - enemyPos).normalized();
+            data.dashPreparationTime = 0.0f;
 
-        if ((heroPos - enemyPos).magnitude() < 1000.0f) {
+            // Визуальные эффекты подготовки
+            CreateDashPreparationEffect(enemyPos, data.dashDirection);
+        }
+
+        // Обновляем время подготовки
+        if (data.isPreparingDash) {
+            data.dashPreparationTime += deltaTime;
+
+            // Показываем направление рывка красной линией
+            DrawDashDirection(enemyPos, data.dashDirection);
+
+            // Ждем завершения подготовки
+            if (data.dashPreparationTime >= data.MAX_DASH_PREPARATION) {
+                data.isPreparingDash = false;
+                // Запускаем звук рывка
+                ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\EnemyDash.wav");
+            }
+            return; // Не двигаемся во время подготовки
+        }
+
+        // Фаза самого рывка
+        point3d attackDir = data.dashDirection; // Используем заранее вычисленное направление
+
+        // Увеличиваем скорость во время рывка
+        float moveDistance = data.chaseSpeed * data.dashSpeedMultiplier * deltaTime;
+        enemyPos += attackDir * moveDistance;
+
+        // Проверяем столкновение
+        float distanceToPlayer = (heroPos - enemyPos).magnitude();
+
+        if (distanceToPlayer < 3000.0f) {
+            bool attackBlocked = (current_weapon == weapon_name::Shield && energy >= energyCost.shieldBlock);
+
             if (!attackBlocked) {
                 data.isAttacking = true;
                 player -= data.DAMAGE_AI;
+                // Эффект при успешной атаке
+                CreateAdvancedShockwave(enemyPos, 1500.0f);
             }
             else {
                 player -= 0.1f;
                 energy -= 100.f;
             }
+
+            // Завершаем атаку после попадания
+            data.attackTimer = 0.0f;
+            data.isPreparingDash = false;
+            data.dashPreparationTime = 0.0f;
         }
+
+        // Обновляем вращение
+        UpdateRotation(attackDir);
+
+        // Обновляем матрицу трансформации
+        data.enemyConstellationOffset = XMMatrixRotationQuaternion(data.currentRotation) *
+            XMMatrixTranslation(enemyPos.x, enemyPos.y, enemyPos.z);
     }
+
+
 
     void EnemyAI::JumpAttack(float deltaTime, point3d& heroPos, point3d& enemyPos , float& player) {
         // Фаза прыжка вверх

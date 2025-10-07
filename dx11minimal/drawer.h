@@ -1530,7 +1530,7 @@ namespace drawer
     std::vector<StarProjectile> Wave;
 
     void CreateAdvancedShockwave(point3d& center, float initialRadius) {
-        const int layers = 3; // Количество слоёв волны
+        const int layers = 2; // Количество слоёв волны
         const int starsPerLayer = 30;
 
         for (int layer = 0; layer < layers; layer++) {
@@ -1549,9 +1549,9 @@ namespace drawer
                     center.z + sinf(spiralAngle) * layerRadius
                 };
 
-                wave.radius = GetRandom(200, 1200);
+                wave.radius = GetRandom(500, 1800);
                 wave.creationTime = currentTime;
-                wave.lifetime = 4000.0f - layer * 500.0f; // Внешние слои живут дольше
+                wave.lifetime = 4000.0f - layer * 50.0f; // Внешние слои живут дольше
 
                 // Направление - вверх и наружу
                 wave.direction = (wave.position - center).normalized() + point3d(0, 0.3f, 0);
@@ -1571,7 +1571,7 @@ namespace drawer
             wave.position += wave.direction * wave.Speed * deltaTime;
 
             // Увеличение радиуса для эффекта расширения
-            wave.radius *= 1.02f;
+            wave.radius *= 1.01f;
 
             // Пульсация размера
             float pulse = 0.5f + 0.5f * sinf(currentTime * 0.01f);
@@ -1919,7 +1919,67 @@ namespace drawer
         ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
         ConstBuf::Update(5, ConstBuf::global);
     }
-    
+    void DrawDashDirection(point3d& enemyPos, const point3d& direction) {
+        // Сохраняем текущие настройки шейдера
+        Shaders::vShader(4);
+        Shaders::pShader(4);
+
+        // Устанавливаем красный цвет для линии
+        ConstBuf::global[2] = XMFLOAT4(1.0f, 0.0f, 0.0f, 0.8f); // Красный с прозрачностью
+        ConstBuf::Update(5, ConstBuf::global);
+        ConstBuf::ConstToPixel(5);
+
+        // Вычисляем конечную точку линии (в направлении рывка)
+        float dashLength = 5000.0f; // Длина линии предсказания
+        point3d dashEnd = enemyPos + direction * dashLength;
+
+        // Рисуем линию
+        drawer::drawLine(enemyPos, dashEnd, 50.0f); // Толстая красная линия
+
+        // Добавляем pulsating эффект на конец линии
+        float pulse = 0.5f + 0.5f * sinf(currentTime * 0.01f);
+        point3d pulsePoint = enemyPos + direction * (dashLength + pulse * 500.0f);
+
+        // Рисуем pulsating точку на конце
+        Shaders::vShader(1);
+        Shaders::pShader(1);
+        ConstBuf::global[1] = XMFLOAT4(1.0f, 0.0f, 0.0f, pulse * 0.8f);
+        ConstBuf::Update(5, ConstBuf::global);
+        ConstBuf::ConstToPixel(5);
+
+        pulsePoint.draw(pulsePoint, 100.0f * pulse);
+
+        // Восстанавливаем стандартный цвет
+        ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
+    }
+
+    void CreateDashPreparationEffect(point3d& enemyPos, const point3d& direction) {
+        // Создаем частицы подготовки вокруг врага
+        const int particleCount = 20;
+
+        for (int i = 0; i < particleCount; i++) {
+            StarProjectile particle;
+
+            // Распределяем частицы в направлении рывка
+            float angle = (i / (float)particleCount) * 2 * PI;
+            float distance = 1000.0f + (i % 5) * 500.0f;
+
+            // Создаем небольшое отклонение от основного направления
+            point3d right = direction.cross(point3d(0, 1, 0)).normalized();
+            point3d up = right.cross(direction).normalized();
+
+            point3d offset = right * cosf(angle) * 300.0f + up * sinf(angle) * 300.0f;
+            particle.position = enemyPos + direction * distance + offset;
+            particle.direction = direction;
+            particle.radius = 200.0f;
+            particle.creationTime = currentTime;
+            particle.lifetime = Enemy::enemyData.MAX_DASH_PREPARATION;
+
+            
+        }
+
+    }
 
     void InputHook(float deltaTime, point3d _hero, point3d _enemy) {
 
