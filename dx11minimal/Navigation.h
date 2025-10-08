@@ -7,8 +7,8 @@ float boostingFlySpeed;
 const float maxFlySpeed = 15.f;
 const float MOUSE_SENSITIVITY = 0.002f;
 const float CURSOR_IGNORE_ZONE = 0.05f;
-const float MAX_CURSOR_DEVIATION = 0.3f;
-const float SENSIVITY = 0.25f;
+const float MAX_CURSOR_DEVIATION = 0.45f;
+const float SENSIVITY = 0.11f;
 const float CURSOR_ZONE_DELTA = MAX_CURSOR_DEVIATION - CURSOR_IGNORE_ZONE;
 
 void getPerpendicularDirections()

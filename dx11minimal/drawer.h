@@ -2252,8 +2252,8 @@ namespace drawer
             );
 
             // Простая позиция позади игрока
-            particle.position = heroPos - flyDirection.normalized() * 2000.0f +
-                point3d(GetRandom(-1000, 1000), GetRandom(-1000, 1000), GetRandom(-1000, 1000));
+            particle.position = heroPos + flyDirection.normalized() * 5000.0f +
+                point3d(GetRandom(-2000, 2000), GetRandom(-2000, 2000), GetRandom(-2000, 2000));
 
             particle.velocity = flyDirection * currentFlySpeed * 300.0f;
             particle.initialSize = GetRandom(50, 150);

@@ -1163,13 +1163,13 @@ namespace Camera
 	{
 		int n = 0; //угол поворота
 		bool mouse = false;
-		float camDist = 500.0f;
-		float minDist = 500.0f;
-		float maxDist = 1000.0f;
+		float camDist = 300.0f; // УМЕНЬШЕНО (было 500.0f)
+		float minDist = 300.0f; // УМЕНЬШЕНО (было 500.0f)
+		float maxDist = 800.0f; // УМЕНЬШЕНО (было 1000.0f)
 		float fovAngle = 60.0f;
-		float verticalOffset = 180.0f;
+		float verticalOffset = 180.0f; // УМЕНЬШЕНО (было 180.0f)
 		float horizontalOffset = 0.0f;
-		float distanceOffset = 600.0f;
+		float distanceOffset = 400.0f; // УМЕНЬШЕНО (было 600.0f)
 		XMVECTOR relativeMovement = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR currentRotation = XMQuaternionIdentity();
 		XMVECTOR Forward = XMVectorSet(0, 0, 1, 0);
@@ -1181,10 +1181,15 @@ namespace Camera
 		XMMATRIX constellationOffset = XMMatrixTranslation(0, 0, 0);
 		XMVECTOR EyeBack = XMVectorSet(0, 0, -1, 0);
 
-		// ДОБАВИМ ПЕРЕМЕННЫЕ ДЛЯ ПЛАВНОГО СЛЕЖЕНИЯ ЗА МЫШЬЮ
-		XMVECTOR targetRotation = XMQuaternionIdentity(); // целевой поворот камеры
-		float rotationSmoothness = 0.03f; // плавность поворота (0-1)
-		bool isFollowingMouse = true; // следить за направлением мыши
+		// УЛУЧШЕННЫЕ ПАРАМЕТРЫ ДЛЯ ПЛАВНОСТИ
+		XMVECTOR targetRotation = XMQuaternionIdentity();
+		float rotationSmoothness = 0.12f;
+		bool isFollowingMouse = true;
+
+		// ДОБАВЛЕНО: плавность движения позиции камеры
+		float positionSmoothness = 0.15f;
+		XMVECTOR smoothEyePosition = XMVectorSet(0, 0, 0, 0);
+
 	} static state;
 
 	void UpdateCameraPosition()
@@ -1194,7 +1199,7 @@ namespace Camera
 			// Берем ориентацию героя (которая управляется мышью)
 			state.targetRotation = Hero::state.currentRotation;
 
-			// ПЛАВНАЯ ИНТЕРПОЛЯЦИЯ КВАРТЕРНИОНОВ
+			// ПЛАВНАЯ ИНТЕРПОЛЯЦИЯ КВАРТЕРНИОНОВ с увеличенной плавностью
 			state.currentRotation = XMQuaternionSlerp(
 				state.currentRotation,
 				state.targetRotation,
@@ -1210,20 +1215,33 @@ namespace Camera
 		state.Up = XMVector3Rotate(state.defaultUp, state.currentRotation);
 		state.Right = XMVector3Cross(state.Up, state.Forward);
 
-		// 3. ВЫЧИСЛЯЕМ ПОЗИЦИЮ КАМЕРЫ ОТНОСИТЕЛЬНО ГЕРОЯ
-		XMVECTOR cameraOffset =
+		// 3. ВЫЧИСЛЯЕМ ЦЕЛЕВУЮ ПОЗИЦИЮ КАМЕРЫ ОТНОСИТЕЛЬНО ГЕРОЯ
+		XMVECTOR targetCameraOffset =
 			(-state.Forward * state.distanceOffset) +      // Основное смещение назад от камеры
 			(state.Up * state.verticalOffset) +           // Вертикальное смещение
 			(state.Right * state.horizontalOffset);       // Горизонтальное смещение
 
-		// 4. ВЫЧИСЛЯЕМ ОКОНЧАТЕЛЬНУЮ ПОЗИЦИЮ КАМЕРЫ
-		XMVECTOR cameraPosition = Hero::state.position + cameraOffset;
+		XMVECTOR targetCameraPosition = Hero::state.position + targetCameraOffset;
+
+		// 4. ПЛАВНАЯ ИНТЕРПОЛЯЦИЯ ПОЗИЦИИ КАМЕРЫ
+		if (XMVectorGetX(XMVector3Length(state.smoothEyePosition)) == 0) {
+			// Первая инициализация
+			state.smoothEyePosition = targetCameraPosition;
+		}
+		else {
+			// Плавное движение к целевой позиции
+			state.smoothEyePosition = XMVectorLerp(
+				state.smoothEyePosition,
+				targetCameraPosition,
+				state.positionSmoothness
+			);
+		}
 
 		// 5. ВЫЧИСЛЯЕМ ТОЧКУ ФОКУСИРОВКИ (впереди по направлению камеры)
-		XMVECTOR cameraTarget = cameraPosition + (state.Forward * 50.0f);
+		XMVECTOR cameraTarget = state.smoothEyePosition + (state.Forward * 50.0f);
 
 		// 6. ОБНОВЛЯЕМ СОСТОЯНИЕ КАМЕРЫ
-		state.Eye = cameraPosition;
+		state.Eye = state.smoothEyePosition;
 		state.at = cameraTarget;
 
 		// 7. ОБНОВЛЯЕМ МАТРИЦУ ВИДА
@@ -1251,8 +1269,9 @@ namespace Camera
 
 	void HandleMouseWheel(int delta)
 	{
-		state.distanceOffset -= delta * 5.0f;
-		state.distanceOffset = clamp(state.distanceOffset, state.minDist, state.maxDist);
+		// ПЛАВНОЕ ИЗМЕНЕНИЕ ДИСТАНЦИИ КАМЕРЫ
+		float targetDistance = state.distanceOffset - delta * 2.0f; // ЕЩЕ УМЕНЬШЕНА ЧУВСТВИТЕЛЬНОСТЬ
+		state.distanceOffset = clamp(targetDistance, state.minDist, state.maxDist);
 	}
 
 	// ФУНКЦИИ ДЛЯ УПРАВЛЕНИЯ СЛЕЖЕНИЕМ ЗА МЫШЬЮ
@@ -1260,14 +1279,18 @@ namespace Camera
 	{
 		state.isFollowingMouse = enable;
 		if (!enable) {
-			// При выключении слежения можно сохранить текущую ориентацию
 			state.targetRotation = state.currentRotation;
 		}
 	}
 
 	void SetRotationSmoothness(float smoothness)
 	{
-		state.rotationSmoothness = clamp(smoothness, 0.005f, 3.3f);
+		state.rotationSmoothness = clamp(smoothness, 0.05f, 0.3f);
+	}
+
+	void SetPositionSmoothness(float smoothness)
+	{
+		state.positionSmoothness = clamp(smoothness, 0.05f, 0.3f);
 	}
 
 	// МГНОВЕННОЕ СОВМЕЩЕНИЕ С ГЕРОЕМ (для резких поворотов)
@@ -1275,11 +1298,23 @@ namespace Camera
 	{
 		state.currentRotation = Hero::state.currentRotation;
 		state.targetRotation = state.currentRotation;
+		state.smoothEyePosition = state.Eye; // Сбрасываем плавность позиции
+	}
+
+	// ФУНКЦИЯ ДЛЯ БЫСТРОГО ПРИБЛИЖЕНИЯ КАМЕРЫ
+	void SetCameraDistance(float distance)
+	{
+		state.distanceOffset = clamp(distance, state.minDist, state.maxDist);
 	}
 
 	// ПОЛУЧЕНИЕ ТЕКУЩЕЙ ПЛАВНОСТИ
 	float GetRotationSmoothness()
 	{
 		return state.rotationSmoothness;
+	}
+
+	float GetPositionSmoothness()
+	{
+		return state.positionSmoothness;
 	}
 }
