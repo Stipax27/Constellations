@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
+п»ї////////////////////////////////////////////////////////////////////////////////
 // Filename: LevelManagerClass.h
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef _LEVELMANAGERCLASS_H_
@@ -19,6 +19,7 @@
 #include "SphereCollider.cpp"
 #include "PlaneCollider.cpp"
 #include "Sprite.cpp"
+#include "Constellation.cpp"
 
 #include "PhysicSystem.cpp"
 #include "CollisionSystem.cpp"
@@ -116,9 +117,9 @@ public:
 
 	bool Frame();
 
-	void ProcessSound(const char* name)//проигрывание аудиофайла в формате .wav, файл должен лежать в той же папке где и программа
+	void ProcessSound(const char* name)//РїСЂРѕРёРіСЂС‹РІР°РЅРёРµ Р°СѓРґРёРѕС„Р°Р№Р»Р° РІ С„РѕСЂРјР°С‚Рµ .wav, С„Р°Р№Р» РґРѕР»Р¶РµРЅ Р»РµР¶Р°С‚СЊ РІ С‚РѕР№ Р¶Рµ РїР°РїРєРµ РіРґРµ Рё РїСЂРѕРіСЂР°РјРјР°
 	{
-		//PlaySound(TEXT(name), NULL, SND_FILENAME | SND_ASYNC);//переменная name содежрит имя файла. флаг ASYNC позволяет проигрывать звук паралельно с исполнением программы
+		//PlaySound(TEXT(name), NULL, SND_FILENAME | SND_ASYNC);//РїРµСЂРµРјРµРЅРЅР°СЏ name СЃРѕРґРµР¶СЂРёС‚ РёРјСЏ С„Р°Р№Р»Р°. С„Р»Р°Рі ASYNC РїРѕР·РІРѕР»СЏРµС‚ РїСЂРѕРёРіСЂС‹РІР°С‚СЊ Р·РІСѓРє РїР°СЂР°Р»РµР»СЊРЅРѕ СЃ РёСЃРїРѕР»РЅРµРЅРёРµРј РїСЂРѕРіСЂР°РјРјС‹
 	}
 
 private:

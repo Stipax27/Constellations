@@ -48,7 +48,6 @@ public:
 		Draw::ClearDepth();
 
 		Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
-		Depth::Depth(Depth::depthmode::off);
 		Rasterizer::Cull(Rasterizer::cullmode::off);
 
 		Textures::RenderTarget(0, 0);
@@ -134,11 +133,15 @@ public:
 					Shaders::vShader(1);
 					Shaders::pShader(1);
 
-					ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
-					ConstBuf::Update(5, ConstBuf::global);
-					ConstBuf::ConstToVertex(5);
+					for (int a = 0; a < constellation->stars.size(); a++) {
+						point3d star = constellation->stars[a];
+						ConstBuf::global[0] = XMFLOAT4(star.x, star.y, star.z, 2);
+						ConstBuf::Update(5, ConstBuf::global);
+						ConstBuf::ConstToVertex(5);
+						ConstBuf::ConstToPixel(5);
 
-					Draw::Drawer(1);
+						Draw::Drawer(1);
+					}
 				}
 			}
 		}

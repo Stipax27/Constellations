@@ -54,37 +54,27 @@ bool LevelManagerClass::Initialize()
 	// WORLD CREATING START //
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
-	Sprite* sprite;
+	Constellation* constellation;
 	Transform* transform;
 	PhysicBody* physicBody;
 	//SphereCollider* sphereCollider;
 
-	Entity* star = m_World->CreateEntity();
-	transform = star->AddComponent<Transform>();
-	transform->position = point3d(-3.0f, 0.0f, 0.0f);
-	transform->scale = point3d(2, 0, 0);
+	Entity* entity = m_World->CreateEntity();
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(0.0f, 0.0f, 0.0f);
+	transform->scale = point3d(5, 0, 0);
 	//physicBody = star->AddComponent<PhysicBody>();
 	//physicBody->velocity = point3d(0.0f, 0.0f, 0.0f);
 	//star->AddComponent<SphereCollider>();
-	sprite = star->AddComponent<Sprite>();
-	sprite->vShader = 1;
-	sprite->pShader = 1;
+	constellation = entity->AddComponent<Constellation>();
 
-	star = m_World->CreateEntity();
-	transform = star->AddComponent<Transform>();
-	transform->position = point3d(0.0f, 0.0f, 0.0f);
-	transform->scale = point3d(3, 0, 0);
-	sprite = star->AddComponent<Sprite>();
-	sprite->vShader = 1;
-	sprite->pShader = 1;
-
-	star = m_World->CreateEntity();
-	transform = star->AddComponent<Transform>();
-	transform->position = point3d(3.0f, 0.0f, 0.0f);
-	transform->scale = point3d(1, 0, 0);
-	sprite = star->AddComponent<Sprite>();
-	sprite->vShader = 1;
-	sprite->pShader = 1;
+	constellation->stars = {
+		point3d(0, 0, 0),
+		point3d(0, 1, 0),
+		point3d(0, 2, 0),
+		point3d(-1, 0, 0),
+		point3d(1, 0, 0),
+	};
 
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
