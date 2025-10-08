@@ -8,6 +8,7 @@
 #include "system.h"
 #include "Transform.cpp"
 #include "Sprite.cpp"
+#include "Constellation.cpp"
 
 #include "cameraclass.h"
 
@@ -63,8 +64,7 @@ public:
 			Entity* entity = entities[i];
 			Transform* transform = entity->GetComponent<Transform>();
 
-			Sprite* sprite = entity->GetComponent<Sprite>();
-			if (transform != nullptr && sprite != nullptr)
+			if (transform != nullptr)
 			{
 
 				XMMATRIX rotateMatrix, translateMatrix, scaleMatrix, srMatrix;
@@ -109,17 +109,37 @@ public:
 				srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
 				XMMATRIX worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
-				// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+				Sprite* sprite = entity->GetComponent<Sprite>();
+				if (sprite != nullptr)
+				{
+					// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 				//sprite->model.Render(m_Direct3D->GetDeviceContext());
 
-				Shaders::vShader(sprite->vShader);
-				Shaders::pShader(sprite->pShader);
+					Shaders::vShader(sprite->vShader);
+					Shaders::pShader(sprite->pShader);
 
-				ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
-				ConstBuf::Update(5, ConstBuf::global);
-				ConstBuf::ConstToVertex(5);
+					ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
+					ConstBuf::Update(5, ConstBuf::global);
+					ConstBuf::ConstToVertex(5);
 
-				Draw::Drawer(1);
+					Draw::Drawer(1);
+				}
+				
+				Constellation* constellation = entity->GetComponent<Constellation>();
+				if (constellation != nullptr)
+				{
+					// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+				//sprite->model.Render(m_Direct3D->GetDeviceContext());
+
+					Shaders::vShader(1);
+					Shaders::pShader(1);
+
+					ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
+					ConstBuf::Update(5, ConstBuf::global);
+					ConstBuf::ConstToVertex(5);
+
+					Draw::Drawer(1);
+				}
 			}
 		}
 
