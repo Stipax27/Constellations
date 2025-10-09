@@ -142,8 +142,8 @@ public:
 						point3d point1 = constellation->stars[link.first];
 						point3d point2 = constellation->stars[link.second];
 
-						ConstBuf::global[0] = XMFLOAT4(point1.x, point1.y, point1.z, 0.5);
-						ConstBuf::global[1] = XMFLOAT4(point2.x, point2.y, point2.z, 0.5);
+						ConstBuf::global[0] = XMFLOAT4(point1.x, point1.y, point1.z, 0.25);
+						ConstBuf::global[1] = XMFLOAT4(point2.x, point2.y, point2.z, 0.25);
 						ConstBuf::Update(5, ConstBuf::global);
 						ConstBuf::ConstToVertex(5);
 
