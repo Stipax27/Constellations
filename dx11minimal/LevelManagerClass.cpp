@@ -62,19 +62,26 @@ bool LevelManagerClass::Initialize()
 	Entity* entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, 0.0f);
-	transform->scale = point3d(5, 0, 0);
+	transform->scale = point3d(1, 0, 0);
 	//physicBody = star->AddComponent<PhysicBody>();
 	//physicBody->velocity = point3d(0.0f, 0.0f, 0.0f);
 	//star->AddComponent<SphereCollider>();
 	constellation = entity->AddComponent<Constellation>();
-
 	constellation->stars = {
+		point3d(-0.09, -0.7, 0),
+		point3d(-0.05, -0.15, 0),
 		point3d(0, 0, 0),
-		point3d(0, 1, 0),
-		point3d(0, 2, 0),
-		point3d(-1, 0, 0),
-		point3d(1, 0, 0),
+		point3d(-0.4, 0.5, 0),
+		point3d(0, 0, 0),
+		point3d(0.4, 0.3, 0)
 	};
+	constellation->links = {
+		{0,1},
+		{1,2},
+		{2,3},
+		{2,5}
+	};
+
 
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();

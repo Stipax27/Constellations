@@ -161,6 +161,9 @@
     <ClCompile Include="Point3d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Constellation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="dx11minimal.rc">
@@ -263,6 +266,9 @@
     <None Include="Shaders\BlackHole_Body_PS.shader" />
     <None Include="Shaders\UI_PS.shader" />
     <None Include="Shaders\UI_VS.shader" />
+    <None Include="ColorCorrection_PS.shader">
+      <Filter>Shaders\PostProcess</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\StarLink_PS.shader">

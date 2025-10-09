@@ -418,7 +418,8 @@ void Shaders::Init()
 	
 	//-----------------------------------------------
 	
-	Shaders::CreatePS(100, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Lensing_PS.shader"));
+	Shaders::CreatePS(100, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ColorCorrection_PS.shader"));
+	Shaders::CreatePS(101, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Lensing_PS.shader"));
 	
 	//-----------------------------------------------
 	

@@ -11,9 +11,9 @@ cbuffer frame : register(b4)
 
 cbuffer camera : register(b3)
 {
-    float4x4 world[2];
-    float4x4 view[2];
-    float4x4 proj[2];
+    //float4x4 world[2];
+    float4x4 view;
+    float4x4 proj;
 };
 
 cbuffer drawMat : register(b2)
@@ -55,8 +55,8 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     float4 p2 = gConst[1];
 
     float4 pointsProj[] = {
-        mul(mul(float4(p1.xyz, 1.0f), view[0]), proj[0]),
-        mul(mul(float4(p2.xyz, 1.0f), view[0]), proj[0])
+        mul(mul(float4(p1.xyz, 1.0f), view), proj),
+        mul(mul(float4(p2.xyz, 1.0f), view), proj)
     };
 
     float4 direction = pointsProj[1] - pointsProj[0];
@@ -69,8 +69,8 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     float4 pos = gConst[vID % 2];
 
-    float4 viewPos = mul(float4(pos.xyz, 1.0f), view[0]);
-    float4 projPos = mul(viewPos, proj[0]);
+    float4 viewPos = mul(float4(pos.xyz, 1.0f), view);
+    float4 projPos = mul(viewPos, proj);
 
     projPos.xy += perpendicular * quadUV[vID].y * gConst[0].w * float2(aspect.x, 1);
 

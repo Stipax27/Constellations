@@ -43,15 +43,15 @@ public:
 
 	bool Update(vector<Entity*>& entities, float deltaTime)
 	{
+		Textures::RenderTarget(1, 0);
+
 		// Clear the buffers to begin the scene.
 		Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
 		Draw::ClearDepth();
 
 		Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
 		Rasterizer::Cull(Rasterizer::cullmode::off);
-
-		Textures::RenderTarget(0, 0);
-		Depth::Depth(Depth::depthmode::on);
+		Depth::Depth(Depth::depthmode::off);
 
 		// Generate the view matrix based on the camera's position.
 		m_Camera->Render();
@@ -130,15 +130,35 @@ public:
 					// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 				//sprite->model.Render(m_Direct3D->GetDeviceContext());
 
+					Shaders::vShader(4);
+					Shaders::pShader(4);
+
+					ConstBuf::global[2] = XMFLOAT4(1, 1, 1, 1);
+					ConstBuf::Update(5, ConstBuf::global);
+					ConstBuf::ConstToPixel(5);
+
+					for (int a = 0; a < constellation->links.size(); a++) {
+						pair<int, int> link = constellation->links[a];
+						point3d point1 = constellation->stars[link.first];
+						point3d point2 = constellation->stars[link.second];
+
+						ConstBuf::global[0] = XMFLOAT4(point1.x, point1.y, point1.z, 0.5);
+						ConstBuf::global[1] = XMFLOAT4(point2.x, point2.y, point2.z, 0.5);
+						ConstBuf::Update(5, ConstBuf::global);
+						ConstBuf::ConstToVertex(5);
+
+						Draw::Drawer(1);
+					}
+
 					Shaders::vShader(1);
 					Shaders::pShader(1);
 
 					for (int a = 0; a < constellation->stars.size(); a++) {
 						point3d star = constellation->stars[a];
-						ConstBuf::global[0] = XMFLOAT4(star.x, star.y, star.z, 2);
+
+						ConstBuf::global[0] = XMFLOAT4(star.x, star.y, star.z, transform->scale.x);
 						ConstBuf::Update(5, ConstBuf::global);
 						ConstBuf::ConstToVertex(5);
-						ConstBuf::ConstToPixel(5);
 
 						Draw::Drawer(1);
 					}
@@ -146,19 +166,16 @@ public:
 			}
 		}
 
-		//Textures::CreateMipMap();
-		//Draw::OutputRenderTextures();
+		Textures::CreateMipMap();
+		Draw::OutputRenderTextures();
 
-		//Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
-		//Depth::Depth(Depth::depthmode::off);
-		//Rasterizer::Cull(Rasterizer::cullmode::off);
+		Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
+		Depth::Depth(Depth::depthmode::off);
+		Rasterizer::Cull(Rasterizer::cullmode::off);
 
-		//Shaders::vShader(10);
-		//Shaders::pShader(10);
-		//context->Draw(6, 0);
-
-		// Present the rendered scene to the screen.
-		Draw::Present();
+		Shaders::vShader(10);
+		Shaders::pShader(100);
+		context->Draw(6, 0);
 
 		return true;
 	}

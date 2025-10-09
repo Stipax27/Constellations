@@ -141,6 +141,9 @@
     <ClInclude Include="Point3d.h" />
     <ClInclude Include="system.h" />
     <ClInclude Include="world.h" />
+    <None Include="ColorCorrection_PS.shader">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
     <None Include="Shaders\BlackHole_Body_PS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
