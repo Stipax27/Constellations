@@ -1,4 +1,5 @@
-﻿#pragma once
+﻿#ifndef _POINT3D_H
+#define _POINT3D_H
 
 #include <sstream>
 #include "DirectXMath.h"
@@ -47,3 +48,5 @@ struct point3d {
     point3d& operator/=(const point3d& other);
     point3d& operator/=(float scalar);
 };
+
+#endif

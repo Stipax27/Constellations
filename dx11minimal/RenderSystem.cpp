@@ -7,7 +7,7 @@
 #include<cmath>
 #include "system.h"
 #include "Transform.cpp"
-#include "Sprite.cpp"
+#include "RenderObject.cpp"
 #include "Constellation.cpp"
 
 #include "cameraclass.h"
@@ -108,14 +108,14 @@ public:
 				srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
 				XMMATRIX worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
-				Sprite* sprite = entity->GetComponent<Sprite>();
-				if (sprite != nullptr)
+				RenderObject* renderObject = entity->GetComponent<RenderObject>();
+				if (renderObject != nullptr)
 				{
 					// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 				//sprite->model.Render(m_Direct3D->GetDeviceContext());
 
-					Shaders::vShader(sprite->vShader);
-					Shaders::pShader(sprite->pShader);
+					Shaders::vShader(renderObject->vShader);
+					Shaders::pShader(renderObject->pShader);
 
 					ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
 					ConstBuf::Update(5, ConstBuf::global);

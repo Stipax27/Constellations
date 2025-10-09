@@ -48,6 +48,16 @@ void CameraClass::SetRotation(float x, float y, float z)
 }
 
 
+void CameraClass::SetQuaternionRotation(float x = 0.0f, float y = 1.0f, float z = 0.0f, float w = 0.0f)
+{
+	point3d rotation = quaternionToEuler(x, y, z, w);
+
+	m_rotationX = rotation.x;
+	m_rotationY = rotation.y;
+	m_rotationZ = rotation.z;
+}
+
+
 void CameraClass::AddPosition(float x = 0.0f, float y = 0.0f, float z = 0.0f)
 {
 	m_positionX += x;
@@ -63,6 +73,16 @@ void CameraClass::AddRotation(float x = 0.0f, float y = 0.0f, float z = 0.0f)
 	m_rotationY += y;
 	m_rotationZ += z;
 	return;
+}
+
+
+void CameraClass::AddQuaternionRotation(float x = 0.0f, float y = 1.0f, float z = 0.0f, float w = 0.0f)
+{
+	point3d rotation = quaternionToEuler(x, y, z, w);
+
+	m_rotationX += rotation.x;
+	m_rotationY += rotation.y;
+	m_rotationZ += rotation.z;
 }
 
 

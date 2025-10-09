@@ -1,7 +1,8 @@
-﻿#ifndef UTILS_H
-#define UTILS_H
+﻿#ifndef _UTILS_H
+#define _UTILS_H
 
 #include <corecrt_math.h>
+#include "Point3d.h"
 
 #define PI 3.1415926535897932384626433832795f
 
@@ -10,5 +11,6 @@ float smoothstep(float edge0, float edge1, float x);
 float fract(float);
 float lerp(float x1, float x2, float a);
 float degreesToRadians(float);
+point3d quaternionToEuler(float x, float y, float z, float w);
 
-#endif // !UTILS_H
+#endif
