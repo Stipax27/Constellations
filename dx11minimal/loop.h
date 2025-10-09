@@ -43,6 +43,7 @@ void mainLoop(float deltaTime)
 		Camerainit = true;
 		Camera::Camera();//��� �������� ��� ����� ����� ������������ (�� ���� � ����������� �����(dx11minimal.cpp) ����� ���������(��� ������))
 	}
+	CameraTargeting::UpdateTargeting(deltaTime);
 	Camera::Camera();//добавили общий вызов обновления камеры, чтобы везде не коллить
 
 	Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });

@@ -1189,44 +1189,84 @@ namespace Camera
 
 	void UpdateCameraPosition()
 	{
-		// 1. ЕСЛИ ВКЛЮЧЕНО СЛЕЖЕНИЕ ЗА МЫШЬЮ - ПЛАВНО ПОВОРАЧИВАЕМ КАМЕРУ К ГЕРОЮ
-		if (state.isFollowingMouse) {
-			// Берем ориентацию героя (которая управляется мышью)
-			state.targetRotation = Hero::state.currentRotation;
+		XMVECTOR cameraTarget;
+		XMVECTOR cameraPosition;
 
-			// ПЛАВНАЯ ИНТЕРПОЛЯЦИЯ КВАРТЕРНИОНОВ
-			state.currentRotation = XMQuaternionSlerp(
-				state.currentRotation,
-				state.targetRotation,
-				state.rotationSmoothness
-			);
+		// ИСПОЛЬЗУЕМ СИСТЕМУ ТАРГЕТИНГА
+		if (CameraTargeting::IsTargeting())
+		{
+			// РЕЖИМ ТАРГЕТИНГА
+			XMVECTOR enemyPos = CameraTargeting::GetTargetPosition();
+			float transition = CameraTargeting::data.currentTransition;
 
-			// Нормализуем результат
-			state.currentRotation = XMQuaternionNormalize(state.currentRotation);
+			// Плавная интерполяция дистанции
+			float currentDistance = state.distanceOffset;
+			float targetDistance = CameraTargeting::data.targetingDistance;
+			state.distanceOffset = currentDistance + (targetDistance - currentDistance) * transition * 0.1f;
+
+			// Вычисляем направление от героя к врагу
+			XMVECTOR toEnemy = XMVector3Normalize(enemyPos - Hero::state.position);
+
+			// Плавная интерполяция направления
+			XMVECTOR targetForward = toEnemy;
+			state.Forward = XMVectorLerp(state.Forward, targetForward, transition * 0.1f);
+			state.Forward = XMVector3Normalize(state.Forward);
+
+			state.Up = state.defaultUp;
+			state.Right = XMVector3Cross(state.Up, state.Forward);
+
+			// Позиция камеры
+			cameraPosition = Hero::state.position +
+				(-state.Forward * state.distanceOffset) +
+				(state.Up * CameraTargeting::data.targetingVerticalOffset);
+
+			cameraTarget = enemyPos;
+
+			// Отключаем автоматическое слежение за мышью
+			state.isFollowingMouse = false;
+		}
+		else
+		{
+			// ОБЫЧНЫЙ РЕЖИМ
+			if (state.isFollowingMouse) {
+				state.targetRotation = Hero::state.currentRotation;
+				state.currentRotation = XMQuaternionSlerp(
+					state.currentRotation,
+					state.targetRotation,
+					state.rotationSmoothness
+				);
+				state.currentRotation = XMQuaternionNormalize(state.currentRotation);
+			}
+
+			// Плавное возвращение к обычной дистанции
+			if (state.distanceOffset > CameraTargeting::data.normalDistance)
+			{
+				state.distanceOffset -= (state.distanceOffset - CameraTargeting::data.normalDistance) * 0.1f;
+			}
+
+			// Вычисляем векторы ориентации из кватерниона
+			state.Forward = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), state.currentRotation);
+			state.Up = XMVector3Rotate(state.defaultUp, state.currentRotation);
+			state.Right = XMVector3Cross(state.Up, state.Forward);
+
+			// Позиция камеры относительно героя
+			XMVECTOR cameraOffset =
+				(-state.Forward * state.distanceOffset) +
+				(state.Up * state.verticalOffset) +
+				(state.Right * state.horizontalOffset);
+
+			cameraPosition = Hero::state.position + cameraOffset;
+			cameraTarget = cameraPosition + (state.Forward * 50.0f);
+
+			// Включаем обратно слежение за мышью
+			state.isFollowingMouse = true;
 		}
 
-		// 2. ВЫЧИСЛЯЕМ ВЕКТОРЫ ОРИЕНТАЦИИ КАМЕРЫ ИЗ КВАРТЕРНИОНА
-		state.Forward = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), state.currentRotation);
-		state.Up = XMVector3Rotate(state.defaultUp, state.currentRotation);
-		state.Right = XMVector3Cross(state.Up, state.Forward);
-
-		// 3. ВЫЧИСЛЯЕМ ПОЗИЦИЮ КАМЕРЫ ОТНОСИТЕЛЬНО ГЕРОЯ
-		XMVECTOR cameraOffset =
-			(-state.Forward * state.distanceOffset) +      // Основное смещение назад от камеры
-			(state.Up * state.verticalOffset) +           // Вертикальное смещение
-			(state.Right * state.horizontalOffset);       // Горизонтальное смещение
-
-		// 4. ВЫЧИСЛЯЕМ ОКОНЧАТЕЛЬНУЮ ПОЗИЦИЮ КАМЕРЫ
-		XMVECTOR cameraPosition = Hero::state.position + cameraOffset;
-
-		// 5. ВЫЧИСЛЯЕМ ТОЧКУ ФОКУСИРОВКИ (впереди по направлению камеры)
-		XMVECTOR cameraTarget = cameraPosition + (state.Forward * 50.0f);
-
-		// 6. ОБНОВЛЯЕМ СОСТОЯНИЕ КАМЕРЫ
+		// Обновляем состояние камеры
 		state.Eye = cameraPosition;
 		state.at = cameraTarget;
 
-		// 7. ОБНОВЛЯЕМ МАТРИЦУ ВИДА
+		// Обновляем матрицу вида
 		ConstBuf::camera.view[0] = XMMatrixTranspose(
 			XMMatrixLookAtLH(state.Eye, state.at, state.Up)
 		);

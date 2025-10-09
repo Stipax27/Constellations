@@ -128,6 +128,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AriesNebula.h" />
+    <ClInclude Include="CameraTarget.h" />
+    <ClInclude Include="CameraTargetLOG.h" />
     <ClInclude Include="Constellation.h" />
     <ClInclude Include="DialogStruct.h" />
     <ClInclude Include="DiologTEXT.h" />

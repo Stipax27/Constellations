@@ -7,8 +7,8 @@ float boostingFlySpeed;
 const float maxFlySpeed = 15.f;
 const float MOUSE_SENSITIVITY = 0.002f;
 const float CURSOR_IGNORE_ZONE = 0.05f;
-const float MAX_CURSOR_DEVIATION = 0.3f;
-const float SENSIVITY = 0.25f;
+const float MAX_CURSOR_DEVIATION = 0.45f;
+const float SENSIVITY = 0.11f;
 const float CURSOR_ZONE_DELTA = MAX_CURSOR_DEVIATION - CURSOR_IGNORE_ZONE;
 
 void getPerpendicularDirections()
@@ -29,6 +29,7 @@ void updateFlyDirection()
     {
         return;
     }
+
     point3d Direction = { 0, 0, 0 };
 
     if (GetAsyncKeyState('W') & 0x8000) {
@@ -69,51 +70,31 @@ void updateFlyDirection()
     }
     flyDirection = flyDirection.lerp(Direction, 0.1f);
 
-    float dPitch = 0.0f, dYaw = 0.0f, dRoll = 0.0f;
-
-    float x = mouse.pos.x - window.width / 2;
-    float y = mouse.pos.y - window.height / 2;
-
-    point3d mousePos = point3d(x / window.width / aspect, y / window.height, 0);
-    float length = mousePos.magnitude();
-
-    if (length > CURSOR_IGNORE_ZONE)
+    // РЕЖИМ ТАРГЕТИНГА - ГЕРОЙ ВСЕГДА СМОТРИТ НА ВРАГА, НО МОЖНО ПРИЦЕЛИВАТЬСЯ
+    if (CameraTargeting::IsTargeting())
     {
-        if (length > MAX_CURSOR_DEVIATION)
-        {
-            mousePos = mousePos.normalized() * MAX_CURSOR_DEVIATION;
-            SetCursorPos(mousePos.x * window.width * aspect + window.width / 2, mousePos.y * window.height + window.height / 2);
-        }
+        XMVECTOR enemyPos = CameraTargeting::GetTargetPosition();
+        XMVECTOR heroPos = Hero::state.position;
 
-        float k = (length - CURSOR_IGNORE_ZONE) / MAX_CURSOR_DEVIATION;
+        // ВЫЧИСЛЯЕМ НАПРАВЛЕНИЕ К ВРАГУ
+        XMVECTOR toEnemy = XMVector3Normalize(enemyPos - heroPos);
 
-        float dx = (mousePos.x) * SENSIVITY * k;
-        float dy = (mousePos.y) * SENSIVITY * k;
+        // СОЗДАЕМ КВАРТЕРНИОН ДЛЯ ПОВОРОТА К ВРАГУ
+        XMVECTOR targetForward = toEnemy;
+        XMVECTOR upVector = XMVectorSet(0, 1, 0, 0);
 
-        dPitch = dy;
-        dYaw = dx;
-    }
+        // ИСПОЛЬЗУЕМ LookAt для создания правильного поворота
+        XMMATRIX lookAtMatrix = XMMatrixLookAtLH(heroPos, enemyPos, upVector);
+        XMMATRIX rotationMatrix = XMMatrixInverse(nullptr, lookAtMatrix);
+        XMVECTOR targetRotation = XMQuaternionRotationMatrix(rotationMatrix);
 
-    // УПРАВЛЕНИЕ Q/E ДЛЯ ВРАЩЕНИЯ
-    if (GetAsyncKeyState('E')) {
-        dRoll -= turnSpeed;
-        Camera::state.n = lerp(Camera::state.n, 100, 0.3f);
-    }
-    if (GetAsyncKeyState('Q')) {
-        dRoll += turnSpeed;
-        Camera::state.n = lerp(Camera::state.n, 100, 0.3f);
-    }
-
-    // ПРИМЕНЯЕМ ВРАЩЕНИЕ К ГЕРОЮ (УПРАВЛЯЕТСЯ МЫШЬЮ)
-    if (dPitch != 0.0f || dYaw != 0.0f || dRoll != 0.0f) {
-        XMVECTOR qPitch = XMQuaternionRotationAxis(Hero::state.Right, dPitch);
-        XMVECTOR qYaw = XMQuaternionRotationAxis(Hero::state.Up, dYaw);
-        XMVECTOR qRoll = XMQuaternionRotationAxis(Hero::state.Forwardbuf, dRoll);
-
-        XMVECTOR qTotal = XMQuaternionMultiply(qYaw, qPitch);
-        qTotal = XMQuaternionMultiply(qTotal, qRoll);
-
-        Hero::state.currentRotation = XMQuaternionMultiply(Hero::state.currentRotation, qTotal);
+        // ПЛАВНАЯ ИНТЕРПОЛЯЦИЯ ПОВОРОТА
+        float rotationSpeed = 5.0f * (deltaTime / 1000.0f);
+        Hero::state.currentRotation = XMQuaternionSlerp(
+            Hero::state.currentRotation,
+            targetRotation,
+            rotationSpeed
+        );
         Hero::state.currentRotation = XMQuaternionNormalize(Hero::state.currentRotation);
 
         // ОБНОВЛЯЕМ ВЕКТОРЫ ГЕРОЯ
@@ -121,13 +102,71 @@ void updateFlyDirection()
         Hero::state.Up = XMVector3Rotate(Hero::state.defaultUp, Hero::state.currentRotation);
         Hero::state.Right = XMVector3Cross(Hero::state.Up, Hero::state.Forwardbuf);
 
-        // КАМЕРА БУДЕТ ПЛАВНО СЛЕДОВАТЬ ЗА ЭТИМ ПОВОРОТОМ
-    }
-    else {
+        // НЕ ЦЕНТРИРУЕМ КУРСОР - ПОЗВОЛЯЕМ ИГРОКУ ПРИЦЕЛИВАТЬСЯ
+        // Мышка теперь используется только для прицеливания атак, а не для поворота героя
+
         Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
     }
-}
+    else
+    {
+        // ОБЫЧНЫЙ РЕЖИМ - ПОЛНОЕ УПРАВЛЕНИЕ МЫШЬЮ
+        float dPitch = 0.0f, dYaw = 0.0f, dRoll = 0.0f;
 
+        float x = mouse.pos.x - window.width / 2;
+        float y = mouse.pos.y - window.height / 2;
+
+        point3d mousePos = point3d(x / window.width / aspect, y / window.height, 0);
+        float length = mousePos.magnitude();
+
+        if (length > CURSOR_IGNORE_ZONE)
+        {
+            if (length > MAX_CURSOR_DEVIATION)
+            {
+                mousePos = mousePos.normalized() * MAX_CURSOR_DEVIATION;
+                SetCursorPos(mousePos.x * window.width * aspect + window.width / 2, mousePos.y * window.height + window.height / 2);
+            }
+
+            float k = (length - CURSOR_IGNORE_ZONE) / MAX_CURSOR_DEVIATION;
+
+            float dx = (mousePos.x) * SENSIVITY * k;
+            float dy = (mousePos.y) * SENSIVITY * k;
+
+            dPitch = dy;
+            dYaw = dx;
+        }
+
+        // УПРАВЛЕНИЕ Q/E ДЛЯ ВРАЩЕНИЯ
+        if (GetAsyncKeyState('E')) {
+            dRoll -= turnSpeed;
+            Camera::state.n = lerp(Camera::state.n, 100, 0.3f);
+        }
+        if (GetAsyncKeyState('Q')) {
+            dRoll += turnSpeed;
+            Camera::state.n = lerp(Camera::state.n, 100, 0.3f);
+        }
+
+        // ПРИМЕНЯЕМ ВРАЩЕНИЕ К ГЕРОЮ
+        if (dPitch != 0.0f || dYaw != 0.0f || dRoll != 0.0f) {
+            XMVECTOR qPitch = XMQuaternionRotationAxis(Hero::state.Right, dPitch);
+            XMVECTOR qYaw = XMQuaternionRotationAxis(Hero::state.Up, dYaw);
+            XMVECTOR qRoll = XMQuaternionRotationAxis(Hero::state.Forwardbuf, dRoll);
+
+            XMVECTOR qTotal = XMQuaternionMultiply(qYaw, qPitch);
+            qTotal = XMQuaternionMultiply(qTotal, qRoll);
+
+            Hero::state.currentRotation = XMQuaternionMultiply(Hero::state.currentRotation, qTotal);
+            Hero::state.currentRotation = XMQuaternionNormalize(Hero::state.currentRotation);
+
+            // ОБНОВЛЯЕМ ВЕКТОРЫ ГЕРОЯ
+            Hero::state.Forwardbuf = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), Hero::state.currentRotation);
+            Hero::state.Up = XMVector3Rotate(Hero::state.defaultUp, Hero::state.currentRotation);
+            Hero::state.Right = XMVector3Cross(Hero::state.Up, Hero::state.Forwardbuf);
+        }
+        else {
+            Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
+        }
+    }
+}
 int acc = 0;
 bool wasShiftPressed = false;
 float speed;
@@ -321,10 +360,19 @@ void updatePlayerPosition(float deltaTime)
 {
     if (currentFlySpeed > 0)
     {
-        // 1. Создаем вектор направления из flyDirection
-        XMVECTOR moveDir = XMVectorSet(flyDirection.x, flyDirection.y, flyDirection.z, 0.0f);
+        XMVECTOR moveDir;
 
-        // 2. Рассчитываем вектор смещения (без дополнительного вращения!)
+        // РАЗНЫЕ НАПРАВЛЕНИЯ ДВИЖЕНИЯ В ЗАВИСИМОСТИ ОТ РЕЖИМА
+        if (CameraTargeting::IsTargeting()) {
+            // ПРИ ТАРГЕТИНГЕ - ДВИЖЕНИЕ ОТНОСИТЕЛЬНО КАМЕРЫ
+            moveDir = XMVectorSet(flyDirection.x, flyDirection.y, flyDirection.z, 0.0f);
+        }
+        else {
+            // ОБЫЧНЫЙ РЕЖИМ - ДВИЖЕНИЕ ОТНОСИТЕЛЬНО ГЕРОЯ
+            moveDir = XMVectorSet(flyDirection.x, flyDirection.y, flyDirection.z, 0.0f);
+        }
+
+        // 2. Рассчитываем вектор смещения
         XMVECTOR displacement = XMVectorScale(moveDir, currentFlySpeed * deltaTime);
 
         // 3. Обновляем позицию героя

@@ -165,6 +165,15 @@
     <ClInclude Include="EnemyAiUPD.h">
       <Filter>Header Files\Structures</Filter>
     </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraTarget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraTargetLOG.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dx11minimal.cpp">
@@ -269,6 +278,11 @@
     <None Include="Shaders\VoronoiNoise.shader">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Shaders\BlackHole_Body_PS.shader" />
+    <None Include="Shaders\UI_PS.shader" />
+    <None Include="Shaders\UI_VS.shader" />
+    <None Include="Shaders\StarPointPS.shader" />
+    <None Include="Shaders\StarPointVS.shader" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\StarLink_PS.shader">
@@ -277,5 +291,6 @@
     <FxCompile Include="Shaders\SpaceStars_VS.shader">
       <Filter>Shaders\SpaceStars</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\BlackHole_Body_VS.shader" />
   </ItemGroup>
 </Project>

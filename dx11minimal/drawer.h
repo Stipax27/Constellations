@@ -2799,6 +2799,57 @@ namespace drawer
            //    drawString("recharge", window.width * .9, window.height * .85, 1., false);
            //    drawString(cdTimeOutText.c_str(), window.width * .9, window.height * .9, 3., false);
            // }
+            static bool wasFPressed = false;
+            static DWORD lastFToggleTime = 0;
+            const DWORD F_TOGGLE_COOLDOWN = 300; // Задержка 300ms
+
+            if (GetAsyncKeyState('F') & 0x8000)
+            {
+                if (!wasFPressed && (currentTime - lastFToggleTime) > F_TOGGLE_COOLDOWN)
+                {
+                    if (!CameraTargeting::IsTargeting())
+                    {
+                        // Найти ближайшего врага
+                        float closestDistance = FLT_MAX;
+                        int closestEnemy = -1;
+
+                        for (int i = 0; i < starSet.size(); i++)
+                        {
+                            if (i == player_sign || !starSet[i]) continue;
+
+                            Constellation& enemy = *starSet[i];
+                            XMMATRIX enemyTransform = CreateEnemyToWorldMatrix(enemy);
+                            XMVECTOR enemyPos = enemyTransform.r[3];
+
+                            float distance = XMVectorGetX(XMVector3Length(enemyPos - Hero::state.position));
+
+                            if (distance < closestDistance && distance < 40000.0f)
+                            {
+                                closestDistance = distance;
+                                closestEnemy = i;
+                            }
+                        }
+
+                        if (closestEnemy != -1)
+                        {
+                            CameraTargeting::StartTargeting(closestEnemy);
+                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\TargetLock.wav");
+                        }
+                    }
+                    else
+                    {
+                        CameraTargeting::StopTargeting();
+                        ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\TargetUnlock.wav");
+                    }
+
+                    wasFPressed = true;
+                    lastFToggleTime = currentTime;
+                }
+            }
+            else
+            {
+                wasFPressed = false;
+            }
 
             UpdateGame();
 

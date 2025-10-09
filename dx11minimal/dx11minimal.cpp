@@ -62,6 +62,7 @@ DWORD battleStartTime;
 
 HWND hWnd;
 #include "utils.h"
+#include "CameraTarget.h"
 #include "dx11.h"
 #include "Player.h"
 
@@ -88,6 +89,7 @@ HWND hWnd;
 #include "StatusGame.h"
 #include "Weapon.h"
 #include "EnemyAiUPD.h"//
+#include "CameraTargetLOG.h"
 #include "Elements.h"
 #include "MainGame.h"
 #include "DiologTEXT.h"
