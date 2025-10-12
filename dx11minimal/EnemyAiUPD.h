@@ -65,7 +65,7 @@ namespace Enemy {
 
     void EnemyAI::AiUpdate(float deltaTime, point3d& heroPosition, point3d& enemyPositions , float& player) {
         data.playerDistance = (heroPosition - enemyPositions).magnitude();
-        data.playerVisible = (data.playerDistance < 20000.0f);
+        data.playerVisible = (data.playerDistance < 40000.0f);
 
         switch (data.currentState) {
         case AIState::PATROL:
@@ -266,11 +266,11 @@ namespace Enemy {
             XMMatrixTranslation(enemyPos.x, enemyPos.y, enemyPos.z);
     }
 
-    void EnemyAI::JumpAttack(float deltaTime, point3d& heroPos, point3d& enemyPos , float& player) {
+    void EnemyAI::JumpAttack(float deltaTime, point3d& heroPos, point3d& enemyPos, float& player) {
         // Фаза прыжка вверх
         if (!data.isShockwaveActive && data.jumpHeight < data.maxJumpHeight) {
             data.jumpHeight += data.jumpSpeed * deltaTime;
-            enemyPos.y -= data.jumpSpeed * deltaTime;
+            enemyPos.y -= data.jumpSpeed * deltaTime; // Обратите внимание: это УМЕНЬШАЕТ Y - возможно должно быть enemyPos.y +=
 
             // Поворачиваем врага вверх во время прыжка
             XMVECTOR upDir = XMVectorSet(0, 1, 0, 0);
@@ -279,7 +279,18 @@ namespace Enemy {
         // Фаза падения и создания ударной волны
         else if (!data.isShockwaveActive) {
             data.jumpHeight -= data.jumpSpeed * deltaTime;
-            enemyPos.y += data.jumpSpeed * deltaTime;
+            enemyPos.y += data.jumpSpeed * deltaTime; // Обратите внимание: это УВЕЛИЧИВАЕТ Y
+
+            // ДОБАВИТЬ: проверка столкновения во время падения
+            float fallDistance = (heroPos - enemyPos).magnitude();
+            if (fallDistance < 2000.0f) { // Увеличиваем радиус коллизии
+                bool attackBlocked = (current_weapon == weapon_name::Shield && energy >= energyCost.shieldBlock);
+                if (!attackBlocked) {
+                    data.isAttacking = true;
+                    player -= data.DAMAGE_AI * 1.5f; // Урон при падении
+                    //ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Damage.wav");
+                }
+            }
 
             if (enemyPos.y <= data.lastOrbitPosition.y) {
                 enemyPos.y = data.lastOrbitPosition.y;
@@ -292,15 +303,26 @@ namespace Enemy {
                 UpdateRotation(toPlayer.normalized());
             }
         }
-        // Фаза ударной волны
+        // Фаза ударной волны - УЛУЧШЕННАЯ ПРОВЕРКА
         else if (data.isShockwaveActive) {
             data.shockwaveRadius += data.shockwaveSpeed * deltaTime;
-            bool attackBlocked = (current_weapon == weapon_name::Shield && energy >= energyCost.shieldBlock);
-            // Проверяем попадание по игроку
-            if ((heroPos - enemyPos).magnitude() < data.shockwaveRadius) {
+
+            // УВЕЛИЧИВАЕМ радиус проверки и добавляем отладку
+            float shockwaveDistance = (heroPos - enemyPos).magnitude();
+            bool isPlayerInRange = (shockwaveDistance < data.shockwaveRadius + 15000.0f); // + буфер
+
+            if (isPlayerInRange && !data.damageApplied) { // Защита от многократного урона
+                bool attackBlocked = (current_weapon == weapon_name::Shield && energy >= energyCost.shieldBlock);
+
                 if (!attackBlocked) {
                     data.isAttacking = true;
-                    player -= data.DAMAGE_AI*2.f;
+                    player -= data.DAMAGE_AI * 2.f;
+                    data.damageApplied = true; // Помечаем, что урон применен
+                    //ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Damage.wav");
+
+                    // Добавляем визуальный эффект
+                    //point3d damageDirection = (heroPos - enemyPos).normalized();
+                    //CreateConstellationsDamageEffect(heroPos, damageDirection);
                 }
                 else {
                     player -= 0.1f;
@@ -312,6 +334,7 @@ namespace Enemy {
             if (data.shockwaveRadius >= data.maxShockwaveRadius) {
                 data.isShockwaveActive = false;
                 data.attackTimer = 0.0f;
+                data.damageApplied = false; // Сбрасываем для следующей атаки
             }
         }
 

@@ -56,6 +56,9 @@
         float boomRadius = 0.0f;
         float maxBoomRadius = 50000.0f;
         DWORD boomStartTime = 0;
+
+        bool damageApplied = false; 
+        float shockwaveHitRadius = 2000.0f;
         
 
 

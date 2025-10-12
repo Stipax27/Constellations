@@ -2668,6 +2668,11 @@ namespace drawer
 
             playerConst.RenderMorph(deltaTime);
 
+            drawString("Press < T > to enter tutorial", (100. / 2560)* window.width, (100. / 1440)* window.height, 1.f, false);
+            if (GetAsyncKeyState('T')) {
+                gameState = gameState_::Exploring;
+            }
+
             isBattleActive = false;
             break;
 
@@ -3234,8 +3239,9 @@ namespace drawer
             drawString("To rotate Camera move the <Mouse>", (1280. / 2560) * window.width, (800. / 1440) * window.height, 1.f, true);
             drawString("Hold <Shift> to make a Dash", (1280. / 2560) * window.width, (900. / 1440) * window.height, 1.f, true);
 
-            drawString("Press < TAB > to exit tutorial", (100. / 2560) * window.width, (50. / 1440) * window.height, 1.f, false);
-            if (GetAsyncKeyState(VK_TAB)) {
+            drawString("Press < ESC > to exit tutorial", (100. / 2560) * window.width, (50. / 1440) * window.height, 1.f, false);
+
+            if (GetAsyncKeyState(VK_ESCAPE)) {
                 gameState = gameState_::Fight;
             }
             drawString("Press < Right arrow > to flip the page forward", (1280. / 2560) * window.width, (1100. / 1440) * window.height, 1.f, true);
@@ -3248,8 +3254,8 @@ namespace drawer
             break;
         }
         case gameState_::Exploring1:
-            drawString("Press < TAB > to exit tutorial", (100. / 2560) * window.width, (50. / 1440) * window.height, 1.f, false);
-            if (GetAsyncKeyState(VK_TAB)) {
+            drawString("Press < ESC > to exit tutorial", (100. / 2560) * window.width, (50. / 1440) * window.height, 1.f, false);
+            if (GetAsyncKeyState(VK_ESCAPE)) {
                 gameState = gameState_::Fight;
             }
             drawString("Previous Page", (300. / 2560)* window.width, (1350. / 1440)* window.height, 1.f, true);

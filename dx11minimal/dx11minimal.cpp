@@ -263,7 +263,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_KEYDOWN:
-        if (wParam == VK_ESCAPE)
+        if (wParam == '0')
         {
             PostQuitMessage(0);
             return 0;
