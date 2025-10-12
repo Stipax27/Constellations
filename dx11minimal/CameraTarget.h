@@ -19,6 +19,9 @@ namespace CameraTargeting
         // Для плавного перехода
         float currentTransition = 0.0f;
         float transitionSpeed = 3.0f;
+         bool wasTogglePressed = false;
+         DWORD lastToggleTime = 0;
+         const DWORD TOGGLE_COOLDOWN = 500;
     };
 
     extern TargetingData data;

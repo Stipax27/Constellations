@@ -10,6 +10,11 @@ namespace CameraTargeting
             data.targetEnemyID = enemyID;
             data.currentTransition = 0.0f;
         }
+
+        if (Enemy::enemyData.isJumping) {
+            return; // Не начинаем таргетинг на прыгающего врага
+        }
+
     }
 
     void StopTargeting()

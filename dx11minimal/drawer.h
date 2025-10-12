@@ -1987,7 +1987,7 @@ namespace drawer
 
         static bool isHooked = false;
         static float currentSpeed = 0.0f;
-        const float maxSpeed = 10.0f;
+        const float maxSpeed = 30.0f;
         const float acceleration = 2000.0f;
         const float minDistance = 500.0f;
 
@@ -2002,15 +2002,15 @@ namespace drawer
         float distance = XMVectorGetX(XMVector3Length(Dir));
 
        
-        if (GetAsyncKeyState(VK_RBUTTON) & 0x8000 && distance < 30000.0f && !isHooked) {
+        if (GetAsyncKeyState('F') & 0x8000 && distance < 30000.0f && !isHooked) {
             isHooked = true;
-            currentSpeed = maxSpeed * 0.2f;
+            currentSpeed = maxSpeed * 0.5f;
         }
 
         
 
         if (isHooked) {
-            drawLine(_hero, _enemy, 5.f);
+            drawLine(_hero, _enemy, 10.f);
             if (currentSpeed < maxSpeed) {
                 currentSpeed += acceleration * deltaTime;
                 currentSpeed = min(currentSpeed, maxSpeed);
@@ -2052,7 +2052,7 @@ namespace drawer
                 }
                 else {
                     // Автоматическое переключение на кулаки при нехватке энергии
-                    //current_weapon = weapon_name::Fists;
+                    current_weapon = weapon_name::Fists;
                     //ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\NoEnergy.wav");
                 }
             }
@@ -2646,7 +2646,58 @@ namespace drawer
                 // Визуализация направления атаки (опционально)
                 //DwarHeroGetDamage(Heropos, damageDirection);
             }
+            bool wasFPressed = false;
+            DWORD lastFToggleTime = 0;
+            const DWORD F_TOGGLE_COOLDOWN = 500; // Задержка 300ms
 
+            if (GetAsyncKeyState(VK_MBUTTON) & 0x8000)
+            {
+                if (!CameraTargeting::data.wasTogglePressed &&
+                    (currentTime - CameraTargeting::data.lastToggleTime) > CameraTargeting::data.TOGGLE_COOLDOWN)
+                {
+                    if (!CameraTargeting::IsTargeting())
+                    {
+                        // Найти ближайшего врага
+                        float closestDistance = FLT_MAX;
+                        int closestEnemy = -1;
+
+                        for (int i = 0; i < starSet.size(); i++)
+                        {
+                            if (i == player_sign || !starSet[i]) continue;
+
+                            Constellation& enemy = *starSet[i];
+                            XMMATRIX enemyTransform = CreateEnemyToWorldMatrix(enemy);
+                            XMVECTOR enemyPos = enemyTransform.r[3];
+
+                            float distance = XMVectorGetX(XMVector3Length(enemyPos - Hero::state.position));
+
+                            if (distance < closestDistance && distance < 40000.0f)
+                            {
+                                closestDistance = distance;
+                                closestEnemy = i;
+                            }
+                        }
+
+                        if (closestEnemy != -1)
+                        {
+                            CameraTargeting::StartTargeting(closestEnemy);
+                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\TargetLock.wav");
+                        }
+                    }
+                    else
+                    {
+                        CameraTargeting::StopTargeting();
+                        ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\TargetUnlock.wav");
+                    }
+
+                    CameraTargeting::data.wasTogglePressed = true;
+                    CameraTargeting::data.lastToggleTime = currentTime;
+                }
+            }
+            else
+            {
+                CameraTargeting::data.wasTogglePressed = false;
+            }
             // ОБНОВЛЯЕМ И ОТРИСОВЫВАЕМ ЧАСТИЦЫ УРОНА
             UpdateHeroDamageParticles(deltaTime);
             RenderHeroDamageParticles();
@@ -2655,6 +2706,8 @@ namespace drawer
             if (enemyAI.data.isShockwaveActive == true) {
                 CreateAdvancedShockwave(Enemypos, enemyAI.data.shockwaveRadius);
                 enemyAI.data.isShockwaveActive = false;
+                wasFPressed = false;
+                CameraTargeting::StopTargeting();
             }
             UpdateShockwave(deltaTime);
             RenderShockwave();
@@ -2662,6 +2715,7 @@ namespace drawer
             if (enemyAI.data.shouldStartAccumulation) {
                 CreateEnemyAccumulationEffect(enemyAI.data.accumulationPos, 2000.0f);
                 enemyAI.data.shouldStartAccumulation = false;
+                
             }
 
             UpdateEnemyAccumulationEffect(deltaTime);
@@ -2799,57 +2853,7 @@ namespace drawer
            //    drawString("recharge", window.width * .9, window.height * .85, 1., false);
            //    drawString(cdTimeOutText.c_str(), window.width * .9, window.height * .9, 3., false);
            // }
-            static bool wasFPressed = false;
-            static DWORD lastFToggleTime = 0;
-            const DWORD F_TOGGLE_COOLDOWN = 300; // Задержка 300ms
-
-            if (GetAsyncKeyState('F') & 0x8000)
-            {
-                if (!wasFPressed && (currentTime - lastFToggleTime) > F_TOGGLE_COOLDOWN)
-                {
-                    if (!CameraTargeting::IsTargeting())
-                    {
-                        // Найти ближайшего врага
-                        float closestDistance = FLT_MAX;
-                        int closestEnemy = -1;
-
-                        for (int i = 0; i < starSet.size(); i++)
-                        {
-                            if (i == player_sign || !starSet[i]) continue;
-
-                            Constellation& enemy = *starSet[i];
-                            XMMATRIX enemyTransform = CreateEnemyToWorldMatrix(enemy);
-                            XMVECTOR enemyPos = enemyTransform.r[3];
-
-                            float distance = XMVectorGetX(XMVector3Length(enemyPos - Hero::state.position));
-
-                            if (distance < closestDistance && distance < 40000.0f)
-                            {
-                                closestDistance = distance;
-                                closestEnemy = i;
-                            }
-                        }
-
-                        if (closestEnemy != -1)
-                        {
-                            CameraTargeting::StartTargeting(closestEnemy);
-                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\TargetLock.wav");
-                        }
-                    }
-                    else
-                    {
-                        CameraTargeting::StopTargeting();
-                        ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\TargetUnlock.wav");
-                    }
-
-                    wasFPressed = true;
-                    lastFToggleTime = currentTime;
-                }
-            }
-            else
-            {
-                wasFPressed = false;
-            }
+            
 
             UpdateGame();
 
