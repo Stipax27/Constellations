@@ -181,8 +181,8 @@ enum CameraState {
 };
 CameraState cameraState = CAMERA_NORMAL;
 
-const float MAX_CAMERA_DISTANCE = 2000.0f; // максимальное отдаление
-const float NORMAL_CAMERA_DISTANCE = 600.0f; // обычная дистанция
+const float MAX_CAMERA_DISTANCE = 10000.0f; // максимальное отдаление
+const float NORMAL_CAMERA_DISTANCE = Camera::state.distanceOffset; // обычная дистанция
 const float PULL_BACK_SPEED = 0.55f; // скорость отдаления
 const float CATCH_UP_SPEED = 0.08f;  // скорость догоняния
 float cameraEffectStartTime = 0;

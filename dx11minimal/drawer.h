@@ -488,7 +488,131 @@ namespace drawer
         }
     }
 
-    
+    struct ReflectionEffect {
+        point3d position;
+        point3d direction;
+        float radius;
+        DWORD creationTime;
+        float lifetime;
+        XMFLOAT4 color;
+        bool isActive;
+    };
+
+    std::vector<ReflectionEffect> reflectionEffects;
+    bool isShieldReflecting = false;
+    DWORD shieldReflectionStartTime = 0;
+    const float SHIELD_REFLECTION_DURATION = 500.0f;
+
+    // Функция для создания эффекта отражения
+    void CreateShieldReflectionEffect(point3d shieldPos, point3d reflectionDirection) {
+        ReflectionEffect effect;
+        effect.position = shieldPos;
+        effect.direction = reflectionDirection.normalized();
+        effect.radius = 500.0f;
+        effect.creationTime = currentTime;
+        effect.lifetime = 800.0f;
+        effect.color = XMFLOAT4(0.2f, 0.6f, 1.0f, 1.0f); // Синий цвет отражения
+        effect.isActive = true;
+
+        reflectionEffects.push_back(effect);
+
+        // Создаем дополнительные частицы для эффекта
+        const int particleCount = 12;
+        for (int i = 0; i < particleCount; i++) {
+            ReflectionEffect particle;
+            particle.position = shieldPos;
+
+            // Разброс направления для частиц
+            float angle = (i / (float)particleCount) * 2 * PI;
+            point3d randomDir = point3d(cos(angle), sin(angle), 0).normalized();
+            particle.direction = (reflectionDirection + randomDir * 0.3f).normalized();
+
+            particle.radius = GetRandom(100, 300);
+            particle.creationTime = currentTime;
+            particle.lifetime = GetRandom(400, 800);
+            particle.color = XMFLOAT4(0.3f, 0.7f, 1.0f, 0.8f);
+            particle.isActive = true;
+
+            reflectionEffects.push_back(particle);
+        }
+
+        //ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\ShieldReflect.wav");
+    }
+
+    // Обновление эффектов отражения
+    void UpdateReflectionEffects(float deltaTime) {
+        for (auto it = reflectionEffects.begin(); it != reflectionEffects.end();) {
+            ReflectionEffect& effect = *it;
+
+            if (!effect.isActive || (currentTime - effect.creationTime) > effect.lifetime) {
+                it = reflectionEffects.erase(it);
+                continue;
+            }
+
+            // Движение эффекта отражения
+            effect.position += effect.direction * 25.0f * deltaTime;
+
+            // Уменьшение размера со временем
+            float lifeProgress = (currentTime - effect.creationTime) / effect.lifetime;
+            effect.radius *= 0.98f;
+
+            // Изменение прозрачности
+            effect.color.w = 1.0f - lifeProgress;
+
+            ++it;
+        }
+    }
+
+    // Отрисовка эффектов отражения
+    void RenderReflectionEffects() {
+        if (reflectionEffects.empty()) return;
+
+        Shaders::vShader(1);
+        Shaders::pShader(1);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+        for (auto& effect : reflectionEffects) {
+            if (!effect.isActive) continue;
+
+            // Устанавливаем цвет эффекта
+            ConstBuf::global[1] = effect.color;
+            ConstBuf::Update(5, ConstBuf::global);
+            ConstBuf::ConstToPixel(5);
+
+            // Рисуем основную звезду отражения
+            effect.position.draw(effect.position, effect.radius);
+
+            // Добавляем свечение
+            float glowRadius = effect.radius * 1.5f;
+            XMFLOAT4 glowColor = effect.color;
+            glowColor.w *= 0.4f;
+
+            ConstBuf::global[1] = glowColor;
+            ConstBuf::Update(5, ConstBuf::global);
+            effect.position.draw(effect.position, glowRadius);
+
+            // Линия траектории отражения
+            Shaders::vShader(4);
+            Shaders::pShader(4);
+
+            point3d trailEnd = effect.position - effect.direction * effect.radius * 2.0f;
+            float trailAlpha = effect.color.w * 0.3f;
+
+            ConstBuf::global[2] = XMFLOAT4(effect.color.x, effect.color.y, effect.color.z, trailAlpha);
+            ConstBuf::Update(5, ConstBuf::global);
+            ConstBuf::ConstToPixel(5);
+
+            drawLine(effect.position, trailEnd, effect.radius * 0.5f);
+
+            Shaders::vShader(1);
+            Shaders::pShader(1);
+        }
+
+        // Восстанавливаем стандартный цвет
+        ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
+    }
+
 
     struct BowTracerParticle {
         point3d position;
@@ -564,7 +688,15 @@ namespace drawer
             float distanceInPlane = (projected - weapon.position).magnitude();
 
             // Проверяем попадание в диск щита
-            return distanceInPlane <= (weapon.radius + sphereRadius);
+            bool collision = distanceInPlane <= (weapon.radius + sphereRadius);
+
+            // Если есть коллизия и это атака врага - создаем эффект отражения
+            if (collision && weapon.weapon == weapon_name::Fists) {
+                point3d reflectionDir = (sphereCenter - weapon.position).normalized() * -1.0f;
+                CreateShieldReflectionEffect(weapon.position, reflectionDir);
+            }
+
+            return collision;
         }
 
         case weapon_name::Bow: {
@@ -936,7 +1068,7 @@ namespace drawer
     float CameraScale = 1.f;
     float chargeRatio;
 
-    const float MIN_CAMERA_DIST = 600.f;
+    const float MIN_CAMERA_DIST = 1000.f;
     const float MAX_CAMERA_DIST = 10000.f;
     std::string P;
 
@@ -1152,6 +1284,9 @@ namespace drawer
                         newStar.up = newStar.right.cross(newDirection).normalized();
 
                         attackStars.push_back(newStar);
+
+                       
+                        //CreateShieldReflectionEffect(start, newDirection);
                         ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\ShieldStan3.wav");
                         break;
                     }
@@ -1249,7 +1384,8 @@ namespace drawer
         }
     }
 
-    
+    void CreateConstellationsDamageEffect(point3d heroPos, point3d damageDirection);
+
         std::string enemyH;
         std::string indexStar;
         void UpdateAttack(float deltaTime) {
@@ -1265,7 +1401,7 @@ namespace drawer
             if (!starSet[currentEnemyID]) return;
 
             Constellation& enemy = *starSet[currentEnemyID];
-
+            Constellation& Hero = *starSet[player_sign];
             // Сбрасываем масштаб врага в начале кадра
             //enemy.SetStarRadius(0,1.0f);
 
@@ -1273,6 +1409,7 @@ namespace drawer
                 if (enemy.starsHealth[i] <= 0) continue;
 
                 point3d starWorldPos = TransformPoint(enemy.starsCords[i], enemy.Transform);
+                point3d HeroPosTrans = TransformPoint(Hero.starsCords[i], Hero.Transform);
 
                 // Проверяем все выстрелы на приближение к этой звезде
                 for (auto& star : attackStars) {
@@ -1289,18 +1426,23 @@ namespace drawer
                     //}
 
                     if (CheckWeaponCollision(star, starWorldPos, 2000.f)) {
+                            point3d damageDirection = (HeroPosTrans - starWorldPos).normalized();
                         //enemy.SetStarRadius(i, 10000.f);
                         if (current_weapon == weapon_name::Sword) {
                             enemy.starsHealth[i] -= currentDamage * .5f;
+                            CreateConstellationsDamageEffect(starWorldPos, damageDirection);
                         }
                         else if (current_weapon == weapon_name::Shield) {
                             enemy.starsHealth[i] -= currentDamage * .1f;
+                            CreateConstellationsDamageEffect(starWorldPos, damageDirection);
                         }
                         else if (current_weapon == weapon_name::Bow) {
                             enemy.starsHealth[i] -= currentDamage * 1.f;
+                            CreateConstellationsDamageEffect(starWorldPos, damageDirection);
                         }
                         else if (current_weapon == weapon_name::Fists) {
                             enemy.starsHealth[i] -= currentDamage*.2f;
+                            CreateConstellationsDamageEffect(starWorldPos, damageDirection);
                         }
 
                         enemyH = "Star: " + std::to_string(i + 1) + " HP: " + std::to_string(enemy.starsHealth[i]);
@@ -2037,30 +2179,87 @@ namespace drawer
     }
 
     void ShieldBlock() {
-        if (current_weapon == weapon_name::Shield) {
-            // Уменьшаем скорость восстановления энергии при активном щите
-            static DWORD lastShieldEnergyDrain = 0;
-            const DWORD shieldDrainInterval = 100; // ms
+        static DWORD lastShieldEnergyDrain = 0;
+        static DWORD lastEnemyAttackTime = 0;
+        const DWORD shieldDrainInterval = 100;
+        const DWORD reflectionCooldown = 1000;
 
+        if (current_weapon == weapon_name::Shield) {
+            // Потребление энергии при активном щите
             if (currentTime - lastShieldEnergyDrain > shieldDrainInterval) {
                 lastShieldEnergyDrain = currentTime;
 
-                // Постоянное потребление энергии при активном щите
                 float maintenanceCost = energyCost.shield * .2f;
                 if (energy >= maintenanceCost) {
                     energy -= (LONG)maintenanceCost;
                 }
                 else {
-                    // Автоматическое переключение на кулаки при нехватке энергии
                     current_weapon = weapon_name::Fists;
-                    //ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\NoEnergy.wav");
+                    return;
                 }
             }
 
-            // Защита от атак врага
-            //Enemy::enemyData.DAMAGE_AI *= 0.5f; // Уменьшаем урон от врага наполовину
+            // Проверка столкновений с атаками врага для отражения
+            if (currentTime - lastEnemyAttackTime > reflectionCooldown) {
+                Constellation& enemy = *starSet[currentEnemyID];
+                point3d shieldPos = point3d(
+                    XMVectorGetX(Hero::state.position),
+                    XMVectorGetY(Hero::state.position),
+                    XMVectorGetZ(Hero::state.position)
+                );
+
+                // Проверяем все атаки врага
+                for (auto& attack : attackStars) {
+                    if (attack.weapon != weapon_name::Fists) continue;
+
+                    float distance = (attack.position - shieldPos).magnitude();
+
+                    // Если атака близко к щиту - отражаем её
+                    if (distance < 2000.0f) {
+                        // Вычисляем направление отражения
+                        point3d toAttack = (attack.position - shieldPos).normalized();
+                        point3d reflectionDir = toAttack * -1.0f; // Отражаем обратно
+
+                        // Создаем эффект отражения
+                        CreateShieldReflectionEffect(shieldPos, reflectionDir);
+
+                        // Меняем направление атаки врага
+                        attack.direction = reflectionDir;
+                        attack.radius *= 1.2f; // Увеличиваем урон отраженной атаки
+
+                        lastEnemyAttackTime = currentTime;
+                        break;
+                    }
+                }
+            }
+
+            // Визуальный эффект активного щита
+            if ((currentTime / 200) % 2 == 0) { // Мигание каждые 200ms
+                point3d shieldPos = point3d(
+                    XMVectorGetX(Hero::state.position),
+                    XMVectorGetY(Hero::state.position),
+                    XMVectorGetZ(Hero::state.position)
+                );
+
+                // Рисуем защитное поле вокруг щита
+                Shaders::vShader(1);
+                Shaders::pShader(1);
+                Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+                XMFLOAT4 shieldColor = XMFLOAT4(0.1f, 0.3f, 0.8f, 0.3f);
+                ConstBuf::global[1] = shieldColor;
+                ConstBuf::Update(5, ConstBuf::global);
+                ConstBuf::ConstToPixel(5);
+
+                shieldPos.draw(shieldPos, 1500.0f);
+
+                // Восстанавливаем цвет
+                ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+                ConstBuf::Update(5, ConstBuf::global);
+            }
         }
     }
+    
 
     struct DamageParticle {
         point3d position;
@@ -2077,8 +2276,8 @@ namespace drawer
     point3d lastDamageDirection;
     point3d lastDamagePosition;
 
-    void CreateHeroDamageEffect(point3d heroPos, point3d damageDirection) {
-        const int particleCount = 105; // Количество вылетающих звезд
+    void CreateConstellationsDamageEffect(point3d heroPos, point3d damageDirection) {
+        const int particleCount = 200; // Количество вылетающих звезд
 
         for (int i = 0; i < particleCount; i++) {
             DamageParticle particle;
@@ -2103,7 +2302,7 @@ namespace drawer
             );
 
             particle.velocity = (baseDirection + randomSpread).normalized() * GetRandom(5, 15);
-            particle.radius = GetRandom(20, 100);
+            particle.radius = GetRandom(50, 200);
             particle.creationTime = currentTime;
             particle.lifetime = GetRandom(1000, 2000); // 1-2 секунды жизни
 
@@ -2190,7 +2389,7 @@ namespace drawer
                 ConstBuf::Update(5, ConstBuf::global);
                 ConstBuf::ConstToPixel(5);
 
-                drawLine(particle.position, trailEnd, 30.0f);
+                drawLine(particle.position, trailEnd, 100.0f);
 
                 Shaders::vShader(1);
                 Shaders::pShader(1);
@@ -2219,8 +2418,8 @@ namespace drawer
         float emitRate = 30.0f;        // Частота генерации (частиц/секунду)
         float minSpeedThreshold = 5.0f; // Минимальная скорость для генерации
         float maxSpeedForEmission = 25.0f; // Максимальная скорость для расчета интенсивности
-        float minSize = 50.0f;
-        float maxSize = 200.0f;
+        float minSize = 70.0f;
+        float maxSize = 250.0f;
         float minLifetime = 800.0f;
         float maxLifetime = 1500.0f;
         float spreadAngle = 45.0f;     // Угол разброса в градусах
@@ -2252,8 +2451,8 @@ namespace drawer
             );
 
             // Простая позиция позади игрока
-            particle.position = heroPos - flyDirection.normalized() * 2000.0f +
-                point3d(GetRandom(-1000, 1000), GetRandom(-1000, 1000), GetRandom(-1000, 1000));
+            particle.position = heroPos + flyDirection.normalized() * 5000.0f +
+                point3d(GetRandom(-2000, 2000), GetRandom(-2000, 2000), GetRandom(-2000, 2000));
 
             particle.velocity = flyDirection * currentFlySpeed * 300.0f;
             particle.initialSize = GetRandom(50, 150);
@@ -2370,12 +2569,16 @@ namespace drawer
         for (int i = 0; i < Bow.starsCords.size(); i++) {
             Bow.SetStarRadius(i, WEAPON_STAR_RADIUS);
         }
-        //ShieldBlock();
+        ShieldBlock();
         drawString(C.c_str(), 1500, 500, 1.f, true);
+        string DistCam = to_string(Camera::state.distanceOffset);
+        drawString(DistCam.c_str(), 2000, 1000, 1.f, true);
         //d2dRenderTarget->BeginDraw();
         CreateSpeedParticles();
         DrawSpeedParticles();
 
+        UpdateReflectionEffects(deltaTime);
+        RenderReflectionEffects();
         //d2dRenderTarget->BeginDraw();
         switch (gameState)
         {
@@ -2512,7 +2715,8 @@ namespace drawer
 
             if (t) {
                 t = false;
-                Camera::state.camDist = 100;
+                Camera::state.camDist = 1000.0f;  // Используйте большое значение
+                Camera::state.distanceOffset = 1000.0f;
             }
             Camera::state.mouse = true;
             Depth::Depth(Depth::depthmode::off);
@@ -2641,7 +2845,7 @@ namespace drawer
 
                 // СОЗДАЕМ ЭФФЕКТ УРОНА
                 point3d damageDirection = (Heropos - Enemypos).normalized();
-                CreateHeroDamageEffect(Heropos, damageDirection);
+                CreateConstellationsDamageEffect(Heropos, damageDirection);
 
                 // Визуализация направления атаки (опционально)
                 //DwarHeroGetDamage(Heropos, damageDirection);
@@ -2886,7 +3090,8 @@ namespace drawer
 
             if (t) {
                 t = false;
-                Camera::state.camDist = 100;
+                Camera::state.camDist = 10000.0f;  // Используйте большое значение
+                Camera::state.distanceOffset = 10000.0f;
             }
             Camera::state.mouse = true;
             Depth::Depth(Depth::depthmode::off);
@@ -3021,7 +3226,6 @@ namespace drawer
 
 
             //drawString("Rewind time:\nbutton - R", (500. / 2560) * window.width, (1250. / 1440) * window.height, .7f, false);
-
 
             drawString("<<CONTROLS>>", (1280. / 2560)* window.width, (300. / 1440)* window.height, 2.f, true);
             drawString("<WASD> to move", (1280. / 2560) * window.width, (500. / 1440) * window.height, 1.f, true);

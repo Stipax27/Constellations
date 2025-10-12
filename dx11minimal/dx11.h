@@ -1163,13 +1163,13 @@ namespace Camera
 	{
 		int n = 0; //угол поворота
 		bool mouse = false;
-		float camDist = 500.0f;
-		float minDist = 500.0f;
-		float maxDist = 1000.0f;
+		float camDist = 1000.0f;
+		float minDist = 1000.0f;
+		float maxDist = 1500.0f;
 		float fovAngle = 60.0f;
 		float verticalOffset = 180.0f;
 		float horizontalOffset = 0.0f;
-		float distanceOffset = 600.0f;
+		float distanceOffset = 1000.0f;
 		XMVECTOR relativeMovement = XMVectorSet(-1, 0, 0, 0);
 		XMVECTOR currentRotation = XMQuaternionIdentity();
 		XMVECTOR Forward = XMVectorSet(0, 0, 1, 0);

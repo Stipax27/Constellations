@@ -12,7 +12,7 @@ namespace CameraTargeting
         XMVECTOR targetPosition = XMVectorSet(0, 0, 0, 0);
         float targetSmoothness = 0.1f;
         float targetingDistance = 3000.0f;
-        float normalDistance = 600.0f;
+        float normalDistance = 1000.0f;
         float targetingVerticalOffset = 100.0f;
         float targetingHorizontalOffset = 0.0f;
 
