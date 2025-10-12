@@ -50,6 +50,9 @@ bool LevelManagerClass::Initialize()
 	// window params into const buffer
 	ConstBuf::frame.aspect = XMFLOAT4(window->aspect, window->iaspect, float(window->width), float(window->height));
 
+	ConstBuf::factors.AriesNebulaLerpFactor = 0;
+	ConstBuf::UpdateFactors();
+
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING START //
 	//////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,6 +61,7 @@ bool LevelManagerClass::Initialize()
 	Transform* transform;
 	PhysicBody* physicBody;
 	//SphereCollider* sphereCollider;
+	RenderObject* renderObject;
 
 	Entity* entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
@@ -82,6 +86,11 @@ bool LevelManagerClass::Initialize()
 		{2,5}
 	};
 
+	entity = m_World->CreateEntity();
+	transform = entity->AddComponent<Transform>();
+	renderObject = entity->AddComponent<RenderObject>();
+	renderObject->vShader = 7;
+	renderObject->pShader = 7;
 
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();

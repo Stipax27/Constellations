@@ -29,6 +29,11 @@ float degreesToRadians(float degrees)
 
 point3d quaternionToEuler(float x, float y, float z, float w)
 {
+    float magintude = sqrt(x * x + y * y + z * z);
+    x /= magintude;
+    y /= magintude;
+    z /= magintude;
+
     float pitch = atan2(2 * (w * x + y * z), 1 - 2 * (pow(x, 2) + pow(y, 2)));
     float yaw = asin(2 * (w * y - z * x));
     float roll = atan2(2 * (w * z + x * y), 1 - 2 * (pow(y, 2) + pow(z, 2)));

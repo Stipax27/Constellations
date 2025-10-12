@@ -20,17 +20,12 @@ point4d point4d::normalized() const {
     return *this / mag;
 }
 
-point4d point4d::cross(const point4d& other) const {
-    return point4d{
-        y * other.z - z * other.y,
-        z * other.x - x * other.z,
-        x * other.y - y * other.x
-    };
-}
-
 inline point4d point4d::lerp(const point4d& other, float a)
 {
-    return { ::lerp(x, other.x, a), ::lerp(y, other.y, a), ::lerp(z, other.z, a), ::lerp(w, other.w, a) };
+    return { x * (1 - a) + other.x * a,
+        y * (1 - a) + other.y * a,
+        z * (1 - a) + other.z * a,
+        w * (1 - a) + other.w * a };
 }
 
 point4d point4d::floor4()
@@ -116,40 +111,44 @@ point4d& point4d::operator-=(float scalar) {
 
 
 point4d point4d::operator*(float scalar) const {
-    return { x * scalar, y * scalar, z * scalar };
+    return { x * scalar, y * scalar, z * scalar, w * scalar };
 }
 point4d point4d::operator*(const point4d& other) const {
-    return { x * other.x, y * other.y, z * other.z };
+    return { x * other.x, y * other.y, z * other.z, w * other.w };
 }
 point4d& point4d::operator*=(float scalar) {
     x *= scalar;
     y *= scalar;
     z *= scalar;
+    w *= scalar;
     return *this;
 }
 point4d& point4d::operator*=(const point4d& other) {
     x *= other.x;
     y *= other.y;
     z *= other.z;
+    w *= other.w;
     return *this;
 }
 
 
 point4d point4d::operator/(const point4d& other) const {
-    return { x / other.x, y / other.y, z / other.z };
+    return { x / other.x, y / other.y, z / other.z, w / other.w };
 }
 point4d point4d::operator/(float scalar) const {
-    return { x / scalar, y / scalar, z / scalar };
+    return { x / scalar, y / scalar, z / scalar, w / scalar };
 }
 point4d& point4d::operator/=(const point4d& other) {
     x /= other.x;
     y /= other.y;
     z /= other.z;
+    w /= other.w;
     return *this;
 }
 point4d& point4d::operator/=(float scalar) {
     x /= scalar;
     y /= scalar;
     z /= scalar;
+    w /= scalar;
     return *this;
 }

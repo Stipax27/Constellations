@@ -30,7 +30,9 @@ point3d point3d::cross(const point3d& other) const {
 
 inline point3d point3d::lerp(const point3d& other, float a)
 {
-    return { ::lerp(x, other.x, a), ::lerp(y, other.y, a), ::lerp(z, other.z, a) };
+    return { x * (1 - a) + other.x * a,
+        y * (1 - a) + other.y * a,
+        z * (1 - a) + other.z * a };
 }
 
 point3d point3d::floor3()

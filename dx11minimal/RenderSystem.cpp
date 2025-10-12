@@ -55,7 +55,7 @@ public:
 
 		// Generate the view matrix based on the camera's position.
 		m_Camera->Render();
-		//m_Camera->AddRotation(0, 1, 0);
+		//m_Camera->AddRotation(1, 1, 0);
 
 		size_t size = entities.size();
 		for (int i = 0; i < size; i++)
@@ -122,6 +122,7 @@ public:
 					ConstBuf::ConstToVertex(5);
 
 					Draw::Drawer(1);
+					//context->DrawInstanced(6, 900000, 0);
 				}
 				
 				Constellation* constellation = entity->GetComponent<Constellation>();

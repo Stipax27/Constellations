@@ -3,7 +3,6 @@
 
 #include <sstream>
 #include "DirectXMath.h"
-#include "utils.h"
 
 using namespace DirectX;
 
@@ -18,7 +17,6 @@ struct point4d {
 
     float magnitude() const;
     point4d normalized() const;
-    point4d cross(const point4d& other) const;
     inline point4d lerp(const point4d& other, float a);
     point4d floor4();
     point4d fract();
