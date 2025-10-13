@@ -108,6 +108,9 @@
     <ClInclude Include="Point4d.h">
       <Filter>Header Files\Structures</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dx11minimal.cpp">
@@ -123,9 +126,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LevelManagerClass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PhysicBody.cpp">
@@ -165,6 +165,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Point4d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteCluster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

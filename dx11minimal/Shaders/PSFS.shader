@@ -9,24 +9,6 @@ cbuffer frame : register(b4)
     float4 aspect;
 };
 
-cbuffer camera : register(b3)
-{
-    float4x4 world[2];
-    float4x4 view[2];
-    float4x4 proj[2];
-};
-
-cbuffer drawMat : register(b2)
-{
-    float4x4 model;
-    float hilight;
-};
-
-cbuffer params : register(b1)
-{
-    float r, g, b;
-};
-
 float hash11(uint n) {
     n = (n << 13u) ^ n;
     return frac((n * (n * n * 15731u + 789221u) + 1376312589u) * 0.000000000931322574615478515625f);

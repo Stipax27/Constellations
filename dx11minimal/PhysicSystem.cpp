@@ -51,10 +51,10 @@ public:
 			PhysicBody* physicBody = entity->GetComponent<PhysicBody>();
 			if (transform != nullptr && physicBody != nullptr)
 			{
-				if (physicBody->useGravity)
+				/*if (physicBody->useGravity)
 				{
 					physicBody->velocity += *gravityVector * deltaTime;
-				}
+				}*/
 
 				transform->position += physicBody->velocity * deltaTime;
 				transform->rotation += physicBody->angVelocity * deltaTime;

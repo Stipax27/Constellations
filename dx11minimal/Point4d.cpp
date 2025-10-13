@@ -1,6 +1,11 @@
 #include "Point4d.h"
 
-point4d::point4d() = default;
+point4d::point4d() {
+    x = 0;
+    y = 0;
+    z = 0;
+    w = 0;
+}
 point4d::point4d(float X, float Y, float Z, float W) : x(X), y(Y), z(Z), w(W) {}
 
 float point4d::magnitude() const {

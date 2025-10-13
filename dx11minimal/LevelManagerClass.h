@@ -8,6 +8,7 @@
 // INCLUDES //
 //////////////
 #include "cameraclass.h"
+#include "PlayerController.h"
 
 #include "world.h"
 #include "system.h"
@@ -18,7 +19,7 @@
 #include "PhysicBody.cpp"
 #include "SphereCollider.cpp"
 #include "PlaneCollider.cpp"
-#include "Nebula.cpp"
+#include "SpriteCluster.cpp"
 #include "Constellation.cpp"
 
 #include "PhysicSystem.cpp"
@@ -124,6 +125,7 @@ public:
 
 private:
 	World* m_World;
+	PlayerController* playerController;
 };
 
 #endif

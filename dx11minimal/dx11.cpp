@@ -252,7 +252,7 @@ void Textures::CopyDepth(int dst, int src)
 	context->CopyResource(Texture[(int)dst].pDepth, Texture[(int)src].pDepth);
 }
 
-void Textures::TextureToShader(int tex, unsigned int slot, targetshader tA = targetshader::both)
+void Textures::TextureToShader(int tex, unsigned int slot, targetshader tA)
 {
 	if (tA == targetshader::both || tA == targetshader::vertex)
 	{

@@ -1,6 +1,10 @@
 ﻿#include "Point3d.h"
 
-point3d::point3d() = default;
+point3d::point3d() {
+    x = 0;
+    y = 0;
+    z = 0;
+}
 point3d::point3d(float X, float Y, float Z) : x(X), y(Y), z(Z) {}
 
 float point3d::magnitude() const {

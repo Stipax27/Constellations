@@ -57,20 +57,21 @@ bool LevelManagerClass::Initialize()
 	// WORLD CREATING START //
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
+	Entity* player;
+	Entity* entity;
 	Constellation* constellation;
 	Transform* transform;
 	PhysicBody* physicBody;
 	//SphereCollider* sphereCollider;
-	Nebula* nebula;
+	SpriteCluster* spriteCluster;
 
-	Entity* entity = m_World->CreateEntity();
-	transform = entity->AddComponent<Transform>();
+	player = m_World->CreateEntity();
+	transform = player->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, 0.0f);
 	transform->scale = point3d(1, 0, 0);
-	//physicBody = star->AddComponent<PhysicBody>();
-	//physicBody->velocity = point3d(0.0f, 0.0f, 0.0f);
+	physicBody = player->AddComponent<PhysicBody>();
 	//star->AddComponent<SphereCollider>();
-	constellation = entity->AddComponent<Constellation>();
+	constellation = player->AddComponent<Constellation>();
 	constellation->stars = {
 		point3d(-0.09, -0.7, 0),
 		point3d(-0.05, -0.15, 0),
@@ -88,10 +89,37 @@ bool LevelManagerClass::Initialize()
 
 	entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
-	nebula = entity->AddComponent<Nebula>();
-	nebula->vShader = 7;
-	nebula->pShader = 7;
-	nebula->points = 900000;
+	spriteCluster = entity->AddComponent<SpriteCluster>();
+	spriteCluster->vShader = 7;
+	spriteCluster->pShader = 7;
+	spriteCluster->pointsNum = 900000;
+
+	entity = m_World->CreateEntity();
+	spriteCluster = entity->AddComponent<SpriteCluster>();
+	spriteCluster->vShader = 2;
+	spriteCluster->pShader = 2;
+	spriteCluster->pointsNum = 10000;
+
+	entity = m_World->CreateEntity();
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(2.0f, 0.0f, 0.0f);
+	transform->scale = point3d(1, 0, 0);
+	//star->AddComponent<SphereCollider>();
+	constellation = entity->AddComponent<Constellation>();
+	constellation->stars = {
+		point3d(-0.09, -0.7, 0),
+		point3d(-0.05, -0.15, 0),
+		point3d(0, 0, 0),
+		point3d(-0.4, 0.5, 0),
+		point3d(0, 0, 0),
+		point3d(0.4, 0.3, 0)
+	};
+	constellation->links = {
+		{0,1},
+		{1,2},
+		{2,3},
+		{2,5}
+	};
 
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
@@ -101,6 +129,10 @@ bool LevelManagerClass::Initialize()
 	// WORLD CREATING END //
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
+	m_World->PreCalculations();
+
+	playerController = new PlayerController();
+	playerController->Initialize(player, m_World->m_Camera);
 
 	return true;
 }
@@ -127,7 +159,12 @@ void LevelManagerClass::Shutdown()
 		window = 0;
 	}
 
-	return;
+	if (playerController)
+	{
+		playerController->Shutdown();
+		delete playerController;
+		playerController = 0;
+	}
 }
 
 
@@ -136,20 +173,17 @@ bool LevelManagerClass::Frame()
 	bool result;
 
 	mouse->Update();
+	playerController->ProcessInput();
 
-	float x = 1;
-
-	XMFLOAT4 i = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
-	ConstBuf::frame.aspect = i;
-	float a = ConstBuf::frame.aspect.x;
-
-	x = i.x;
+	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 
 	result = m_World->UpdatePhysic();
 	if (!result)
 	{
 		return false;
 	}
+
+	playerController->ProcessCamera();
 
 	result = m_World->UpdateRender();
 	if (!result)

@@ -7,7 +7,7 @@
 #include<cmath>
 #include "system.h"
 #include "Transform.cpp"
-#include "Nebula.cpp"
+#include "SpriteCluster.cpp"
 #include "Constellation.cpp"
 
 #include "cameraclass.h"
@@ -49,7 +49,7 @@ public:
 		Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
 		Draw::ClearDepth();
 
-		Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
+		Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 		Rasterizer::Cull(Rasterizer::cullmode::off);
 		Depth::Depth(Depth::depthmode::off);
 
@@ -107,28 +107,14 @@ public:
 				// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
 				srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
 				XMMATRIX worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
-
-				Nebula* nebula = entity->GetComponent<Nebula>();
-				if (nebula != nullptr)
-				{
-					// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-				//sprite->model.Render(m_Direct3D->GetDeviceContext());
-
-					Shaders::vShader(nebula->vShader);
-					Shaders::pShader(nebula->pShader);
-
-					ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
-					ConstBuf::Update(5, ConstBuf::global);
-					ConstBuf::ConstToVertex(5);
-
-					context->DrawInstanced(6, nebula->points, 0, 0);
-				}
 				
 				Constellation* constellation = entity->GetComponent<Constellation>();
 				if (constellation != nullptr)
 				{
 					// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 				//sprite->model.Render(m_Direct3D->GetDeviceContext());
+
+					point3d transformPos = transform->position;
 
 					Shaders::vShader(4);
 					Shaders::pShader(4);
@@ -139,8 +125,8 @@ public:
 
 					for (int a = 0; a < constellation->links.size(); a++) {
 						pair<int, int> link = constellation->links[a];
-						point3d point1 = constellation->stars[link.first];
-						point3d point2 = constellation->stars[link.second];
+						point3d point1 = constellation->stars[link.first] + transformPos;
+						point3d point2 = constellation->stars[link.second] + transformPos;
 
 						ConstBuf::global[0] = XMFLOAT4(point1.x, point1.y, point1.z, 0.25);
 						ConstBuf::global[1] = XMFLOAT4(point2.x, point2.y, point2.z, 0.25);
@@ -154,7 +140,7 @@ public:
 					Shaders::pShader(1);
 
 					for (int a = 0; a < constellation->stars.size(); a++) {
-						point3d star = constellation->stars[a];
+						point3d star = constellation->stars[a] + transformPos;
 
 						ConstBuf::global[0] = XMFLOAT4(star.x, star.y, star.z, transform->scale.x);
 						ConstBuf::Update(5, ConstBuf::global);
@@ -163,6 +149,25 @@ public:
 						Draw::Drawer(1);
 					}
 				}
+			}
+
+			SpriteCluster* spriteCluster = entity->GetComponent<SpriteCluster>();
+			if (spriteCluster != nullptr)
+			{
+				// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+			//sprite->model.Render(m_Direct3D->GetDeviceContext());
+
+				Shaders::vShader(spriteCluster->vShader);
+				Shaders::pShader(spriteCluster->pShader);
+
+				if (transform != nullptr)
+				{
+					ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
+					ConstBuf::Update(5, ConstBuf::global);
+					ConstBuf::ConstToVertex(5);
+				}
+
+				context->DrawInstanced(6, spriteCluster->pointsNum, 0, 0);
 			}
 		}
 

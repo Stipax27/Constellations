@@ -58,7 +58,28 @@ Entity* World::CreateEntity()
 
 void World::PreCalculations()
 {
+	InputAssembler::IA(InputAssembler::topology::triList);
+	Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
+	Depth::Depth(Depth::depthmode::off);
+	Rasterizer::Cull(Rasterizer::cullmode::off);
 
+	Textures::RenderTarget(3, 0);
+	Shaders::vShader(10);
+	Shaders::pShader(200);
+	Draw::Clear({ 0.0f, 0.0f, 0.0f, 1.0f });
+	context->Draw(6, 0);
+	Textures::CreateMipMap();
+
+	Textures::RenderTarget(4, 0);
+	Shaders::pShader(201);
+	Draw::Clear({ 0.0f, 0.0f, 0.0f, 1.0f });
+	context->Draw(6, 0);
+	Textures::CreateMipMap();
+
+	Textures::RenderTarget(1, 0);
+	Textures::TextureToShader(3, 0);
+	Textures::TextureToShader(4, 1, targetshader::vertex);
+	Depth::Depth(Depth::depthmode::on);
 }
 
 

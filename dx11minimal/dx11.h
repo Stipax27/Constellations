@@ -103,7 +103,7 @@ namespace Textures
 	void SetViewport(int, byte);
 	void CopyColor(int, int);
 	void CopyDepth(int, int);
-	void TextureToShader(int, unsigned int, targetshader);
+	void TextureToShader(int, unsigned int, targetshader = targetshader::both);
 	void CreateMipMap();
 	void RenderTarget(int, unsigned int);
 }
