@@ -18,7 +18,7 @@
 #include "PhysicBody.cpp"
 #include "SphereCollider.cpp"
 #include "PlaneCollider.cpp"
-#include "RenderObject.cpp"
+#include "Nebula.cpp"
 #include "Constellation.cpp"
 
 #include "PhysicSystem.cpp"

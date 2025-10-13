@@ -253,7 +253,7 @@
     <ClCompile Include="LevelManagerClass.cpp" />
     <ClCompile Include="Point3d.cpp" />
     <ClCompile Include="Point4d.cpp" />
-    <ClCompile Include="RenderObject.cpp" />
+    <ClCompile Include="Nebula.cpp" />
     <ClCompile Include="PhysicBody.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />
     <ClCompile Include="PlaneCollider.cpp" />

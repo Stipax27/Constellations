@@ -61,7 +61,7 @@ bool LevelManagerClass::Initialize()
 	Transform* transform;
 	PhysicBody* physicBody;
 	//SphereCollider* sphereCollider;
-	RenderObject* renderObject;
+	Nebula* nebula;
 
 	Entity* entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
@@ -88,9 +88,10 @@ bool LevelManagerClass::Initialize()
 
 	entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
-	renderObject = entity->AddComponent<RenderObject>();
-	renderObject->vShader = 7;
-	renderObject->pShader = 7;
+	nebula = entity->AddComponent<Nebula>();
+	nebula->vShader = 7;
+	nebula->pShader = 7;
+	nebula->points = 900000;
 
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();

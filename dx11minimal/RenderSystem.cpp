@@ -7,7 +7,7 @@
 #include<cmath>
 #include "system.h"
 #include "Transform.cpp"
-#include "RenderObject.cpp"
+#include "Nebula.cpp"
 #include "Constellation.cpp"
 
 #include "cameraclass.h"
@@ -108,21 +108,20 @@ public:
 				srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
 				XMMATRIX worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
-				RenderObject* renderObject = entity->GetComponent<RenderObject>();
-				if (renderObject != nullptr)
+				Nebula* nebula = entity->GetComponent<Nebula>();
+				if (nebula != nullptr)
 				{
 					// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 				//sprite->model.Render(m_Direct3D->GetDeviceContext());
 
-					Shaders::vShader(renderObject->vShader);
-					Shaders::pShader(renderObject->pShader);
+					Shaders::vShader(nebula->vShader);
+					Shaders::pShader(nebula->pShader);
 
 					ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
 					ConstBuf::Update(5, ConstBuf::global);
 					ConstBuf::ConstToVertex(5);
 
-					Draw::Drawer(1);
-					//context->DrawInstanced(6, 900000, 0);
+					context->DrawInstanced(6, nebula->points, 0, 0);
 				}
 				
 				Constellation* constellation = entity->GetComponent<Constellation>();

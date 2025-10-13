@@ -65,6 +65,7 @@ public:
 
 	bool Initialize(float);
 	void Shutdown();
+	//void Start
 	bool UpdatePhysic();
 	bool UpdateRender();
 	void CleanMem();
