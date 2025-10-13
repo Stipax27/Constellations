@@ -229,7 +229,9 @@ void TestDrawLine()
 }
 
 bool textBool = false;
-
+const char* text = "Play";
+const char* text1 = "Settings";
+const char* text2 = "Authors";
 void StartMenu()
 {
     if (!exitButtonInitialized) {
@@ -238,9 +240,7 @@ void StartMenu()
         exitButtonInitialized = true;
     }
 
-    const char* text = "Play";
-    const char* text1 = "Settings";
-    const char* text2 = "Authors";
+    
 
     if (drawParticledClickableText(text, window.width / 2, window.height / 2, 1.f, true))
     {
@@ -248,7 +248,8 @@ void StartMenu()
         DeleteParticledText(text1);
         DeleteParticledText(text2);
 
-        gameState = gameState_::DialogStruct;
+        StartTransition(gameState_::DialogStruct, 500.0f);
+       
     }
 
     if (drawParticledClickableText(text1, window.width / 2, window.height / 2 + 200, 1.f, true))

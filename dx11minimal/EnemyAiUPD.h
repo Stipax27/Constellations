@@ -281,16 +281,6 @@ namespace Enemy {
             data.jumpHeight -= data.jumpSpeed * deltaTime;
             enemyPos.y += data.jumpSpeed * deltaTime; // Обратите внимание: это УВЕЛИЧИВАЕТ Y
 
-            // ДОБАВИТЬ: проверка столкновения во время падения
-            float fallDistance = (heroPos - enemyPos).magnitude();
-            if (fallDistance < 2000.0f) { // Увеличиваем радиус коллизии
-                bool attackBlocked = (current_weapon == weapon_name::Shield && energy >= energyCost.shieldBlock);
-                if (!attackBlocked) {
-                    data.isAttacking = true;
-                    player -= data.DAMAGE_AI * 1.5f; // Урон при падении
-                    //ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Damage.wav");
-                }
-            }
 
             if (enemyPos.y <= data.lastOrbitPosition.y) {
                 enemyPos.y = data.lastOrbitPosition.y;
@@ -392,11 +382,12 @@ namespace Enemy {
                 if (distance < data.boomRadius + 3000.0f) {
                     if (!attackBlocked) {
                         data.isAttacking = true;
-                        player -= data.DAMAGE_AI;
+                        player -= data.DAMAGE_AI * 3.1f;
                     }
                     else {
                         player -= 0.1f;
                         energy -= 250.f;
+
                     }
                 }
                 data.isBoomExploding = false;

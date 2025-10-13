@@ -1,6 +1,46 @@
 ﻿bool t = true;
 point3d attackDirection;
 
+struct StarProjectile {
+    point3d position;
+    point3d direction;
+    float radius;
+    point3d up;
+    point3d right;
+    weapon_name weapon;
+    float Speed;
+    bool isNew;
+    DWORD creationTime;
+    float lifetime;
+
+};
+float finalRadius;
+static DWORD lastAttackTime = 0;
+std::vector<StarProjectile> attackStars;
+
+struct BowTracerParticle {
+    point3d position;
+    float size;
+    DWORD creationTime;
+    float lifetime;
+};
+
+std::vector<BowTracerParticle> bowTracerParticles;
+
+
+const float MIN_CAMERA_DIST = 1000.f;
+const float MAX_CAMERA_DIST = 10000.f;
+
+float currentStarRadius = 20.0f;
+float starRadiusReturnStart = 500.0f;
+DWORD starRadiusReturnStartTime = 0;
+bool isStarRadiusReturning = false;
+float starRadiusReturnSpeed = 2.f;
+const float MIN_STAR_RADIUS = 20.0f;
+const float MAX_STAR_RADIUS = 500.0f;
+
+#include "TransitionsStateLOGICK.h"
+#include "SmoothTransformObject.h"
 namespace drawer
 {
 
@@ -130,7 +170,7 @@ namespace drawer
                     currentRadius += pulse * 5.0f;
 
                     // Можно использовать другой цвет, например желтый
-                    starColor = XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f); // Желтый
+                    starColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // Желтый
                 }
                 else
                 {
@@ -614,31 +654,9 @@ namespace drawer
     }
 
 
-    struct BowTracerParticle {
-        point3d position;
-        float size;
-        DWORD creationTime;
-        float lifetime;
-    };
+    
 
-    std::vector<BowTracerParticle> bowTracerParticles;
-
-    struct StarProjectile {
-        point3d position;
-        point3d direction; 
-        float radius;
-        point3d up;
-        point3d right;
-        weapon_name weapon;
-        float Speed;
-        bool isNew; 
-        DWORD creationTime; 
-        float lifetime;
-
-    };
-    float finalRadius;
-    static DWORD lastAttackTime = 0;
-    std::vector<StarProjectile> attackStars; // Теперь храним звёзды с их направлениями
+    // Теперь храним звёзды с их направлениями
 
     static std::random_device rd;
     static std::mt19937 gen(rd());
@@ -1068,8 +1086,7 @@ namespace drawer
     float CameraScale = 1.f;
     float chargeRatio;
 
-    const float MIN_CAMERA_DIST = 1000.f;
-    const float MAX_CAMERA_DIST = 10000.f;
+    
     std::string P;
 
     
@@ -1089,13 +1106,7 @@ namespace drawer
     float heroScaleReturnSpeed = 2.0f;
 
 
-    float currentStarRadius = 20.0f;
-    float starRadiusReturnStart = 500.0f;
-    DWORD starRadiusReturnStartTime = 0;
-    bool isStarRadiusReturning = false;
-    float starRadiusReturnSpeed = 2.f;
-    const float MIN_STAR_RADIUS = 20.0f;
-    const float MAX_STAR_RADIUS = 500.0f;
+   
     string C;
 
     void HandleMouseClick(XMVECTOR heroPosition, Constellation& player) {
@@ -2570,21 +2581,25 @@ namespace drawer
             Bow.SetStarRadius(i, WEAPON_STAR_RADIUS);
         }
         ShieldBlock();
-        drawString(C.c_str(), 1500, 500, 1.f, true);
-        string DistCam = to_string(Camera::state.distanceOffset);
-        drawString(DistCam.c_str(), 2000, 1000, 1.f, true);
+       //drawString(C.c_str(), 1500, 500, 1.f, true);
+       //string DistCam = to_string(Camera::state.distanceOffset);
+       //drawString(DistCam.c_str(), 2000, 1000, 1.f, true);
         //d2dRenderTarget->BeginDraw();
         CreateSpeedParticles();
         DrawSpeedParticles();
 
         UpdateReflectionEffects(deltaTime);
         RenderReflectionEffects();
+
+        UpdateTransition(deltaTime);
         //d2dRenderTarget->BeginDraw();
         switch (gameState)
         {
-        case gameState_::MainMenu:
+        case gameState_::MainMenu: {
+
             StartMenu();
             break;
+        }
 
         case gameState_::Settings:
             SettingsState();
@@ -2699,8 +2714,8 @@ namespace drawer
             DrawMovementParticles();
             //CreateParticledText("ANOTHER TEST", (1700. / 2560) * window.width, (600. / 1440) * window.height + 200.f, .7f, false);
             std::string P = std::to_string(chargeRatio);
-            drawString(P.c_str(), 600, 750, 1.f, true);
-            drawString("Power", 450, 750, 1.f, true);
+            //drawString(P.c_str(), 600, 750, 1.f, true);
+            //drawString("Power", 450, 750, 1.f, true);
             
             drawStaminaBar(energy);
 
@@ -2947,7 +2962,7 @@ namespace drawer
 
 
             if (GetAsyncKeyState('P')) {
-                gameState = gameState_::WinFight;
+                StartTransition(gameState_::WinFight, 2000.0f);
                 mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
                 mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
             }
@@ -3014,14 +3029,14 @@ namespace drawer
             }
 
             updateEnemyPosition(deltaTime, Heropos, Enemypos, playerHP);
-            if (playerHP < 0.f) {
+            if (playerHP <= 0.f) {
                 gameState = gameState_::EndFight;
             }
             InputHook(deltaTime, Heropos, Enemypos);
 
             string heroHP = std::to_string(playerHP);
             drawString(heroHP.c_str(), window.width / 2, window.height - 100, 1, true);
-            drawString("HP", 820, 960, 2.f, true);
+            drawString("HP", (1150.f / 2560)* window.width, (1300.f /1440)* window.height, 2.f, true);
 
             Constellation& c = *starSet[player_sign];
             c.Transform = CreateHeroToWorldMatrix(c);
@@ -3312,6 +3327,9 @@ namespace drawer
 
         DrawUiParticles(deltaTime);
         RenderParticledText(deltaTime);
+
+        // ОТРИСОВЫВАЕМ ПЕРЕХОД ПОВЕРХ ВСЕГО
+        DrawTransitionOverlay();
     }
 }
 

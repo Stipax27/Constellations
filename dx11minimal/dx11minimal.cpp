@@ -57,7 +57,7 @@ DWORD battleStartTime;
  DWORD attackEndTime = 0; // Время окончания атаки
  const DWORD returnDuration = 5000; // Длительность возврата в мс
 
- 
+
 
 
 HWND hWnd;
@@ -91,10 +91,15 @@ HWND hWnd;
 #include "EnemyAiUPD.h"//
 #include "CameraTargetLOG.h"
 #include "Elements.h"
-#include "MainGame.h"
 #include "DiologTEXT.h"
-#include "DialogStruct.h"
 #include "Parametrics.h"
+#include "TransitionState.h"
+
+
+#include "MainGame.h"
+#include "DialogStruct.h"
+
+
 #include "drawer.h"//
 
 #include "loop.h"

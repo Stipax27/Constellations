@@ -202,10 +202,10 @@ void handleInput() {
     static double lastClickTime = 0.0;
 
     bool canClick = (currentTime - lastClickTime) >= 1.f;
-    drawString("If you don't want to read \n Start Game Press T", window.width / 2, (1200. / 1440) * window.height,1.f,true);
-    if (GetAsyncKeyState('T') & 0x8000) {
+    drawString("If you don't want to read \n Start Game Press P", window.width / 2, (1200. / 1440) * window.height,1.f,true);
+    if (GetAsyncKeyState('P') & 0x8000) {
         lastClickTime = currentTime;
-        gameState = gameState_::selectEnemy;
+        StartTransition(gameState_::selectEnemy, 2000.0f);
         startTime = currentTime;
     }
 }
