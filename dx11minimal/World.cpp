@@ -56,6 +56,12 @@ Entity* World::CreateEntity()
 }
 
 
+void World::PreCalculations()
+{
+
+}
+
+
 bool World::UpdatePhysic()
 {
 	bool result;
