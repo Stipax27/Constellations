@@ -4,15 +4,31 @@
 #ifndef _PLAYERCONTROLLER_H_
 #define _PLAYERCONTROLLER_H_
 
+
 //////////////
 // INCLUDES //
 //////////////
 #include "cameraclass.h"
+#include "mouseclass.h"
+#include "windowclass.h"
+
 #include "entity.h"
 
 #include "Transform.cpp"
 #include "PhysicBody.cpp"
 #include "Constellation.cpp"
+
+
+/////////////
+// GLOBALS //
+/////////////
+const float MOUSE_SENSITIVITY = 0.002f;
+const float CURSOR_IGNORE_ZONE = 0.05f;
+const float MAX_CURSOR_DEVIATION = 0.45f;
+const float SENSIVITY = 0.11f;
+const float CURSOR_ZONE_DELTA = MAX_CURSOR_DEVIATION - CURSOR_IGNORE_ZONE;
+const float ROLL_SPEED = 1.0f;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: PlayerController
@@ -30,6 +46,7 @@ public:
 
 	void ProcessInput();
 	void ProcessCamera();
+	void ProcessMouse();
 
 private:
 	bool IsKeyPressed(const int);
@@ -40,6 +57,8 @@ private:
 	Constellation* playerConstellation;
 
 	CameraClass* camera;
+	MouseClass* mouse;
+	WindowClass* window;
 };
 
 #endif

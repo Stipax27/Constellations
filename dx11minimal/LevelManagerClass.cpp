@@ -21,7 +21,7 @@ LevelManagerClass::~LevelManagerClass()
 void LevelManagerClass::InitWindow()
 {
 	if (window == 0) {
-		window = new WindowStruct;
+		window = new WindowClass;
 	}
 }
 
@@ -42,7 +42,7 @@ bool LevelManagerClass::Initialize()
 		return false;
 	}
 
-	mouse = new MouseStruct;
+	mouse = new MouseClass;
 	mouse->Initialize(window, m_World->m_Camera);
 
 	Dx11Init(window->hWnd, window->width, window->height);
