@@ -205,7 +205,7 @@ void handleInput() {
     drawString("If you don't want to read \n Start Game Press P", window.width / 2, (1200. / 1440) * window.height,1.f,true);
     if (GetAsyncKeyState('P') & 0x8000) {
         lastClickTime = currentTime;
-        StartTransition(gameState_::selectEnemy, 2000.0f);
+        StartTransition(gameState_::selectEnemy, 1500.0f);
         startTime = currentTime;
     }
 }

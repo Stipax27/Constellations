@@ -94,7 +94,7 @@ public:
                 Enemy::enemyData.enemyConstellationOffset.r[3].m128_f32[2],
                 1.0f
             );
-
+          
         XMMATRIX translation = XMMatrixTranslationFromVector(currentPos);
         XMMATRIX rotation = XMMatrixRotationQuaternion(Enemy::enemyData.currentRotation);
         XMMATRIX scale = XMMatrixScaling(c.scale, c.scale, c.scale);
