@@ -141,6 +141,7 @@
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="Point3d.h" />
+    <ClInclude Include="Point3x3.h" />
     <ClInclude Include="system.h" />
     <ClInclude Include="windowclass.h" />
     <ClInclude Include="world.h" />
@@ -257,6 +258,7 @@
     <ClCompile Include="MouseClass.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Point3d.cpp" />
+    <ClCompile Include="Point3x3.cpp" />
     <ClCompile Include="Point4d.cpp" />
     <ClCompile Include="SpriteCluster.cpp" />
     <ClCompile Include="PhysicBody.cpp" />

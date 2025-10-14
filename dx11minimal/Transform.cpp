@@ -2,7 +2,8 @@
 #define _TRANSFORM_C_
 
 #include "component.h"
-#include "point3d.h"
+#include "Point3d.h"
+#include "Point3x3.h"
 
 
 struct Transform : Component
@@ -10,6 +11,8 @@ struct Transform : Component
 	point3d position = point3d();
 	point3d rotation = point3d();
 	point3d scale = point3d(1.0f, 1.0f, 1.0f);
+
+	point3x3 rotationMatrix = point3x3();
 
 	point3d GetLookVector()
 	{

@@ -129,6 +129,9 @@
     <ClInclude Include="dx11.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Point3x3.h">
+      <Filter>Header Files\Structures</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp">
@@ -196,6 +199,9 @@
     </ClCompile>
     <ClCompile Include="PlaneCollider.cpp">
       <Filter>Source Files\Physic</Filter>
+    </ClCompile>
+    <ClCompile Include="Point3x3.cpp">
+      <Filter>Source Files\Structures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
