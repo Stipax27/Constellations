@@ -158,7 +158,7 @@ static double lastClickTime = 0.0;
 
 void renderContent() {
     float textX = window.width / 2;
-    float textY = (500. / 1440) * window.height;
+    float textY = (200. / 1440) * window.height;
     static int currentNarrative = 0;
     static double lastClickTime = 0.0;
 

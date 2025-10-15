@@ -2542,6 +2542,20 @@ namespace drawer
         ConstBuf::Update(5, ConstBuf::global);
     }
 
+    void TeleportEnemy(point3d newPosition) {
+        // Обновляем матрицу трансформации
+        Enemy::enemyData.enemyConstellationOffset = XMMatrixTranslation(
+            newPosition.x, newPosition.y, newPosition.z
+        );
+
+        // Сбрасываем состояние ИИ
+        enemyAI.splineInitialized = false;
+        enemyAI.splineProgress = 0.0f;
+
+        // Можно также сбросить состояние атаки
+        Enemy::enemyData.currentState = Enemy::AIState::PATROL;
+    }
+
     Constellation& enemy = *starSet[currentEnemyID];
     Constellation& player = *starSet[player_sign];
 
@@ -2638,7 +2652,7 @@ namespace drawer
         {
             for (int i = 0; i < enemy.starsCords.size(); i++) {
 
-                enemy.SetStarRadius(i, 200.f);
+                enemy.SetStarRadius(i, 1000.f);
             }
             //DrawTEST();
             drawStaminaBar(energy);
@@ -2666,11 +2680,10 @@ namespace drawer
             playerConst.Transform = CreateHeroToWorldMatrix(playerConst);
 
 
-            Constellation& q = *starSet[currentEnemyID];
-            
+            Constellation& q = *starSet[0];
+            TeleportEnemy(point3d{ 30000.f,0.f,0.f });
             q.Transform = CreateEnemyToWorldMatrix(q);
            
-
             drawConstellation(q,false, 200.f,30);
           
 
@@ -2704,12 +2717,12 @@ namespace drawer
         case gameState_::DialogStruct: {
 
 
-            Constellation& c = *starSet[currentEnemyID];
-
+            Constellation& c = *starSet[16];
+            TeleportEnemy(point3d{ 6000.f,-5000.f,-115000.f });
             c.Transform = CreateEnemyToWorldMatrix(c);
 
 
-            drawConstellation(c, false, 200.f, 30);
+            drawConstellation(c, false, 200.f, 40);
             initContentData();
             renderContent();
             handleInput();
@@ -2722,7 +2735,7 @@ namespace drawer
 
             for (int i = 0; i < enemy.starsCords.size();i++) {
 
-                enemy.SetStarRadius(i, 100.f);
+                enemy.SetStarRadius(i, 1000.f);
             }
             CreateMovementParticles();
             UpdateMovementParticles(deltaTime);

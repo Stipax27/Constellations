@@ -85,21 +85,18 @@ public:
 
     friend XMMATRIX CreateEnemyToWorldMatrix(Constellation& c)
     {
-        
         c.scale = 20000;
 
-            XMVECTOR currentPos = XMVectorSet(
-                Enemy::enemyData.enemyConstellationOffset.r[3].m128_f32[0],  // ? ��� Enemy::
-                Enemy::enemyData.enemyConstellationOffset.r[3].m128_f32[1],
-                Enemy::enemyData.enemyConstellationOffset.r[3].m128_f32[2],
-                1.0f
-            );
-          
-        XMMATRIX translation = XMMatrixTranslationFromVector(currentPos);
+        // ВАЖНО: используем currentRotation из EnemyData
         XMMATRIX rotation = XMMatrixRotationQuaternion(Enemy::enemyData.currentRotation);
+
+        // Получаем позицию из enemyConstellationOffset
+        XMVECTOR currentPos = Enemy::enemyData.enemyConstellationOffset.r[3];
+
+        XMMATRIX translation = XMMatrixTranslationFromVector(currentPos);
         XMMATRIX scale = XMMatrixScaling(c.scale, c.scale, c.scale);
 
-        return  scale * rotation * translation;
+        return scale * rotation * translation;
     }
 
     friend XMMATRIX HeroUITransform( const Constellation& c)
