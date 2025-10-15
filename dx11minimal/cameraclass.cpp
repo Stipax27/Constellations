@@ -16,9 +16,8 @@ CameraClass::~CameraClass()
 
 void CameraClass::Initialize(float iAspect)
 {
-	m_positionX = 0.0f;
-	m_positionY = 0.0f;
-	m_positionZ = 0.0f;
+	position = point3d();
+	qRotation = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
 	m_rotationX = 0.0f;
 	m_rotationY = 0.0f;
@@ -32,19 +31,15 @@ void CameraClass::Initialize(float iAspect)
 
 void CameraClass::SetPosition(float x, float y, float z)
 {
-	m_positionX = x;
-	m_positionY = y;
-	m_positionZ = z;
-	return;
+	position = point3d(x, y, z);
 }
 
 
-void CameraClass::SetRotation(float x, float y, float z)
+void CameraClass::SetEulerRotation(float x, float y, float z)
 {
 	m_rotationX = x;
 	m_rotationY = y;
 	m_rotationZ = z;
-	return;
 }
 
 
@@ -60,19 +55,15 @@ void CameraClass::SetQuaternionRotation(float x = 0.0f, float y = 1.0f, float z 
 
 void CameraClass::AddPosition(float x = 0.0f, float y = 0.0f, float z = 0.0f)
 {
-	m_positionX += x;
-	m_positionY += y;
-	m_positionZ += z;
-	return;
+	position += point3d(x, y, z);
 }
 
 
-void CameraClass::AddRotation(float x = 0.0f, float y = 0.0f, float z = 0.0f)
+void CameraClass::AddEulerRotation(float x = 0.0f, float y = 0.0f, float z = 0.0f)
 {
 	m_rotationX += x;
 	m_rotationY += y;
 	m_rotationZ += z;
-	return;
 }
 
 
@@ -95,7 +86,7 @@ void CameraClass::SetFov(float FoV)
 
 XMFLOAT3 CameraClass::GetPosition()
 {
-	return XMFLOAT3(m_positionX, m_positionY, m_positionZ);
+	return XMFLOAT3(position.x, position.y, position.z);
 }
 
 
@@ -107,7 +98,7 @@ XMFLOAT3 CameraClass::GetRotation()
 
 void CameraClass::Render()
 {
-	XMFLOAT3 up, position, lookAt;
+	XMFLOAT3 up, pos, lookAt;
 	XMVECTOR upVector, positionVector, lookAtVector;
 	float yaw, pitch, roll;
 	XMMATRIX rotationMatrix;
@@ -122,12 +113,12 @@ void CameraClass::Render()
 	upVector = XMLoadFloat3(&up);
 
 	// Setup the position of the camera in the world.
-	position.x = m_positionX;
-	position.y = m_positionY;
-	position.z = m_positionZ;
+	pos.x = position.x;
+	pos.y = position.y;
+	pos.z = position.z;
 
 	// Load it into a XMVECTOR structure.
-	positionVector = XMLoadFloat3(&position);
+	positionVector = XMLoadFloat3(&pos);
 
 	// Setup where the camera is looking by default.
 	lookAt.x = 0.0f;

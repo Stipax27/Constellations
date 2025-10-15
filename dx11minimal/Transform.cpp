@@ -12,33 +12,52 @@ struct Transform : Component
 	point3d rotation = point3d();
 	point3d scale = point3d(1.0f, 1.0f, 1.0f);
 
-	point3x3 rotationMatrix = point3x3();
+    XMVECTOR qRotation = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
-	point3d GetLookVector()
+    XMVECTOR GetLookVector()
 	{
-		XMMATRIX pitchMatrix = XMMatrixSet(
-			1, 0, 0, 0,
-			0, cos(rotation.x), -sin(rotation.x), 0,
-			0, sin(rotation.x), cos(rotation.x), 0,
-			0, 0, 0, 0
-		);
-
-		XMMATRIX yawMatrix = XMMATRIX{
-			cos(rotation.y), 0, sin(rotation.y), 0,
-			0, 1, 0, 0,
-			-sin(rotation.y), 0, cos(rotation.y), 0,
-			0, 0, 0, 0
-		};
-
-		XMMATRIX rollMatrix = XMMATRIX{
-			cos(rotation.z), -sin(rotation.z), 0, 0,
-			sin(rotation.z), cos(rotation.z), 0, 0,
-			0, 0, 1, 0,
-			0, 0, 0, 0
-		};
-
-		XMMATRIX rotationMatrix = yawMatrix * pitchMatrix * rollMatrix;
+        return XMVector3Rotate(XMVectorSet(0, 0, 1, 0), qRotation);
 	}
+
+    XMVECTOR GetUpVector()
+    {
+        return XMVector3Rotate(XMVectorSet(0, 1, 0, 0), qRotation);
+    }
+
+    XMVECTOR GetRightVector()
+    {
+        return XMVector3Rotate(XMVectorSet(1, 0, 0, 0), qRotation);
+    }
 };
+
+void navigationByMouse()
+{
+    static XMVECTOR currentRotation = XMQuaternionIdentity();
+
+    if (GetAsyncKeyState(VK_RBUTTON))
+    {
+        float dx = (mouse.pos.x - mouse.oldPos.x) * 0.01;
+        float dy = (mouse.pos.y - mouse.oldPos.y) * 0.01;
+
+        XMVECTOR qPitch = XMQuaternionRotationAxis(XMVectorSet(1, 0, 0, 0), dy);
+        XMVECTOR qYaw = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), dx);
+
+        XMVECTOR qNewRotation = XMQuaternionMultiply(qYaw, qPitch);
+        Camera::state.currentRotation = XMQuaternionMultiply(qNewRotation, Camera::state.currentRotation);
+        Camera::state.currentRotation = XMQuaternionNormalize(Camera::state.currentRotation);
+
+        XMVECTOR rotatedForward = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), Camera::state.currentRotation);
+        XMVECTOR rotatedUp = XMVector3Rotate(XMVectorSet(0, 1, 0, 0), Camera::state.currentRotation);
+        XMVECTOR eye = XMVectorScale(rotatedForward, -Camera::state.camDist);
+
+        ConstBuf::camera.view[0] = XMMatrixTranspose(XMMatrixLookAtLH(eye, XMVectorZero(), rotatedUp));
+
+        ConstBuf::UpdateCamera();
+        mouse.Angle.x = mouse.oldAngle.x + dx;
+        mouse.Angle.y = mouse.oldAngle.y + dy;
+        mouse.oldPos.x = mouse.pos.x;
+        mouse.oldPos.y = mouse.pos.y;
+    }
+}
 
 #endif

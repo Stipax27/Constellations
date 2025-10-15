@@ -40,3 +40,15 @@ point3d quaternionToEuler(float x, float y, float z, float w)
 
     return point3d(pitch, yaw, roll);
 }
+
+XMVECTOR eulerToQuanternion(float x, float y, float z)
+{
+    XMVECTOR qYaw = XMQuaternionRotationAxis(XMVectorSet(0, 0, 1, 0), z);
+    XMVECTOR qPitch = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), y);
+    XMVECTOR qRoll = XMQuaternionRotationAxis(XMVectorSet(1, 0, 0, 0), x);
+
+    XMVECTOR qRotation = XMQuaternionMultiply(XMQuaternionMultiply(qYaw, qPitch), qRoll);
+    qRotation = XMQuaternionNormalize(qRotation);
+
+    return qRotation;
+}
