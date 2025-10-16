@@ -1440,6 +1440,266 @@ Constellation Zenit(
     }
 );
 
+Constellation HeroART(
+    {
+        {0.330935, 0.26651, 0},//coords
+        {0.352518, 0.301133, 0},//coords
+        {0.374101, 0.352426, 0},//coords
+        {0.328371, 0.412054, 0},//coords
+        {0.309353, 0.424022, 0},//coords
+        {0.328371, 0.43713, 0},//coords
+        {0.338129, 0.421671, 0},//coords
+        {0.41227, 0.262022, 0},//coords
+        {0.561151, 0.274703, 0},//coords
+        {0.751799, 0.245993, 0},//coords
+        {0.856714, 0.267931, 0},//coords
+        {0.888489, 0.320368, 0},//coords
+        {0.978417, 0.366531, 0},//coords
+        {0.953237, 0.43193, 0},//coords
+        {0.953237, 0.457576, 0},//coords
+        {1, 0.507587, 0},//coords
+        {1, 0.545986, 0},//coords
+        {0.906475, 0.578115, 0},//coords
+        {0.803814, 0.389866, 0},//coords
+        {0.776978, 0.363967, 0},//coords
+        {0.845324, 0.306262, 0},//coords
+        {0.871783, 0.292798, 0},//coords
+        {0.374101, 0.12289, 0},//coords
+        {0.489209, 0.0921137, 0},//coords
+        {0.489209, 0.0666809, 0},//coords
+        {0.302158, 0.11776, 0},//coords
+        {0.309353, 0.106575, 0},//coords
+        {0.359712, 0.102372, 0},//coords
+        {0.309353, 0.0980267, 0},//coords
+        {0.334532, 0.0906177, 0},//coords
+        {0.334532, 0.0831374, 0},//coords
+        {0.302158, 0.0857021, 0},//coords
+        {0.309353, 0.058702, 0},//coords
+        {0.348921, 0.0613379, 0},//coords
+        {0.374101, 0.0701005, 0},//coords
+        {0.431655, 0.0644012, 0},//coords
+        {0.44964, 0.0523616, 0},//coords
+        {0.489209, 0.0159578, 0},//coords
+        {0.424929, 0.0473036, 0},//coords
+        {0.424929, 0.0227969, 0},//coords
+        {0.489209, 0, 0},//coords
+        {0.41227, 0.0136782, 0},//coords
+        {0.41227, 0.0347653, 0},//coords
+        {0.395683, 0.0119684, 0},//coords
+        {0.363309, 0.0344091, 0},//coords
+        {0.352518, 0.0215858, 0},//coords
+        {0.309353, 0.0433141, 0},//coords
+        {0.302158, 0.0170977, 0},//coords
+        {0.28777, 0.0228681, 0},//coords
+        {0.298561, 0.0485146, 0},//coords
+        {0.273381, 0.0267151, 0},//coords
+        {0.226619, 0.0395384, 0},//coords
+        {0.215827, 0.0523616, 0},//coords
+        {0.464178, 0.0389864, 0},//coords
+        {0.510791, 0.0267151, 0},//coords
+        {0.487485, 0.0541426, 0},//coords
+        {0.532374, 0.0369737, 0},//coords
+        {0.553957, 0.0523616, 0},//coords
+        {0.546763, 0.0805728, 0},//coords
+        {0.611511, 0.13956, 0},//coords
+        {0.539568, 0.107502, 0},//coords
+        {0.593525, 0.144689, 0},//coords
+        {0.489209, 0.107502, 0},//coords
+        {0.464178, 0.154449, 0},//coords
+        {0.906475, 0.15623, 0},//coords
+        {0.871783, 0.164708, 0},//coords
+        {0.824381, 0.160469, 0},//coords
+        {0.769784, 0.178029, 0},//coords
+        {0.758993, 0.199829, 0},//coords
+        {0.41227, 0.280402, 0},//coords
+        {0.539568, 0.322576, 0},//coords
+        {0, 0.611455, 0},//coords
+        {0.100719, 0.776875, 0},//coords
+        {0.258993, 0.88972, 0},//coords
+        {0.279576, 0.88972, 0},//coords
+        {0.147482, 0.773028, 0},//coords
+        {0.00498073, 0.578115, 0},//coords
+        {0.179856, 0.760205, 0},//coords
+        {0.323741, 0.850894, 0},//coords
+        {0.323741, 0.981005, 0},//coords
+        {0.0413792, 0.546857, 0},//coords
+        {0.348921, 0.662748, 0},//coords
+        {0.126099, 0.569139, 0},//coords
+        {0.0783929, 0.521769, 0},//coords
+        {0.21223, 0.461423, 0},//coords
+        {0.297162, 0.569139, 0},//coords
+        {0.338129, 0.578115, 0},//coords
+        {0.293965, 0.479376, 0},//coords
+        {0.920863, 1, 0},//coords
+        {0.640288, 0.683266, 0},//coords
+        {0.514389, 0.564009, 0},//coords
+        {0.369947, 0.461946, 0},//coords
+        {0.511348, 0.858668, 0},//coords
+        {0.435252, 0.679419, 0},//coords
+        {0.338129, 0.575622, 0},//coords
+        {0.567415, 0.8907, 0},//coords
+        {0.511348, 0.742609, 0},//coords
+        {0.405377, 0.647491, 0},//coords
+        {0.348921, 0.550545, 0},//coords
+        {0.348921, 0.523759, 0},//coords
+        {0.377149, 0.527178, 0},//coords
+        {0.539381, 0.685047, 0},//coords
+        {0.676259, 0.916649, 0},//coords
+        {0.694245, 0.920496, 0},//coords
+        {0.561151, 0.683337, 0},//coords
+        {0.406475, 0.526822, 0},//coords
+        {0.406475, 0.513999, 0},//coords
+        {0.446043, 0.534516, 0},//coords
+        {0.615108, 0.683266, 0},//coords
+        {0.795666, 0.858668, 0},//coords
+        {0.845079, 0.43713, 0},//coords
+        {0.776978, 0.424022, 0},//coords
+        {0.811029, 0.485004, 0},//coords
+        {0.733813, 0.449882, 0},//coords
+        {0.68725, 0.43713, 0},//coords
+        {0.68725, 0.452518, 0},//coords
+        {0.654676, 0.463988, 0},//coords
+        {0.682454, 0.485004, 0},//coords
+        {0.683453, 0.505022, 0},//coords
+        {0.605547, 0.464522, 0},//coords
+        {0.584932, 0.479376, 0},//coords
+        {0.584932, 0.498112, 0},//coords
+        {0.475919, 0.449669, 0},//coords
+        {0.405983, 0.453967, 0},//coords
+        {0.206835, 0.292798, 0},//coords
+        {0.293866, 0.267931, 0},//coords
+        {0.328371, 0.267931, 0},//coords
+        {0.34925, 0.219579, 0},//coords
+        {0.424929, 0.181742, 0}//coords
+    },
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1 },//health
+    {
+        {0, 1},//indicies
+        {1, 2},//indicies
+        {2, 3},//indicies
+        {3, 4},//indicies
+        {4, 5},//indicies
+        {5, 6},//indicies
+        {7, 8},//indicies
+        {8, 9},//indicies
+        {9, 10},//indicies
+        {10, 11},//indicies
+        {11, 12},//indicies
+        {12, 13},//indicies
+        {13, 14},//indicies
+        {14, 15},//indicies
+        {15, 16},//indicies
+        {16, 17},//indicies
+        {18, 19},//indicies
+        {19, 20},//indicies
+        {20, 21},//indicies
+        {22, 23},//indicies
+        {23, 24},//indicies
+        {25, 26},//indicies
+        {26, 27},//indicies
+        {27, 28},//indicies
+        {28, 29},//indicies
+        {29, 30},//indicies
+        {30, 31},//indicies
+        {31, 32},//indicies
+        {32, 33},//indicies
+        {33, 34},//indicies
+        {34, 35},//indicies
+        {35, 36},//indicies
+        {36, 37},//indicies
+        {37, 38},//indicies
+        {38, 39},//indicies
+        {39, 40},//indicies
+        {40, 41},//indicies
+        {41, 42},//indicies
+        {42, 43},//indicies
+        {43, 44},//indicies
+        {44, 45},//indicies
+        {45, 46},//indicies
+        {46, 47},//indicies
+        {47, 48},//indicies
+        {48, 49},//indicies
+        {49, 50},//indicies
+        {50, 51},//indicies
+        {51, 52},//indicies
+        {53, 54},//indicies
+        {54, 55},//indicies
+        {55, 56},//indicies
+        {56, 57},//indicies
+        {58, 59},//indicies
+        {60, 61},//indicies
+        {62, 63},//indicies
+        {64, 65},//indicies
+        {65, 66},//indicies
+        {66, 67},//indicies
+        {67, 68},//indicies
+        {69, 70},//indicies
+        {71, 72},//indicies
+        {72, 73},//indicies
+        {73, 74},//indicies
+        {74, 75},//indicies
+        {75, 76},//indicies
+        {76, 77},//indicies
+        {77, 78},//indicies
+        {78, 79},//indicies
+        {80, 81},//indicies
+        {81, 82},//indicies
+        {82, 83},//indicies
+        {83, 84},//indicies
+        {84, 85},//indicies
+        {85, 86},//indicies
+        {86, 87},//indicies
+        {88, 89},//indicies
+        {89, 90},//indicies
+        {90, 91},//indicies
+        {92, 93},//indicies
+        {93, 94},//indicies
+        {95, 96},//indicies
+        {97, 98},//indicies
+        {98, 99},//indicies
+        {99, 100},//indicies
+        {100, 101},//indicies
+        {101, 102},//indicies
+        {102, 103},//indicies
+        {103, 104},//indicies
+        {104, 105},//indicies
+        {105, 106},//indicies
+        {106, 107},//indicies
+        {107, 108},//indicies
+        {108, 109},//indicies
+        {110, 111},//indicies
+        {111, 112},//indicies
+        {112, 113},//indicies
+        {113, 114},//indicies
+        {114, 115},//indicies
+        {115, 116},//indicies
+        {116, 117},//indicies
+        {117, 118},//indicies
+        {118, 119},//indicies
+        {119, 120},//indicies
+        {120, 121},//indicies
+        {121, 122},//indicies
+        {122, 123},//indicies
+        {124, 125},//indicies
+        {125, 126},//indicies
+        {126, 127},//indicies
+        {127, 128}//indicies
+    }
+);
+
+
 std::vector <Constellation*> starSet = {
 &Aries,
 &Taurus,
@@ -1457,7 +1717,8 @@ std::vector <Constellation*> starSet = {
 &Shield,
 &Bow,
 &Staff,
-&Zenit
+&Zenit,
+&HeroART
 };
 
 RenderObject* ariesNebula;
@@ -1500,7 +1761,7 @@ enum class gameState_ {
     MainMenu, Settings, Authors, MonthSelection, DaySelection, confirmSign, selectEnemy, Fight, EndFight, DialogStruct, WinFight, Exploring, Exploring1, Exploring2
 };
 
-gameState_  gameState = gameState_::selectEnemy;
+gameState_  gameState = gameState_::MainMenu;
 Constellation* currentEnemy = &Aries;
 ZodiacSign currentEnemyID = ZodiacSign::ARIES;
 

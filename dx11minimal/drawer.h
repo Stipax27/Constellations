@@ -2568,7 +2568,7 @@ namespace drawer
 
         XMVECTOR heroPosition = Hero::state.constellationOffset.r[3];
         XMVECTOR enemyPositions = Enemy::enemyData.enemyConstellationOffset.r[3];
-        playerHP = getConstellationHP(player);
+        
         float enemyTotalHP = getConstellationHP(enemy);
         // ПРИМЕНЯЕМ РАЗМЕР ТОЛЬКО К ИГРОКУ, НЕ К ОРУЖИЯМ
         for (int i = 0; i < player.starsCords.size(); i++) {
@@ -2725,8 +2725,13 @@ namespace drawer
             TeleportEnemy(point3d{ 6000.f,-5000.f,-115000.f });
             c.Transform = CreateEnemyToWorldMatrix(c);
 
+            Constellation& h = *starSet[17];
+            TeleportEnemy(point3d{ -6000.f,-5000.f,-115000.f });
+            h.Transform = CreateEnemyToWorldMatrix(h);
+
 
             drawConstellation(c, false, 200.f, 40);
+            //drawConstellation(h, false, 200.f, 40);
             initContentData();
             renderContent();
             handleInput();
@@ -3075,8 +3080,28 @@ namespace drawer
             }
 
             updateEnemyPosition(deltaTime, Heropos, Enemypos, playerHP);
-            if (playerHP <= 0.f) {
-                gameState = gameState_::EndFight;
+            static DWORD deathStartTime = 0;
+            static bool deathAnimationStarted = false;
+
+            if (playerHP <= 0.f && !deathAnimationStarted) {
+                deathAnimationStarted = true;
+                deathStartTime = currentTime;
+                ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\PlayerDeath.wav");
+            }
+
+            if (deathAnimationStarted) {
+                float progress = (currentTime - deathStartTime) / 2000.0f; // 2 секунды
+
+                // Простой эффект затемнения и уменьшения
+                float darken = progress;
+                heroScale = max(0.1f, MIN_HERO_SCALE * (1.0f - progress));
+                player.SetStarSpacing(heroScale);
+                
+                if (progress >= 1.0f) {
+                    deathAnimationStarted = false;
+                    gameState = gameState_::EndFight;
+                    mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
+                }
             }
             InputHook(deltaTime, Heropos, Enemypos);
 
