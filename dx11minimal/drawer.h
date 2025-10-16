@@ -506,26 +506,26 @@ namespace drawer
                 remainingTime = (LONG)((battleStartTime + MAX_BATTLE_TIME) - currentTime);
             }
 
-            if (remainingTime > 0) {
-
-                //DrawHpHeroBar();
-                std::string timeStr = "Time " + (std::to_string(remainingTime / 1000 / 60)) + ":" + std::to_string(remainingTime / 1000 % 60 );
-                drawString(timeStr.c_str(), window.width / 1.1, 45, 1.f, true);
-
-                if (getConstellationHP(*starSet[currentEnemyID]) < 0)
-                {
-                    timeModifier = 0;
-                    isBattleActive = false;
-                    gameState = gameState_::WinFight;
-                }
-            }
-            else
-            {
-                timeModifier = 0;
-                isBattleActive = false;
-                gameState = gameState_::EndFight;
-
-            }
+            //if (remainingTime > 0) {
+            //
+            //    //DrawHpHeroBar();
+            //    std::string timeStr = "Time " + (std::to_string(remainingTime / 1000 / 60)) + ":" + std::to_string(remainingTime / 1000 % 60 );
+            //    drawString(timeStr.c_str(), window.width / 1.1, 45, 1.f, true);
+            //
+            //    if (getConstellationHP(*starSet[currentEnemyID]) < 0)
+            //    {
+            //        timeModifier = 0;
+            //        isBattleActive = false;
+            //        gameState = gameState_::WinFight;
+            //    }
+            //}
+            //else
+            //{
+            //    timeModifier = 0;
+            //    isBattleActive = false;
+            //    gameState = gameState_::EndFight;
+            //
+            //}
         }
     }
 
@@ -1075,8 +1075,8 @@ namespace drawer
     float chargeStartTime = 0;
     bool isCharging = false;
     const float MAX_CHARGE_TIME = 2000.0f; 
-    const float MIN_ATTACK_RADIUS = 15.0f; 
-    const float MAX_ATTACK_RADIUS = 1000.0f; 
+    const float MIN_ATTACK_RADIUS = 30.0f; 
+    const float MAX_ATTACK_RADIUS = 2000.0f; 
     
     static bool wasPressed = false;
     static bool useLeftFist = true;
@@ -1116,12 +1116,6 @@ namespace drawer
         // Обнаружение момента нажатия
         if (isPressed && !wasPressed) {
             useLeftFist = !useLeftFist;
-            point3d startPos = point3d(
-                XMVectorGetX(heroPosition),
-                XMVectorGetY(heroPosition),
-                XMVectorGetZ(heroPosition)
-            );
-            //CreateSpiralAccumulationEffect(startPos, 1000.0f);
         }
         wasPressed = isPressed;
 
@@ -1138,31 +1132,39 @@ namespace drawer
             chargeRatio = min(chargeDuration / MAX_CHARGE_TIME, 1.0f);
             finalRadius = MIN_ATTACK_RADIUS + chargeRatio * (MAX_ATTACK_RADIUS - MIN_ATTACK_RADIUS);
 
-            accumulationCenter = point3d(
-                XMVectorGetX(heroPosition),
-                XMVectorGetY(heroPosition),
-                XMVectorGetZ(heroPosition)
-            );
+            // ПРЯМОЕ ПРИМЕНЕНИЕ ТРЯСКИ К МАТРИЦЕ
+            if (chargeRatio > 0.3f) {
+                float intensity = 0.1f + (chargeRatio - 0.3f) * 0.3f;
 
-            // Увеличиваем масштаб героя, камеры и звезд пропорционально времени задержки
+                // Немедленно применяем тряску к матрице
+                float shakeX = GetRandom(-intensity * 100, intensity * 100);
+                float shakeY = GetRandom(-intensity * 100, intensity * 100);
+                float shakeZ = GetRandom(-intensity * 100, intensity * 100);
+
+                XMMATRIX shakeMatrix = XMMatrixTranslation(shakeX, shakeY, shakeZ);
+                player.Transform = player.Transform * shakeMatrix;
+            }
+
+           
+            // Остальной код зарядки...
             targetHeroScale = MIN_HERO_SCALE + chargeRatio * (MAX_HERO_SCALE - MIN_HERO_SCALE);
             targetCameraDistance = MIN_CAMERA_DIST + chargeRatio * (MAX_CAMERA_DIST - MIN_CAMERA_DIST);
             currentStarRadius = MIN_STAR_RADIUS + chargeRatio * (MAX_STAR_RADIUS - MIN_STAR_RADIUS);
             C = to_string(currentStarRadius);
 
-            // Непосредственно применяем все изменения
             currentCameraDistance = targetCameraDistance;
             currentHeroScale = targetHeroScale;
 
             Camera::state.distanceOffset = currentCameraDistance;
             player.SetStarSpacing(currentHeroScale);
 
-            // ПРИМЕНЯЕМ РАЗМЕР ТОЛЬКО К ИГРОКУ, НЕ К ОРУЖИЯМ
             for (int i = 0; i < player.starsCords.size(); i++) {
                 player.SetStarRadius(i, currentStarRadius);
             }
 
             currentDamage = MIN_ATTACK_DAMAGE + chargeRatio * (MAX_ATTACK_DAMAGE - MIN_ATTACK_DAMAGE);
+
+            
         }
         else {
             if (isCharging) {
@@ -1183,10 +1185,10 @@ namespace drawer
                 if (currentTime - lastAttackTime > 400) {
                     if (gameState == gameState_::selectEnemy) {
                         gameState = gameState_::Fight;
-                        mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
+                        mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\FREEFLY.mp3"), NULL, 0, NULL);
                         mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
                     }
-                    lastAttackTime = currentTime;
+                   lastAttackTime = currentTime;
 
                     float attackCost = 0.0f;
                     switch (current_weapon) {
@@ -1396,16 +1398,14 @@ namespace drawer
         }
     }
 
-    void CreateConstellationsDamageEffect(point3d heroPos, point3d damageDirection);
+    float EnemyHpB;
+    void CreateConstellationsDamageEffect(point3d heroPos, point3d damageDirection , XMFLOAT4 ColEff);
 
         std::string enemyH;
         std::string indexStar;
         void UpdateAttack(float deltaTime) {
-            if (starSet.empty() ||
-                currentEnemyID < 0 ||
-                currentEnemyID >= starSet.size() ||
-                !starSet[currentEnemyID] ||
-                starSet[currentEnemyID]->starsCords.empty()) {
+            if (starSet.empty() || currentEnemyID < 0 || currentEnemyID >= starSet.size() ||
+                !starSet[currentEnemyID] || starSet[currentEnemyID]->starsCords.empty()) {
                 OutputDebugStringA("Invalid attack state - resetting\n");
                 return;
             }
@@ -1414,59 +1414,53 @@ namespace drawer
 
             Constellation& enemy = *starSet[currentEnemyID];
             Constellation& Hero = *starSet[player_sign];
-            // Сбрасываем масштаб врага в начале кадра
-            //enemy.SetStarRadius(0,1.0f);
+
+            // Получаем общее HP врага
+            float enemyTotalHP = getConstellationHP(enemy);
+
             point3d HeroPosTrans;
-            for (int j = 0; j < Hero.starsCords.size(); j++) 
-            {
+            for (int j = 0; j < Hero.starsCords.size(); j++) {
                 HeroPosTrans = TransformPoint(Hero.starsCords[j], Hero.Transform);
             }
+
             for (int i = 0; i < enemy.starsCords.size(); i++) {
                 if (enemy.starsHealth[i] <= 0) continue;
 
                 point3d starWorldPos = TransformPoint(enemy.starsCords[i], enemy.Transform);
-                 
 
                 // Проверяем все выстрелы на приближение к этой звезде
                 for (auto& star : attackStars) {
-                    float distance = (star.position - starWorldPos).magnitude();
-
-                    // Если выстрел близко к звезде - увеличиваем её
-                    //if (distance < 3000.f) {
-                    //    // Плавное увеличение в зависимости от расстояния
-                    //    float scaleFactor = 1.0f + (3000.f - distance) / 3000.f * 5.0f; // Увеличиваем до 6x
-                    //    //enemy.SetStarRadius(0,scaleFactor);
-                    //        
-                    //    // Также можно увеличить конкретную звезду
-                    //    enemy.starsRadius[i] = 1000.f * scaleFactor; // Увеличиваем радиус звезды
-                    //}
-
                     if (CheckWeaponCollision(star, starWorldPos, 2000.f)) {
-                            point3d damageDirection = (HeroPosTrans - starWorldPos).normalized();
-                        //enemy.SetStarRadius(i, 10000.f);
+                        point3d damageDirection = (HeroPosTrans - starWorldPos).normalized();
+
                         if (current_weapon == weapon_name::Sword) {
                             enemy.starsHealth[i] -= currentDamage * .5f;
-                            CreateConstellationsDamageEffect(starWorldPos, damageDirection);
                         }
                         else if (current_weapon == weapon_name::Shield) {
                             enemy.starsHealth[i] -= currentDamage * .1f;
-                            CreateConstellationsDamageEffect(starWorldPos, damageDirection);
                         }
                         else if (current_weapon == weapon_name::Bow) {
                             enemy.starsHealth[i] -= currentDamage * 1.f;
-                            CreateConstellationsDamageEffect(starWorldPos, damageDirection);
                         }
                         else if (current_weapon == weapon_name::Fists) {
-                            enemy.starsHealth[i] -= currentDamage*.2f;
-                            CreateConstellationsDamageEffect(starWorldPos, damageDirection);
+                            enemy.starsHealth[i] -= currentDamage * .2f;
                         }
-
-                        //enemyH = "Star: " + std::to_string(i + 1) + " HP: " + std::to_string(enemy.starsHealth[i]);
+                        float colorVariant = GetRandom(0, 100) * 0.01f;
+                        XMFLOAT4 ColEnemyEff(
+                            1.0f,                    // R
+                            0.3f + colorVariant * 0.4f, // G (от 0.3 до 0.7)
+                            0.1f,                    // B
+                            1.0f                     // A
+                        );
+                        CreateConstellationsDamageEffect(starWorldPos, damageDirection , ColEnemyEff);
                         ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Damage.wav");
                         break;
                     }
                 }
             }
+
+            // Обновляем общее HP врага после нанесения урона
+            enemyTotalHP = getConstellationHP(enemy);
 
             isAttacking = false;
             UpdateAttackStars(deltaTime);
@@ -2292,8 +2286,8 @@ namespace drawer
     point3d lastDamageDirection;
     point3d lastDamagePosition;
 
-    void CreateConstellationsDamageEffect(point3d heroPos, point3d damageDirection) {
-        const int particleCount = 200; // Количество вылетающих звезд
+    void CreateConstellationsDamageEffect(point3d heroPos, point3d damageDirection, XMFLOAT4 ColEff) {
+        const int particleCount = 100; // Количество вылетающих звезд
 
         for (int i = 0; i < particleCount; i++) {
             DamageParticle particle;
@@ -2323,13 +2317,8 @@ namespace drawer
             particle.lifetime = GetRandom(1000, 2000); // 1-2 секунды жизни
 
             // Цвета от красного к оранжевому
-            float colorVariant = GetRandom(0, 100) * 0.01f;
-            particle.color = XMFLOAT4(
-                1.0f,                    // R
-                0.3f + colorVariant * 0.4f, // G (от 0.3 до 0.7)
-                0.1f,                    // B
-                1.0f                     // A
-            );
+            
+            particle.color = ColEff;
 
             particle.isActive = true;
             heroDamageParticles.push_back(particle);
@@ -2434,8 +2423,8 @@ namespace drawer
         float emitRate = 30.0f;        // Частота генерации (частиц/секунду)
         float minSpeedThreshold = 5.0f; // Минимальная скорость для генерации
         float maxSpeedForEmission = 25.0f; // Максимальная скорость для расчета интенсивности
-        float minSize = 70.0f;
-        float maxSize = 250.0f;
+        float minSize = 90.0f;
+        float maxSize = 270.0f;
         float minLifetime = 800.0f;
         float maxLifetime = 1500.0f;
         float spreadAngle = 45.0f;     // Угол разброса в градусах
@@ -2556,6 +2545,18 @@ namespace drawer
         Enemy::enemyData.currentState = Enemy::AIState::PATROL;
     }
 
+    void ApplyChargingShake(Constellation& constellation, float chargeRatio) {
+        if (chargeRatio > 0.3f) {
+            float intensity = 0.1f + (chargeRatio - 0.3f) * 0.3f;
+            float shakeX = GetRandom(-intensity * 100, intensity * 100);
+            float shakeY = GetRandom(-intensity * 100, intensity * 100);
+            float shakeZ = GetRandom(-intensity * 100, intensity * 100);
+
+            XMMATRIX shakeMatrix = XMMatrixTranslation(shakeX, shakeY, shakeZ);
+            constellation.Transform = constellation.Transform * shakeMatrix;
+        }
+    }
+
     Constellation& enemy = *starSet[currentEnemyID];
     Constellation& player = *starSet[player_sign];
 
@@ -2567,7 +2568,8 @@ namespace drawer
 
         XMVECTOR heroPosition = Hero::state.constellationOffset.r[3];
         XMVECTOR enemyPositions = Enemy::enemyData.enemyConstellationOffset.r[3];
-
+        playerHP = getConstellationHP(player);
+        float enemyTotalHP = getConstellationHP(enemy);
         // ПРИМЕНЯЕМ РАЗМЕР ТОЛЬКО К ИГРОКУ, НЕ К ОРУЖИЯМ
         for (int i = 0; i < player.starsCords.size(); i++) {
             player.SetStarRadius(i, currentStarRadius);
@@ -2617,11 +2619,13 @@ namespace drawer
         case gameState_::MainMenu: {
 
             StartMenu();
+            mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
             break;
         }
 
         case gameState_::Settings:
             SettingsState();
+
             break;
 
         case gameState_::Authors:
@@ -2681,7 +2685,7 @@ namespace drawer
 
 
             Constellation& q = *starSet[0];
-            TeleportEnemy(point3d{ 30000.f,0.f,0.f });
+            TeleportEnemy(point3d{ 0.f,-10000.f,0.f });
             q.Transform = CreateEnemyToWorldMatrix(q);
            
             drawConstellation(q,false, 200.f,30);
@@ -2698,7 +2702,7 @@ namespace drawer
             TextOutA(window.context, window.width * 5 / 6, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());
 
             //drawString("Find Constallations and click on it", window.width / 2, (200. / 1440) * window.height, 1, true);
-            drawString("Features:\nMouse wheel to zoom in and out", (1700. / 2560) * window.width, (1200. / 1440) * window.height, .7f, false);
+            //drawString("Features:\nMouse wheel to zoom in and out", (1700. / 2560) * window.width, (1200. / 1440) * window.height, .7f, false);
 
             playerConst.RenderMorph(deltaTime);
 
@@ -2706,7 +2710,7 @@ namespace drawer
             if (GetAsyncKeyState('T')) {
                 gameState = gameState_::Exploring;
             }
-
+            drawHPBar(playerHP);
             isBattleActive = false;
             break;
 
@@ -2888,12 +2892,19 @@ namespace drawer
             }
 
             if (enemyAI.data.isAttacking == true) {
-                playerConst.StartShaking();
+                //playerConst.StartShaking();
                 enemyAI.data.isAttacking = false;
 
                 // СОЗДАЕМ ЭФФЕКТ УРОНА
+                float colorVariantHERO = GetRandom(0, 100) * 0.01f;
+                XMFLOAT4 ColorHEROEff(
+                    0.1f,                    // R
+                    0.3f + colorVariantHERO * 0.4f, // G (от 0.3 до 0.7)
+                    1.0f,                    // B
+                    1.0f                     // A
+                );
                 point3d damageDirection = (Heropos - Enemypos).normalized();
-                CreateConstellationsDamageEffect(Heropos, damageDirection);
+                CreateConstellationsDamageEffect(Heropos, damageDirection, ColorHEROEff);
 
                 // Визуализация направления атаки (опционально)
                 //DwarHeroGetDamage(Heropos, damageDirection);
@@ -2933,13 +2944,13 @@ namespace drawer
                         if (closestEnemy != -1)
                         {
                             CameraTargeting::StartTargeting(closestEnemy);
-                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\TargetLock.wav");
+                            //ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\TargetLock.wav");
                         }
                     }
                     else
                     {
                         CameraTargeting::StopTargeting();
-                        ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\TargetUnlock.wav");
+                        //ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\TargetUnlock.wav");
                     }
 
                     CameraTargeting::data.wasTogglePressed = true;
@@ -2992,7 +3003,7 @@ namespace drawer
             if (GetAsyncKeyState('P')) {
                 StartTransition(gameState_::WinFight, 2000.0f);
                 mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
-                mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\FREEFLY.mp3"), NULL, 0, NULL);
             }
 
             if (currentTime > attack_time + weapon[(int)current_weapon].attackSpeed and attack_start == true)
@@ -3036,7 +3047,14 @@ namespace drawer
             if (!playerConst.morphing) {
                 HandleMouseClick(heroPosition, playerConst);
                 //Hero::UpdateAttackRotation(deltaTime);
+                
+            }
+            Constellation& c = *starSet[player_sign];
+            c.Transform = CreateHeroToWorldMatrix(c); // Базовая матрица
 
+            // Применяем тряску поверх базовой матрицы
+            if (isCharging) {
+                ApplyChargingShake(c, chargeRatio);
             }
             UpdateCameraScaleAndStarRadiusReturn(deltaTime, player);
             UpdateAttack(deltaTime);
@@ -3053,7 +3071,7 @@ namespace drawer
             if (getConstellationHP(enemy) <= 0) {
                 gameState = gameState_::WinFight;
                 mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
-                mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\FREEFLY.mp3"), NULL, 0, NULL);
             }
 
             updateEnemyPosition(deltaTime, Heropos, Enemypos, playerHP);
@@ -3062,12 +3080,12 @@ namespace drawer
             }
             InputHook(deltaTime, Heropos, Enemypos);
 
-            string heroHP = std::to_string(playerHP);
-            drawString(heroHP.c_str(), window.width / 2, window.height - 100, 1, true);
-            drawString("HP", (1150.f / 2560)* window.width, (1300.f /1440)* window.height, 2.f, true);
-
-            Constellation& c = *starSet[player_sign];
-            c.Transform = CreateHeroToWorldMatrix(c);
+            //string heroHP = std::to_string(playerHP);
+            //drawString(heroHP.c_str(), window.width / 2, window.height - 100, 1, true);
+            //drawString("HP", (1150.f / 2560)* window.width, (1300.f /1440)* window.height, 2.f, true);
+            drawHPBar(playerHP);
+            drawEnemyBar(enemyTotalHP);
+            
             drawConstellation(*starSet[player_sign]);
             drawString(enemyH.c_str(), window.width / 2, 100, 2.f, true);
             drawString("ARIES", window.width / 2, 50, 2.f, true);
@@ -3120,7 +3138,7 @@ namespace drawer
         case gameState_::WinFight:
         {
             //winFight();
-
+            CameraTargeting::StopTargeting();
             if (AriesNebula.defeatTime >= 0)
             {
                 if (ConstBuf::factors.AriesNebulaLerpFactor < 1)
@@ -3182,7 +3200,7 @@ namespace drawer
                 Constellation& h = *starSet[currentEnemyID];
                 h.Transform = CreateEnemyToWorldMatrix(h);
                 Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-                drawConstellation(*starSet[currentEnemyID]);
+                //drawConstellation(*starSet[currentEnemyID]);
 
                 //linksDivider = 15;
                 modelTransform = &placeHeroToWorld;
@@ -3207,7 +3225,7 @@ namespace drawer
                 Constellation& c = *starSet[currentEnemyID];
 
                 c.Transform = CreateEnemyToWorldMatrix(c);
-                drawConstellation(*starSet[currentEnemyID]);
+                //drawConstellation(*starSet[currentEnemyID]);
             }
 
             modelTransform = &placeConstToWorld;

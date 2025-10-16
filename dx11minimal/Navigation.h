@@ -348,10 +348,10 @@ void updateFlySpeed(float deltaTime)
 }
 
 struct EnergyCost {
-    float fists = 5.0f;
-    float sword = 15.0f;
-    float shield = 25.0f;
-    float bow = 20.0f;
+    float fists = 15.0f;
+    float sword = 35.0f;
+    float shield = 35.0f;
+    float bow = 50.0f;
     float chargeMultiplier = 2.0f; // множитель при зарядке
     float shieldBlock = 8.0f;
 } energyCost;

@@ -349,18 +349,21 @@ public:
 
     bool isShaking = false;
     DWORD shakeStartTime = 0;
-    const DWORD shakeDuration = 500; 
-    float shakeIntensity = 0.1f; 
-    std::vector<point3d> originalStarPositions; 
+    DWORD shakeDuration = 500;
+    float shakeIntensity = 0.1f;
+    std::vector<point3d> originalStarPositions;
 
-    void StartShaking() {
+    // НОВАЯ ФУНКЦИЯ - Запуск тряски с настраиваемой интенсивностью
+    void StartShaking(float intensity = 0.1f, DWORD duration = 500) {
         if (!isShaking) {
             isShaking = true;
             shakeStartTime = currentTime;
-            originalStarPositions = starsCords; 
+            shakeIntensity = intensity;
+            shakeDuration = duration;
+            originalStarPositions = starsCords;
         }
     }
-        
+
     void UpdateShaking() {
         if (!isShaking) return;
 

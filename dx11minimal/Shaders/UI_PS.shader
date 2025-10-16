@@ -1,3 +1,8 @@
+cbuffer ColorBuffer : register(b5)
+{
+    float4 global[4];
+};
+
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
@@ -6,5 +11,5 @@ struct VS_OUTPUT
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-    return float4(1, 1, 1, 1); // Белый цвет по умолчанию
+    return global[3];
 }

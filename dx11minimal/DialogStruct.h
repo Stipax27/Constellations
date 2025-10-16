@@ -206,6 +206,8 @@ void handleInput() {
     if (GetAsyncKeyState('P') & 0x8000) {
         lastClickTime = currentTime;
         StartTransition(gameState_::selectEnemy, 1500.0f);
+        mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
+        mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\FREEFLY.mp3"), NULL, 0, NULL);
         startTime = currentTime;
     }
 }

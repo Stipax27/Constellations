@@ -73,7 +73,7 @@ HWND hWnd;
 
 #include "MainWindow.h"
 #include "mouse.h"
-#include "UI.h"
+
 #include "font.h"
 
 #include "DodgeEnemy.h"
@@ -98,7 +98,7 @@ HWND hWnd;
 
 #include "MainGame.h"
 #include "DialogStruct.h"
-
+#include "UI.h"
 
 #include "drawer.h"//
 
