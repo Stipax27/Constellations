@@ -58,7 +58,7 @@ void DrawTransitionOverlay() {
 
     // Рисуем полноэкранный квадрат
     point3d screenCenter = { 0, 0, 0 };
-    screenCenter.draw(screenCenter, 10000.0f);
+    screenCenter.draw(screenCenter, 1000000.0f);
 
     // Восстанавливаем цвет
     ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);

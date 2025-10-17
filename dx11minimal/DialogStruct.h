@@ -158,7 +158,7 @@ static double lastClickTime = 0.0;
 
 void renderContent() {
     float textX = window.width / 2;
-    float textY = (500. / 1440) * window.height;
+    float textY = (200. / 1440) * window.height;
     static int currentNarrative = 0;
     static double lastClickTime = 0.0;
 
@@ -205,7 +205,7 @@ void handleInput() {
     drawString("If you don't want to read \n Start Game Press P", window.width / 2, (1200. / 1440) * window.height,1.f,true);
     if (GetAsyncKeyState('P') & 0x8000) {
         lastClickTime = currentTime;
-        StartTransition(gameState_::selectEnemy, 2000.0f);
+        StartTransition(gameState_::selectEnemy, 1500.0f);
         startTime = currentTime;
     }
 }

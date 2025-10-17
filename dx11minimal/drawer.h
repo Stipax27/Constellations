@@ -91,31 +91,32 @@ namespace drawer
 
             if (!Constellation.morphing && Constellation.starsCords.size() == Constellation.originStarsCords.size())
             {
-                if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0)
-                {
-                    // Устанавливаем яркий цвет для линий между неповрежденными звездами
-                    ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // Белый
-                    ConstBuf::Update(5, ConstBuf::global);
-                    ConstBuf::ConstToPixel(5);
+                ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // Белый
+                ConstBuf::Update(5, ConstBuf::global);
+                ConstBuf::ConstToPixel(5);
 
-                    drawLine(point1, point2, sz * 1.5f); // Увеличиваем толщину линии
+                drawLine(point1, point2, sz * 1.5f); // Увеличиваем толщину линии
 
-                    // Восстанавливаем стандартный цвет
-                    ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-                    ConstBuf::Update(5, ConstBuf::global);
-                }
-                else if (starHealth[starEdges[i][0]] > 0 || starHealth[starEdges[i][1]] > 0)
-                {
-                    // Полуповрежденные линии - тонкие и бледные
-                    ConstBuf::global[2] = XMFLOAT4(0.7f, 0.7f, 0.7f, 0.5f);
-                    ConstBuf::Update(5, ConstBuf::global);
-                    ConstBuf::ConstToPixel(5);
+                // Восстанавливаем стандартный цвет
+                ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+                ConstBuf::Update(5, ConstBuf::global);
+                //if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0)
+                //{
+                //    // Устанавливаем яркий цвет для линий между неповрежденными звездами
+                //    
+                //}
+                //else if (starHealth[starEdges[i][0]] > 0 || starHealth[starEdges[i][1]] > 0)
+                //{
+                //    // Полуповрежденные линии - тонкие и бледные
+                //    ConstBuf::global[2] = XMFLOAT4(0.7f, 0.7f, 0.7f, 0.5f);
+                //    ConstBuf::Update(5, ConstBuf::global);
+                //    ConstBuf::ConstToPixel(5);
 
-                    drawLine(point1, point2, sz * 0.5f);
+                //    drawLine(point1, point2, sz * 0.5f);
 
-                    ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-                    ConstBuf::Update(5, ConstBuf::global);
-                }
+                //    ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+                //    ConstBuf::Update(5, ConstBuf::global);
+                //}
             }
             else
             {
@@ -1415,12 +1416,16 @@ namespace drawer
             Constellation& Hero = *starSet[player_sign];
             // Сбрасываем масштаб врага в начале кадра
             //enemy.SetStarRadius(0,1.0f);
-
+            point3d HeroPosTrans;
+            for (int j = 0; j < Hero.starsCords.size(); j++) 
+            {
+                HeroPosTrans = TransformPoint(Hero.starsCords[j], Hero.Transform);
+            }
             for (int i = 0; i < enemy.starsCords.size(); i++) {
                 if (enemy.starsHealth[i] <= 0) continue;
 
                 point3d starWorldPos = TransformPoint(enemy.starsCords[i], enemy.Transform);
-                point3d HeroPosTrans = TransformPoint(Hero.starsCords[i], Hero.Transform);
+                 
 
                 // Проверяем все выстрелы на приближение к этой звезде
                 for (auto& star : attackStars) {
@@ -1456,7 +1461,7 @@ namespace drawer
                             CreateConstellationsDamageEffect(starWorldPos, damageDirection);
                         }
 
-                        enemyH = "Star: " + std::to_string(i + 1) + " HP: " + std::to_string(enemy.starsHealth[i]);
+                        //enemyH = "Star: " + std::to_string(i + 1) + " HP: " + std::to_string(enemy.starsHealth[i]);
                         ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Damage.wav");
                         break;
                     }
@@ -2537,6 +2542,20 @@ namespace drawer
         ConstBuf::Update(5, ConstBuf::global);
     }
 
+    void TeleportEnemy(point3d newPosition) {
+        // Обновляем матрицу трансформации
+        Enemy::enemyData.enemyConstellationOffset = XMMatrixTranslation(
+            newPosition.x, newPosition.y, newPosition.z
+        );
+
+        // Сбрасываем состояние ИИ
+        enemyAI.splineInitialized = false;
+        enemyAI.splineProgress = 0.0f;
+
+        // Можно также сбросить состояние атаки
+        Enemy::enemyData.currentState = Enemy::AIState::PATROL;
+    }
+
     Constellation& enemy = *starSet[currentEnemyID];
     Constellation& player = *starSet[player_sign];
 
@@ -2661,12 +2680,12 @@ namespace drawer
             playerConst.Transform = CreateHeroToWorldMatrix(playerConst);
 
 
-            Constellation& c = *starSet[0]; // Используем текущего врага
-
-            c.Transform = CreateEnemyToWorldMatrix(c);
-
-
-            drawConstellation(c, false, 1000.f, 1000.f);
+            Constellation& q = *starSet[0];
+            TeleportEnemy(point3d{ 30000.f,0.f,0.f });
+            q.Transform = CreateEnemyToWorldMatrix(q);
+           
+            drawConstellation(q,false, 200.f,30);
+          
 
             if (!playerConst.morphing)
                 HandleMouseClick(heroPosition, playerConst);
@@ -2695,12 +2714,21 @@ namespace drawer
             // drawString(std::to_string(mouse.pos.y).c_str(), 0, 0, 1, false);
 
         }
-        case gameState_::DialogStruct:
+        case gameState_::DialogStruct: {
+
+
+            Constellation& c = *starSet[16];
+            TeleportEnemy(point3d{ 6000.f,-5000.f,-115000.f });
+            c.Transform = CreateEnemyToWorldMatrix(c);
+
+
+            drawConstellation(c, false, 200.f, 40);
             initContentData();
             renderContent();
             handleInput();
 
             break;
+        }
 
         case gameState_::Fight:
         {

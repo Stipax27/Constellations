@@ -1094,7 +1094,7 @@ namespace Hero
 		XMVECTOR at = XMVectorSet(0, 0, 0, 0);
 		XMVECTOR Up = XMVector3Rotate(defaultUp, currentRotation);
 		XMMATRIX constellationOffset = XMMatrixTranslation(0, 0, 0);
-		XMVECTOR position = XMVectorSet(0, 0, 0, 0);
+		XMVECTOR position = XMVectorSet(0.0f, 0.0f, -140000.0f, 0.0f);
 		XMMATRIX worldMatrix = XMMatrixIdentity();
 
 		
