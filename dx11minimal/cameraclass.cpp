@@ -17,11 +17,7 @@ CameraClass::~CameraClass()
 void CameraClass::Initialize(float iAspect)
 {
 	position = point3d();
-	qRotation = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-
-	m_rotationX = 0.0f;
-	m_rotationY = 0.0f;
-	m_rotationZ = 0.0f;
+	qRotation = XMQuaternionRotationAxis(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), 0);
 
 	iaspect = iAspect;
 
@@ -37,19 +33,13 @@ void CameraClass::SetPosition(float x, float y, float z)
 
 void CameraClass::SetEulerRotation(float x, float y, float z)
 {
-	m_rotationX = x;
-	m_rotationY = y;
-	m_rotationZ = z;
+	qRotation = eulerToQuanternion(x * RAD, y * RAD, z * RAD);
 }
 
 
 void CameraClass::SetQuaternionRotation(float x = 0.0f, float y = 1.0f, float z = 0.0f, float w = 0.0f)
 {
-	point3d rotation = quaternionToEuler(x, y, z, w);
-
-	m_rotationX = rotation.x;
-	m_rotationY = rotation.y;
-	m_rotationZ = rotation.z;
+	qRotation = XMQuaternionNormalize(XMQuaternionRotationAxis(XMVectorSet(x, y, z, 0.0f), w * RAD));
 }
 
 
@@ -61,19 +51,15 @@ void CameraClass::AddPosition(float x = 0.0f, float y = 0.0f, float z = 0.0f)
 
 void CameraClass::AddEulerRotation(float x = 0.0f, float y = 0.0f, float z = 0.0f)
 {
-	m_rotationX += x;
-	m_rotationY += y;
-	m_rotationZ += z;
+	XMVECTOR addRotation = eulerToQuanternion(x * RAD, y * RAD, z * RAD);
+	qRotation = XMQuaternionNormalize(XMQuaternionMultiply(qRotation, addRotation));
 }
 
 
 void CameraClass::AddQuaternionRotation(float x = 0.0f, float y = 1.0f, float z = 0.0f, float w = 0.0f)
 {
-	point3d rotation = quaternionToEuler(x, y, z, w);
-
-	m_rotationX += rotation.x;
-	m_rotationY += rotation.y;
-	m_rotationZ += rotation.z;
+	XMVECTOR addRotation = XMQuaternionRotationAxis(XMVectorSet(x, y, z, 0.0f), w * RAD);
+	qRotation = XMQuaternionNormalize(XMQuaternionMultiply(qRotation, addRotation));
 }
 
 
@@ -90,9 +76,16 @@ XMFLOAT3 CameraClass::GetPosition()
 }
 
 
-XMFLOAT3 CameraClass::GetRotation()
+XMFLOAT3 CameraClass::GetEulerRotation()
 {
-	return XMFLOAT3(m_rotationX, m_rotationY, m_rotationZ);
+	point3d eRotation = quaternionToEuler(XMVectorGetX(qRotation), XMVectorGetY(qRotation), XMVectorGetZ(qRotation), XMVectorGetW(qRotation));
+	return XMFLOAT3(eRotation.x, eRotation.y, eRotation.z);
+}
+
+
+XMVECTOR CameraClass::GetQuaternionRotation()
+{
+	return qRotation;
 }
 
 
@@ -113,9 +106,7 @@ void CameraClass::Render()
 	upVector = XMLoadFloat3(&up);
 
 	// Setup the position of the camera in the world.
-	pos.x = position.x;
-	pos.y = position.y;
-	pos.z = position.z;
+	pos = XMFLOAT3(position.x, position.y, position.z);
 
 	// Load it into a XMVECTOR structure.
 	positionVector = XMLoadFloat3(&pos);
@@ -129,12 +120,13 @@ void CameraClass::Render()
 	lookAtVector = XMLoadFloat3(&lookAt);
 
 	// Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
-	pitch = m_rotationX * RAD;
-	yaw = m_rotationY * RAD;
-	roll = m_rotationZ * RAD;
+	/*pitch = m_rotationx * rad;
+	yaw = m_rotationy * rad;
+	roll = m_rotationz * rad;*/
 
 	// Create the rotation matrix from the yaw, pitch, and roll values.
-	rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+	//rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+	rotationMatrix = XMMatrixRotationQuaternion(qRotation);
 
 	// Transform the lookAt and up vector by the rotation matrix so the view is correctly rotated at the origin.
 	lookAtVector = XMVector3TransformCoord(lookAtVector, rotationMatrix);
@@ -147,7 +139,6 @@ void CameraClass::Render()
 	m_viewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
 
 	ConstBuf::camera.view = XMMatrixTranspose(m_viewMatrix);
-	UpdateProjectionMatrix();
 
 	ConstBuf::UpdateCamera();
 	ConstBuf::ConstToVertex(3);

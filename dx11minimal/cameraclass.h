@@ -9,11 +9,6 @@
 #include "dx11.h"
 #include "Point3d.h"
 
-/////////////
-// GLOBALS //
-/////////////
-const float RAD = 0.0174532925f;
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: CameraClass
@@ -37,7 +32,8 @@ public:
 	void AddQuaternionRotation(float, float, float, float);
 
 	XMFLOAT3 GetPosition();
-	XMFLOAT3 GetRotation();
+	XMFLOAT3 GetEulerRotation();
+	XMVECTOR GetQuaternionRotation();
 	float GetFov();
 
 	void Render();
@@ -47,7 +43,6 @@ public:
 private:
 	point3d position;
 	XMVECTOR qRotation;
-	float m_rotationX, m_rotationY, m_rotationZ;
 	float fov;
 	float iaspect;
 

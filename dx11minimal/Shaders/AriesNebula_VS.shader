@@ -91,7 +91,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     float size = 800;
     //starPos = spiral(iID) * range * 2 - range;
     float3 starPos = spiral(iID);
-    starPos.y = 1000;
+    //starPos.y = 1000;
 
     float par = starPos.x * starPos.x + starPos.z * starPos.z;
     starPos.y = cos(starPos.x / 100000 * PI) * cos(starPos.z / 100000 * PI) * -7500 + (par * lerp(16000, 12000, AriesNebulaLerpFactor)) / (lerp(60000000, 50000000, AriesNebulaLerpFactor) + par);

@@ -25,7 +25,7 @@
 const float MOUSE_SENSITIVITY = 0.002f;
 const float CURSOR_IGNORE_ZONE = 0.05f;
 const float MAX_CURSOR_DEVIATION = 0.45f;
-const float SENSIVITY = 0.11f;
+const float SENSIVITY = 1.5f;
 const float CURSOR_ZONE_DELTA = MAX_CURSOR_DEVIATION - CURSOR_IGNORE_ZONE;
 const float ROLL_SPEED = 1.0f;
 
@@ -41,7 +41,7 @@ public:
 	PlayerController(const PlayerController&);
 	~PlayerController();
 
-	void Initialize(Entity*, CameraClass*);
+	void Initialize(Entity*, CameraClass*, MouseClass*, WindowClass*);
 	void Shutdown();
 
 	void ProcessInput();

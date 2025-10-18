@@ -55,7 +55,8 @@ public:
 
 		// Generate the view matrix based on the camera's position.
 		m_Camera->Render();
-		//m_Camera->AddRotation(1, 1, 0);
+		//m_Camera->SetQuaternionRotation(0, 1, 0, timer::GetCounter() / 1000);
+		//m_Camera->AddEulerRotation(0, 1, 0);
 
 		size_t size = entities.size();
 		for (int i = 0; i < size; i++)
@@ -89,18 +90,7 @@ public:
 				//// Turn the Z buffer back on now that all 2D rendering has completed.
 				//m_Direct3D->TurnZBufferOn();
 
-				XMVECTOR axis;
-				float angle = transform->rotation.magnitude();
-				if (angle > 0)
-				{
-					axis = XMVectorSet(transform->rotation.x / angle, transform->rotation.y / angle, transform->rotation.z / angle, 0.0f);
-				}
-				else
-				{
-					axis = XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
-				}
-
-				rotateMatrix = XMMatrixRotationAxis(axis, angle);
+				rotateMatrix = XMMatrixRotationQuaternion(transform->qRotation);
 				scaleMatrix = XMMatrixScaling(transform->scale.x, transform->scale.y, transform->scale.z);
 				translateMatrix = XMMatrixTranslation(transform->position.x, transform->position.y, transform->position.z);
 
@@ -115,6 +105,7 @@ public:
 				//sprite->model.Render(m_Direct3D->GetDeviceContext());
 
 					point3d transformPos = transform->position;
+					vector<point3d> transformedStars;
 
 					Shaders::vShader(4);
 					Shaders::pShader(4);
@@ -123,10 +114,15 @@ public:
 					ConstBuf::Update(5, ConstBuf::global);
 					ConstBuf::ConstToPixel(5);
 
+					for (int a = 0; a < constellation->stars.size(); a++) {
+						point3d star = constellation->stars[a] + transformPos;
+						transformedStars.push_back(star);
+					}
+
 					for (int a = 0; a < constellation->links.size(); a++) {
 						pair<int, int> link = constellation->links[a];
-						point3d point1 = constellation->stars[link.first] + transformPos;
-						point3d point2 = constellation->stars[link.second] + transformPos;
+						point3d point1 = transformedStars[link.first] + transformPos;
+						point3d point2 = transformedStars[link.second] + transformPos;
 
 						ConstBuf::global[0] = XMFLOAT4(point1.x, point1.y, point1.z, 0.25);
 						ConstBuf::global[1] = XMFLOAT4(point2.x, point2.y, point2.z, 0.25);
@@ -139,8 +135,8 @@ public:
 					Shaders::vShader(1);
 					Shaders::pShader(1);
 
-					for (int a = 0; a < constellation->stars.size(); a++) {
-						point3d star = constellation->stars[a] + transformPos;
+					for (int a = 0; a < transformedStars.size(); a++) {
+						point3d star = transformedStars[a] + transformPos;
 
 						ConstBuf::global[0] = XMFLOAT4(star.x, star.y, star.z, transform->scale.x);
 						ConstBuf::Update(5, ConstBuf::global);

@@ -132,7 +132,7 @@ bool LevelManagerClass::Initialize()
 	m_World->PreCalculations();
 
 	playerController = new PlayerController();
-	playerController->Initialize(player, m_World->m_Camera);
+	playerController->Initialize(player, m_World->m_Camera, mouse, window);
 
 	return true;
 }
@@ -174,6 +174,7 @@ bool LevelManagerClass::Frame()
 
 	mouse->Update();
 	playerController->ProcessInput();
+	playerController->ProcessMouse();
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 

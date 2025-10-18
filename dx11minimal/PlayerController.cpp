@@ -22,13 +22,15 @@ PlayerController::~PlayerController()
 }
 
 
-void PlayerController::Initialize(Entity* Player, CameraClass* Camera)
+void PlayerController::Initialize(Entity* Player, CameraClass* Camera, MouseClass* Mouse, WindowClass* Window)
 {
 	playerTransform = Player->GetComponent<Transform>();
 	playerPhysicBody = Player->GetComponent<PhysicBody>();
 	playerConstellation = Player->GetComponent<Constellation>();
 
 	camera = Camera;
+	mouse = Mouse;
+	window = Window;
 }
 
 
@@ -48,6 +50,21 @@ void PlayerController::Shutdown()
 	{
 		playerConstellation = 0;
 	}
+
+	if (camera)
+	{
+		camera = 0;
+	}
+
+	if (mouse)
+	{
+		mouse = 0;
+	}
+
+	if (window)
+	{
+		window = 0;
+	}
 }
 
 
@@ -59,6 +76,7 @@ bool PlayerController::IsKeyPressed(const int Key)
 
 void PlayerController::ProcessInput()
 {
+	// ÓÏÐÀÂËÅÍÈÅ  ÏÅÐÅÄÂÈÆÅÍÈÅÌ
 	playerPhysicBody->velocity = point3d();
 
 	if (IsKeyPressed('W')) {
@@ -83,6 +101,21 @@ void PlayerController::ProcessInput()
 	if (playerPhysicBody->velocity.magnitude() > 0) {
 		playerPhysicBody->velocity = playerPhysicBody->velocity.normalized() * 5;
 	}
+
+	// ÓÏÐÀÂËÅÍÈÅ ÍÀÊËÎÍÎÌ
+	float roll = 0.0f;
+
+	if (IsKeyPressed('E')) {
+		roll = -ROLL_SPEED;
+	}
+	if (IsKeyPressed('Q')) {
+		roll = ROLL_SPEED;
+	}
+
+	if (roll != 0) {
+		XMVECTOR lookVector = XMQuaternionNormalize(XMQuaternionRotationAxis(playerTransform->GetLookVector(), roll));
+		camera->AddQuaternionRotation(XMVectorGetX(lookVector), XMVectorGetY(lookVector), XMVectorGetZ(lookVector), XMVectorGetW(lookVector));
+	}
 }
 
 
@@ -94,7 +127,7 @@ void PlayerController::ProcessCamera()
 
 void PlayerController::ProcessMouse()
 {
-	float dPitch = 0.0f, dYaw = 0.0f, dRoll = 0.0f;
+	float dPitch = 0.0f, dYaw = 0.0f;
 
 	float x = mouse->pos.x - window->width / 2;
 	float y = mouse->pos.y - window->height / 2;
@@ -102,53 +135,22 @@ void PlayerController::ProcessMouse()
 	point3d mousePos = point3d(x / window->width / window->aspect, y / window->height, 0);
 	float length = mousePos.magnitude();
 
-	if (length > CURSOR_IGNORE_ZONE)
-	{
-		if (length > MAX_CURSOR_DEVIATION)
-		{
+	if (length > CURSOR_IGNORE_ZONE) {
+		if (length > MAX_CURSOR_DEVIATION) {
 			mousePos = mousePos.normalized() * MAX_CURSOR_DEVIATION;
 			SetCursorPos(mousePos.x * window->width * window->aspect + window->width / 2, mousePos.y * window->height + window->height / 2);
 		}
 
 		float k = (length - CURSOR_IGNORE_ZONE) / MAX_CURSOR_DEVIATION;
 
-		float dx = (mousePos.x) * SENSIVITY * k;
-		float dy = (mousePos.y) * SENSIVITY * k;
+		dYaw = mousePos.x;
+		dPitch = mousePos.y;
 
-		dPitch = dy;
-		dYaw = dx;
-	}
-
-	// ÓÏÐÀÂËÅÍÈÅ Q/E ÄËß ÂÐÀÙÅÍÈß
-	if (IsKeyPressed('E')) {
-		dRoll -= ROLL_SPEED;
-		//Camera::state.n = lerp(Camera::state.n, 100, 0.3f);
-	}
-	if (IsKeyPressed('Q')) {
-		dRoll += ROLL_SPEED;
-		//Camera::state.n = lerp(Camera::state.n, 100, 0.3f);
-	}
-
-	// ÏÐÈÌÅÍßÅÌ ÂÐÀÙÅÍÈÅ Ê ÃÅÐÎÞ (ÓÏÐÀÂËßÅÒÑß ÌÛØÜÞ)
-	if (dPitch != 0.0f || dYaw != 0.0f || dRoll != 0.0f) {
-		XMVECTOR qPitch = XMQuaternionRotationAxis(Hero::state.Right, dPitch);
-		XMVECTOR qYaw = XMQuaternionRotationAxis(Hero::state.Up, dYaw);
-		XMVECTOR qRoll = XMQuaternionRotationAxis(Hero::state.Forwardbuf, dRoll);
-
-		XMVECTOR qTotal = XMQuaternionMultiply(qYaw, qPitch);
-		qTotal = XMQuaternionMultiply(qTotal, qRoll);
-
-		Hero::state.currentRotation = XMQuaternionMultiply(Hero::state.currentRotation, qTotal);
-		Hero::state.currentRotation = XMQuaternionNormalize(Hero::state.currentRotation);
-
-		// ÎÁÍÎÂËßÅÌ ÂÅÊÒÎÐÛ ÃÅÐÎß
-		Hero::state.Forwardbuf = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), Hero::state.currentRotation);
-		Hero::state.Up = XMVector3Rotate(Hero::state.defaultUp, Hero::state.currentRotation);
-		Hero::state.Right = XMVector3Cross(Hero::state.Up, Hero::state.Forwardbuf);
-
-		// ÊÀÌÅÐÀ ÁÓÄÅÒ ÏËÀÂÍÎ ÑËÅÄÎÂÀÒÜ ÇÀ ÝÒÈÌ ÏÎÂÎÐÎÒÎÌ
+		XMVECTOR addRotation = eulerToQuanternion(dPitch, dYaw, 0) * SENSIVITY * k;
+		playerPhysicBody->qAngVelocity = XMQuaternionMultiply(playerTransform->qRotation, addRotation);
+		camera->AddQuaternionRotation(XMVectorGetX(addRotation), XMVectorGetY(addRotation), XMVectorGetZ(addRotation), XMVectorGetW(addRotation));
 	}
 	else {
-		Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
+		//Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
 	}
 }

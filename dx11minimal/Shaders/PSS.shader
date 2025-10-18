@@ -9,17 +9,6 @@ cbuffer frame : register(b4)
     float4 aspect;
 };
 
-cbuffer drawMat : register(b2)
-{
-    float4x4 model;
-    float hilight;
-};
-
-cbuffer params : register(b1)
-{
-    float r, g, b;
-};
-
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
