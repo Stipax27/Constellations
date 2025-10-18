@@ -113,8 +113,8 @@ void PlayerController::ProcessInput()
 	}
 
 	if (roll != 0) {
-		XMVECTOR lookVector = XMQuaternionNormalize(XMQuaternionRotationAxis(playerTransform->GetLookVector(), roll));
-		camera->AddQuaternionRotation(XMVectorGetX(lookVector), XMVectorGetY(lookVector), XMVectorGetZ(lookVector), XMVectorGetW(lookVector));
+		XMVECTOR lookVector = XMQuaternionRotationAxis(playerTransform->GetLookVector(), roll);
+		//camera->AddQuaternionRotation(XMVectorGetX(lookVector), XMVectorGetY(lookVector), XMVectorGetZ(lookVector), XMVectorGetW(lookVector));
 	}
 }
 
@@ -147,8 +147,8 @@ void PlayerController::ProcessMouse()
 		dPitch = mousePos.y;
 
 		XMVECTOR addRotation = eulerToQuanternion(dPitch, dYaw, 0) * SENSIVITY * k;
-		playerPhysicBody->qAngVelocity = XMQuaternionMultiply(playerTransform->qRotation, addRotation);
-		camera->AddQuaternionRotation(XMVectorGetX(addRotation), XMVectorGetY(addRotation), XMVectorGetZ(addRotation), XMVectorGetW(addRotation));
+		//playerPhysicBody->qAngVelocity = XMQuaternionMultiply(playerTransform->qRotation, addRotation);
+		//camera->AddQuaternionRotation(XMVectorGetX(addRotation), XMVectorGetY(addRotation), XMVectorGetZ(addRotation), XMVectorGetW(addRotation));
 	}
 	else {
 		//Camera::state.n = lerp(Camera::state.n, 0, 0.2f);

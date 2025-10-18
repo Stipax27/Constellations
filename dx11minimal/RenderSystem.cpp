@@ -121,8 +121,8 @@ public:
 
 					for (int a = 0; a < constellation->links.size(); a++) {
 						pair<int, int> link = constellation->links[a];
-						point3d point1 = transformedStars[link.first] + transformPos;
-						point3d point2 = transformedStars[link.second] + transformPos;
+						point3d point1 = transformedStars[link.first];
+						point3d point2 = transformedStars[link.second];
 
 						ConstBuf::global[0] = XMFLOAT4(point1.x, point1.y, point1.z, 0.25);
 						ConstBuf::global[1] = XMFLOAT4(point2.x, point2.y, point2.z, 0.25);
@@ -136,7 +136,7 @@ public:
 					Shaders::pShader(1);
 
 					for (int a = 0; a < transformedStars.size(); a++) {
-						point3d star = transformedStars[a] + transformPos;
+						point3d star = transformedStars[a];
 
 						ConstBuf::global[0] = XMFLOAT4(star.x, star.y, star.z, transform->scale.x);
 						ConstBuf::Update(5, ConstBuf::global);
