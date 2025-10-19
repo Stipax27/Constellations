@@ -1,4 +1,4 @@
-﻿#ifndef _UTILS_H
+#ifndef _UTILS_H
 #define _UTILS_H
 
 
@@ -8,6 +8,8 @@
 #include <corecrt_math.h>
 #include "Point3d.h"
 #include "DirectXMath.h"
+
+using namespace DirectX;
 
 
 /////////////

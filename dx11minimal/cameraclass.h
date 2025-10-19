@@ -16,8 +16,6 @@
 class CameraClass
 {
 public:
-	XMMATRIX rotationMatrix;
-
 	CameraClass();
 	CameraClass(const CameraClass&);
 	~CameraClass();
@@ -48,6 +46,8 @@ private:
 	XMVECTOR qRotation;
 	float fov;
 	float iaspect;
+
+	XMMATRIX rotationMatrix;
 
 	XMMATRIX m_viewMatrix;
 	XMMATRIX m_projectionMatrix;

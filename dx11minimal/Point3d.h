@@ -1,10 +1,8 @@
-﻿#ifndef _POINT3D_H
+#ifndef _POINT3D_H
 #define _POINT3D_H
 
 #include <sstream>
-#include "DirectXMath.h"
-
-using namespace DirectX;
+#include <corecrt_math.h>
 
 struct point3d {
     float x = 0.0f;

@@ -3,6 +3,9 @@
 
 #include "component.h"
 #include "Point3d.h"
+#include <DirectXMath.h>
+
+using namespace DirectX;
 
 
 struct Transform : Component

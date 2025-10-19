@@ -149,8 +149,8 @@ void PlayerController::ProcessMouse()
 		XMVECTOR addRotation = eulerToQuanternion(dPitch, dYaw, 0) * SENSIVITY * k;
 		//playerPhysicBody->qAngVelocity = XMQuaternionMultiply(playerTransform->qRotation, addRotation);
 
-		XMMATRIX matrix = XMMatrixRotationY(XMConvertToRadians(1));
-		camera->AddMatrixRotation(matrix);
+		camera->AddMatrixRotation(XMMatrixRotationY(XMConvertToRadians(dYaw * SENSIVITY * k)));
+		camera->AddMatrixRotation(XMMatrixRotationX(XMConvertToRadians(dPitch * SENSIVITY * k)));
 	}
 	else {
 		//Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
