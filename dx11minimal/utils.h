@@ -7,9 +7,6 @@
 //////////////
 #include <corecrt_math.h>
 #include "Point3d.h"
-#include "DirectXMath.h"
-
-using namespace DirectX;
 
 
 /////////////

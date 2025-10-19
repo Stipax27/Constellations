@@ -95,6 +95,8 @@ bool World::UpdatePhysic()
 			return false;
 		}
 	}
+
+	return true;
 }
 
 
@@ -107,6 +109,8 @@ bool World::UpdateRender()
 	ConstBuf::UpdateFrame();
 	ConstBuf::ConstToVertex(4);
 	ConstBuf::ConstToPixel(4);
+
+	PreCalculations();
 
 	size_t size = renderSystems.size();
 	for (int i = 0; i < size; i++)

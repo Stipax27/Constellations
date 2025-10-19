@@ -60,7 +60,7 @@ float3 spiral(uint index) {
     uint localIndex = index - getSectorsOfLevel(level - 1);
 
     float angle = PI * 2 / sectors * localIndex;
-    float radius = 400 * level / 6;
+    float radius = 0.5 * level / 6;
 
     return float3(sin(angle), 0, cos(angle)) * radius;
 }
@@ -87,22 +87,21 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 
     //calc star position
 
-    float range = 50000;
-    float size = 800;
+    float range = 60;
+    float size = 1;
     //starPos = spiral(iID) * range * 2 - range;
     float3 starPos = spiral(iID);
-    //starPos.y = 1000;
 
     float par = starPos.x * starPos.x + starPos.z * starPos.z;
-    starPos.y = cos(starPos.x / 100000 * PI) * cos(starPos.z / 100000 * PI) * -7500 + (par * lerp(16000, 12000, AriesNebulaLerpFactor)) / (lerp(60000000, 50000000, AriesNebulaLerpFactor) + par);
+    //starPos.y = cos(starPos.x / 200 * PI) * cos(starPos.z / 200 * PI) * 15 + (par * lerp(32, 24, AriesNebulaLerpFactor)) / (lerp(120000, 100000, AriesNebulaLerpFactor) + par);
     
-    starPos.y += perlinTexture.SampleLevel(perlinSamplerState, starPos.xz / (range * 2) + 0.5, 1).r * lerp(5000, 4000, AriesNebulaLerpFactor);
+    starPos.y += perlinTexture.SampleLevel(perlinSamplerState, starPos.xz / (range * 2) + 0.5, 1).r * lerp(10, 8, AriesNebulaLerpFactor);
 
     float3 voronoi = voronoiTexture.SampleLevel(voronoiSamplerState, starPos.xz / (range * 2) + 0.5, 1);
-    starPos.y -= voronoi.x * voronoi.y * voronoi.z * lerp(35000, 7500, AriesNebulaLerpFactor);
+    starPos.y -= voronoi.x * voronoi.y * voronoi.z * lerp(70, 15, AriesNebulaLerpFactor);
 
-    starPos.y += (sin(starPos.x * PI / range * 5 + time.x * 0.05) + cos(starPos.z * PI / range * 5 + time.x * 0.05)) * lerp(300, 150, AriesNebulaLerpFactor);
-    starPos.y += cos((starPos.x + starPos.z) * PI / range * 2 + time.x * -0.05) * lerp(600, 300, AriesNebulaLerpFactor);
+    //starPos.y += (sin(starPos.x * PI / range * 5 + time.x * 0.05) + cos(starPos.z * PI / range * 5 + time.x * 0.05)) * lerp(0.6, 0.3, AriesNebulaLerpFactor);
+    //starPos.y += cos((starPos.x + starPos.z) * PI / range * 2 + time.x * -0.05) * lerp(1.2, 0.6, AriesNebulaLerpFactor);
 
     // //-----
 

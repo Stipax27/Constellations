@@ -89,6 +89,8 @@ bool LevelManagerClass::Initialize()
 
 	entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(0.0f, 0.0f, 0.0f);
+	transform->scale = point3d(1, 1, 1);
 	spriteCluster = entity->AddComponent<SpriteCluster>();
 	spriteCluster->vShader = 7;
 	spriteCluster->pShader = 7;
@@ -129,7 +131,7 @@ bool LevelManagerClass::Initialize()
 	// WORLD CREATING END //
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
-	m_World->PreCalculations();
+	//m_World->PreCalculations();
 
 	playerController = new PlayerController();
 	playerController->Initialize(player, m_World->m_Camera, mouse, window);

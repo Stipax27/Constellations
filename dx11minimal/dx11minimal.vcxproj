@@ -77,6 +77,8 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <StructMemberAlignment>Default</StructMemberAlignment>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -91,6 +93,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -105,6 +109,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -119,6 +125,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -141,7 +149,6 @@
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="Point3d.h" />
-    <ClInclude Include="Point3x3.h" />
     <ClInclude Include="system.h" />
     <ClInclude Include="windowclass.h" />
     <ClInclude Include="world.h" />
@@ -258,7 +265,6 @@
     <ClCompile Include="MouseClass.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Point3d.cpp" />
-    <ClCompile Include="Point3x3.cpp" />
     <ClCompile Include="Point4d.cpp" />
     <ClCompile Include="SpriteCluster.cpp" />
     <ClCompile Include="PhysicBody.cpp" />
