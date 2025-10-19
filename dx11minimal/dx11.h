@@ -1,4 +1,4 @@
-﻿#ifndef DX11_H
+#ifndef DX11_H
 #define DX11_H
 
 
@@ -24,7 +24,7 @@
 
 using namespace DirectX;
 
-#define FRAMES_PER_SECOND 60
+#define FRAMES_PER_SECOND 144
 #define FRAME_LEN (1000. / (float) FRAMES_PER_SECOND)
 
 typedef unsigned long uint32;
