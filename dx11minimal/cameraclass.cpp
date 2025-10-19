@@ -19,6 +19,13 @@ void CameraClass::Initialize(float iAspect)
 	position = point3d();
 	qRotation = XMQuaternionRotationAxis(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), 0);
 
+	rotationMatrix = XMMATRIX{
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1
+	};
+
 	iaspect = iAspect;
 
 	SetFov(70);
@@ -46,6 +53,12 @@ void CameraClass::SetQuaternionRotation(float x = 0.0f, float y = 1.0f, float z 
 void CameraClass::AddPosition(float x = 0.0f, float y = 0.0f, float z = 0.0f)
 {
 	position += point3d(x, y, z);
+}
+
+
+void CameraClass::AddMatrixRotation(XMMATRIX Matrix)
+{
+	rotationMatrix = XMMatrixMultiply(rotationMatrix, Matrix);
 }
 
 
@@ -94,7 +107,6 @@ void CameraClass::Render()
 	XMFLOAT3 up, pos, lookAt;
 	XMVECTOR upVector, positionVector, lookAtVector;
 	float yaw, pitch, roll;
-	XMMATRIX rotationMatrix;
 
 
 	// Setup the vector that points upwards.
@@ -126,7 +138,7 @@ void CameraClass::Render()
 
 	// Create the rotation matrix from the yaw, pitch, and roll values.
 	//rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
-	rotationMatrix = XMMatrixRotationQuaternion(qRotation);
+	//rotationMatrix = XMMatrixRotationQuaternion(qRotation);
 
 	// Transform the lookAt and up vector by the rotation matrix so the view is correctly rotated at the origin.
 	lookAtVector = XMVector3TransformCoord(lookAtVector, rotationMatrix);

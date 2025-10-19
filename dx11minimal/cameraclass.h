@@ -16,6 +16,8 @@
 class CameraClass
 {
 public:
+	XMMATRIX rotationMatrix;
+
 	CameraClass();
 	CameraClass(const CameraClass&);
 	~CameraClass();
@@ -28,6 +30,7 @@ public:
 	void SetFov(float);
 
 	void AddPosition(float, float, float);
+	void AddMatrixRotation(XMMATRIX);
 	void AddEulerRotation(float, float, float);
 	void AddQuaternionRotation(float, float, float, float);
 

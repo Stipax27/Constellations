@@ -1,4 +1,4 @@
-#include "PlayerController.h"
+ï»¿#include "PlayerController.h"
 
 
 PlayerController::PlayerController()
@@ -76,7 +76,7 @@ bool PlayerController::IsKeyPressed(const int Key)
 
 void PlayerController::ProcessInput()
 {
-	// ÓÏÐÀÂËÅÍÈÅ  ÏÅÐÅÄÂÈÆÅÍÈÅÌ
+	// Ð£ÐŸÐ ÐÐ’Ð›Ð•ÐÐ˜Ð•  ÐŸÐ•Ð Ð•Ð”Ð’Ð˜Ð–Ð•ÐÐ˜Ð•Ðœ
 	playerPhysicBody->velocity = point3d();
 
 	if (IsKeyPressed('W')) {
@@ -102,7 +102,7 @@ void PlayerController::ProcessInput()
 		playerPhysicBody->velocity = playerPhysicBody->velocity.normalized() * 5;
 	}
 
-	// ÓÏÐÀÂËÅÍÈÅ ÍÀÊËÎÍÎÌ
+	// Ð£ÐŸÐ ÐÐ’Ð›Ð•ÐÐ˜Ð• ÐÐÐšÐ›ÐžÐÐžÐœ
 	float roll = 0.0f;
 
 	if (IsKeyPressed('E')) {
@@ -148,7 +148,9 @@ void PlayerController::ProcessMouse()
 
 		XMVECTOR addRotation = eulerToQuanternion(dPitch, dYaw, 0) * SENSIVITY * k;
 		//playerPhysicBody->qAngVelocity = XMQuaternionMultiply(playerTransform->qRotation, addRotation);
-		//camera->AddQuaternionRotation(XMVectorGetX(addRotation), XMVectorGetY(addRotation), XMVectorGetZ(addRotation), XMVectorGetW(addRotation));
+
+		//XMMATRIX matrix = XMMatrixRotationY(XMConvertToRadians(1));
+		//camera->AddMatrixRotation(matrix);
 	}
 	else {
 		//Camera::state.n = lerp(Camera::state.n, 0, 0.2f);

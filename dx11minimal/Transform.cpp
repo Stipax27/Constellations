@@ -3,7 +3,6 @@
 
 #include "component.h"
 #include "Point3d.h"
-#include "Point3x3.h"
 
 
 struct Transform : Component
@@ -12,6 +11,13 @@ struct Transform : Component
 	point3d scale = point3d(1.0f, 1.0f, 1.0f);
 
     XMVECTOR qRotation = XMQuaternionRotationAxis(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), 0);
+
+    XMMATRIX mRotation = XMMATRIX{
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+    };
 
     XMVECTOR GetLookVector()
 	{
