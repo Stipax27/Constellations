@@ -142,7 +142,36 @@ namespace Enemy {
         data.attackTimer -= deltaTime;
     }
 
+    void EnemyAI::DamageSound() {
+        srand(time(0));
+        float Cos = rand() % 8;
 
+        if (Cos == 0) {
+            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\damage1.wav");
+        }
+        else if (Cos == 1) {
+            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\damage2.wav");
+        }
+        else if (Cos == 2) {
+            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\damage3.wav");
+        }
+        else if (Cos == 3) {
+            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\damage4.wav");
+        }
+        else if (Cos == 4) {
+            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\damage5.wav");
+        }
+        else if (Cos == 5) {
+            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\damage6.wav");
+        }
+        else if (Cos == 6) {
+            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\damage7.wav");
+        }
+        else if (Cos == 7) {
+            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\damage8.wav");
+        }
+    
+    }
     void EnemyAI::Patrol(float deltaTime, point3d& enemyPositions) {
         if (data.waypoints.empty()) return;
 
@@ -280,7 +309,7 @@ namespace Enemy {
                 player -= 0.1f;
                 energy -= 100.f;
             }
-
+            DamageSound();
             data.attackTimer = 0.0f;
         }
 
@@ -342,7 +371,7 @@ namespace Enemy {
                     player -= 0.1f;
                     energy -= 200.f;
                 }
-            
+                DamageSound();
             }
 
             // Завершаем атаку, когда волна достигла максимума
@@ -420,7 +449,7 @@ namespace Enemy {
                 data.boomCurrentTime = 0.0f;
                 data.boomRadius = 0.0f;
                 data.attackTimer = 0.0f;
-
+                DamageSound();
                 // Восстанавливаем нормальный масштаб
                 data.enemyConstellationOffset = XMMatrixRotationQuaternion(data.currentRotation) *
                     XMMatrixTranslation(enemyPos.x, enemyPos.y, enemyPos.z);

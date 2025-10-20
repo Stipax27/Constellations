@@ -24,7 +24,7 @@ cbuffer drawMat : register(b2)
 
 cbuffer params : register(b1)
 {
-    float r, g, b, a;  // Добавил альфа-канал
+    float r, g, b, a;  // Основной цвет из params буфера
 };
 
 struct VS_OUTPUT
@@ -61,13 +61,20 @@ float4 PS(VS_OUTPUT input) : SV_Target
     float2 uv = input.uv;
     float brightness = exp(-dot(uv, uv) * 20);
     
-    // Используем gConst[1] из global буфера
-    float4 starColor = float4(gConst[1].x, gConst[1].y, gConst[1].z, gConst[1].w);
+    // ПРИОРИТЕТ 1: Используем цвет из global буфера, если он задан
+    float4 finalColor = float4(1.0f, 1.0f, 1.0f, 1.0f); // Белый по умолчанию
     
-    // Если цвет не задан (все нули) - используем белый
-    if (dot(starColor.rgb, 1.0) == 0) {
-        starColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    // Проверяем, установлен ли цвет в global буфере (не черный и не нулевой)
+    if (gConst[1].a > 0.01f) // Проверяем альфа-канал как индикатор
+    {
+        finalColor = gConst[1];
     }
+    // ПРИОРИТЕТ 2: Используем цвет из params буфера
+    else if (a > 0.01f) 
+    {
+        finalColor = float4(r, g, b, a);
+    }
+    // ПРИОРИТЕТ 3: Белый по умолчанию
     
-    return float4(brightness, brightness, brightness, 1) * starColor * (1 + .9);
+    return float4(brightness, brightness, brightness, 1) * finalColor * (1 + .9);
 }

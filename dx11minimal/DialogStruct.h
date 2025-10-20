@@ -1,4 +1,4 @@
-﻿void renderContent();
+﻿void renderContent(Constellation& c);
 void selectVariant(int variantIndex);
 void handleInput();
 void initContentData();
@@ -193,17 +193,17 @@ void selectVariant(int variantIndex) {
         return;
     }
 
-    renderContent();
+    renderContent(*starSet[player_sign]);
 }
 
-void renderContent() {
+void renderContent(Constellation& c) {
     float textX = window.width / 2;
     float textY = (200. / 1440) * window.height;
     static int currentNarrative = 0;
     static double lastClickTime = 0.0;
     static bool narrativeSoundPlayed = false;
     static bool dialogSoundPlayed = false;
-
+    
     if (currentNarrative < (int)narratives.size()) {
         // Показываем нарративный текст
         const NarrativeText& narrative = narratives[currentNarrative];
@@ -239,6 +239,7 @@ void renderContent() {
             }
             return;
         }
+        c.StartShaking(0.5f,1000.f);
     }
     else {
         // Показываем диалоги
@@ -257,7 +258,7 @@ void renderContent() {
                     // Показываем сообщение о ожидании
                     float waitTime = (float)(dialogShowTime - currentTime);
                     std::string waitText = "..." + std::to_string((int)waitTime) + "ms";
-                    drawString(waitText.c_str(), textX, textY, 1.f, true);
+                    //drawString(waitText.c_str(), textX, textY, 1.f, true);
                     return;
                 }
             }
@@ -297,6 +298,7 @@ void renderContent() {
         else {
             std::cout << "currentDialogs пуст!" << std::endl;
         }
+        c.StartShaking(0.5f, 1000.f);
     }
 }
 

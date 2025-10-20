@@ -120,6 +120,7 @@
         float splineProgress = 0.0f;
 
         void AiUpdate(float deltaTime, point3d& heroPosition, point3d& enemyPositions, float& player);
+        void DamageSound();
         void Patrol(float deltaTime, point3d& enemyPositions);
         void Chase(point3d& heroPos, point3d& enemyPositions , float deltaTime);
         void UpdateRotation(point3d direction);

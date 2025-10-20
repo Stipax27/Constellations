@@ -1,6 +1,14 @@
 ﻿bool t = true;
 point3d attackDirection;
 
+float currentLinkSize = 30.0f;
+const float MIN_LINK_SIZE = 2.0f;
+const float MAX_LINK_SIZE = 50.0f;
+float linkSizeReturnStart = 2.0f;
+DWORD linkSizeReturnStartTime = 0;
+bool isLinkSizeReturning = false;
+float linkSizeReturnSpeed = 2.0f;
+
 struct StarProjectile {
     point3d position;
     point3d direction;
@@ -12,6 +20,7 @@ struct StarProjectile {
     bool isNew;
     DWORD creationTime;
     float lifetime;
+    XMFLOAT4 color;
 
 };
 float finalRadius;
@@ -77,71 +86,39 @@ namespace drawer
         Draw::elipse(1);
     }
 
-    void drawLinks(Constellation& Constellation, float sz)
-    {
+    void drawLinks(Constellation& Constellation, float sz) {
+        float currentLinkThickness = currentLinkSize;
+
         std::vector <point3d>& starArray = Constellation.starsCords;
         std::vector<std::vector<float>>& starEdges = Constellation.constellationEdges;
         std::vector <float>& starHealth = Constellation.starsHealth;
 
         int starsEdgesCount = starEdges.size();
-        for (int i = 0; i < starsEdgesCount; i++)
-        {
+        for (int i = 0; i < starsEdgesCount; i++) {
             point3d point1 = TransformPoint(starArray[starEdges[i][0]], Constellation.Transform);
             point3d point2 = TransformPoint(starArray[starEdges[i][1]], Constellation.Transform);
 
-            if (!Constellation.morphing && Constellation.starsCords.size() == Constellation.originStarsCords.size())
-            {
-                ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // Белый
-                ConstBuf::Update(5, ConstBuf::global);
-                ConstBuf::ConstToPixel(5);
+            // ЯВНО устанавливаем белый цвет для каждой линии
+            ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+            ConstBuf::Update(5, ConstBuf::global);
+            ConstBuf::ConstToPixel(5);
 
-                drawLine(point1, point2, sz * 1.5f); // Увеличиваем толщину линии
-
-                // Восстанавливаем стандартный цвет
-                ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-                ConstBuf::Update(5, ConstBuf::global);
-                //if (starHealth[starEdges[i][0]] > 0 && starHealth[starEdges[i][1]] > 0)
-                //{
-                //    // Устанавливаем яркий цвет для линий между неповрежденными звездами
-                //    
-                //}
-                //else if (starHealth[starEdges[i][0]] > 0 || starHealth[starEdges[i][1]] > 0)
-                //{
-                //    // Полуповрежденные линии - тонкие и бледные
-                //    ConstBuf::global[2] = XMFLOAT4(0.7f, 0.7f, 0.7f, 0.5f);
-                //    ConstBuf::Update(5, ConstBuf::global);
-                //    ConstBuf::ConstToPixel(5);
-
-                //    drawLine(point1, point2, sz * 0.5f);
-
-                //    ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-                //    ConstBuf::Update(5, ConstBuf::global);
-                //}
-            }
-            else
-            {
-                ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // Белый
-                ConstBuf::Update(5, ConstBuf::global);
-                ConstBuf::ConstToPixel(5);
-
-                drawLine(point1, point2, sz * 1.5f); // Увеличиваем толщину линии
-
-                // Восстанавливаем стандартный цвет
-                ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-                ConstBuf::Update(5, ConstBuf::global);
-            }
+            // Используем currentLinkThickness вместо sz
+            drawLine(point1, point2, currentLinkThickness * 1.5f);
         }
+
+        // Сбрасываем цвет после отрисовки всех линий
+        ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
     }
 
-    void drawStarPulse(Constellation& Constellation, bool colorOverride = false, float finalStarRad = 10.f)
-    {
+    void drawStarPulse(Constellation& Constellation, bool colorOverride = false, float finalStarRad = 10.f) {
         std::vector <point3d>& starArray = Constellation.starsCords;
         std::vector <float>& starHealth = Constellation.starsHealth;
 
         int starsCount = starArray.size();
 
-        for (int i = 0; i < starsCount; i++)
-        {
+        for (int i = 0; i < starsCount; i++) {
             point3d point;
             point = starArray[i];
             point3d worldPoint = TransformPoint(point, Constellation.Transform);
@@ -158,27 +135,8 @@ namespace drawer
             screenPoint.x *= window.width;
             screenPoint.y *= window.height;
 
-            // Изменяем цвет или размер для неповрежденных звезд
-            //float currentRadius = finalStarRad;
-            XMFLOAT4 starColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // Белый по умолчанию
-
-            if (i < starHealth.size())
-            {
-                if (starHealth[i] > 0)
-                {
-                    // Для неповрежденных звезд - пульсация и другой цвет
-                    float pulse = 0.5f + 0.5f * sinf(currentTime * 0.005f);
-                    currentRadius += pulse * 5.0f;
-
-                    // Можно использовать другой цвет, например желтый
-                    starColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // Желтый
-                }
-                else
-                {
-                    // Для поврежденных звезд - серый цвет
-                    starColor = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.25f); // Серый с прозрачностью
-                }
-            }
+            // ЯВНО устанавливаем белый цвет для каждой звезды
+            XMFLOAT4 starColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 
             // Устанавливаем цвет звезды
             ConstBuf::global[1] = starColor;
@@ -188,20 +146,25 @@ namespace drawer
             if (currentRadius > 0) {
                 point.draw(worldPoint, currentRadius);
             }
-
-            // Восстанавливаем стандартный цвет
-            ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-            ConstBuf::Update(5, ConstBuf::global);
         }
+
+        // Сбрасываем цвет после отрисовки всех звезд
+        ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
     }
 
-    void drawConstellation(Constellation& Constellation, bool colorOverride = false , float finalStarRad = 10.f, float sz =2.f)
-    {
+    void drawConstellation(Constellation& Constellation, bool colorOverride = false, float finalStarRad = 10.f, float sz = 2.f) {
         if (&Constellation == starSet[player_sign]) {
             finalStarRad *= heroScale;
             sz *= heroScale;
         }
+
         Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+        // Сбрасываем цвет перед началом отрисовки
+        ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
+
         Shaders::vShader(1);
         Shaders::pShader(1);
         Shaders::gShader(0);
@@ -211,7 +174,16 @@ namespace drawer
         Shaders::vShader(4);
         Shaders::pShader(4);
 
-        drawLinks(Constellation,sz);
+        // Сбрасываем цвет для линий
+        ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
+
+        drawLinks(Constellation, sz);
+
+        // Финальный сброс цветов
+        ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
     }
 
     void DrawRenderObject(RenderObject* object)
@@ -571,7 +543,7 @@ namespace drawer
             particle.radius = GetRandom(100, 300);
             particle.creationTime = currentTime;
             particle.lifetime = GetRandom(400, 800);
-            particle.color = XMFLOAT4(0.3f, 0.7f, 1.0f, 0.8f);
+            particle.color = XMFLOAT4(0.3f, 1.0f, 1.0f, 0.8f);
             particle.isActive = true;
 
             reflectionEffects.push_back(particle);
@@ -773,6 +745,11 @@ namespace drawer
                  Shaders::vShader(15);
                  Shaders::pShader(15);
 
+                 // Устанавливаем цвет ДО любых других операций
+                 ConstBuf::global[1] = star.color;
+                 ConstBuf::Update(5, ConstBuf::global);
+                 ConstBuf::ConstToPixel(5);
+
                  // Проверяем, новая ли это частица (создана при нажатии ЛКМ)
                  if (star.isNew) {
                      float timeSinceCreation = (currentTime - star.creationTime);
@@ -811,7 +788,7 @@ namespace drawer
                          star.isNew = false;
                      }
                  }
-
+                 
                  // Обычная отрисовка частицы (всегда)
                  star.position.draw(star.position, star.radius * 0.2f);
                  break;
@@ -819,83 +796,105 @@ namespace drawer
 
              case weapon_name::Sword: {
 
-                    Shaders::vShader(15);
-                    Shaders::pShader(15);
+                 Shaders::vShader(15);
+                 Shaders::pShader(15);
+
+                 ConstBuf::global[1] = star.color;
+                 ConstBuf::Update(5, ConstBuf::global);
+                 ConstBuf::ConstToPixel(5);
+                    
                     float timeSinceCreation = (currentTime - star.creationTime);
 
+                    star.position.draw(star.position, finalRadius);
                     point3d end = star.position + star.direction;
                         drawLine(star.position, end, 3.f);
-                        star.position.draw(star.position , finalRadius);
-                    
-                    break;
-                }
 
-                case weapon_name::Shield: {
-
-                    Shaders::vShader(15);
-                    Shaders::pShader(15);
-                   
-
-                        for (int i = 0; i < 36; i++) {
-                            float angle = i * (2 * PI / 36);
-                            float nextAngle = (i + 1) * (2 * PI / 36);
-
-                            point3d local1(cos(angle), sin(angle), 0);
-                            point3d local2(cos(nextAngle), sin(nextAngle), 0);
-
-                            point3d shield1 = star.position + (star.right * local1.x + star.up * local1.y) * star.radius;
-                            point3d shield2 = star.position + (star.right * local2.x + star.up * local2.y) * star.radius;
-
-                            drawLine(shield1, shield2, 30.f);
-                        }
-                        star.position.draw(star.position, finalRadius);
-                    
-                    break;
-                }
-
-                case weapon_name::Bow: {
-
-                    Shaders::vShader(15);
-                    Shaders::pShader(15);
-
-                    // Отрисовываем трассерные частицы сначала (чтобы были под стрелой)
-                    for (auto& tracer : bowTracerParticles) {
-                        float elapsed = currentTime - tracer.creationTime;
-                        float alpha = 1.0f - (elapsed / tracer.lifetime);
-
-                        // Устанавливаем прозрачность через размер
-                        float renderSize = tracer.size * alpha;
-                        if (renderSize > 0.5f) {
-                            tracer.position.draw(tracer.position, renderSize);
-                        }
-                    }
-
-                    // Отрисовываем основную стрелу
-                    point3d arrowStart = star.position;
-                    point3d arrowEnd = star.position + star.direction * finalRadius * 3.f;
-
-                    // Ядро стрелы - яркая звезда
-                    star.position.draw(star.position, finalRadius * 0.8f);
-
-                    // Внешнее свечение
-                    star.position.draw(star.position, finalRadius * 1.2f);
-
-                    // Линия трассера
-                    Shaders::vShader(4);
-                    Shaders::pShader(4);
-                    drawLine(arrowStart, arrowEnd, finalRadius * 2.f);
-
-                    // Наконечник стрелы
-                    Shaders::vShader(1);
-                    Shaders::pShader(1);
-                    point3d tip = arrowEnd - star.direction * finalRadius * 0.5f;
-                    tip.draw(tip, finalRadius * 0.4f);
+                        
 
                     break;
-                }
+             }
+
+             case weapon_name::Shield: {
+
+                 Shaders::vShader(15);
+                 Shaders::pShader(15);
+
+                 ConstBuf::global[1] = star.color;
+                 ConstBuf::Update(5, ConstBuf::global);
+                 ConstBuf::ConstToPixel(5);
+
+                 star.position.draw(star.position, finalRadius);
+
+                     for (int i = 0; i < 36; i++) {
+                         float angle = i * (2 * PI / 36);
+                         float nextAngle = (i + 1) * (2 * PI / 36);
+
+                         point3d local1(cos(angle), sin(angle), 0);
+                         point3d local2(cos(nextAngle), sin(nextAngle), 0);
+
+                         point3d shield1 = star.position + (star.right * local1.x + star.up * local1.y) * star.radius;
+                         point3d shield2 = star.position + (star.right * local2.x + star.up * local2.y) * star.radius;
+
+                         drawLine(shield1, shield2, 30.f);
+                     }
+                     
+                     
+                 break;
+             }
+
+             case weapon_name::Bow: {
+
+                 Shaders::vShader(15);
+                 Shaders::pShader(15);
+
+                 ConstBuf::global[1] = star.color;
+                 ConstBuf::global[2] = star.color;
+                 ConstBuf::Update(5, ConstBuf::global);
+                 ConstBuf::ConstToPixel(5);
+
+                 // Отрисовываем трассерные частицы сначала (чтобы были под стрелой)
+                 for (auto& tracer : bowTracerParticles) {
+                     float elapsed = currentTime - tracer.creationTime;
+                     float alpha = 1.0f - (elapsed / tracer.lifetime);
+
+                     // Устанавливаем прозрачность через размер
+                     float renderSize = tracer.size * alpha;
+                     if (renderSize > 0.5f) {
+                         tracer.position.draw(tracer.position, renderSize);
+                     }
+                 }
+
+                 // Отрисовываем основную стрелу
+                 point3d arrowStart = star.position;
+                 point3d arrowEnd = star.position + star.direction * finalRadius * 3.f;
+
+                 // Ядро стрелы - яркая звезда
+                 star.position.draw(star.position, finalRadius * 0.8f);
+
+                 // Внешнее свечение
+                 star.position.draw(star.position, finalRadius * 1.2f);
+
+                 Shaders::vShader(1);
+                 Shaders::pShader(1);
+                 point3d tip = arrowEnd - star.direction * finalRadius * 0.5f;
+                 tip.draw(tip, finalRadius * 0.4f);
+
+                 // Линия трассера
+                 Shaders::vShader(4);
+                 Shaders::pShader(4);
+                 drawLine(arrowStart, arrowEnd, finalRadius * 2.f);
+
+
+                 break;
+             }
 
              }
+             ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+             ConstBuf::Update(5, ConstBuf::global);
         }
+
+        ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
        
     }
     struct AccumulationStar {
@@ -1126,6 +1125,7 @@ namespace drawer
                 isCameraReturning = false;
                 isHeroScaleReturning = false;
                 isStarRadiusReturning = false;
+                currentLinkSize = MIN_LINK_SIZE + chargeRatio * (MAX_LINK_SIZE - MIN_LINK_SIZE);
             }
 
             float chargeDuration = currentTime - chargeStartTime;
@@ -1172,22 +1172,21 @@ namespace drawer
                 isCameraReturning = true;
                 isHeroScaleReturning = true;
                 isStarRadiusReturning = true;
+                isLinkSizeReturning = true; // Добавляем возврат размера линий
 
                 cameraReturnStartTime = currentTime;
                 heroScaleReturnStartTime = currentTime;
                 starRadiusReturnStartTime = currentTime;
+                linkSizeReturnStartTime = currentTime; // Для линий
 
                 // Сохраняем текущие значения для плавного возврата
                 cameraReturnStartDistance = currentCameraDistance;
                 heroScaleReturnStart = currentHeroScale;
                 starRadiusReturnStart = currentStarRadius;
+                linkSizeReturnStart = currentLinkSize; // Для линий
 
                 if (currentTime - lastAttackTime > 400) {
-                    if (gameState == gameState_::selectEnemy) {
-                        gameState = gameState_::Fight;
-                        mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\FREEFLY.mp3"), NULL, 0, NULL);
-                        mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
-                    }
+                    
                    lastAttackTime = currentTime;
 
                     float attackCost = 0.0f;
@@ -1238,6 +1237,9 @@ namespace drawer
 
                     switch (current_weapon) {
                     case weapon_name::Fists: {
+                        srand(time(0));
+                        float Cos = rand() % 5;
+
                         StarProjectile newStar;
                         newStar.position = fistPosition;
                         newStar.direction = newDirection;
@@ -1245,6 +1247,7 @@ namespace drawer
                         newStar.weapon = weapon_name::Fists;
                         newStar.isNew = true;
                         newStar.creationTime = currentTime;
+                        newStar.color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // ГОЛУБОЙ для кулаков
 
                         newStar.up = point3d(XMVectorGetX(Camera::state.Up),
                             XMVectorGetY(Camera::state.Up),
@@ -1253,6 +1256,23 @@ namespace drawer
                         newStar.up = newStar.right.cross(newDirection).normalized();
 
                         attackStars.push_back(newStar);
+
+                        if (Cos == 0) {
+                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\hit1.wav");
+                        }
+                        else if (Cos == 1) {
+                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\hit2.wav");
+                        }
+                        else if (Cos == 2) {
+                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\hit3.wav");
+                        }
+                        else if (Cos == 3) {
+                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\hit4.wav");
+                        }
+                        else if (Cos == 4) {
+                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\hit5.wav");
+                        }
+
                         break;
                     }
                     case weapon_name::Sword: {
@@ -1266,6 +1286,7 @@ namespace drawer
                             newStar.direction = newDirection;
                             newStar.radius = finalRadius;
                             newStar.weapon = weapon_name::Sword;
+                            newStar.color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // КРАСНЫЙ для меча
 
                             point3d up = point3d(XMVectorGetX(Camera::state.Up),
                                 XMVectorGetY(Camera::state.Up),
@@ -1276,35 +1297,28 @@ namespace drawer
 
                             newStar.position += up * (i * finalRadius - (finalRadius * 10.f));
                             newStar.position += right * (i * finalRadius - (finalRadius * 10.f));
-
+                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Sword.wav");
                             attackStars.push_back(newStar);
                         }
-
-                        ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Sword.wav");
                         break;
                     }
-
                     case weapon_name::Shield: {
                         StarProjectile newStar;
                         newStar.position = start;
                         newStar.direction = newDirection;
                         newStar.radius = finalRadius;
                         newStar.weapon = weapon_name::Shield;
+                        newStar.color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // КОРИЧНЕВЫЙ для щита
 
                         newStar.up = point3d(XMVectorGetX(Camera::state.Up),
                             XMVectorGetY(Camera::state.Up),
                             XMVectorGetZ(Camera::state.Up));
                         newStar.right = newDirection.cross(newStar.up).normalized();
                         newStar.up = newStar.right.cross(newDirection).normalized();
-
-                        attackStars.push_back(newStar);
-
-                       
-                        //CreateShieldReflectionEffect(start, newDirection);
                         ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\ShieldStan3.wav");
+                        attackStars.push_back(newStar);
                         break;
                     }
-
                     case weapon_name::Bow: {
                         point3d fixedUp = point3d(XMVectorGetX(Camera::state.Up),
                             XMVectorGetY(Camera::state.Up),
@@ -1320,19 +1334,9 @@ namespace drawer
                         newStar.up = fixedUp;
                         newStar.right = fixedRight;
                         newStar.creationTime = currentTime;
-
-                        attackStars.push_back(newStar);
-
-                        for (int i = 0; i < 8; i++) {
-                            BowTracerParticle tracer;
-                            tracer.position = start;
-                            tracer.size = finalRadius * 0.3f;
-                            tracer.creationTime = currentTime;
-                            tracer.lifetime = 300.0f + (rand() % 200);
-                            bowTracerParticles.push_back(tracer);
-                        }
-
+                        newStar.color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // ЗЕЛЕНЫЙ для лука
                         ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Bow.wav");
+                        attackStars.push_back(newStar);
                         break;
                     }
                     }
@@ -1394,6 +1398,18 @@ namespace drawer
                 for (int i = 0; i < player.starsCords.size(); i++) {
                     player.SetStarRadius(i, MIN_STAR_RADIUS);
                 }
+            }
+        }
+
+        if (isLinkSizeReturning) {
+            float returnProgress = (currentTime - linkSizeReturnStartTime) / 1000.0f * linkSizeReturnSpeed;
+            returnProgress = min(returnProgress, 1.0f);
+
+            currentLinkSize = lerp(linkSizeReturnStart, MIN_LINK_SIZE, returnProgress);
+
+            if (returnProgress >= 1.0f) {
+                isLinkSizeReturning = false;
+                currentLinkSize = MIN_LINK_SIZE;
             }
         }
     }
@@ -1496,7 +1512,7 @@ namespace drawer
     void DrawSwordAttack() {
         if (isAttacking) return;
 
-        Blend::Blending(Blend::blendmode::on);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
        
         DrawAttackStars();
     }
@@ -1854,9 +1870,9 @@ namespace drawer
         for (auto& particle : boomStars) {
             // Цвет остается без изменений (как в оригинале)
             ConstBuf::global[1] = XMFLOAT4(
-                0, // R
-                0, // G
-                0, // B
+                1, // R
+                0.3, // G
+                0.3, // B
                 min(1.0f, particle.radius / 1.0f) // Alpha
             );
 
@@ -1866,8 +1882,6 @@ namespace drawer
             // Рисуем частицу
             particle.position.draw(particle.position, particle.radius);
         }
-
-        // Восстанавливаем стандартный цвет
 
     }
 
@@ -2567,7 +2581,7 @@ namespace drawer
 
             // Затухание размера и прозрачности
             particle.size = particle.initialSize * (1.0f - lifeProgress);
-            particle.color.w = 0.8f * (1.0f - lifeProgress);
+            particle.color = XMFLOAT4(0.0f, 0.5f, 1.0f, 0.7f);
 
             // Медленное затухание скорости
             particle.velocity *= 0.995f;
@@ -2637,6 +2651,26 @@ namespace drawer
         }
     }
 
+    void StateFight(point3d& HeroPos, point3d& EnemyPos) {
+        float distance = (HeroPos - EnemyPos).magnitude();
+
+        if (distance < 50000.0f) {
+            // Show warning/indicator but don't start fight immediately
+            if (distance < 50000.0f) {
+                // Draw warning text
+                drawString("Press F to engage in combat", window.width / 2, 100, 1.f, true);
+
+                // Start fight only when player confirms
+                if (GetAsyncKeyState('F') & 0x8000) 
+                {
+                    gameState = gameState_::Fight;
+                    mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\FREEFLY.mp3"), NULL, 0, NULL);
+                    mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
+                }
+            }
+        }
+    }
+
     Constellation& enemy = *starSet[currentEnemyID];
     Constellation& player = *starSet[player_sign];
 
@@ -2693,6 +2727,18 @@ namespace drawer
         RenderReflectionEffects();
 
         UpdateTransition(deltaTime);
+
+        point3d Heropos = point3d(
+            XMVectorGetX(heroPosition),
+            XMVectorGetY(heroPosition),
+            XMVectorGetZ(heroPosition)
+        );
+
+        point3d Enemypos = point3d(
+            XMVectorGetX(enemyPositions),
+            XMVectorGetY(enemyPositions),
+            XMVectorGetZ(enemyPositions)
+        );
         //d2dRenderTarget->BeginDraw();
         switch (gameState)
         {
@@ -2706,7 +2752,7 @@ namespace drawer
             l.Transform = CreateEnemyToWorldMatrix(l,7000.f);
             Enemy::enemyData.currentRotation = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), 0);
 
-            drawConstellation(l, false, 200.f, 30);
+            drawConstellation(l, false, 200.f, currentLinkSize);
             mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
             break;
         }
@@ -2742,6 +2788,7 @@ namespace drawer
 
         case gameState_::selectEnemy:
         {
+            
             for (int i = 0; i < enemy.starsCords.size(); i++) {
 
                 enemy.SetStarRadius(i, 1000.f);
@@ -2776,7 +2823,7 @@ namespace drawer
             TeleportEnemy(point3d{ 0.f,-10000.f,0.f });
             q.Transform = CreateEnemyToWorldMatrix(q);
            
-            drawConstellation(q,false, 200.f,30);
+            drawConstellation(q,false, 200.f, currentLinkSize);
           
 
             if (!playerConst.morphing)
@@ -2800,6 +2847,8 @@ namespace drawer
             }
             drawHPBar(playerHP);
             isBattleActive = false;
+
+            StateFight(Heropos, Enemypos);
             break;
 
             // drawString("X", 0, 0, 1, false);
@@ -2817,12 +2866,13 @@ namespace drawer
             Enemy::enemyData.currentRotation = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), PI);
             TeleportEnemy(point3d{ -6000.f,-5000.f,-115000.f });
             h.Transform = CreateEnemyToWorldMatrix(h);
+            
             Enemy::enemyData.currentRotation = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), 0);
 
-            drawConstellation(c, false, 200.f, 80);
-            drawConstellation(h, false, 200.f, 40);
+            drawConstellation(c, false, 200.f, currentLinkSize);
+            drawConstellation(h, false, 200.f, currentLinkSize);
             initContentData();
-            renderContent();
+            renderContent(c);
             handleInput();
 
             break;
@@ -2957,17 +3007,7 @@ namespace drawer
             Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 
 
-            point3d Heropos = point3d(
-                XMVectorGetX(heroPosition),
-                XMVectorGetY(heroPosition),
-                XMVectorGetZ(heroPosition)
-            );
-
-            point3d Enemypos = point3d(
-                XMVectorGetX(enemyPositions),
-                XMVectorGetY(enemyPositions),
-                XMVectorGetZ(enemyPositions)
-            );
+           
 
             lastFrameTime = currentTime;
 
@@ -3062,6 +3102,7 @@ namespace drawer
 
             if (enemyAI.data.isPreparingAttack) {
                 CreateEnemyPathEffect(Enemypos, enemyAI.data.delayedAttackTarget);
+                ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Oven Dash.wav");
             }
             UpdateEnemyPathEffect(deltaTime);
             RenderEnemyPathEffect();
@@ -3086,9 +3127,6 @@ namespace drawer
             UpdateExplosionEffects(deltaTime);
             RenderExplosionEffects();
 
-            //Constellation& c = *starSet[player_sign];
-            //c.Transform = CreateHeroToWorldMatrix(c);
-            //drawСonstellation(*starSet[player_sign]);//Игрок
 
             if (attack_collision == true)
             {
@@ -3096,8 +3134,6 @@ namespace drawer
                 attack_collision = false;
                 attack_speed = false;
             }
-
-
 
             if (GetAsyncKeyState('P')) {
                 StartTransition(gameState_::WinFight, 2000.0f);
@@ -3132,7 +3168,7 @@ namespace drawer
             {
                 isShakingHero = false;
             }*/
-            Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+            //Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 
             if (starSet.empty() || currentEnemyID < 0 || currentEnemyID >= starSet.size()) {
                 gameState = gameState_::selectEnemy;
@@ -3141,6 +3177,9 @@ namespace drawer
 
             // Безопасный вызов функций атаки
 
+            Constellation& c = *starSet[player_sign];
+            c.Transform = CreateHeroToWorldMatrix(c); // Базовая матрица
+
 
             // Обновление атак
             if (!playerConst.morphing) {
@@ -3148,22 +3187,17 @@ namespace drawer
                 //Hero::UpdateAttackRotation(deltaTime);
                 
             }
-            Constellation& c = *starSet[player_sign];
-            c.Transform = CreateHeroToWorldMatrix(c); // Базовая матрица
-
             // Применяем тряску поверх базовой матрицы
             if (isCharging) {
                 ApplyChargingShake(c, chargeRatio);
             }
+
             UpdateCameraScaleAndStarRadiusReturn(deltaTime, player);
             UpdateAttack(deltaTime);
+            DrawSwordAttack();
 
             UpdateAccumulationEffect(deltaTime);
             RenderAccumulationEffect();
-
-
-
-            DrawSwordAttack();
 
 
             // Проверка условий победы/поражения
@@ -3180,7 +3214,7 @@ namespace drawer
             if (playerHP <= 0.f && !deathAnimationStarted) {
                 deathAnimationStarted = true;
                 deathStartTime = currentTime;
-                ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\PlayerDeath.wav");
+                //ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\PlayerDeath.wav");
             }
 
             if (deathAnimationStarted) {
@@ -3205,7 +3239,7 @@ namespace drawer
             drawHPBar(playerHP);
             drawEnemyBar(enemyTotalHP);
             
-            drawConstellation(*starSet[player_sign], false , 10.f,7.f);
+            drawConstellation(*starSet[player_sign], false, 10.f, currentLinkSize);
             drawString(enemyH.c_str(), window.width / 2, 100, 2.f, true);
             drawString("ARIES", window.width / 2, 50, 2.f, true);
             drawString("Press < T > to enter tutorial", (100. / 2560) * window.width, (100. / 1440) * window.height, 1.f, false);
