@@ -83,9 +83,9 @@ public:
         return translateZ * rotate * scale;
     }
 
-    friend XMMATRIX CreateEnemyToWorldMatrix(Constellation& c)
+    friend XMMATRIX CreateEnemyToWorldMatrix(Constellation& c,float Scale = 20000)
     {
-        c.scale = 20000;
+        c.scale = Scale;
 
         // ВАЖНО: используем currentRotation из EnemyData
         XMMATRIX rotation = XMMatrixRotationQuaternion(Enemy::enemyData.currentRotation);

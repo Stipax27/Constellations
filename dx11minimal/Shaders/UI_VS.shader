@@ -32,7 +32,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     ndc.y = 1.0 - (screenPos.y / screenSize.y) * 2.0;
 
     output.pos = float4(ndc, 0, 1);
-    output.uv  = quadPos[vID];
+    output.uv  = quadPos[vID]/2+.5;
 
     return output;
 }

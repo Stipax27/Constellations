@@ -24,7 +24,7 @@ cbuffer drawMat : register(b2)
 
 cbuffer params : register(b1)
 {
-    float r, g, b;
+    float r, g, b, a;  // Добавил альфа-канал
 };
 
 struct VS_OUTPUT
@@ -56,11 +56,18 @@ float star(float2 uv)
     return max(c, 0);
 }
 
-float4 PS(VS_OUTPUT input) : SV_Target
+float4 PS(VS_OUTPUT input) : SV_Target  
 {
-    //return input.worldpos.x/2000+.5;
-
     float2 uv = input.uv;
-float brightness = exp(-dot(uv, uv) * 20);
-return float4(brightness, brightness, brightness, 1)*float4(1,1,1.4,1)*(1+.9);
+    float brightness = exp(-dot(uv, uv) * 20);
+    
+    // Используем gConst[1] из global буфера
+    float4 starColor = float4(gConst[1].x, gConst[1].y, gConst[1].z, gConst[1].w);
+    
+    // Если цвет не задан (все нули) - используем белый
+    if (dot(starColor.rgb, 1.0) == 0) {
+        starColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    }
+    
+    return float4(brightness, brightness, brightness, 1) * starColor * (1 + .9);
 }

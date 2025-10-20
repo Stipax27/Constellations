@@ -11,5 +11,7 @@ struct VS_OUTPUT
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-    return global[3];
+    float x = input.uv.x;
+    float y = input.uv.y;
+    return float4(saturate(global[3].xyz),saturate(global[3].w)* (saturate(1-pow(abs(y-.5)*2.,1)) * saturate(1-pow(abs(x-.5)*2.,16))));
 }

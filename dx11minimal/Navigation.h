@@ -204,8 +204,8 @@ void updateFlySpeed(float deltaTime)
         energy = min(energy, 300L);
     }
 
-    drawString((std::to_string(energy)).c_str(), (1850.f / 2560) * window.width, (1000.f / 1440) * window.height, .7f, false);
-    drawString("Energy", (1700.f / 2560)* window.width, (1000.f / 1440)* window.height, .7f, false);
+    drawString((std::to_string(energy)).c_str(), (1250.f / 2560) * window.width, (1190.f / 1440) * window.height, .5f, false);
+    drawString("Energy", (1100.f / 2560)* window.width, (1190.f / 1440)* window.height, .5f, false);
 
     
     deltaTime /= 1000;
@@ -243,7 +243,7 @@ void updateFlySpeed(float deltaTime)
     }
 
     // СИСТЕМА РЫВКА ПРИ НУЛЕВОЙ ЭНЕРГИИ
-    if (energy <= 0) {
+    if (energy < 1) {
         if (isBoosting && !wasShiftPressed && canRush) {
             // НАЧАЛО НАКОПЛЕНИЯ СКОРОСТИ ДЛЯ РЫВКА
             wasShiftPressed = true;

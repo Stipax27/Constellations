@@ -36,6 +36,11 @@
         float dashPreparationTime = 0.0f;
         const float MAX_DASH_PREPARATION = 1000.0f; 
         float dashSpeedMultiplier = 3.0f;
+        std::vector<point3d> playerPosHistory;
+        point3d delayedAttackTarget;
+        float prepareAttackTimer = 0.0f;
+        bool isPreparingAttack = false;
+
 
         bool isJumping = false;
         float jumpHeight = 0.0f;

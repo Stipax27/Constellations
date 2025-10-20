@@ -49,7 +49,7 @@ bool drawClickableText(
 
     // Проигрываем звук только при первом наведении на этот текст
     if (isHovered && lastHoveredText != text) {
-        ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Mouse_select.wav");
+        //ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Mouse_select.wav");
         lastHoveredText = text;
     }
     // Сбрасываем запомненный текст, если мышь не над ним
@@ -90,7 +90,7 @@ bool drawParticledClickableText(
     }
 
     if (isHovered && lastHoveredText != text) {
-        ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Mouse_select.wav");
+        //ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Mouse_select.wav");
         lastHoveredText = text;
     }
     else if (!isHovered && lastHoveredText == text) {

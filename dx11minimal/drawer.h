@@ -201,7 +201,7 @@ namespace drawer
             finalStarRad *= heroScale;
             sz *= heroScale;
         }
-
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
         Shaders::vShader(1);
         Shaders::pShader(1);
         Shaders::gShader(0);
@@ -1522,7 +1522,7 @@ namespace drawer
             if (!isPressed)
             {
                 isPressed = true;
-                ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Mouse_click1.wav");
+                //ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Mouse_click1.wav");
                 point3d mousePos = point3d(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1),0);
                 DWORD curTime = timer::GetCounter();
 
@@ -1999,7 +1999,7 @@ namespace drawer
                 }
             }
 
-            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Damage.wav");
+           // ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Damage.wav");
         }
     }
 
@@ -2406,6 +2406,86 @@ namespace drawer
         ConstBuf::Update(5, ConstBuf::global);
     }
 
+    std::vector<StarProjectile> enemyPathStars;
+
+    // Функция для создания дорожки из звезд
+    void CreateEnemyPathEffect(point3d startPos, point3d targetPos) {
+        enemyPathStars.clear();
+
+        // Вычисляем направление и расстояние
+        point3d direction = (targetPos - startPos).normalized();
+        float distance = (targetPos - startPos).magnitude();
+
+        // Создаем звезды вдоль пути
+        int starCount = 20; // Количество звезд в дорожке
+        float step = distance / starCount;
+
+        for (int i = 0; i < starCount; i++) {
+            StarProjectile pathStar;
+
+            // Позиция вдоль пути
+            pathStar.position = startPos + direction * (step * i);
+            pathStar.radius = 300.0f + GetRandom(-50, 50); // Разный размер
+            pathStar.creationTime = currentTime;
+            pathStar.lifetime = 2000.0f; // 2 секунды жизни
+
+            // Случайное смещение для естественности
+            point3d randomOffset = point3d(
+                GetRandom(-500, 500),
+                GetRandom(-100, 100),
+                GetRandom(-200, 200)
+            );
+            pathStar.position += randomOffset;
+
+            enemyPathStars.push_back(pathStar);
+        }
+    }
+
+    // Обновление дорожки
+    void UpdateEnemyPathEffect(float deltaTime) {
+        for (auto it = enemyPathStars.begin(); it != enemyPathStars.end();) {
+            StarProjectile& star = *it;
+
+            // Уменьшаем размер со временем
+            star.radius *= 0.99f;
+
+            // Удаляем старые звезды
+            if (currentTime - star.creationTime > star.lifetime || star.radius < 10.0f) {
+                it = enemyPathStars.erase(it);
+            }
+            else {
+                ++it;
+            }
+        }
+    }
+
+    // Отрисовка дорожки
+    void RenderEnemyPathEffect() {
+        if (enemyPathStars.empty()) return;
+
+        Shaders::vShader(15);
+        Shaders::pShader(15);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+        // Устанавливаем красный цвет для ВСЕХ звезд дорожки
+        ConstBuf::global[1] = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
+        ConstBuf::ConstToPixel(5);
+
+        for (auto& star : enemyPathStars) {
+            float lifeProgress = (currentTime - star.creationTime) / star.lifetime;
+            float alpha = 1.0f - lifeProgress;
+
+            // Передаем прозрачность через размер
+            float renderRadius = star.radius * alpha;
+            star.position.draw(star.position, renderRadius);
+        }
+
+        // Восстанавливаем
+        ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
+    }
+
     struct MovementParticle {
         point3d position;
         point3d velocity;
@@ -2619,6 +2699,14 @@ namespace drawer
         case gameState_::MainMenu: {
 
             StartMenu();
+            Constellation& l = *starSet[18];
+            TeleportEnemy(point3d{ 3700.f,-10000.f,-120000.f });
+            Enemy::enemyData.currentRotation = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), PI);
+            
+            l.Transform = CreateEnemyToWorldMatrix(l,7000.f);
+            Enemy::enemyData.currentRotation = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), 0);
+
+            drawConstellation(l, false, 200.f, 30);
             mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\GG_C.mp3"), NULL, 0, NULL);
             break;
         }
@@ -2696,7 +2784,7 @@ namespace drawer
             UpdateAttack(deltaTime);
             DrawSwordAttack();
 
-            drawConstellation(playerConst);
+            drawConstellation(playerConst,false,10.f , 7.f );
 
             std::string curentSignstring = zodiacSignToString(player_sign);
             TextOutA(window.context, window.width * 5 / 6, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());
@@ -2726,12 +2814,13 @@ namespace drawer
             c.Transform = CreateEnemyToWorldMatrix(c);
 
             Constellation& h = *starSet[17];
+            Enemy::enemyData.currentRotation = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), PI);
             TeleportEnemy(point3d{ -6000.f,-5000.f,-115000.f });
             h.Transform = CreateEnemyToWorldMatrix(h);
+            Enemy::enemyData.currentRotation = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), 0);
 
-
-            drawConstellation(c, false, 200.f, 40);
-            //drawConstellation(h, false, 200.f, 40);
+            drawConstellation(c, false, 200.f, 80);
+            drawConstellation(h, false, 200.f, 40);
             initContentData();
             renderContent();
             handleInput();
@@ -2971,9 +3060,14 @@ namespace drawer
             RenderHeroDamageParticles();
             playerConst.UpdateShaking();
 
+            if (enemyAI.data.isPreparingAttack) {
+                CreateEnemyPathEffect(Enemypos, enemyAI.data.delayedAttackTarget);
+            }
+            UpdateEnemyPathEffect(deltaTime);
+            RenderEnemyPathEffect();
+
             if (enemyAI.data.isShockwaveActive == true) {
                 CreateAdvancedShockwave(Enemypos, enemyAI.data.shockwaveRadius);
-                enemyAI.data.isShockwaveActive = false;
                 wasFPressed = false;
                 CameraTargeting::StopTargeting();
             }
@@ -3111,7 +3205,7 @@ namespace drawer
             drawHPBar(playerHP);
             drawEnemyBar(enemyTotalHP);
             
-            drawConstellation(*starSet[player_sign]);
+            drawConstellation(*starSet[player_sign], false , 10.f,7.f);
             drawString(enemyH.c_str(), window.width / 2, 100, 2.f, true);
             drawString("ARIES", window.width / 2, 50, 2.f, true);
             drawString("Press < T > to enter tutorial", (100. / 2560) * window.width, (100. / 1440) * window.height, 1.f, false);
@@ -3148,8 +3242,27 @@ namespace drawer
            //    drawString("recharge", window.width * .9, window.height * .85, 1., false);
            //    drawString(cdTimeOutText.c_str(), window.width * .9, window.height * .9, 3., false);
            // }
-            
+            if (Enemy::enemyData.isShockwaveActive) {
+                point3d shockwaveCenter = point3d(Enemypos.x, Enemy::enemyData.lastOrbitPosition.y, Enemypos.z);
 
+                // Визуализация радиуса (можно убрать после отладки)
+                Shaders::vShader(4);
+                Shaders::pShader(4);
+                ConstBuf::global[2] = XMFLOAT4(1.0f, 0.0f, 0.0f, 0.3f); // Красный полупрозрачный
+                ConstBuf::Update(5, ConstBuf::global);
+                ConstBuf::ConstToPixel(5);
+
+                // Рисуем круг ударной волны
+                for (int i = 0; i < 36; i++) {
+                    float angle1 = i * (2 * PI / 36);
+                    float angle2 = (i + 1) * (2 * PI / 36);
+
+                    point3d p1 = shockwaveCenter + point3d(cos(angle1), 0, sin(angle1)) * Enemy::enemyData.shockwaveRadius;
+                    point3d p2 = shockwaveCenter + point3d(cos(angle2), 0, sin(angle2)) * Enemy::enemyData.shockwaveRadius;
+
+                    drawLine(p1, p2, 100.0f);
+                }
+            }
             UpdateGame();
 
             break;
@@ -3278,7 +3391,7 @@ namespace drawer
 
             Constellation& c = *starSet[player_sign];
             c.Transform = CreateHeroToWorldMatrix(c);
-            drawConstellation(*starSet[player_sign]);
+            drawConstellation(*starSet[player_sign],false, 10.f,7.f);
 
             std::string curentSignstring = zodiacSignToString(currentEnemyID);
             //drawString(curentSignstring.c_str(), window.width / 1.1, window.height / 10., 1, true);

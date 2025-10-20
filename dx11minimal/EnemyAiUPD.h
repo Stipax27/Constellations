@@ -64,6 +64,12 @@ namespace Enemy {
 
 
     void EnemyAI::AiUpdate(float deltaTime, point3d& heroPosition, point3d& enemyPositions , float& player) {
+
+        data.playerPosHistory.push_back(heroPosition);
+        if (data.playerPosHistory.size() > 30) {
+            data.playerPosHistory.erase(data.playerPosHistory.begin());
+        }
+
         data.playerDistance = (heroPosition - enemyPositions).magnitude();
         data.playerVisible = (data.playerDistance < 40000.0f);
 
@@ -85,20 +91,37 @@ namespace Enemy {
             break;
 
         case AIState::ATTACK:
-            AttackPlayer(deltaTime, heroPosition, enemyPositions, player);
-            if (data.attackTimer <= 0.0f) {
-                data.currentState = AIState::ORBIT;
-                data.attackCooldown = 4000.0f; // Следующая атака через 5 секунды
+            if (data.isPreparingAttack) {
+               
+                data.prepareAttackTimer -= deltaTime;
+
+                
+                point3d toTarget = data.delayedAttackTarget - enemyPositions;
+                UpdateRotation(toTarget.normalized());
+
+                // Когда подготовка завершена - начинаем атаку
+                if (data.prepareAttackTimer <= 0.0f) {
+                    data.isPreparingAttack = false;
+                    data.attackTimer = 1500.0f; // Длительность полета
+                }
+            }
+            else {
+                // Фаза полета к цели
+                AttackPlayer(deltaTime, heroPosition, enemyPositions, player);
+                if (data.attackTimer <= 0.0f) {
+                    data.currentState = AIState::ORBIT;
+                    data.attackCooldown = 4000.0f;
+                    data.isPreparingAttack = false;
+                }
             }
             break;
-
         case AIState::JUMP_ATTACK:
             JumpAttack(deltaTime, heroPosition, enemyPositions, player);
             if (data.attackTimer <= 0.0f) {
                 data.currentState = AIState::ORBIT;
                 data.attackCooldown = 5000.0f;
                 data.isJumping = false;
-                data.isShockwaveActive = false;
+               
             }
             break;
 
@@ -106,6 +129,7 @@ namespace Enemy {
             Explosion( deltaTime, enemyPositions, player);
             if (data.attackTimer <= 0.0f) {
                 data.currentState = AIState::ORBIT;
+                data.attackCooldown = 5000.0f;
 
             }
             break;
@@ -192,12 +216,23 @@ namespace Enemy {
             // Генерируем случайное число от 0 до 100
             int attackType = rand() % 100;
 
-            if (attackType < 50) { // 50% - обычная атака
-                AttakDir = heroPos - enemyPos;
+            if (attackType < 50) { // Обычная атака с подготовкой
+                // Берем позицию игрока 0.5 секунд назад (примерно 15 кадров назад)
+                if (data.playerPosHistory.size() > 15) {
+                    data.delayedAttackTarget = data.playerPosHistory[data.playerPosHistory.size() - 16];
+                }
+                else {
+                    data.delayedAttackTarget = heroPos; // Если истории нет - текущая позиция
+                }
+
+                AttakDir = data.delayedAttackTarget - enemyPos;
                 data.currentState = AIState::ATTACK;
-                data.attackTimer = 3000.f; // Только 1 секунда!
+                data.isPreparingAttack = true;
+                data.prepareAttackTimer = 800.0f; // 0.8 секунд подготовки
+                data.attackTimer = 2300.0f; // Общее время атаки
                 data.lastOrbitPosition = enemyPos;
                 data.attackCooldown = 0.0f;
+              
             }
             else if (attackType < 80) { // 30% - атака в прыжке (50-79)
                 AttakDir = heroPos - enemyPos;
@@ -207,7 +242,7 @@ namespace Enemy {
                 data.isJumping = true;
                 data.jumpHeight = 0.0f;
                 data.attackCooldown = 0.0f;
-                
+
             }
             else { // 20% - взрыв (80-99)
                 AttakDir = heroPos - enemyPos;
@@ -223,48 +258,37 @@ namespace Enemy {
     }
 
     void EnemyAI::AttackPlayer(float deltaTime, point3d& heroPos, point3d& enemyPos, float& player) {
-        // Проверяем таймер
         if (data.attackTimer <= 0.0f) return;
 
-        // Обновляем направление к игроку каждый кадр
-        point3d attackDir = (heroPos - enemyPos).normalized();
+        // Летим к запомненной позиции (delayedAttackTarget)
+        point3d attackDir = (data.delayedAttackTarget - enemyPos).normalized();
 
-        // Увеличиваем скорость атаки и дистанцию проверки
-        float moveDistance = data.chaseSpeed * 10.0f * deltaTime; // Увеличили скорость
+        float moveDistance = data.chaseSpeed * 12.0f * deltaTime;
         enemyPos += attackDir * moveDistance;
 
-        // Проверяем столкновение с увеличенной дистанцией
+        // Проверяем столкновение с реальным игроком
         float distanceToPlayer = (heroPos - enemyPos).magnitude();
 
-        // Увеличиваем дистанцию атаки и добавляем отладочную информацию
-        if (distanceToPlayer < 3000.0f) { // Увеличили с 1000 до 3000
+        if (distanceToPlayer < 3000.0f) {
             bool attackBlocked = (current_weapon == weapon_name::Shield && energy >= energyCost.shieldBlock);
 
             if (!attackBlocked) {
                 data.isAttacking = true;
                 player -= data.DAMAGE_AI;
-                
             }
             else {
                 player -= 0.1f;
                 energy -= 100.f;
-               
             }
 
-            // Завершаем атаку после попадания
             data.attackTimer = 0.0f;
-
-           
         }
-        
 
-        // Обновляем вращение
         UpdateRotation(attackDir);
-
-        // Обновляем матрицу трансформации
         data.enemyConstellationOffset = XMMatrixRotationQuaternion(data.currentRotation) *
             XMMatrixTranslation(enemyPos.x, enemyPos.y, enemyPos.z);
     }
+
 
     void EnemyAI::JumpAttack(float deltaTime, point3d& heroPos, point3d& enemyPos, float& player) {
         // Фаза прыжка вверх
@@ -276,18 +300,16 @@ namespace Enemy {
             XMVECTOR upDir = XMVectorSet(0, 1, 0, 0);
             data.currentRotation = XMQuaternionRotationAxis(data.RightEn, XM_PI / 4);
         }
-        // Фаза падения и создания ударной волны
-        else if (!data.isShockwaveActive) {
+        else if (data.isShockwaveActive == false) {
             data.jumpHeight -= data.jumpSpeed * deltaTime;
             enemyPos.y += data.jumpSpeed * deltaTime; // Обратите внимание: это УВЕЛИЧИВАЕТ Y
-
+            
 
             if (enemyPos.y <= data.lastOrbitPosition.y) {
                 enemyPos.y = data.lastOrbitPosition.y;
                 data.isShockwaveActive = true;
                 data.shockwaveStartTime = currentTime;
                 data.shockwaveRadius = 0.0f;
-
                 // Восстанавливаем нормальную ориентацию
                 point3d toPlayer = heroPos - enemyPos;
                 UpdateRotation(toPlayer.normalized());
@@ -297,34 +319,37 @@ namespace Enemy {
         else if (data.isShockwaveActive) {
             data.shockwaveRadius += data.shockwaveSpeed * deltaTime;
 
-            // УВЕЛИЧИВАЕМ радиус проверки и добавляем отладку
-            float shockwaveDistance = (heroPos - enemyPos).magnitude();
-            bool isPlayerInRange = (shockwaveDistance < data.shockwaveRadius + 15000.0f); // + буфер
+            // Центр ударной волны - на земле под врагом
+            point3d shockwaveCenter = point3d(enemyPos.x, data.lastOrbitPosition.y, enemyPos.z);
 
-            if (isPlayerInRange && !data.damageApplied) { // Защита от многократного урона
+            // Проверяем расстояние от центра волны до игрока
+            float distanceToShockwave = (heroPos - shockwaveCenter).magnitude();
+            bool isPlayerInRange = (distanceToShockwave <= data.shockwaveRadius*1.5f);
+
+
+            if (isPlayerInRange && !data.damageApplied) {
                 bool attackBlocked = (current_weapon == weapon_name::Shield && energy >= energyCost.shieldBlock);
 
                 if (!attackBlocked) {
                     data.isAttacking = true;
                     player -= data.DAMAGE_AI * 2.f;
-                    data.damageApplied = true; // Помечаем, что урон применен
-                    //ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Damage.wav");
+                    data.damageApplied = true;
+                    
+                   
 
-                    // Добавляем визуальный эффект
-                    //point3d damageDirection = (heroPos - enemyPos).normalized();
-                    //CreateConstellationsDamageEffect(heroPos, damageDirection);
                 }
                 else {
                     player -= 0.1f;
                     energy -= 200.f;
                 }
+            
             }
 
             // Завершаем атаку, когда волна достигла максимума
             if (data.shockwaveRadius >= data.maxShockwaveRadius) {
                 data.isShockwaveActive = false;
                 data.attackTimer = 0.0f;
-                data.damageApplied = false; // Сбрасываем для следующей атаки
+                data.damageApplied = false;
             }
         }
 
