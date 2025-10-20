@@ -57,7 +57,7 @@ public:
 				}*/
 
 				transform->position += physicBody->velocity * deltaTime;
-				transform->qRotation = XMQuaternionNormalize(XMQuaternionMultiply(transform->qRotation, physicBody->qAngVelocity * deltaTime));
+				transform->mRotation = XMMatrixMultiply(physicBody->mAngVelocity, transform->mRotation);
 			}
 		}
 

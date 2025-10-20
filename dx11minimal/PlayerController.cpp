@@ -113,7 +113,7 @@ void PlayerController::ProcessInput()
 	}
 
 	if (roll != 0) {
-		XMVECTOR lookVector = XMQuaternionRotationAxis(playerTransform->GetLookVector(), roll);
+		//XMVECTOR lookVector = XMQuaternionRotationAxis(playerTransform->GetLookVector(), roll);
 		//camera->AddQuaternionRotation(XMVectorGetX(lookVector), XMVectorGetY(lookVector), XMVectorGetZ(lookVector), XMVectorGetW(lookVector));
 	}
 }
@@ -121,14 +121,15 @@ void PlayerController::ProcessInput()
 
 void PlayerController::ProcessCamera()
 {
+	//point3d camPos = playerTransform->position - playerTransform->GetLookVector() * 10;
+	//camera->SetPosition(camPos.x, camPos.y, camPos.z);
+
 	camera->SetPosition(playerTransform->position.x, playerTransform->position.y, playerTransform->position.z - 10);
 }
 
 
 void PlayerController::ProcessMouse()
 {
-	float dPitch = 0.0f, dYaw = 0.0f;
-
 	float x = mouse->pos.x - window->width / 2;
 	float y = mouse->pos.y - window->height / 2;
 
@@ -142,15 +143,14 @@ void PlayerController::ProcessMouse()
 		}
 
 		float k = (length - CURSOR_IGNORE_ZONE) / MAX_CURSOR_DEVIATION;
+		mousePos *= SENSIVITY * k;
 
-		dYaw = mousePos.x;
-		dPitch = mousePos.y;
+		//XMVECTOR addRotation = eulerToQuanternion(dPitch, dYaw, 0) * SENSIVITY * k;
+		XMMATRIX additionalRotation = XMMatrixRotationRollPitchYaw(XMConvertToRadians(mousePos.y), XMConvertToRadians(mousePos.x), 0);
 
-		XMVECTOR addRotation = eulerToQuanternion(dPitch, dYaw, 0) * SENSIVITY * k;
-		//playerPhysicBody->qAngVelocity = XMQuaternionMultiply(playerTransform->qRotation, addRotation);
+		playerPhysicBody->mAngVelocity = additionalRotation;
 
-		camera->AddMatrixRotation(XMMatrixRotationY(XMConvertToRadians(dYaw * SENSIVITY * k)));
-		camera->AddMatrixRotation(XMMatrixRotationX(XMConvertToRadians(dPitch * SENSIVITY * k)));
+		camera->AddMatrixRotation(additionalRotation);
 	}
 	else {
 		//Camera::state.n = lerp(Camera::state.n, 0, 0.2f);

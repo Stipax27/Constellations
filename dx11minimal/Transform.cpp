@@ -3,6 +3,7 @@
 
 #include "component.h"
 #include "Point3d.h"
+#include <DirectXMath.h>
 
 
 struct Transform : Component
@@ -10,28 +11,28 @@ struct Transform : Component
 	point3d position = point3d();
 	point3d scale = point3d(1.0f, 1.0f, 1.0f);
 
-    XMVECTOR qRotation = XMQuaternionRotationAxis(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), 0);
+    DirectX::XMVECTOR qRotation = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), 0);
 
-    XMMATRIX mRotation = XMMATRIX{
+    DirectX::XMMATRIX mRotation = DirectX::XMMATRIX{
         1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0,
         0, 0, 0, 1
     };
 
-    XMVECTOR GetLookVector()
+    point3d GetLookVector()
 	{
-        return XMVector3Rotate(XMVectorSet(0, 0, 1, 0), qRotation);
+        return point3d(mRotation.r[0].m128_f32[2], mRotation.r[1].m128_f32[2], mRotation.r[2].m128_f32[2]);
 	}
 
-    XMVECTOR GetUpVector()
+    point3d GetUpVector()
     {
-        return XMVector3Rotate(XMVectorSet(0, 1, 0, 0), qRotation);
+        return point3d(mRotation.r[0].m128_f32[1], mRotation.r[1].m128_f32[1], mRotation.r[2].m128_f32[1]);
     }
 
-    XMVECTOR GetRightVector()
+    point3d GetRightVector()
     {
-        return XMVector3Rotate(XMVectorSet(1, 0, 0, 0), qRotation);
+        return point3d(mRotation.r[0].m128_f32[0], mRotation.r[1].m128_f32[0], mRotation.r[2].m128_f32[0]);
     }
 };
 

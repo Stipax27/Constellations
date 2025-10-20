@@ -3,9 +3,6 @@
 
 #include <sstream>
 #include <corecrt_math.h>
-#include <DirectXMath.h>
-
-using namespace DirectX;
 
 struct point3d {
     float x = 0.0f;

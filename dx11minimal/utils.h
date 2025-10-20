@@ -6,6 +6,7 @@
 // INCLUDES //
 //////////////
 #include <corecrt_math.h>
+#include <DirectXMath.h>
 #include "Point3d.h"
 
 
@@ -22,6 +23,6 @@ float fract(float);
 float lerp(float x1, float x2, float a);
 float degreesToRadians(float);
 point3d quaternionToEuler(float x, float y, float z, float w);
-XMVECTOR eulerToQuanternion(float x, float y, float z);
+DirectX::XMVECTOR eulerToQuanternion(float x, float y, float z);
 
 #endif

@@ -8,10 +8,7 @@
 // INCLUDES //
 //////////////
 #include<string>
-#include <DirectXMath.h>
-
 using namespace std;
-using namespace DirectX;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Struct name: Component
