@@ -1,7 +1,7 @@
 #ifndef DX11_H
 #define DX11_H
 
-
+#define _XM_SSE_INTRINSICS_ 
 #include <d3d11.h>
 #include <d2d1.h>
 #include <d3dcompiler.h>
