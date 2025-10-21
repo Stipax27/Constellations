@@ -815,30 +815,114 @@ namespace drawer
              }
 
              case weapon_name::Shield: {
-
                  Shaders::vShader(15);
                  Shaders::pShader(15);
 
                  ConstBuf::global[1] = star.color;
+                 ConstBuf::global[2] = star.color;
                  ConstBuf::Update(5, ConstBuf::global);
                  ConstBuf::ConstToPixel(5);
 
+                 // Основная звезда щита
                  star.position.draw(star.position, finalRadius);
 
-                     for (int i = 0; i < 36; i++) {
-                         float angle = i * (2 * PI / 36);
-                         float nextAngle = (i + 1) * (2 * PI / 36);
+                 Shaders::vShader(4);
+                 Shaders::pShader(4);
 
-                         point3d local1(cos(angle), sin(angle), 0);
-                         point3d local2(cos(nextAngle), sin(nextAngle), 0);
+                 // Создаем сложную форму асписа с двумя глубокими выемками
+                 const int segments = 64;
+                 const float mainRadius = star.radius;
+                 const float notchDepth = mainRadius * 0.4f; // Более глубокие выемки
+                 const float notchWidth = PI * 0.25f; // Шире выемки
 
-                         point3d shield1 = star.position + (star.right * local1.x + star.up * local1.y) * star.radius;
-                         point3d shield2 = star.position + (star.right * local2.x + star.up * local2.y) * star.radius;
+                 std::vector<point3d> outerPoints;
+                 std::vector<point3d> innerPoints;
 
-                         drawLine(shield1, shield2, 30.f);
+                 // Внешний контур с выемками
+                 for (int i = 0; i < segments; i++) {
+                     float angle = (i / (float)segments) * 2 * PI;
+
+                     // Две симметричные выемки для копья
+                     float notch1Angle = PI * 0.5f;   // Верхняя выемка (90°)
+                     float notch2Angle = PI * 1.5f;   // Нижняя выемка (270°)
+
+                     float currentRadius = mainRadius;
+
+                     // Проверяем близость к выемкам
+                     float distToNotch1 = fabs(fmod(angle - notch1Angle + PI, 2 * PI) - PI);
+                     float distToNotch2 = fabs(fmod(angle - notch2Angle + PI, 2 * PI) - PI);
+
+                     if (distToNotch1 < notchWidth || distToNotch2 < notchWidth) {
+                         float notchProgress = 0.0f;
+                         if (distToNotch1 < notchWidth) {
+                             notchProgress = distToNotch1 / notchWidth;
+                         }
+                         else {
+                             notchProgress = distToNotch2 / notchWidth;
+                         }
+
+                         // Синусоидальное углубление для плавных выемок
+                         currentRadius = mainRadius - notchDepth * sinf(notchProgress * PI);
                      }
-                     
-                     
+
+                     point3d point = star.position +
+                         (star.right * cosf(angle) + star.up * sinf(angle)) * currentRadius;
+                     outerPoints.push_back(point);
+                 }
+
+                 // Внутренний контур (для объема)
+                 for (int i = 0; i < segments; i++) {
+                     float angle = (i / (float)segments) * 2 * PI;
+                     float innerRadius = mainRadius * 0.7f;
+
+                     point3d point = star.position +
+                         (star.right * cosf(angle) + star.up * sinf(angle)) * innerRadius;
+                     innerPoints.push_back(point);
+                 }
+
+                 // Рисуем внешний контур
+                 for (int i = 0; i < segments; i++) {
+                     int next_i = (i + 1) % segments;
+                     drawLine(outerPoints[i], outerPoints[next_i], 35.f);
+                 }
+
+                 // Рисуем внутренний контур
+                 for (int i = 0; i < segments; i++) {
+                     int next_i = (i + 1) % segments;
+                     drawLine(innerPoints[i], innerPoints[next_i], 25.f);
+                 }
+
+                 // Соединяем внешний и внутренний контуры радиальными линиями
+                 for (int i = 0; i < segments; i += 4) {
+                     drawLine(outerPoints[i], innerPoints[i], 20.f);
+                 }
+
+                 // Декоративные элементы - греческие узоры
+                 Shaders::vShader(1);
+                 Shaders::pShader(1);
+
+                 // Центральный умбон (рукоять)
+                 ConstBuf::global[1] = XMFLOAT4(0.8f, 0.6f, 0.3f, 1.0f); // Золотистый
+                 ConstBuf::Update(5, ConstBuf::global);
+                 star.position.draw(star.position, finalRadius * 0.3f);
+
+                 // Декоративные точки по краю
+                 Shaders::vShader(15);
+                 Shaders::pShader(15);
+                 ConstBuf::global[1] = XMFLOAT4(0.9f, 0.7f, 0.4f, 1.0f);
+                 ConstBuf::Update(5, ConstBuf::global);
+
+                 for (int i = 0; i < 12; i++) {
+                     float angle = (i / 12.0f) * 2 * PI;
+                     // Пропускаем точки в области выемок
+                     if (fabs(fmod(angle - PI * 0.5f + PI, 2 * PI) - PI) < notchWidth * 1.2f) continue;
+                     if (fabs(fmod(angle - PI * 1.5f + PI, 2 * PI) - PI) < notchWidth * 1.2f) continue;
+
+                     point3d decorPoint = star.position +
+                         (star.right * cosf(angle) + star.up * sinf(angle)) * mainRadius * 0.9f;
+                     decorPoint.draw(decorPoint, finalRadius * 0.2f);
+                 }
+
                  break;
              }
 
@@ -1247,7 +1331,7 @@ namespace drawer
                         newStar.weapon = weapon_name::Fists;
                         newStar.isNew = true;
                         newStar.creationTime = currentTime;
-                        newStar.color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // ГОЛУБОЙ для кулаков
+                        newStar.color = XMFLOAT4(0.3f, 0.3f, 1.0f, 1.0f); // ГОЛУБОЙ для кулаков
 
                         newStar.up = point3d(XMVectorGetX(Camera::state.Up),
                             XMVectorGetY(Camera::state.Up),
@@ -1286,7 +1370,7 @@ namespace drawer
                             newStar.direction = newDirection;
                             newStar.radius = finalRadius;
                             newStar.weapon = weapon_name::Sword;
-                            newStar.color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // КРАСНЫЙ для меча
+                            newStar.color = XMFLOAT4(1.0f, 0.3f, 0.3f, 1.0f); // КРАСНЫЙ для меча
 
                             point3d up = point3d(XMVectorGetX(Camera::state.Up),
                                 XMVectorGetY(Camera::state.Up),
@@ -1308,7 +1392,7 @@ namespace drawer
                         newStar.direction = newDirection;
                         newStar.radius = finalRadius;
                         newStar.weapon = weapon_name::Shield;
-                        newStar.color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // КОРИЧНЕВЫЙ для щита
+                        newStar.color = XMFLOAT4(0.9f, 0.5f, 0.1f, 1.0f); // КОРИЧНЕВЫЙ для щита
 
                         newStar.up = point3d(XMVectorGetX(Camera::state.Up),
                             XMVectorGetY(Camera::state.Up),
@@ -1334,7 +1418,7 @@ namespace drawer
                         newStar.up = fixedUp;
                         newStar.right = fixedRight;
                         newStar.creationTime = currentTime;
-                        newStar.color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // ЗЕЛЕНЫЙ для лука
+                        newStar.color = XMFLOAT4(0.3f, 1.0f, 0.3f, 1.0f); // ЗЕЛЕНЫЙ для лука
                         ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Bow.wav");
                         attackStars.push_back(newStar);
                         break;
@@ -2151,6 +2235,10 @@ namespace drawer
         Shaders::vShader(4);
         Shaders::pShader(4);
 
+        ConstBuf::global[2] = XMFLOAT4(0.9f, 0.5f, 0.1f, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
+        ConstBuf::ConstToPixel(5);
+
         static bool isHooked = false;
         static float currentSpeed = 0.0f;
         const float maxSpeed = 30.0f;
@@ -2270,12 +2358,12 @@ namespace drawer
                 Shaders::pShader(1);
                 Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 
-                XMFLOAT4 shieldColor = XMFLOAT4(0.1f, 0.3f, 0.8f, 0.3f);
+                XMFLOAT4 shieldColor = XMFLOAT4(0.9f, 0.5f, 0.1f, 0.3f);
                 ConstBuf::global[1] = shieldColor;
                 ConstBuf::Update(5, ConstBuf::global);
                 ConstBuf::ConstToPixel(5);
 
-                shieldPos.draw(shieldPos, 1500.0f);
+                shieldPos.draw(shieldPos, 500.0f);
 
                 // Восстанавливаем цвет
                 ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -2445,8 +2533,8 @@ namespace drawer
 
             // Случайное смещение для естественности
             point3d randomOffset = point3d(
-                GetRandom(-500, 500),
-                GetRandom(-100, 100),
+                GetRandom(-1000, 1000),
+                GetRandom(700, 1000),
                 GetRandom(-200, 200)
             );
             pathStar.position += randomOffset;
@@ -2558,7 +2646,7 @@ namespace drawer
             particle.size = particle.initialSize;
             particle.lifetime = GetRandom(800, 1200);
             particle.creationTime = currentTime;
-            particle.color = XMFLOAT4(0.4f, 0.6f, 1.0f, 0.7f);
+            particle.color = XMFLOAT4(0.1f, 0.6f, 0.8f, 0.9f);
 
             movementParticles.push_back(particle);
         }
@@ -2581,7 +2669,7 @@ namespace drawer
 
             // Затухание размера и прозрачности
             particle.size = particle.initialSize * (1.0f - lifeProgress);
-            particle.color = XMFLOAT4(0.0f, 0.5f, 1.0f, 0.7f);
+           
 
             // Медленное затухание скорости
             particle.velocity *= 0.995f;
@@ -2671,6 +2759,314 @@ namespace drawer
         }
     }
 
+
+    // Структура для управления иконкой змеи
+    // Структура для управления иконкой змеи Аспида
+    struct AspidSnakeIcon {
+        point3d position;
+        float size;
+        float time;
+        bool isActive;
+        XMFLOAT4 baseColor;
+        XMFLOAT4 eyeGlowColor;
+        float aggressionLevel; // Уровень агрессии (0-1)
+    };
+
+    AspidSnakeIcon aspidSnakeIcon;
+
+    // Инициализация иконки змеи Аспида
+    void InitAspidSnakeIcon() {
+        aspidSnakeIcon.position = point3d(100.0f, 100.0f, 0.0f);
+        aspidSnakeIcon.size = 120.0f; // Больший размер для более детальной прорисовки
+        aspidSnakeIcon.time = 0.0f;
+        aspidSnakeIcon.isActive = true;
+        aspidSnakeIcon.baseColor = XMFLOAT4(0.1f, 0.7f, 0.3f, 1.0f); // Ядовито-зеленый
+        aspidSnakeIcon.eyeGlowColor = XMFLOAT4(1.0f, 0.2f, 0.1f, 1.0f); // Кроваво-красный
+        aspidSnakeIcon.aggressionLevel = 0.0f;
+    }
+
+    // Функция для рисования иконки змеи Аспида
+    void DrawAspidSnakeIcon() {
+        if (!aspidSnakeIcon.isActive) return;
+
+        // Обновляем время для анимации
+        aspidSnakeIcon.time += 0.016f;
+
+        float iconX = aspidSnakeIcon.position.x;
+        float iconY = aspidSnakeIcon.position.y;
+        float baseSize = aspidSnakeIcon.size;
+
+        // Основные параметры головы Аспида
+        const float headWidth = baseSize * 0.8f;
+        const float headHeight = baseSize * 0.6f;
+        const float jawHeight = baseSize * 0.3f;
+
+        // Анимация дыхания и агрессии
+        float breathPulse = 0.5f + 0.5f * sinf(aspidSnakeIcon.time * 2.0f);
+        float aggressionPulse = 0.7f + 0.3f * sinf(aspidSnakeIcon.time * 4.0f);
+
+        // Динамический уровень агрессии (можно менять в зависимости от состояния игры)
+        aspidSnakeIcon.aggressionLevel = 0.3f + 0.4f * breathPulse;
+
+        // === РИСУЕМ ОСНОВНУЮ ФОРМУ ГОЛОВЫ ===
+
+        // Основная треугольная форма головы
+        point3d headTop = { iconX + headWidth * 0.5f, iconY, 0 };
+        point3d headLeft = { iconX, iconY + headHeight, 0 };
+        point3d headRight = { iconX + headWidth, iconY + headHeight, 0 };
+
+        // Чешуйчатая текстура на голове
+        Shaders::vShader(4);
+        Shaders::pShader(4);
+        Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
+
+        // Основной цвет головы с градиентом
+        XMFLOAT4 headColor = XMFLOAT4(
+            aspidSnakeIcon.baseColor.x,
+            aspidSnakeIcon.baseColor.y * (0.8f + 0.2f * breathPulse),
+            aspidSnakeIcon.baseColor.z,
+            1.0f
+        );
+
+        // Рисуем треугольник головы
+        ConstBuf::global[2] = headColor;
+        ConstBuf::Update(5, ConstBuf::global);
+        ConstBuf::ConstToPixel(5);
+
+        drawLine(headTop, headLeft, headHeight * 0.15f);
+        drawLine(headTop, headRight, headHeight * 0.15f);
+        drawLine(headLeft, headRight, headHeight * 0.1f);
+
+        // === РИСУЕМ ЧЕЛЮСТИ ===
+
+        // Верхняя челюсть
+        point3d upperJawLeft = { iconX + headWidth * 0.2f, iconY + headHeight * 0.3f, 0 };
+        point3d upperJawRight = { iconX + headWidth * 0.8f, iconY + headHeight * 0.3f, 0 };
+
+        // Нижняя челюсть (открывается при агрессии)
+        float jawOpen = aspidSnakeIcon.aggressionLevel * 0.4f;
+        point3d lowerJawLeft = { iconX + headWidth * 0.1f, iconY + headHeight * 0.7f + jawOpen * 20.0f, 0 };
+        point3d lowerJawRight = { iconX + headWidth * 0.9f, iconY + headHeight * 0.7f + jawOpen * 20.0f, 0 };
+
+        XMFLOAT4 jawColor = XMFLOAT4(
+            headColor.x * 0.7f,
+            headColor.y * 0.7f,
+            headColor.z * 0.7f,
+            1.0f
+        );
+
+        ConstBuf::global[2] = jawColor;
+        ConstBuf::Update(5, ConstBuf::global);
+
+        // Верхняя челюсть
+        drawLine(upperJawLeft, upperJawRight, headHeight * 0.08f);
+
+        // Нижняя челюсть
+        drawLine(lowerJawLeft, lowerJawRight, headHeight * 0.1f);
+
+        // Боковые линии челюстей
+        drawLine(headLeft, lowerJawLeft, headHeight * 0.06f);
+        drawLine(headRight, lowerJawRight, headHeight * 0.06f);
+
+        // === РИСУЕМ ГЛАЗА ===
+
+        Shaders::vShader(1);
+        Shaders::pShader(1);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+        // Позиции глаз
+        float eyeY = iconY + headHeight * 0.4f;
+        float eyeSize = baseSize * 0.12f;
+
+        point3d leftEye = { iconX + headWidth * 0.3f, eyeY, 0 };
+        point3d rightEye = { iconX + headWidth * 0.7f, eyeY, 0 };
+
+        // Свечение глаз
+        float eyeGlowIntensity = 0.5f + 0.5f * aggressionPulse;
+        XMFLOAT4 eyeGlowColor = XMFLOAT4(
+            aspidSnakeIcon.eyeGlowColor.x,
+            aspidSnakeIcon.eyeGlowColor.y,
+            aspidSnakeIcon.eyeGlowColor.z,
+            eyeGlowIntensity * 0.8f
+        );
+
+        // Внешнее свечение глаз
+        ConstBuf::global[1] = eyeGlowColor;
+        ConstBuf::Update(5, ConstBuf::global);
+        leftEye.draw(leftEye, eyeSize * 2.0f);
+        rightEye.draw(rightEye, eyeSize * 2.0f);
+
+        // Основные глаза
+        XMFLOAT4 eyeColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        ConstBuf::global[1] = eyeColor;
+        ConstBuf::Update(5, ConstBuf::global);
+        leftEye.draw(leftEye, eyeSize);
+        rightEye.draw(rightEye, eyeSize);
+
+        // Зрачки (вертикальные, как у змеи)
+        float pupilOffset = sinf(aspidSnakeIcon.time * 3.0f) * (eyeSize * 0.2f);
+        XMFLOAT4 pupilColor = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
+
+        ConstBuf::global[1] = pupilColor;
+        ConstBuf::Update(5, ConstBuf::global);
+
+        // Вертикальные зрачки
+        point3d leftPupil = { leftEye.x, leftEye.y + pupilOffset, 0 };
+        point3d rightPupil = { rightEye.x, rightEye.y + pupilOffset, 0 };
+
+        leftPupil.draw(leftPupil, eyeSize * 0.4f);
+        rightPupil.draw(rightPupil, eyeSize * 0.4f);
+
+        // === РИСУЕМ ЯЗЫК ===
+
+        if (aspidSnakeIcon.aggressionLevel > 0.5f) {
+            float tonguePhase = fmod(aspidSnakeIcon.time, 2.0f);
+            if (tonguePhase < 0.6f) { // Язык появляется периодически
+                float tongueProgress = tonguePhase / 0.6f;
+
+                point3d tongueBase = { iconX + headWidth * 0.5f, iconY + headHeight * 0.7f, 0 };
+                float tongueLength = baseSize * 0.5f * tongueProgress;
+                point3d tongueTip = { tongueBase.x, tongueBase.y + tongueLength, 0 };
+
+                // Раздвоенный кончик языка
+                point3d tongueTipLeft = { tongueBase.x - baseSize * 0.05f, tongueBase.y + tongueLength, 0 };
+                point3d tongueTipRight = { tongueBase.x + baseSize * 0.05f, tongueBase.y + tongueLength, 0 };
+
+                XMFLOAT4 tongueColor = XMFLOAT4(1.0f, 0.3f, 0.4f, 0.9f);
+
+                Shaders::vShader(4);
+                Shaders::pShader(4);
+                ConstBuf::global[2] = tongueColor;
+                ConstBuf::Update(5, ConstBuf::global);
+
+                // Основная часть языка
+                drawLine(tongueBase, tongueTip, baseSize * 0.03f);
+
+                // Раздвоенный кончик
+                drawLine(tongueTip, tongueTipLeft, baseSize * 0.02f);
+                drawLine(tongueTip, tongueTipRight, baseSize * 0.02f);
+            }
+        }
+
+        // === РИСУЕМ ЯДОВИТЫЕ КЛЫКИ ===
+
+        Shaders::vShader(1);
+        Shaders::pShader(1);
+
+        XMFLOAT4 fangColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.9f);
+        ConstBuf::global[1] = fangColor;
+        ConstBuf::Update(5, ConstBuf::global);
+
+        // Верхние клыки
+        point3d upperFangLeft = { iconX + headWidth * 0.25f, iconY + headHeight * 0.5f, 0 };
+        point3d upperFangRight = { iconX + headWidth * 0.75f, iconY + headHeight * 0.5f, 0 };
+
+        upperFangLeft.draw(upperFangLeft, baseSize * 0.04f);
+        upperFangRight.draw(upperFangRight, baseSize * 0.04f);
+
+        // Нижние клыки (видны при открытой пасти)
+        if (jawOpen > 0.1f) {
+            point3d lowerFangLeft = { iconX + headWidth * 0.2f, iconY + headHeight * 0.7f, 0 };
+            point3d lowerFangRight = { iconX + headWidth * 0.8f, iconY + headHeight * 0.7f, 0 };
+
+            lowerFangLeft.draw(lowerFangLeft, baseSize * 0.05f);
+            lowerFangRight.draw(lowerFangRight, baseSize * 0.05f);
+        }
+
+        // === РИСУЕМ ЧЕШУЙКИ И ДЕТАЛИ ===
+
+        Shaders::vShader(4);
+        Shaders::pShader(4);
+
+        // Чешуйки на голове
+        XMFLOAT4 scaleColor = XMFLOAT4(
+            headColor.x * 1.2f,
+            headColor.y * 1.2f,
+            headColor.z * 1.2f,
+            0.6f
+        );
+        ConstBuf::global[2] = scaleColor;
+        ConstBuf::Update(5, ConstBuf::global);
+
+        // Рисуем несколько чешуек в виде ромбов
+        for (int i = 0; i < 5; i++) {
+            float scaleX = iconX + headWidth * (0.2f + i * 0.15f);
+            float scaleY = iconY + headHeight * 0.2f;
+            float scaleSize = baseSize * 0.03f;
+
+            point3d scaleCenter = { scaleX, scaleY, 0 };
+            point3d scaleTop = { scaleX, scaleY - scaleSize, 0 };
+            point3d scaleBottom = { scaleX, scaleY + scaleSize, 0 };
+            point3d scaleLeft = { scaleX - scaleSize, scaleY, 0 };
+            point3d scaleRight = { scaleX + scaleSize, scaleY, 0 };
+
+            drawLine(scaleTop, scaleRight, scaleSize * 0.5f);
+            drawLine(scaleRight, scaleBottom, scaleSize * 0.5f);
+            drawLine(scaleBottom, scaleLeft, scaleSize * 0.5f);
+            drawLine(scaleLeft, scaleTop, scaleSize * 0.5f);
+        }
+
+        // === РИСУЕМ АУРУ ЯДОВИТОСТИ ===
+
+        Shaders::vShader(1);
+        Shaders::pShader(1);
+        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+        float auraPulse = 0.3f + 0.7f * sinf(aspidSnakeIcon.time * 1.5f);
+        float auraSize = baseSize * (1.2f + 0.3f * auraPulse);
+        float auraX = iconX + headWidth * 0.5f - auraSize * 0.5f;
+        float auraY = iconY + headHeight * 0.5f - auraSize * 0.5f;
+
+        XMFLOAT4 auraColor = XMFLOAT4(
+            0.3f, 1.0f, 0.3f,
+            0.2f * aspidSnakeIcon.aggressionLevel
+        );
+
+        ConstBuf::global[1] = auraColor;
+        ConstBuf::Update(5, ConstBuf::global);
+
+        // Рисуем ауру как серию концентрических кругов
+        for (int i = 0; i < 3; i++) {
+            float currentAuraSize = auraSize * (0.7f + i * 0.2f);
+            float currentAuraAlpha = auraColor.w * (1.0f - i * 0.3f);
+
+            XMFLOAT4 currentAuraColor = auraColor;
+            currentAuraColor.w = currentAuraAlpha;
+
+            ConstBuf::global[1] = currentAuraColor;
+            ConstBuf::Update(5, ConstBuf::global);
+
+            point3d auraCenter = { iconX + headWidth * 0.5f, iconY + headHeight * 0.5f, 0 };
+            auraCenter.draw(auraCenter, currentAuraSize * 0.5f);
+        }
+
+        // Восстанавливаем стандартные настройки
+        ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        ConstBuf::Update(5, ConstBuf::global);
+    }
+
+    // Функция для обновления позиции иконки
+    void UpdateAspidSnakeIconPosition(float x, float y) {
+        aspidSnakeIcon.position = point3d(x, y, 0.0f);
+    }
+
+    // Функция для установки уровня агрессии (0-1)
+    void SetAspidAggressionLevel(float level) {
+        aspidSnakeIcon.aggressionLevel = max(0.0f, min(1.0f, level));
+    }
+
+    // Функция для показа/скрытия иконки
+    void SetAspidSnakeIconVisible(bool visible) {
+        aspidSnakeIcon.isActive = visible;
+    }
+
+    // Функция для изменения цвета иконки
+    void SetAspidSnakeIconColor(XMFLOAT4 newColor) {
+        aspidSnakeIcon.baseColor = newColor;
+    }
+
+
     Constellation& enemy = *starSet[currentEnemyID];
     Constellation& player = *starSet[player_sign];
 
@@ -2715,7 +3111,7 @@ namespace drawer
         for (int i = 0; i < Bow.starsCords.size(); i++) {
             Bow.SetStarRadius(i, WEAPON_STAR_RADIUS);
         }
-        ShieldBlock();
+        
        //drawString(C.c_str(), 1500, 500, 1.f, true);
        //string DistCam = to_string(Camera::state.distanceOffset);
        //drawString(DistCam.c_str(), 2000, 1000, 1.f, true);
@@ -2788,7 +3184,10 @@ namespace drawer
 
         case gameState_::selectEnemy:
         {
-            
+            InitAspidSnakeIcon();
+            SetAspidAggressionLevel(0.f);
+            UpdateAspidSnakeIconPosition(window.width/2, window.height/2);
+            DrawAspidSnakeIcon();
             for (int i = 0; i < enemy.starsCords.size(); i++) {
 
                 enemy.SetStarRadius(i, 1000.f);
@@ -2847,7 +3246,7 @@ namespace drawer
             }
             drawHPBar(playerHP);
             isBattleActive = false;
-
+            
             StateFight(Heropos, Enemypos);
             break;
 
@@ -2864,7 +3263,7 @@ namespace drawer
 
             Constellation& h = *starSet[17];
             Enemy::enemyData.currentRotation = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), PI);
-            TeleportEnemy(point3d{ -6000.f,-5000.f,-115000.f });
+            TeleportEnemy(point3d{ -6000.f,-5000.f,-110000.f });
             h.Transform = CreateEnemyToWorldMatrix(h);
             
             Enemy::enemyData.currentRotation = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), 0);
@@ -2880,7 +3279,7 @@ namespace drawer
 
         case gameState_::Fight:
         {
-
+            ShieldBlock();
             for (int i = 0; i < enemy.starsCords.size();i++) {
 
                 enemy.SetStarRadius(i, 1000.f);
@@ -3212,6 +3611,7 @@ namespace drawer
             static bool deathAnimationStarted = false;
 
             if (playerHP <= 0.f && !deathAnimationStarted) {
+                playerHP = 0.f;
                 deathAnimationStarted = true;
                 deathStartTime = currentTime;
                 //ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\PlayerDeath.wav");
@@ -3303,8 +3703,151 @@ namespace drawer
         }
         case gameState_::EndFight:
         {
-            endFight();
+            // Черно-белый фильтр для всего мира
+            static DWORD endFightStartTime = currentTime;
+            static bool transitionStarted = false;
+           
 
+            if (!transitionStarted) {
+                endFightStartTime = currentTime;
+                transitionStarted = true;
+                mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
+            }
+
+            // Плавный переход в черно-белый (2 секунды)
+            float transitionProgress = min((currentTime - endFightStartTime) / 2000.0f, 1.0f);
+            ConstBuf::factors.grayscale = transitionProgress;
+            ConstBuf::UpdateFactors();
+
+            for (int i = 0; i < enemy.starsCords.size(); i++) {
+                enemy.SetStarRadius(i, 1000.f);
+            }
+
+           
+            //drawStaminaBar(energy);
+
+            if (isBattleActive == false) {
+                isBattleActive = true;
+                battleStartTime = currentTime;
+            }
+
+            if (starSet.empty() || currentEnemyID < 0 || currentEnemyID >= starSet.size()) {
+                gameState = gameState_::selectEnemy;
+                break;
+            }
+
+            Constellation& playerConst = *starSet[player_sign];
+            playerConst.RenderMorph(deltaTime);
+
+            if (t) {
+                t = false;
+                Camera::state.camDist = 1000.0f;
+                Camera::state.distanceOffset = 1000.0f;
+            }
+
+            Camera::state.mouse = true;
+            Depth::Depth(Depth::depthmode::off);
+            SelectWeapon(&playerConst);
+            SelectElement();
+
+            DrawCombatStats();
+
+            if (attackCooldown == true) {
+                AttackVector();
+            }
+
+            modelTransform = &placeToWorld;
+            modelProject = &fightProject;
+            uiFunc = &starIntersectUI;
+
+            ConstBuf::Update(0, ConstBuf::drawerV);
+            ConstBuf::ConstToVertex(0);
+            ConstBuf::Update(1, ConstBuf::drawerP);
+            ConstBuf::ConstToPixel(1);
+
+            // Рисуем окружение в черно-белом
+            DrawRenderObject(backgroundStars);
+            DrawRenderObject(spaceStars);
+            DrawRenderObject(ariesNebula);
+
+            modelTransform = &placeConstToWorld;
+
+            srand(currentTime);
+
+            // Рисуем врага в черно-белом
+            Constellation& h = *starSet[currentEnemyID];
+            h.Transform = CreateEnemyToWorldMatrix(h);
+            Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+            drawConstellation(*starSet[currentEnemyID], false, 1000.f, 100.f);
+
+            modelTransform = &placeHeroToWorld;
+            uiFunc = &heroUI;
+            Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+            lastFrameTime = currentTime;
+
+            modelTransform = &placeConstToWorld;
+            modelTransform = &placeHeroToWorld;
+            uiFunc = &heroUI;
+
+            modelTransform = NULL;
+            uiFunc = NULL;
+
+            if (starSet.empty() || currentEnemyID < 0 || currentEnemyID >= starSet.size()) {
+                gameState = gameState_::selectEnemy;
+                break;
+            }
+
+            // Обновление атак (в черно-белом)
+            Constellation& c = *starSet[player_sign];
+            c.Transform = CreateHeroToWorldMatrix(c);
+
+           
+            // Обновляем позицию врага
+            updateEnemyPosition(deltaTime, Heropos, Enemypos, playerHP);
+
+            // Хук в черно-белом
+            //InputHook(deltaTime, Heropos, Enemypos);
+
+            // Интерфейс тоже в черно-белом
+            //drawHPBar(playerHP);
+            //drawEnemyBar(enemyTotalHP);
+
+            drawConstellation(*starSet[player_sign], false, 10.f, currentLinkSize);
+
+           
+            drawString("YOU DIED", window.width / 2., window.height / 4 - 100, 7.f, true);
+            drawString("Press R to restart", window.width / 2., window.height / 4 + 200, 2.f, true);
+           
+
+            drawString("ARIES", window.width / 2, 50, 2.f, true);
+            drawString("Press < T > to enter tutorial", (100. / 2560) * window.width, (100. / 1440) * window.height, 1.f, false);
+
+            if (GetAsyncKeyState('T')) {
+                gameState = gameState_::Exploring;
+            }
+
+            // Перезапуск игры
+            if (GetAsyncKeyState('R') & 0x8000) {
+                // Сбрасываем черно-белый фильтр
+                ConstBuf::factors.grayscale = 0.0f;
+                ConstBuf::UpdateFactors();
+                transitionStarted = false;
+
+                // Восстанавливаем здоровье игрока
+                for (int i = 0; i < player.starsHealth.size(); i++) {
+                    player.starsHealth[i] = player.maxHP / player.starsHealth.size();
+                }
+
+                // Восстанавливаем здоровье врага
+                for (int i = 0; i < enemy.starsHealth.size(); i++) {
+                    enemy.starsHealth[i] = enemy.maxHP / enemy.starsHealth.size();
+                }
+
+                PostQuitMessage(0);
+            }
+
+            UpdateGame();
             break;
         }
         case gameState_::WinFight:
@@ -3433,10 +3976,15 @@ namespace drawer
             drawString("You Win!", window.width / 2., window.height / 4-100, 7.f, true);
 
             drawString("Aries Is Defeated!", window.width / 2., window.height / 6-100, 4.f, true);
+            drawString("Press R to restart", window.width / 2., window.height / 4 + 200, 2.f, true);
             curentSignstring = zodiacSignToString(player_sign);
             //drawString(curentSignstring.c_str(), window.width / 2, window.height - window.height / 7., 1, true);
 
-
+            if (GetAsyncKeyState('R') & 0x8000) {
+                // Сбрасываем черно-белый фильтр
+               
+                PostQuitMessage(0);
+            }
             //drawCurrentElement();
 
             //UpdateGame();

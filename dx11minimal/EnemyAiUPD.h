@@ -292,7 +292,7 @@ namespace Enemy {
         // Летим к запомненной позиции (delayedAttackTarget)
         point3d attackDir = (data.delayedAttackTarget - enemyPos).normalized();
 
-        float moveDistance = data.chaseSpeed * 12.0f * deltaTime;
+        float moveDistance = data.chaseSpeed * 15.0f * deltaTime;
         enemyPos += attackDir * moveDistance;
 
         // Проверяем столкновение с реальным игроком

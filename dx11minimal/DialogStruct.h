@@ -71,7 +71,7 @@ void initContentData() {
     currentDialogs.clear();
 
     // Начальные нарративные тексты с озвучкой
-    narratives.push_back(NarrativeText("MC: \"Who... am I?\n And where?\" ", 0, "..\\dx11minimal\\Resourses\\Sounds\\1.1Hero.wav"));
+    narratives.push_back(NarrativeText("Aspid: \"Who... am I?\n And where?\" ", 0, "..\\dx11minimal\\Resourses\\Sounds\\1.1Hero.wav"));
     narratives.push_back(NarrativeText("He instinctively tries to perform at least some action, \n as if wanting to wake up from a cold oblivion. \n A pleasant pulsation begins to spread through his being.", 0, "..\\dx11minimal\\Resourses\\Sounds\\3.1.wav"));
     narratives.push_back(NarrativeText("A pair of palms slid off his face,\n opening his eyes and allowing him to see the space around him that filled with dim light sources. \n His mind was trying to assess the situation around him,\n creating even more questions that he didn't know the answers to. \n It was if a shadow had enveloped his mind, leaving only fragmented thoughts...", 0, "..\\dx11minimal\\Resourses\\Sounds\\3.2.wav"));
     narratives.push_back(NarrativeText("At this most desperate moment, he suddenly felt someone's powerful presence. \n A bright creature appeared in front of him, starting to resonate with his mind.", 0, "..\\dx11minimal\\Resourses\\Sounds\\3.3.wav"));

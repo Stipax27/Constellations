@@ -679,6 +679,7 @@ namespace ConstBuf
 	//b6
 	struct {
 		float AriesNebulaLerpFactor;
+		float grayscale = 0.0f;
 	} factors;
 
 	int roundUp(int n, int r)

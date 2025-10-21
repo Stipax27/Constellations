@@ -114,9 +114,16 @@ public:
         float deltaTime = currentTime - lastTime;
         lastTime = currentTime;
         if (deltaTime > 100.0f) deltaTime = 100.0f;
-        updateFlyDirection(); //hero move for mouse and move on "WASD"
-        updateFlySpeed(deltaTime);
-        updatePlayerPosition(deltaTime); //bez nego "WASD" toze ne rabotaet
+        if (gameState == gameState_::EndFight) {
+        
+        }
+        else {
+            updateFlyDirection(); //hero move for mouse and move on "WASD"
+            updateFlySpeed(deltaTime);
+            updatePlayerPosition(deltaTime); //bez nego "WASD" toze ne rabotaet
+        }
+
+       
         Camera::Camera();
 
         XMVECTOR heroPosition = XMVectorSet(

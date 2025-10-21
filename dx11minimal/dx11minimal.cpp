@@ -61,6 +61,12 @@ DWORD battleStartTime;
 
 
 HWND hWnd;
+enum class gameState_ {
+    MainMenu, Settings, Authors, MonthSelection, DaySelection, confirmSign, selectEnemy, Fight, EndFight, DialogStruct, WinFight, Exploring, Exploring1, Exploring2
+};
+
+gameState_  gameState = gameState_::MainMenu;
+
 #include "utils.h"
 #include "CameraTarget.h"
 #include "dx11.h"
@@ -84,8 +90,8 @@ HWND hWnd;
 #include "Navigation.h"
 #include "Constellation.h"
 
-
 #include "MainWorld.h"
+
 #include "StatusGame.h"
 #include "Weapon.h"
 #include "EnemyAiUPD.h"//

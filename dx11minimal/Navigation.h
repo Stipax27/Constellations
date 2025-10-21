@@ -213,6 +213,7 @@ void updateFlySpeed(float deltaTime)
     // ПРОВЕРКА КУЛДАУНА РЫВКА
     if (energy <= 0 && currentTime - lastRushTime > RUSH_COOLDOWN) {
         canRush = true;
+        energy = 0;
     }
 
     // ОБНОВЛЕНИЕ ЭФФЕКТА КАМЕРЫ
