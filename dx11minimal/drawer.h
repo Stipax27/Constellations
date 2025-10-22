@@ -1,4 +1,7 @@
-﻿bool t = true;
+﻿Constellation& enemy = *starSet[currentEnemyID];
+Constellation& player = *starSet[player_sign];
+
+bool t = true;
 point3d attackDirection;
 
 float currentLinkSize = 30.0f;
@@ -85,7 +88,7 @@ namespace drawer
 
         Draw::elipse(1);
     }
-
+    XMFLOAT4 starColor;
     void drawLinks(Constellation& Constellation, float sz) {
         float currentLinkThickness = currentLinkSize;
 
@@ -98,8 +101,30 @@ namespace drawer
             point3d point1 = TransformPoint(starArray[starEdges[i][0]], Constellation.Transform);
             point3d point2 = TransformPoint(starArray[starEdges[i][1]], Constellation.Transform);
 
+            starColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+            if (Constellation.starsCords == enemy.starsCords) {
+                if (starHealth[i] <= 0.0f) {
+                    // Мертвая звезда - темно-красная с низкой альфой
+                    starColor = XMFLOAT4(0.1f, 0.1f, 0.1f, 0.3f);
+                }
+                else if (starHealth[i] <= 0.3f) {
+                    // Критическое состояние - мигающий красный
+                    float pulse = 0.7f + 0.3f * sinf(currentTime * 0.01f);
+                    starColor = XMFLOAT4(1.0f, 0.1f, 0.1f, pulse);
+                }
+                else if (starHealth[i] <= 0.6f) {
+                    // Поврежденная звезда - оранжево-красный
+                    float healthRatio = (starHealth[i] - 0.3f) * 5.0f; // От 0.0 до 1.0
+                    starColor = XMFLOAT4(
+                        1.0f,                    // R
+                        0.3f + healthRatio * 0.7f, // G увеличивается
+                        0.1f,                    // B
+                        1.0f                     // Alpha
+                    );
+                }
+            }
             // ЯВНО устанавливаем белый цвет для каждой линии
-            ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+            ConstBuf::global[2] = starColor;
             ConstBuf::Update(5, ConstBuf::global);
             ConstBuf::ConstToPixel(5);
 
@@ -111,7 +136,7 @@ namespace drawer
         ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
         ConstBuf::Update(5, ConstBuf::global);
     }
-
+   
     void drawStarPulse(Constellation& Constellation, bool colorOverride = false, float finalStarRad = 10.f) {
         std::vector <point3d>& starArray = Constellation.starsCords;
         std::vector <float>& starHealth = Constellation.starsHealth;
@@ -136,8 +161,29 @@ namespace drawer
             screenPoint.y *= window.height;
 
             // ЯВНО устанавливаем белый цвет для каждой звезды
-            XMFLOAT4 starColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-
+            starColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+            if (Constellation.starsCords == enemy.starsCords) {
+                if (starHealth[i] <= 0.0f) {
+                    // Мертвая звезда - темно-красная с низкой альфой
+                    starColor = XMFLOAT4(0.1f, 0.1f, 0.1f, 0.3f);
+                }
+                else if (starHealth[i] <= 0.3f) {
+                    // Критическое состояние - мигающий красный
+                    float pulse = 0.7f + 0.3f * sinf(currentTime * 0.01f);
+                    starColor = XMFLOAT4(1.0f, 0.1f, 0.1f, pulse);
+                }
+                else if (starHealth[i] <= 0.6f) {
+                    // Поврежденная звезда - оранжево-красный
+                    float healthRatio = (starHealth[i] - 0.3f) * 5.0f; // От 0.0 до 1.0
+                    starColor = XMFLOAT4(
+                        1.0f,                    // R
+                        0.3f + healthRatio * 0.7f, // G увеличивается
+                        0.1f,                    // B
+                        1.0f                     // Alpha
+                    );
+                }
+            }
+            
             // Устанавливаем цвет звезды
             ConstBuf::global[1] = starColor;
             ConstBuf::Update(5, ConstBuf::global);
@@ -1532,7 +1578,7 @@ namespace drawer
                 for (auto& star : attackStars) {
                     if (CheckWeaponCollision(star, starWorldPos, 2000.f)) {
                         point3d damageDirection = (HeroPosTrans - starWorldPos).normalized();
-
+                       
                         if (current_weapon == weapon_name::Sword) {
                             enemy.starsHealth[i] -= currentDamage * .3f;
                         }
@@ -3259,8 +3305,7 @@ namespace drawer
     }
 
 
-    Constellation& enemy = *starSet[currentEnemyID];
-    Constellation& player = *starSet[player_sign];
+    
 
     float playerHP = getConstellationHP(player);
     float EnemyHP = getConstellationHP(enemy);
@@ -3453,7 +3498,7 @@ namespace drawer
 
             // Отрисовываем иконку змеи ПОСЛЕДНЕЙ, чтобы она была поверх других элементов UI
             //DrawAspidSnakeIcon();
-            drawString("ASPID ICON", aspidSnakeIcon.position.x, aspidSnakeIcon.position.y - 80, 0.5f, true);
+            //drawString("ASPID ICON", aspidSnakeIcon.position.x, aspidSnakeIcon.position.y - 80, 0.5f, true);
 
             break;
         }
