@@ -1,7 +1,7 @@
-void drawRect(float width, float height, float x, float y, XMFLOAT4 color)
+void drawRect(float width, float height, float x, float y, XMFLOAT4 color, int vShader = 13, int pShader = 13)
 {
-    Shaders::vShader(13); // ID пр€моугольного шейдера
-    Shaders::pShader(13);
+    Shaders::vShader(vShader); // ID пр€моугольного шейдера
+    Shaders::pShader(pShader);
     Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
 
     ConstBuf::global[0] = XMFLOAT4(width, height, 0, 0);
@@ -230,9 +230,9 @@ void drawFillParticles(float barX, float barY, float fillWidth, float barHeight,
 
 void drawStaminaBar(float energy) {
     float normalizedEnergy = energy / 100.0f;
-    float barWidth = 75.0f;
+    float barWidth = 90.0f;
     float barHeight = 12.0f;
-    float x = (1080.0f / 2560.0f) * window.width;
+    float x = (250.0f / 2560.0f) * window.width;
     float y = (1350.0f / 1440.0f) * window.height;
     static float time = 0.011f;
     time += 0.016f;
@@ -263,7 +263,7 @@ void drawStaminaBar(float energy) {
 
         // «вездные частицы “ќЋ№ ќ на заполненной части!
         int particleCount = (int)(normalizedEnergy * 8);
-        drawFillParticles(x, y, currentWidth*2.f, barHeight, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), particleCount, time);
+        drawFillParticles(x, y, currentWidth * 1.2f, barHeight, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), particleCount, time);
 
         // Ёффект свечени€ с частицами
         if (normalizedEnergy > 1.0f) {
@@ -279,9 +279,9 @@ float normalizedHP = maxHP;
 
 void drawHPBar(float HP) {
     normalizedHP = HP / maxHP;
-    float barWidth = 180.0f;
+    float barWidth = 240.0f;
     float barHeight = 18.0f;
-    float x = (1080.0f / 2560.0f) * window.width;
+    float x = (250.0f / 2560.0f) * window.width;
     float y = (1300.0f / 1440.0f) * window.height;
     static float time = 0.0f;
     time += 0.016f;
@@ -323,7 +323,7 @@ void drawHPBar(float HP) {
         else {
             particleColor = XMFLOAT4(1.0f, 0.8f, 0.8f, 0.6f);
         }
-        drawFillParticles(x, y, currentWidth*2.f, barHeight, particleColor, particleCount, time);
+        drawFillParticles(x, y, currentWidth * 1.2f, barHeight, particleColor, particleCount, time);
 
         // ѕульсаци€ с частицами при низком HP
         if (normalizedHP < 0.3f) {
@@ -334,6 +334,20 @@ void drawHPBar(float HP) {
             drawFillParticles(x, y, currentWidth, barHeight, XMFLOAT4(1.0f, 0.3f, 0.3f, pulse), 4, time * 3.0f);
         }
     }
+}
+
+void drawStrengthStar(float energy) {
+    float normalizedEnergy = energy / 300.0f;
+    float size = lerp(60, 120, normalizedEnergy);
+
+    float barWidth = size;
+    float barHeight = size / iaspect;
+    float x = ((110.0f - size / 2) / 2560.0f) * window.width;
+    float y = ((1280.0f - size / 2) / 1440.0f) * window.height;
+    static float time = 0.011f;
+    time += 0.016f;
+
+    drawRect(barWidth, barHeight, x, y, XMFLOAT4(1.0f, 1.0f, 0.8f, 0.6f), 13, 16);
 }
 
 void drawEnemyBar(float enemyHP) {
