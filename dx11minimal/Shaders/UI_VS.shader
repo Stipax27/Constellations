@@ -3,6 +3,12 @@ cbuffer global : register(b5)
     float4 gConst[3]; // gConst[0] = (width, height, 0, 0), gConst[1] = (screenWidth, screenHeight, 0, 0), gConst[2] = (x, y, 0, 0)
 };
 
+cbuffer frame : register(b4)
+{
+    float4 time;
+    float4 aspect;
+};
+
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
@@ -18,7 +24,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
         float2(1, -1), float2(1, 1), float2(-1, 1)
     };
 
-    float2 size = gConst[0].xy;
+    float2 size = gConst[0].xy * float2(aspect.x, 1);
     float2 screenSize = gConst[1].xy;
     float2 pos = gConst[2].xy;
 

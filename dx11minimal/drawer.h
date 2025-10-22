@@ -1303,6 +1303,7 @@ namespace drawer
                 isHeroScaleReturning = true;
                 isStarRadiusReturning = true;
                 isLinkSizeReturning = true; // Добавляем возврат размера линий
+                chargeRatio = 0;
 
                 cameraReturnStartTime = currentTime;
                 heroScaleReturnStartTime = currentTime;
@@ -3441,6 +3442,7 @@ namespace drawer
 
             // DrawTEST();
             drawStaminaBar(energy);
+            drawStrengthStar(chargeRatio);
 
             CreateMovementParticles();
             UpdateMovementParticles(deltaTime);
@@ -3887,6 +3889,7 @@ namespace drawer
             drawHPBar(playerHP);
             drawEnemyBar(enemyTotalHP);
             drawStaminaBar(energy);
+            drawStrengthStar(chargeRatio);
             drawString("Aspid",  (1080.0f / 2560.0f) * window.width, (1250.0f / 1440.0f) * window.height, 2.f, true);
             drawConstellation(*starSet[player_sign], false, 10.f, currentLinkSize);
             drawString(enemyH.c_str(), window.width / 2, 100, 2.f, true);

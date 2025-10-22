@@ -547,6 +547,9 @@ namespace Shaders {
 
 		CreateVS(15, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarPointVS.shader"));
 		CreatePS(15, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarPointPS.shader"));
+
+		CreatePS(16, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StrengthStar_PS.shader"));
+
 		//-----------------------------------------------
 
 		CreatePS(100, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\LowHpVignette_PS.shader"));
