@@ -65,7 +65,7 @@ enum class gameState_ {
     MainMenu, Settings, Authors, MonthSelection, DaySelection, confirmSign, selectEnemy, Fight, EndFight, DialogStruct, WinFight, Exploring, Exploring1, Exploring2
 };
 
-gameState_  gameState = gameState_::MainMenu;
+gameState_  gameState = gameState_::selectEnemy;
 
 #include "utils.h"
 #include "CameraTarget.h"

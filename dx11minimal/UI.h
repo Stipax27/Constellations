@@ -23,13 +23,13 @@ void drawBackgroundParticles(float barX, float barY, float barWidth, float barHe
         float posY = barY + (fmod(seed * 73.1f, barHeight));
 
         float size = 1.0f + fmod(seed * 29.7f, 1.0f);
-        float alpha = 0.3f + 0.7f * (0.5f + 0.5f * sinf(time * 2.0f + seed * 5.0f));
+        float alpha = 0.3f + 0.4f * (0.5f + 0.5f * sinf(time * 2.0f + seed * 5.0f));
 
         XMFLOAT4 particleColor = XMFLOAT4(
             baseColor.x * (0.8f + 0.4f * fmod(seed * 13.7f, 1.0f)),
             baseColor.y * (0.8f + 0.4f * fmod(seed * 17.3f, 1.0f)),
             baseColor.z * (0.8f + 0.4f * fmod(seed * 19.1f, 1.0f)),
-            baseColor.w * alpha * 0.3f // Более прозрачные для фона
+            baseColor.w * alpha * 0.1f // Более прозрачные для фона
         );
 
         drawRect(size, size, posX, posY, particleColor);
@@ -345,13 +345,13 @@ void drawEnemyBar(float enemyHP) {
     time += 0.016f;
 
     // Темный фон с космическим оттенком
-    drawRect(barWidth + 8, barHeight + 8, x - 4, y - 4, XMFLOAT4(0.08f, 0.02f, 0.1f, 0.6f));
+    drawRect(barWidth + 8, barHeight + 8, x - 4, y - 4, XMFLOAT4(0.08f, 0.02f, 0.1f, 0.3f));
 
     // Фоновые частицы (на всей ширине фона) - звездная пыль
-    drawBackgroundParticles(x, y, barWidth, barHeight, XMFLOAT4(0.9f, 0.7f, 0.3f, 0.4f), 10, time);
+    drawBackgroundParticles(x, y, barWidth, barHeight, XMFLOAT4(0.9f, 0.7f, 0.3f, 0.1f), 10, time);
 
     // Рамка вражеского бара с градиентом от золотого к темному
-    drawRect(barWidth + 6, barHeight + 6, x - 3, y - 3, XMFLOAT4(0.6f, 0.4f, 0.1f, .8f));
+    drawRect(barWidth + 6, barHeight + 6, x - 3, y - 3, XMFLOAT4(0.6f, 0.4f, 0.1f, .4f));
 
     // Основной бар врага с эффектом гаснущей звезды
     float currentWidth = normalizedHP * barWidth;
@@ -374,7 +374,7 @@ void drawEnemyBar(float enemyHP) {
             float t = (normalizedHP - 0.4f) / 0.2f;
             color = XMFLOAT4(1.0f, 0.5f + t * 0.3f, 0.2f + t * 0.2f, 1.0f);
         }
-        else if (normalizedHP > 0.2f) {
+        else if (normalizedHP > 0.2f) {   
             // Красный гигант - звезда расширяется и остывает
             float t = (normalizedHP - 0.2f) / 0.2f;
             color = XMFLOAT4(1.0f, 0.3f + t * 0.2f, 0.1f + t * 0.1f, 1.0f);
@@ -382,7 +382,7 @@ void drawEnemyBar(float enemyHP) {
         else {
             // Коричневый карлик - почти погасшая звезда
             float t = normalizedHP / 0.2f;
-            color = XMFLOAT4(0.6f + t * 0.4f, 0.3f + t * 0.2f, 0.1f, 1.0f);
+            color = XMFLOAT4(1.0f + t * 0.1f, 0.3f + t * 0.2f, 0.1f, 1.0f);
         }
 
         drawRect(currentWidth, barHeight, x, y, color);
@@ -410,18 +410,17 @@ void drawEnemyBar(float enemyHP) {
         if (normalizedHP < 0.25f) {
             float pulse = (sinf(time * 6.0f) + 1.0f) * 0.5f;
 
-            // Случайные вспышки по длине бара
-            /*for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < 2; i++) {
                 float flashPos = fmod(time * 3.0f + i * 2.0f, currentWidth);
                 float flashWidth = 8.0f + 4.0f * sinf(time * 4.0f + i);
                 float flashAlpha = 0.3f + 0.4f * pulse;
 
-                drawRect(flashWidth, barHeight - 2, x + flashPos, y + 1,
-                    XMFLOAT4(1.0f, 0.6f, 0.2f, flashAlpha));
-            }*/
+               /*drawRect(flashWidth, barHeight - 2, x + flashPos, y + 1,
+                    XMFLOAT4(1.0f, 0.6f, 0.2f, flashAlpha));*/
+            }
 
-            // Интенсивные частицы - последние вспышки звезды
-            //drawFillParticles(x, y, currentWidth, barHeight, XMFLOAT4(1.0f, 0.8f, 0.3f, pulse), 8, time * 5.0f);
+            
+            drawFillParticles(x, y, currentWidth, barHeight, XMFLOAT4(1.0f, 0.1f, 0.1f, pulse), 8, time * 5.0f);
         }
 
         // Эффект "суперновой" для боссов при критическом HP
@@ -454,3 +453,4 @@ void drawEnemyBar(float enemyHP) {
             XMFLOAT4(1.0f, 0.6f, 0.1f, framePulse));
     }
 }
+

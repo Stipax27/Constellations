@@ -1534,16 +1534,16 @@ namespace drawer
                         point3d damageDirection = (HeroPosTrans - starWorldPos).normalized();
 
                         if (current_weapon == weapon_name::Sword) {
-                            enemy.starsHealth[i] -= currentDamage * .5f;
+                            enemy.starsHealth[i] -= currentDamage * .3f;
                         }
                         else if (current_weapon == weapon_name::Shield) {
                             enemy.starsHealth[i] -= currentDamage * .1f;
                         }
                         else if (current_weapon == weapon_name::Bow) {
-                            enemy.starsHealth[i] -= currentDamage * 1.f;
+                            enemy.starsHealth[i] -= currentDamage * 0.5f;
                         }
                         else if (current_weapon == weapon_name::Fists) {
-                            enemy.starsHealth[i] -= currentDamage * .2f;
+                            enemy.starsHealth[i] -= currentDamage * .1f;
                         }
                         float colorVariant = GetRandom(0, 100) * 0.01f;
                         XMFLOAT4 ColEnemyEff(
@@ -1553,7 +1553,45 @@ namespace drawer
                             1.0f                     // A
                         );
                         CreateConstellationsDamageEffect(starWorldPos, damageDirection , ColEnemyEff);
-                        ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Damage.wav");
+                        srand(time(0));
+                        float Soundradnd = rand() % 12;
+
+                        if (Soundradnd==0) {
+                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged1.wav");
+                        }
+                        else if(Soundradnd == 1) {
+                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged2.wav");
+                        }
+                        else if (Soundradnd == 2) {
+                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged3.wav");
+                        }
+                        else if (Soundradnd == 3) {
+                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged4.wav");
+                        }
+                        else if (Soundradnd == 4) {
+                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged5.wav");
+                        }
+                        else if (Soundradnd == 5) {
+                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged6.wav");
+                        }
+                        else if (Soundradnd == 6) {
+                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged7.wav");
+                        }
+                        else if (Soundradnd == 7) {
+                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged8.wav");
+                        }
+                        else if (Soundradnd == 8) {
+                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged9.wav");
+                        }
+                        else if (Soundradnd == 9) {
+                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged10.wav");
+                        }
+                        else if (Soundradnd == 10) {
+                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged11.wav");
+                        }
+                        else if (Soundradnd == 11) {
+                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged12.wav");
+                        }
                         break;
                     }
                 }
@@ -1840,6 +1878,7 @@ namespace drawer
     }
 
     void RenderShockwave() {
+
         Shaders::vShader(1); // Шейдер для звёзд
         Shaders::pShader(1);
         Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
@@ -2760,7 +2799,6 @@ namespace drawer
     }
 
 
-    // Структура для управления иконкой змеи
     // Структура для управления иконкой змеи Аспида
     struct AspidSnakeIcon {
         point3d position;
@@ -2769,56 +2807,94 @@ namespace drawer
         bool isActive;
         XMFLOAT4 baseColor;
         XMFLOAT4 eyeGlowColor;
-        float aggressionLevel; // Уровень агрессии (0-1)
+        XMFLOAT4 scaleColor;
+        float aggressionLevel;
+        float health;
+        bool isHissing;
+        float hissIntensity;
     };
 
     AspidSnakeIcon aspidSnakeIcon;
 
     // Инициализация иконки змеи Аспида
     void InitAspidSnakeIcon() {
-        aspidSnakeIcon.position = point3d(100.0f, 100.0f, 0.0f);
-        aspidSnakeIcon.size = 120.0f; // Больший размер для более детальной прорисовки
+        aspidSnakeIcon.position = point3d(window.width / 2, window.height / 2, 0.0f);
+        aspidSnakeIcon.size = 12000.0f;
         aspidSnakeIcon.time = 0.0f;
         aspidSnakeIcon.isActive = true;
-        aspidSnakeIcon.baseColor = XMFLOAT4(0.1f, 0.7f, 0.3f, 1.0f); // Ядовито-зеленый
-        aspidSnakeIcon.eyeGlowColor = XMFLOAT4(1.0f, 0.2f, 0.1f, 1.0f); // Кроваво-красный
+        aspidSnakeIcon.baseColor = XMFLOAT4(0.1f, 0.7f, 0.3f, 1.0f);
+        aspidSnakeIcon.eyeGlowColor = XMFLOAT4(1.0f, 0.2f, 0.1f, 1.0f);
+        aspidSnakeIcon.scaleColor = XMFLOAT4(0.05f, 0.4f, 0.15f, 1.0f);
         aspidSnakeIcon.aggressionLevel = 0.0f;
+        aspidSnakeIcon.health = 1.0f;
+        aspidSnakeIcon.isHissing = false;
+        aspidSnakeIcon.hissIntensity = 0.0f;
     }
 
-    // Функция для рисования иконки змеи Аспида
+    // Функция для рисования детализированной иконки головы змеи Аспида
     void DrawAspidSnakeIcon() {
         if (!aspidSnakeIcon.isActive) return;
 
         // Обновляем время для анимации
         aspidSnakeIcon.time += 0.016f;
 
-        float iconX = aspidSnakeIcon.position.x;
-        float iconY = aspidSnakeIcon.position.y;
-        float baseSize = aspidSnakeIcon.size;
+        // === ПОЗИЦИОНИРОВАНИЕ ОТНОСИТЕЛЬНО ГЕРОЯ ===
+        XMVECTOR heroPos = Hero::state.position;
+        XMVECTOR heroForward = Hero::state.Forwardbuf;
+        XMVECTOR heroRight = Hero::state.Right;
+        XMVECTOR heroUp = Hero::state.Up;
 
-        // Основные параметры головы Аспида
-        const float headWidth = baseSize * 0.8f;
-        const float headHeight = baseSize * 0.6f;
-        const float jawHeight = baseSize * 0.3f;
+        // Смещение слева от героя
+        float offsetDistance = 400.0f;
+        float verticalOffset = -100.0f;
 
-        // Анимация дыхания и агрессии
+        // Вычисляем позицию слева от героя
+        XMVECTOR iconWorldPos = heroPos +
+            (-heroRight * offsetDistance) +
+            (heroUp * verticalOffset);
+
+        // Преобразуем в point3d
+        point3d worldPosition = point3d(
+            XMVectorGetX(iconWorldPos),
+            XMVectorGetY(iconWorldPos),
+            XMVectorGetZ(iconWorldPos)
+        );
+
+        // === НАСТРОЙКИ РАЗМЕРА ИКОНКИ В МИРЕ ===
+        float baseSize = 800.0f;
+        const float headWidth = baseSize * 0.3f;
+        const float headHeight = baseSize * 0.2f;
+
+        // Анимации
         float breathPulse = 0.5f + 0.5f * sinf(aspidSnakeIcon.time * 2.0f);
         float aggressionPulse = 0.7f + 0.3f * sinf(aspidSnakeIcon.time * 4.0f);
+        float subtlePulse = 0.8f + 0.2f * sinf(aspidSnakeIcon.time * 1.5f);
 
-        // Динамический уровень агрессии (можно менять в зависимости от состояния игры)
+        // Динамический уровень агрессии
         aspidSnakeIcon.aggressionLevel = 0.3f + 0.4f * breathPulse;
 
-        // === РИСУЕМ ОСНОВНУЮ ФОРМУ ГОЛОВЫ ===
+        // Вычисляем локальные оси для иконки
+        point3d cameraRight = point3d(
+            XMVectorGetX(Camera::state.Right),
+            XMVectorGetY(Camera::state.Right),
+            XMVectorGetZ(Camera::state.Right)
+        );
 
-        // Основная треугольная форма головы
-        point3d headTop = { iconX + headWidth * 0.5f, iconY, 0 };
-        point3d headLeft = { iconX, iconY + headHeight, 0 };
-        point3d headRight = { iconX + headWidth, iconY + headHeight, 0 };
+        point3d cameraUp = point3d(
+            XMVectorGetX(Camera::state.Up),
+            XMVectorGetY(Camera::state.Up),
+            XMVectorGetZ(Camera::state.Up)
+        );
 
-        // Чешуйчатая текстура на голове
+        // === ПЕРЕВЕРНУТАЯ ТРЕУГОЛЬНАЯ ФОРМА ГОЛОВЫ ===
         Shaders::vShader(4);
         Shaders::pShader(4);
         Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
+
+        // Перевернутый треугольник - основание сверху, вершина снизу
+        point3d headBaseLeft = worldPosition + (-cameraRight * (headWidth * 0.5f)) + (cameraUp * (headHeight * 0.5f));
+        point3d headBaseRight = worldPosition + (cameraRight * (headWidth * 0.5f)) + (cameraUp * (headHeight * 0.5f));
+        point3d headTip = worldPosition + (-cameraUp * (headHeight * 0.5f));
 
         // Основной цвет головы с градиентом
         XMFLOAT4 headColor = XMFLOAT4(
@@ -2828,25 +2904,133 @@ namespace drawer
             1.0f
         );
 
-        // Рисуем треугольник головы
+        // Рисуем перевернутый треугольник головы
         ConstBuf::global[2] = headColor;
         ConstBuf::Update(5, ConstBuf::global);
         ConstBuf::ConstToPixel(5);
 
-        drawLine(headTop, headLeft, headHeight * 0.15f);
-        drawLine(headTop, headRight, headHeight * 0.15f);
-        drawLine(headLeft, headRight, headHeight * 0.1f);
+        drawLine(headBaseLeft, headBaseRight, headHeight * 0.15f);
+        drawLine(headBaseLeft, headTip, headHeight * 0.15f);
+        drawLine(headBaseRight, headTip, headHeight * 0.15f);
 
-        // === РИСУЕМ ЧЕЛЮСТИ ===
+        // === ДЕТАЛИЗИРОВАННЫЕ ЧЕШУЙКИ НА ГОЛОВЕ ===
+        Shaders::vShader(1);
+        Shaders::pShader(1);
 
-        // Верхняя челюсть
-        point3d upperJawLeft = { iconX + headWidth * 0.2f, iconY + headHeight * 0.3f, 0 };
-        point3d upperJawRight = { iconX + headWidth * 0.8f, iconY + headHeight * 0.3f, 0 };
+        // Рисуем узор чешуек на голове
+        XMFLOAT4 scalePatternColor = XMFLOAT4(
+            aspidSnakeIcon.scaleColor.x,
+            aspidSnakeIcon.scaleColor.y,
+            aspidSnakeIcon.scaleColor.z,
+            0.8f
+        );
 
-        // Нижняя челюсть (открывается при агрессии)
-        float jawOpen = aspidSnakeIcon.aggressionLevel * 0.4f;
-        point3d lowerJawLeft = { iconX + headWidth * 0.1f, iconY + headHeight * 0.7f + jawOpen * 20.0f, 0 };
-        point3d lowerJawRight = { iconX + headWidth * 0.9f, iconY + headHeight * 0.7f + jawOpen * 20.0f, 0 };
+        ConstBuf::global[1] = scalePatternColor;
+        ConstBuf::Update(5, ConstBuf::global);
+
+        // Чешуйки в виде ромбического узора
+        const int scaleRows = 4;
+        const int scaleCols = 6;
+        for (int row = 0; row < scaleRows; row++) {
+            for (int col = 0; col < scaleCols; col++) {
+                float u = (float)col / (scaleCols - 1);
+                float v = (float)row / (scaleRows - 1);
+
+                // Позиция чешуйки на перевернутом треугольнике
+                point3d scalePos = headBaseLeft.lerp(headBaseRight, u);
+                scalePos = scalePos.lerp(headTip, v * 0.8f); // Смещаем к вершине
+
+                // Добавляем небольшую выпуклость
+                float bulge = sinf(u * PI) * sinf(v * PI) * baseSize * 0.02f;
+                scalePos = scalePos + cameraRight * (GetRandom(-10, 10) * 0.1f) + cameraUp * bulge;
+
+                float scaleSize = baseSize * 0.015f * (0.7f + 0.3f * sinf(aspidSnakeIcon.time * 3.0f + row + col));
+                scalePos.draw(scalePos, scaleSize);
+            }
+        }
+
+        // === УЛУЧШЕННЫЕ ДЕТАЛИЗИРОВАННЫЕ ГЛАЗА ===
+        float eyeYOffset = headHeight * 0.1f; // Глаза ближе к основанию
+        float eyeSize = baseSize * 0.1f;
+        float eyeSpacing = headWidth * 0.2f;
+
+        point3d leftEye = worldPosition + (-cameraRight * eyeSpacing) + (cameraUp * eyeYOffset);
+        point3d rightEye = worldPosition + (cameraRight * eyeSpacing) + (cameraUp * eyeYOffset);
+
+        // Многослойное свечение глаз
+        float eyeGlowIntensity = 0.5f + 0.5f * aggressionPulse;
+
+        // Внешняя аура
+        XMFLOAT4 eyeOuterGlow = XMFLOAT4(
+            aspidSnakeIcon.eyeGlowColor.x,
+            aspidSnakeIcon.eyeGlowColor.y,
+            aspidSnakeIcon.eyeGlowColor.z,
+            eyeGlowIntensity * 0.3f
+        );
+        ConstBuf::global[1] = eyeOuterGlow;
+        ConstBuf::Update(5, ConstBuf::global);
+        leftEye.draw(leftEye, eyeSize * 3.0f);
+        rightEye.draw(rightEye, eyeSize * 3.0f);
+
+        // Среднее свечение
+        XMFLOAT4 eyeMiddleGlow = XMFLOAT4(
+            aspidSnakeIcon.eyeGlowColor.x * 1.2f,
+            aspidSnakeIcon.eyeGlowColor.y * 0.8f,
+            aspidSnakeIcon.eyeGlowColor.z * 0.6f,
+            eyeGlowIntensity * 0.6f
+        );
+        ConstBuf::global[1] = eyeMiddleGlow;
+        ConstBuf::Update(5, ConstBuf::global);
+        leftEye.draw(leftEye, eyeSize * 2.0f);
+        rightEye.draw(rightEye, eyeSize * 2.0f);
+
+        // Основные глаза с текстурой
+        XMFLOAT4 eyeBaseColor = XMFLOAT4(0.9f, 0.9f, 1.0f, 1.0f);
+        ConstBuf::global[1] = eyeBaseColor;
+        ConstBuf::Update(5, ConstBuf::global);
+        leftEye.draw(leftEye, eyeSize * 1.2f);
+        rightEye.draw(rightEye, eyeSize * 1.2f);
+
+        // Радужная оболочка
+        XMFLOAT4 irisColor = XMFLOAT4(0.1f, 0.5f, 0.2f, 1.0f);
+        ConstBuf::global[1] = irisColor;
+        ConstBuf::Update(5, ConstBuf::global);
+        leftEye.draw(leftEye, eyeSize * 0.8f);
+        rightEye.draw(rightEye, eyeSize * 0.8f);
+
+        // Вертикальные зрачки с анимацией
+        float pupilFollow = sinf(aspidSnakeIcon.time * 2.0f) * (eyeSize * 0.15f);
+        XMFLOAT4 pupilColor = XMFLOAT4(0.05f, 0.05f, 0.05f, 1.0f);
+        ConstBuf::global[1] = pupilColor;
+        ConstBuf::Update(5, ConstBuf::global);
+
+        point3d leftPupil = leftEye + cameraUp * pupilFollow;
+        point3d rightPupil = rightEye + cameraUp * pupilFollow;
+        leftPupil.draw(leftPupil, eyeSize * 0.4f);
+        rightPupil.draw(rightPupil, eyeSize * 0.4f);
+
+        // Блики в глазах
+        XMFLOAT4 eyeHighlight = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.9f);
+        ConstBuf::global[1] = eyeHighlight;
+        ConstBuf::Update(5, ConstBuf::global);
+
+        point3d leftHighlight = leftEye + (cameraRight * eyeSize * 0.15f) + (cameraUp * eyeSize * 0.1f);
+        point3d rightHighlight = rightEye + (-cameraRight * eyeSize * 0.15f) + (cameraUp * eyeSize * 0.1f);
+        leftHighlight.draw(leftHighlight, eyeSize * 0.12f);
+        rightHighlight.draw(rightHighlight, eyeSize * 0.12f);
+
+        // === ДЕТАЛИЗИРОВАННЫЕ ЧЕЛЮСТИ И ПАСТЬ ===
+        Shaders::vShader(4);
+        Shaders::pShader(4);
+
+        // Верхняя челюсть (основание треугольника)
+        point3d upperJawLeft = headBaseLeft + (-cameraUp * headHeight * 0.1f);
+        point3d upperJawRight = headBaseRight + (-cameraUp * headHeight * 0.1f);
+
+        // Нижняя челюсть с анимацией открытия
+        float jawOpen = aspidSnakeIcon.aggressionLevel * 0.8f;
+        point3d lowerJawLeft = headTip + (-cameraRight * headWidth * 0.3f) + (cameraUp * jawOpen * 100.0f);
+        point3d lowerJawRight = headTip + (cameraRight * headWidth * 0.3f) + (cameraUp * jawOpen * 100.0f);
 
         XMFLOAT4 jawColor = XMFLOAT4(
             headColor.x * 0.7f,
@@ -2859,163 +3043,124 @@ namespace drawer
         ConstBuf::Update(5, ConstBuf::global);
 
         // Верхняя челюсть
-        drawLine(upperJawLeft, upperJawRight, headHeight * 0.08f);
+        drawLine(upperJawLeft, upperJawRight, headHeight * 0.1f);
 
-        // Нижняя челюсть
-        drawLine(lowerJawLeft, lowerJawRight, headHeight * 0.1f);
-
-        // Боковые линии челюстей
-        drawLine(headLeft, lowerJawLeft, headHeight * 0.06f);
-        drawLine(headRight, lowerJawRight, headHeight * 0.06f);
-
-        // === РИСУЕМ ГЛАЗА ===
-
-        Shaders::vShader(1);
-        Shaders::pShader(1);
-        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-
-        // Позиции глаз
-        float eyeY = iconY + headHeight * 0.4f;
-        float eyeSize = baseSize * 0.12f;
-
-        point3d leftEye = { iconX + headWidth * 0.3f, eyeY, 0 };
-        point3d rightEye = { iconX + headWidth * 0.7f, eyeY, 0 };
-
-        // Свечение глаз
-        float eyeGlowIntensity = 0.5f + 0.5f * aggressionPulse;
-        XMFLOAT4 eyeGlowColor = XMFLOAT4(
-            aspidSnakeIcon.eyeGlowColor.x,
-            aspidSnakeIcon.eyeGlowColor.y,
-            aspidSnakeIcon.eyeGlowColor.z,
-            eyeGlowIntensity * 0.8f
-        );
-
-        // Внешнее свечение глаз
-        ConstBuf::global[1] = eyeGlowColor;
-        ConstBuf::Update(5, ConstBuf::global);
-        leftEye.draw(leftEye, eyeSize * 2.0f);
-        rightEye.draw(rightEye, eyeSize * 2.0f);
-
-        // Основные глаза
-        XMFLOAT4 eyeColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-        ConstBuf::global[1] = eyeColor;
-        ConstBuf::Update(5, ConstBuf::global);
-        leftEye.draw(leftEye, eyeSize);
-        rightEye.draw(rightEye, eyeSize);
-
-        // Зрачки (вертикальные, как у змеи)
-        float pupilOffset = sinf(aspidSnakeIcon.time * 3.0f) * (eyeSize * 0.2f);
-        XMFLOAT4 pupilColor = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
-
-        ConstBuf::global[1] = pupilColor;
-        ConstBuf::Update(5, ConstBuf::global);
-
-        // Вертикальные зрачки
-        point3d leftPupil = { leftEye.x, leftEye.y + pupilOffset, 0 };
-        point3d rightPupil = { rightEye.x, rightEye.y + pupilOffset, 0 };
-
-        leftPupil.draw(leftPupil, eyeSize * 0.4f);
-        rightPupil.draw(rightPupil, eyeSize * 0.4f);
-
-        // === РИСУЕМ ЯЗЫК ===
-
-        if (aspidSnakeIcon.aggressionLevel > 0.5f) {
-            float tonguePhase = fmod(aspidSnakeIcon.time, 2.0f);
-            if (tonguePhase < 0.6f) { // Язык появляется периодически
-                float tongueProgress = tonguePhase / 0.6f;
-
-                point3d tongueBase = { iconX + headWidth * 0.5f, iconY + headHeight * 0.7f, 0 };
-                float tongueLength = baseSize * 0.5f * tongueProgress;
-                point3d tongueTip = { tongueBase.x, tongueBase.y + tongueLength, 0 };
-
-                // Раздвоенный кончик языка
-                point3d tongueTipLeft = { tongueBase.x - baseSize * 0.05f, tongueBase.y + tongueLength, 0 };
-                point3d tongueTipRight = { tongueBase.x + baseSize * 0.05f, tongueBase.y + tongueLength, 0 };
-
-                XMFLOAT4 tongueColor = XMFLOAT4(1.0f, 0.3f, 0.4f, 0.9f);
-
-                Shaders::vShader(4);
-                Shaders::pShader(4);
-                ConstBuf::global[2] = tongueColor;
-                ConstBuf::Update(5, ConstBuf::global);
-
-                // Основная часть языка
-                drawLine(tongueBase, tongueTip, baseSize * 0.03f);
-
-                // Раздвоенный кончик
-                drawLine(tongueTip, tongueTipLeft, baseSize * 0.02f);
-                drawLine(tongueTip, tongueTipRight, baseSize * 0.02f);
-            }
+        // Нижняя челюсть (только при агрессии)
+        if (jawOpen > 0.1f) {
+            drawLine(lowerJawLeft, lowerJawRight, headHeight * 0.08f);
+            // Боковые линии челюстей
+            drawLine(headTip, lowerJawLeft, headHeight * 0.06f);
+            drawLine(headTip, lowerJawRight, headHeight * 0.06f);
         }
 
-        // === РИСУЕМ ЯДОВИТЫЕ КЛЫКИ ===
-
+        // === УЛУЧШЕННЫЕ ЯДОВИТЫЕ КЛЫКИ ===
         Shaders::vShader(1);
         Shaders::pShader(1);
+
+        // Верхние клыки на основании
+        point3d upperFangLeft = upperJawLeft + (-cameraRight * headWidth * 0.05f);
+        point3d upperFangRight = upperJawRight + (cameraRight * headWidth * 0.05f);
+
+        // Нижние клыки (появляются при открытой пасти)
+        point3d lowerFangLeft = lowerJawLeft;
+        point3d lowerFangRight = lowerJawRight;
 
         XMFLOAT4 fangColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.9f);
         ConstBuf::global[1] = fangColor;
         ConstBuf::Update(5, ConstBuf::global);
 
         // Верхние клыки
-        point3d upperFangLeft = { iconX + headWidth * 0.25f, iconY + headHeight * 0.5f, 0 };
-        point3d upperFangRight = { iconX + headWidth * 0.75f, iconY + headHeight * 0.5f, 0 };
+        upperFangLeft.draw(upperFangLeft, baseSize * 0.03f);
+        upperFangRight.draw(upperFangRight, baseSize * 0.03f);
 
-        upperFangLeft.draw(upperFangLeft, baseSize * 0.04f);
-        upperFangRight.draw(upperFangRight, baseSize * 0.04f);
-
-        // Нижние клыки (видны при открытой пасти)
-        if (jawOpen > 0.1f) {
-            point3d lowerFangLeft = { iconX + headWidth * 0.2f, iconY + headHeight * 0.7f, 0 };
-            point3d lowerFangRight = { iconX + headWidth * 0.8f, iconY + headHeight * 0.7f, 0 };
-
-            lowerFangLeft.draw(lowerFangLeft, baseSize * 0.05f);
-            lowerFangRight.draw(lowerFangRight, baseSize * 0.05f);
+        // Нижние клыки (только при открытой пасти)
+        if (jawOpen > 0.2f) {
+            lowerFangLeft.draw(lowerFangLeft, baseSize * 0.025f);
+            lowerFangRight.draw(lowerFangRight, baseSize * 0.025f);
         }
 
-        // === РИСУЕМ ЧЕШУЙКИ И ДЕТАЛИ ===
+        // Капли яда на клыках с улучшенной анимацией
+        if (aspidSnakeIcon.aggressionLevel > 0.6f) {
+            XMFLOAT4 venomColor = XMFLOAT4(0.3f, 1.0f, 0.3f, 0.9f);
+            ConstBuf::global[1] = venomColor;
+            ConstBuf::Update(5, ConstBuf::global);
 
-        Shaders::vShader(4);
-        Shaders::pShader(4);
+            float venomPulse = sinf(aspidSnakeIcon.time * 6.0f);
+            if (venomPulse > 0.7f) {
+                point3d venomDropLeft = upperFangLeft + (-cameraUp * baseSize * 0.015f);
+                point3d venomDropRight = upperFangRight + (-cameraUp * baseSize * 0.015f);
 
-        // Чешуйки на голове
-        XMFLOAT4 scaleColor = XMFLOAT4(
-            headColor.x * 1.2f,
-            headColor.y * 1.2f,
-            headColor.z * 1.2f,
-            0.6f
-        );
-        ConstBuf::global[2] = scaleColor;
-        ConstBuf::Update(5, ConstBuf::global);
-
-        // Рисуем несколько чешуек в виде ромбов
-        for (int i = 0; i < 5; i++) {
-            float scaleX = iconX + headWidth * (0.2f + i * 0.15f);
-            float scaleY = iconY + headHeight * 0.2f;
-            float scaleSize = baseSize * 0.03f;
-
-            point3d scaleCenter = { scaleX, scaleY, 0 };
-            point3d scaleTop = { scaleX, scaleY - scaleSize, 0 };
-            point3d scaleBottom = { scaleX, scaleY + scaleSize, 0 };
-            point3d scaleLeft = { scaleX - scaleSize, scaleY, 0 };
-            point3d scaleRight = { scaleX + scaleSize, scaleY, 0 };
-
-            drawLine(scaleTop, scaleRight, scaleSize * 0.5f);
-            drawLine(scaleRight, scaleBottom, scaleSize * 0.5f);
-            drawLine(scaleBottom, scaleLeft, scaleSize * 0.5f);
-            drawLine(scaleLeft, scaleTop, scaleSize * 0.5f);
+                float dropSize = baseSize * 0.008f * venomPulse;
+                venomDropLeft.draw(venomDropLeft, dropSize);
+                venomDropRight.draw(venomDropRight, dropSize);
+            }
         }
 
-        // === РИСУЕМ АУРУ ЯДОВИТОСТИ ===
+        // === ДЕТАЛИЗИРОВАННЫЙ ЯЗЫК ===
+        if (aspidSnakeIcon.aggressionLevel > 0.3f) {
+            Shaders::vShader(4);
+            Shaders::pShader(4);
 
+            float tonguePhase = fmod(aspidSnakeIcon.time, 2.5f);
+            if (tonguePhase < 1.0f) {
+                float tongueProgress = tonguePhase / 1.0f;
+
+                point3d tongueBase = headTip;
+                float tongueLength = baseSize * 0.5f * tongueProgress;
+                point3d tongueTip = tongueBase + (-cameraUp * tongueLength);
+
+                // Раздвоенный кончик языка с улучшенной анимацией
+                float forkSpread = baseSize * 0.06f * (1.0f + 0.4f * sinf(aspidSnakeIcon.time * 10.0f));
+                point3d tongueTipLeft = tongueTip + (-cameraRight * forkSpread);
+                point3d tongueTipRight = tongueTip + (cameraRight * forkSpread);
+
+                // Градиент цвета языка
+                XMFLOAT4 tongueBaseColor = XMFLOAT4(1.0f, 0.5f, 0.7f, 0.9f);
+                XMFLOAT4 tongueMidColor = XMFLOAT4(1.0f, 0.3f, 0.5f, 0.8f);
+                XMFLOAT4 tongueTipColor = XMFLOAT4(1.0f, 0.2f, 0.3f, 0.7f);
+
+                // Основная часть языка с градиентом
+                point3d tongueMid = tongueBase.lerp(tongueTip, 0.5f);
+
+                ConstBuf::global[2] = tongueBaseColor;
+                ConstBuf::Update(5, ConstBuf::global);
+                drawLine(tongueBase, tongueMid, baseSize * 0.02f);
+
+                ConstBuf::global[2] = tongueMidColor;
+                ConstBuf::Update(5, ConstBuf::global);
+                drawLine(tongueMid, tongueTip, baseSize * 0.018f);
+
+                // Раздвоенный кончик
+                ConstBuf::global[2] = tongueTipColor;
+                ConstBuf::Update(5, ConstBuf::global);
+                drawLine(tongueTip, tongueTipLeft, baseSize * 0.012f);
+                drawLine(tongueTip, tongueTipRight, baseSize * 0.012f);
+            }
+        }
+
+        // === НОСОВЫЕ ЯМКИ И ДОПОЛНИТЕЛЬНЫЕ ДЕТАЛИ ===
         Shaders::vShader(1);
         Shaders::pShader(1);
-        Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 
-        float auraPulse = 0.3f + 0.7f * sinf(aspidSnakeIcon.time * 1.5f);
-        float auraSize = baseSize * (1.2f + 0.3f * auraPulse);
-        float auraX = iconX + headWidth * 0.5f - auraSize * 0.5f;
-        float auraY = iconY + headHeight * 0.5f - auraSize * 0.5f;
+        // Носовые ямки (тепловые сенсоры)
+        point3d nostrilLeft = worldPosition + (-cameraRight * headWidth * 0.1f) + (cameraUp * headHeight * 0.2f);
+        point3d nostrilRight = worldPosition + (cameraRight * headWidth * 0.1f) + (cameraUp * headHeight * 0.2f);
+
+        XMFLOAT4 nostrilColor = XMFLOAT4(0.8f, 0.3f, 0.1f, 0.8f);
+        ConstBuf::global[1] = nostrilColor;
+        ConstBuf::Update(5, ConstBuf::global);
+
+        float nostrilPulse = 0.7f + 0.3f * sinf(aspidSnakeIcon.time * 5.0f);
+        nostrilLeft.draw(nostrilLeft, baseSize * 0.008f * nostrilPulse);
+        nostrilRight.draw(nostrilRight, baseSize * 0.008f * nostrilPulse);
+
+        // === УЛУЧШЕННАЯ АУРА И ЭФФЕКТЫ ===
+        Shaders::vShader(1);
+        Shaders::pShader(1);
+
+        // Основная аура ядовитости
+        float auraPulse = 0.4f + 0.6f * sinf(aspidSnakeIcon.time * 1.5f);
+        float auraSize = baseSize * (1.3f + 0.4f * auraPulse);
 
         XMFLOAT4 auraColor = XMFLOAT4(
             0.3f, 1.0f, 0.3f,
@@ -3024,20 +3169,53 @@ namespace drawer
 
         ConstBuf::global[1] = auraColor;
         ConstBuf::Update(5, ConstBuf::global);
+        worldPosition.draw(worldPosition, auraSize * 0.6f);
 
-        // Рисуем ауру как серию концентрических кругов
-        for (int i = 0; i < 3; i++) {
-            float currentAuraSize = auraSize * (0.7f + i * 0.2f);
-            float currentAuraAlpha = auraColor.w * (1.0f - i * 0.3f);
+        // Энергетические частицы вокруг головы
+        if (aspidSnakeIcon.aggressionLevel > 0.4f) {
+            float particleTime = aspidSnakeIcon.time * 4.0f;
+            int particleCount = 8;
 
-            XMFLOAT4 currentAuraColor = auraColor;
-            currentAuraColor.w = currentAuraAlpha;
+            for (int i = 0; i < particleCount; i++) {
+                float angle = (float)i / particleCount * 2 * PI + particleTime;
+                float radius = baseSize * 0.9f + sinf(particleTime + i * 0.5f) * baseSize * 0.2f;
 
-            ConstBuf::global[1] = currentAuraColor;
+                point3d particlePos = worldPosition +
+                    (cameraRight * cosf(angle) * radius) +
+                    (cameraUp * sinf(angle) * radius * 0.6f);
+
+                float particleSize = baseSize * 0.015f * (0.6f + 0.4f * sinf(particleTime * 3.0f + i));
+                float particleAlpha = 0.4f + 0.3f * sinf(particleTime * 2.0f + i);
+
+                XMFLOAT4 particleColor = XMFLOAT4(0.2f, 1.0f, 0.3f, particleAlpha);
+                ConstBuf::global[1] = particleColor;
+                ConstBuf::Update(5, ConstBuf::global);
+
+                particlePos.draw(particlePos, particleSize);
+            }
+        }
+
+        // Эффект шипения
+        if (aspidSnakeIcon.isHissing && aspidSnakeIcon.hissIntensity > 0.1f) {
+            Shaders::vShader(4);
+            Shaders::pShader(4);
+
+            XMFLOAT4 hissColor = XMFLOAT4(1.0f, 1.0f, 1.0f, aspidSnakeIcon.hissIntensity * 0.3f);
+            ConstBuf::global[2] = hissColor;
             ConstBuf::Update(5, ConstBuf::global);
 
-            point3d auraCenter = { iconX + headWidth * 0.5f, iconY + headHeight * 0.5f, 0 };
-            auraCenter.draw(auraCenter, currentAuraSize * 0.5f);
+            // Линии шипения от пасти
+            for (int i = 0; i < 3; i++) {
+                float angle = (i - 1) * 0.3f;
+                float length = baseSize * 0.4f * aspidSnakeIcon.hissIntensity;
+
+                point3d hissStart = headTip;
+                point3d hissEnd = hissStart +
+                    (cameraRight * sinf(angle) * length) +
+                    (-cameraUp * cosf(angle) * length);
+
+                drawLine(hissStart, hissEnd, baseSize * 0.01f);
+            }
         }
 
         // Восстанавливаем стандартные настройки
@@ -3046,24 +3224,38 @@ namespace drawer
         ConstBuf::Update(5, ConstBuf::global);
     }
 
-    // Функция для обновления позиции иконки
-    void UpdateAspidSnakeIconPosition(float x, float y) {
-        aspidSnakeIcon.position = point3d(x, y, 0.0f);
+    // Функция для обновления состояния иконки
+    void UpdateAspidSnakeIcon(float deltaTime) {
+        if (!aspidSnakeIcon.isActive) return;
+
+        // Обновление анимации шипения
+        if (aspidSnakeIcon.isHissing) {
+            aspidSnakeIcon.hissIntensity = min(aspidSnakeIcon.hissIntensity + deltaTime * 3.0f, 1.0f);
+        }
+        else {
+            aspidSnakeIcon.hissIntensity = max(aspidSnakeIcon.hissIntensity - deltaTime * 4.0f, 0.0f);
+        }
+
+        // Динамическое изменение цвета в зависимости от здоровья
+        if (aspidSnakeIcon.health < 0.3f) {
+            aspidSnakeIcon.baseColor = XMFLOAT4(0.7f, 0.2f, 0.1f, 1.0f); // Красный при низком здоровье
+        }
+        else if (aspidSnakeIcon.health < 0.6f) {
+            aspidSnakeIcon.baseColor = XMFLOAT4(0.4f, 0.6f, 0.1f, 1.0f); // Желто-зеленый при среднем
+        }
+        else {
+            aspidSnakeIcon.baseColor = XMFLOAT4(0.1f, 0.7f, 0.3f, 1.0f); // Стандартный зеленый
+        }
     }
 
-    // Функция для установки уровня агрессии (0-1)
-    void SetAspidAggressionLevel(float level) {
-        aspidSnakeIcon.aggressionLevel = max(0.0f, min(1.0f, level));
+    // Функция для установки здоровья иконки
+    void SetAspidSnakeHealth(float health) {
+        aspidSnakeIcon.health = max(0.0f, min(1.0f, health));
     }
 
-    // Функция для показа/скрытия иконки
-    void SetAspidSnakeIconVisible(bool visible) {
-        aspidSnakeIcon.isActive = visible;
-    }
-
-    // Функция для изменения цвета иконки
-    void SetAspidSnakeIconColor(XMFLOAT4 newColor) {
-        aspidSnakeIcon.baseColor = newColor;
+    // Функция для активации анимации шипения
+    void SetAspidHissing(bool hissing) {
+        aspidSnakeIcon.isHissing = hissing;
     }
 
 
@@ -3184,18 +3376,27 @@ namespace drawer
 
         case gameState_::selectEnemy:
         {
-            InitAspidSnakeIcon();
-            SetAspidAggressionLevel(0.f);
-            UpdateAspidSnakeIconPosition(window.width/2, window.height/2);
-            DrawAspidSnakeIcon();
-            for (int i = 0; i < enemy.starsCords.size(); i++) {
-
-                enemy.SetStarRadius(i, 1000.f);
+       
+            // Инициализируем один раз при входе в состояние
+            static bool aspidInitialized = false;
+            if (!aspidInitialized) {
+                InitAspidSnakeIcon();
+                aspidInitialized = true;
             }
-            //DrawTEST();
-            drawStaminaBar(energy);
+
+            // Обновляем агрессию (можно менять в зависимости от условий игры)
+            //SetAspidAggressionLevel(0.3f + 0.2f * sinf(currentTime * 0.001f));
 
             
+
+            // Остальной код состояния...
+            for (int i = 0; i < enemy.starsCords.size(); i++) {
+                enemy.SetStarRadius(i, 1000.f);
+            }
+
+            // DrawTEST();
+            drawStaminaBar(energy);
+
             CreateMovementParticles();
             UpdateMovementParticles(deltaTime);
             DrawMovementParticles();
@@ -3212,47 +3413,49 @@ namespace drawer
             DrawRenderObject(backgroundStars);
             DrawRenderObject(spaceStars);
             DrawRenderObject(ariesNebula);
-            //DrawRenderObject(blackHole);
 
             Constellation& playerConst = *starSet[player_sign];
             playerConst.Transform = CreateHeroToWorldMatrix(playerConst);
 
-
             Constellation& q = *starSet[0];
             TeleportEnemy(point3d{ 0.f,-10000.f,0.f });
             q.Transform = CreateEnemyToWorldMatrix(q);
-           
-            drawConstellation(q,false, 200.f, currentLinkSize);
-          
+
+            drawConstellation(q, false, 200.f, currentLinkSize);
 
             if (!playerConst.morphing)
                 HandleMouseClick(heroPosition, playerConst);
+
+            if (isCharging) {
+                ApplyChargingShake(playerConst, chargeRatio);
+            }
+
+            UpdateCameraScaleAndStarRadiusReturn(deltaTime, player);
             UpdateAttack(deltaTime);
             DrawSwordAttack();
 
-            drawConstellation(playerConst,false,10.f , 7.f );
+            drawConstellation(playerConst, false, 10.f, 7.f);
 
             std::string curentSignstring = zodiacSignToString(player_sign);
             TextOutA(window.context, window.width * 5 / 6, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());
 
-            //drawString("Find Constallations and click on it", window.width / 2, (200. / 1440) * window.height, 1, true);
-            //drawString("Features:\nMouse wheel to zoom in and out", (1700. / 2560) * window.width, (1200. / 1440) * window.height, .7f, false);
-
             playerConst.RenderMorph(deltaTime);
-
-            drawString("Press < T > to enter tutorial", (100. / 2560)* window.width, (100. / 1440)* window.height, 1.f, false);
+            drawString("Aspid", (1080.0f / 2560.0f)* window.width, (1250.0f / 1440.0f)* window.height, 2.f, true);
+            drawString("Press < T > to enter tutorial", (100. / 2560) * window.width, (100. / 1440) * window.height, 1.f, false);
             if (GetAsyncKeyState('T')) {
                 gameState = gameState_::Exploring;
             }
+
             drawHPBar(playerHP);
             isBattleActive = false;
-            
+
             StateFight(Heropos, Enemypos);
+
+            // Отрисовываем иконку змеи ПОСЛЕДНЕЙ, чтобы она была поверх других элементов UI
+            //DrawAspidSnakeIcon();
+            drawString("ASPID ICON", aspidSnakeIcon.position.x, aspidSnakeIcon.position.y - 80, 0.5f, true);
+
             break;
-
-            // drawString("X", 0, 0, 1, false);
-            // drawString(std::to_string(mouse.pos.y).c_str(), 0, 0, 1, false);
-
         }
         case gameState_::DialogStruct: {
 
@@ -3292,7 +3495,7 @@ namespace drawer
             //drawString(P.c_str(), 600, 750, 1.f, true);
             //drawString("Power", 450, 750, 1.f, true);
             
-            drawStaminaBar(energy);
+           
 
 
             if (isBattleActive == false) {
@@ -3638,7 +3841,8 @@ namespace drawer
             //drawString("HP", (1150.f / 2560)* window.width, (1300.f /1440)* window.height, 2.f, true);
             drawHPBar(playerHP);
             drawEnemyBar(enemyTotalHP);
-            
+            drawStaminaBar(energy);
+            drawString("Aspid",  (1080.0f / 2560.0f) * window.width, (1250.0f / 1440.0f) * window.height, 2.f, true);
             drawConstellation(*starSet[player_sign], false, 10.f, currentLinkSize);
             drawString(enemyH.c_str(), window.width / 2, 100, 2.f, true);
             drawString("ARIES", window.width / 2, 50, 2.f, true);
