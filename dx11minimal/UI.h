@@ -336,9 +336,10 @@ void drawHPBar(float HP) {
     }
 }
 
-void drawStrengthStar(float energy) {
-    float normalizedEnergy = energy / 300.0f;
-    float size = lerp(60, 120, normalizedEnergy);
+float lastCharge = 0;
+void drawStrengthStar(float charge) {
+    lastCharge = lerp(lastCharge, charge, 0.1);
+    float size = lerp(90, 180, lastCharge);
 
     float barWidth = size;
     float barHeight = size / iaspect;
