@@ -274,9 +274,11 @@ void drawStaminaBar(float energy) {
     }
 }
 
+float maxHP = 6.0f;
+float normalizedHP = maxHP;
+
 void drawHPBar(float HP) {
-    float maxHP = 6.0f;
-    float normalizedHP = HP / maxHP;
+    normalizedHP = HP / maxHP;
     float barWidth = 180.0f;
     float barHeight = 18.0f;
     float x = (1080.0f / 2560.0f) * window.width;

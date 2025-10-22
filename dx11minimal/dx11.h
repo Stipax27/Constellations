@@ -549,7 +549,7 @@ namespace Shaders {
 		CreatePS(15, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarPointPS.shader"));
 		//-----------------------------------------------
 
-		CreatePS(100, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Lensing_PS.shader"));
+		CreatePS(100, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\LowHpVignette_PS.shader"));
 
 		//-----------------------------------------------
 
