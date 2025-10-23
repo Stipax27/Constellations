@@ -137,7 +137,7 @@ namespace drawer
         ConstBuf::Update(5, ConstBuf::global);
     }
    
-    void drawStarPulse(Constellation& Constellation, bool colorOverride = false, float finalStarRad = 10.f) {
+    void drawStarPulse(Constellation& Constellation, bool colorOverride = false, float finalStarRad = 10.f,float alpha = 1.0f) {
         std::vector <point3d>& starArray = Constellation.starsCords;
         std::vector <float>& starHealth = Constellation.starsHealth;
 
@@ -161,7 +161,7 @@ namespace drawer
             screenPoint.y *= window.height;
 
             // ЯВНО устанавливаем белый цвет для каждой звезды
-            starColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+            starColor = XMFLOAT4(1.0f, 1.0f, 1.0f, alpha);
             if (Constellation.starsCords == enemy.starsCords) {
                 if (starHealth[i] <= 0.0f) {
                     // Мертвая звезда - темно-красная с низкой альфой
@@ -195,38 +195,52 @@ namespace drawer
         }
 
         // Сбрасываем цвет после отрисовки всех звезд
-        ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, alpha);
         ConstBuf::Update(5, ConstBuf::global);
     }
 
-    void drawConstellation(Constellation& Constellation, bool colorOverride = false, float finalStarRad = 10.f, float sz = 2.f) {
+    void drawConstellation(Constellation& Constellation, bool colorOverride = false,
+        float finalStarRad = 10.f, float sz = 2.f, float alpha = 1.0f) {
+
         if (&Constellation == starSet[player_sign]) {
             finalStarRad *= heroScale;
             sz *= heroScale;
+            // Применяем прозрачность для ГГ
+            alpha *= heroAlpha;
+        }
+        else {
+            // Определяем, является ли это созвездие Зенитом
+            // Предположим, что Зенит - это starSet[16] (как в вашем коде для диалогов)
+            if (&Constellation == starSet[16]) {
+                // Применяем прозрачность для Зенита
+                alpha *= zenithAlpha;
+            }
+            // Можно добавить другие проверки для других NPC
         }
 
         Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 
-        // Сбрасываем цвет перед началом отрисовки
-        ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        // Устанавливаем альфа-канал для цветов
+        XMFLOAT4 starColorWithAlpha = XMFLOAT4(1.0f, 1.0f, 1.0f, alpha);
+        XMFLOAT4 linkColorWithAlpha = XMFLOAT4(1.0f, 1.0f, 1.0f, alpha);
+
+        ConstBuf::global[1] = starColorWithAlpha;
+        ConstBuf::global[2] = linkColorWithAlpha;
         ConstBuf::Update(5, ConstBuf::global);
 
+        // Остальной код отрисовки без изменений
         Shaders::vShader(1);
         Shaders::pShader(1);
         Shaders::gShader(0);
 
-        drawStarPulse(Constellation, colorOverride, finalStarRad);
+        drawStarPulse(Constellation, colorOverride, finalStarRad, alpha);
 
         Shaders::vShader(4);
         Shaders::pShader(4);
 
-        // Сбрасываем цвет для линий
-        ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-        ConstBuf::Update(5, ConstBuf::global);
-
         drawLinks(Constellation, sz);
 
-        // Финальный сброс цветов
+        // Восстанавливаем стандартные цвета
         ConstBuf::global[1] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
         ConstBuf::global[2] = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
         ConstBuf::Update(5, ConstBuf::global);
@@ -3305,7 +3319,23 @@ namespace drawer
         aspidSnakeIcon.isHissing = hissing;
     }
 
+    void UpdateAlphaTransitions(float deltaTime) {
+        // Целевые значения прозрачности
+        float targetZenithAlpha = isZenithSpeaking ? 0.7f : 1.0f; // Зенит становится прозрачнее когда говорит
+        float targetHeroAlpha = isHeroSpeaking ? 0.7f : 1.0f;     // ГГ становится прозрачнее когда говорит
 
+        // Плавное изменение прозрачности
+        float progress = 0.0f;
+        if (alphaChangeStartTime > 0) {
+            progress = min((currentTime - alphaChangeStartTime) / ALPHA_CHANGE_DURATION, 1.0f);
+        }
+
+        zenithAlpha = lerp(zenithAlpha, targetZenithAlpha, progress);
+        heroAlpha = lerp(heroAlpha, targetHeroAlpha, progress);
+
+        // Отладочный вывод (можно убрать после тестирования)
+        // std::cout << "Zenith Alpha: " << zenithAlpha << ", Hero Alpha: " << heroAlpha << std::endl;
+    }
     
 
     float playerHP = getConstellationHP(player);
@@ -3318,11 +3348,12 @@ namespace drawer
         XMVECTOR enemyPositions = Enemy::enemyData.enemyConstellationOffset.r[3];
         
         float enemyTotalHP = getConstellationHP(enemy);
+        UpdateAlphaTransitions(deltaTime);
         // ПРИМЕНЯЕМ РАЗМЕР ТОЛЬКО К ИГРОКУ, НЕ К ОРУЖИЯМ
         for (int i = 0; i < player.starsCords.size(); i++) {
             player.SetStarRadius(i, currentStarRadius);
         }
-
+      
         // Оружия должны иметь свои собственные размеры
         // УБЕРИТЕ эти строки или задайте фиксированные размеры для оружий:
         /*
@@ -3377,7 +3408,7 @@ namespace drawer
         switch (gameState)
         {
         case gameState_::MainMenu: {
-
+            DrawRenderObject(backgroundStars);
             StartMenu();
             Constellation& l = *starSet[18];
             TeleportEnemy(point3d{ 3700.f,-10000.f,-120000.f });
@@ -3405,6 +3436,7 @@ namespace drawer
             break;
 
         case gameState_::DaySelection:
+            
             menuMonthprocessing();
             menuDayprocessing();
             break;
@@ -3487,7 +3519,7 @@ namespace drawer
             TextOutA(window.context, window.width * 5 / 6, window.height - window.height / 20., curentSignstring.c_str(), curentSignstring.size());
 
             playerConst.RenderMorph(deltaTime);
-            drawString("Aspid", (1080.0f / 2560.0f)* window.width, (1250.0f / 1440.0f)* window.height, 2.f, true);
+            //drawString("Aspid", (1080.0f / 2560.0f)* window.width, (1250.0f / 1440.0f)* window.height, 2.f, true);
             drawString("Press < T > to enter tutorial", (100. / 2560) * window.width, (100. / 1440) * window.height, 1.f, false);
             if (GetAsyncKeyState('T')) {
                 gameState = gameState_::Exploring;
@@ -3506,7 +3538,7 @@ namespace drawer
         }
         case gameState_::DialogStruct: {
 
-
+            DrawRenderObject(backgroundStars);
             Constellation& c = *starSet[16];
             TeleportEnemy(point3d{ 6000.f,-5000.f,-115000.f });
             c.Transform = CreateEnemyToWorldMatrix(c);
@@ -3518,11 +3550,12 @@ namespace drawer
             
             Enemy::enemyData.currentRotation = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), 0);
 
-            drawConstellation(c, false, 200.f, currentLinkSize);
-            drawConstellation(h, false, 200.f, currentLinkSize);
+            DiologUI();
             initContentData();
             renderContent(c);
             handleInput();
+            drawConstellation(c, false, 200.f, currentLinkSize);
+            drawConstellation(h, false, 200.f, currentLinkSize);
 
             break;
         }
@@ -3890,7 +3923,8 @@ namespace drawer
             drawEnemyBar(enemyTotalHP);
             drawStaminaBar(energy);
             drawStrengthStar(chargeRatio);
-            drawString("Aspid",  (1080.0f / 2560.0f) * window.width, (1250.0f / 1440.0f) * window.height, 2.f, true);
+            drawWeaponPanel((int)current_weapon, energy);
+            //drawString("Aspid",  (1080.0f / 2560.0f) * window.width, (1250.0f / 1440.0f) * window.height, 2.f, true);
             drawConstellation(*starSet[player_sign], false, 10.f, currentLinkSize);
             drawString(enemyH.c_str(), window.width / 2, 100, 2.f, true);
             drawString("ARIES", window.width / 2, 50, 2.f, true);
@@ -4073,11 +4107,11 @@ namespace drawer
            
 
             drawString("ARIES", window.width / 2, 50, 2.f, true);
-            drawString("Press < T > to enter tutorial", (100. / 2560) * window.width, (100. / 1440) * window.height, 1.f, false);
-
+            /*drawString("Press < T > to enter tutorial", (100. / 2560) * window.width, (100. / 1440) * window.height, 1.f, false);
+            
             if (GetAsyncKeyState('T')) {
                 gameState = gameState_::Exploring;
-            }
+            }*/
 
             // Перезапуск игры
             if (GetAsyncKeyState('R') & 0x8000) {

@@ -57,7 +57,7 @@ void SelectWeapon(Constellation* playerConst) {
     if (GetAsyncKeyState('1')) current_weapon = weapon_name::Sword;
     if (GetAsyncKeyState('2')) current_weapon = weapon_name::Shield;
     if (GetAsyncKeyState('3')) current_weapon = weapon_name::Bow;
-    if (GetAsyncKeyState('4')) current_weapon = weapon_name::Staff;
+    //if (GetAsyncKeyState('4')) current_weapon = weapon_name::Staff;
 
     /*if (lastWeapon != current_weapon && (int)current_weapon > 0)
         backMorphLock = true;*/

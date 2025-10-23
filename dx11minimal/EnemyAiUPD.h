@@ -309,7 +309,7 @@ namespace Enemy {
                 player -= 0.1f;
                 energy -= 100.f;
             }
-            DamageSound();
+            //DamageSound();
             data.attackTimer = 0.0f;
         }
 
@@ -371,7 +371,7 @@ namespace Enemy {
                     player -= 0.1f;
                     energy -= 200.f;
                 }
-                DamageSound();
+                //DamageSound();
             }
 
             // Завершаем атаку, когда волна достигла максимума
@@ -449,7 +449,7 @@ namespace Enemy {
                 data.boomCurrentTime = 0.0f;
                 data.boomRadius = 0.0f;
                 data.attackTimer = 0.0f;
-                DamageSound();
+                //DamageSound();
                 // Восстанавливаем нормальный масштаб
                 data.enemyConstellationOffset = XMMatrixRotationQuaternion(data.currentRotation) *
                     XMMatrixTranslation(enemyPos.x, enemyPos.y, enemyPos.z);

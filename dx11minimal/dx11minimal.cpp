@@ -58,14 +58,19 @@ DWORD battleStartTime;
  const DWORD returnDuration = 5000; // Длительность возврата в мс
 
 
-
+ float zenithAlpha = 1.0f;    // Прозрачность Зенита (1.0 = полностью непрозрачный)
+ float heroAlpha = 1.0f;      // Прозрачность ГГ
+ bool isZenithSpeaking = false;
+ bool isHeroSpeaking = false;
+ DWORD alphaChangeStartTime = 0;
+ float ALPHA_CHANGE_DURATION = 500.0f; // Время изменения прозрачности в ms
 
 HWND hWnd;
 enum class gameState_ {
     MainMenu, Settings, Authors, MonthSelection, DaySelection, confirmSign, selectEnemy, Fight, EndFight, DialogStruct, WinFight, Exploring, Exploring1, Exploring2
 };
 
-gameState_  gameState = gameState_::selectEnemy;
+gameState_  gameState = gameState_::MainMenu;
 
 #include "utils.h"
 #include "CameraTarget.h"

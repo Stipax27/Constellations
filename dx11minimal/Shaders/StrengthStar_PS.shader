@@ -65,6 +65,6 @@ float4 PS(VS_OUTPUT input) : SV_Target
     float s2 = star(rotZ(float3(uv,0), (45 + time.x) * 3.14 / 180).xy * 1.5);
     float s3 = star(rotZ(float3(uv,0), time.x * 2 * 3.14 / 180).xy * 2);
 
-    return saturate(float4(s3, s2, s1, s1 + s2 + s3));
+    return saturate(float4(s3, s2, s1, s1 + s2 + s3) * lerp(float4(0.95, 0.2, 0.1, 1), float4(1, 1, 1, 1), gConst[3].x));
 
 }

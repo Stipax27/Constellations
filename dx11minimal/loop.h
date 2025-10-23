@@ -66,7 +66,7 @@ void mainLoop(float deltaTime)
 	Textures::RenderTarget(0, 0);*/
 
 	Shaders::vShader(10);
-	if (normalizedHP < 0.3f) {
+	if (normalizedHP <= 0.4f) {
 		Shaders::pShader(100);
 	}
 	else
