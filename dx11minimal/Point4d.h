@@ -2,7 +2,7 @@
 #define _POINT4D_H
 
 #include <sstream>
-#include "DirectXMath.h"
+#include "dx11.h"
 
 using namespace DirectX;
 

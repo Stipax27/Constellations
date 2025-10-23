@@ -146,7 +146,6 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="LevelManagerClass.h" />
     <ClInclude Include="mouseclass.h" />
-    <ClInclude Include="mtx.h" />
     <ClInclude Include="ParticleObject.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="PlayerController.h" />
