@@ -98,13 +98,13 @@ void InitializeState(gameState_ newState) {
 
     case gameState_::WinFight:
         // Инициализация экрана победы
-        mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
+        mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\OvenFightThemeNumHzKakoiMb12.mp3"), NULL, 0, NULL);
         mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\FREEFLY.mp3"), NULL, 0, NULL);
         break;
 
     case gameState_::EndFight:
         // Инициализация экрана поражения
-        mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
+        mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\OvenFightThemeNumHzKakoiMb12.mp3"), NULL, 0, NULL);
         mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\FREEFLY.mp3"), NULL, 0, NULL);
         break;
 

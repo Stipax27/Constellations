@@ -276,7 +276,7 @@ namespace Enemy {
             else { // 20% - взрыв (80-99)
                 AttakDir = heroPos - enemyPos;
                 data.currentState = AIState::BOOM_ATTACK;
-                data.attackTimer = 5000.0f;
+                data.attackTimer = 7500.0f;
                 data.lastOrbitPosition = enemyPos;
                 data.attackCooldown = 0.0f;
                 data.isBoomExploding = true;
@@ -410,14 +410,11 @@ namespace Enemy {
                 data.boomStartTime = currentTime;
             }
         }
-        // Фаза взрыва
-        else {
-            // Увеличиваем радиус взрыва
-            data.boomRadius += (data.maxBoomRadius * (deltaTime / 1000.0f))/5.f;
-
-            // Создаем визуальные эффекты взрыва (можно добавить частицы, свечение)
-            //CreateExplosionEffects(enemyPos, data.boomRadius);
-
+        
+        else if (data.isBoomExploding) {
+            // Увеличиваем радиус взрыва - достигнет максимума за 7500 мс
+            data.boomRadius += (data.maxBoomRadius/0.99f * (deltaTime / 1000.0f)) / 7.5f;
+            
             // Проверяем попадание по игроку
             point3d heroPos = point3d(
                 XMVectorGetX(Hero::state.constellationOffset.r[3]),
@@ -426,10 +423,7 @@ namespace Enemy {
             );
 
             
-
-            // Завершаем атаку, когда взрыв достиг максимума
             if (data.boomRadius >= data.maxBoomRadius) {
-
                 bool attackBlocked = (current_weapon == weapon_name::Shield && energy >= energyCost.shieldBlock);
 
                 float distance = (heroPos - enemyPos).magnitude();
@@ -441,15 +435,16 @@ namespace Enemy {
                     else {
                         player -= 0.1f;
                         energy -= 250.f;
-
                     }
                 }
+
+                // Завершаем атаку
                 data.isBoomExploding = false;
                 data.isBoomPreparing = false;
                 data.boomCurrentTime = 0.0f;
                 data.boomRadius = 0.0f;
                 data.attackTimer = 0.0f;
-                //DamageSound();
+
                 // Восстанавливаем нормальный масштаб
                 data.enemyConstellationOffset = XMMatrixRotationQuaternion(data.currentRotation) *
                     XMMatrixTranslation(enemyPos.x, enemyPos.y, enemyPos.z);

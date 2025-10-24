@@ -56,7 +56,7 @@
         point3d accumulationPos;
         bool isBoomPreparing = false;
         bool isBoomExploding = false;
-        float boomPrepareTime = 5000.0f;
+        float boomPrepareTime = 7500.0f;
         float boomCurrentTime = 0.0f;
         float boomRadius = 0.0f;
         float maxBoomRadius = 50000.0f;

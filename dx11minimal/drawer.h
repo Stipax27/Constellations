@@ -1617,42 +1617,42 @@ namespace drawer
                         srand(time(0));
                         float Soundradnd = rand() % 12;
 
-                        if (Soundradnd==0) {
-                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged1.wav");
-                        }
-                        else if(Soundradnd == 1) {
-                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged2.wav");
-                        }
-                        else if (Soundradnd == 2) {
-                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged3.wav");
-                        }
-                        else if (Soundradnd == 3) {
-                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged4.wav");
-                        }
-                        else if (Soundradnd == 4) {
-                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged5.wav");
-                        }
-                        else if (Soundradnd == 5) {
-                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged6.wav");
-                        }
-                        else if (Soundradnd == 6) {
-                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged7.wav");
-                        }
-                        else if (Soundradnd == 7) {
-                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged8.wav");
-                        }
-                        else if (Soundradnd == 8) {
-                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged9.wav");
-                        }
-                        else if (Soundradnd == 9) {
-                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged10.wav");
-                        }
-                        else if (Soundradnd == 10) {
-                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged11.wav");
-                        }
-                        else if (Soundradnd == 11) {
-                            ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged12.wav");
-                        }
+                        //if (Soundradnd==0) {
+                        //    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged1.wav");
+                        //}
+                        //else if(Soundradnd == 1) {
+                        //    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged2.wav");
+                        //}
+                        //else if (Soundradnd == 2) {
+                        //    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged3.wav");
+                        //}
+                        //else if (Soundradnd == 3) {
+                        //    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged4.wav");
+                        //}
+                        //else if (Soundradnd == 4) {
+                        //    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged5.wav");
+                        //}
+                        //else if (Soundradnd == 5) {
+                        //    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged6.wav");
+                        //}
+                        //else if (Soundradnd == 6) {
+                        //    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged7.wav");
+                        //}
+                        //else if (Soundradnd == 7) {
+                        //    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged8.wav");
+                        //}
+                        //else if (Soundradnd == 8) {
+                        //    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged9.wav");
+                        //}
+                        //else if (Soundradnd == 9) {
+                        //    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged10.wav");
+                        //}
+                        //else if (Soundradnd == 10) {
+                        //    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged11.wav");
+                        //}
+                        //else if (Soundradnd == 11) {
+                        //    ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\enemyDamaged12.wav");
+                        //}
                         break;
                     }
                 }
@@ -2084,7 +2084,7 @@ namespace drawer
     point3d enemyAccumulationCenter; // Центр накопления врага
     bool isEnemyAccumulating = false;
     DWORD enemyAccumulationStartTime = 0;
-    const float ENEMY_ACCUMULATION_DURATION = 5000.0f; // Время накопления врага
+    const float ENEMY_ACCUMULATION_DURATION = 7500.0f; // Время накопления врага
 
     // Функция для создания эффекта накопления врага
     void CreateEnemyAccumulationEffect(point3d center, float sphereRadius) {
@@ -2853,7 +2853,7 @@ namespace drawer
                 {
                     gameState = gameState_::Fight;
                     mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\FREEFLY.mp3"), NULL, 0, NULL);
-                    mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
+                    mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\OvenFightThemeNumHzKakoiMb12.mp3"), NULL, 0, NULL);
                 }
             }
         }
@@ -3791,14 +3791,16 @@ namespace drawer
 
             if (enemyAI.data.isShockwaveActive == true) {
                 CreateAdvancedShockwave(Enemypos, enemyAI.data.shockwaveRadius);
+                ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\jump.wav");
                 wasFPressed = false;
                 CameraTargeting::StopTargeting();
             }
             UpdateShockwave(deltaTime);
             RenderShockwave();
 
-            if (enemyAI.data.shouldStartAccumulation) {
+            if (enemyAI.data.shouldStartAccumulation == true) {
                 CreateEnemyAccumulationEffect(enemyAI.data.accumulationPos, 2000.0f);
+                ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\boom.wav");
                 enemyAI.data.shouldStartAccumulation = false;
                 
             }
@@ -3819,7 +3821,7 @@ namespace drawer
 
             if (GetAsyncKeyState('P')) {
                 StartTransition(gameState_::WinFight, 2000.0f);
-                mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\OvenFightThemeNumHzKakoiMb12.mp3"), NULL, 0, NULL);
                 mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\FREEFLY.mp3"), NULL, 0, NULL);
             }
 
@@ -3885,7 +3887,7 @@ namespace drawer
             // Проверка условий победы/поражения
             if (getConstellationHP(enemy) <= 0) {
                 gameState = gameState_::WinFight;
-                mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\OvenFightThemeNumHzKakoiMb12.mp3"), NULL, 0, NULL);
                 mciSendString(TEXT("play ..\\dx11minimal\\Resourses\\Sounds\\FREEFLY.mp3"), NULL, 0, NULL);
             }
 
@@ -3911,13 +3913,11 @@ namespace drawer
                 if (progress >= 1.0f) {
                     deathAnimationStarted = false;
                     gameState = gameState_::EndFight;
-                    mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
+                    mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\OvenFightThemeNumHzKakoiMb12.mp3"), NULL, 0, NULL);
                 }
             }
             InputHook(deltaTime, Heropos, Enemypos);
-
-            //string heroHP = std::to_string(playerHP);
-            //drawString(heroHP.c_str(), window.width / 2, window.height - 100, 1, true);
+            
             //drawString("HP", (1150.f / 2560)* window.width, (1300.f /1440)* window.height, 2.f, true);
             drawHPBar(playerHP);
             drawEnemyBar(enemyTotalHP);
@@ -3997,7 +3997,7 @@ namespace drawer
             if (!transitionStarted) {
                 endFightStartTime = currentTime;
                 transitionStarted = true;
-                mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3"), NULL, 0, NULL);
+                mciSendString(TEXT("stop ..\\dx11minimal\\Resourses\\Sounds\\OvenFightThemeNumHzKakoiMb12.mp3"), NULL, 0, NULL);
             }
 
             // Плавный переход в черно-белый (2 секунды)
