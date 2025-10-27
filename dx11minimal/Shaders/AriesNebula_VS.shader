@@ -93,7 +93,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     float3 starPos = spiral(iID);
 
     float par = starPos.x * starPos.x + starPos.z * starPos.z;
-    starPos.y = cos(starPos.x / 200 * PI) * cos(starPos.z / 200 * PI) * 15 + (par * lerp(32, 24, 0)) / (lerp(120000, 100000, AriesNebulaLerpFactor) + par);
+    starPos.y = cos(starPos.x / 200 * PI) * cos(starPos.z / 200 * PI) * 15 - (par * lerp(24, 16, 0)) / (lerp(50, 40, AriesNebulaLerpFactor) + par);
     
     starPos.y -= perlinTexture.SampleLevel(perlinSamplerState, starPos.xz / (range * 2) + 0.5, 1).r * lerp(10, 8, AriesNebulaLerpFactor);
 
