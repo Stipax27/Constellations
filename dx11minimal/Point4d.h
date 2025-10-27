@@ -4,8 +4,6 @@
 #include <sstream>
 #include "dx11.h"
 
-using namespace DirectX;
-
 struct point4d {
     float x = 0.0f;
     float y = 0.0f;
