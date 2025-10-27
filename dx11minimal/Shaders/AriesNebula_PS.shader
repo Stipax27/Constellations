@@ -37,7 +37,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
     float3 lowerColor = lerp(lerp(float3(1, 0.25, 0.25), float3(1, 0.95, 0.1), n - 0.2), lerp(float3(0.25, 1, 0.25), float3(1, 0, 1), n), AriesNebulaLerpFactor);
     float3 upperColor = lerp(float3(1, 1, 1), float3(0.8, 0.5, 0.05), AriesNebulaLerpFactor);
     float3 color = lerp(upperColor, lowerColor, max(min(lerp((input.worldpos.y - 3000) / 1500, input.worldpos.y / 1000, AriesNebulaLerpFactor), 1), 0));
-    float brightness = exp(-dot(uv, uv) * 20) * 0.03f;
+    float brightness = exp(-dot(uv, uv) * 20) * 0.02f;
 
     float offset = max(length(input.worldpos.xz) - 40000, 0);
     float sat = max(1 - offset / 10000, 0);

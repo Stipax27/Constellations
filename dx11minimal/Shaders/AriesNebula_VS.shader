@@ -87,18 +87,18 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 
     //calc star position
 
-    float range = 60;
+    float range = 65;
     float size = 1;
     //starPos = spiral(iID) * range * 2 - range;
     float3 starPos = spiral(iID);
 
     float par = starPos.x * starPos.x + starPos.z * starPos.z;
-    //starPos.y = cos(starPos.x / 200 * PI) * cos(starPos.z / 200 * PI) * 15 + (par * lerp(32, 24, AriesNebulaLerpFactor)) / (lerp(120000, 100000, AriesNebulaLerpFactor) + par);
+    starPos.y = cos(starPos.x / 200 * PI) * cos(starPos.z / 200 * PI) * 15 + (par * lerp(32, 24, 0)) / (lerp(120000, 100000, AriesNebulaLerpFactor) + par);
     
-    starPos.y += perlinTexture.SampleLevel(perlinSamplerState, starPos.xz / (range * 2) + 0.5, 1).r * lerp(10, 8, AriesNebulaLerpFactor);
+    starPos.y -= perlinTexture.SampleLevel(perlinSamplerState, starPos.xz / (range * 2) + 0.5, 1).r * lerp(10, 8, AriesNebulaLerpFactor);
 
     float3 voronoi = voronoiTexture.SampleLevel(voronoiSamplerState, starPos.xz / (range * 2) + 0.5, 1);
-    starPos.y -= voronoi.x * voronoi.y * voronoi.z * lerp(70, 15, AriesNebulaLerpFactor);
+    starPos.y += voronoi.x * voronoi.y * voronoi.z * lerp(70, 15, AriesNebulaLerpFactor);
 
     //starPos.y += (sin(starPos.x * PI / range * 5 + time.x * 0.05) + cos(starPos.z * PI / range * 5 + time.x * 0.05)) * lerp(0.6, 0.3, AriesNebulaLerpFactor);
     //starPos.y += cos((starPos.x + starPos.z) * PI / range * 2 + time.x * -0.05) * lerp(1.2, 0.6, AriesNebulaLerpFactor);

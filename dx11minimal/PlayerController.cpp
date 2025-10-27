@@ -99,7 +99,7 @@ void PlayerController::ProcessInput()
 	}
 
 	if (playerPhysicBody->velocity.magnitude() > 0) {
-		playerPhysicBody->velocity = playerPhysicBody->velocity.normalized() * 5;
+		playerPhysicBody->velocity = playerPhysicBody->velocity.normalized() * 15;
 	}
 
 	// УПРАВЛЕНИЕ НАКЛОНОМ

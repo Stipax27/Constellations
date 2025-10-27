@@ -58,7 +58,8 @@ void CameraClass::AddPosition(float x = 0.0f, float y = 0.0f, float z = 0.0f)
 
 void CameraClass::AddMatrixRotation(XMMATRIX Matrix)
 {
-	rotationMatrix = XMMatrixMultiply(Matrix, rotationMatrix);
+	XMMATRIX result = Matrix * rotationMatrix;
+	rotationMatrix = result;
 }
 
 

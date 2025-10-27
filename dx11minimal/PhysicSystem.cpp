@@ -57,12 +57,8 @@ public:
 				}*/
 
 				transform->position += physicBody->velocity * deltaTime;
-				//transform->mRotation = XMMatrixMultiply(physicBody->mAngVelocity, transform->mRotation);
-				//XMMATRIX x = XMMatrixIdentity();
-				//x= XMMatrixMultiply(physicBody->mAngVelocity, transform->mRotation);
-				//transform->mRotation = XMMatrixIdentity();
-				//transform->mRotation = x;
-
+				XMMATRIX result = physicBody->mAngVelocity * transform->mRotation;
+				transform->mRotation = result;
 			}
 		}
 
