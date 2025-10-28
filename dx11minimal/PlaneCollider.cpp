@@ -9,6 +9,8 @@ struct PlaneCollider : Component
 	float friction = 1.0f;
 	point3d normal = point3d();
 	float radius = 1.0f;
+
+	bool isTouchable = true;
 };
 
 #endif

@@ -105,9 +105,6 @@
     <ClInclude Include="LevelManagerClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="mtx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="system.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -129,18 +126,12 @@
     <ClInclude Include="dx11.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Point3x3.h">
-      <Filter>Header Files\Structures</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LevelManagerClass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SphereCollider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Transform.cpp">
@@ -200,8 +191,8 @@
     <ClCompile Include="PlaneCollider.cpp">
       <Filter>Source Files\Physic</Filter>
     </ClCompile>
-    <ClCompile Include="Point3x3.cpp">
-      <Filter>Source Files\Structures</Filter>
+    <ClCompile Include="SphereCollider.cpp">
+      <Filter>Source Files\Physic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
