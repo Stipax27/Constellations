@@ -59,6 +59,8 @@ public:
 				transform->position += physicBody->velocity * deltaTime;
 				XMMATRIX result = physicBody->mAngVelocity * transform->mRotation;
 				transform->mRotation = result;
+
+				physicBody->velocity = physicBody->velocity.lerp(point3d(), 5 * deltaTime);
 			}
 		}
 

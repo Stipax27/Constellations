@@ -30,7 +30,7 @@ public:
 	void AddPosition(float, float, float);
 	void AddMatrixRotation(XMMATRIX);
 	void AddEulerRotation(float, float, float);
-	void AddQuaternionRotation(float, float, float, float);
+	void AddVectorRotation(point3d, float);
 
 	XMFLOAT3 GetPosition();
 	XMFLOAT3 GetEulerRotation();

@@ -32,9 +32,9 @@ point3d point3d::cross(const point3d& other) const {
     };
 }
 
-inline point3d point3d::lerp(const point3d& other, float a)
+point3d point3d::lerp(const point3d& other, float a)
 {
-    return { x * (1 - a) + other.x * a,
+    return point3d{ x * (1 - a) + other.x * a,
         y * (1 - a) + other.y * a,
         z * (1 - a) + other.z * a };
 }
@@ -51,6 +51,10 @@ point3d point3d::fract()
 
 float point3d::dot(const point3d& other) const {
     return x * other.x + y * other.y + z * other.z;
+}
+
+DirectX::XMVECTOR point3d::toXMVector() const {
+    return DirectX::XMVectorSet(x, y, z, 0);
 }
 
 

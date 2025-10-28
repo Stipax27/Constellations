@@ -77,29 +77,29 @@ bool PlayerController::IsKeyPressed(const int Key)
 void PlayerController::ProcessInput()
 {
 	// УПРАВЛЕНИЕ  ПЕРЕДВИЖЕНИЕМ
-	playerPhysicBody->velocity = point3d();
+	point3d velocity = point3d();
 
 	if (IsKeyPressed('W')) {
-		playerPhysicBody->velocity += point3d(0, 0, 1);
+		velocity += playerTransform->GetLookVector();
 	}
 	if (IsKeyPressed('S')) {
-		playerPhysicBody->velocity += point3d(0, 0, -1);
+		velocity += playerTransform->GetLookVector() * -1;
 	}
 	if (IsKeyPressed('A')) {
-		playerPhysicBody->velocity += point3d(-1, 0, 0);
+		velocity += playerTransform->GetRightVector() * -1;
 	}
 	if (IsKeyPressed('D')) {
-		playerPhysicBody->velocity += point3d(1, 0, 0);
+		velocity += playerTransform->GetRightVector();
 	}
 	if (IsKeyPressed(VK_SPACE)) {
-		playerPhysicBody->velocity += point3d(0, 1, 0);
+		velocity += playerTransform->GetUpVector();
 	}
 	if (IsKeyPressed(VK_CONTROL)) {
-		playerPhysicBody->velocity += point3d(0, -1, 0);
+		velocity += playerTransform->GetUpVector() * -1;
 	}
 
-	if (playerPhysicBody->velocity.magnitude() > 0) {
-		playerPhysicBody->velocity = playerPhysicBody->velocity.normalized() * 15;
+	if (velocity.magnitude() > 0) {
+		playerPhysicBody->velocity = velocity.normalized() * 15;
 	}
 
 	// УПРАВЛЕНИЕ НАКЛОНОМ
@@ -113,8 +113,7 @@ void PlayerController::ProcessInput()
 	}
 
 	if (roll != 0) {
-		//XMVECTOR lookVector = XMQuaternionRotationAxis(playerTransform->GetLookVector(), roll);
-		//camera->AddQuaternionRotation(XMVectorGetX(lookVector), XMVectorGetY(lookVector), XMVectorGetZ(lookVector), XMVectorGetW(lookVector));
+		camera->AddVectorRotation(playerTransform->GetLookVector(), roll);
 	}
 }
 

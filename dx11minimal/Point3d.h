@@ -3,6 +3,7 @@
 
 #include <sstream>
 #include <corecrt_math.h>
+#include "DirectXMath.h"
 
 struct point3d {
     float x = 0.0f;
@@ -15,10 +16,11 @@ struct point3d {
     float magnitude() const;
     point3d normalized() const;
     point3d cross(const point3d& other) const;
-    inline point3d lerp(const point3d& other, float a);
+    point3d lerp(const point3d& other, float a);
     point3d floor3();
     point3d fract();
     float dot(const point3d& other) const;
+    DirectX::XMVECTOR toXMVector() const;
 
     bool operator==(const point3d& other) const;
     bool operator!=(const point3d& other) const;

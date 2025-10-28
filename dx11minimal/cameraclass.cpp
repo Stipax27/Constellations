@@ -70,10 +70,10 @@ void CameraClass::AddEulerRotation(float x = 0.0f, float y = 0.0f, float z = 0.0
 }
 
 
-void CameraClass::AddQuaternionRotation(float x = 0.0f, float y = 1.0f, float z = 0.0f, float w = 0.0f)
+void CameraClass::AddVectorRotation(point3d vector = point3d(0, 1, 0), float w = 0.0f)
 {
-	XMVECTOR addRotation = XMQuaternionRotationAxis(XMVectorSet(x, y, z, 0.0f), w * RAD);
-	qRotation = XMQuaternionNormalize(XMQuaternionMultiply(qRotation, addRotation));
+	XMVECTOR addRotation = XMQuaternionRotationAxis(vector.toXMVector(), w * RAD);
+	AddMatrixRotation(XMMatrixRotationQuaternion(addRotation));
 }
 
 
