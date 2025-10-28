@@ -24,7 +24,7 @@ bool World::Initialize(float iaspect)
 	m_Camera = new CameraClass;
 	m_Camera->Initialize(iaspect);
 
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	m_Camera->SetPosition(point3d(0.0f, 0.0f, -10.0f));
 	m_Camera->SetQuaternionRotation(0.0f, 1.0f, 0.0f, 0.0f);
 
 	return true;

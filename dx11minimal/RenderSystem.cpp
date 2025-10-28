@@ -113,7 +113,9 @@ public:
 					ConstBuf::ConstToPixel(5);
 
 					for (int a = 0; a < constellation->stars.size(); a++) {
-						point3d star = constellation->stars[a] + transformPos;
+						point3d star = constellation->stars[a];
+						star = transformPos + transform->GetLookVector() * star.z + transform->GetRightVector() * star.x + transform->GetUpVector() * star.y;
+
 						transformedStars.push_back(star);
 					}
 

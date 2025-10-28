@@ -22,7 +22,7 @@ public:
 
 	void Initialize(float);
 
-	void SetPosition(float, float, float);
+	void SetPosition(point3d);
 	void SetEulerRotation(float, float, float);
 	void SetQuaternionRotation(float, float, float, float);
 	void SetFov(float);

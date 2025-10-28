@@ -32,9 +32,9 @@ void CameraClass::Initialize(float iAspect)
 }
 
 
-void CameraClass::SetPosition(float x, float y, float z)
+void CameraClass::SetPosition(point3d Position)
 {
-	position = point3d(x, y, z);
+	position = Position;
 }
 
 

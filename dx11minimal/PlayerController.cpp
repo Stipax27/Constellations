@@ -123,7 +123,7 @@ void PlayerController::ProcessCamera()
 	//point3d camPos = playerTransform->position - playerTransform->GetLookVector() * 10;
 	//camera->SetPosition(camPos.x, camPos.y, camPos.z);
 
-	camera->SetPosition(playerTransform->position.x, playerTransform->position.y, playerTransform->position.z - 10);
+	camera->SetPosition(playerTransform->position - playerTransform->GetLookVector() * 10);
 }
 
 
