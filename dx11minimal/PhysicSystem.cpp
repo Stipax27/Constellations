@@ -61,6 +61,7 @@ public:
 				transform->mRotation = result;
 
 				physicBody->velocity = physicBody->velocity.lerp(point3d(), 5 * deltaTime);
+				physicBody->mAngVelocity = XMMatrixIdentity();
 			}
 		}
 

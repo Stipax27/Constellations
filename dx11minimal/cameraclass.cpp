@@ -38,6 +38,12 @@ void CameraClass::SetPosition(point3d Position)
 }
 
 
+void CameraClass::SetMatrixRotation(XMMATRIX Matrix)
+{
+	rotationMatrix = Matrix;
+}
+
+
 void CameraClass::SetEulerRotation(float x, float y, float z)
 {
 	qRotation = eulerToQuanternion(x * RAD, y * RAD, z * RAD);

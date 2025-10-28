@@ -20,19 +20,19 @@ struct Transform : Component
         0, 0, 0, 1
     };
 
-    point3d GetLookVector()
-	{
-        return point3d(mRotation.r[2].m128_f32[0], mRotation.r[2].m128_f32[1], mRotation.r[2].m128_f32[2]).normalized();
-	}
+    point3d GetRightVector()
+    {
+        return point3d(mRotation.r[0].m128_f32[0], mRotation.r[0].m128_f32[1], mRotation.r[0].m128_f32[2]).normalized();
+    }
 
     point3d GetUpVector()
     {
         return point3d(mRotation.r[1].m128_f32[0], mRotation.r[1].m128_f32[1], mRotation.r[1].m128_f32[2]).normalized();
     }
 
-    point3d GetRightVector()
+    point3d GetLookVector()
     {
-        return point3d(mRotation.r[0].m128_f32[0], mRotation.r[0].m128_f32[1], mRotation.r[0].m128_f32[2]).normalized();
+        return point3d(mRotation.r[2].m128_f32[0], mRotation.r[2].m128_f32[1], mRotation.r[2].m128_f32[2]).normalized();
     }
 };
 

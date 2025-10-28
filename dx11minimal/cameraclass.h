@@ -23,6 +23,7 @@ public:
 	void Initialize(float);
 
 	void SetPosition(point3d);
+	void SetMatrixRotation(XMMATRIX);
 	void SetEulerRotation(float, float, float);
 	void SetQuaternionRotation(float, float, float, float);
 	void SetFov(float);
