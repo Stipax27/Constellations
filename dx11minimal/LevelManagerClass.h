@@ -10,7 +10,6 @@
 #include "windowclass.h"
 #include "mouseclass.h"
 
-#include "cameraclass.h"
 #include "PlayerController.h"
 
 #include "world.h"

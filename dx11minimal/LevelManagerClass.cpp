@@ -122,6 +122,7 @@ bool LevelManagerClass::Initialize()
 		{2,3},
 		{2,5}
 	};
+	entity->active = false;
 
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();

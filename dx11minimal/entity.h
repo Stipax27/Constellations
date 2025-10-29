@@ -20,6 +20,7 @@ class Entity
 {
 public:
 	string name;
+	bool active = true;
 
 public:
 	Entity();

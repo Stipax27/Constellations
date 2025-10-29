@@ -62,108 +62,111 @@ public:
 		for (int i = 0; i < size; i++)
 		{
 			Entity* entity = entities[i];
-			Transform* transform = entity->GetComponent<Transform>();
-
-			if (transform != nullptr)
+			if (entity->active)
 			{
-				bool result;
+				Transform* transform = entity->GetComponent<Transform>();
 
-				//// Turn off the Z buffer to begin all 2D rendering.
-				//m_Direct3D->TurnZBufferOff();
+				if (transform != nullptr)
+				{
+					bool result;
 
-				//// Put the bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
-				//result = m_Bitmap->Render(m_Direct3D->GetDeviceContext());
-				//if (!result)
-				//{
-				//	return false;
-				//}
+					//// Turn off the Z buffer to begin all 2D rendering.
+					//m_Direct3D->TurnZBufferOff();
 
-				//// Render the bitmap with the UI shader.
-				//result = m_ShaderManager->RenderUIShader(m_Direct3D->GetDeviceContext(), m_Bitmap->GetIndexCount(), m_Bitmap->GetTexture());
-				//if (!result)
-				//{
-				//	return false;
-				//}
+					//// Put the bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
+					//result = m_Bitmap->Render(m_Direct3D->GetDeviceContext());
+					//if (!result)
+					//{
+					//	return false;
+					//}
 
-				//// Turn the Z buffer back on now that all 2D rendering has completed.
-				//m_Direct3D->TurnZBufferOn();
+					//// Render the bitmap with the UI shader.
+					//result = m_ShaderManager->RenderUIShader(m_Direct3D->GetDeviceContext(), m_Bitmap->GetIndexCount(), m_Bitmap->GetTexture());
+					//if (!result)
+					//{
+					//	return false;
+					//}
 
-				//rotateMatrix = XMMatrixRotationQuaternion(transform->qRotation);
-				//scaleMatrix = XMMatrixScaling(transform->scale.x, transform->scale.y, transform->scale.z);
-				//translateMatrix = XMMatrixTranslation(transform->position.x, transform->position.y, transform->position.z);
+					//// Turn the Z buffer back on now that all 2D rendering has completed.
+					//m_Direct3D->TurnZBufferOn();
 
-				// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
-				//srMatrix = XMMatrixMultiply(scaleMatrix, transform->mRotation);
-				//XMMATRIX worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
-				
-				Constellation* constellation = entity->GetComponent<Constellation>();
-				if (constellation != nullptr)
+					//rotateMatrix = XMMatrixRotationQuaternion(transform->qRotation);
+					//scaleMatrix = XMMatrixScaling(transform->scale.x, transform->scale.y, transform->scale.z);
+					//translateMatrix = XMMatrixTranslation(transform->position.x, transform->position.y, transform->position.z);
+
+					// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
+					//srMatrix = XMMatrixMultiply(scaleMatrix, transform->mRotation);
+					//XMMATRIX worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+
+					Constellation* constellation = entity->GetComponent<Constellation>();
+					if (constellation != nullptr)
+					{
+						// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+					//sprite->model.Render(m_Direct3D->GetDeviceContext());
+
+						point3d transformPos = transform->position;
+						vector<point3d> transformedStars;
+
+						Shaders::vShader(4);
+						Shaders::pShader(4);
+
+						ConstBuf::global[2] = XMFLOAT4(1, 1, 1, 1);
+						ConstBuf::Update(5, ConstBuf::global);
+						ConstBuf::ConstToPixel(5);
+
+						for (int a = 0; a < constellation->stars.size(); a++) {
+							point3d star = constellation->stars[a];
+							star = transformPos + transform->GetLookVector() * star.z + transform->GetRightVector() * star.x + transform->GetUpVector() * star.y;
+
+							transformedStars.push_back(star);
+						}
+
+						for (int a = 0; a < constellation->links.size(); a++) {
+							pair<int, int> link = constellation->links[a];
+							point3d point1 = transformedStars[link.first];
+							point3d point2 = transformedStars[link.second];
+
+							ConstBuf::global[0] = XMFLOAT4(point1.x, point1.y, point1.z, 0.25);
+							ConstBuf::global[1] = XMFLOAT4(point2.x, point2.y, point2.z, 0.25);
+							ConstBuf::Update(5, ConstBuf::global);
+							ConstBuf::ConstToVertex(5);
+
+							Draw::Drawer(1);
+						}
+
+						Shaders::vShader(1);
+						Shaders::pShader(1);
+
+						for (int a = 0; a < transformedStars.size(); a++) {
+							point3d star = transformedStars[a];
+
+							ConstBuf::global[0] = XMFLOAT4(star.x, star.y, star.z, transform->scale.x);
+							ConstBuf::Update(5, ConstBuf::global);
+							ConstBuf::ConstToVertex(5);
+
+							Draw::Drawer(1);
+						}
+					}
+				}
+
+				SpriteCluster* spriteCluster = entity->GetComponent<SpriteCluster>();
+				if (spriteCluster != nullptr)
 				{
 					// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 				//sprite->model.Render(m_Direct3D->GetDeviceContext());
 
-					point3d transformPos = transform->position;
-					vector<point3d> transformedStars;
+					Shaders::vShader(spriteCluster->vShader);
+					Shaders::pShader(spriteCluster->pShader);
 
-					Shaders::vShader(4);
-					Shaders::pShader(4);
-
-					ConstBuf::global[2] = XMFLOAT4(1, 1, 1, 1);
-					ConstBuf::Update(5, ConstBuf::global);
-					ConstBuf::ConstToPixel(5);
-
-					for (int a = 0; a < constellation->stars.size(); a++) {
-						point3d star = constellation->stars[a];
-						star = transformPos + transform->GetLookVector() * star.z + transform->GetRightVector() * star.x + transform->GetUpVector() * star.y;
-
-						transformedStars.push_back(star);
-					}
-
-					for (int a = 0; a < constellation->links.size(); a++) {
-						pair<int, int> link = constellation->links[a];
-						point3d point1 = transformedStars[link.first];
-						point3d point2 = transformedStars[link.second];
-
-						ConstBuf::global[0] = XMFLOAT4(point1.x, point1.y, point1.z, 0.25);
-						ConstBuf::global[1] = XMFLOAT4(point2.x, point2.y, point2.z, 0.25);
+					if (transform != nullptr)
+					{
+						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
 						ConstBuf::Update(5, ConstBuf::global);
 						ConstBuf::ConstToVertex(5);
-
-						Draw::Drawer(1);
 					}
 
-					Shaders::vShader(1);
-					Shaders::pShader(1);
-
-					for (int a = 0; a < transformedStars.size(); a++) {
-						point3d star = transformedStars[a];
-
-						ConstBuf::global[0] = XMFLOAT4(star.x, star.y, star.z, transform->scale.x);
-						ConstBuf::Update(5, ConstBuf::global);
-						ConstBuf::ConstToVertex(5);
-
-						Draw::Drawer(1);
-					}
+					context->DrawInstanced(6, spriteCluster->pointsNum, 0, 0);
 				}
-			}
-
-			SpriteCluster* spriteCluster = entity->GetComponent<SpriteCluster>();
-			if (spriteCluster != nullptr)
-			{
-				// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-			//sprite->model.Render(m_Direct3D->GetDeviceContext());
-
-				Shaders::vShader(spriteCluster->vShader);
-				Shaders::pShader(spriteCluster->pShader);
-
-				if (transform != nullptr)
-				{
-					ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
-					ConstBuf::Update(5, ConstBuf::global);
-					ConstBuf::ConstToVertex(5);
-				}
-
-				context->DrawInstanced(6, spriteCluster->pointsNum, 0, 0);
 			}
 		}
 
