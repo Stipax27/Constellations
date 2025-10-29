@@ -31,10 +31,6 @@ public:
 
 	void Shutdown()
 	{
-		if (m_Camera)
-		{
-			m_Camera = 0;
-		}
 	}
 
 
@@ -49,11 +45,6 @@ public:
 		Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 		Rasterizer::Cull(Rasterizer::cullmode::off);
 		Depth::Depth(Depth::depthmode::off);
-
-		// Generate the view matrix based on the camera's position.
-		m_Camera->Render();
-		//m_Camera->SetQuaternionRotation(0, 1, 0, timer::GetCounter() / 1000);
-		//m_Camera->AddEulerRotation(0, 1, 0);
 
 		size_t size = entities.size();
 		for (int i = 0; i < size; i++)
@@ -73,6 +64,7 @@ public:
 
 						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, 0);
 						ConstBuf::global[1] = XMFLOAT4(transform->scale.x, transform->scale.y, 0, 0);
+						ConstBuf::global[2] = XMFLOAT4(rect->anchorPoint.x, rect->anchorPoint.y, 0, 0);
 						ConstBuf::Update(5, ConstBuf::global);
 						ConstBuf::ConstToVertex(5);
 
@@ -95,9 +87,6 @@ public:
 
 		return true;
 	}
-
-private:
-	CameraClass* m_Camera;
 };
 
 #endif
