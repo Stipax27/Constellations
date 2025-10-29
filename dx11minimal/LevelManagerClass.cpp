@@ -59,6 +59,7 @@ bool LevelManagerClass::Initialize()
 
 	Entity* player;
 	Entity* entity;
+	Explosion* explosion;
 	Constellation* constellation;
 	Transform* transform;
 	PhysicBody* physicBody;
@@ -86,6 +87,10 @@ bool LevelManagerClass::Initialize()
 		{2,3},
 		{2,5}
 	};
+
+	entity = m_World->CreateEntity();
+	explosion = entity->AddComponent<Explosion>();
+	transform = entity->AddComponent<Transform>();
 
 	entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();

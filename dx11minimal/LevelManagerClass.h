@@ -23,6 +23,7 @@
 #include "PlaneCollider.cpp"
 #include "SpriteCluster.cpp"
 #include "Constellation.cpp"
+#include "Explosion.cpp" 
 
 #include "RenderSystem.cpp"
 #include "UISystem.cpp"
