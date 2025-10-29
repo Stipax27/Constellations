@@ -24,9 +24,11 @@
 #include "SpriteCluster.cpp"
 #include "Constellation.cpp"
 
+#include "RenderSystem.cpp"
+#include "UISystem.cpp"
+
 #include "PhysicSystem.cpp"
 #include "CollisionSystem.cpp"
-#include "RenderSystem.cpp"
 
 
 /////////////

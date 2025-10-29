@@ -267,6 +267,7 @@
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Point3d.cpp" />
     <ClCompile Include="Point4d.cpp" />
+    <ClCompile Include="Rect.cpp" />
     <ClCompile Include="SpriteCluster.cpp" />
     <ClCompile Include="PhysicBody.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />
@@ -275,6 +276,7 @@
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="UISystem.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="WindowClass.cpp" />
     <ClCompile Include="World.cpp" />

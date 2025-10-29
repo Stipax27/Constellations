@@ -127,6 +127,7 @@ bool LevelManagerClass::Initialize()
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
 	m_World->AddRenderSystem<RenderSystem>(m_World->m_Camera);
+	m_World->AddRenderSystem<UISystem>();
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING END //

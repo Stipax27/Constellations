@@ -64,6 +64,9 @@
     <Filter Include="Source Files\Physic">
       <UniqueIdentifier>{6e8fe13d-84c8-4fea-9982-53197fa4309e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Render\UI">
+      <UniqueIdentifier>{669754a8-2675-416b-b672-12ef5143d519}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -193,6 +196,12 @@
     </ClCompile>
     <ClCompile Include="SphereCollider.cpp">
       <Filter>Source Files\Physic</Filter>
+    </ClCompile>
+    <ClCompile Include="UISystem.cpp">
+      <Filter>Source Files\Render\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Rect.cpp">
+      <Filter>Source Files\Render\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

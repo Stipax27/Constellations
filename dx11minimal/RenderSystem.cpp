@@ -171,7 +171,7 @@ public:
 		}
 
 		Textures::CreateMipMap();
-		Draw::OutputRenderTextures();
+		Draw::SwitchRenderTextures();
 
 		Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
 		Depth::Depth(Depth::depthmode::off);
