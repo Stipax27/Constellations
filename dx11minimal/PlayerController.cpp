@@ -122,7 +122,7 @@ void PlayerController::ProcessInput()
 
 void PlayerController::ProcessCamera()
 {
-	camera->SetPosition(camera->GetPosition().lerp(playerTransform->position - playerTransform->GetLookVector() * 10, 0.2f));
+	camera->SetPosition(camera->GetPosition().lerp(playerTransform->position - playerTransform->GetLookVector() * 7 + playerTransform->GetUpVector() * 2, 0.2f));
 	camera->SetMatrixRotation(playerTransform->mRotation);
 }
 
