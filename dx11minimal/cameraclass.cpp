@@ -90,9 +90,9 @@ void CameraClass::SetFov(float FoV)
 }
 
 
-XMFLOAT3 CameraClass::GetPosition()
+point3d CameraClass::GetPosition()
 {
-	return XMFLOAT3(position.x, position.y, position.z);
+	return position;
 }
 
 
@@ -100,6 +100,12 @@ XMFLOAT3 CameraClass::GetEulerRotation()
 {
 	point3d eRotation = quaternionToEuler(XMVectorGetX(qRotation), XMVectorGetY(qRotation), XMVectorGetZ(qRotation), XMVectorGetW(qRotation));
 	return XMFLOAT3(eRotation.x, eRotation.y, eRotation.z);
+}
+
+
+XMMATRIX CameraClass::GetMatrixRotation()
+{
+	return rotationMatrix;
 }
 
 
