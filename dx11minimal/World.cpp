@@ -122,9 +122,6 @@ bool World::UpdateRender()
 		}
 	}
 
-	// Present the rendered scene to the screen.
-	Draw::Present();
-
 	return true;
 }
 

@@ -104,7 +104,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg = { 0 };
 
     timer::StartCounter();
-    //ShowCursor(FALSE);
+    ShowCursor(FALSE);
 
     // Main message loop:
     while (msg.message != WM_QUIT)

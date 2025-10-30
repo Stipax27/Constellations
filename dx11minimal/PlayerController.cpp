@@ -138,7 +138,8 @@ void PlayerController::ProcessMouse()
 	if (length > CURSOR_IGNORE_ZONE) {
 		if (length > MAX_CURSOR_DEVIATION) {
 			mousePos = mousePos.normalized() * MAX_CURSOR_DEVIATION;
-			SetCursorPos(mousePos.x * window->width * window->aspect + window->width / 2, mousePos.y * window->height + window->height / 2);
+			mouse->pos = point3d(mousePos.x * window->width * window->aspect + window->width / 2, mousePos.y * window->height + window->height / 2, 0);
+			SetCursorPos(mouse->pos.x, mouse->pos.y);
 		}
 
 		float k = (length - CURSOR_IGNORE_ZONE) / MAX_CURSOR_DEVIATION;

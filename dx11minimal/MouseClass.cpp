@@ -64,3 +64,16 @@ point3d MouseClass::GetMouseRay() {
 
 	return rayWorld;
 }
+
+
+void MouseClass::RenderCursor() {
+	ConstBuf::global[0] = XMFLOAT4(pos.x / window->width * 2 - 1, -(pos.y / window->height * 2 - 1), 0.0f, 1.0f);
+	ConstBuf::Update(5, ConstBuf::global);
+	ConstBuf::ConstToVertex(5);
+
+	Shaders::vShader(11);
+	Shaders::pShader(11);
+	Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
+
+	context->Draw(6, 0);
+}

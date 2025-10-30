@@ -196,5 +196,8 @@ bool LevelManagerClass::Frame()
 		return false;
 	}
 
+	mouse->RenderCursor();
+	Draw::Present();
+
 	return true;
 }

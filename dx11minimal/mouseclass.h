@@ -28,7 +28,9 @@ public:
 	void Initialize(WindowClass* window, CameraClass* camera);
 	void Shutdown();
 	void Update();
+
 	point3d GetMouseRay();
+	void RenderCursor();
 
 private:
 	WindowClass* window;

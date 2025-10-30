@@ -9,13 +9,6 @@ cbuffer frame : register(b4)
     float4 aspect;
 };
 
-cbuffer camera : register(b3)
-{
-    float4x4 world[2];
-    float4x4 view[2];
-    float4x4 proj[2];
-};
-
 cbuffer drawMat : register(b2)
 {
     float4x4 model;
@@ -61,18 +54,6 @@ float3 HSLToRGB(float3 hsl) {
     return rgb + m;
 }
 
-
-float3 rotZ(float3 pos, float a)
-{
-    float3x3 m =
-    {
-        cos(a), -sin(a),0,
-        sin(a), cos(a), 0,
-        0, 0, 1
-    };
-    pos = mul(pos, m);
-    return pos;
-}
 
 float star(float2 uv)
 {
