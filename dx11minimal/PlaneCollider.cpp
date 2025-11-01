@@ -1,4 +1,4 @@
-#ifndef _PLANECOLLIDER_C_
+﻿#ifndef _PLANECOLLIDER_C_
 #define _PLANECOLLIDER_C_
 
 #include "component.h"
@@ -7,7 +7,7 @@
 struct PlaneCollider : Component
 {
 	float friction = 1.0f;
-	point3d normal = point3d();
+	point3d normal = point3d(0, 1, 0);
 	float radius = 1.0f;
 
 	bool isTouchable = true;

@@ -1,4 +1,4 @@
-#include "LevelManagerClass.h"
+﻿#include "LevelManagerClass.h"
 
 LevelManagerClass::LevelManagerClass()
 {
@@ -62,7 +62,7 @@ bool LevelManagerClass::Initialize()
 	Constellation* constellation;
 	Transform* transform;
 	PhysicBody* physicBody;
-	//SphereCollider* sphereCollider;
+	SphereCollider* sphereCollider;
 	SpriteCluster* spriteCluster;
 
 	player = m_World->CreateEntity();
@@ -70,7 +70,7 @@ bool LevelManagerClass::Initialize()
 	transform->position = point3d(0.0f, 0.0f, 0.0f);
 	transform->scale = point3d(1, 0, 0);
 	physicBody = player->AddComponent<PhysicBody>();
-	//star->AddComponent<SphereCollider>();
+	sphereCollider = player->AddComponent<SphereCollider>();
 	constellation = player->AddComponent<Constellation>();
 	constellation->stars = {
 		point3d(-0.09, -0.7, 0),
@@ -95,6 +95,7 @@ bool LevelManagerClass::Initialize()
 	spriteCluster->vShader = 7;
 	spriteCluster->pShader = 7;
 	spriteCluster->pointsNum = 900000;
+	entity->AddComponent<PlaneCollider>();
 
 	entity = m_World->CreateEntity();
 	spriteCluster = entity->AddComponent<SpriteCluster>();
