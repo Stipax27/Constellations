@@ -141,6 +141,7 @@
     <ClInclude Include="cameraclass.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="dx11.h" />
+    <ClInclude Include="Enemy_Patern.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="FpsCounter.h" />
     <ClInclude Include="framework.h" />
@@ -265,6 +266,7 @@
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="LevelManagerClass.cpp" />
     <ClCompile Include="MouseClass.cpp" />
+    <ClCompile Include="Patern_Enemy_Logik.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Point3d.cpp" />
     <ClCompile Include="Point4d.cpp" />
