@@ -36,12 +36,6 @@ public:
 
 	bool Update(vector<Entity*>& entities, float deltaTime)
 	{
-		Textures::RenderTarget(1, 0);
-
-		// Clear the buffers to begin the scene.
-		Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
-		Draw::ClearDepth();
-
 		Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 		Rasterizer::Cull(Rasterizer::cullmode::off);
 		Depth::Depth(Depth::depthmode::off);
@@ -73,17 +67,6 @@ public:
 				}
 			}
 		}
-
-		Textures::CreateMipMap();
-		Draw::OutputRenderTextures();
-
-		Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
-		Depth::Depth(Depth::depthmode::off);
-		Rasterizer::Cull(Rasterizer::cullmode::off);
-
-		Shaders::vShader(10);
-		Shaders::pShader(100);
-		context->Draw(6, 0);
 
 		return true;
 	}

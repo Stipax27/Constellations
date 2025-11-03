@@ -31,8 +31,6 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     float2 mousepos = float2(gConst[0].xy);
 
-    float2 pos = quadPos[vID];
-
     float2 screenPos = mul(float4(quadPos[vID], 0.0, 1.0), proj).xy;
     screenPos = float2(mousepos.x + screenPos.x * size, mousepos.y - screenPos.y * size);
 

@@ -43,8 +43,6 @@ public:
 
 	bool Update(vector<Entity*>& entities, float deltaTime)
 	{
-		Textures::RenderTarget(1, 0);
-
 		// Clear the buffers to begin the scene.
 		Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
 		Draw::ClearDepth();
@@ -171,7 +169,7 @@ public:
 		}
 
 		Textures::CreateMipMap();
-		Draw::OutputRenderTextures();
+		Draw::SwitchRenderTextures();
 
 		Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
 		Depth::Depth(Depth::depthmode::off);

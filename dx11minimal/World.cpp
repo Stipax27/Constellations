@@ -112,6 +112,11 @@ bool World::UpdateRender()
 
 	PreCalculations();
 
+	Textures::RenderTarget(1, 0);
+	// Clear the buffers to begin the scene.
+	Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
+	Draw::ClearDepth();
+
 	size_t size = renderSystems.size();
 	for (int i = 0; i < size; i++)
 	{
@@ -121,6 +126,17 @@ bool World::UpdateRender()
 			return false;
 		}
 	}
+
+	Textures::CreateMipMap();
+	Draw::OutputRenderTextures();
+
+	Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
+	Depth::Depth(Depth::depthmode::off);
+	Rasterizer::Cull(Rasterizer::cullmode::off);
+
+	Shaders::vShader(10);
+	Shaders::pShader(100);
+	context->Draw(6, 0);
 
 	return true;
 }

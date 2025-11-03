@@ -13,16 +13,6 @@
 #include "PlayerController.h"
 
 #include "world.h"
-#include "system.h"
-#include "entity.h"
-#include "component.h"
-
-#include "Transform.cpp"
-#include "PhysicBody.cpp"
-#include "SphereCollider.cpp"
-#include "PlaneCollider.cpp"
-#include "SpriteCluster.cpp"
-#include "Constellation.cpp"
 
 #include "RenderSystem.cpp"
 #include "UISystem.cpp"

@@ -1,4 +1,4 @@
-﻿#include "LevelManagerClass.h"
+#include "LevelManagerClass.h"
 
 LevelManagerClass::LevelManagerClass()
 {
@@ -64,6 +64,7 @@ bool LevelManagerClass::Initialize()
 	PhysicBody* physicBody;
 	SphereCollider* sphereCollider;
 	SpriteCluster* spriteCluster;
+	Rect* rect;
 
 	player = m_World->CreateEntity();
 	transform = player->AddComponent<Transform>();
@@ -123,16 +124,19 @@ bool LevelManagerClass::Initialize()
 		{2,3},
 		{2,5}
 	};
-	entity->active = false;
-
-	m_World->AddPhysicSystem<PhysicSystem>();
-	m_World->AddPhysicSystem<CollisionSystem>();
-	m_World->AddRenderSystem<RenderSystem>(m_World->m_Camera);
-	//m_World->AddRenderSystem<UISystem>();
+	
+	entity = m_World->CreateEntity();
+	transform = entity->AddComponent<Transform>();
+	rect = entity->AddComponent<Rect>();
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING END //
 	//////////////////////////////////////////////////////////////////////////////////////////////
+
+	m_World->AddPhysicSystem<PhysicSystem>();
+	m_World->AddPhysicSystem<CollisionSystem>();
+	m_World->AddRenderSystem<RenderSystem>(m_World->m_Camera);
+	m_World->AddRenderSystem<UISystem>();
 
 	//m_World->PreCalculations();
 
