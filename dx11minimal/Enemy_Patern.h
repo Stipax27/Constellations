@@ -1,7 +1,16 @@
 #pragma once
 #include <vector>
+#include "Point3d.h"
+#include "dx11.h"
+#include <iostream>
+#include <cmath>
+#include "timer.h"
+#include "entity.h"
+#include "Transform.cpp"
 
 namespace Enemy {
+    Entity* Player;
+    Entity* Enemy;
 
     enum class AIState {
         PATROL,
@@ -11,6 +20,11 @@ namespace Enemy {
         JUMP_ATTACK,
         BOOM_ATTACK
     };
+    void init(Entity* player, Entity* enemy) 
+    {
+        Player = player;
+        Enemy = enemy;
+    }
 
     struct EnemyData {
 
@@ -87,10 +101,10 @@ namespace Enemy {
             enemyConstellationOffset(XMMatrixIdentity())
         {
             waypoints = {
-                point3d(-50000.0f, 0.0f, 0.0f),
-                point3d(0.0f, 0.0f, 25000.0f),
-                point3d(25000.0f, 0.0f, 0.0f),
-                point3d(0.0f, 0.0f, -50000.0f)
+                point3d(-50.0f, 0.0f, 0.0f),
+                point3d(0.0f, 0.0f, 25.0f),
+                point3d(25.0f, 0.0f, 0.0f),
+                point3d(0.0f, 0.0f, -50.0f)
             };
             UpEn = XMVector3Rotate(defaultUp, currentRotation);
         }
@@ -122,7 +136,7 @@ namespace Enemy {
         bool splineInitialized = false;
         float splineProgress = 0.0f;
 
-        void AiUpdate(float deltaTime, point3d& heroPosition, point3d& enemyPositions, float& player);
+        void AiUpdate(float deltaTime, float& player);
         void DamageSound();
         void Patrol(float deltaTime, point3d& enemyPositions);
         void Chase(point3d& heroPos, point3d& enemyPositions, float deltaTime);
@@ -132,6 +146,7 @@ namespace Enemy {
         void JumpAttack(float deltaTime, point3d& heroPos, point3d& enemyPos, float& player);
         void Explosion(float deltaTime, point3d& enemyPos, float& player);
     };
+    void updateEnemyPosition(float deltaTime, point3d& heroPosition, point3d& enemyPositions, float& player);
 
     static EnemyData enemyData;
 }

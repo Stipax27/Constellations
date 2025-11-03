@@ -16,6 +16,7 @@
 #include "system.h"
 #include "entity.h"
 #include "component.h"
+#include "Enemy_Patern.h"
 
 #include "Transform.cpp"
 #include "PhysicBody.cpp"

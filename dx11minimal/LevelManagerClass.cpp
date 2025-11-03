@@ -127,7 +127,6 @@ bool LevelManagerClass::Initialize()
 		{2,3},
 		{2,5}
 	};
-	entity->active = false;
 
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
@@ -137,6 +136,8 @@ bool LevelManagerClass::Initialize()
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING END //
 	//////////////////////////////////////////////////////////////////////////////////////////////
+
+	Enemy::init(player, entity);
 
 	//m_World->PreCalculations();
 
@@ -184,6 +185,8 @@ bool LevelManagerClass::Frame()
 	mouse->Update();
 	playerController->ProcessInput();
 	playerController->ProcessMouse();
+
+	Enemy::updateEnemyPosition(timer::deltaTime);
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 
