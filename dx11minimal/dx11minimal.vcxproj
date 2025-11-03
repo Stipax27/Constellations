@@ -142,6 +142,7 @@
     <ClInclude Include="component.h" />
     <ClInclude Include="dx11.h" />
     <ClInclude Include="entity.h" />
+    <ClInclude Include="Font.h" />
     <ClInclude Include="FpsCounter.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="LevelManagerClass.h" />
@@ -274,6 +275,7 @@
     <ClCompile Include="PlaneCollider.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
+    <ClCompile Include="TextLabel.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="UISystem.cpp" />

@@ -8,6 +8,7 @@ struct Rect : Component
 {
 	point3d anchorPoint = point3d();
 	point3d color = point3d();
+	bool screenAspect = true;
 };
 
 #endif
