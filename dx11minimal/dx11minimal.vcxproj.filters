@@ -308,11 +308,11 @@
     <None Include="Shaders\BlackHole_Body_PS.shader">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\UI_PS.shader">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Shaders\UI_VS.shader">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\UI</Filter>
+    </None>
+    <None Include="Shaders\UI_PS.shader">
+      <Filter>Shaders\UI</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

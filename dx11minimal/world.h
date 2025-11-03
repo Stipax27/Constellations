@@ -73,6 +73,8 @@ private:
 	vector<Entity*> entities;
 	vector<unique_ptr<System>> physicSystems;
 	vector<unique_ptr<System>> renderSystems;
+
+	bool firstFrame = true;
 };
 
 #endif

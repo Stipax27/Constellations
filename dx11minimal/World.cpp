@@ -77,9 +77,6 @@ void World::PreCalculations()
 	Textures::CreateMipMap();
 
 	Textures::RenderTarget(1, 0);
-	Textures::TextureToShader(3, 0);
-	Textures::TextureToShader(4, 1, targetshader::vertex);
-	Depth::Depth(Depth::depthmode::on);
 }
 
 
@@ -110,7 +107,12 @@ bool World::UpdateRender()
 	ConstBuf::ConstToVertex(4);
 	ConstBuf::ConstToPixel(4);
 
-	PreCalculations();
+	if (firstFrame) {
+		firstFrame = false;
+		PreCalculations();
+	}
+	Textures::TextureToShader(3, 0);
+	Textures::TextureToShader(4, 1, targetshader::vertex);
 
 	Textures::RenderTarget(1, 0);
 	// Clear the buffers to begin the scene.
@@ -120,7 +122,7 @@ bool World::UpdateRender()
 	size_t size = renderSystems.size();
 	for (int i = 0; i < size; i++)
 	{
-		result = renderSystems[i]->Update(entities, 0.01f);
+		result = renderSystems[i]->Update(entities, timer::deltaTime);
 		if (!result)
 		{
 			return false;

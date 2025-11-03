@@ -1,4 +1,4 @@
-﻿cbuffer global : register(b5)
+cbuffer global : register(b5)
 {
     float4 gConst[32];
 };
@@ -36,18 +36,9 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     float2 anchorPoint = gConst[2].xy;
     //float2 screenSize = gConst[1].xy;
 
-    float2 screenPos = mul(float4(quadPos[vID], 0.0, 1.0), proj).xy;
+    float2 screenPos = mul(float4(pos + quadPos[vID] * size, 0.0, 1.0), proj).xy;
 
-    float2 basePos = pos + size;
-   
-    float2 screenPos = basePos + quadPos[vID] * size;
-
-    // переводим в NDC
-    float2 ndc;
-    ndc.x = (screenPos.x / screenSize.x) * 2.0 - 1.0;
-    ndc.y = 1.0 - (screenPos.y / screenSize.y) * 2.0;
-
-    output.pos = float4(ndc, 0, 1);
+    output.pos = float4(screenPos, 0, 1);
     output.uv  = quadPos[vID];
 
     return output;
