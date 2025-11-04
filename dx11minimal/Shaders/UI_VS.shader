@@ -31,14 +31,13 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
         float2(1, -1), float2(1, 1), float2(-1, 1)
     };
 
-    float2 pos = gConst[0].xy;
+    float3 pos = gConst[0].xyz;
     float2 size = gConst[1].xy;
     float2 anchorPoint = gConst[2].xy;
-    //float2 screenSize = gConst[1].xy;
 
-    float2 screenPos = mul(float4(pos + quadPos[vID] * size, 0.0, 1.0), proj).xy;
+    float3 screenPos = float3((quadPos[vID] - anchorPoint) * size, 0.0) * float3(gConst[1].zw, 1) + pos;
 
-    output.pos = float4(screenPos, 0, 1);
+    output.pos = float4(screenPos, 1);
     output.uv  = quadPos[vID];
 
     return output;

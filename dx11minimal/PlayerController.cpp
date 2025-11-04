@@ -113,9 +113,7 @@ void PlayerController::ProcessInput()
 	}
 
 	if (roll != 0) {
-		//camera->AddVectorRotation(playerTransform->GetLookVector(), roll);
-
-		playerPhysicBody->mAngVelocity = XMMatrixRotationAxis(playerTransform->GetLookVector().toXMVector(), roll * RAD);
+		playerPhysicBody->mAngVelocity = XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), roll * RAD);
 	}
 }
 
@@ -149,8 +147,6 @@ void PlayerController::ProcessMouse()
 		XMMATRIX additionalRotation = XMMatrixRotationRollPitchYaw(XMConvertToRadians(mousePos.y), XMConvertToRadians(mousePos.x), 0);
 
 		playerPhysicBody->mAngVelocity = playerPhysicBody->mAngVelocity * additionalRotation;
-
-		//camera->AddMatrixRotation(additionalRotation);
 	}
 	else {
 		//Camera::state.n = lerp(Camera::state.n, 0, 0.2f);

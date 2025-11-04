@@ -100,8 +100,8 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     float3 voronoi = voronoiTexture.SampleLevel(voronoiSamplerState, starPos.xz / (range * 2) + 0.5, 1);
     starPos.y += voronoi.x * voronoi.y * voronoi.z * lerp(70, 15, AriesNebulaLerpFactor);
 
-    //starPos.y += (sin(starPos.x * PI / range * 5 + time.x * 0.05) + cos(starPos.z * PI / range * 5 + time.x * 0.05)) * lerp(0.6, 0.3, AriesNebulaLerpFactor);
-    //starPos.y += cos((starPos.x + starPos.z) * PI / range * 2 + time.x * -0.05) * lerp(1.2, 0.6, AriesNebulaLerpFactor);
+    starPos.y += (sin(starPos.x * PI / range * 5 + time.x * 0.05) + cos(starPos.z * PI / range * 5 + time.x * 0.05)) * lerp(0.4, 0.2, AriesNebulaLerpFactor);
+    starPos.y += cos((starPos.x + starPos.z) * PI / range * 2 + time.x * -0.05) * lerp(0.8, 0.4, AriesNebulaLerpFactor);
 
     // //-----
 

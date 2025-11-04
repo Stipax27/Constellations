@@ -186,7 +186,7 @@ namespace ConstBuf
 
 	//----------------------------------------------------------------
 
-	extern ID3D11Buffer* buffer[7];
+	extern ID3D11Buffer* buffer[8];
 
 #define constCount 32
 
@@ -211,6 +211,9 @@ namespace ConstBuf
 	//b6
 	extern Factors factors;
 
+	//b7
+	extern int drawerInt[constCount];
+
 	int roundUp(int, int);
 	void Create(ID3D11Buffer*&, int);
 	void Init();
@@ -229,7 +232,7 @@ namespace ConstBuf
 	void ConstToPixel(int);
 
 	namespace getbyname {
-		enum { drawerV, drawerP, drawerMat, camera, frame, global, factors };
+		enum { drawerV, drawerP, drawerMat, camera, frame, global, factors, drawerInt };
 	}
 }
 

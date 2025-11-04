@@ -1,4 +1,4 @@
-#include "dx11.h"
+ï»¿#include "dx11.h"
 
 static inline int32 _log2(float x)
 {
@@ -504,7 +504,7 @@ void Sampler::SamplerComp(unsigned int slot)
 
 //////////////////////////////////////////////////////////////////////////////////
 
-ID3D11Buffer* ConstBuf::buffer[7];
+ID3D11Buffer* ConstBuf::buffer[8];
 
 //b0
 float ConstBuf::drawerV[constCount];
@@ -526,6 +526,9 @@ XMFLOAT4 ConstBuf::global[constCount];
 
 //b6
 ConstBuf::Factors ConstBuf::factors;
+
+//b7
+int ConstBuf::drawerInt[constCount];
 
 
 int ConstBuf::roundUp(int n, int r)
@@ -555,6 +558,7 @@ void ConstBuf::Init()
 	ConstBuf::Create(ConstBuf::buffer[4], sizeof(frame));
 	ConstBuf::Create(ConstBuf::buffer[5], sizeof(global));
 	ConstBuf::Create(ConstBuf::buffer[6], sizeof(factors));
+	ConstBuf::Create(ConstBuf::buffer[7], sizeof(drawerInt));
 }
 
 void ConstBuf::UpdateFrame()
@@ -703,20 +707,20 @@ ID2D1HwndRenderTarget* d2dRenderTarget = nullptr;
 
 void InitD2D(HWND hwnd)
 {
-	// Øàã 1: Ñîçäàíèå ôàáðèêè
+	// Ð¨Ð°Ð³ 1: Ð¡Ð¾Ð·Ð´Ð°Ð½Ð¸Ðµ Ñ„Ð°Ð±Ñ€Ð¸ÐºÐ¸
 	D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &d2dFactory);
 
-	// Øàã 2: Ïîëó÷àåì ðàçìåðû îêíà
+	// Ð¨Ð°Ð³ 2: ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ñ€Ð°Ð·Ð¼ÐµÑ€Ñ‹ Ð¾ÐºÐ½Ð°
 	RECT rc;
 	GetClientRect(hwnd, &rc);
 
-	// Øàã 3: Îïèñàíèå ðåíäåð-òàðãåòà
+	// Ð¨Ð°Ð³ 3: ÐžÐ¿Ð¸ÑÐ°Ð½Ð¸Ðµ Ñ€ÐµÐ½Ð´ÐµÑ€-Ñ‚Ð°Ñ€Ð³ÐµÑ‚Ð°
 	D2D1_RENDER_TARGET_PROPERTIES rtProps = D2D1::RenderTargetProperties();
 	D2D1_HWND_RENDER_TARGET_PROPERTIES hwndProps =
 		D2D1::HwndRenderTargetProperties(hwnd,
 			D2D1::SizeU(rc.right - rc.left, rc.bottom - rc.top));
 
-	// Øàã 4: Ñîçäà¸ì render target
+	// Ð¨Ð°Ð³ 4: Ð¡Ð¾Ð·Ð´Ð°Ñ‘Ð¼ render target
 	d2dFactory->CreateHwndRenderTarget(rtProps, hwndProps, &d2dRenderTarget);
 }
 
