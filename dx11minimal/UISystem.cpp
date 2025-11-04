@@ -59,8 +59,10 @@ public:
 						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, 0);
 						ConstBuf::global[1] = XMFLOAT4(transform->scale.x, transform->scale.y, 0, 0);
 						ConstBuf::global[2] = XMFLOAT4(rect->anchorPoint.x, rect->anchorPoint.y, 0, 0);
+						ConstBuf::global[3] = XMFLOAT4(rect->color.x, rect->color.y, rect->color.z, 0);
 						ConstBuf::Update(5, ConstBuf::global);
 						ConstBuf::ConstToVertex(5);
+						ConstBuf::ConstToPixel(5);
 
 						Draw::Drawer(1);
 					}

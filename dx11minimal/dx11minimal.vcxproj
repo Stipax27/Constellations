@@ -257,6 +257,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="cameraclass.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="Constellation.cpp" />
