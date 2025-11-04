@@ -12,7 +12,7 @@ struct VS_OUTPUT
 float4 PS(VS_OUTPUT input) : SV_Target
 {
     float4 color = gConst[3];
-    float c = 1 - saturate(length(input.uv));
+    //float c = 1 - saturate(length(input.uv));
 
-    return color * float4(c, c, c, c);
+    return color;
 }

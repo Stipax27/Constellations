@@ -64,6 +64,7 @@ public:
 						switch (rect->ratio)
 						{
 						case ScreenAspectRatio::XY:
+							ConstBuf::global[1].z = 1;
 							ConstBuf::global[1].w = 1;
 							break;
 						case ScreenAspectRatio::XX:
