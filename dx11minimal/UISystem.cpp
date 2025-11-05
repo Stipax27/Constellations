@@ -54,9 +54,9 @@ public:
 					if (rect != nullptr)
 					{
 						Shaders::vShader(13);
-						Shaders::pShader(13);
+						Shaders::pShader(13 + (int)rect->cornerType);
 
-						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, rect->corner);
+						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, rect->cornerRadius);
 						ConstBuf::global[1] = XMFLOAT4(transform->scale.x, transform->scale.y, 0, 0);
 						ConstBuf::global[2] = XMFLOAT4(rect->anchorPoint.x, rect->anchorPoint.y, 0, 0);
 						ConstBuf::global[3] = XMFLOAT4(rect->color.x, rect->color.y, rect->color.z, rect->opacity);

@@ -410,11 +410,11 @@ void Shaders::Init()
 	Shaders::CreateVS(12, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\UiParticle_VS.shader"));
 	Shaders::CreatePS(12, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\UiParticle_PS.shader"));
 	
-	Shaders::CreateVS(13, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\UI_VS.shader"));
-	Shaders::CreatePS(13, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\UI_PS.shader"));
-	
-	Shaders::CreateVS(14, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\BlackHole_Body_VS.shader"));
-	Shaders::CreatePS(14, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\BlackHole_Body_PS.shader"));
+	Shaders::CreateVS(13, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Rect_VS.shader"));
+	Shaders::CreatePS(13, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Rect_Strict_PS.shader"));
+
+	Shaders::CreatePS(14, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Rect_Smooth_PS.shader"));
+	//Shaders::CreatePS(14, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\BlackHole_Body_PS.shader"));
 	
 	//-----------------------------------------------
 	

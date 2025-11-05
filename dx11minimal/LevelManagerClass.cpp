@@ -128,13 +128,14 @@ bool LevelManagerClass::Initialize()
 	entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(-1, 0, 0);
-	transform->scale = point3d(0.25, 0.25, 0);
+	transform->scale = point3d(0.5, 0.25, 0);
 	rect = entity->AddComponent<Rect>();
 	rect->color = point3d(0.8f, 0.0f, 0.0f);
 	rect->opacity = 0.5f;
 	rect->anchorPoint = point3d(-1, 0, 0);
 	rect->ratio = ScreenAspectRatio::YY;
-
+	rect->cornerRadius = 0.25f;
+	rect->cornerType = CornerType::Smooth;
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING END //

@@ -129,26 +129,30 @@ void PlayerController::ProcessMouse()
 {
 	float x = mouse->pos.x - window->width / 2;
 	float y = mouse->pos.y - window->height / 2;
-
 	point3d mousePos = point3d(x / window->width / window->aspect, y / window->height, 0);
-	float length = mousePos.magnitude();
 
-	if (length > CURSOR_IGNORE_ZONE) {
-		if (length > MAX_CURSOR_DEVIATION) {
-			mousePos = mousePos.normalized() * MAX_CURSOR_DEVIATION;
-			mouse->pos = point3d(mousePos.x * window->width * window->aspect + window->width / 2, mousePos.y * window->height + window->height / 2, 0);
-			SetCursorPos(mouse->pos.x, mouse->pos.y);
+	if (mouse->state == MouseState::Centered) {
+
+		float length = mousePos.magnitude();
+
+		if (length > CURSOR_IGNORE_ZONE) {
+			if (length > MAX_CURSOR_DEVIATION) {
+				mousePos = mousePos.normalized() * MAX_CURSOR_DEVIATION;
+				mouse->pos = point3d(mousePos.x * window->width * window->aspect + window->width / 2, mousePos.y * window->height + window->height / 2, 0);
+				SetCursorPos(mouse->pos.x, mouse->pos.y);
+			}
+
+			float k = (length - CURSOR_IGNORE_ZONE) / MAX_CURSOR_DEVIATION;
+			mousePos *= SENSIVITY * k;
+
+			//XMVECTOR addRotation = eulerToQuanternion(dPitch, dYaw, 0) * SENSIVITY * k;
+			XMMATRIX additionalRotation = XMMatrixRotationRollPitchYaw(XMConvertToRadians(mousePos.y), XMConvertToRadians(mousePos.x), 0);
+
+			playerPhysicBody->mAngVelocity = playerPhysicBody->mAngVelocity * additionalRotation;
+		}
+		else {
+			//Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
 		}
 
-		float k = (length - CURSOR_IGNORE_ZONE) / MAX_CURSOR_DEVIATION;
-		mousePos *= SENSIVITY * k;
-
-		//XMVECTOR addRotation = eulerToQuanternion(dPitch, dYaw, 0) * SENSIVITY * k;
-		XMMATRIX additionalRotation = XMMatrixRotationRollPitchYaw(XMConvertToRadians(mousePos.y), XMConvertToRadians(mousePos.x), 0);
-
-		playerPhysicBody->mAngVelocity = playerPhysicBody->mAngVelocity * additionalRotation;
-	}
-	else {
-		//Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
 	}
 }

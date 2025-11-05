@@ -209,6 +209,9 @@
     <ClCompile Include="TextLabel.cpp">
       <Filter>Source Files\Render\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="dx11minimal.rc">
@@ -308,16 +311,19 @@
     <None Include="Shaders\VoronoiNoise.shader">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="ColorCorrection_PS.shader">
+    <None Include="Shaders\ColorCorrection_PS.shader">
       <Filter>Shaders\PostProcess</Filter>
     </None>
     <None Include="Shaders\BlackHole_Body_PS.shader">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\UI_VS.shader">
+    <None Include="Shaders\Rect_VS.shader">
       <Filter>Shaders\UI</Filter>
     </None>
-    <None Include="Shaders\UI_PS.shader">
+    <None Include="Shaders\Rect_Strict_PS.shader">
+      <Filter>Shaders\UI</Filter>
+    </None>
+    <None Include="Shaders\Rect_Smooth_PS.shader">
       <Filter>Shaders\UI</Filter>
     </None>
   </ItemGroup>

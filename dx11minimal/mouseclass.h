@@ -9,16 +9,25 @@
 #include "cameraclass.h"
 #include "windowclass.h"
 
+///////////
+// ENUMS //
+///////////
+enum MouseState {
+	Free,
+	Centered
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: MouseClass
 ////////////////////////////////////////////////////////////////////////////////
+
 class MouseClass
 {
 public:
 	point3d pos;
 	point3d oldPos;
 	point3d worldPos;
+	MouseState state;
 
 public:
 	MouseClass();

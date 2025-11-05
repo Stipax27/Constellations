@@ -19,6 +19,8 @@ MouseClass::~MouseClass()
 void MouseClass::Initialize(WindowClass* Window, CameraClass* Camera) {
 	window = Window;
 	camera = Camera;
+
+	state = MouseState::Centered;
 }
 
 
@@ -71,8 +73,9 @@ void MouseClass::RenderCursor() {
 	ConstBuf::Update(5, ConstBuf::global);
 	ConstBuf::ConstToVertex(5);
 
-	Shaders::vShader(11);
-	Shaders::pShader(11);
+	int shaderID = state == MouseState::Free ? 6 : 11;
+	Shaders::vShader(shaderID);
+	Shaders::pShader(shaderID);
 	Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
 
 	context->Draw(6, 0);
