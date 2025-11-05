@@ -6,7 +6,7 @@
 
 struct TextLabel : Component
 {
-	
+	string text = "TextLabel";
 };
 
 #endif
