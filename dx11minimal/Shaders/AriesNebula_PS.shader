@@ -30,16 +30,20 @@ float4 PS(VS_OUTPUT input) : SV_Target
 {
     float2 uv = input.uv;
 
+    float3 pos = gConst[0].xyz;
     float range = 65;
 
-    float n = saturate(perlinTexture.Sample(perlinSamplerState, input.worldpos.xz / (range * 2) + 0.5).r - 0.25);
+    float2 posXZ = input.worldpos.xz - pos.xz;
+    float posY = input.worldpos.y - pos.y;
+
+    float n = saturate(perlinTexture.Sample(perlinSamplerState, posXZ / (range * 2) + 0.5).r - 0.25);
 
     float3 lowerColor = lerp(lerp(float3(1, 0.25, 0.25), float3(1, 0.95, 0.1), n - 0.2), lerp(float3(0.25, 1, 0.25), float3(1, 0, 1), n), AriesNebulaLerpFactor);
     float3 upperColor = lerp(float3(1, 1, 1), float3(0.8, 0.5, 0.05), AriesNebulaLerpFactor);
-    float3 color = lerp(lowerColor, upperColor, max(min(lerp((input.worldpos.y + 10) / 6, input.worldpos.y / 4, AriesNebulaLerpFactor), 1), 0));
+    float3 color = lerp(lowerColor, upperColor, max(min(lerp((posY + 10) / 6, posY / 4, AriesNebulaLerpFactor), 1), 0));
     float brightness = exp(-dot(uv, uv) * 20) * 0.025f;
 
-    float offset = max(length(input.worldpos.xz) - 40, 0);
+    float offset = max(length(posXZ) - 40, 0);
     float sat = max(1 - offset / 20, 0);
     brightness *= sat;
 

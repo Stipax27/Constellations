@@ -161,6 +161,7 @@ public:
 						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
 						ConstBuf::Update(5, ConstBuf::global);
 						ConstBuf::ConstToVertex(5);
+						ConstBuf::ConstToPixel(5);
 					}
 
 					context->DrawInstanced(6, spriteCluster->pointsNum, 0, 0);

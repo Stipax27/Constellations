@@ -90,7 +90,7 @@ bool LevelManagerClass::Initialize()
 
 	entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0.0f, 0.0f, 0.0f);
+	transform->position = point3d(20.0f, -50.0f, 50.0f);
 	transform->scale = point3d(1, 1, 1);
 	spriteCluster = entity->AddComponent<SpriteCluster>();
 	spriteCluster->vShader = 7;
@@ -127,12 +127,12 @@ bool LevelManagerClass::Initialize()
 	
 	entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-1, 0, 0);
-	transform->scale = point3d(0.5, 0.25, 0);
+	transform->position = point3d(0, 1, 0);
+	transform->scale = point3d(0.25, 0.25, 0);
 	rect = entity->AddComponent<Rect>();
-	rect->color = point3d(0.8f, 0.0f, 0.0f);
-	rect->opacity = 0.5f;
-	rect->anchorPoint = point3d(-1, 0, 0);
+	rect->color = point3d(0.5f, 0.25f, 0.8f);
+	rect->opacity = 1.f;
+	rect->anchorPoint = point3d(0, 1, 0);
 	rect->ratio = ScreenAspectRatio::YY;
 	rect->cornerRadius = 0.25f;
 	rect->cornerType = CornerType::Smooth;
