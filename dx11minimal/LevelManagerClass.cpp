@@ -65,6 +65,7 @@ bool LevelManagerClass::Initialize()
 	SphereCollider* sphereCollider;
 	SpriteCluster* spriteCluster;
 	Rect* rect;
+	TextLabel* textLabel;
 
 	player = m_World->CreateEntity();
 	transform = player->AddComponent<Transform>();
@@ -136,6 +137,13 @@ bool LevelManagerClass::Initialize()
 	rect->ratio = ScreenAspectRatio::YY;
 	rect->cornerRadius = 0.25f;
 	rect->cornerType = CornerType::Smooth;
+
+	entity = m_World->CreateEntity();
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(0, 0, 0);
+	transform->scale = point3d(0.5, 0.5, 0);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->text = "Test text";
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING END //

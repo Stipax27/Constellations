@@ -142,7 +142,8 @@
     <ClInclude Include="component.h" />
     <ClInclude Include="dx11.h" />
     <ClInclude Include="entity.h" />
-    <ClInclude Include="Font.h" />
+    <ClInclude Include="font.h" />
+    <ClInclude Include="Font_OLD.h" />
     <ClInclude Include="FpsCounter.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="LevelManagerClass.h" />

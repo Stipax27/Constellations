@@ -7,6 +7,7 @@
 struct TextLabel : Component
 {
 	string text = "TextLabel";
+	float fontSize = 8.0f;
 };
 
 #endif
