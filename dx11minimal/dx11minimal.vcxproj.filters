@@ -129,6 +129,9 @@
     <ClInclude Include="dx11.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Enemy_Patern.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp">
@@ -202,6 +205,15 @@
     </ClCompile>
     <ClCompile Include="Rect.cpp">
       <Filter>Source Files\Render\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Explosion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Patern_Enemy_Logik.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SplinePath.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

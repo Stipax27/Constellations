@@ -63,6 +63,7 @@ bool LevelManagerClass::Initialize()
 	Constellation* constellation;
 	Transform* transform;
 	PhysicBody* physicBody;
+	AIComponent* aiComponent;
 	//SphereCollider* sphereCollider;
 	SpriteCluster* spriteCluster;
 
@@ -88,9 +89,9 @@ bool LevelManagerClass::Initialize()
 		{2,5}
 	};
 
-	entity = m_World->CreateEntity();
+	/*entity = m_World->CreateEntity();
 	explosion = entity->AddComponent<Explosion>();
-	transform = entity->AddComponent<Transform>();
+	transform = entity->AddComponent<Transform>();*/
 
 	entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
@@ -111,6 +112,15 @@ bool LevelManagerClass::Initialize()
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(2.0f, 0.0f, 0.0f);
 	transform->scale = point3d(1, 0, 0);
+	physicBody = entity->AddComponent<PhysicBody>();
+	aiComponent = entity->AddComponent<AIComponent>();
+
+	aiComponent->patrolPoints = {
+		 point3d(-50.0f, 0.0f, 0.0f),
+		 point3d(0.0f, 0.0f, 25.0f),
+		 point3d(25.0f, 0.0f, 0.0f),
+		 point3d(0.0f, 0.0f, -50.0f)
+	};
 	//star->AddComponent<SphereCollider>();
 	constellation = entity->AddComponent<Constellation>();
 	constellation->stars = {
@@ -127,9 +137,10 @@ bool LevelManagerClass::Initialize()
 		{2,3},
 		{2,5}
 	};
-
+	
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
+	
 	m_World->AddRenderSystem<RenderSystem>(m_World->m_Camera);
 	//m_World->AddRenderSystem<UISystem>();
 
@@ -137,12 +148,19 @@ bool LevelManagerClass::Initialize()
 	// WORLD CREATING END //
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
-	Enemy::init(player, entity);
-
+	
 	//m_World->PreCalculations();
 
 	playerController = new PlayerController();
 	playerController->Initialize(player, m_World->m_Camera, mouse, window);
+
+	AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
+
+	if (aiSystem)
+	{
+		aiSystem->SetPlayerEntity(player);
+	}
+
 
 	return true;
 }
@@ -186,7 +204,6 @@ bool LevelManagerClass::Frame()
 	playerController->ProcessInput();
 	playerController->ProcessMouse();
 
-	Enemy::updateEnemyPosition(timer::deltaTime);
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 

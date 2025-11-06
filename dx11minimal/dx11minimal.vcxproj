@@ -271,6 +271,7 @@
     <ClCompile Include="Point3d.cpp" />
     <ClCompile Include="Point4d.cpp" />
     <ClCompile Include="Rect.cpp" />
+    <ClCompile Include="SplinePath.cpp" />
     <ClCompile Include="SpriteCluster.cpp" />
     <ClCompile Include="PhysicBody.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />

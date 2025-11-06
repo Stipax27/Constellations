@@ -24,7 +24,10 @@
 #include "PlaneCollider.cpp"
 #include "SpriteCluster.cpp"
 #include "Constellation.cpp"
-#include "Explosion.cpp" 
+#include "Explosion.cpp"
+#include "SplinePath.cpp"
+#include "Patern_Enemy_Logik.cpp"
+
 
 #include "RenderSystem.cpp"
 #include "UISystem.cpp"
@@ -49,6 +52,7 @@ class LevelManagerClass
 public:
 	WindowClass* window;
 	MouseClass* mouse;
+	
 
 public:
 	LevelManagerClass();
