@@ -64,8 +64,8 @@ bool LevelManagerClass::Initialize()
 	PhysicBody* physicBody;
 	SphereCollider* sphereCollider;
 	SpriteCluster* spriteCluster;
-	Rect* rect;
-	TextLabel* textLabel;
+	/*Rect* rect;
+	TextLabel* textLabel;*/
 
 	player = m_World->CreateEntity();
 	transform = player->AddComponent<Transform>();
@@ -91,13 +91,13 @@ bool LevelManagerClass::Initialize()
 
 	entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(20.0f, -50.0f, 50.0f);
-	transform->scale = point3d(1, 1, 1);
+	transform->position = point3d(0.0f, 0.0f, 50.0f);
+	transform->scale = point3d(1, 0, 0);
 	spriteCluster = entity->AddComponent<SpriteCluster>();
 	spriteCluster->vShader = 7;
 	spriteCluster->pShader = 7;
 	spriteCluster->pointsNum = 900000;
-	entity->AddComponent<PlaneCollider>();
+	//entity->AddComponent<PlaneCollider>();
 
 	entity = m_World->CreateEntity();
 	spriteCluster = entity->AddComponent<SpriteCluster>();
@@ -126,7 +126,7 @@ bool LevelManagerClass::Initialize()
 		{2,5}
 	};
 	
-	entity = m_World->CreateEntity();
+	/*entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0, 1, 0);
 	transform->scale = point3d(0.25, 0.25, 0);
@@ -143,7 +143,7 @@ bool LevelManagerClass::Initialize()
 	transform->position = point3d(0, 0, 0);
 	transform->scale = point3d(0.5, 0.5, 0);
 	textLabel = entity->AddComponent<TextLabel>();
-	textLabel->text = "Test text";
+	textLabel->text = "Test text";*/
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING END //
@@ -152,7 +152,7 @@ bool LevelManagerClass::Initialize()
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
 	m_World->AddRenderSystem<RenderSystem>(m_World->m_Camera);
-	m_World->AddRenderSystem<UISystem>();
+	//m_World->AddRenderSystem<UISystem>();
 
 	//m_World->PreCalculations();
 

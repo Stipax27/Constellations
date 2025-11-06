@@ -60,7 +60,7 @@ float3 spiral(uint index) {
     uint localIndex = index - getSectorsOfLevel(level - 1);
 
     float angle = PI * 2 / sectors * localIndex;
-    float radius = 0.5 * level / 6;
+    float radius = 0.5 * level / 6 * gConst[0].w;
 
     return float3(sin(angle), 0, cos(angle)) * radius;
 }
@@ -88,8 +88,10 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     //calc star position
 
     float3 pos = gConst[0].xyz;
-    float range = 65;
-    float size = 1;
+    float scale = gConst[0].w;
+
+    float range = 65 * scale;
+    float size = 1 * scale;
     //starPos = spiral(iID) * range * 2 - range;
     float3 spiralPos = spiral(iID);
     float3 starPos = spiralPos + pos;
@@ -104,6 +106,8 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 
     starPos.y += (sin(spiralPos.x * PI / range * 5 + time.x * 0.05) + cos(spiralPos.z * PI / range * 5 + time.x * 0.05)) * lerp(0.4, 0.2, AriesNebulaLerpFactor);
     starPos.y += cos((spiralPos.x + spiralPos.z) * PI / range * 2 + time.x * -0.05) * lerp(0.8, 0.4, AriesNebulaLerpFactor);
+
+    starPos.y *= scale;
 
     // //-----
 
