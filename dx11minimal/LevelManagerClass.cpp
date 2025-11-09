@@ -1,4 +1,4 @@
-#include "LevelManagerClass.h"
+﻿#include "LevelManagerClass.h"
 
 LevelManagerClass::LevelManagerClass()
 {
@@ -97,7 +97,7 @@ bool LevelManagerClass::Initialize()
 	spriteCluster->vShader = 7;
 	spriteCluster->pShader = 7;
 	spriteCluster->pointsNum = 900000;
-	//entity->AddComponent<PlaneCollider>();
+	entity->AddComponent<PlaneCollider>();
 
 	entity = m_World->CreateEntity();
 	spriteCluster = entity->AddComponent<SpriteCluster>();

@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+﻿#define _CRT_SECURE_NO_WARNINGS
 
 #include "framework.h"
 #include "windows.h"
@@ -132,10 +132,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
             timer::frameEndTime = timer::GetCounter();
             timer::frameRenderingDuration = timer::frameEndTime - timer::frameBeginTime;
-            timer::nextFrameTime = timer::frameBeginTime + FRAME_LEN;
+            timer::nextFrameTime = timer::frameBeginTime + RENDER_DT;
         }
 
-        //Sleep((DWORD)min(FRAME_LEN, max(FRAME_LEN - timer::frameRenderingDuration, 0)));
+        Sleep((DWORD)min(RENDER_DT, max(RENDER_DT - timer::frameRenderingDuration, 0)));
     }
 
     levelManager.Shutdown();

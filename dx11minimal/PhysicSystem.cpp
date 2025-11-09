@@ -1,4 +1,4 @@
-#ifndef _PHYSIC_SYSTEM_
+﻿#ifndef _PHYSIC_SYSTEM_
 #define _PHYSIC_SYSTEM_
 
 //////////////
@@ -12,7 +12,7 @@
 /////////////
 // GLOBALS //
 /////////////
-const float GravityAcceleration = 9.8f;
+#define SPACE_DENSITY 5.0f
 
 
 class PhysicSystem : public System
@@ -20,39 +20,29 @@ class PhysicSystem : public System
 public:
 	PhysicSystem()
 	{
-		gravityVector = 0;
 	}
 
 
 
 	void Initialize()
 	{
-		gravityVector = new point3d(0.0f, -GravityAcceleration, 0.0f);
 	}
 
 
 	void Shutdown()
 	{
-		if (gravityVector)
-		{
-			delete gravityVector;
-			gravityVector = 0;
-		}
 	}
 
 
 	bool Update(vector<Entity*>& entities, float deltaTime)
 	{
 		size_t size = entities.size();
-		for (int i = 0; i < size; i++)
-		{
+		for (int i = 0; i < size; i++) {
 			Entity* entity = entities[i];
-			if (entity->active)
-			{
+			if (entity->active) {
 				Transform* transform = entity->GetComponent<Transform>();
 				PhysicBody* physicBody = entity->GetComponent<PhysicBody>();
-				if (transform != nullptr && physicBody != nullptr)
-				{
+				if (transform != nullptr && physicBody != nullptr) {
 					/*if (physicBody->useGravity)
 					{
 						physicBody->velocity += *gravityVector * deltaTime;
@@ -62,7 +52,12 @@ public:
 					XMMATRIX result = physicBody->mAngVelocity * transform->mRotation;
 					transform->mRotation = result;
 
-					physicBody->velocity = physicBody->velocity.lerp(point3d(), 5 * deltaTime);
+					float velMagnitude = physicBody->velocity.magnitude();
+					if (velMagnitude > 0) {
+						float deceleration = SPACE_DENSITY / velMagnitude * deltaTime;
+						physicBody->velocity = physicBody->velocity.lerp(point3d(), deceleration);
+					}
+
 					physicBody->mAngVelocity = XMMatrixIdentity();
 				}
 			}
@@ -70,9 +65,6 @@ public:
 
 		return true;
 	}
-
-private:
-	point3d* gravityVector;
 };
 
 #endif

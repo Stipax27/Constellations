@@ -11,6 +11,9 @@ struct PlaneCollider : Component
 	float radius = 1.0f;
 
 	bool isTouchable = true;
+
+	float gravitySpeed = 9.8f;
+	float gravityDistance = 50.0f;
 };
 
 #endif
