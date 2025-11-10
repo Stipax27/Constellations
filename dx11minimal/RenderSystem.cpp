@@ -1,4 +1,4 @@
-#ifndef _RENDER_SYSTEM_
+﻿#ifndef _RENDER_SYSTEM_
 #define _RENDER_SYSTEM_
 
 //////////////
@@ -67,26 +67,6 @@ public:
 				if (transform != nullptr)
 				{
 					bool result;
-
-					//// Turn off the Z buffer to begin all 2D rendering.
-					//m_Direct3D->TurnZBufferOff();
-
-					//// Put the bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
-					//result = m_Bitmap->Render(m_Direct3D->GetDeviceContext());
-					//if (!result)
-					//{
-					//	return false;
-					//}
-
-					//// Render the bitmap with the UI shader.
-					//result = m_ShaderManager->RenderUIShader(m_Direct3D->GetDeviceContext(), m_Bitmap->GetIndexCount(), m_Bitmap->GetTexture());
-					//if (!result)
-					//{
-					//	return false;
-					//}
-
-					//// Turn the Z buffer back on now that all 2D rendering has completed.
-					//m_Direct3D->TurnZBufferOn();
 
 					//rotateMatrix = XMMatrixRotationQuaternion(transform->qRotation);
 					//scaleMatrix = XMMatrixScaling(transform->scale.x, transform->scale.y, transform->scale.z);

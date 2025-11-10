@@ -51,7 +51,7 @@ public:
 						float distance = (transform1->position - transform2->position).dot(planeCollider->normal);
 
 						if (distance < planeCollider->gravityDistance) {
-							physicBody1->velocity -= planeCollider->normal * planeCollider->gravitySpeed * deltaTime;
+							physicBody1->velocity -= planeCollider->normal * (planeCollider->gravitySpeed + SPACE_DENSITY) * deltaTime;
 						}
 
 						if (distance < sphereCollider->radius) {

@@ -27,32 +27,6 @@ float camDist = 100;//we have this in camera state
 bool isBattleActive = false;
 DWORD battleStartTime;
 
-//#include "Point3d.h"
-
-//#include "AriesNebula.h"
-
-//#include "UI.h"
-//#include "font.h"
-
-//#include "EnemyData.h"
-//#include "EnemyDataCon.h"
-//#include "EnemyAi.h"
-
-//#include "Navigation.h"
-//#include "Constellation.h"
-//#include "EnemyAiUPD.h"
-
-//#include "MainWorld.h"
-//#include "StatusGame.h"
-//#include "Weapon.h"
-//#include "Elements.h"
-//#include "MainGame.h"
-//#include "DialogStruct.h"
-//#include "Parametrics.h"
-//#include "drawer.h"
-
-//#include "loop.h"
-
 #include "resource.h"
 #include "LevelManagerClass.h"
 
