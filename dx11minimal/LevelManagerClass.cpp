@@ -64,6 +64,7 @@ bool LevelManagerClass::Initialize()
 	PhysicBody* physicBody;
 	SphereCollider* sphereCollider;
 	SpriteCluster* spriteCluster;
+	PlaneCollider* planeCollider;
 	/*Rect* rect;
 	TextLabel* textLabel;*/
 
@@ -97,7 +98,8 @@ bool LevelManagerClass::Initialize()
 	spriteCluster->vShader = 7;
 	spriteCluster->pShader = 7;
 	spriteCluster->pointsNum = 900000;
-	entity->AddComponent<PlaneCollider>();
+	planeCollider = entity->AddComponent<PlaneCollider>();
+	planeCollider->gravityDistance = 20.0f;
 
 	entity = m_World->CreateEntity();
 	spriteCluster = entity->AddComponent<SpriteCluster>();

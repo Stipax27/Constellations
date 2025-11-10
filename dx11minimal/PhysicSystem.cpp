@@ -12,7 +12,7 @@
 /////////////
 // GLOBALS //
 /////////////
-#define SPACE_DENSITY 5.0f
+#define SPACE_DENSITY 10.0f
 
 
 class PhysicSystem : public System
