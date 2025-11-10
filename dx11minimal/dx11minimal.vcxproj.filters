@@ -132,6 +132,9 @@
     <ClInclude Include="Enemy_Patern.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="StarAttack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp">

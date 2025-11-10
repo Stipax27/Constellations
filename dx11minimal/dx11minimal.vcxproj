@@ -151,6 +151,7 @@
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="Point3d.h" />
+    <ClInclude Include="StarAttack.h" />
     <ClInclude Include="system.h" />
     <ClInclude Include="windowclass.h" />
     <ClInclude Include="world.h" />

@@ -269,11 +269,6 @@ private:
 
         return distance <= ai->detectionRange;
     }
-
-    void PerformAttack(Entity* entity, Transform* transform, AIComponent* ai)
-    {
-
-    }
 };
 
 #endif
