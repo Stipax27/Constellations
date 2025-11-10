@@ -1,4 +1,6 @@
-﻿#include "dx11.h"
+﻿#pragma once
+
+#include "dx11.h"
 
 #include <vector>
 #include <wrl/client.h>

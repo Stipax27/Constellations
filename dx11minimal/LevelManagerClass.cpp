@@ -65,8 +65,8 @@ bool LevelManagerClass::Initialize()
 	SphereCollider* sphereCollider;
 	SpriteCluster* spriteCluster;
 	PlaneCollider* planeCollider;
-	/*Rect* rect;
-	TextLabel* textLabel;*/
+	Rect* rect;
+	TextLabel* textLabel;
 
 	player = m_World->CreateEntity();
 	transform = player->AddComponent<Transform>();
@@ -127,20 +127,48 @@ bool LevelManagerClass::Initialize()
 		{2,3},
 		{2,5}
 	};
+
+	// MAIN MENU //
 	
 	/*entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0, 1, 0);
-	transform->scale = point3d(0.25, 0.25, 0);
+	transform->position = point3d(0.0f, 0.1f, 0.0f);
+	transform->scale = point3d(0.25f, 0.05f, 0.0f);
 	rect = entity->AddComponent<Rect>();
 	rect->color = point3d(0.5f, 0.25f, 0.8f);
 	rect->opacity = 1.f;
-	rect->anchorPoint = point3d(0, 1, 0);
+	rect->anchorPoint = point3d(0, 0, 0);
 	rect->ratio = ScreenAspectRatio::YY;
 	rect->cornerRadius = 0.25f;
-	rect->cornerType = CornerType::Smooth;
+	rect->cornerType = CornerType::Strict;
 
 	entity = m_World->CreateEntity();
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(0.0f, -0.1f, 0.0f);
+	transform->scale = point3d(0.25f, 0.05f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.5f, 0.25f, 0.8f);
+	rect->opacity = 1.f;
+	rect->anchorPoint = point3d(0, 0, 0);
+	rect->ratio = ScreenAspectRatio::YY;
+	rect->cornerRadius = 0.25f;
+	rect->cornerType = CornerType::Strict;
+
+	entity = m_World->CreateEntity();
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(0.0f, -0.3f, 0.0f);
+	transform->scale = point3d(0.25f, 0.05f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.5f, 0.25f, 0.8f);
+	rect->opacity = 1.f;
+	rect->anchorPoint = point3d(0, 0, 0);
+	rect->ratio = ScreenAspectRatio::YY;
+	rect->cornerRadius = 0.25f;
+	rect->cornerType = CornerType::Strict;*/
+
+	// MAIN MENU END //
+
+	/*entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0, 0, 0);
 	transform->scale = point3d(0.5, 0.5, 0);
