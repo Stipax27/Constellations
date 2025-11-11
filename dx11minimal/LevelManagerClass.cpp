@@ -69,7 +69,7 @@ bool LevelManagerClass::Initialize()
 	TextLabel* textLabel;
 
 	Entity* folder = m_World->CreateEntity("WorldFolder");
-	folder->SetActive(false);
+	folder->SetActive(true);
 
 	player = m_World->CreateEntity("Player", folder);
 	transform = player->AddComponent<Transform>();
@@ -133,7 +133,10 @@ bool LevelManagerClass::Initialize()
 
 	// MAIN MENU //
 
-	entity = m_World->CreateEntity();
+	folder = m_World->CreateEntity("UIFolder");
+	folder->SetActive(false);
+
+	entity = m_World->CreateEntity("PlayButton", folder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.1f, 0.0f);
 	transform->scale = point3d(0.25f, 0.05f, 0.0f);
@@ -145,7 +148,7 @@ bool LevelManagerClass::Initialize()
 	rect->cornerRadius = 0.25f;
 	rect->cornerType = CornerType::Strict;
 
-	entity = m_World->CreateEntity();
+	entity = m_World->CreateEntity("SettingsButton", folder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0.0f, -0.1f, 0.0f);
 	transform->scale = point3d(0.25f, 0.05f, 0.0f);
@@ -157,7 +160,7 @@ bool LevelManagerClass::Initialize()
 	rect->cornerRadius = 0.25f;
 	rect->cornerType = CornerType::Strict;
 
-	entity = m_World->CreateEntity();
+	entity = m_World->CreateEntity("QuitButton", folder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0.0f, -0.3f, 0.0f);
 	transform->scale = point3d(0.25f, 0.05f, 0.0f);
