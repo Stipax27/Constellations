@@ -61,7 +61,7 @@ public:
 		return raw_ptr;
 	}
 
-	Entity* CreateEntity();
+	Entity* CreateEntity(string = "Unnamed", Entity* = nullptr);
 	void RemoveEntityByObject(Entity*);
 
 	bool Initialize(float);

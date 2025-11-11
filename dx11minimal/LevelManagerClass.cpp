@@ -68,8 +68,10 @@ bool LevelManagerClass::Initialize()
 	Rect* rect;
 	TextLabel* textLabel;
 
-	player = m_World->CreateEntity();
-	player->timeScale = 1.0f;
+	Entity* folder = m_World->CreateEntity("WorldFolder");
+	folder->SetActive(false);
+
+	player = m_World->CreateEntity("Player", folder);
 	transform = player->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, 0.0f);
 	transform->scale = point3d(1, 0, 0);
@@ -91,7 +93,7 @@ bool LevelManagerClass::Initialize()
 		{2,5}
 	};
 
-	entity = m_World->CreateEntity();
+	entity = m_World->CreateEntity("AriesNebulaLocation", folder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, 50.0f);
 	transform->scale = point3d(1, 0, 0);
@@ -102,13 +104,13 @@ bool LevelManagerClass::Initialize()
 	planeCollider = entity->AddComponent<PlaneCollider>();
 	planeCollider->gravityDistance = 20.0f;
 
-	entity = m_World->CreateEntity();
+	entity = m_World->CreateEntity("StarsBackground", folder);
 	spriteCluster = entity->AddComponent<SpriteCluster>();
 	spriteCluster->vShader = 2;
 	spriteCluster->pShader = 2;
 	spriteCluster->pointsNum = 10000;
 
-	entity = m_World->CreateEntity();
+	entity = m_World->CreateEntity("Enemy", folder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(2.0f, 0.0f, 0.0f);
 	transform->scale = point3d(1, 0, 0);
@@ -131,7 +133,7 @@ bool LevelManagerClass::Initialize()
 
 	// MAIN MENU //
 	
-	/*entity = m_World->CreateEntity();
+	entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.1f, 0.0f);
 	transform->scale = point3d(0.25f, 0.05f, 0.0f);
@@ -165,7 +167,7 @@ bool LevelManagerClass::Initialize()
 	rect->anchorPoint = point3d(0, 0, 0);
 	rect->ratio = ScreenAspectRatio::YY;
 	rect->cornerRadius = 0.25f;
-	rect->cornerType = CornerType::Strict;*/
+	rect->cornerType = CornerType::Strict;
 
 	// MAIN MENU END //
 

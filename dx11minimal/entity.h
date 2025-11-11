@@ -20,7 +20,7 @@ class Entity
 {
 public:
 	string name;
-	bool active = true;
+	Entity* parent;
 	float timeScale = 1.0f;
 
 public:
@@ -69,16 +69,18 @@ public:
 	void Destroy();
 
 	int GetId();
-	Entity* GetParent();
 
 	void AddChild(Entity*);
 	Entity* GetChildByName(string, bool);
 	vector<Entity*> GetChildrenByName(string, bool);
 	vector<Entity*> GetChildren(bool);
 
+	void SetActive(bool);
+	bool IsActive();
+
 private:
 	int id;
-	Entity* parent;
+	bool active = true;
 
 	unordered_map<type_index, Component*> components;
 	vector<Entity*> children;

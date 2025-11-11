@@ -34,7 +34,7 @@ public:
 		size_t size = entities.size();
 		for (int i = 0; i < size; i++) {
 			Entity* entity = entities[i];
-			if (entity->active) {
+			if (entity->IsActive()) {
 				Transform* transform = entity->GetComponent<Transform>();
 				PhysicBody* physicBody = entity->GetComponent<PhysicBody>();
 				if (transform != nullptr && physicBody != nullptr) {
@@ -45,7 +45,7 @@ public:
 
 					float velMagnitude = physicBody->velocity.magnitude();
 					if (velMagnitude > 0) {
-						float deceleration = max(SPACE_DENSITY / velMagnitude * deltaTime * entity->timeScale, 1);
+						float deceleration = min(SPACE_DENSITY / velMagnitude * deltaTime, 1);
 						physicBody->velocity = physicBody->velocity.lerp(point3d(), deceleration);
 					}
 
