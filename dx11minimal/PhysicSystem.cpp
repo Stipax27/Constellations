@@ -39,13 +39,13 @@ public:
 				PhysicBody* physicBody = entity->GetComponent<PhysicBody>();
 				if (transform != nullptr && physicBody != nullptr) {
 
-					transform->position += physicBody->velocity * deltaTime;
+					transform->position += physicBody->velocity * deltaTime * entity->timeScale;
 					XMMATRIX result = physicBody->mAngVelocity * transform->mRotation;
 					transform->mRotation = result;
 
 					float velMagnitude = physicBody->velocity.magnitude();
 					if (velMagnitude > 0) {
-						float deceleration = SPACE_DENSITY / velMagnitude * deltaTime;
+						float deceleration = max(SPACE_DENSITY / velMagnitude * deltaTime * entity->timeScale, 1);
 						physicBody->velocity = physicBody->velocity.lerp(point3d(), deceleration);
 					}
 

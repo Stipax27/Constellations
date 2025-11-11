@@ -69,6 +69,7 @@ bool LevelManagerClass::Initialize()
 	TextLabel* textLabel;
 
 	player = m_World->CreateEntity();
+	player->timeScale = 1.0f;
 	transform = player->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, 0.0f);
 	transform->scale = point3d(1, 0, 0);

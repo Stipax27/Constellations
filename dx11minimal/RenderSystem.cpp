@@ -130,8 +130,10 @@ public:
 				SpriteCluster* spriteCluster = entity->GetComponent<SpriteCluster>();
 				if (spriteCluster != nullptr)
 				{
-					// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-				//sprite->model.Render(m_Direct3D->GetDeviceContext());
+					ConstBuf::drawerV[0] = entity->timeScale;
+					ConstBuf::Update(0, ConstBuf::drawerV);
+					ConstBuf::ConstToVertex(0);
+					ConstBuf::ConstToPixel(0);
 
 					Shaders::vShader(spriteCluster->vShader);
 					Shaders::pShader(spriteCluster->pShader);

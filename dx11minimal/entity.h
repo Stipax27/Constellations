@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
 // Filename: entity.h
@@ -21,6 +21,7 @@ class Entity
 public:
 	string name;
 	bool active = true;
+	float timeScale = 1.0f;
 
 public:
 	Entity();
