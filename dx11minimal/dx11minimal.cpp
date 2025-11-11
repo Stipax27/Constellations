@@ -1,7 +1,6 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 
 #include "framework.h"
-#include "windows.h"
 #include <stdexcept>
 //#include "math.h"
 #include <stdlib.h>
