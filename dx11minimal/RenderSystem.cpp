@@ -60,7 +60,7 @@ public:
 		for (int i = 0; i < size; i++)
 		{
 			Entity* entity = entities[i];
-			if (entity->active)
+			if (entity->IsActive())
 			{
 				Transform* transform = entity->GetComponent<Transform>();
 
@@ -88,9 +88,9 @@ public:
 						Shaders::vShader(4);
 						Shaders::pShader(4);
 
-						ConstBuf::global[2] = XMFLOAT4(1, 1, 1, 1);
+						/*ConstBuf::global[2] = XMFLOAT4(1, 1, 1, 1);
 						ConstBuf::Update(5, ConstBuf::global);
-						ConstBuf::ConstToPixel(5);
+						ConstBuf::ConstToPixel(5);*/
 
 						for (int a = 0; a < constellation->stars.size(); a++) {
 							point3d star = constellation->stars[a];

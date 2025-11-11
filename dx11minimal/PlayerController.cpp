@@ -131,8 +131,10 @@ void PlayerController::ProcessMouse()
 	float y = mouse->pos.y - window->height / 2;
 	point3d mousePos = point3d(x / window->width / window->aspect, y / window->height, 0);
 
-	if (mouse->state == MouseState::Centered) {
-
+	switch (mouse->state)
+	{
+	case MouseState::Centered:
+	{
 		float length = mousePos.magnitude();
 
 		if (length > CURSOR_IGNORE_ZONE) {
@@ -153,6 +155,37 @@ void PlayerController::ProcessMouse()
 		else {
 			//Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
 		}
-
+		break;
 	}
+	case MouseState::Free:
+	{
+		if (IsKeyPressed(VK_LBUTTON))
+		{
+
+			if (!mousePressed)
+			{
+				mousePressed = true;
+				//ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Mouse_click1.wav");
+				//point3d mousePos = point3d(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1), 0);
+
+				for (int i = 0; i < 20; i++)
+				{
+					MouseParticle particle = MouseParticle();
+					particle.pos = mousePos;
+					particle.vel = point3d(getRandom(-100, 100), getRandom(-100, 100), 0).normalized() * point3d(window->aspect, 1, 0) * (float)getRandom(8, 30) / 100.0f * 0.002f;
+					particle.lifetime = getRandom(500, 1500);
+					particle.startTime = timer::currentTime;
+
+					mouse->particles.push_back(particle);
+				}
+			}
+		}
+		else
+		{
+			mousePressed = false;
+		}
+		break;
+	}
+	}
+
 }

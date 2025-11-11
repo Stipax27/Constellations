@@ -1,4 +1,4 @@
-#ifndef _MOUSECLASS_H_
+﻿#ifndef _MOUSECLASS_H_
 #define _MOUSECLASS_H_
 
 
@@ -8,6 +8,9 @@
 #include "Point3d.h"
 #include "cameraclass.h"
 #include "windowclass.h"
+#include <vector>
+
+using namespace std;
 
 ///////////
 // ENUMS //
@@ -15,6 +18,16 @@
 enum MouseState {
 	Free,
 	Centered
+};
+
+/////////////
+// STRUCTS //
+/////////////
+struct MouseParticle {
+	point3d pos;
+	point3d vel;
+	DWORD startTime;
+	DWORD lifetime;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -28,6 +41,8 @@ public:
 	point3d oldPos;
 	point3d worldPos;
 	MouseState state;
+
+	vector<MouseParticle> particles;
 
 public:
 	MouseClass();

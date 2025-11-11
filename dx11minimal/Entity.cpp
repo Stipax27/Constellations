@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////////
 // Filename: Entity.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "Entity.h"
@@ -18,8 +18,7 @@ Entity::~Entity()
 }
 
 
-void Entity::Destroy()
-{
+void Entity::Destroy() {
 	for (int i = 0; i < children.size(); i++) {
 		children[i]->Destroy();
 	}
@@ -28,25 +27,17 @@ void Entity::Destroy()
 }
 
 
-int Entity::GetId()
-{
+int Entity::GetId() {
 	return id;
 }
 
 
-Entity* Entity::GetParent()
-{
-	return parent;
-}
-
-
-void Entity::AddChild(Entity* Child)
-{
+void Entity::AddChild(Entity* Child) {
 	children.push_back(Child);
 }
 
-Entity* Entity::GetChildByName(string Name, bool Recursive = false)
-{
+
+Entity* Entity::GetChildByName(string Name, bool Recursive = false) {
 	for (int i = 0; i < children.size(); i++) {
 		Entity* child = children[i];
 		if (child->name == Name) {
@@ -62,8 +53,8 @@ Entity* Entity::GetChildByName(string Name, bool Recursive = false)
 	}
 }
 
-vector<Entity*> Entity::GetChildrenByName(string Name, bool Recursive = false)
-{
+
+vector<Entity*> Entity::GetChildrenByName(string Name, bool Recursive = false) {
 	vector<Entity*> array;
 	for (int i = 0; i < children.size(); i++) {
 		Entity* child = children[i];
@@ -84,8 +75,8 @@ vector<Entity*> Entity::GetChildrenByName(string Name, bool Recursive = false)
 	return array;
 }
 
-vector<Entity*> Entity::GetChildren(bool Recursive = false)
-{
+
+vector<Entity*> Entity::GetChildren(bool Recursive = false) {
 	vector<Entity*> array;
 	for (int i = 0; i < children.size(); i++) {
 		Entity* child = children[i];
@@ -103,4 +94,23 @@ vector<Entity*> Entity::GetChildren(bool Recursive = false)
 	}
 
 	return array;
+}
+
+
+void Entity::SetActive(bool mode) {
+	active = mode;
+}
+
+
+bool Entity::IsActive() {
+	if (active) {
+		Entity* ancestor = parent;
+		while (ancestor != nullptr) {
+			return ancestor->IsActive();
+		}
+
+		return true;
+	}
+
+	return false;
 }

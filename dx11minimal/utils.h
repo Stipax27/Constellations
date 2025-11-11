@@ -1,4 +1,4 @@
-#ifndef _UTILS_H
+﻿#ifndef _UTILS_H
 #define _UTILS_H
 
 
@@ -24,5 +24,7 @@ float lerp(float x1, float x2, float a);
 float degreesToRadians(float);
 point3d quaternionToEuler(float x, float y, float z, float w);
 DirectX::XMVECTOR eulerToQuanternion(float x, float y, float z);
+
+int getRandom(int min = 1, int max = 0);
 
 #endif
