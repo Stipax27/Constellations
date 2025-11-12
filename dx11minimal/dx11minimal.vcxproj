@@ -138,6 +138,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BaseStar.h" />
     <ClInclude Include="cameraclass.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="dx11.h" />
@@ -258,6 +259,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BaseStar.cpp" />
     <ClCompile Include="cameraclass.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="Constellation.cpp" />

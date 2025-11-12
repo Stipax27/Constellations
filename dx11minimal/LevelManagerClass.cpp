@@ -69,7 +69,7 @@ bool LevelManagerClass::Initialize()
 
 	player = m_World->CreateEntity();
 	transform = player->AddComponent<Transform>();
-	transform->position = point3d(0.0f, 0.0f, 0.0f);
+	transform->position = point3d(0.0f, 0.0f, -20.0f);
 	transform->scale = point3d(1, 0, 0);
 	physicBody = player->AddComponent<PhysicBody>();
 	//star->AddComponent<SphereCollider>();
@@ -138,6 +138,23 @@ bool LevelManagerClass::Initialize()
 		{2,5}
 	};
 	
+	entity = m_World->CreateEntity();
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(30.0f, 3.0f, 0.0f);
+	transform->scale = point3d(1, 0, 0);
+	physicBody = entity->AddComponent<PhysicBody>();
+	//star->AddComponent<SphereCollider>();
+	constellation = entity->AddComponent<Constellation>();
+	constellation->stars = {
+		point3d(0, 0, 0)
+	};
+	aiComponent = entity->AddComponent<AIComponent>();
+
+	aiComponent->patrolPoints = {
+		 point3d(-10.0f, 0.0f, 0.0f),
+		 point3d(0.0f, 0.0f, 10.0f)
+	};
+
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
 	
@@ -150,6 +167,9 @@ bool LevelManagerClass::Initialize()
 
 	
 	//m_World->PreCalculations();
+	Star = new BaseStar();
+	Star->Init(m_World, entity);
+	Star->Flash();
 
 	playerController = new PlayerController();
 	playerController->Initialize(player, m_World->m_Camera, mouse, window);
@@ -203,7 +223,8 @@ bool LevelManagerClass::Frame()
 	mouse->Update();
 	playerController->ProcessInput();
 	playerController->ProcessMouse();
-
+	
+	
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 

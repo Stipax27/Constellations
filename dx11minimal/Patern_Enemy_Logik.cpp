@@ -206,7 +206,7 @@ private:
             // Реализация логики атаки
             if (ai->stateTimer >= ai->attackCooldown)
             {
-                PerformAttack(entity, transform, ai);
+                //PerformAttack(entity, transform, ai);
                 ai->stateTimer = 0.0f;
             }
         }

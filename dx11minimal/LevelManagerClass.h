@@ -17,6 +17,7 @@
 #include "entity.h"
 #include "component.h"
 #include "Enemy_Patern.h"
+#include "BaseStar.h"
 
 #include "Transform.cpp"
 #include "PhysicBody.cpp"
@@ -52,6 +53,7 @@ class LevelManagerClass
 public:
 	WindowClass* window;
 	MouseClass* mouse;
+	World* m_World;
 	
 
 public:
@@ -71,8 +73,8 @@ public:
 	}
 
 private:
-	World* m_World;
 	PlayerController* playerController;
+	BaseStar* Star;
 };
 
 #endif
