@@ -69,7 +69,7 @@ bool LevelManagerClass::Initialize()
 	TextLabel* textLabel;
 
 	Entity* folder = m_World->CreateEntity("WorldFolder");
-	folder->SetActive(false);
+	folder->SetActive(true);
 
 	player = m_World->CreateEntity("Player", folder);
 	transform = player->AddComponent<Transform>();
@@ -133,7 +133,7 @@ bool LevelManagerClass::Initialize()
 
 	// MAIN MENU //
 	
-	entity = m_World->CreateEntity();
+	/*entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.1f, 0.0f);
 	transform->scale = point3d(0.25f, 0.05f, 0.0f);
@@ -167,7 +167,7 @@ bool LevelManagerClass::Initialize()
 	rect->anchorPoint = point3d(0, 0, 0);
 	rect->ratio = ScreenAspectRatio::YY;
 	rect->cornerRadius = 0.25f;
-	rect->cornerType = CornerType::Strict;
+	rect->cornerType = CornerType::Strict;*/
 
 	// MAIN MENU END //
 

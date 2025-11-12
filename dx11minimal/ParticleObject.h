@@ -1,10 +1,8 @@
-#ifndef _PARTICLE_OBJECT_H_
+﻿#ifndef _PARTICLE_OBJECT_H_
 #define _PARTICLE_OBJECT_H_
 
 #include "Point3d.h"
 #include <vector>
-
-using namespace std;
 
 
 struct Particle
@@ -28,7 +26,7 @@ struct ParticleObject
 
 	point3d position = point3d();
 	float lastEmit = 0;
-	vector<Particle*> particles;
+	std::vector<Particle*> particles;
 };
 
 #endif

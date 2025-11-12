@@ -52,6 +52,8 @@ private:
 	bool IsKeyPressed(const int);
 
 private:
+	Entity* playerEntity;
+
 	Transform* playerTransform;
 	PhysicBody* playerPhysicBody;
 	Constellation* playerConstellation;

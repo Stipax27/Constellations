@@ -332,7 +332,7 @@ void Shaders::CreateVS(int i, LPCWSTR name)
 {
 	HRESULT hr;
 
-	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "VS", "vs_4_1", NULL, NULL, &VS[i].pBlob, &pErrorBlob);
+	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "VS", "vs_5_0", NULL, NULL, &VS[i].pBlob, &pErrorBlob);
 	Shaders::CompilerLog(name, hr, "vertex shader compiled: ");
 
 	if (hr == S_OK)
@@ -345,7 +345,7 @@ void Shaders::CreatePS(int i, LPCWSTR name)
 {
 	HRESULT hr;
 
-	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PS", "ps_4_1", NULL, NULL, &PS[i].pBlob, &pErrorBlob);
+	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PS", "ps_5_0", NULL, NULL, &PS[i].pBlob, &pErrorBlob);
 	Shaders::CompilerLog(name, hr, "pixel shader compiled: ");
 
 	if (hr == S_OK)
@@ -358,7 +358,7 @@ void Shaders::CreateGS(int i, LPCWSTR name)
 {
 	HRESULT hr;
 
-	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "GS", "gs_4_1", NULL, NULL, &GS[i].pBlob, &pErrorBlob);
+	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "GS", "gs_5_0", NULL, NULL, &GS[i].pBlob, &pErrorBlob);
 	Shaders::CompilerLog(name, hr, "geometry shader compiled: ");
 
 	if (hr == S_OK)

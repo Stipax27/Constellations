@@ -3,6 +3,8 @@
 
 PlayerController::PlayerController()
 {
+	playerEntity = 0;
+
 	playerTransform = 0;
 	playerPhysicBody = 0;
 	playerConstellation = 0;
@@ -24,6 +26,8 @@ PlayerController::~PlayerController()
 
 void PlayerController::Initialize(Entity* Player, CameraClass* Camera, MouseClass* Mouse, WindowClass* Window)
 {
+	playerEntity = Player;
+
 	playerTransform = Player->GetComponent<Transform>();
 	playerPhysicBody = Player->GetComponent<PhysicBody>();
 	playerConstellation = Player->GetComponent<Constellation>();
@@ -76,44 +80,46 @@ bool PlayerController::IsKeyPressed(const int Key)
 
 void PlayerController::ProcessInput()
 {
-	// УПРАВЛЕНИЕ  ПЕРЕДВИЖЕНИЕМ
-	point3d velocity = point3d();
+	if (playerEntity != nullptr && playerEntity->IsActive()) {
+		// УПРАВЛЕНИЕ  ПЕРЕДВИЖЕНИЕМ
+		point3d velocity = point3d();
 
-	if (IsKeyPressed('W')) {
-		velocity += playerTransform->GetLookVector();
-	}
-	if (IsKeyPressed('S')) {
-		velocity += playerTransform->GetLookVector() * -1;
-	}
-	if (IsKeyPressed('A')) {
-		velocity += playerTransform->GetRightVector() * -1;
-	}
-	if (IsKeyPressed('D')) {
-		velocity += playerTransform->GetRightVector();
-	}
-	if (IsKeyPressed(VK_SPACE)) {
-		velocity += playerTransform->GetUpVector();
-	}
-	if (IsKeyPressed(VK_CONTROL)) {
-		velocity += playerTransform->GetUpVector() * -1;
-	}
+		if (IsKeyPressed('W')) {
+			velocity += playerTransform->GetLookVector();
+		}
+		if (IsKeyPressed('S')) {
+			velocity += playerTransform->GetLookVector() * -1;
+		}
+		if (IsKeyPressed('A')) {
+			velocity += playerTransform->GetRightVector() * -1;
+		}
+		if (IsKeyPressed('D')) {
+			velocity += playerTransform->GetRightVector();
+		}
+		if (IsKeyPressed(VK_SPACE)) {
+			velocity += playerTransform->GetUpVector();
+		}
+		if (IsKeyPressed(VK_CONTROL)) {
+			velocity += playerTransform->GetUpVector() * -1;
+		}
 
-	if (velocity.magnitude() > 0) {
-		playerPhysicBody->velocity = velocity.normalized() * 15;
-	}
+		if (velocity.magnitude() > 0) {
+			playerPhysicBody->velocity = velocity.normalized() * 15;
+		}
 
-	// УПРАВЛЕНИЕ НАКЛОНОМ
-	float roll = 0.0f;
+		// УПРАВЛЕНИЕ НАКЛОНОМ
+		float roll = 0.0f;
 
-	if (IsKeyPressed('E')) {
-		roll = -ROLL_SPEED;
-	}
-	if (IsKeyPressed('Q')) {
-		roll = ROLL_SPEED;
-	}
+		if (IsKeyPressed('E')) {
+			roll = -ROLL_SPEED;
+		}
+		if (IsKeyPressed('Q')) {
+			roll = ROLL_SPEED;
+		}
 
-	if (roll != 0) {
-		playerPhysicBody->mAngVelocity = XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), roll * RAD);
+		if (roll != 0) {
+			playerPhysicBody->mAngVelocity = XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), roll * RAD);
+		}
 	}
 }
 
@@ -135,25 +141,27 @@ void PlayerController::ProcessMouse()
 	{
 	case MouseState::Centered:
 	{
-		float length = mousePos.magnitude();
+		if (playerEntity != nullptr && playerEntity->IsActive()) {
+			float length = mousePos.magnitude();
 
-		if (length > CURSOR_IGNORE_ZONE) {
-			if (length > MAX_CURSOR_DEVIATION) {
-				mousePos = mousePos.normalized() * MAX_CURSOR_DEVIATION;
-				mouse->pos = point3d(mousePos.x * window->width * window->aspect + window->width / 2, mousePos.y * window->height + window->height / 2, 0);
-				SetCursorPos(mouse->pos.x, mouse->pos.y);
+			if (length > CURSOR_IGNORE_ZONE) {
+				if (length > MAX_CURSOR_DEVIATION) {
+					mousePos = mousePos.normalized() * MAX_CURSOR_DEVIATION;
+					mouse->pos = point3d(mousePos.x * window->width * window->aspect + window->width / 2, mousePos.y * window->height + window->height / 2, 0);
+					SetCursorPos(mouse->pos.x, mouse->pos.y);
+				}
+
+				float k = (length - CURSOR_IGNORE_ZONE) / MAX_CURSOR_DEVIATION;
+				mousePos *= SENSIVITY * k;
+
+				//XMVECTOR addRotation = eulerToQuanternion(dPitch, dYaw, 0) * SENSIVITY * k;
+				XMMATRIX additionalRotation = XMMatrixRotationRollPitchYaw(XMConvertToRadians(mousePos.y), XMConvertToRadians(mousePos.x), 0);
+
+				playerPhysicBody->mAngVelocity = playerPhysicBody->mAngVelocity * additionalRotation;
 			}
-
-			float k = (length - CURSOR_IGNORE_ZONE) / MAX_CURSOR_DEVIATION;
-			mousePos *= SENSIVITY * k;
-
-			//XMVECTOR addRotation = eulerToQuanternion(dPitch, dYaw, 0) * SENSIVITY * k;
-			XMMATRIX additionalRotation = XMMatrixRotationRollPitchYaw(XMConvertToRadians(mousePos.y), XMConvertToRadians(mousePos.x), 0);
-
-			playerPhysicBody->mAngVelocity = playerPhysicBody->mAngVelocity * additionalRotation;
-		}
-		else {
-			//Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
+			else {
+				//Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
+			}
 		}
 		break;
 	}
