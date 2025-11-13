@@ -394,7 +394,9 @@ void Textures::LoadTexture(const char* filename)
 
 //////////////////////////////////////////////////////////////////////////////////
 
-void Models::LoadModel(const char* filename)
+ID3D11Buffer* Models::vertexBuffer, * Models::indexBuffer;
+
+void Models::LoadModelFromTxtFile(const char* filename)
 {
 	std::ifstream fin;
 	char input;

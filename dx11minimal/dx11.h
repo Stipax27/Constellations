@@ -135,9 +135,9 @@ namespace Models
 		float nx, ny, nz;
 	};
 
-	ID3D11Buffer* vertexBuffer, * indexBuffer;
+	extern ID3D11Buffer* vertexBuffer, * indexBuffer;
 
-	void LoadModel(const char* filename);
+	void LoadModelFromTxtFile(const char* filename);
 }
 
 namespace Shaders {
