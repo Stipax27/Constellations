@@ -289,6 +289,244 @@ void Textures::RenderTarget(int target, unsigned int level = 0)
 	SetViewport(target, level);
 }
 
+void Textures::LoadTexture(const char* filename)
+{
+	int error, bpp, imageSize, index, i, j, k;
+	FILE* filePtr;
+	unsigned int count;
+	TargaHeader targaFileHeader;
+	unsigned char* targaImage;
+	unsigned char* targaData;
+	unsigned int rowPitch;
+
+	// Open the targa file for reading in binary.
+	error = fopen_s(&filePtr, filename, "rb");
+	if (error != 0)
+	{
+		return;
+	}
+
+	// Read in the file header.
+	count = (unsigned int)fread(&targaFileHeader, sizeof(TargaHeader), 1, filePtr);
+	if (count != 1)
+	{
+		return;
+	}
+
+	// Get the important information from the header.
+	int m_height = (int)targaFileHeader.height;
+	int m_width = (int)targaFileHeader.width;
+	bpp = (int)targaFileHeader.bpp;
+
+	// Check that it is 32 bit and not 24 bit.
+	if (bpp != 32)
+	{
+		return;
+	}
+
+	// Calculate the size of the 32 bit image data.
+	imageSize = m_width * m_height * 4;
+
+	// Allocate memory for the targa image data.
+	targaImage = new unsigned char[imageSize];
+
+	// Read in the targa image data.
+	count = (unsigned int)fread(targaImage, 1, imageSize, filePtr);
+	if (count != imageSize)
+	{
+		return;
+	}
+
+	// Close the file.
+	error = fclose(filePtr);
+	if (error != 0)
+	{
+		return;
+	}
+
+	// Allocate memory for the targa destination data.
+	targaData = new unsigned char[imageSize];
+
+	// Initialize the index into the targa destination data array.
+	index = 0;
+
+	// Initialize the index into the targa image data.
+	k = (m_width * m_height * 4) - (m_width * 4);
+
+	// Now copy the targa image data into the targa destination array in the correct order since the targa format is stored upside down and also is not in RGBA order.
+	for (j = 0; j < m_height; j++)
+	{
+		for (i = 0; i < m_width; i++)
+		{
+			targaData[index + 0] = targaImage[k + 2];  // Red.
+			targaData[index + 1] = targaImage[k + 1];  // Green.
+			targaData[index + 2] = targaImage[k + 0];  // Blue
+			targaData[index + 3] = targaImage[k + 3];  // Alpha
+
+			// Increment the indexes into the targa data.
+			k += 4;
+			index += 4;
+		}
+
+		// Set the targa image data index back to the preceding row at the beginning of the column since its reading it in upside down.
+		k -= (m_width * 8);
+	}
+
+	Create(1, tType::flat, tFormat::u8, XMFLOAT2(targaFileHeader.width, targaFileHeader.height), true, false);
+
+	// Set the row pitch of the targa image data.
+	rowPitch = (m_width * 4) * sizeof(unsigned char);
+
+	// Copy the targa image data into the texture.
+	context->UpdateSubresource(Texture[1].pTexture, 0, NULL, targaData, rowPitch, 0);
+
+	// Generate mipmaps for this texture.
+	context->GenerateMips(Texture[1].TextureResView);
+
+	// Release the targa image data now that it was copied into the destination array.
+	delete[] targaImage;
+	targaImage = 0;
+
+	// Release the targa image data now that the image data has been loaded into the texture.
+	delete[] targaData;
+	targaData = 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+
+void Models::LoadModel(const char* filename)
+{
+	std::ifstream fin;
+	char input;
+	int i;
+	int vertexCount, indexCount;
+
+
+	// Open the model file.
+	fin.open(filename);
+
+	// If it could not open the file then exit.
+	if (fin.fail())
+	{
+		Shaders::Log("Failed to read the model file\n");
+		return;
+	}
+
+	// Read up to the value of vertex count.
+	fin.get(input);
+	while (input != ':')
+	{
+		fin.get(input);
+	}
+
+	// Read in the vertex count.
+	fin >> vertexCount;
+
+	// Set the number of indices to be the same as the vertex count.
+	indexCount = vertexCount;
+
+	// Create the model using the vertex count that was read in.
+	ModelType* model = new ModelType[vertexCount];
+
+	// Read up to the beginning of the data.
+	fin.get(input);
+	while (input != ':')
+	{
+		fin.get(input);
+	}
+	fin.get(input);
+	fin.get(input);
+
+	// Read in the vertex data.
+	for (i = 0; i < vertexCount; i++)
+	{
+		fin >> model[i].x >> model[i].y >> model[i].z;
+		fin >> model[i].tu >> model[i].tv;
+		fin >> model[i].nx >> model[i].ny >> model[i].nz;
+	}
+
+	// Close the model file.
+	fin.close();
+
+
+
+	VertexType* vertices;
+	unsigned long* indices;
+	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
+	D3D11_SUBRESOURCE_DATA vertexData, indexData;
+	HRESULT result;
+
+	// Set the number of indices in the index array.
+	indexCount = vertexCount;
+
+	// Create the vertex array.
+	vertices = new VertexType[vertexCount];
+
+	// Create the index array.
+	indices = new unsigned long[indexCount];
+
+	// Load the vertex array and index array with data.
+	for (int i = 0; i < vertexCount; i++)
+	{
+		vertices[i].position = XMFLOAT3(model[i].x, model[i].y, model[i].z);
+		vertices[i].texture = XMFLOAT2(model[i].tu, model[i].tv);
+		vertices[i].normal = XMFLOAT3(model[i].nx, model[i].ny, model[i].nz);
+
+		indices[i] = i;
+	}
+
+	// Set up the description of the static vertex buffer.
+	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.ByteWidth = sizeof(VertexType) * vertexCount;
+	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.CPUAccessFlags = 0;
+	vertexBufferDesc.MiscFlags = 0;
+	vertexBufferDesc.StructureByteStride = 0;
+
+	// Give the subresource structure a pointer to the vertex data.
+	vertexData.pSysMem = vertices;
+	vertexData.SysMemPitch = 0;
+	vertexData.SysMemSlicePitch = 0;
+
+	// Now create the vertex buffer.
+	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer);
+	if (FAILED(result))
+	{
+		Shaders::Log("Failed to create vertex buffer for the model\n");
+		return;
+	}
+
+	// Set up the description of the static index buffer.
+	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.ByteWidth = sizeof(unsigned long) * indexCount;
+	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	indexBufferDesc.CPUAccessFlags = 0;
+	indexBufferDesc.MiscFlags = 0;
+	indexBufferDesc.StructureByteStride = 0;
+
+	// Give the subresource structure a pointer to the index data.
+	indexData.pSysMem = indices;
+	indexData.SysMemPitch = 0;
+	indexData.SysMemSlicePitch = 0;
+
+	// Create the index buffer.
+	result = device->CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer);
+	if (FAILED(result))
+	{
+		Shaders::Log("Failed to create index buffer for the model\n");
+		return;
+	}
+
+	// Release the arrays now that the vertex and index buffers have been created and loaded.
+	delete[] vertices;
+	vertices = 0;
+
+	delete[] indices;
+	indices = 0;
+
+	Shaders::Log("Model file was read succesfully\n");
+}
+
 //////////////////////////////////////////////////////////////////////////////////
 
 Shaders::VertexShader Shaders::VS[255];
@@ -415,6 +653,9 @@ void Shaders::Init()
 
 	Shaders::CreatePS(14, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Rect_Smooth_PS.shader"));
 	//Shaders::CreatePS(14, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\BlackHole_Body_PS.shader"));
+
+	Shaders::CreateVS(15, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Mesh_VS.shader"));
+	Shaders::CreatePS(15, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Mesh_PS.shader"));
 	
 	//-----------------------------------------------
 	

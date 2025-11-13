@@ -10,6 +10,8 @@
 #include <debugapi.h>
 #include <algorithm>
 #include <deque>
+#include <stdio.h>
+#include <fstream>
 
 #pragma comment(lib, "d3d10.lib")
 #pragma comment(lib, "d3d11.lib")
@@ -88,6 +90,15 @@ namespace Textures
 
 	};
 
+	struct TargaHeader
+	{
+		unsigned char data1[12];
+		unsigned short width;
+		unsigned short height;
+		unsigned char bpp;
+		unsigned char data2;
+	};
+
 	extern textureDesc Texture[max_tex];
 
 	extern int currentRT;
@@ -105,8 +116,29 @@ namespace Textures
 	void TextureToShader(int, unsigned int, targetshader = targetshader::both);
 	void CreateMipMap();
 	void RenderTarget(int, unsigned int);
+	void LoadTexture(const char*);
 }
 
+namespace Models
+{
+	struct VertexType
+	{
+		XMFLOAT3 position;
+		XMFLOAT3 normal;
+		XMFLOAT2 texture;
+	};
+
+	struct ModelType
+	{
+		float x, y, z;
+		float tu, tv;
+		float nx, ny, nz;
+	};
+
+	ID3D11Buffer* vertexBuffer, * indexBuffer;
+
+	void LoadModel(const char* filename);
+}
 
 namespace Shaders {
 
