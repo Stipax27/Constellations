@@ -272,6 +272,7 @@
     <ClCompile Include="dx11minimal.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="LevelManagerClass.cpp" />
+    <ClCompile Include="MethodOfClosest.cpp" />
     <ClCompile Include="MouseClass.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Point3d.cpp" />
@@ -283,6 +284,7 @@
     <ClCompile Include="PlaneCollider.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
+    <ClCompile Include="SurfaceCollider.cpp" />
     <ClCompile Include="TextLabel.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="Transform.cpp" />

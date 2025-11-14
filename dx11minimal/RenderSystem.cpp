@@ -12,6 +12,10 @@
 
 #include "cameraclass.h"
 
+//DEBUG
+#include "SurfaceCollider.cpp"
+
+
 
 class RenderSystem : public System
 {
@@ -105,6 +109,23 @@ public:
 						point3d transformPos = transform->position;
 						vector<point3d> transformedStars;
 
+
+						//debug point
+						Shaders::vShader(1);
+						Shaders::pShader(1);
+
+						SurfaceCollider surface;
+
+						float xxx = 20;
+						float zzz = 30;
+
+						ConstBuf::global[0] = XMFLOAT4(xxx, surface.getHeight(xxx, zzz), zzz, 5.0f);
+						ConstBuf::Update(5, ConstBuf::global);
+						ConstBuf::ConstToVertex(5);
+
+						Draw::Drawer(1);
+
+
 						Shaders::vShader(4);
 						Shaders::pShader(4);
 
@@ -146,6 +167,10 @@ public:
 						}
 					}
 				}
+
+
+
+
 
 				SpriteCluster* spriteCluster = entity->GetComponent<SpriteCluster>();
 				if (spriteCluster != nullptr)

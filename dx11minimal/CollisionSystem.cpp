@@ -57,15 +57,16 @@ public:
 							PhysicBody* physicBody1 = entity1->GetComponent<PhysicBody>();
 							if (physicBody1 != nullptr)
 							{
-								point3d buoyantForce = -(physicBody1->velocity * planeCollider->normal / pow(planeCollider->normal.magnitude(), 2) * planeCollider->normal);
-								physicBody1->velocity += buoyantForce;
+								//point3d buoyantForce = -(physicBody1->velocity * planeCollider->normal / pow(planeCollider->normal.magnitude(), 2) * planeCollider->normal);
+								//physicBody1->velocity += buoyantForce;
+
 								transform1->position += planeCollider->normal * (sphereCollider->radius - distance);
 
-								float sideVelocity = (physicBody1->velocity - planeCollider->normal * buoyantForce).magnitude();
+								/*float sideVelocity = (physicBody1->velocity - planeCollider->normal * buoyantForce).magnitude();
 								if (sideVelocity > 0.0f)
 								{
 									physicBody1->velocity = physicBody1->velocity.normalized() * (physicBody1->velocity.magnitude() - ((sideVelocity * sphereCollider->friction + sphereCollider->friction) * deltaTime));
-								}
+								}*/
 							}
 
 							/*PhysicBody* physicBody2 = entity2->GetComponent<PhysicBody>();

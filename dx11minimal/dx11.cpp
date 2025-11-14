@@ -429,6 +429,9 @@ void Shaders::Init()
 
 void Shaders::vShader(unsigned int n)
 {
+	//if (n == 7) {
+	//	n = 7;
+	//}
 	context->VSSetShader(VS[n].vShader, NULL, 0);
 }
 
