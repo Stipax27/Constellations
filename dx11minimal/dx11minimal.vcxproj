@@ -147,6 +147,7 @@
     <ClInclude Include="FpsCounter.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="LevelManagerClass.h" />
+    <ClInclude Include="MethodOfClosest.h" />
     <ClInclude Include="mouseclass.h" />
     <ClInclude Include="ParticleObject.h" />
     <ClInclude Include="ParticleSystem.h" />

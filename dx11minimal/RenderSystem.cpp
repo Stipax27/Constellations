@@ -14,7 +14,7 @@
 
 //DEBUG
 #include "SurfaceCollider.cpp"
-
+#include "MethodOfClosest.h"
 
 
 class RenderSystem : public System
@@ -114,16 +114,22 @@ public:
 						Shaders::vShader(1);
 						Shaders::pShader(1);
 
+						point3d closestPoint;
+						float distance;
 						SurfaceCollider surface;
 
-						float xxx = 20;
-						float zzz = 30;
+						float xxx = transformPos.x;
+						float zzz = transformPos.z;
 
-						ConstBuf::global[0] = XMFLOAT4(xxx, surface.getHeight(xxx, zzz), zzz, 5.0f);
+						bool collision = findClosestPointOnSurface(transformPos, surface, closestPoint, distance, 12, 3);
+
+						ConstBuf::global[0] = XMFLOAT4(closestPoint.x, closestPoint.y, closestPoint.z, 5.0f);
 						ConstBuf::Update(5, ConstBuf::global);
 						ConstBuf::ConstToVertex(5);
 
 						Draw::Drawer(1);
+
+
 
 
 						Shaders::vShader(4);

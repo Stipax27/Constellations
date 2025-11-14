@@ -135,6 +135,9 @@
     <ClInclude Include="font.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MethodOfClosest.h">
+      <Filter>Source Files\Physic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp">

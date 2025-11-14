@@ -1,6 +1,7 @@
 #ifndef SURFACECOLLISION_CPP
 #define SURFACECOLLISION_CPP
 
+#include "MethodOfClosest.h"
 #include "SurfaceCollider.cpp"
 #include <cmath>
 #include <random>
@@ -31,21 +32,21 @@ bool findClosestPointOnSurface(const point3d& playerPos,
 
     // Быстрая проверка вертикального расстояния
     float y_projection = surface.getHeight(playerPos.x, playerPos.z);
-    float vertical_distance = std::abs(playerPos.y - y_projection);
+    //float vertical_distance = std::abs(playerPos.y - y_projection);
 
     point3d current_pos = playerPos;
     float learning_rate = 0.1f;
 
-    // Настраиваем параметры в зависимости от расстояния
-    if (vertical_distance > collisionThreshold) {
-        learning_rate = 0.5f;
-        maxIterations = maxIterations / 2;
-    }
+    //// Настраиваем параметры в зависимости от расстояния
+    //if (vertical_distance > collisionThreshold) {
+    //    learning_rate = 0.5f;
+    //    maxIterations = maxIterations / 2;
+    //}
 
     point3d best_pos = playerPos;
     float best_distance = 1e20f;
 
-    int num_restarts = (vertical_distance > collisionThreshold) ? 3 : 1;
+    int num_restarts = 1;//(vertical_distance > collisionThreshold) ? 3 : 1;
 
     for (int restart = 0; restart < num_restarts; ++restart) {
         if (restart > 0) {
@@ -64,8 +65,8 @@ bool findClosestPointOnSurface(const point3d& playerPos,
             surfaceGradient(current_pos, surface, dy_dx, dy_dz);
 
             // Градиент функции расстояния
-            float grad_x = 2.0f * (current_pos.x - playerPos.x) + 2.0f * (y - playerPos.y) * dy_dx;
-            float grad_z = 2.0f * (current_pos.z - playerPos.z) + 2.0f * (y - playerPos.y) * dy_dz;
+            float grad_x = 1.0f * ((current_pos.x - playerPos.x) + (y - playerPos.y) * dy_dx);
+            float grad_z = 1.0f * ((current_pos.z - playerPos.z) + (y - playerPos.y) * dy_dz);
 
             // Ограничиваем градиент для стабильности
             float grad_norm = std::sqrt(grad_x * grad_x + grad_z * grad_z);
