@@ -98,6 +98,7 @@ bool LevelManagerClass::Initialize()
 	spriteCluster->pShader = 7;
 	spriteCluster->pointsNum = 900000;
 	//entity->AddComponent<PlaneCollider>();
+	entity->AddComponent<SurfaceCollider>();
 
 	entity = m_World->CreateEntity();
 	spriteCluster = entity->AddComponent<SpriteCluster>();

@@ -98,7 +98,7 @@ bool findClosestPointOnSurface(const point3d& playerPos,
     outClosestPoint = best_pos;
     outDistance = best_distance;
 
-    return (best_distance <= collisionThreshold);
+    return (best_pos - playerPos).dot(surface.getNormal(best_pos.x, best_pos.z)) > 0;
 }
 
 #endif
