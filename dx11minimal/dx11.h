@@ -1,4 +1,4 @@
-﻿#ifndef DX11_H
+#ifndef DX11_H
 #define DX11_H
 
 #define _XM_SSE_INTRINSICS_ 
@@ -145,6 +145,7 @@ namespace Shaders {
 	struct VertexShader {
 		ID3D11VertexShader* vShader;
 		ID3DBlob* pBlob;
+		ID3D11InputLayout* pLayout;
 	};
 
 	struct PixelShader {
@@ -247,6 +248,7 @@ namespace ConstBuf
 
 	int roundUp(int, int);
 	void Create(ID3D11Buffer*&, int);
+	void CreateVertexBuffer();
 	void Init();
 
 	template <typename T>
