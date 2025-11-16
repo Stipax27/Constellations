@@ -248,7 +248,7 @@ namespace ConstBuf
 
 	int roundUp(int, int);
 	void Create(ID3D11Buffer*&, int);
-	void CreateVertexBuffer();
+	void CreateVertexBuffer(int);
 	void Init();
 
 	template <typename T>

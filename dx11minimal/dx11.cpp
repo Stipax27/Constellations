@@ -792,7 +792,7 @@ void ConstBuf::Create(ID3D11Buffer*& buf, int size)
 	HRESULT hr = device->CreateBuffer(&bd, NULL, &buf);
 }
 
-void ConstBuf::CreateVertexBuffer()
+void ConstBuf::CreateVertexBuffer(int vertexShader)
 {
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
 	unsigned int numElements;
@@ -824,8 +824,8 @@ void ConstBuf::CreateVertexBuffer()
 	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
 	// Create the vertex input layout.
-	device->CreateInputLayout(polygonLayout, numElements, Shaders::VS[1].pBlob->GetBufferPointer(),
-		Shaders::VS[1].pBlob->GetBufferSize(), &Shaders::VS[1].pLayout);
+	device->CreateInputLayout(polygonLayout, numElements, Shaders::VS[vertexShader].pBlob->GetBufferPointer(),
+		Shaders::VS[vertexShader].pBlob->GetBufferSize(), &Shaders::VS[vertexShader].pLayout);
 }
 
 void ConstBuf::Init()
@@ -1082,7 +1082,7 @@ void Dx11Init(HWND hwnd, int width, int height)
 	// voronoi noise rt
 	Textures::Create(4, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
 
-	ConstBuf::CreateVertexBuffer();
+	ConstBuf::CreateVertexBuffer(1);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
