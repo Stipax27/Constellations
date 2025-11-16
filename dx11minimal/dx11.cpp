@@ -289,7 +289,7 @@ void Textures::RenderTarget(int target, unsigned int level = 0)
 	SetViewport(target, level);
 }
 
-void Textures::LoadTexture(const char* filename)
+void Textures::LoadTexture(const char* filename, int textureId)
 {
 	int error, bpp, imageSize, index, i, j, k;
 	FILE* filePtr;
@@ -378,10 +378,10 @@ void Textures::LoadTexture(const char* filename)
 	rowPitch = (m_width * 4) * sizeof(unsigned char);
 
 	// Copy the targa image data into the texture.
-	context->UpdateSubresource(Texture[1].pTexture, 0, NULL, targaData, rowPitch, 0);
+	context->UpdateSubresource(Texture[textureId].pTexture, 0, NULL, targaData, rowPitch, 0);
 
 	// Generate mipmaps for this texture.
-	context->GenerateMips(Texture[1].TextureResView);
+	context->GenerateMips(Texture[textureId].TextureResView);
 
 	// Release the targa image data now that it was copied into the destination array.
 	delete[] targaImage;
@@ -1082,7 +1082,7 @@ void Dx11Init(HWND hwnd, int width, int height)
 	// voronoi noise rt
 	Textures::Create(4, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
 
-	ConstBuf::CreateVertexBuffer(1);
+	ConstBuf::CreateVertexBuffer(15);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
