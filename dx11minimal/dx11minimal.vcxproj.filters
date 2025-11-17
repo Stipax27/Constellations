@@ -135,6 +135,9 @@
     <ClInclude Include="StarAttack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BaseStar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp">
@@ -216,6 +219,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SplinePath.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseStar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ExplosionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

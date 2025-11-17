@@ -2,12 +2,13 @@
 #include "world.h"
 #include "Transform.cpp"
 #include "timer.h"
+#include <cstdlib> // для rand()
+#include <cmath> 
 
 class BaseStar 
 {
 private:
 
-	DWORD LastTime;
 
 public:
 	World *m_World;
@@ -15,6 +16,7 @@ public:
 	float speed;
 	float damage;
 	float rad;
+	DWORD LastTime;
 
 	void Init(World*, Entity*);
 	void Flash();

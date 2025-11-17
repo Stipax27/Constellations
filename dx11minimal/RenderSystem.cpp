@@ -158,7 +158,7 @@ public:
 						transform->position;
 						explosion->radius = min(explosion->max_radius, explosion->radius + explosion->speed * deltaTime);
 
-						ConstBuf::global[0] = XMFLOAT4(1, 1, 1, explosion->radius);
+						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, explosion->radius);
 						ConstBuf::Update(5, ConstBuf::global);
 						ConstBuf::ConstToVertex(5);
 						ConstBuf::ConstToPixel(5);

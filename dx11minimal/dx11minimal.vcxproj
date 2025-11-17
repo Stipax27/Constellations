@@ -267,6 +267,7 @@
     <ClCompile Include="dx11minimal.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Explosion.cpp" />
+    <ClCompile Include="ExplosionSystem.cpp" />
     <ClCompile Include="LevelManagerClass.cpp" />
     <ClCompile Include="MouseClass.cpp" />
     <ClCompile Include="Patern_Enemy_Logik.cpp" />

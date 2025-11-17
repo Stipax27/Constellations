@@ -255,6 +255,8 @@ private:
             ai->behaviorType = AIBehaviorType::PATROL;
             ai->stateTimer = 0.0f;
         }
+
+
     }
 
     bool DetectPlayer(Transform* transform, AIComponent* ai)

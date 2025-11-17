@@ -169,7 +169,7 @@ bool LevelManagerClass::Initialize()
 	//m_World->PreCalculations();
 	Star = new BaseStar();
 	Star->Init(m_World, entity);
-	Star->Flash();
+	
 
 	playerController = new PlayerController();
 	playerController->Initialize(player, m_World->m_Camera, mouse, window);
@@ -216,6 +216,7 @@ void LevelManagerClass::Shutdown()
 }
 
 
+// В методе Frame или в другом месте по условиям
 bool LevelManagerClass::Frame()
 {
 	bool result;
@@ -223,22 +224,39 @@ bool LevelManagerClass::Frame()
 	mouse->Update();
 	playerController->ProcessInput();
 	playerController->ProcessMouse();
-	
-	
+
+	// Проверяем условия для атак звезды
+	DWORD currentTime = GetTickCount();
+	srand(time(0));
+	// Пример: атака каждые 3 секунды
+	if (currentTime - Star->LastTime > 3000) {
+		// Случайный выбор атаки
+		int attackType = rand() % 3;
+		switch (attackType) {
+		case 0:
+			Star->Flash();
+			break;
+		case 1:
+			Star->CoronalEjection();
+			break;
+		case 2:
+			Star->SunWind();
+			break;
+		}
+		Star->LastTime = currentTime;
+	}
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 
 	result = m_World->UpdatePhysic();
-	if (!result)
-	{
+	if (!result) {
 		return false;
 	}
 
 	playerController->ProcessCamera();
 
 	result = m_World->UpdateRender();
-	if (!result)
-	{
+	if (!result) {
 		return false;
 	}
 
