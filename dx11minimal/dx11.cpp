@@ -619,7 +619,6 @@ void Shaders::Init()
 {
 	Shaders::CreateVS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VS.shader"));
 	Shaders::CreatePS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PS.shader"));
-	//Shaders::CreateGS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Static_GS.shader"));
 	
 	Shaders::CreateVS(1, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VSS.shader"));
 	Shaders::CreatePS(1, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PSS.shader"));
@@ -669,6 +668,7 @@ void Shaders::Init()
 
 	Shaders::CreateVS(16, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PointCloud_VS.shader"));
 	Shaders::CreatePS(16, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PointCloud_PS.shader"));
+	Shaders::CreateGS(16, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PointCloud_GS.shader"));
 	
 	//-----------------------------------------------
 	
@@ -1105,7 +1105,7 @@ void Dx11Init(HWND hwnd, int width, int height)
 	// voronoi noise rt
 	Textures::Create(4, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
 
-	ConstBuf::CreateVertexBuffer(15);
+	ConstBuf::CreateVertexBuffer(16);
 }
 
 //////////////////////////////////////////////////////////////////////////////////

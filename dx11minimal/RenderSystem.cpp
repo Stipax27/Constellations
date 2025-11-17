@@ -136,8 +136,8 @@ public:
 						//Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
 						Rasterizer::Cull(mesh->cullMode);
 						Depth::Depth(Depth::depthmode::on);
-						Shaders::vShader(15);
-						Shaders::pShader(15);
+						Shaders::vShader(16);
+						Shaders::pShader(16);
 						InputAssembler::IA(InputAssembler::topology::triList);
 						context->DrawIndexed(36, 0, 0);
 					}
