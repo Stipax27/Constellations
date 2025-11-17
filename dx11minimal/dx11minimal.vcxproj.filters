@@ -329,7 +329,7 @@
     <None Include="Shaders\Rect_Smooth_PS.shader">
       <Filter>Shaders\UI</Filter>
     </None>
-    <None Include="Shaders\Mesh_PS.shader">
+    <None Include="Shaders\Mesh_Stretch_PS.shader">
       <Filter>Shaders\Mesh</Filter>
     </None>
     <None Include="Shaders\Mesh_VS.shader">
@@ -342,6 +342,9 @@
       <Filter>Shaders\Mesh</Filter>
     </None>
     <None Include="Shaders\PointCloud_GS.shader">
+      <Filter>Shaders\Mesh</Filter>
+    </None>
+    <None Include="Shaders\Mesh_Fit_PS.shader">
       <Filter>Shaders\Mesh</Filter>
     </None>
   </ItemGroup>

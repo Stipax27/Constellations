@@ -131,16 +131,22 @@ public:
 
 					Mesh* mesh = entity->GetComponent<Mesh>();
 					if (mesh != nullptr) {
+						ConstBuf::CreateVertexBuffer(15);
+
 						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, 0);
 						ConstBuf::global[1] = XMFLOAT4(transform->scale.x, transform->scale.y, transform->scale.z, 0);
 						ConstBuf::Update(5, ConstBuf::global);
+
+						ConstBuf::drawerMat.model = XMMatrixTranspose(transform->mRotation);
+						ConstBuf::UpdateDrawerMat();
+
 						ConstBuf::ConstToVertex(5);
 
 						//Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
 						Rasterizer::Cull(mesh->cullMode);
 						Depth::Depth(Depth::depthmode::on);
-						Shaders::vShader(16);
-						Shaders::pShader(16);
+						Shaders::vShader(15);
+						Shaders::pShader(15);
 						InputAssembler::IA(InputAssembler::topology::triList);
 						context->DrawIndexed(36, 0, 0);
 					}

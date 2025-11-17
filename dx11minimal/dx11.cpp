@@ -664,11 +664,13 @@ void Shaders::Init()
 	//Shaders::CreatePS(14, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\BlackHole_Body_PS.shader"));
 
 	Shaders::CreateVS(15, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Mesh_VS.shader"));
-	Shaders::CreatePS(15, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Mesh_PS.shader"));
+	Shaders::CreatePS(15, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Mesh_Stretch_PS.shader"));
 
-	Shaders::CreateVS(16, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PointCloud_VS.shader"));
-	Shaders::CreatePS(16, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PointCloud_PS.shader"));
-	Shaders::CreateGS(16, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PointCloud_GS.shader"));
+	Shaders::CreatePS(16, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Mesh_Fit_PS.shader"));
+
+	Shaders::CreateVS(17, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PointCloud_VS.shader"));
+	Shaders::CreatePS(17, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PointCloud_PS.shader"));
+	Shaders::CreateGS(17, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PointCloud_GS.shader"));
 	
 	//-----------------------------------------------
 	
@@ -1104,8 +1106,6 @@ void Dx11Init(HWND hwnd, int width, int height)
 	Textures::Create(3, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
 	// voronoi noise rt
 	Textures::Create(4, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
-
-	ConstBuf::CreateVertexBuffer(16);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
