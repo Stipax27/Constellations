@@ -79,6 +79,9 @@ public:
 
 					Constellation* constellation = entity->GetComponent<Constellation>();
 					if (constellation != nullptr) {
+						Rasterizer::Cull(Rasterizer::cullmode::off);
+						Depth::Depth(Depth::depthmode::off);
+
 						// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 					//sprite->model.Render(m_Direct3D->GetDeviceContext());
 
@@ -146,6 +149,9 @@ public:
 				SpriteCluster* spriteCluster = entity->GetComponent<SpriteCluster>();
 				if (spriteCluster != nullptr)
 				{
+					Rasterizer::Cull(Rasterizer::cullmode::off);
+					Depth::Depth(Depth::depthmode::off);
+
 					ConstBuf::drawerV[0] = entity->timeScale;
 					ConstBuf::Update(0, ConstBuf::drawerV);
 					ConstBuf::ConstToVertex(0);
