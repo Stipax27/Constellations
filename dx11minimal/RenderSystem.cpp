@@ -110,24 +110,21 @@ public:
 						vector<point3d> transformedStars;
 
 
-						//debug point
-						Shaders::vShader(1);
-						Shaders::pShader(1);
+						////debug point
+						//Shaders::vShader(1);
+						//Shaders::pShader(1);
 
-						point3d closestPoint;
-						float distance;
-						SurfaceCollider surface;
+						//point3d closestPoint;
+						//float distance;
+						//SurfaceCollider surface;
 
-						float xxx = transformPos.x;
-						float zzz = transformPos.z;
+						//bool collision = findClosestPointOnSurface(transformPos, surface, closestPoint, distance, 12, 3);
 
-						bool collision = findClosestPointOnSurface(transformPos, surface, closestPoint, distance, 12, 3);
+						//ConstBuf::global[0] = XMFLOAT4(closestPoint.x, closestPoint.y, closestPoint.z, 5.0f);
+						//ConstBuf::Update(5, ConstBuf::global);
+						//ConstBuf::ConstToVertex(5);
 
-						ConstBuf::global[0] = XMFLOAT4(closestPoint.x, closestPoint.y, closestPoint.z, 5.0f);
-						ConstBuf::Update(5, ConstBuf::global);
-						ConstBuf::ConstToVertex(5);
-
-						Draw::Drawer(1);
+						//Draw::Drawer(1);
 
 
 

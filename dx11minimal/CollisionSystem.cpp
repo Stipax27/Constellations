@@ -34,7 +34,7 @@ public:
 	}
 
 	float f(float x) {
-		return pow(2, x);
+		return 0.25*x;
 	}
 
 	bool Update(vector<Entity*>& entities, float deltaTime)
