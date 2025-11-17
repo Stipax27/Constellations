@@ -67,6 +67,9 @@
     <Filter Include="Source Files\Render\UI">
       <UniqueIdentifier>{669754a8-2675-416b-b672-12ef5143d519}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Mesh">
+      <UniqueIdentifier>{40b322f7-157e-4a73-a9c4-95c68d5acf7c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -314,9 +317,6 @@
     <None Include="Shaders\VoronoiNoise.shader">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\ColorCorrection_PS.shader">
-      <Filter>Shaders\PostProcess</Filter>
-    </None>
     <None Include="Shaders\BlackHole_Body_PS.shader">
       <Filter>Shaders</Filter>
     </None>
@@ -330,10 +330,19 @@
       <Filter>Shaders\UI</Filter>
     </None>
     <None Include="Shaders\Mesh_PS.shader">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\Mesh</Filter>
     </None>
     <None Include="Shaders\Mesh_VS.shader">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\Mesh</Filter>
+    </None>
+    <None Include="Shaders\PointCloud_VS.shader">
+      <Filter>Shaders\Mesh</Filter>
+    </None>
+    <None Include="Shaders\PointCloud_PS.shader">
+      <Filter>Shaders\Mesh</Filter>
+    </None>
+    <None Include="Shaders\PointCloud_GS.shader">
+      <Filter>Shaders\Mesh</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

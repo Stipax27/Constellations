@@ -9,6 +9,7 @@
 #include "Transform.cpp"
 #include "SpriteCluster.cpp"
 #include "Constellation.cpp"
+#include "Mesh.cpp"
 
 #include "cameraclass.h"
 
@@ -77,8 +78,7 @@ public:
 					//XMMATRIX worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
 					Constellation* constellation = entity->GetComponent<Constellation>();
-					if (constellation != nullptr)
-					{
+					if (constellation != nullptr) {
 						// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 					//sprite->model.Render(m_Direct3D->GetDeviceContext());
 
@@ -125,6 +125,22 @@ public:
 							Draw::Drawer(1);
 						}
 					}
+
+					Mesh* mesh = entity->GetComponent<Mesh>();
+					if (mesh != nullptr) {
+						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, 0);
+						ConstBuf::global[1] = XMFLOAT4(transform->scale.x, transform->scale.y, transform->scale.z, 0);
+						ConstBuf::Update(5, ConstBuf::global);
+						ConstBuf::ConstToVertex(5);
+
+						//Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
+						Rasterizer::Cull(mesh->cullMode);
+						Depth::Depth(Depth::depthmode::on);
+						Shaders::vShader(15);
+						Shaders::pShader(15);
+						InputAssembler::IA(InputAssembler::topology::triList);
+						context->DrawIndexed(36, 0, 0);
+					}
 				}
 
 				SpriteCluster* spriteCluster = entity->GetComponent<SpriteCluster>();
@@ -150,11 +166,6 @@ public:
 				}
 			}
 		}
-
-		Shaders::vShader(15);
-		Shaders::pShader(15);
-		InputAssembler::IA(InputAssembler::topology::triList);
-		context->DrawIndexed(36, 0, 0);
 
 		Textures::CreateMipMap();
 		Draw::SwitchRenderTextures();

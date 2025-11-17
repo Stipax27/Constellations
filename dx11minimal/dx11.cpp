@@ -666,6 +666,9 @@ void Shaders::Init()
 
 	Shaders::CreateVS(15, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Mesh_VS.shader"));
 	Shaders::CreatePS(15, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Mesh_PS.shader"));
+
+	Shaders::CreateVS(16, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PointCloud_VS.shader"));
+	Shaders::CreatePS(16, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PointCloud_PS.shader"));
 	
 	//-----------------------------------------------
 	

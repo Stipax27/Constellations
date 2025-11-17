@@ -2,14 +2,12 @@
 #define _MESH_C_
 
 #include "component.h"
-#include "point3d.h"
-#include <vector>
-#include <utility>
+#include "dx11.h"
 
 
-struct Constellation : Component
+struct Mesh : Component
 {
-	
+	Rasterizer::cullmode cullMode = Rasterizer::cullmode::front;
 };
 
 #endif
