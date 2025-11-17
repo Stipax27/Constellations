@@ -73,6 +73,7 @@ ID3D11RenderTargetView* Textures::mrtView[8];
 Textures::textureDesc Textures::Texture[max_tex];
 
 int Textures::currentRT = 0;
+int Textures::texturesCount = 0;
 
 void Textures::CreateTex(int i)
 {
@@ -190,6 +191,8 @@ void Textures::shaderResDepth(int i)
 
 void Textures::Create(int i, tType type, tFormat format, XMFLOAT2 size, bool mipMaps, bool depth)
 {
+	texturesCount = max(i, texturesCount + 1);
+
 	ZeroMemory(&tdesc, sizeof(tdesc));
 	ZeroMemory(&svDesc, sizeof(svDesc));
 	ZeroMemory(&renderTargetViewDesc, sizeof(renderTargetViewDesc));
@@ -289,7 +292,7 @@ void Textures::RenderTarget(int target, unsigned int level = 0)
 	SetViewport(target, level);
 }
 
-void Textures::LoadTexture(const char* filename, int textureId)
+void Textures::LoadTexture(const char* filename)
 {
 	int error, bpp, imageSize, index, i, j, k;
 	FILE* filePtr;
@@ -372,7 +375,8 @@ void Textures::LoadTexture(const char* filename, int textureId)
 		k -= (m_width * 8);
 	}
 
-	Create(1, tType::flat, tFormat::u8, XMFLOAT2(targaFileHeader.width, targaFileHeader.height), true, false);
+	int textureId = texturesCount;
+	Create(textureId, tType::flat, tFormat::u8, XMFLOAT2(targaFileHeader.width, targaFileHeader.height), true, false);
 
 	// Set the row pitch of the targa image data.
 	rowPitch = (m_width * 4) * sizeof(unsigned char);
@@ -538,6 +542,10 @@ Shaders::GeometryShader Shaders::GS[255];
 ID3DBlob* Shaders::pErrorBlob;
 wchar_t Shaders::shaderPathW[MAX_PATH];
 
+int Shaders::currentVS = 0;
+int Shaders::currentPS = 0;
+int Shaders::currentGS = 0;
+
 LPCWSTR Shaders::nameToPatchLPCWSTR(const char* path)
 {
 	int len = MultiByteToWideChar(CP_ACP, 0, path, -1, NULL, 0);
@@ -672,16 +680,19 @@ void Shaders::Init()
 
 void Shaders::vShader(unsigned int n)
 {
+	currentVS = n;
 	context->VSSetShader(VS[n].vShader, NULL, 0);
 }
 
 void Shaders::pShader(unsigned int n)
 {
+	currentPS = n;
 	context->PSSetShader(PS[n].pShader, NULL, 0);
 }
 
 void Shaders::gShader(unsigned int n)
 {
+	currentGS = n;
 	context->GSSetShader(GS[n].gShader, NULL, 0);
 }
 
@@ -1054,8 +1065,17 @@ void InputAssembler::IA(topology topoType)
 	}
 
 	context->IASetPrimitiveTopology(ttype);
-	context->IASetInputLayout(NULL);
-	context->IASetVertexBuffers(0, 0, NULL, NULL, NULL);
+	//context->IASetInputLayout(NULL);
+	//context->IASetVertexBuffers(0, 0, NULL, NULL, NULL);
+
+	context->IASetInputLayout(Shaders::VS[Shaders::currentVS].pLayout);
+
+	unsigned int stride = sizeof(Models::VertexType);
+	unsigned int offset = 0;
+
+	// Set the vertex buffer to active in the input assembler so it can be rendered.
+	context->IASetVertexBuffers(0, 1, &Models::vertexBuffer, &stride, &offset);
+	context->IASetIndexBuffer(Models::indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 }
 
 //////////////////////////////////////////////////////////////////////////////////

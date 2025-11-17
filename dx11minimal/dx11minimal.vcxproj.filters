@@ -212,6 +212,9 @@
     <ClCompile Include="Button.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="dx11minimal.rc">
@@ -325,6 +328,12 @@
     </None>
     <None Include="Shaders\Rect_Smooth_PS.shader">
       <Filter>Shaders\UI</Filter>
+    </None>
+    <None Include="Shaders\Mesh_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Mesh_VS.shader">
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

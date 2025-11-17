@@ -102,6 +102,7 @@ namespace Textures
 	extern textureDesc Texture[max_tex];
 
 	extern int currentRT;
+	extern int texturesCount;
 
 	void CreateTex(int);
 	void ShaderRes(int);
@@ -116,7 +117,7 @@ namespace Textures
 	void TextureToShader(int, unsigned int, targetshader = targetshader::both);
 	void CreateMipMap();
 	void RenderTarget(int, unsigned int);
-	void LoadTexture(const char*, int);
+	void LoadTexture(const char*);
 }
 
 namespace Models
@@ -165,6 +166,10 @@ namespace Shaders {
 	extern ID3DBlob* pErrorBlob;
 
 	extern wchar_t shaderPathW[MAX_PATH];
+
+	extern int currentVS;
+	extern int currentPS;
+	extern int currentGS;
 
 	LPCWSTR nameToPatchLPCWSTR(const char*);
 	void Log(const char*);

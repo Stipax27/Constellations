@@ -289,6 +289,7 @@
     <ClCompile Include="dx11minimal.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="LevelManagerClass.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MouseClass.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Point3d.cpp" />

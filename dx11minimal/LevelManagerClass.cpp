@@ -53,7 +53,7 @@ bool LevelManagerClass::Initialize()
 	ConstBuf::factors.AriesNebulaLerpFactor = 0;
 	ConstBuf::UpdateFactors();
 
-	Textures::LoadTexture("..\\dx11minimal\\Resourses\\Textures\\testTexture.tga", 1);
+	Textures::LoadTexture("..\\dx11minimal\\Resourses\\Textures\\testTexture.tga");
 	Models::LoadModelFromTxtFile("..\\dx11minimal\\Resourses\\Models\\Cube.txt");
 
 	//////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
-Texture2D inputTexture : register(t0);
-SamplerState samplerState : register(s0);
+Texture2D inputTexture : register(t1);
+SamplerState samplerState : register(s1);
 
 cbuffer global : register(b5)
 {
@@ -41,7 +41,7 @@ struct VS_OUTPUT
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-    //return float4(input.vnorm.xyz, 1);
+    //return float4(1, 0, 1, 1);
 
     float3 lightDir = normalize(float3(1, -1, 0.25));
     float4 ambientColor = float4(0.15, 0.15, 0.15, 1);

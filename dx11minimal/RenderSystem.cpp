@@ -1,4 +1,4 @@
-﻿#ifndef _RENDER_SYSTEM_
+#ifndef _RENDER_SYSTEM_
 #define _RENDER_SYSTEM_
 
 //////////////
@@ -150,6 +150,11 @@ public:
 				}
 			}
 		}
+
+		Shaders::vShader(15);
+		Shaders::pShader(15);
+		InputAssembler::IA(InputAssembler::topology::triList);
+		context->DrawIndexed(36, 0, 0);
 
 		Textures::CreateMipMap();
 		Draw::SwitchRenderTextures();
