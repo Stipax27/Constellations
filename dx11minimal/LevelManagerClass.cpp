@@ -75,6 +75,12 @@ bool LevelManagerClass::Initialize()
 	Entity* folder = m_World->CreateEntity("WorldFolder");
 	folder->SetActive(true);
 
+	entity = m_World->CreateEntity("Cube", folder);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(20.0f, 10.0f, 0.0f);
+	transform->scale = point3d(5.0f, 0.2f, 1.0f);
+	mesh = entity->AddComponent<Mesh>();
+
 	player = m_World->CreateEntity("Player", folder);
 	transform = player->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, 0.0f);
@@ -105,6 +111,7 @@ bool LevelManagerClass::Initialize()
 	spriteCluster->vShader = 7;
 	spriteCluster->pShader = 7;
 	spriteCluster->pointsNum = 900000;
+	entity->AddComponent<SurfaceCollider>();
 	//planeCollider = entity->AddComponent<PlaneCollider>();
 	//planeCollider->gravityDistance = 20.0f;
 
@@ -113,12 +120,6 @@ bool LevelManagerClass::Initialize()
 	spriteCluster->vShader = 2;
 	spriteCluster->pShader = 2;
 	spriteCluster->pointsNum = 10000;
-
-	entity = m_World->CreateEntity("Cube", folder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(20.0f, 10.0f, 0.0f);
-	transform->scale = point3d(5.0f, 0.2f, 1.0f);
-	mesh = entity->AddComponent<Mesh>();
 
 	entity = m_World->CreateEntity("Enemy", folder);
 	transform = entity->AddComponent<Transform>();

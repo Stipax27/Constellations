@@ -1,4 +1,4 @@
-﻿#include "PlayerController.h"
+#include "PlayerController.h"
 
 
 PlayerController::PlayerController()
@@ -81,7 +81,7 @@ bool PlayerController::IsKeyPressed(const int Key)
 void PlayerController::ProcessInput()
 {
 	if (playerEntity != nullptr && playerEntity->IsActive()) {
-		// УПРАВЛЕНИЕ  ПЕРЕДВИЖЕНИЕМ
+		// ??????????  ?????????????
 		point3d velocity = point3d();
 
 		if (IsKeyPressed('W')) {
@@ -103,11 +103,11 @@ void PlayerController::ProcessInput()
 			velocity += playerTransform->GetUpVector() * -1;
 		}
 
-		if (velocity.magnitude() > 0) {
-			playerPhysicBody->velocity = velocity.normalized() * 15;
-		}
+	if (velocity.magnitude() > 0) {
+		playerPhysicBody->velocity += velocity.normalized();
+	}
 
-		// УПРАВЛЕНИЕ НАКЛОНОМ
+		// ?????????? ????????
 		float roll = 0.0f;
 
 		if (IsKeyPressed('E')) {

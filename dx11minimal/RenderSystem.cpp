@@ -13,6 +13,10 @@
 
 #include "cameraclass.h"
 
+//DEBUG
+#include "SurfaceCollider.cpp"
+#include "MethodOfClosest.h"
+
 
 class RenderSystem : public System
 {
@@ -80,13 +84,33 @@ public:
 					Constellation* constellation = entity->GetComponent<Constellation>();
 					if (constellation != nullptr) {
 						Rasterizer::Cull(Rasterizer::cullmode::off);
-						Depth::Depth(Depth::depthmode::off);
+						Depth::Depth(Depth::depthmode::readonly);
 
 						// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 					//sprite->model.Render(m_Direct3D->GetDeviceContext());
 
 						point3d transformPos = transform->position;
 						vector<point3d> transformedStars;
+
+
+						////debug point
+						//Shaders::vShader(1);
+						//Shaders::pShader(1);
+
+						//point3d closestPoint;
+						//float distance;
+						//SurfaceCollider surface;
+
+						//bool collision = findClosestPointOnSurface(transformPos, surface, closestPoint, distance, 12, 3);
+
+						//ConstBuf::global[0] = XMFLOAT4(closestPoint.x, closestPoint.y, closestPoint.z, 5.0f);
+						//ConstBuf::Update(5, ConstBuf::global);
+						//ConstBuf::ConstToVertex(5);
+
+						//Draw::Drawer(1);
+
+
+
 
 						Shaders::vShader(4);
 						Shaders::pShader(4);
@@ -152,11 +176,15 @@ public:
 					}
 				}
 
+
+
+
+
 				SpriteCluster* spriteCluster = entity->GetComponent<SpriteCluster>();
 				if (spriteCluster != nullptr)
 				{
 					Rasterizer::Cull(Rasterizer::cullmode::off);
-					Depth::Depth(Depth::depthmode::off);
+					Depth::Depth(Depth::depthmode::readonly);
 
 					ConstBuf::drawerV[0] = entity->timeScale;
 					ConstBuf::Update(0, ConstBuf::drawerV);
