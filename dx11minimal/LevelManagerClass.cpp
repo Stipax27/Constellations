@@ -226,7 +226,7 @@ bool LevelManagerClass::Frame()
 	playerController->ProcessMouse();
 
 	// Проверяем условия для атак звезды
-	DWORD currentTime = GetTickCount();
+	DWORD currentTime = timer::currentTime;
 	srand(time(0));
 	// Пример: атака каждые 3 секунды
 	if (currentTime - Star->LastTime > 3000) {

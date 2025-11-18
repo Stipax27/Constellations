@@ -3,7 +3,7 @@
 void BaseStar::Init(World* World, Entity* Entity) {
     m_World = World;
     m_entity = Entity;
-    LastTime = GetTickCount();
+    LastTime = timer::currentTime;
 }
 
 void BaseStar::Flash()
@@ -18,7 +18,7 @@ void BaseStar::Flash()
     Explosion* explosion = flashEntity->AddComponent<Explosion>();
     explosion->explosionType = Explosion::Type::FLASH;
     explosion->max_radius = 8.0f; // Большой радиус
-    explosion->speed = 25.0f;     // Очень быстрый рост
+    explosion->speed = .5f;     // Очень быстрый рост
     explosion->duration = 0.3f;   // Короткая длительность
     explosion->intensity = 2.0f;  // Высокая интенсивность
 
@@ -66,7 +66,7 @@ void BaseStar::CoronalEjection()
         Explosion* chargeExplosion = chargeEntity->AddComponent<Explosion>();
         chargeExplosion->explosionType = Explosion::Type::CORONAL_EJECTION;
         chargeExplosion->max_radius = 1.0f;
-        chargeExplosion->speed = 8.0f;
+        chargeExplosion->speed = 0.5f;
         chargeExplosion->duration = 0.5f;
         chargeExplosion->intensity = 1.2f;
     }
@@ -119,7 +119,7 @@ void BaseStar::SunWind()
         Explosion* windExplosion = windEntity->AddComponent<Explosion>();
         windExplosion->explosionType = Explosion::Type::SUN_WIND;
         windExplosion->max_radius = 0.8f;
-        windExplosion->speed = 15.0f;
+        windExplosion->speed = 0.5f;
         windExplosion->duration = 0.4f;
         windExplosion->intensity = 0.7f;
     }
