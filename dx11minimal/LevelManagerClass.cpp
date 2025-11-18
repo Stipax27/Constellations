@@ -1,4 +1,4 @@
-﻿#include "LevelManagerClass.h"
+#include "LevelManagerClass.h"
 
 LevelManagerClass::LevelManagerClass()
 {
@@ -53,6 +53,9 @@ bool LevelManagerClass::Initialize()
 	ConstBuf::factors.AriesNebulaLerpFactor = 0;
 	ConstBuf::UpdateFactors();
 
+	Textures::LoadTexture("..\\dx11minimal\\Resourses\\Textures\\testTexture.tga");
+	Models::LoadModelFromTxtFile("..\\dx11minimal\\Resourses\\Models\\Cube.txt");
+
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING START //
 	//////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,6 +76,7 @@ bool LevelManagerClass::Initialize()
 	PlaneCollider* planeCollider;
 	Rect* rect;
 	TextLabel* textLabel;
+	Mesh* mesh;
 
 	Entity* folder = m_World->CreateEntity("WorldFolder");
 	folder->SetActive(true);
@@ -114,14 +118,21 @@ bool LevelManagerClass::Initialize()
 	spriteCluster->vShader = 7;
 	spriteCluster->pShader = 7;
 	spriteCluster->pointsNum = 900000;
-	planeCollider = entity->AddComponent<PlaneCollider>();
-	planeCollider->gravityDistance = 20.0f;
+	entity->AddComponent<SurfaceCollider>();
+	//planeCollider = entity->AddComponent<PlaneCollider>();
+	//planeCollider->gravityDistance = 20.0f;
 
 	entity = m_World->CreateEntity("StarsBackground", folder);
 	spriteCluster = entity->AddComponent<SpriteCluster>();
 	spriteCluster->vShader = 2;
 	spriteCluster->pShader = 2;
 	spriteCluster->pointsNum = 10000;
+
+	entity = m_World->CreateEntity("Cube", folder);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(20.0f, 10.0f, 0.0f);
+	transform->scale = point3d(5.0f, 0.2f, 1.0f);
+	mesh = entity->AddComponent<Mesh>();
 
 	entity = m_World->CreateEntity("Enemy", folder);
 	transform = entity->AddComponent<Transform>();
@@ -175,6 +186,8 @@ bool LevelManagerClass::Initialize()
 	
 	m_World->AddRenderSystem<RenderSystem>(m_World->m_Camera);
 	//m_World->AddRenderSystem<UISystem>();
+
+
 
 	// MAIN MENU //
 	
@@ -230,7 +243,8 @@ bool LevelManagerClass::Initialize()
 	
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
-	m_World->AddRenderSystem<RenderSystem>(m_World->m_Camera);
+	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera);
+	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera);
 	m_World->AddRenderSystem<UISystem>();
 
 	//m_World->PreCalculations();

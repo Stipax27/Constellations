@@ -1,4 +1,4 @@
-﻿#include "dx11.h"
+#include "dx11.h"
 
 static inline int32 _log2(float x)
 {
@@ -73,6 +73,7 @@ ID3D11RenderTargetView* Textures::mrtView[8];
 Textures::textureDesc Textures::Texture[max_tex];
 
 int Textures::currentRT = 0;
+int Textures::texturesCount = 0;
 
 void Textures::CreateTex(int i)
 {
@@ -190,6 +191,8 @@ void Textures::shaderResDepth(int i)
 
 void Textures::Create(int i, tType type, tFormat format, XMFLOAT2 size, bool mipMaps, bool depth)
 {
+	texturesCount = max(i, texturesCount + 1);
+
 	ZeroMemory(&tdesc, sizeof(tdesc));
 	ZeroMemory(&svDesc, sizeof(svDesc));
 	ZeroMemory(&renderTargetViewDesc, sizeof(renderTargetViewDesc));
@@ -289,6 +292,247 @@ void Textures::RenderTarget(int target, unsigned int level = 0)
 	SetViewport(target, level);
 }
 
+void Textures::LoadTexture(const char* filename)
+{
+	int error, bpp, imageSize, index, i, j, k;
+	FILE* filePtr;
+	unsigned int count;
+	TargaHeader targaFileHeader;
+	unsigned char* targaImage;
+	unsigned char* targaData;
+	unsigned int rowPitch;
+
+	// Open the targa file for reading in binary.
+	error = fopen_s(&filePtr, filename, "rb");
+	if (error != 0)
+	{
+		return;
+	}
+
+	// Read in the file header.
+	count = (unsigned int)fread(&targaFileHeader, sizeof(TargaHeader), 1, filePtr);
+	if (count != 1)
+	{
+		return;
+	}
+
+	// Get the important information from the header.
+	int m_height = (int)targaFileHeader.height;
+	int m_width = (int)targaFileHeader.width;
+	bpp = (int)targaFileHeader.bpp;
+
+	// Check that it is 32 bit and not 24 bit.
+	if (bpp != 32)
+	{
+		return;
+	}
+
+	// Calculate the size of the 32 bit image data.
+	imageSize = m_width * m_height * 4;
+
+	// Allocate memory for the targa image data.
+	targaImage = new unsigned char[imageSize];
+
+	// Read in the targa image data.
+	count = (unsigned int)fread(targaImage, 1, imageSize, filePtr);
+	if (count != imageSize)
+	{
+		return;
+	}
+
+	// Close the file.
+	error = fclose(filePtr);
+	if (error != 0)
+	{
+		return;
+	}
+
+	// Allocate memory for the targa destination data.
+	targaData = new unsigned char[imageSize];
+
+	// Initialize the index into the targa destination data array.
+	index = 0;
+
+	// Initialize the index into the targa image data.
+	k = (m_width * m_height * 4) - (m_width * 4);
+
+	// Now copy the targa image data into the targa destination array in the correct order since the targa format is stored upside down and also is not in RGBA order.
+	for (j = 0; j < m_height; j++)
+	{
+		for (i = 0; i < m_width; i++)
+		{
+			targaData[index + 0] = targaImage[k + 2];  // Red.
+			targaData[index + 1] = targaImage[k + 1];  // Green.
+			targaData[index + 2] = targaImage[k + 0];  // Blue
+			targaData[index + 3] = targaImage[k + 3];  // Alpha
+
+			// Increment the indexes into the targa data.
+			k += 4;
+			index += 4;
+		}
+
+		// Set the targa image data index back to the preceding row at the beginning of the column since its reading it in upside down.
+		k -= (m_width * 8);
+	}
+
+	int textureId = texturesCount;
+	Create(textureId, tType::flat, tFormat::u8, XMFLOAT2(targaFileHeader.width, targaFileHeader.height), true, false);
+
+	// Set the row pitch of the targa image data.
+	rowPitch = (m_width * 4) * sizeof(unsigned char);
+
+	// Copy the targa image data into the texture.
+	context->UpdateSubresource(Texture[textureId].pTexture, 0, NULL, targaData, rowPitch, 0);
+
+	// Generate mipmaps for this texture.
+	context->GenerateMips(Texture[textureId].TextureResView);
+
+	// Release the targa image data now that it was copied into the destination array.
+	delete[] targaImage;
+	targaImage = 0;
+
+	// Release the targa image data now that the image data has been loaded into the texture.
+	delete[] targaData;
+	targaData = 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+
+ID3D11Buffer* Models::vertexBuffer, * Models::indexBuffer;
+
+void Models::LoadModelFromTxtFile(const char* filename)
+{
+	std::ifstream fin;
+	char input;
+	int i;
+	int vertexCount, indexCount;
+
+
+	// Open the model file.
+	fin.open(filename);
+
+	// If it could not open the file then exit.
+	if (fin.fail())
+	{
+		Shaders::Log("Failed to read the model file\n");
+		return;
+	}
+
+	// Read up to the value of vertex count.
+	fin.get(input);
+	while (input != ':')
+	{
+		fin.get(input);
+	}
+
+	// Read in the vertex count.
+	fin >> vertexCount;
+
+	// Set the number of indices to be the same as the vertex count.
+	indexCount = vertexCount;
+
+	// Create the model using the vertex count that was read in.
+	ModelType* model = new ModelType[vertexCount];
+
+	// Read up to the beginning of the data.
+	fin.get(input);
+	while (input != ':')
+	{
+		fin.get(input);
+	}
+	fin.get(input);
+	fin.get(input);
+
+	// Read in the vertex data.
+	for (i = 0; i < vertexCount; i++)
+	{
+		fin >> model[i].x >> model[i].y >> model[i].z;
+		fin >> model[i].tu >> model[i].tv;
+		fin >> model[i].nx >> model[i].ny >> model[i].nz;
+	}
+
+	// Close the model file.
+	fin.close();
+
+
+
+	VertexType* vertices;
+	unsigned long* indices;
+	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
+	D3D11_SUBRESOURCE_DATA vertexData, indexData;
+	HRESULT result;
+
+	// Set the number of indices in the index array.
+	indexCount = vertexCount;
+
+	// Create the vertex array.
+	vertices = new VertexType[vertexCount];
+
+	// Create the index array.
+	indices = new unsigned long[indexCount];
+
+	// Load the vertex array and index array with data.
+	for (int i = 0; i < vertexCount; i++)
+	{
+		vertices[i].position = XMFLOAT3(model[i].x, model[i].y, model[i].z);
+		vertices[i].texture = XMFLOAT2(model[i].tu, model[i].tv);
+		vertices[i].normal = XMFLOAT3(model[i].nx, model[i].ny, model[i].nz);
+
+		indices[i] = i;
+	}
+
+	// Set up the description of the static vertex buffer.
+	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.ByteWidth = sizeof(VertexType) * vertexCount;
+	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.CPUAccessFlags = 0;
+	vertexBufferDesc.MiscFlags = 0;
+	vertexBufferDesc.StructureByteStride = 0;
+
+	// Give the subresource structure a pointer to the vertex data.
+	vertexData.pSysMem = vertices;
+	vertexData.SysMemPitch = 0;
+	vertexData.SysMemSlicePitch = 0;
+
+	// Now create the vertex buffer.
+	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer);
+	if (FAILED(result))
+	{
+		Shaders::Log("Failed to create vertex buffer for the model\n");
+		return;
+	}
+
+	// Set up the description of the static index buffer.
+	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.ByteWidth = sizeof(unsigned long) * indexCount;
+	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	indexBufferDesc.CPUAccessFlags = 0;
+	indexBufferDesc.MiscFlags = 0;
+	indexBufferDesc.StructureByteStride = 0;
+
+	// Give the subresource structure a pointer to the index data.
+	indexData.pSysMem = indices;
+	indexData.SysMemPitch = 0;
+	indexData.SysMemSlicePitch = 0;
+
+	// Create the index buffer.
+	result = device->CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer);
+	if (FAILED(result))
+	{
+		Shaders::Log("Failed to create index buffer for the model\n");
+		return;
+	}
+
+	// Release the arrays now that the vertex and index buffers have been created and loaded.
+	delete[] vertices;
+	vertices = 0;
+
+	delete[] indices;
+	indices = 0;
+
+	Shaders::Log("Model file was read succesfully\n");
+}
+
 //////////////////////////////////////////////////////////////////////////////////
 
 Shaders::VertexShader Shaders::VS[255];
@@ -297,6 +541,10 @@ Shaders::GeometryShader Shaders::GS[255];
 
 ID3DBlob* Shaders::pErrorBlob;
 wchar_t Shaders::shaderPathW[MAX_PATH];
+
+int Shaders::currentVS = 0;
+int Shaders::currentPS = 0;
+int Shaders::currentGS = 0;
 
 LPCWSTR Shaders::nameToPatchLPCWSTR(const char* path)
 {
@@ -332,7 +580,7 @@ void Shaders::CreateVS(int i, LPCWSTR name)
 {
 	HRESULT hr;
 
-	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "VS", "vs_4_1", NULL, NULL, &VS[i].pBlob, &pErrorBlob);
+	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "VS", "vs_5_0", NULL, NULL, &VS[i].pBlob, &pErrorBlob);
 	Shaders::CompilerLog(name, hr, "vertex shader compiled: ");
 
 	if (hr == S_OK)
@@ -345,7 +593,7 @@ void Shaders::CreatePS(int i, LPCWSTR name)
 {
 	HRESULT hr;
 
-	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PS", "ps_4_1", NULL, NULL, &PS[i].pBlob, &pErrorBlob);
+	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PS", "ps_5_0", NULL, NULL, &PS[i].pBlob, &pErrorBlob);
 	Shaders::CompilerLog(name, hr, "pixel shader compiled: ");
 
 	if (hr == S_OK)
@@ -358,7 +606,7 @@ void Shaders::CreateGS(int i, LPCWSTR name)
 {
 	HRESULT hr;
 
-	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "GS", "gs_4_1", NULL, NULL, &GS[i].pBlob, &pErrorBlob);
+	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "GS", "gs_5_0", NULL, NULL, &GS[i].pBlob, &pErrorBlob);
 	Shaders::CompilerLog(name, hr, "geometry shader compiled: ");
 
 	if (hr == S_OK)
@@ -371,7 +619,6 @@ void Shaders::Init()
 {
 	Shaders::CreateVS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VS.shader"));
 	Shaders::CreatePS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PS.shader"));
-	//Shaders::CreateGS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Static_GS.shader"));
 	
 	Shaders::CreateVS(1, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VSS.shader"));
 	Shaders::CreatePS(1, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PSS.shader"));
@@ -415,6 +662,15 @@ void Shaders::Init()
 
 	Shaders::CreatePS(14, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Rect_Smooth_PS.shader"));
 	//Shaders::CreatePS(14, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\BlackHole_Body_PS.shader"));
+
+	Shaders::CreateVS(15, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Mesh_VS.shader"));
+	Shaders::CreatePS(15, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Mesh_Stretch_PS.shader"));
+
+	Shaders::CreatePS(16, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Mesh_Fit_PS.shader"));
+
+	Shaders::CreateVS(17, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PointCloud_VS.shader"));
+	Shaders::CreatePS(17, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PointCloud_PS.shader"));
+	Shaders::CreateGS(17, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PointCloud_GS.shader"));
 	
 	//-----------------------------------------------
 	
@@ -429,16 +685,19 @@ void Shaders::Init()
 
 void Shaders::vShader(unsigned int n)
 {
+	currentVS = n;
 	context->VSSetShader(VS[n].vShader, NULL, 0);
 }
 
 void Shaders::pShader(unsigned int n)
 {
+	currentPS = n;
 	context->PSSetShader(PS[n].pShader, NULL, 0);
 }
 
 void Shaders::gShader(unsigned int n)
 {
+	currentGS = n;
 	context->GSSetShader(GS[n].gShader, NULL, 0);
 }
 
@@ -547,6 +806,42 @@ void ConstBuf::Create(ID3D11Buffer*& buf, int size)
 	bd.StructureByteStride = 16;
 
 	HRESULT hr = device->CreateBuffer(&bd, NULL, &buf);
+}
+
+void ConstBuf::CreateVertexBuffer(int vertexShader)
+{
+	D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
+	unsigned int numElements;
+
+	polygonLayout[0].SemanticName = "POSITION";
+	polygonLayout[0].SemanticIndex = 0;
+	polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	polygonLayout[0].InputSlot = 0;
+	polygonLayout[0].AlignedByteOffset = 0;
+	polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	polygonLayout[0].InstanceDataStepRate = 0;
+
+	polygonLayout[1].SemanticName = "NORMAL";
+	polygonLayout[1].SemanticIndex = 0;
+	polygonLayout[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	polygonLayout[1].InputSlot = 0;
+	polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	polygonLayout[1].InstanceDataStepRate = 0;
+
+	polygonLayout[2].SemanticName = "TEXCOORD";
+	polygonLayout[2].SemanticIndex = 0;
+	polygonLayout[2].Format = DXGI_FORMAT_R32G32_FLOAT;
+	polygonLayout[2].InputSlot = 0;
+	polygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	polygonLayout[2].InstanceDataStepRate = 0;
+
+	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
+
+	// Create the vertex input layout.
+	device->CreateInputLayout(polygonLayout, numElements, Shaders::VS[vertexShader].pBlob->GetBufferPointer(),
+		Shaders::VS[vertexShader].pBlob->GetBufferSize(), &Shaders::VS[vertexShader].pLayout);
 }
 
 void ConstBuf::Init()
@@ -707,20 +1002,20 @@ ID2D1HwndRenderTarget* d2dRenderTarget = nullptr;
 
 void InitD2D(HWND hwnd)
 {
-	// Шаг 1: Создание фабрики
+	// ??? 1: ???????? ???????
 	D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &d2dFactory);
 
-	// Шаг 2: Получаем размеры окна
+	// ??? 2: ???????? ??????? ????
 	RECT rc;
 	GetClientRect(hwnd, &rc);
 
-	// Шаг 3: Описание рендер-таргета
+	// ??? 3: ???????? ??????-???????
 	D2D1_RENDER_TARGET_PROPERTIES rtProps = D2D1::RenderTargetProperties();
 	D2D1_HWND_RENDER_TARGET_PROPERTIES hwndProps =
 		D2D1::HwndRenderTargetProperties(hwnd,
 			D2D1::SizeU(rc.right - rc.left, rc.bottom - rc.top));
 
-	// Шаг 4: Создаём render target
+	// ??? 4: ??????? render target
 	d2dFactory->CreateHwndRenderTarget(rtProps, hwndProps, &d2dRenderTarget);
 }
 
@@ -775,8 +1070,17 @@ void InputAssembler::IA(topology topoType)
 	}
 
 	context->IASetPrimitiveTopology(ttype);
-	context->IASetInputLayout(NULL);
-	context->IASetVertexBuffers(0, 0, NULL, NULL, NULL);
+	//context->IASetInputLayout(NULL);
+	//context->IASetVertexBuffers(0, 0, NULL, NULL, NULL);
+
+	context->IASetInputLayout(Shaders::VS[Shaders::currentVS].pLayout);
+
+	unsigned int stride = sizeof(Models::VertexType);
+	unsigned int offset = 0;
+
+	// Set the vertex buffer to active in the input assembler so it can be rendered.
+	context->IASetVertexBuffers(0, 1, &Models::vertexBuffer, &stride, &offset);
+	context->IASetIndexBuffer(Models::indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 }
 
 //////////////////////////////////////////////////////////////////////////////////

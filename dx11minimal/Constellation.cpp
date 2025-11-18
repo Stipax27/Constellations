@@ -1,4 +1,4 @@
-#ifndef _CONSTELLATION_C_
+﻿#ifndef _CONSTELLATION_C_
 #define _CONSTELLATION_C_
 
 #include "component.h"

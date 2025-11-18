@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -66,6 +66,9 @@
     </Filter>
     <Filter Include="Source Files\Render\UI">
       <UniqueIdentifier>{669754a8-2675-416b-b672-12ef5143d519}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Mesh">
+      <UniqueIdentifier>{40b322f7-157e-4a73-a9c4-95c68d5acf7c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -236,6 +239,15 @@
     <ClCompile Include="Button.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="SurfaceCollider.cpp">
+      <Filter>Source Files\Physic</Filter>
+    </ClCompile>
+    <ClCompile Include="MethodOfClosest.cpp">
+      <Filter>Source Files\Physic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="dx11minimal.rc">
@@ -335,9 +347,6 @@
     <None Include="Shaders\VoronoiNoise.shader">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\ColorCorrection_PS.shader">
-      <Filter>Shaders\PostProcess</Filter>
-    </None>
     <None Include="Shaders\BlackHole_Body_PS.shader">
       <Filter>Shaders</Filter>
     </None>
@@ -349,6 +358,24 @@
     </None>
     <None Include="Shaders\Rect_Smooth_PS.shader">
       <Filter>Shaders\UI</Filter>
+    </None>
+    <None Include="Shaders\Mesh_Stretch_PS.shader">
+      <Filter>Shaders\Mesh</Filter>
+    </None>
+    <None Include="Shaders\Mesh_VS.shader">
+      <Filter>Shaders\Mesh</Filter>
+    </None>
+    <None Include="Shaders\PointCloud_VS.shader">
+      <Filter>Shaders\Mesh</Filter>
+    </None>
+    <None Include="Shaders\PointCloud_PS.shader">
+      <Filter>Shaders\Mesh</Filter>
+    </None>
+    <None Include="Shaders\PointCloud_GS.shader">
+      <Filter>Shaders\Mesh</Filter>
+    </None>
+    <None Include="Shaders\Mesh_Fit_PS.shader">
+      <Filter>Shaders\Mesh</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

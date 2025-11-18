@@ -1,4 +1,4 @@
-﻿#ifndef DX11_H
+#ifndef DX11_H
 #define DX11_H
 
 #define _XM_SSE_INTRINSICS_ 
@@ -10,6 +10,8 @@
 #include <debugapi.h>
 #include <algorithm>
 #include <deque>
+#include <stdio.h>
+#include <fstream>
 
 #pragma comment(lib, "d3d10.lib")
 #pragma comment(lib, "d3d11.lib")
@@ -88,9 +90,19 @@ namespace Textures
 
 	};
 
+	struct TargaHeader
+	{
+		unsigned char data1[12];
+		unsigned short width;
+		unsigned short height;
+		unsigned char bpp;
+		unsigned char data2;
+	};
+
 	extern textureDesc Texture[max_tex];
 
 	extern int currentRT;
+	extern int texturesCount;
 
 	void CreateTex(int);
 	void ShaderRes(int);
@@ -105,14 +117,36 @@ namespace Textures
 	void TextureToShader(int, unsigned int, targetshader = targetshader::both);
 	void CreateMipMap();
 	void RenderTarget(int, unsigned int);
+	void LoadTexture(const char*);
 }
 
+namespace Models
+{
+	struct VertexType
+	{
+		XMFLOAT3 position;
+		XMFLOAT3 normal;
+		XMFLOAT2 texture;
+	};
+
+	struct ModelType
+	{
+		float x, y, z;
+		float tu, tv;
+		float nx, ny, nz;
+	};
+
+	extern ID3D11Buffer* vertexBuffer, * indexBuffer;
+
+	void LoadModelFromTxtFile(const char* filename);
+}
 
 namespace Shaders {
 
 	struct VertexShader {
 		ID3D11VertexShader* vShader;
 		ID3DBlob* pBlob;
+		ID3D11InputLayout* pLayout;
 	};
 
 	struct PixelShader {
@@ -132,6 +166,10 @@ namespace Shaders {
 	extern ID3DBlob* pErrorBlob;
 
 	extern wchar_t shaderPathW[MAX_PATH];
+
+	extern int currentVS;
+	extern int currentPS;
+	extern int currentGS;
 
 	LPCWSTR nameToPatchLPCWSTR(const char*);
 	void Log(const char*);
@@ -215,6 +253,7 @@ namespace ConstBuf
 
 	int roundUp(int, int);
 	void Create(ID3D11Buffer*&, int);
+	void CreateVertexBuffer(int);
 	void Init();
 
 	template <typename T>

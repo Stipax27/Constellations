@@ -1,5 +1,5 @@
-﻿#ifndef _RENDER_SYSTEM_
-#define _RENDER_SYSTEM_
+#ifndef _SPRITE_SYSTEM_
+#define _SPRITE_SYSTEM_
 
 //////////////
 // INCLUDES //
@@ -13,17 +13,11 @@
 #include "cameraclass.h"
 
 
-class RenderSystem : public System
+class SpriteSystem : public System
 {
 public:
-	RenderSystem(CameraClass* camera)
+	SpriteSystem(CameraClass* camera)
 	{
-		m_Camera = camera;
-
-		InputAssembler::IA(InputAssembler::topology::triList);
-		Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
-		Depth::Depth(Depth::depthmode::off);
-		Rasterizer::Cull(Rasterizer::cullmode::off);
 	}
 
 
@@ -34,27 +28,18 @@ public:
 
 	void Shutdown()
 	{
-		if (m_Camera)
-		{
-			m_Camera = 0;
-		}
 	}
 
 
 	bool Update(vector<Entity*>& entities, float deltaTime)
 	{
 		// Clear the buffers to begin the scene.
-		Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
-		Draw::ClearDepth();
+		/*Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
+		Draw::ClearDepth();*/
 
 		Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 		Rasterizer::Cull(Rasterizer::cullmode::off);
-		Depth::Depth(Depth::depthmode::off);
-
-		// Generate the view matrix based on the camera's position.
-		m_Camera->Render();
-		//m_Camera->SetQuaternionRotation(0, 1, 0, timer::GetCounter() / 1000);
-		//m_Camera->AddEulerRotation(0, 1, 0);
+		Depth::Depth(Depth::depthmode::readonly);
 
 		size_t size = entities.size();
 		for (int i = 0; i < size; i++)
@@ -77,20 +62,37 @@ public:
 					//XMMATRIX worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
 					Constellation* constellation = entity->GetComponent<Constellation>();
-					if (constellation != nullptr)
-					{
+					if (constellation != nullptr) {
 						// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 					//sprite->model.Render(m_Direct3D->GetDeviceContext());
 
 						point3d transformPos = transform->position;
 						vector<point3d> transformedStars;
 
+
+						////debug point
+						//Shaders::vShader(1);
+						//Shaders::pShader(1);
+
+						//point3d closestPoint;
+						//float distance;
+						//SurfaceCollider surface;
+
+						//bool collision = findClosestPointOnSurface(transformPos, surface, closestPoint, distance, 12, 3);
+
+						//ConstBuf::global[0] = XMFLOAT4(closestPoint.x, closestPoint.y, closestPoint.z, 5.0f);
+						//ConstBuf::Update(5, ConstBuf::global);
+						//ConstBuf::ConstToVertex(5);
+
+						//Draw::Drawer(1);
+
+
 						Shaders::vShader(4);
 						Shaders::pShader(4);
 
-						/*ConstBuf::global[2] = XMFLOAT4(1, 1, 1, 1);
+						ConstBuf::global[2] = XMFLOAT4(1, 1, 1, 1);
 						ConstBuf::Update(5, ConstBuf::global);
-						ConstBuf::ConstToPixel(5);*/
+						ConstBuf::ConstToPixel(5);
 
 						for (int a = 0; a < constellation->stars.size(); a++) {
 							point3d star = constellation->stars[a];
@@ -170,22 +172,8 @@ public:
 			}
 		}
 
-		Textures::CreateMipMap();
-		Draw::SwitchRenderTextures();
-
-		Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
-		Depth::Depth(Depth::depthmode::off);
-		Rasterizer::Cull(Rasterizer::cullmode::off);
-
-		Shaders::vShader(10);
-		Shaders::pShader(100);
-		context->Draw(6, 0);
-
 		return true;
 	}
-
-private:
-	CameraClass* m_Camera;
 };
 
 #endif

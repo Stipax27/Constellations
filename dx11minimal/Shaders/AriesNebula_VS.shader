@@ -89,6 +89,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 
     float3 pos = gConst[0].xyz;
     float scale = gConst[0].w;
+    float timeScale = drawerV[0];
 
     float range = 65 * scale;
     float size = 1 * scale;
@@ -104,8 +105,8 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     float3 voronoi = voronoiTexture.SampleLevel(voronoiSamplerState, spiralPos.xz / (range * 2) + 0.5, 1);
     starPos.y += voronoi.x * voronoi.y * voronoi.z * lerp(70, 15, AriesNebulaLerpFactor);
 
-    starPos.y += (sin(spiralPos.x * PI / range * 5 + time.x * 0.05) + cos(spiralPos.z * PI / range * 5 + time.x * 0.05)) * lerp(0.4, 0.2, AriesNebulaLerpFactor);
-    starPos.y += cos((spiralPos.x + spiralPos.z) * PI / range * 2 + time.x * -0.05) * lerp(0.8, 0.4, AriesNebulaLerpFactor);
+    starPos.y += (sin(spiralPos.x * PI / range * 5 + time.x * 0.05 * timeScale) + cos(spiralPos.z * PI / range * 5 + time.x * 0.05 * timeScale)) * lerp(0.4, 0.2, AriesNebulaLerpFactor);
+    starPos.y += cos((spiralPos.x + spiralPos.z) * PI / range * 2 + time.x * -0.05 * timeScale) * lerp(0.8, 0.4, AriesNebulaLerpFactor);
 
     starPos.y *= scale;
 

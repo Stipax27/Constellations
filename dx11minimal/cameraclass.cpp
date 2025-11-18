@@ -119,7 +119,6 @@ void CameraClass::Render()
 {
 	XMFLOAT3 up, pos, lookAt;
 	XMVECTOR upVector, positionVector, lookAtVector;
-	float yaw, pitch, roll;
 
 
 	// Setup the vector that points upwards.

@@ -4,7 +4,6 @@
 
 #include <vector>
 #include <wrl/client.h>
-using namespace std;
 
 std::vector<float> letter_01 = { 16409.33f,400.93f,16412.6f,126.78f,16267.9f,223.6f,16385.4f,308.46f };
 std::vector<float> letter_02 = { 16074.25f,398.76f,16074.25f,135.48f,16218.95f,222.51f,16094.92f,298.67f };
@@ -384,7 +383,7 @@ struct RenderText
     RenderTextState state;
 };
 
-vector<RenderText*> renderTextList;
+std::vector<RenderText*> renderTextList;
 float textCreateSpeed = 1.5f;
 
 void CreateParticledText(const char* str, float x, float y, float scale, bool centered)

@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 // Filename: World.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "World.h"
@@ -128,12 +128,19 @@ bool World::UpdateRender()
 		PreCalculations();
 	}
 	Textures::TextureToShader(3, 0);
-	Textures::TextureToShader(4, 1, targetshader::vertex);
+	Textures::TextureToShader(4, 1);
 
 	Textures::RenderTarget(1, 0);
 	// Clear the buffers to begin the scene.
 	Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
 	Draw::ClearDepth();
+
+	InputAssembler::IA(InputAssembler::topology::triList);
+	Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
+	Depth::Depth(Depth::depthmode::off);
+	Rasterizer::Cull(Rasterizer::cullmode::off);
+
+	m_Camera->Render();
 
 	size_t size = renderSystems.size();
 	for (int i = 0; i < size; i++)
