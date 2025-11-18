@@ -15,7 +15,7 @@
 class MeshSystem : public System
 {
 public:
-	MeshSystem(CameraClass* camera)
+	MeshSystem()
 	{
 	}
 

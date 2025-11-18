@@ -181,14 +181,6 @@ bool LevelManagerClass::Initialize()
 		 point3d(0.0f, 0.0f, 10.0f)
 	};
 
-	m_World->AddPhysicSystem<PhysicSystem>();
-	m_World->AddPhysicSystem<CollisionSystem>();
-	
-	m_World->AddRenderSystem<RenderSystem>(m_World->m_Camera);
-	//m_World->AddRenderSystem<UISystem>();
-
-
-
 	// MAIN MENU //
 	
 	/*entity = m_World->CreateEntity();
@@ -243,8 +235,8 @@ bool LevelManagerClass::Initialize()
 	
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
-	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera);
-	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera);
+	m_World->AddRenderSystem<MeshSystem>();
+	m_World->AddRenderSystem<SpriteSystem>();
 	m_World->AddRenderSystem<UISystem>();
 
 	//m_World->PreCalculations();
