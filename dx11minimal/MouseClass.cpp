@@ -1,4 +1,4 @@
-#include "mouseclass.h"
+﻿#include "mouseclass.h"
 
 MouseClass::MouseClass()
 {
@@ -19,6 +19,8 @@ MouseClass::~MouseClass()
 void MouseClass::Initialize(WindowClass* Window, CameraClass* Camera) {
 	window = Window;
 	camera = Camera;
+
+	state = MouseState::Free;
 }
 
 
@@ -63,4 +65,50 @@ point3d MouseClass::GetMouseRay() {
 	rayWorld = rayWorld.normalized();
 
 	return rayWorld;
+}
+
+
+void MouseClass::RenderCursor() {
+	ConstBuf::global[0] = XMFLOAT4(pos.x / window->width * 2 - 1, -(pos.y / window->height * 2 - 1), 0.0f, 1.0f);
+	ConstBuf::Update(5, ConstBuf::global);
+	ConstBuf::ConstToVertex(5);
+
+	int shaderID = state == MouseState::Free ? 6 : 11;
+	Shaders::vShader(shaderID);
+	Shaders::pShader(shaderID);
+	Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
+
+	context->Draw(6, 0);
+
+	Shaders::vShader(12);
+	Shaders::pShader(12);
+	Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+
+	int i = 0;
+	DWORD curTime = timer::GetCounter();
+	while (i < particles.size())
+	{
+		MouseParticle particle = particles[i];
+
+		if (curTime - particle.startTime < particle.lifetime)
+		{
+			ConstBuf::global[0] = XMFLOAT4(particle.pos.x, particle.pos.y, 0.0f, 1 - (float)(curTime - particle.startTime) / (float)particle.lifetime);
+
+			ConstBuf::Update(5, ConstBuf::global);
+			ConstBuf::ConstToVertex(5);
+			ConstBuf::Update(1, ConstBuf::drawerP);
+			ConstBuf::ConstToPixel(1);
+
+			context->Draw(6, 0);
+
+			particle.pos += particle.vel * 0.01f;
+			particle.vel *= 0.92f;
+
+			i++;
+		}
+		else
+		{
+			particles.erase(particles.begin() + i);
+		}
+	}
 }

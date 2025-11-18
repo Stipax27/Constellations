@@ -1,7 +1,6 @@
-#include "utils.h"
+﻿#include "utils.h"
 
-float clamp(float x, float a, float b)
-{
+float clamp(float x, float a, float b) {
     return fmax(fmin(x, b), a);
 }
 
@@ -12,23 +11,19 @@ float smoothstep(float edge0, float edge1, float x) {
     return x * x * (3 - 2 * x);
 }
 
-float fract(float a)
-{
+float fract(float a) {
     return a - floor(a);
 }
 
-float lerp(float x1, float x2, float a)
-{
+float lerp(float x1, float x2, float a) {
     return x1 * (1 - a) + x2 * a;
 }
 
-float degreesToRadians(float degrees)
-{
+float degreesToRadians(float degrees) {
     return degrees * PI / 180.0f;
 }
 
-point3d quaternionToEuler(float x, float y, float z, float w)
-{
+point3d quaternionToEuler(float x, float y, float z, float w) {
     float magintude = sqrt(x * x + y * y + z * z);
     x /= magintude;
     y /= magintude;
@@ -41,10 +36,20 @@ point3d quaternionToEuler(float x, float y, float z, float w)
     return point3d(pitch, yaw, roll);
 }
 
-DirectX::XMVECTOR eulerToQuanternion(float x, float y, float z)
-{
+DirectX::XMVECTOR eulerToQuanternion(float x, float y, float z) {
     DirectX::XMVECTOR qRotation = DirectX::XMQuaternionRotationRollPitchYaw(x, y, z);
     qRotation = DirectX::XMQuaternionNormalize(qRotation);
 
     return qRotation;
+}
+
+int getRandom(int min, int max) {
+    if (max > min)
+    {
+        return rand() % (max - min) + min;
+    }
+    else
+    {
+        return rand() % min;
+    }
 }

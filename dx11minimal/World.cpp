@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////////
 // Filename: World.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "World.h"
@@ -47,12 +47,28 @@ void World::Shutdown()
 }
 
 
-Entity* World::CreateEntity()
+Entity* World::CreateEntity(string Name, Entity* Parent)
 {
 	Entity* entity = new Entity;
+	entity->name = Name;
+	entity->parent = Parent;
+
 	entities.push_back(entity);
 
 	return entity;
+}
+
+
+void World::RemoveEntityByObject(Entity* object)
+{
+	for (int i = 0; i < entities.size(); i++) {
+		Entity* entity = entities[i];
+		if (entity == object) {
+			entity->Destroy();
+			entities.erase(entities.begin() + i);
+			break;
+		}
+	}
 }
 
 
@@ -77,9 +93,6 @@ void World::PreCalculations()
 	Textures::CreateMipMap();
 
 	Textures::RenderTarget(1, 0);
-	Textures::TextureToShader(3, 0);
-	Textures::TextureToShader(4, 1, targetshader::vertex);
-	Depth::Depth(Depth::depthmode::on);
 }
 
 
@@ -110,20 +123,38 @@ bool World::UpdateRender()
 	ConstBuf::ConstToVertex(4);
 	ConstBuf::ConstToPixel(4);
 
-	PreCalculations();
+	if (firstFrame) {
+		firstFrame = false;
+		PreCalculations();
+	}
+	Textures::TextureToShader(3, 0);
+	Textures::TextureToShader(4, 1, targetshader::vertex);
+
+	Textures::RenderTarget(1, 0);
+	// Clear the buffers to begin the scene.
+	Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
+	Draw::ClearDepth();
 
 	size_t size = renderSystems.size();
 	for (int i = 0; i < size; i++)
 	{
-		result = renderSystems[i]->Update(entities, 0.01f);
+		result = renderSystems[i]->Update(entities, timer::deltaTime);
 		if (!result)
 		{
 			return false;
 		}
 	}
 
-	// Present the rendered scene to the screen.
-	Draw::Present();
+	Textures::CreateMipMap();
+	Draw::OutputRenderTextures();
+
+	Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
+	Depth::Depth(Depth::depthmode::off);
+	Rasterizer::Cull(Rasterizer::cullmode::off);
+
+	Shaders::vShader(10);
+	Shaders::pShader(100);
+	context->Draw(6, 0);
 
 	return true;
 }

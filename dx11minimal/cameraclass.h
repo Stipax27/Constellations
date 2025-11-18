@@ -33,9 +33,10 @@ public:
 	void AddEulerRotation(float, float, float);
 	void AddVectorRotation(point3d, float);
 
-	XMFLOAT3 GetPosition();
+	point3d GetPosition();
 	XMFLOAT3 GetEulerRotation();
 	XMVECTOR GetQuaternionRotation();
+	XMMATRIX GetMatrixRotation();
 	float GetFov();
 
 	void Render();

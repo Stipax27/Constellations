@@ -31,21 +31,13 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
         float2(1, -1), float2(1, 1), float2(-1, 1)
     };
 
-    float2 pos = gConst[0].xy;
+    float3 pos = gConst[0].xyz;
     float2 size = gConst[1].xy;
     float2 anchorPoint = gConst[2].xy;
-    //float2 screenSize = gConst[1].xy;
 
-    float2 basePos = pos + size;
-   
-    float2 screenPos = basePos + quadPos[vID] * size;
+    float3 screenPos = float3((quadPos[vID] - anchorPoint) * size, 0.0) * float3(gConst[1].zw, 1) + pos;
 
-    // переводим в NDC
-    float2 ndc;
-    ndc.x = (screenPos.x / screenSize.x) * 2.0 - 1.0;
-    ndc.y = 1.0 - (screenPos.y / screenSize.y) * 2.0;
-
-    output.pos = float4(ndc, 0, 1);
+    output.pos = float4(screenPos, 1);
     output.uv  = quadPos[vID];
 
     return output;

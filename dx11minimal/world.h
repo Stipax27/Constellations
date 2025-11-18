@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////////
 // Filename: world.h
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef _WORLD_H_
@@ -20,10 +20,10 @@ using namespace std;
 /////////////
 // GLOBALS //
 /////////////
-const float PHYSICS_DT = 1.0f / 60.0f; // 60 FPS
-const float RENDER_DT = 1.0f / 144.0f; // 144 FPS
-const float SCREEN_DEPTH = 10000.0f;
-const float SCREEN_NEAR = 0.1f;
+#define PHYSICS_DT 1000.0f / 60.0f // 60 FPS
+#define RENDER_DT 1000.0f / (float)FRAMES_PER_SECOND // 144 FPS
+#define SCREEN_DEPTH 1000.0f
+#define SCREEN_NEAR 0.1f
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +61,8 @@ public:
 		return raw_ptr;
 	}
 
-	Entity* CreateEntity();
+	Entity* CreateEntity(string = "Unnamed", Entity* = nullptr);
+	void RemoveEntityByObject(Entity*);
 
 	bool Initialize(float);
 	void Shutdown();
@@ -73,6 +74,8 @@ private:
 	vector<Entity*> entities;
 	vector<unique_ptr<System>> physicSystems;
 	vector<unique_ptr<System>> renderSystems;
+
+	bool firstFrame = true;
 };
 
 #endif

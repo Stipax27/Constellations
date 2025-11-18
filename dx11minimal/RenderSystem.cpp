@@ -1,4 +1,4 @@
-#ifndef _RENDER_SYSTEM_
+﻿#ifndef _RENDER_SYSTEM_
 #define _RENDER_SYSTEM_
 
 //////////////
@@ -43,8 +43,6 @@ public:
 
 	bool Update(vector<Entity*>& entities, float deltaTime)
 	{
-		Textures::RenderTarget(1, 0);
-
 		// Clear the buffers to begin the scene.
 		Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
 		Draw::ClearDepth();
@@ -62,33 +60,13 @@ public:
 		for (int i = 0; i < size; i++)
 		{
 			Entity* entity = entities[i];
-			if (entity->active)
+			if (entity->IsActive())
 			{
 				Transform* transform = entity->GetComponent<Transform>();
 
 				if (transform != nullptr)
 				{
 					bool result;
-
-					//// Turn off the Z buffer to begin all 2D rendering.
-					//m_Direct3D->TurnZBufferOff();
-
-					//// Put the bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
-					//result = m_Bitmap->Render(m_Direct3D->GetDeviceContext());
-					//if (!result)
-					//{
-					//	return false;
-					//}
-
-					//// Render the bitmap with the UI shader.
-					//result = m_ShaderManager->RenderUIShader(m_Direct3D->GetDeviceContext(), m_Bitmap->GetIndexCount(), m_Bitmap->GetTexture());
-					//if (!result)
-					//{
-					//	return false;
-					//}
-
-					//// Turn the Z buffer back on now that all 2D rendering has completed.
-					//m_Direct3D->TurnZBufferOn();
 
 					//rotateMatrix = XMMatrixRotationQuaternion(transform->qRotation);
 					//scaleMatrix = XMMatrixScaling(transform->scale.x, transform->scale.y, transform->scale.z);
@@ -110,9 +88,9 @@ public:
 						Shaders::vShader(4);
 						Shaders::pShader(4);
 
-						ConstBuf::global[2] = XMFLOAT4(1, 1, 1, 1);
+						/*ConstBuf::global[2] = XMFLOAT4(1, 1, 1, 1);
 						ConstBuf::Update(5, ConstBuf::global);
-						ConstBuf::ConstToPixel(5);
+						ConstBuf::ConstToPixel(5);*/
 
 						for (int a = 0; a < constellation->stars.size(); a++) {
 							point3d star = constellation->stars[a];
@@ -171,8 +149,10 @@ public:
 				SpriteCluster* spriteCluster = entity->GetComponent<SpriteCluster>();
 				if (spriteCluster != nullptr)
 				{
-					// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-				//sprite->model.Render(m_Direct3D->GetDeviceContext());
+					ConstBuf::drawerV[0] = entity->timeScale;
+					ConstBuf::Update(0, ConstBuf::drawerV);
+					ConstBuf::ConstToVertex(0);
+					ConstBuf::ConstToPixel(0);
 
 					Shaders::vShader(spriteCluster->vShader);
 					Shaders::pShader(spriteCluster->pShader);
@@ -182,6 +162,7 @@ public:
 						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
 						ConstBuf::Update(5, ConstBuf::global);
 						ConstBuf::ConstToVertex(5);
+						ConstBuf::ConstToPixel(5);
 					}
 
 					context->DrawInstanced(6, spriteCluster->pointsNum, 0, 0);
@@ -190,7 +171,7 @@ public:
 		}
 
 		Textures::CreateMipMap();
-		Draw::OutputRenderTextures();
+		Draw::SwitchRenderTextures();
 
 		Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
 		Depth::Depth(Depth::depthmode::off);

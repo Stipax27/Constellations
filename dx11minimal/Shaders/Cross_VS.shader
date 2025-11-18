@@ -5,9 +5,9 @@ cbuffer global : register(b5)
 
 cbuffer camera : register(b3)
 {
-    float4x4 world[2];
-    float4x4 view[2];
-    float4x4 proj[2];
+    //float4x4 world[2];
+    float4x4 view;
+    float4x4 proj;
 };
 
 struct VS_OUTPUT
@@ -31,9 +31,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     float2 mousepos = float2(gConst[0].xy);
 
-    float2 pos = quadPos[vID];
-
-    float2 screenPos = mul(float4(quadPos[vID], 0.0, 1.0), proj[0]).xy;
+    float2 screenPos = mul(float4(quadPos[vID], 0.0, 1.0), proj).xy;
     screenPos = float2(mousepos.x + screenPos.x * size, mousepos.y - screenPos.y * size);
 
     output.pos = float4(screenPos.xy, 0, 1);

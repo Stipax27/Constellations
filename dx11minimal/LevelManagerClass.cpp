@@ -1,4 +1,4 @@
-#include "LevelManagerClass.h"
+ï»¿#include "LevelManagerClass.h"
 
 LevelManagerClass::LevelManagerClass()
 {
@@ -65,14 +65,21 @@ bool LevelManagerClass::Initialize()
 	PhysicBody* physicBody;
 	AIComponent* aiComponent;
 	//SphereCollider* sphereCollider;
+	SphereCollider* sphereCollider;
 	SpriteCluster* spriteCluster;
+	PlaneCollider* planeCollider;
+	Rect* rect;
+	TextLabel* textLabel;
 
-	player = m_World->CreateEntity();
+	Entity* folder = m_World->CreateEntity("WorldFolder");
+	folder->SetActive(false);
+
+	player = m_World->CreateEntity("Player", folder);
 	transform = player->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, -20.0f);
 	transform->scale = point3d(1, 0, 0);
 	physicBody = player->AddComponent<PhysicBody>();
-	//star->AddComponent<SphereCollider>();
+	sphereCollider = player->AddComponent<SphereCollider>();
 	constellation = player->AddComponent<Constellation>();
 	constellation->stars = {
 		point3d(-0.09, -0.7, 0),
@@ -89,26 +96,24 @@ bool LevelManagerClass::Initialize()
 		{2,5}
 	};
 
-	/*entity = m_World->CreateEntity();
-	explosion = entity->AddComponent<Explosion>();
-	transform = entity->AddComponent<Transform>();*/
-
-	entity = m_World->CreateEntity();
+	entity = m_World->CreateEntity("AriesNebulaLocation", folder);
 	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0.0f, 0.0f, 0.0f);
-	transform->scale = point3d(1, 1, 1);
+	transform->position = point3d(0.0f, 0.0f, 50.0f);
+	transform->scale = point3d(1, 0, 0);
 	spriteCluster = entity->AddComponent<SpriteCluster>();
 	spriteCluster->vShader = 7;
 	spriteCluster->pShader = 7;
 	spriteCluster->pointsNum = 900000;
+	planeCollider = entity->AddComponent<PlaneCollider>();
+	planeCollider->gravityDistance = 20.0f;
 
-	entity = m_World->CreateEntity();
+	entity = m_World->CreateEntity("StarsBackground", folder);
 	spriteCluster = entity->AddComponent<SpriteCluster>();
 	spriteCluster->vShader = 2;
 	spriteCluster->pShader = 2;
 	spriteCluster->pointsNum = 10000;
 
-	entity = m_World->CreateEntity();
+	entity = m_World->CreateEntity("Enemy", folder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(2.0f, 0.0f, 0.0f);
 	transform->scale = point3d(1, 0, 0);
@@ -161,11 +166,62 @@ bool LevelManagerClass::Initialize()
 	m_World->AddRenderSystem<RenderSystem>(m_World->m_Camera);
 	//m_World->AddRenderSystem<UISystem>();
 
+	// MAIN MENU //
+	
+	entity = m_World->CreateEntity();
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(0.0f, 0.1f, 0.0f);
+	transform->scale = point3d(0.25f, 0.05f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.5f, 0.25f, 0.8f);
+	rect->opacity = 1.f;
+	rect->anchorPoint = point3d(0, 0, 0);
+	rect->ratio = ScreenAspectRatio::YY;
+	rect->cornerRadius = 0.25f;
+	rect->cornerType = CornerType::Strict;
+
+	entity = m_World->CreateEntity();
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(0.0f, -0.1f, 0.0f);
+	transform->scale = point3d(0.25f, 0.05f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.5f, 0.25f, 0.8f);
+	rect->opacity = 1.f;
+	rect->anchorPoint = point3d(0, 0, 0);
+	rect->ratio = ScreenAspectRatio::YY;
+	rect->cornerRadius = 0.25f;
+	rect->cornerType = CornerType::Strict;
+
+	entity = m_World->CreateEntity();
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(0.0f, -0.3f, 0.0f);
+	transform->scale = point3d(0.25f, 0.05f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.5f, 0.25f, 0.8f);
+	rect->opacity = 1.f;
+	rect->anchorPoint = point3d(0, 0, 0);
+	rect->ratio = ScreenAspectRatio::YY;
+	rect->cornerRadius = 0.25f;
+	rect->cornerType = CornerType::Strict;
+
+	// MAIN MENU END //
+
+	/*entity = m_World->CreateEntity();
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(0, 0, 0);
+	transform->scale = point3d(0.5, 0.5, 0);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->text = "Test text";*/
+
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING END //
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
-	
+	m_World->AddPhysicSystem<PhysicSystem>();
+	m_World->AddPhysicSystem<CollisionSystem>();
+	m_World->AddRenderSystem<RenderSystem>(m_World->m_Camera);
+	m_World->AddRenderSystem<UISystem>();
+
 	//m_World->PreCalculations();
 	Star = new BaseStar();
 	Star->Init(m_World, entity);
@@ -216,7 +272,7 @@ void LevelManagerClass::Shutdown()
 }
 
 
-// Â ìåòîäå Frame èëè â äðóãîì ìåñòå ïî óñëîâèÿì
+// Ð’ Ð¼ÐµÑ‚Ð¾Ð´Ðµ Frame Ð¸Ð»Ð¸ Ð² Ð´Ñ€ÑƒÐ³Ð¾Ð¼ Ð¼ÐµÑÑ‚Ðµ Ð¿Ð¾ ÑƒÑÐ»Ð¾Ð²Ð¸ÑÐ¼
 bool LevelManagerClass::Frame()
 {
 	bool result;
@@ -225,12 +281,12 @@ bool LevelManagerClass::Frame()
 	playerController->ProcessInput();
 	playerController->ProcessMouse();
 
-	// Ïðîâåðÿåì óñëîâèÿ äëÿ àòàê çâåçäû
+	// ÐŸÑ€Ð¾Ð²ÐµÑ€ÑÐµÐ¼ ÑƒÑÐ»Ð¾Ð²Ð¸Ñ Ð´Ð»Ñ Ð°Ñ‚Ð°Ðº Ð·Ð²ÐµÐ·Ð´Ñ‹
 	DWORD currentTime = timer::currentTime;
 	srand(time(0));
-	// Ïðèìåð: àòàêà êàæäûå 3 ñåêóíäû
+	// ÐŸÑ€Ð¸Ð¼ÐµÑ€: Ð°Ñ‚Ð°ÐºÐ° ÐºÐ°Ð¶Ð´Ñ‹Ðµ 3 ÑÐµÐºÑƒÐ½Ð´Ñ‹
 	if (currentTime - Star->LastTime > 3000) {
-		// Ñëó÷àéíûé âûáîð àòàêè
+		// Ð¡Ð»ÑƒÑ‡Ð°Ð¹Ð½Ñ‹Ð¹ Ð²Ñ‹Ð±Ð¾Ñ€ Ð°Ñ‚Ð°ÐºÐ¸
 		int attackType = rand() % 3;
 		switch (attackType) {
 		case 0:
@@ -259,6 +315,9 @@ bool LevelManagerClass::Frame()
 	if (!result) {
 		return false;
 	}
+
+	mouse->RenderCursor();
+	Draw::Present();
 
 	return true;
 }

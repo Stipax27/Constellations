@@ -78,7 +78,7 @@
       <ConformanceMode>true</ConformanceMode>
       <StructMemberAlignment>16Bytes</StructMemberAlignment>
       <LanguageStandard_C>Default</LanguageStandard_C>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <FloatingPointModel>Fast</FloatingPointModel>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
@@ -96,7 +96,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>Default</LanguageStandard_C>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -112,7 +112,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>Default</LanguageStandard_C>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -128,7 +128,7 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>Default</LanguageStandard_C>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -144,6 +144,7 @@
     <ClInclude Include="dx11.h" />
     <ClInclude Include="Enemy_Patern.h" />
     <ClInclude Include="entity.h" />
+    <ClInclude Include="Font_OLD.h" />
     <ClInclude Include="FpsCounter.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="LevelManagerClass.h" />
@@ -156,8 +157,14 @@
     <ClInclude Include="system.h" />
     <ClInclude Include="windowclass.h" />
     <ClInclude Include="world.h" />
-    <None Include="ColorCorrection_PS.shader">
+    <None Include="Shaders\ColorCorrection_PS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="Shaders\Rect_Smooth_PS.shader">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
     <None Include="Shaders\BlackHole_Body_PS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -231,10 +238,10 @@
     <None Include="Shaders\UiParticle_VS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="Shaders\UI_PS.shader">
+    <None Include="Shaders\Rect_Strict_PS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="Shaders\UI_VS.shader">
+    <None Include="Shaders\Rect_VS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
     <None Include="Shaders\VSFS.shader">
@@ -259,6 +266,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="BaseStar.cpp" />
     <ClCompile Include="cameraclass.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
@@ -282,6 +290,7 @@
     <ClCompile Include="PlaneCollider.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
+    <ClCompile Include="TextLabel.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="UISystem.cpp" />

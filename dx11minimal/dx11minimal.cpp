@@ -1,7 +1,6 @@
-#define _CRT_SECURE_NO_WARNINGS
+﻿#define _CRT_SECURE_NO_WARNINGS
 
 #include "framework.h"
-#include "windows.h"
 #include <stdexcept>
 //#include "math.h"
 #include <stdlib.h>
@@ -26,32 +25,6 @@ float camDist = 100;//we have this in camera state
 
 bool isBattleActive = false;
 DWORD battleStartTime;
-
-//#include "Point3d.h"
-
-//#include "AriesNebula.h"
-
-//#include "UI.h"
-//#include "font.h"
-
-//#include "EnemyData.h"
-//#include "EnemyDataCon.h"
-//#include "EnemyAi.h"
-
-//#include "Navigation.h"
-//#include "Constellation.h"
-//#include "EnemyAiUPD.h"
-
-//#include "MainWorld.h"
-//#include "StatusGame.h"
-//#include "Weapon.h"
-//#include "Elements.h"
-//#include "MainGame.h"
-//#include "DialogStruct.h"
-//#include "Parametrics.h"
-//#include "drawer.h"
-
-//#include "loop.h"
 
 #include "resource.h"
 #include "LevelManagerClass.h"
@@ -104,7 +77,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg = { 0 };
 
     timer::StartCounter();
-    //ShowCursor(FALSE);
+    ShowCursor(FALSE);
 
     // Main message loop:
     while (msg.message != WM_QUIT)
@@ -132,10 +105,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
             timer::frameEndTime = timer::GetCounter();
             timer::frameRenderingDuration = timer::frameEndTime - timer::frameBeginTime;
-            timer::nextFrameTime = timer::frameBeginTime + FRAME_LEN;
+            timer::nextFrameTime = timer::frameBeginTime + RENDER_DT;
         }
 
-        //Sleep((DWORD)min(FRAME_LEN, max(FRAME_LEN - timer::frameRenderingDuration, 0)));
+        Sleep((DWORD)min(RENDER_DT, max(RENDER_DT - timer::frameRenderingDuration, 0)));
     }
 
     levelManager.Shutdown();
