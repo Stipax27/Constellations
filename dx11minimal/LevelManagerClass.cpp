@@ -197,8 +197,8 @@ bool LevelManagerClass::Initialize()
 
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
-	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera);
-	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera);
+	m_World->AddRenderSystem<MeshSystem>();
+	m_World->AddRenderSystem<SpriteSystem>();
 	m_World->AddRenderSystem<UISystem>();
 
 	//m_World->PreCalculations();

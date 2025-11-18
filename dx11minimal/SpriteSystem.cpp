@@ -16,7 +16,7 @@
 class SpriteSystem : public System
 {
 public:
-	SpriteSystem(CameraClass* camera)
+	SpriteSystem()
 	{
 	}
 
