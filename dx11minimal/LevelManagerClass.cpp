@@ -63,16 +63,19 @@ bool LevelManagerClass::Initialize()
 	Constellation* constellation;
 	Transform* transform;
 	PhysicBody* physicBody;
+
 	AIComponent* aiComponent;
 	//SphereCollider* sphereCollider;
+
 	SphereCollider* sphereCollider;
+
 	SpriteCluster* spriteCluster;
 	PlaneCollider* planeCollider;
 	Rect* rect;
 	TextLabel* textLabel;
 
 	Entity* folder = m_World->CreateEntity("WorldFolder");
-	folder->SetActive(false);
+	folder->SetActive(true);
 
 	player = m_World->CreateEntity("Player", folder);
 	transform = player->AddComponent<Transform>();
@@ -95,6 +98,13 @@ bool LevelManagerClass::Initialize()
 		{2,3},
 		{2,5}
 	};
+
+
+	/*entity = m_World->CreateEntity();
+	explosion = entity->AddComponent<Explosion>();
+	transform = entity->AddComponent<Transform>();*/
+
+	entity = m_World->CreateEntity();
 
 	entity = m_World->CreateEntity("AriesNebulaLocation", folder);
 	transform = entity->AddComponent<Transform>();
@@ -168,7 +178,7 @@ bool LevelManagerClass::Initialize()
 
 	// MAIN MENU //
 	
-	entity = m_World->CreateEntity();
+	/*entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.1f, 0.0f);
 	transform->scale = point3d(0.25f, 0.05f, 0.0f);
@@ -202,7 +212,7 @@ bool LevelManagerClass::Initialize()
 	rect->anchorPoint = point3d(0, 0, 0);
 	rect->ratio = ScreenAspectRatio::YY;
 	rect->cornerRadius = 0.25f;
-	rect->cornerType = CornerType::Strict;
+	rect->cornerType = CornerType::Strict;*/
 
 	// MAIN MENU END //
 
@@ -217,6 +227,7 @@ bool LevelManagerClass::Initialize()
 	// WORLD CREATING END //
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
+	
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
 	m_World->AddRenderSystem<RenderSystem>(m_World->m_Camera);
@@ -272,7 +283,7 @@ void LevelManagerClass::Shutdown()
 }
 
 
-// В методе Frame или в другом месте по условиям
+// � ������ Frame ��� � ������ ����� �� ��������
 bool LevelManagerClass::Frame()
 {
 	bool result;
@@ -281,12 +292,12 @@ bool LevelManagerClass::Frame()
 	playerController->ProcessInput();
 	playerController->ProcessMouse();
 
-	// Проверяем условия для атак звезды
+	// ��������� ������� ��� ���� ������
 	DWORD currentTime = timer::currentTime;
 	srand(time(0));
-	// Пример: атака каждые 3 секунды
+	// ������: ����� ������ 3 �������
 	if (currentTime - Star->LastTime > 3000) {
-		// Случайный выбор атаки
+		// ��������� ����� �����
 		int attackType = rand() % 3;
 		switch (attackType) {
 		case 0:

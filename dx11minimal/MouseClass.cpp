@@ -20,7 +20,7 @@ void MouseClass::Initialize(WindowClass* Window, CameraClass* Camera) {
 	window = Window;
 	camera = Camera;
 
-	state = MouseState::Free;
+	state = MouseState::Centered;
 }
 
 

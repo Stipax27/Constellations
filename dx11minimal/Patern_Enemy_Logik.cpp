@@ -54,7 +54,7 @@ public:
         for (int i = 0; i < size; i++)
         {
             Entity* entity = entities[i];
-            if (entity->active)
+            if (entity->IsActive())
             {
                 Transform* transform = entity->GetComponent<Transform>();
                 AIComponent* aiComponent = entity->GetComponent<AIComponent>();
