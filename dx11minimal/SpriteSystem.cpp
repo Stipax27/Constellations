@@ -1,5 +1,5 @@
-#ifndef _RENDER_SYSTEM_
-#define _RENDER_SYSTEM_
+#ifndef _SPRITE_SYSTEM_
+#define _SPRITE_SYSTEM_
 
 //////////////
 // INCLUDES //
@@ -9,26 +9,15 @@
 #include "Transform.cpp"
 #include "SpriteCluster.cpp"
 #include "Constellation.cpp"
-#include "Mesh.cpp"
 
 #include "cameraclass.h"
 
-//DEBUG
-#include "SurfaceCollider.cpp"
-#include "MethodOfClosest.h"
 
-
-class RenderSystem : public System
+class SpriteSystem : public System
 {
 public:
-	RenderSystem(CameraClass* camera)
+	SpriteSystem(CameraClass* camera)
 	{
-		m_Camera = camera;
-
-		InputAssembler::IA(InputAssembler::topology::triList);
-		Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
-		Depth::Depth(Depth::depthmode::off);
-		Rasterizer::Cull(Rasterizer::cullmode::off);
 	}
 
 
@@ -39,10 +28,6 @@ public:
 
 	void Shutdown()
 	{
-		if (m_Camera)
-		{
-			m_Camera = 0;
-		}
 	}
 
 
@@ -54,12 +39,7 @@ public:
 
 		Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 		Rasterizer::Cull(Rasterizer::cullmode::off);
-		Depth::Depth(Depth::depthmode::off);
-
-		// Generate the view matrix based on the camera's position.
-		m_Camera->Render();
-		//m_Camera->SetQuaternionRotation(0, 1, 0, timer::GetCounter() / 1000);
-		//m_Camera->AddEulerRotation(0, 1, 0);
+		Depth::Depth(Depth::depthmode::readonly);
 
 		size_t size = entities.size();
 		for (int i = 0; i < size; i++)
@@ -83,9 +63,6 @@ public:
 
 					Constellation* constellation = entity->GetComponent<Constellation>();
 					if (constellation != nullptr) {
-						Rasterizer::Cull(Rasterizer::cullmode::off);
-						Depth::Depth(Depth::depthmode::readonly);
-
 						// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 					//sprite->model.Render(m_Direct3D->GetDeviceContext());
 
@@ -108,8 +85,6 @@ public:
 						//ConstBuf::ConstToVertex(5);
 
 						//Draw::Drawer(1);
-
-
 
 
 						Shaders::vShader(4);
@@ -152,40 +127,11 @@ public:
 							Draw::Drawer(1);
 						}
 					}
-
-					Mesh* mesh = entity->GetComponent<Mesh>();
-					if (mesh != nullptr) {
-						ConstBuf::CreateVertexBuffer(15);
-
-						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, 0);
-						ConstBuf::global[1] = XMFLOAT4(transform->scale.x, transform->scale.y, transform->scale.z, 0);
-						ConstBuf::Update(5, ConstBuf::global);
-
-						ConstBuf::drawerMat.model = XMMatrixTranspose(transform->mRotation);
-						ConstBuf::UpdateDrawerMat();
-
-						ConstBuf::ConstToVertex(5);
-
-						//Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
-						Rasterizer::Cull(mesh->cullMode);
-						Depth::Depth(Depth::depthmode::on);
-						Shaders::vShader(15);
-						Shaders::pShader(15);
-						InputAssembler::IA(InputAssembler::topology::triList);
-						context->DrawIndexed(36, 0, 0);
-					}
 				}
-
-
-
-
 
 				SpriteCluster* spriteCluster = entity->GetComponent<SpriteCluster>();
 				if (spriteCluster != nullptr)
 				{
-					Rasterizer::Cull(Rasterizer::cullmode::off);
-					Depth::Depth(Depth::depthmode::readonly);
-
 					ConstBuf::drawerV[0] = entity->timeScale;
 					ConstBuf::Update(0, ConstBuf::drawerV);
 					ConstBuf::ConstToVertex(0);
@@ -207,22 +153,8 @@ public:
 			}
 		}
 
-		Textures::CreateMipMap();
-		Draw::SwitchRenderTextures();
-
-		Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
-		Depth::Depth(Depth::depthmode::off);
-		Rasterizer::Cull(Rasterizer::cullmode::off);
-
-		Shaders::vShader(10);
-		Shaders::pShader(100);
-		context->Draw(6, 0);
-
 		return true;
 	}
-
-private:
-	CameraClass* m_Camera;
 };
 
 #endif

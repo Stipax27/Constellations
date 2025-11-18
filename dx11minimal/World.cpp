@@ -135,6 +135,13 @@ bool World::UpdateRender()
 	Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
 	Draw::ClearDepth();
 
+	InputAssembler::IA(InputAssembler::topology::triList);
+	Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
+	Depth::Depth(Depth::depthmode::off);
+	Rasterizer::Cull(Rasterizer::cullmode::off);
+
+	m_Camera->Render();
+
 	size_t size = renderSystems.size();
 	for (int i = 0; i < size; i++)
 	{
