@@ -104,7 +104,13 @@ void PlayerController::ProcessInput()
 		}
 
 	if (velocity.magnitude() > 0) {
-		playerPhysicBody->velocity += velocity.normalized();
+		point3d newVelocity = playerPhysicBody->velocity + velocity.normalized();
+		if (newVelocity.magnitude() > 15.0f) {
+			playerPhysicBody->velocity = newVelocity.normalized() * 15;
+		}
+		else {
+			playerPhysicBody->velocity = newVelocity;
+		}
 	}
 
 		// ?????????? ????????
