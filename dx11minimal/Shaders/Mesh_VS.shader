@@ -39,7 +39,7 @@ struct VS_OUTPUT
     float4 pos : SV_POSITION;
     float4 vpos : POSITION0;
     float4 wpos : POSITION1;
-    float4 vnorm : NORMAL1;
+    float4 vnorm : NORMAL0;
     float2 uv : TEXCOORD0;
 };
 
@@ -54,6 +54,7 @@ VS_OUTPUT VS(VS_INPUT input)
     output.vpos = mul(output.pos, view);
     output.wpos = float4(input.position.xyz, 1);
     //output.vnorm = normalize(mul(input.normal, world));
+    output.vnorm = float4(normalize(input.normal), 1);
     output.uv = input.uv;
 
     return output;
