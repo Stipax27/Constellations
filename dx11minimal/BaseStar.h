@@ -17,11 +17,13 @@ public:
 	float damage;
 	float rad;
 	DWORD LastTime;
+	vector<Entity*> effect;
 
 	void Init(World*, Entity*);
 	void Flash();
 	void CoronalEjection();
 	void SunWind();
-	
+	void FartingEffect();
+	void LifeTimeParticl();
 };
 

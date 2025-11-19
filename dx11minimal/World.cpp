@@ -64,8 +64,8 @@ void World::RemoveEntityByObject(Entity* object)
 	for (int i = 0; i < entities.size(); i++) {
 		Entity* entity = entities[i];
 		if (entity == object) {
-			entity->Destroy();
 			entities.erase(entities.begin() + i);
+			entity->Destroy();
 			break;
 		}
 	}

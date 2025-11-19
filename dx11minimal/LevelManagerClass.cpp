@@ -181,6 +181,7 @@ bool LevelManagerClass::Initialize()
 		 point3d(0.0f, 0.0f, 10.0f)
 	};
 
+
 	// MAIN MENU //
 	
 	/*entity = m_World->CreateEntity();
@@ -298,11 +299,13 @@ bool LevelManagerClass::Frame()
 	playerController->ProcessInput();
 	playerController->ProcessMouse();
 
+	
 	// ��������� ������� ��� ���� ������
 	DWORD currentTime = timer::currentTime;
 	srand(time(0));
 	// ������: ����� ������ 3 �������
 	if (currentTime - Star->LastTime > 3000) {
+		Star->FartingEffect();
 		// ��������� ����� �����
 		int attackType = rand() % 3;
 		switch (attackType) {
@@ -317,6 +320,7 @@ bool LevelManagerClass::Frame()
 			break;
 		}
 		Star->LastTime = currentTime;
+		Star->LifeTimeParticl();
 	}
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };

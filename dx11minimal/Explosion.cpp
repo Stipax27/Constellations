@@ -8,6 +8,7 @@ struct Explosion : Component {
         FLASH,
         CORONAL_EJECTION,
         SUN_WIND,
+        EFFECT,
         DEFAULT
     };
 
