@@ -55,11 +55,7 @@ public:
 					if (mesh != nullptr) {
 						ConstBuf::CreateVertexBuffer(15);
 
-						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, 0);
-						ConstBuf::global[1] = XMFLOAT4(transform->scale.x, transform->scale.y, transform->scale.z, 0);
-						ConstBuf::Update(5, ConstBuf::global);
-
-						transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), 1 * RAD) * transform->mRotation;
+						transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), 10 * RAD) * transform->mRotation;
 
 						XMMATRIX rotateMatrix = transform->mRotation;
 						XMMATRIX scaleMatrix = XMMatrixScaling(transform->scale.x, transform->scale.y, transform->scale.z);
@@ -69,8 +65,8 @@ public:
 						XMMATRIX srMatrix = scaleMatrix * rotateMatrix;
 						XMMATRIX worldMatrix = srMatrix * translateMatrix;
 
-						ConstBuf::drawerMat.model = XMMatrixTranspose(worldMatrix);
-						ConstBuf::UpdateDrawerMat();
+						ConstBuf::camera.world = XMMatrixTranspose(worldMatrix);
+						ConstBuf::UpdateCamera();
 
 						ConstBuf::ConstToVertex(5);
 

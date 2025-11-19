@@ -16,7 +16,7 @@ cbuffer frame : register(b4)
 
 cbuffer camera : register(b3)
 {
-    //float4x4 world[2];
+    float4x4 world;
     float4x4 view;
     float4x4 proj;
 };
@@ -47,12 +47,12 @@ VS_OUTPUT VS(VS_INPUT input)
 {
     VS_OUTPUT output = (VS_OUTPUT)0;
 
-    float3 pos = gConst[0].xyz;
-    float3 scale = gConst[1].xyz;
+    float4 pos = float4(input.position.xyz, 1);
+    pos = mul(pos, world);
 
-    output.pos = mul(float4(input.position.xyz * scale + pos, 1), mul(view, proj));
-    output.vpos = mul(output.pos, view);
-    output.wpos = float4(input.position.xyz, 1);
+    output.pos = mul(pos, mul(view, proj));
+    output.vpos = mul(float4(pos.xyz, 1), view);
+    output.wpos = float4(pos.xyz, 0);
     //output.vnorm = normalize(mul(input.normal, world));
     output.vnorm = float4(normalize(input.normal), 1);
     output.uv = input.uv;

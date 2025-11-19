@@ -5,7 +5,7 @@ cbuffer global : register(b5)
 
 cbuffer camera : register(b3)
 {
-    //float4x4 world[2];
+    float4x4 world;
     float4x4 view;
     float4x4 proj;
 };

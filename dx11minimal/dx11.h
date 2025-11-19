@@ -208,7 +208,7 @@ namespace ConstBuf
 	};
 
 	struct Camera {
-		//XMMATRIX world[2];
+		XMMATRIX world;
 		XMMATRIX view;
 		XMMATRIX proj;
 	};

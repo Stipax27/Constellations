@@ -1,4 +1,4 @@
-﻿#include "mouseclass.h"
+#include "mouseclass.h"
 
 MouseClass::MouseClass()
 {

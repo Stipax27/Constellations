@@ -19,12 +19,7 @@ void CameraClass::Initialize(float iAspect)
 	position = point3d();
 	qRotation = XMQuaternionRotationAxis(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), 0);
 
-	rotationMatrix = XMMATRIX{
-		1, 0, 0, 0,
-		0, 1, 0, 0,
-		0, 0, 1, 0,
-		0, 0, 0, 1
-	};
+	rotationMatrix = XMMatrixIdentity();
 
 	iaspect = iAspect;
 

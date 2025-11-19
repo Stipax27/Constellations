@@ -13,12 +13,7 @@ struct Transform : Component
 
     DirectX::XMVECTOR qRotation = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), 0);
 
-    DirectX::XMMATRIX mRotation = DirectX::XMMATRIX{
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1
-    };
+    DirectX::XMMATRIX mRotation = DirectX::XMMatrixIdentity();
 
     point3d GetRightVector()
     {
