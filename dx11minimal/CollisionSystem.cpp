@@ -34,7 +34,7 @@ public:
 	}
 
 	float f(float x) {
-		return 0.25*x;
+		return 0.35*pow(max(x*(1-0.125*x),0), 2);
 	}
 
 	bool Update(vector<Entity*>& entities, float deltaTime)
@@ -86,22 +86,24 @@ public:
 					SurfaceCollider* surfaceCollider = entity2->GetComponent<SurfaceCollider>();
 					if (surfaceCollider != nullptr) {
 						point3d playerPos = transform1->position;
-						float distance;
-						point3d closestPoint;
+						if ((playerPos-surfaceCollider->basePos).magnitude() < 64) { // 64.5 – location radius
+							float distance;
+							point3d closestPoint;
 
-						bool collision = findClosestPointOnSurface(playerPos, *surfaceCollider, closestPoint, distance, 12, 3);
+							bool collision = findClosestPointOnSurface(playerPos, *surfaceCollider, closestPoint, distance, 12, 3);
 
-						point3d buoyantForce = point3d(0,0,0);
+							point3d buoyantForce = point3d(0, 0, 0);
 
-						if (collision) {
-							buoyantForce = (closestPoint - playerPos).normalized() *
-								max(0,
-									f((closestPoint - playerPos).dot(surfaceCollider->getNormal(closestPoint.x, closestPoint.z)))
-								);
+							if (collision && (closestPoint - playerPos).magnitude()<8) {
+								buoyantForce = (closestPoint - playerPos).normalized() *
+									max(0,
+										f((closestPoint - playerPos).dot(surfaceCollider->getNormal(closestPoint.x, closestPoint.z)))
+									);
+							}
+
+							PhysicBody* physicBody1 = entity1->GetComponent<PhysicBody>();
+							physicBody1->velocity += buoyantForce;
 						}
-
-						PhysicBody* physicBody1 = entity1->GetComponent<PhysicBody>();
-						physicBody1->velocity += buoyantForce;
 					}
 				}
 
