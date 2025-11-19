@@ -51,16 +51,6 @@ public:
 
 				if (transform != nullptr)
 				{
-					bool result;
-
-					//rotateMatrix = XMMatrixRotationQuaternion(transform->qRotation);
-					//scaleMatrix = XMMatrixScaling(transform->scale.x, transform->scale.y, transform->scale.z);
-					//translateMatrix = XMMatrixTranslation(transform->position.x, transform->position.y, transform->position.z);
-
-					// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
-					//srMatrix = XMMatrixMultiply(scaleMatrix, transform->mRotation);
-					//XMMATRIX worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
-
 					Mesh* mesh = entity->GetComponent<Mesh>();
 					if (mesh != nullptr) {
 						ConstBuf::CreateVertexBuffer(15);
@@ -69,7 +59,17 @@ public:
 						ConstBuf::global[1] = XMFLOAT4(transform->scale.x, transform->scale.y, transform->scale.z, 0);
 						ConstBuf::Update(5, ConstBuf::global);
 
-						ConstBuf::drawerMat.model = XMMatrixTranspose(transform->mRotation);
+						transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), 1 * RAD) * transform->mRotation;
+
+						XMMATRIX rotateMatrix = transform->mRotation;
+						XMMATRIX scaleMatrix = XMMatrixScaling(transform->scale.x, transform->scale.y, transform->scale.z);
+						XMMATRIX translateMatrix = XMMatrixTranslation(transform->position.x, transform->position.y, transform->position.z);
+
+						// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
+						XMMATRIX srMatrix = scaleMatrix * rotateMatrix;
+						XMMATRIX worldMatrix = srMatrix * translateMatrix;
+
+						ConstBuf::drawerMat.model = XMMatrixTranspose(worldMatrix);
 						ConstBuf::UpdateDrawerMat();
 
 						ConstBuf::ConstToVertex(5);

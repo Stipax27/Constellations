@@ -64,12 +64,12 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 
     //calc star position
 
-    float size = 7.0f;
-    float range = 2000.0f;
+    float size = 5.0f;
+    float range = 1000.0f;
     float3 starPos = normalize(randomPosition(iID) * range * 2 - range) * range;
 
     float4x4 v = view;
-    v._m30_m31_m32_m33 = 0.0f;
+    v._m30_m31_m32 = 0.0f;
 
     //starPos = lerp(normalize(starPos)* 1400.0f, starPos,.5);
 
