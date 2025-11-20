@@ -86,7 +86,7 @@ public:
 					SurfaceCollider* surfaceCollider = entity2->GetComponent<SurfaceCollider>();
 					if (surfaceCollider != nullptr) {
 						point3d playerPos = transform1->position;
-						if ((playerPos-surfaceCollider->basePos).magnitude() < 64) { // 64.5 – location radius
+						if ((playerPos-surfaceCollider->basePos).magnitude() < 64*transform2->scale.x) { // 64.5 – location radius
 							float distance;
 							point3d closestPoint;
 
