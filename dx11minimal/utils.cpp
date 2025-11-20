@@ -1,4 +1,4 @@
-﻿#include "utils.h"
+#include "utils.h"
 
 float clamp(float x, float a, float b) {
     return fmax(fmin(x, b), a);
@@ -52,4 +52,33 @@ int getRandom(int min, int max) {
     {
         return rand() % min;
     }
+}
+
+Transform GetWorldTransform(Entity* entity) {
+    Transform worldTransform = Transform();
+
+    Transform* originTransform = entity->GetComponent<Transform>();
+    if (originTransform != nullptr) {
+
+        vector<Transform*> transforms = { originTransform };
+
+        Entity* ancestor = entity->parent;
+        while (ancestor != nullptr) {
+
+            Transform* parentTransform = ancestor->GetComponent<Transform>();
+            if (parentTransform != nullptr) {
+                transforms.push_back(parentTransform);
+                ancestor = ancestor->parent;
+            }
+            else {
+                break;
+            }
+        }
+
+        for (int i = transforms.size() - 1; i >= 0; i--) {
+            worldTransform += *transforms[i];
+        }
+    }
+
+    return worldTransform;
 }

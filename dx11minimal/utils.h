@@ -1,4 +1,4 @@
-﻿#ifndef _UTILS_H
+#ifndef _UTILS_H
 #define _UTILS_H
 
 
@@ -8,6 +8,9 @@
 #include <corecrt_math.h>
 #include <DirectXMath.h>
 #include "Point3d.h"
+
+#include "entity.h"
+#include "Transform.cpp"
 
 
 /////////////
@@ -21,10 +24,13 @@ float clamp(float x, float a, float b);
 float smoothstep(float edge0, float edge1, float x);
 float fract(float);
 float lerp(float x1, float x2, float a);
+
 float degreesToRadians(float);
 point3d quaternionToEuler(float x, float y, float z, float w);
 DirectX::XMVECTOR eulerToQuanternion(float x, float y, float z);
 
 int getRandom(int min = 1, int max = 0);
+
+Transform GetWorldTransform(Entity*);
 
 #endif

@@ -51,16 +51,6 @@ public:
 
 				if (transform != nullptr)
 				{
-					bool result;
-
-					//rotateMatrix = XMMatrixRotationQuaternion(transform->qRotation);
-					//scaleMatrix = XMMatrixScaling(transform->scale.x, transform->scale.y, transform->scale.z);
-					//translateMatrix = XMMatrixTranslation(transform->position.x, transform->position.y, transform->position.z);
-
-					// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
-					//srMatrix = XMMatrixMultiply(scaleMatrix, transform->mRotation);
-					//XMMATRIX worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
-
 					Constellation* constellation = entity->GetComponent<Constellation>();
 					if (constellation != nullptr) {
 						// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.

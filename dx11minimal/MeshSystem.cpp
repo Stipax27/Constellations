@@ -36,8 +36,7 @@ public:
 		/*Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
 		Draw::ClearDepth();*/
 
-		Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-		//Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
+		Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
 		//Rasterizer::Cull(Rasterizer::cullmode::off);
 		Depth::Depth(Depth::depthmode::on);
 
@@ -55,11 +54,15 @@ public:
 					if (mesh != nullptr) {
 						ConstBuf::CreateVertexBuffer(15);
 
-						transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), 10 * RAD) * transform->mRotation;
+						if (entity->parent != nullptr && !entity->parent->HasComponent<Transform>()) {
+							transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), -2 * RAD) * transform->mRotation;
+						}
 
-						XMMATRIX rotateMatrix = transform->mRotation;
-						XMMATRIX scaleMatrix = XMMatrixScaling(transform->scale.x, transform->scale.y, transform->scale.z);
-						XMMATRIX translateMatrix = XMMatrixTranslation(transform->position.x, transform->position.y, transform->position.z);
+						Transform worldTransform = GetWorldTransform(entity);
+
+						XMMATRIX rotateMatrix = worldTransform.mRotation;
+						XMMATRIX scaleMatrix = XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z);
+						XMMATRIX translateMatrix = XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z);
 
 						// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
 						XMMATRIX srMatrix = scaleMatrix * rotateMatrix;
