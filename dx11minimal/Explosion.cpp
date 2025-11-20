@@ -2,6 +2,7 @@
 #define _EXPLOSION_C_
 
 #include "component.h"
+#include "timer.h"
 
 struct Explosion : Component {
     enum class Type {
@@ -20,6 +21,8 @@ struct Explosion : Component {
     float startTime = 0.f; // Время создания
     int particleCount = 10; // Количество частиц
     float intensity = 1.0f; // Интенсивность эффекта
+    DWORD lifeTime = 3000;
+    DWORD lifeStartTime = timer::currentTime;
 };
 
 #endif

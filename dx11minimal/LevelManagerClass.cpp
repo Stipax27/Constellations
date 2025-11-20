@@ -319,8 +319,8 @@ bool LevelManagerClass::Frame()
 			Star->SunWind();
 			break;
 		}
+		//Star->LifeTimeParticl();
 		Star->LastTime = currentTime;
-		Star->LifeTimeParticl();
 	}
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };

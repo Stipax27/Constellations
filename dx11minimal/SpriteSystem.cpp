@@ -49,6 +49,29 @@ public:
 			{
 				Transform* transform = entity->GetComponent<Transform>();
 
+				SpriteCluster* spriteCluster = entity->GetComponent<SpriteCluster>();
+				if (spriteCluster != nullptr)
+				{
+					ConstBuf::drawerV[0] = entity->timeScale;
+					ConstBuf::Update(0, ConstBuf::drawerV);
+					ConstBuf::ConstToVertex(0);
+					ConstBuf::ConstToPixel(0);
+
+					Shaders::vShader(spriteCluster->vShader);
+					Shaders::pShader(spriteCluster->pShader);
+
+					if (transform != nullptr)
+					{
+						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
+						ConstBuf::Update(5, ConstBuf::global);
+						ConstBuf::ConstToVertex(5);
+						ConstBuf::ConstToPixel(5);
+					}
+
+					context->DrawInstanced(6, spriteCluster->pointsNum, 0, 0);
+				}
+
+
 				if (transform != nullptr)
 				{
 					bool result;
@@ -131,7 +154,7 @@ public:
 					Explosion* explosion = entity->GetComponent<Explosion>();
 
 					if (explosion != nullptr) {
-
+						
 						Shaders::vShader(1);
 						Shaders::pShader(1);
 
@@ -144,30 +167,14 @@ public:
 						ConstBuf::ConstToPixel(5);
 
 						Draw::Drawer(1);
+						if (timer::currentTime - explosion->lifeStartTime >= explosion->lifeTime)
+						{
+							//entity->RemoveComponent<Explosion>();
+							entity->SetActive(false);
+						}
 					}
 					
-				}
-
-				SpriteCluster* spriteCluster = entity->GetComponent<SpriteCluster>();
-				if (spriteCluster != nullptr)
-				{
-					ConstBuf::drawerV[0] = entity->timeScale;
-					ConstBuf::Update(0, ConstBuf::drawerV);
-					ConstBuf::ConstToVertex(0);
-					ConstBuf::ConstToPixel(0);
-
-					Shaders::vShader(spriteCluster->vShader);
-					Shaders::pShader(spriteCluster->pShader);
-
-					if (transform != nullptr)
-					{
-						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
-						ConstBuf::Update(5, ConstBuf::global);
-						ConstBuf::ConstToVertex(5);
-						ConstBuf::ConstToPixel(5);
-					}
-
-					context->DrawInstanced(6, spriteCluster->pointsNum, 0, 0);
+					
 				}
 			}
 		}

@@ -18,6 +18,7 @@ public:
 	float rad;
 	DWORD LastTime;
 	vector<Entity*> effect;
+	
 
 	void Init(World*, Entity*);
 	void Flash();

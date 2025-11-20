@@ -9,7 +9,7 @@ void BaseStar::LifeTimeParticl() {
 
     DWORD currentTimeEff = timer::currentTime;
 
-    if (currentTimeEff - LastTime > 20000) {
+    if (currentTimeEff - LastTime > 2000) {
         for (int i = 0; i < effect.size(); i++)
         {
             m_World->RemoveEntityByObject(effect[i]);
@@ -18,6 +18,7 @@ void BaseStar::LifeTimeParticl() {
     }
 
 }
+
 void BaseStar::FartingEffect() {
 
     point3d starPos = m_entity->GetComponent<Transform>()->position;
@@ -44,6 +45,7 @@ void BaseStar::FartingEffect() {
         sparkExplosion->speed = 40.0f;
         sparkExplosion->duration = 0.15f;
         sparkExplosion->intensity = 3.5f;
+        sparkExplosion->lifeTime = 1500;
     }
 
     
