@@ -30,7 +30,7 @@ public:
 	}
 
 
-	bool Update(vector<Entity*>& entities, float deltaTime)
+	void Update(vector<Entity*>& entities, float deltaTime)
 	{
 		// Clear the buffers to begin the scene.
 		/*Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
@@ -83,8 +83,6 @@ public:
 				}
 			}
 		}
-
-		return true;
 	}
 };
 

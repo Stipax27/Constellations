@@ -25,7 +25,6 @@ bool World::Initialize(float iaspect)
 	m_Camera->Initialize(iaspect);
 
 	m_Camera->SetPosition(point3d(0.0f, 0.0f, -10.0f));
-	m_Camera->SetQuaternionRotation(0.0f, 1.0f, 0.0f, 0.0f);
 
 	return true;
 }
@@ -96,27 +95,18 @@ void World::PreCalculations()
 }
 
 
-bool World::UpdatePhysic()
+void World::UpdatePhysic()
 {
-	bool result;
 	size_t size = physicSystems.size();
 	for (int i = 0; i < size; i++)
 	{
-		result = physicSystems[i]->Update(entities, 0.01f);
-		if (!result)
-		{
-			return false;
-		}
+		physicSystems[i]->Update(entities, 0.01f);
 	}
-
-	return true;
 }
 
 
-bool World::UpdateRender()
+void World::UpdateRender()
 {
-	bool result;
-
 	// Updating time in const buffer
 	ConstBuf::frame.time = XMFLOAT4{ (float)(timer::frameBeginTime * 0.01f), 0, 0, 0 };
 	ConstBuf::UpdateFrame();
@@ -145,11 +135,7 @@ bool World::UpdateRender()
 	size_t size = renderSystems.size();
 	for (int i = 0; i < size; i++)
 	{
-		result = renderSystems[i]->Update(entities, timer::deltaTime);
-		if (!result)
-		{
-			return false;
-		}
+		renderSystems[i]->Update(entities, timer::deltaTime);
 	}
 
 	Textures::CreateMipMap();
@@ -162,8 +148,6 @@ bool World::UpdateRender()
 	Shaders::vShader(10);
 	Shaders::pShader(100);
 	context->Draw(6, 0);
-
-	return true;
 }
 
 void World::CleanMem()

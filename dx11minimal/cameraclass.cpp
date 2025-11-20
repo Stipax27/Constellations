@@ -17,8 +17,6 @@ CameraClass::~CameraClass()
 void CameraClass::Initialize(float iAspect)
 {
 	position = point3d();
-	qRotation = XMQuaternionRotationAxis(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), 0);
-
 	rotationMatrix = XMMatrixIdentity();
 
 	iaspect = iAspect;
@@ -39,18 +37,6 @@ void CameraClass::SetMatrixRotation(XMMATRIX Matrix)
 }
 
 
-void CameraClass::SetEulerRotation(float x, float y, float z)
-{
-	qRotation = eulerToQuanternion(x * RAD, y * RAD, z * RAD);
-}
-
-
-void CameraClass::SetQuaternionRotation(float x = 0.0f, float y = 1.0f, float z = 0.0f, float w = 0.0f)
-{
-	qRotation = XMQuaternionNormalize(XMQuaternionRotationAxis(XMVectorSet(x, y, z, 0.0f), w * RAD));
-}
-
-
 void CameraClass::AddPosition(float x = 0.0f, float y = 0.0f, float z = 0.0f)
 {
 	position += point3d(x, y, z);
@@ -61,13 +47,6 @@ void CameraClass::AddMatrixRotation(XMMATRIX Matrix)
 {
 	XMMATRIX result = Matrix * rotationMatrix;
 	rotationMatrix = result;
-}
-
-
-void CameraClass::AddEulerRotation(float x = 0.0f, float y = 0.0f, float z = 0.0f)
-{
-	XMVECTOR addRotation = eulerToQuanternion(x * RAD, y * RAD, z * RAD);
-	qRotation = XMQuaternionNormalize(XMQuaternionMultiply(qRotation, addRotation));
 }
 
 
@@ -91,22 +70,9 @@ point3d CameraClass::GetPosition()
 }
 
 
-XMFLOAT3 CameraClass::GetEulerRotation()
-{
-	point3d eRotation = quaternionToEuler(XMVectorGetX(qRotation), XMVectorGetY(qRotation), XMVectorGetZ(qRotation), XMVectorGetW(qRotation));
-	return XMFLOAT3(eRotation.x, eRotation.y, eRotation.z);
-}
-
-
 XMMATRIX CameraClass::GetMatrixRotation()
 {
 	return rotationMatrix;
-}
-
-
-XMVECTOR CameraClass::GetQuaternionRotation()
-{
-	return qRotation;
 }
 
 

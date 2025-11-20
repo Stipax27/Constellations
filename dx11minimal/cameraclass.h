@@ -24,18 +24,13 @@ public:
 
 	void SetPosition(point3d);
 	void SetMatrixRotation(XMMATRIX);
-	void SetEulerRotation(float, float, float);
-	void SetQuaternionRotation(float, float, float, float);
 	void SetFov(float);
 
 	void AddPosition(float, float, float);
 	void AddMatrixRotation(XMMATRIX);
-	void AddEulerRotation(float, float, float);
 	void AddVectorRotation(point3d, float);
 
 	point3d GetPosition();
-	XMFLOAT3 GetEulerRotation();
-	XMVECTOR GetQuaternionRotation();
 	XMMATRIX GetMatrixRotation();
 	float GetFov();
 
@@ -45,11 +40,9 @@ public:
 
 private:
 	point3d position;
-	XMVECTOR qRotation;
+	XMMATRIX rotationMatrix;
 	float fov;
 	float iaspect;
-
-	XMMATRIX rotationMatrix;
 
 	XMMATRIX m_viewMatrix;
 	XMMATRIX m_projectionMatrix;

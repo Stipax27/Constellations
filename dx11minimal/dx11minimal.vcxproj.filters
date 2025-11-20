@@ -135,7 +135,7 @@
     <ClInclude Include="Font_OLD.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="font.h">
+    <ClInclude Include="MethodOfClosest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -182,9 +182,6 @@
     <ClCompile Include="Point4d.cpp">
       <Filter>Source Files\Structures</Filter>
     </ClCompile>
-    <ClCompile Include="RenderSystem.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
     <ClCompile Include="SpriteCluster.cpp">
       <Filter>Source Files\Render</Filter>
     </ClCompile>
@@ -226,6 +223,12 @@
     </ClCompile>
     <ClCompile Include="MethodOfClosest.cpp">
       <Filter>Source Files\Physic</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshSystem.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteSystem.cpp">
+      <Filter>Source Files\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

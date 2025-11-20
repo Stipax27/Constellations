@@ -1,4 +1,4 @@
-﻿#ifndef _PHYSIC_SYSTEM_
+#ifndef _PHYSIC_SYSTEM_
 #define _PHYSIC_SYSTEM_
 
 //////////////
@@ -29,7 +29,7 @@ public:
 	}
 
 
-	bool Update(vector<Entity*>& entities, float deltaTime)
+	void Update(vector<Entity*>& entities, float deltaTime)
 	{
 		size_t size = entities.size();
 		for (int i = 0; i < size; i++) {
@@ -53,8 +53,6 @@ public:
 				}
 			}
 		}
-
-		return true;
 	}
 };
 

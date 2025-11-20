@@ -37,7 +37,7 @@ public:
 		return 0.25*x;
 	}
 
-	bool Update(vector<Entity*>& entities, float deltaTime)
+	void Update(vector<Entity*>& entities, float deltaTime)
 	{
 		size_t size = entities.size();
 		for (int i = 0; i < size; i++) {
@@ -108,8 +108,6 @@ public:
 				}
 			}
 		}
-
-		return true;
 	}
 };
 

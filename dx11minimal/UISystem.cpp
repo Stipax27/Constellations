@@ -1,4 +1,4 @@
-﻿#ifndef _UI_SYSTEM_
+#ifndef _UI_SYSTEM_
 #define _UI_SYSTEM_
 
 //////////////
@@ -122,7 +122,7 @@ public:
 	}
 
 
-	bool Update(vector<Entity*>& entities, float deltaTime)
+	void Update(vector<Entity*>& entities, float deltaTime)
 	{
 		Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
 		Rasterizer::Cull(Rasterizer::cullmode::off);
@@ -231,8 +231,6 @@ public:
 				}
 			}
 		}
-
-		return true;
 	}
 };
 

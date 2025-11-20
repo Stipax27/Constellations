@@ -291,32 +291,20 @@ void LevelManagerClass::Shutdown()
 }
 
 
-bool LevelManagerClass::Frame()
+void LevelManagerClass::Frame()
 {
-	bool result;
-
 	mouse->Update();
 	playerController->ProcessInput();
 	playerController->ProcessMouse();
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 
-	result = m_World->UpdatePhysic();
-	if (!result)
-	{
-		return false;
-	}
+	m_World->UpdatePhysic();
 
 	playerController->ProcessCamera();
 
-	result = m_World->UpdateRender();
-	if (!result)
-	{
-		return false;
-	}
+	m_World->UpdateRender();
 
 	mouse->RenderCursor();
 	Draw::Present();
-
-	return true;
 }
