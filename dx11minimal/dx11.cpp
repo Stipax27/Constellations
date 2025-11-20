@@ -414,7 +414,7 @@ void Models::LoadModelFromTxtFile(const char* filename)
 	// If it could not open the file then exit.
 	if (fin.fail())
 	{
-		Shaders::Log("Failed to read the model file\n");
+		Shaders::Log("Failed to read the txt model file\n");
 		return;
 	}
 
@@ -531,6 +531,20 @@ void Models::LoadModelFromTxtFile(const char* filename)
 	indices = 0;
 
 	Shaders::Log("Model file was read succesfully\n");
+}
+
+void Models::LoadModelFromGltfFile(const char* filename)
+{
+	std::ifstream fin;
+
+	fin.open(filename);
+
+	// If it could not open the file then exit.
+	if (fin.fail())
+	{
+		Shaders::Log("Failed to read the gltf model file\n");
+		return;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////
