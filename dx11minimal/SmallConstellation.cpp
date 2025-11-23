@@ -23,5 +23,5 @@ void SmallConstellation::Throw() {
     throwExplosion->speed = 0.2f;
     throwExplosion->duration = 1.5f;
     throwExplosion->intensity = 0.8f;
-
+    //
 }
