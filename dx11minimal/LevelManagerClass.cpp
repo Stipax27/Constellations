@@ -66,8 +66,8 @@ bool LevelManagerClass::Initialize()
 	Constellation* constellation;
 	Transform* transform;
 	PhysicBody* physicBody;
-
 	AIComponent* aiComponent;
+
 	//SphereCollider* sphereCollider;
 
 	SphereCollider* sphereCollider;
@@ -163,23 +163,72 @@ bool LevelManagerClass::Initialize()
 		{2,3},
 		{2,5}
 	};
-	
+
 	entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(30.0f, 3.0f, 0.0f);
+	transform->position = point3d(0.0f, 0.0f, 0.0f);
 	transform->scale = point3d(1, 0, 0);
 	physicBody = entity->AddComponent<PhysicBody>();
-	//star->AddComponent<SphereCollider>();
 	constellation = entity->AddComponent<Constellation>();
 	constellation->stars = {
-		point3d(0, 0, 0)
+		point3d(0, 0, 0),
+		point3d(0, 1, 0),
+		point3d(1, 1, 0),
+		point3d(1, 0, 0),
+
+		point3d(2, 0, 0),
+		point3d(2, 1, 0),
+		point3d(3, 1, 0),
+		point3d(3, 0, 0),
+
+		point3d(0, -1, 0),
+		point3d(1, -2, 0),
+		point3d(2, -2, 0),
+		point3d(3, -1, 0),
 	};
+	constellation->links = {
+		{0,1},
+		{1,2},
+		{2,3},
+		{3,0},
+
+		{4,5},
+		{5,6},
+		{6,7},
+		{7,4},
+
+		{8,9},
+		{9,10},
+		{10,11}
+	};
+
 	aiComponent = entity->AddComponent<AIComponent>();
 
 	aiComponent->patrolPoints = {
-		 point3d(-10.0f, 0.0f, 0.0f),
-		 point3d(0.0f, 0.0f, 10.0f)
+		 point3d(25.0f, 0.0f, 0.0f),
+		 point3d(25.0f, 25.0f, 0.0f),
+		 point3d(0.0f, 25.0f, 0.0f),
+		 point3d(0.0f, 0.0f, 0.0f)
 	};
+
+
+
+	//entity = m_World->CreateEntity();
+	//transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(30.0f, 3.0f, 0.0f);
+	//transform->scale = point3d(1, 0, 0);
+	//physicBody = entity->AddComponent<PhysicBody>();
+	////star->AddComponent<SphereCollider>();
+	//constellation = entity->AddComponent<Constellation>();
+	//constellation->stars = {
+	//	point3d(0, 0, 0)
+	//};
+	//aiComponent = entity->AddComponent<AIComponent>();
+
+	//aiComponent->patrolPoints = {
+	//	 point3d(-10.0f, 0.0f, 0.0f),
+	//	 point3d(0.0f, 0.0f, 10.0f)
+	//};
 
 
 	// MAIN MENU //
@@ -244,6 +293,8 @@ bool LevelManagerClass::Initialize()
 	Star = new BaseStar();
 	Star->Init(m_World, entity);
 	
+	smallConstellation = new SmallConstellation();
+	smallConstellation->Init(m_World, entity,player);
 
 	playerController = new PlayerController();
 	playerController->Initialize(player, m_World->m_Camera, mouse, window);
@@ -305,23 +356,28 @@ bool LevelManagerClass::Frame()
 	srand(time(0));
 	// ������: ����� ������ 3 �������
 	if (currentTime - Star->LastTime > 3000) {
-		Star->FartingEffect();
-		// ��������� ����� �����
-		int attackType = rand() % 3;
-		switch (attackType) {
-		case 0:
-			Star->Flash();
-			break;
-		case 1:
-			Star->CoronalEjection();
-			break;
-		case 2:
-			Star->SunWind();
-			break;
-		}
-		//Star->LifeTimeParticl();
-		Star->LastTime = currentTime;
+		//Star->FartingEffect();
+		//// ��������� ����� �����
+		//int attackType = rand() % 3;
+		//switch (attackType) {
+		//case 0:
+		//	Star->Flash();
+		//	break;
+		//case 1:
+		//	Star->CoronalEjection();
+		//	break;
+		//case 2:
+		//	Star->SunWind();
+		//	break;
+		//}
+		////Star->LifeTimeParticl();
+		//Star->LastTime = currentTime;
+
+		smallConstellation->Throw();
+
+
 	}
+
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 

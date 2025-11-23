@@ -23,8 +23,6 @@ void BaseStar::FartingEffect() {
 
     point3d starPos = m_entity->GetComponent<Transform>()->position;
 
-      
-    
     for (int i = 0; i < 6; i++) {
         Entity* sparkEntity = m_World->CreateEntity();
         effect.push_back(sparkEntity);

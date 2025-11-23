@@ -18,6 +18,7 @@
 #include "component.h"
 #include "Enemy_Patern.h"
 #include "BaseStar.h"
+#include "SmallConstellation.h"
 
 #include "Transform.cpp"
 #include "PhysicBody.cpp"
@@ -76,6 +77,8 @@ public:
 private:
 	PlayerController* playerController;
 	BaseStar* Star;
+	SmallConstellation* smallConstellation;
+
 };
 
 #endif
