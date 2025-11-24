@@ -24,5 +24,6 @@ public:
 
 	void Init(World*, Entity*, Entity*);
 	void Volley();
+	void Lattice();
 };
 

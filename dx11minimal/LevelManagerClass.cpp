@@ -372,12 +372,22 @@ bool LevelManagerClass::Frame()
 	//	}
 	//	//Star->LifeTimeParticl();
 	//	Star->LastTime = currentTime;
-	//	smallConstellation->Throw();
 	//}
 
 	if (currentTime - smallConstellation->LastTime > 3000) {
+
 		smallConstellation->LastTime = currentTime;
-		smallConstellation->Volley();
+
+		int attackType = rand() % 2;
+
+		switch (attackType) {
+		case 0:
+			smallConstellation->Volley();
+			break;
+		case 1:
+			smallConstellation->Lattice();
+			break;
+		}
 	}
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
