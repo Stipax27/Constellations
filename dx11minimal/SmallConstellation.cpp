@@ -7,21 +7,28 @@ void SmallConstellation::Init(World* World, Entity* entity, Entity* target) {
     LastTime = timer::currentTime;
 }
 
-void SmallConstellation::Throw() {
+void SmallConstellation::Volley() {
 
     point3d startPos = m_entity->GetComponent<Transform>()->position;
     point3d endPos = m_target->GetComponent<Transform>()->position;
     point3d distance = startPos - endPos;
-    distance.magnitude();
+    float totalDistance = distance.magnitude();
 
+    point3d direction = endPos - startPos;
+    direction = direction.normalized();   
     Entity* throwEntity = m_World->CreateEntity();
+    Projectile* projectile;
+    projectile = throwEntity->AddComponent<Projectile>();
+    projectile->velocity = direction;
+    projectile->speed = 50;
 
+	Constellation* constellation;
+	constellation = throwEntity->AddComponent<Constellation>();
+	constellation->stars = m_entity->GetComponent<Constellation>()->stars;
+
+    Transform* throwTransform = throwEntity->AddComponent<Transform>();
+    throwTransform->position = startPos;
     Explosion* throwExplosion = throwEntity->AddComponent<Explosion>();
     
-    throwExplosion->explosionType = Explosion::Type::DEFAULT;
-    throwExplosion->max_radius = 0.3f;
-    throwExplosion->speed = 0.2f;
-    throwExplosion->duration = 1.5f;
-    throwExplosion->intensity = 0.8f;
-    //
+    throwExplosion->max_radius = 1.0f;
 }

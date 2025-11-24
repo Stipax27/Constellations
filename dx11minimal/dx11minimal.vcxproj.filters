@@ -150,6 +150,9 @@
     <ClInclude Include="SmallConstellation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Projectile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp">
@@ -259,6 +262,9 @@
     </ClCompile>
     <ClCompile Include="SmallConstellation.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Projectile.cpp">
+      <Filter>Source Files\Physic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

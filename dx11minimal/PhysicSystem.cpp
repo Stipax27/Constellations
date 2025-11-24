@@ -8,6 +8,7 @@
 #include "system.h"
 #include "Transform.cpp"
 #include "PhysicBody.cpp"
+#include "Projectile.cpp"
 
 
 class PhysicSystem : public System
@@ -51,6 +52,13 @@ public:
 
 					physicBody->mAngVelocity = XMMatrixIdentity();
 				}
+
+				Projectile* projectile = entity->GetComponent<Projectile>();
+				if (transform != nullptr && projectile != nullptr)
+				{
+					transform->position += projectile->velocity * deltaTime * projectile->speed;
+				}
+
 			}
 		}
 

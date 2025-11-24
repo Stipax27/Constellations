@@ -128,41 +128,41 @@ bool LevelManagerClass::Initialize()
 	spriteCluster->pShader = 2;
 	spriteCluster->pointsNum = 10000;
 
-	entity = m_World->CreateEntity("Cube", folder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(20.0f, 10.0f, 0.0f);
-	transform->scale = point3d(5.0f, 0.2f, 1.0f);
-	mesh = entity->AddComponent<Mesh>();
+	//entity = m_World->CreateEntity("Cube", folder);
+	//transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(20.0f, 10.0f, 0.0f);
+	//transform->scale = point3d(5.0f, 0.2f, 1.0f);
+	//mesh = entity->AddComponent<Mesh>();
 
-	entity = m_World->CreateEntity("Enemy", folder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(2.0f, 0.0f, 0.0f);
-	transform->scale = point3d(1, 0, 0);
-	physicBody = entity->AddComponent<PhysicBody>();
-	aiComponent = entity->AddComponent<AIComponent>();
-
-	aiComponent->patrolPoints = {
-		 point3d(-50.0f, 0.0f, 0.0f),
-		 point3d(0.0f, 0.0f, 25.0f),
-		 point3d(25.0f, 0.0f, 0.0f),
-		 point3d(0.0f, 0.0f, -50.0f)
-	};
-	//star->AddComponent<SphereCollider>();
-	constellation = entity->AddComponent<Constellation>();
-	constellation->stars = {
-		point3d(-0.09, -0.7, 0),
-		point3d(-0.05, -0.15, 0),
-		point3d(0, 0, 0),
-		point3d(-0.4, 0.5, 0),
-		point3d(0, 0, 0),
-		point3d(0.4, 0.3, 0)
-	};
-	constellation->links = {
-		{0,1},
-		{1,2},
-		{2,3},
-		{2,5}
-	};
+	//entity = m_World->CreateEntity("Enemy", folder);
+	//transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(2.0f, 0.0f, 0.0f);
+	//transform->scale = point3d(1, 0, 0);
+	//physicBody = entity->AddComponent<PhysicBody>();
+	//aiComponent = entity->AddComponent<AIComponent>();
+	//
+	//aiComponent->patrolPoints = {
+	//	 point3d(-50.0f, 0.0f, 0.0f),
+	//	 point3d(0.0f, 0.0f, 25.0f),
+	//	 point3d(25.0f, 0.0f, 0.0f),
+	//	 point3d(0.0f, 0.0f, -50.0f)
+	//};
+	////star->AddComponent<SphereCollider>();
+	//constellation = entity->AddComponent<Constellation>();
+	//constellation->stars = {
+	//	point3d(-0.09, -0.7, 0),
+	//	point3d(-0.05, -0.15, 0),
+	//	point3d(0, 0, 0),
+	//	point3d(-0.4, 0.5, 0),
+	//	point3d(0, 0, 0),
+	//	point3d(0.4, 0.3, 0)
+	//};
+	//constellation->links = {
+	//	{0,1},
+	//	{1,2},
+	//	{2,3},
+	//	{2,5}
+	//};
 
 	entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
@@ -294,7 +294,7 @@ bool LevelManagerClass::Initialize()
 	Star->Init(m_World, entity);
 	
 	smallConstellation = new SmallConstellation();
-	smallConstellation->Init(m_World, entity,player);
+	smallConstellation->Init(m_World, entity, player);
 
 	playerController = new PlayerController();
 	playerController->Initialize(player, m_World->m_Camera, mouse, window);
@@ -355,29 +355,30 @@ bool LevelManagerClass::Frame()
 	DWORD currentTime = timer::currentTime;
 	srand(time(0));
 	// ������: ����� ������ 3 �������
-	if (currentTime - Star->LastTime > 3000) {
-		//Star->FartingEffect();
-		//// ��������� ����� �����
-		//int attackType = rand() % 3;
-		//switch (attackType) {
-		//case 0:
-		//	Star->Flash();
-		//	break;
-		//case 1:
-		//	Star->CoronalEjection();
-		//	break;
-		//case 2:
-		//	Star->SunWind();
-		//	break;
-		//}
-		////Star->LifeTimeParticl();
-		//Star->LastTime = currentTime;
+	//if (currentTime - Star->LastTime > 3000) {
+	//	Star->FartingEffect();
+	//	// ��������� ����� �����
+	//	int attackType = rand() % 3;
+	//	switch (attackType) {
+	//	case 0:
+	//		Star->Flash();
+	//		break;
+	//	case 1:
+	//		Star->CoronalEjection();
+	//		break;
+	//	case 2:
+	//		Star->SunWind();
+	//		break;
+	//	}
+	//	//Star->LifeTimeParticl();
+	//	Star->LastTime = currentTime;
+	//	smallConstellation->Throw();
+	//}
 
-		smallConstellation->Throw();
-
-
+	if (currentTime - smallConstellation->LastTime > 3000) {
+		smallConstellation->LastTime = currentTime;
+		smallConstellation->Volley();
 	}
-
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 

@@ -1,6 +1,8 @@
 #include "Explosion.cpp"
 #include "world.h"
 #include "Transform.cpp"
+#include "Projectile.cpp"
+#include "Constellation.cpp"
 #include "timer.h"
 #include <cstdlib>
 #include <cmath> 
@@ -21,6 +23,6 @@ public:
 	vector<Entity*> effect;
 
 	void Init(World*, Entity*, Entity*);
-	void Throw();
+	void Volley();
 };
 
