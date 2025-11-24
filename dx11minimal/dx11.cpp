@@ -537,7 +537,8 @@ void Models::LoadModelFromGltfFile(const char* filename)
 {
 	std::ifstream fin;
 	char input;
-	char formatedInput;
+
+	int openedBrackets = 1;
 
 	fin.open(filename);
 
@@ -548,14 +549,18 @@ void Models::LoadModelFromGltfFile(const char* filename)
 		return;
 	}
 
-	fin >> formatedInput;
-	Shaders::Log(&formatedInput);
-	Shaders::Log("\n");
-
 	fin.get(input);
-	while (input != '%')
+	while (openedBrackets > 0)
 	{
 		fin.get(input);
+
+		if (input == '{') {
+			openedBrackets++;
+		}
+		else if (input == '}') {
+			openedBrackets--;
+		}
+
 		Shaders::Log(&input);
 	}
 
