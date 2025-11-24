@@ -41,18 +41,18 @@ void SmallConstellation::Lattice() {
     point3d direction = targetPoint - startPos;
     direction = direction.normalized();
 
-    Entity* throwEntity = m_World->CreateEntity();
+    Entity* latticeEntity = m_World->CreateEntity();
 
     Projectile* projectile;
-    projectile = throwEntity->AddComponent<Projectile>();
+    projectile = latticeEntity->AddComponent<Projectile>();
     projectile->velocity = direction;
     projectile->speed = 50;
 
     Constellation* constellation;
-    constellation = throwEntity->AddComponent<Constellation>();
+    constellation = latticeEntity->AddComponent<Constellation>();
     constellation->stars =
     {
-        point3d(0, 0, 2), 
+        point3d(0, 0,- 2), 
 
         point3d(-3, 0, 0), 
         point3d(0, 3, 0),
@@ -64,14 +64,14 @@ void SmallConstellation::Lattice() {
         point3d(2, -2, 0),
         point3d(-2, -2, 0),
 
-        point3d(-1.5, 0, 1),
-        point3d(-1, 1, 1),
-        point3d(0, 1.5, 1),
-        point3d(1, 1, 1),
-        point3d(1.5, 0, 1),
-        point3d(1, -1, 1),
-        point3d(0, -1.5, 1),
-        point3d(-1, -1, 1),
+        point3d(-1.5, 0, -1),
+        point3d(-1, 1, -1),
+        point3d(0, 1.5, -1),
+        point3d(1, 1, -1),
+        point3d(1.5, 0, -1),
+        point3d(1, -1, -1),
+        point3d(0, -1.5, -1),
+        point3d(-1, -1, -1),
 
     };
     constellation->links = 
@@ -86,9 +86,16 @@ void SmallConstellation::Lattice() {
 
     };
 
+    Transform* latticeTransform = latticeEntity->AddComponent<Transform>();
+    latticeTransform->position = startPos;
 
+    point3d currentLookVector = latticeTransform->GetLookVector();
+    point3d rotationAxis = currentLookVector.cross(direction).normalized();
+    DirectX::XMVECTOR rotationAxisVector = DirectX::XMVectorSet(rotationAxis.x, rotationAxis.y, rotationAxis.z, 0.0f);
+    float angleBetweenVectors = acosf(currentLookVector.dot(direction));
+    DirectX::XMVECTOR quaternionRotation = DirectX::XMQuaternionRotationAxis(rotationAxisVector, angleBetweenVectors);
 
-    Transform* throwTransform = throwEntity->AddComponent<Transform>();
-    throwTransform->position = startPos;
+    latticeTransform->qRotation = DirectX::XMQuaternionMultiply(latticeTransform->qRotation, quaternionRotation);
+    latticeTransform->mRotation = DirectX::XMMatrixRotationQuaternion(latticeTransform->qRotation);
 
 }
