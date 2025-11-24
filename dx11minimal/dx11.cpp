@@ -530,12 +530,14 @@ void Models::LoadModelFromTxtFile(const char* filename)
 	delete[] indices;
 	indices = 0;
 
-	Shaders::Log("Model file was read succesfully\n");
+	Shaders::Log("Model txt file was read succesfully\n");
 }
 
 void Models::LoadModelFromGltfFile(const char* filename)
 {
 	std::ifstream fin;
+	char input;
+	char formatedInput;
 
 	fin.open(filename);
 
@@ -545,6 +547,21 @@ void Models::LoadModelFromGltfFile(const char* filename)
 		Shaders::Log("Failed to read the gltf model file\n");
 		return;
 	}
+
+	fin >> formatedInput;
+	Shaders::Log(&formatedInput);
+	Shaders::Log("\n");
+
+	fin.get(input);
+	while (input != '%')
+	{
+		fin.get(input);
+		Shaders::Log(&input);
+	}
+
+	fin.close();
+
+	Shaders::Log("Model glTF file was read succesfully\n");
 }
 
 //////////////////////////////////////////////////////////////////////////////////

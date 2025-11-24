@@ -1,0 +1,7 @@
+//FILE DEBUG//
+Hello, world!
+This is test text.
+I just need to know how it works.
+123; 1 2 3; 12345.
+//FILE DEBUG//
+%

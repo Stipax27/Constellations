@@ -55,6 +55,7 @@ bool LevelManagerClass::Initialize()
 
 	Textures::LoadTexture("..\\dx11minimal\\Resourses\\Textures\\testTexture.tga");
 	Models::LoadModelFromTxtFile("..\\dx11minimal\\Resourses\\Models\\Cube.txt");
+	Models::LoadModelFromGltfFile("..\\dx11minimal\\Resourses\\Models\\Test.txt");
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING START //
