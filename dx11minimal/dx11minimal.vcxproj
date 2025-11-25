@@ -316,6 +316,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="assimp.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="cameraclass.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
