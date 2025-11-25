@@ -21,6 +21,7 @@
 #include "PhysicSystem.cpp"
 #include "CollisionSystem.cpp"
 
+#include "CollisionDrawSystem.cpp"
 
 /////////////
 // GLOBALS //

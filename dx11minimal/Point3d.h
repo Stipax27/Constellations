@@ -14,6 +14,7 @@ struct point3d {
     point3d(float X, float Y, float Z);
 
     float magnitude() const;
+    float volume() const;
     point3d normalized() const;
     point3d cross(const point3d& other) const;
     point3d lerp(const point3d& other, float a);

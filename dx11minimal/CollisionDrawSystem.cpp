@@ -1,0 +1,83 @@
+#ifndef _DEBUG_COLLISION_DRAW_SYSTEM_
+#define _DEBUG_COLLISION_DRAW_SYSTEM_
+
+//////////////
+// INCLUDES //
+//////////////
+#include<cmath>
+#include "system.h"
+#include "Transform.cpp"
+
+#include "SphereCollider.cpp"
+#include "PlaneCollider.cpp"
+#include "SurfaceCollider.cpp"
+
+#include "cameraclass.h"
+
+
+class CollisionDrawSystem : public System
+{
+public:
+	CollisionDrawSystem()
+	{
+	}
+
+
+	void Initialize()
+	{
+	}
+
+
+	void Shutdown()
+	{
+	}
+
+
+	void Update(vector<Entity*>& entities, float deltaTime)
+	{
+		Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
+		Rasterizer::Cull(Rasterizer::cullmode::wireframe);
+		Depth::Depth(Depth::depthmode::readonly);
+
+		size_t size = entities.size();
+		for (int i = 0; i < size; i++)
+		{
+			Entity* entity = entities[i];
+			if (entity->IsActive())
+			{
+				Transform* transform = entity->GetComponent<Transform>();
+
+				if (transform != nullptr)
+				{
+					Transform worldTransform = GetWorldTransform(entity);
+
+					ConstBuf::global[0] = XMFLOAT4(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, worldTransform.scale.magnitude());
+					ConstBuf::Update(5, ConstBuf::global);
+					ConstBuf::ConstToVertex(5);
+
+					SphereCollider* sphereCollider = entity->GetComponent<SphereCollider>();
+					if (sphereCollider != nullptr) {
+						Shaders::vShader(18);
+						Shaders::pShader(18);
+
+						int n = 11;
+						ConstBuf::drawerV[0] = n;
+						Draw::Drawer(n * n);
+					}
+
+					/*PlaneCollider* planeCollider = entity->GetComponent<PlaneCollider>();
+					if (planeCollider != nullptr) {
+						Shaders::vShader(18);
+						Shaders::pShader(18);
+
+						int n = 11;
+						ConstBuf::drawerV[0] = n;
+						Draw::Drawer(n * n);
+					}*/
+				}
+			}
+		}
+	}
+};
+
+#endif

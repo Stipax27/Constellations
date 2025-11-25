@@ -1,4 +1,4 @@
-﻿#ifndef _BUTTON_C_
+#ifndef _BUTTON_C_
 #define _BUTTON_C_
 
 #include "component.h"

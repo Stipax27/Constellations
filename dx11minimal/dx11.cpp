@@ -560,6 +560,13 @@ void Models::LoadModelFromGltfFile(const char* filename)
 		else if (input == '}') {
 			openedBrackets--;
 		}
+		else {
+
+			if (input == '"') {
+
+			}
+
+		}
 
 		Shaders::Log(&input);
 	}
@@ -707,6 +714,9 @@ void Shaders::Init()
 	Shaders::CreateVS(17, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PointCloud_VS.shader"));
 	Shaders::CreatePS(17, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PointCloud_PS.shader"));
 	Shaders::CreateGS(17, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PointCloud_GS.shader"));
+
+	Shaders::CreateVS(18, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Sphere_VS.shader"));
+	Shaders::CreatePS(18, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Sphere_PS.shader"));
 	
 	//-----------------------------------------------
 	
@@ -1123,6 +1133,8 @@ void InputAssembler::IA(topology topoType)
 
 void Dx11Init(HWND hwnd, int width, int height)
 {
+	//LoadAssimpFunctions(0, 0);
+
 	Device::Init(hwnd, width, height);
 	Rasterizer::Init(width, height);
 	Depth::Init();
@@ -1163,7 +1175,7 @@ void Draw::NullDrawer(int quadCount, unsigned int instances = 1)
 	ConstBuf::Update(1, ConstBuf::drawerP);
 	ConstBuf::ConstToPixel(1);
 
-	context->DrawInstanced(quadCount * 50, instances, 0, 0);
+	context->DrawInstanced(quadCount * 6, instances, 0, 0);
 }
 
 void Draw::Drawer(int quadCount)

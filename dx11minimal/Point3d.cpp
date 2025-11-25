@@ -1,4 +1,4 @@
-﻿#include "Point3d.h"
+#include "Point3d.h"
 
 point3d::point3d() {
     x = 0;
@@ -14,6 +14,10 @@ float point3d::magnitude() const {
     float zz = isnan(z) ? 0.0f : z;
 
     return sqrt(xx * xx + yy * yy + zz * zz);
+}
+
+float point3d::volume() const {
+    return x * y * z;
 }
 
 point3d point3d::normalized() const {

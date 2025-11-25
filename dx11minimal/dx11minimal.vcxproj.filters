@@ -70,6 +70,9 @@
     <Filter Include="Shaders\Mesh">
       <UniqueIdentifier>{40b322f7-157e-4a73-a9c4-95c68d5acf7c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Debug">
+      <UniqueIdentifier>{23f45357-5fcd-4cd2-be7d-530625f77f7a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -136,6 +139,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MethodOfClosest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="assimp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -228,6 +234,9 @@
       <Filter>Source Files\Render</Filter>
     </ClCompile>
     <ClCompile Include="SpriteSystem.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionDrawSystem.cpp">
       <Filter>Source Files\Render</Filter>
     </ClCompile>
   </ItemGroup>
@@ -358,6 +367,12 @@
     </None>
     <None Include="Shaders\Mesh_Fit_PS.shader">
       <Filter>Shaders\Mesh</Filter>
+    </None>
+    <None Include="Shaders\Sphere_VS.shader">
+      <Filter>Shaders\Debug</Filter>
+    </None>
+    <None Include="Shaders\Sphere_PS.shader">
+      <Filter>Shaders\Debug</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

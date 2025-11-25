@@ -55,7 +55,7 @@ bool LevelManagerClass::Initialize()
 
 	Textures::LoadTexture("..\\dx11minimal\\Resourses\\Textures\\testTexture.tga");
 	Models::LoadModelFromTxtFile("..\\dx11minimal\\Resourses\\Models\\Cube.txt");
-	Models::LoadModelFromGltfFile("..\\dx11minimal\\Resourses\\Models\\Cube.gltf");
+	//Models::LoadModelFromGltfFile("..\\dx11minimal\\Resourses\\Models\\Cube.gltf");
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING START //
@@ -249,7 +249,9 @@ bool LevelManagerClass::Initialize()
 
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
+
 	m_World->AddRenderSystem<MeshSystem>();
+	//m_World->AddRenderSystem<CollisionDrawSystem>(); // DEBUG //
 	m_World->AddRenderSystem<SpriteSystem>();
 	m_World->AddRenderSystem<UISystem>();
 

@@ -21,6 +21,7 @@
 #pragma comment(lib, "xaudio2.lib")
 #pragma comment(lib, "d2d1.lib")
 
+#include "assimp.h"
 #include "utils.h"
 #include "timer.h"
 
