@@ -9,26 +9,33 @@ void SmallConstellation::Init(World* World, Entity* entity, Entity* target) {
 
 void SmallConstellation::Volley() {
 
-    point3d startPos = m_entity->GetComponent<Transform>()->position;
-    point3d targetPoint = m_target->GetComponent<Transform>()->position;
-    point3d distance = startPos - targetPoint;
+    for (int i = 0; i < m_entity->GetComponent<Constellation>()->stars.size(); i++) 
+    {
+        point3d startPos;
+        startPos.x = m_entity->GetComponent<Constellation>()->stars[i].x;
+        startPos.y = m_entity->GetComponent<Constellation>()->stars[i].y;
+        startPos.z = m_entity->GetComponent<Constellation>()->stars[i].z;
+        startPos += m_entity->GetComponent<Transform>()->position;
 
-    point3d direction = targetPoint - startPos;
-    direction = direction.normalized();  
+        point3d targetPoint = m_target->GetComponent<Transform>()->position;
+        point3d distance = startPos - targetPoint;
 
-    Entity* throwEntity = m_World->CreateEntity();
+        point3d direction = targetPoint - startPos;
+        direction = direction.normalized();
 
-    Projectile* projectile;
-    projectile = throwEntity->AddComponent<Projectile>();
-    projectile->velocity = direction;
-    projectile->speed = 50;
+        Entity* volleyEntity = m_World->CreateEntity();
 
-	Constellation* constellation;
-	constellation = throwEntity->AddComponent<Constellation>();
-	constellation->stars = m_entity->GetComponent<Constellation>()->stars;
+        Projectile* projectile;
+        projectile = volleyEntity->AddComponent<Projectile>();
+        projectile->velocity = direction;
+        projectile->speed = 50;
 
-    Transform* throwTransform = throwEntity->AddComponent<Transform>();
-    throwTransform->position = startPos;
+        Explosion* chargeExplosion = volleyEntity->AddComponent<Explosion>();
+        chargeExplosion->max_radius = 1.0f;
+
+        Transform* throwTransform = volleyEntity->AddComponent<Transform>();
+        throwTransform->position = startPos;
+    }
     
 }
 
