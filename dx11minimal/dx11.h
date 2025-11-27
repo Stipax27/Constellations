@@ -21,7 +21,6 @@
 #pragma comment(lib, "xaudio2.lib")
 #pragma comment(lib, "d2d1.lib")
 
-#include "assimp.h"
 #include "utils.h"
 #include "timer.h"
 
@@ -227,7 +226,7 @@ namespace ConstBuf
 
 	extern ID3D11Buffer* buffer[8];
 
-#define constCount 32
+#define constCount 256
 
 	//b0 - use "params" label in shader
 	extern float drawerV[constCount];//update per draw call

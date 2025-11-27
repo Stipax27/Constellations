@@ -9,8 +9,6 @@
 #include "Transform.cpp"
 #include "Mesh.cpp"
 
-#include "cameraclass.h"
-
 
 class MeshSystem : public System
 {

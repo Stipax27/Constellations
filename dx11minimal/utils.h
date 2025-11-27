@@ -7,6 +7,7 @@
 //////////////
 #include <corecrt_math.h>
 #include <DirectXMath.h>
+#include <d3d11.h>
 #include "Point3d.h"
 
 #include "entity.h"
@@ -32,5 +33,7 @@ DirectX::XMVECTOR eulerToQuanternion(float x, float y, float z);
 int getRandom(int min = 1, int max = 0);
 
 Transform GetWorldTransform(Entity*);
+
+bool IsKeyPressed(const int);
 
 #endif

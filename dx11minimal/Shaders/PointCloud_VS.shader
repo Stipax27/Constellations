@@ -1,11 +1,11 @@
 cbuffer drawerV : register(b0)
 {
-    float drawConst[32];
+    float drawConst[256];
 }
 
 cbuffer global : register(b5)
 {
-    float4 gConst[32];
+    float4 gConst[256];
 };
 
 cbuffer frame : register(b4)

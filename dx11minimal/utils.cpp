@@ -82,3 +82,7 @@ Transform GetWorldTransform(Entity* entity) {
 
     return worldTransform;
 }
+
+bool IsKeyPressed(const int Key) {
+    return GetAsyncKeyState(Key) & 0x8000;
+}

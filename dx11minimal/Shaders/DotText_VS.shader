@@ -1,6 +1,6 @@
 cbuffer global : register(b5)
 {
-    float4 gConst[32];
+    float4 gConst[256];
 };
 
 cbuffer frame : register(b4)
@@ -24,7 +24,7 @@ cbuffer drawMat : register(b2)
 
 cbuffer objParams : register(b0)
 {
-    float drawerV[32];
+    float drawerV[256];
 };
 
 
@@ -87,7 +87,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 
     float2 quad[6];
 
-    // Прямоугольник (2 треугольника)
+    // ????????????? (2 ????????????)
     quad[0] = A1;
     quad[1] = B1;
     quad[2] = B2;
@@ -96,10 +96,10 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     quad[4] = A2;
     quad[5] = A1;
 
-    float2 pos = quad[localV]; // позиция в "пикселях" или локальной системе
+    float2 pos = quad[localV]; // ??????? ? "????????" ??? ????????? ???????
 
-    float width = aspect.z;   // передай width в константный буфер
-    float height = aspect.w;  // и height
+    float width = aspect.z;   // ??????? width ? ??????????? ?????
+    float height = aspect.w;  // ? height
 
     float2 normalizedPos = float2(pos.x / width, pos.y / height) * 2.0f;
 

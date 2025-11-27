@@ -1,6 +1,6 @@
 cbuffer global : register(b5)
 {
-    float4 gConst[32];
+    float4 gConst[256];
 };
 
 cbuffer frame : register(b4)

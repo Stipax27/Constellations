@@ -198,19 +198,20 @@ bool LevelManagerClass::Initialize()
 
 	// MAIN MENU //
 	
-	/*entity = m_World->CreateEntity();
+	entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.1f, 0.0f);
 	transform->scale = point3d(0.25f, 0.05f, 0.0f);
 	rect = entity->AddComponent<Rect>();
 	rect->color = point3d(0.5f, 0.25f, 0.8f);
 	rect->opacity = 1.f;
-	rect->anchorPoint = point3d(0, 0, 0);
+	rect->anchorPoint = point3d(-1, 0, 0);
 	rect->ratio = ScreenAspectRatio::YY;
 	rect->cornerRadius = 0.25f;
 	rect->cornerType = CornerType::Strict;
+	entity->AddComponent<Button>();
 
-	entity = m_World->CreateEntity();
+	/*entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0.0f, -0.1f, 0.0f);
 	transform->scale = point3d(0.25f, 0.05f, 0.0f);
@@ -253,7 +254,7 @@ bool LevelManagerClass::Initialize()
 	m_World->AddRenderSystem<MeshSystem>();
 	//m_World->AddRenderSystem<CollisionDrawSystem>(); // DEBUG //
 	m_World->AddRenderSystem<SpriteSystem>();
-	m_World->AddRenderSystem<UISystem>();
+	m_World->AddRenderSystem<UISystem>(mouse);
 
 	//m_World->PreCalculations();
 

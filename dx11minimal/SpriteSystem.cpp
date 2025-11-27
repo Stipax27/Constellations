@@ -10,8 +10,6 @@
 #include "SpriteCluster.cpp"
 #include "Constellation.cpp"
 
-#include "cameraclass.h"
-
 
 class SpriteSystem : public System
 {

@@ -141,9 +141,6 @@
     <ClInclude Include="MethodOfClosest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="assimp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp">
@@ -218,9 +215,6 @@
     <ClCompile Include="TextLabel.cpp">
       <Filter>Source Files\Render\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Button.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>Source Files\Render</Filter>
     </ClCompile>
@@ -238,6 +232,9 @@
     </ClCompile>
     <ClCompile Include="CollisionDrawSystem.cpp">
       <Filter>Source Files\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Source Files\Render\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

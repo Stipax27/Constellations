@@ -72,12 +72,6 @@ void PlayerController::Shutdown()
 }
 
 
-bool PlayerController::IsKeyPressed(const int Key)
-{
-	return GetAsyncKeyState(Key) & 0x8000;
-}
-
-
 void PlayerController::ProcessInput()
 {
 	if (playerEntity != nullptr && playerEntity->IsActive()) {
@@ -139,8 +133,8 @@ void PlayerController::ProcessCamera()
 
 void PlayerController::ProcessMouse()
 {
-	float x = mouse->pos.x - window->width / 2;
-	float y = mouse->pos.y - window->height / 2;
+	float x = mouse->absolutePos.x - window->width / 2;
+	float y = mouse->absolutePos.y - window->height / 2;
 	point3d mousePos = point3d(x / window->width / window->aspect, y / window->height, 0);
 
 	switch (mouse->state)
@@ -153,8 +147,11 @@ void PlayerController::ProcessMouse()
 			if (length > CURSOR_IGNORE_ZONE) {
 				if (length > MAX_CURSOR_DEVIATION) {
 					mousePos = mousePos.normalized() * MAX_CURSOR_DEVIATION;
-					mouse->pos = point3d(mousePos.x * window->width * window->aspect + window->width / 2, mousePos.y * window->height + window->height / 2, 0);
-					SetCursorPos(mouse->pos.x, mouse->pos.y);
+
+					mouse->absolutePos = point3d(mousePos.x * window->width * window->aspect + window->width / 2, mousePos.y * window->height + window->height / 2, 0);
+					mouse->pos = point3d(mouse->absolutePos.x / window->width * 2 - 1, -(mouse->absolutePos.y / window->height * 2 - 1), 0.0f);
+
+					SetCursorPos(mouse->absolutePos.x, mouse->absolutePos.y);
 				}
 
 				float k = (length - CURSOR_IGNORE_ZONE) / MAX_CURSOR_DEVIATION;
@@ -185,8 +182,9 @@ void PlayerController::ProcessMouse()
 				for (int i = 0; i < 20; i++)
 				{
 					MouseParticle particle = MouseParticle();
-					particle.pos = mousePos;
-					particle.vel = point3d(getRandom(-100, 100), getRandom(-100, 100), 0).normalized() * point3d(window->aspect, 1, 0) * (float)getRandom(8, 30) / 100.0f * 0.002f;
+					particle.pos = mouse->pos;
+					particle.angle = (float)getRandom(0, 100) / 100.0f * PI * 2.0f;
+					//particle.vel = point3d(getRandom(-100, 100), getRandom(-100, 100), 0).normalized() * point3d(window->aspect, 1, 0) * (float)getRandom(8, 30) / 100.0f * 0.002f;
 					particle.lifetime = getRandom(500, 1500);
 					particle.startTime = timer::currentTime;
 

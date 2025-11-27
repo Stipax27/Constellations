@@ -1133,8 +1133,6 @@ void InputAssembler::IA(topology topoType)
 
 void Dx11Init(HWND hwnd, int width, int height)
 {
-	Assimp::LoadAssimpFunctions(0, 0);
-
 	Device::Init(hwnd, width, height);
 	Rasterizer::Init(width, height);
 	Depth::Init();

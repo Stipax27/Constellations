@@ -20,7 +20,7 @@ void MouseClass::Initialize(WindowClass* Window, CameraClass* Camera) {
 	window = Window;
 	camera = Camera;
 
-	state = MouseState::Centered;
+	state = MouseState::Free;
 }
 
 
@@ -43,7 +43,8 @@ void MouseClass::Update() {
 	GetCursorPos(&p);
 	ScreenToClient(window->hWnd, &p);
 
-	pos = { (float)p.x, (float)p.y, 0.f };
+	absolutePos = { (float)p.x, (float)p.y, 0.f };
+	pos = { absolutePos.x / window->width * 2 - 1, -(absolutePos.y / window->height * 2 - 1), 0.0f };
 }
 
 
@@ -52,8 +53,8 @@ point3d MouseClass::GetMouseRay() {
 	XMMATRIX proj = camera->GetProjectionMatrix();
 	//XMMATRIX proj = XMMatrixPerspectiveFovLH(DegreesToRadians(Camera::state.fovAngle), iaspect, 0.01f, 10000.0f);
 
-	float x = (2.0f * pos.x) / window->width - 1.0f;
-	float y = 1.0f - (2.0f * pos.y) / window->height;
+	float x = (2.0f * absolutePos.x) / window->width - 1.0f;
+	float y = 1.0f - (2.0f * absolutePos.y) / window->height;
 
 	XMVECTOR rayClip = XMVectorSet(x, y, 1.0f, 1.0f);
 
@@ -69,7 +70,7 @@ point3d MouseClass::GetMouseRay() {
 
 
 void MouseClass::RenderCursor() {
-	ConstBuf::global[0] = XMFLOAT4(pos.x / window->width * 2 - 1, -(pos.y / window->height * 2 - 1), 0.0f, 1.0f);
+	ConstBuf::global[0] = XMFLOAT4(pos.x, pos.y, 0.0f, 1.0f);
 	ConstBuf::Update(5, ConstBuf::global);
 	ConstBuf::ConstToVertex(5);
 
@@ -92,17 +93,12 @@ void MouseClass::RenderCursor() {
 
 		if (curTime - particle.startTime < particle.lifetime)
 		{
-			ConstBuf::global[0] = XMFLOAT4(particle.pos.x, particle.pos.y, 0.0f, 1 - (float)(curTime - particle.startTime) / (float)particle.lifetime);
+			if (i < constCount) {
+				ConstBuf::global[i] = XMFLOAT4(particle.pos.x, particle.pos.y, particle.angle, 1 - (float)(curTime - particle.startTime) / (float)particle.lifetime);
 
-			ConstBuf::Update(5, ConstBuf::global);
-			ConstBuf::ConstToVertex(5);
-			ConstBuf::Update(1, ConstBuf::drawerP);
-			ConstBuf::ConstToPixel(1);
-
-			context->Draw(6, 0);
-
-			particle.pos += particle.vel * 0.01f;
-			particle.vel *= 0.92f;
+				//particle.pos += particle.vel * 0.01f;
+				//particle.vel *= 0.92f;
+			}
 
 			i++;
 		}
@@ -110,5 +106,13 @@ void MouseClass::RenderCursor() {
 		{
 			particles.erase(particles.begin() + i);
 		}
+	}
+
+	ConstBuf::Update(5, ConstBuf::global);
+	ConstBuf::ConstToVertex(5);
+
+	size_t size = particles.size();
+	if (size > 0) {
+		context->DrawInstanced(6, min(size, constCount), 0, 0);
 	}
 }

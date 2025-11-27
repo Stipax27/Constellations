@@ -8,10 +8,11 @@
 #include "system.h"
 #include "Transform.cpp"
 #include "Rect.cpp"
+#include "Button.cpp"
 #include "TextLabel.cpp"
 //#include "font.h"
 
-#include "cameraclass.h"
+#include "mouseclass.h"
 
 ///////////////////////////////////////////////////////////////////
 
@@ -103,12 +104,9 @@
 class UISystem : public System
 {
 public:
-	UISystem()
+	UISystem(MouseClass* Mouse)
 	{
-		InputAssembler::IA(InputAssembler::topology::triList);
-		Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
-		Depth::Depth(Depth::depthmode::off);
-		Rasterizer::Cull(Rasterizer::cullmode::off);
+		mouse = Mouse;
 	}
 
 
@@ -119,6 +117,9 @@ public:
 
 	void Shutdown()
 	{
+		if (mouse) {
+			mouse = 0;
+		}
 	}
 
 
@@ -129,18 +130,44 @@ public:
 		Depth::Depth(Depth::depthmode::off);
 
 		size_t size = entities.size();
-		for (int i = 0; i < size; i++)
-		{
+		for (int i = 0; i < size; i++) {
 			Entity* entity = entities[i];
-			if (entity->IsActive())
-			{
+			if (entity->IsActive()) {
 				Transform* transform = entity->GetComponent<Transform>();
 
-				if (transform != nullptr)
-				{
+				if (transform != nullptr) {
 					Rect* rect = entity->GetComponent<Rect>();
-					if (rect != nullptr)
-					{
+					if (rect != nullptr) {
+						
+						Button* button = entity->GetComponent<Button>();
+						if (button != nullptr) {
+
+							point3d offset1 = -transform->scale * (rect->anchorPoint + 1) / 2;
+							point3d offset2 = point3d(0.5f, 0.5f, 0.0f) + transform->scale * ((rect->anchorPoint - 1) / 2);
+
+							/*if (transform->position - (transform->scale / 2) * (rect->anchorPoint + 1) <= mouse->pos.x <= transform->position + (transform->scale / 2) * (rect->anchorPoint - 1)) {
+								if (IsKeyPressed(VK_LBUTTON)) {
+									rect->color = point3d(1, 0, 0);
+								}
+							}
+							else {
+								if (IsKeyPressed(VK_LBUTTON)) {
+									rect->color = point3d(0.5f, 0.25f, 0.8f);
+								}
+							}*/
+
+							if (mouse->pos.x <= transform->position.x + (transform->scale.x / 2) * (rect->anchorPoint.x - 1)) {
+								if (IsKeyPressed(VK_LBUTTON)) {
+									rect->color = point3d(1, 0, 0);
+								}
+							}
+							else {
+								if (IsKeyPressed(VK_LBUTTON)) {
+									rect->color = point3d(0.5f, 0.25f, 0.8f);
+								}
+							}
+						}
+
 						Shaders::vShader(13);
 						Shaders::pShader(13 + (int)rect->cornerType);
 
@@ -173,8 +200,7 @@ public:
 					}
 
 					//TextLabel* textLabel = entity->GetComponent<TextLabel>();
-					//if (textLabel != nullptr)
-					//{
+					//if (textLabel != nullptr) {
 					//	point3d pos = transform->position;
 					//	const char* str = textLabel->text.c_str();
 
@@ -232,6 +258,9 @@ public:
 			}
 		}
 	}
+
+private:
+	MouseClass* mouse;
 };
 
 #endif

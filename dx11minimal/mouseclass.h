@@ -1,4 +1,4 @@
-﻿#ifndef _MOUSECLASS_H_
+#ifndef _MOUSECLASS_H_
 #define _MOUSECLASS_H_
 
 
@@ -25,7 +25,7 @@ enum MouseState {
 /////////////
 struct MouseParticle {
 	point3d pos;
-	point3d vel;
+	float angle;
 	DWORD startTime;
 	DWORD lifetime;
 };
@@ -38,7 +38,7 @@ class MouseClass
 {
 public:
 	point3d pos;
-	point3d oldPos;
+	point3d absolutePos;
 	point3d worldPos;
 	MouseState state;
 

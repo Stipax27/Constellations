@@ -11,7 +11,7 @@ cbuffer factors : register(b6)
 
 cbuffer global : register(b5)
 {
-    float4 gConst[32];
+    float4 gConst[256];
 };
 
 cbuffer frame : register(b4)
@@ -35,7 +35,7 @@ cbuffer drawMat : register(b2)
 
 cbuffer objParams : register(b0)
 {
-    float drawerV[32];
+    float drawerV[256];
 };
 
 #define PI 3.1415926535897932384626433832795
@@ -78,8 +78,6 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 {
     VS_OUTPUT output;
 
-    uint vertexInQuad = vID % 6;
-
     float2 quadPos[6] = {
         float2(-1, -1), float2(1, -1), float2(-1, 1),
         float2(1, -1), float2(1, 1), float2(-1, 1)
@@ -115,9 +113,9 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     float4 viewPos = mul(float4(starPos, 1.0f), view);
     float4 projPos = mul(viewPos, proj);
     //projPos.xy /= max(projPos.w, 0);
-    projPos.xy += quadPos[vertexInQuad] * float2(aspect.x, 1) * size;
+    projPos.xy += quadPos[vID] * float2(aspect.x, 1) * size;
 
-    output.uv = quadPos[vertexInQuad];
+    output.uv = quadPos[vID];
     output.pos = projPos;
     output.starID = iID;
     output.worldpos = float4(starPos, 1);

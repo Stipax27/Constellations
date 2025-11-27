@@ -1,4 +1,4 @@
-﻿#ifndef _RECT_C_
+#ifndef _RECT_C_
 #define _RECT_C_
 
 #include "component.h"
@@ -25,8 +25,6 @@ struct Rect : Component
 
 	float cornerRadius = 0.0f;
 	CornerType cornerType = CornerType::Strict;
-
-	bool clickable = false;
 };
 
 #endif

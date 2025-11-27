@@ -1,6 +1,6 @@
 cbuffer global : register(b5)
 {
-    float4 gConst[32];
+    float4 gConst[256];
 };
 
 cbuffer frame : register(b4)
@@ -24,7 +24,7 @@ cbuffer drawMat : register(b2)
 
 cbuffer objParams : register(b0)
 {
-    float drawerV[32];
+    float drawerV[256];
 };
 
 #define PI 3.1415926535897932384626433832795

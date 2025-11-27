@@ -6,7 +6,7 @@
 
 struct Button : Component
 {
-	
+	bool isClicked = false;
 };
 
 #endif
