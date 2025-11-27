@@ -56,9 +56,26 @@ public:
 				Projectile* projectile = entity->GetComponent<Projectile>();
 				if (transform != nullptr && projectile != nullptr)
 				{
-					transform->position += projectile->velocity * deltaTime * projectile->speed;
-				}
+					projectile->time += deltaTime;
 
+					float distanceTraveled = projectile->speed * projectile->time;
+
+					if (projectile->spiralMovement)
+					{
+						float angleTraveled = projectile->time * projectile->spiralSpeed;
+						float localX = cos(angleTraveled) * projectile->spiralRadius;
+						float localY = sin(angleTraveled) * projectile->spiralRadius;
+
+						transform->position = projectile->startPosition +
+							projectile->direction * distanceTraveled +
+							(projectile->spiralVector1 * localX +
+								projectile->spiralVector2 * localY);
+					}
+					else
+					{
+						transform->position += projectile->direction * projectile->speed * deltaTime;
+					}
+				}
 			}
 		}
 

@@ -379,7 +379,7 @@ bool LevelManagerClass::Frame()
 		smallConstellation->LastTime = currentTime;
 
 		int attackType = rand() % 2;
-
+		
 		switch (attackType) {
 		case 0:
 			smallConstellation->Volley();

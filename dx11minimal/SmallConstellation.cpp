@@ -27,16 +27,35 @@ void SmallConstellation::Volley() {
 
         Projectile* projectile;
         projectile = volleyEntity->AddComponent<Projectile>();
-        projectile->velocity = direction;
-        projectile->speed = 50;
+        projectile->direction = direction;
+        float speed = 50;
+        projectile->speed = speed + ((rand() % 50 - 25) / 100.0f * speed);;
+        projectile->startPosition = startPos;
+
+        projectile->spiralMovement = true;
+       
+        float spiralSpeed = 12.46f;
+        projectile->spiralSpeed = spiralSpeed + ((rand() % 50 - 25) / 100.0f * spiralSpeed);
+        projectile->startPosition = startPos;
+        float spiralRadius = 4.0f;
+        projectile->spiralRadius = spiralRadius + ((rand() % 50 - 25) / 100.0f * spiralRadius);
+
+        point3d temporaryVector;
+        if (fabs(direction.y) < 0.9f) temporaryVector = point3d(0, 1, 0);
+        else temporaryVector = point3d(1, 0, 0);
+        point3d spiralVector1 = temporaryVector.cross(direction);
+        spiralVector1.normalized();
+        projectile->spiralVector1 = spiralVector1;
+        point3d spiralVector2 = spiralVector1.cross(direction);
+        spiralVector2.normalized();
+        projectile->spiralVector2 = spiralVector2;
 
         Explosion* chargeExplosion = volleyEntity->AddComponent<Explosion>();
         chargeExplosion->max_radius = 1.0f;
 
         Transform* throwTransform = volleyEntity->AddComponent<Transform>();
         throwTransform->position = startPos;
-    }
-    
+    }   
 }
 
 void SmallConstellation::Lattice() {
@@ -52,8 +71,8 @@ void SmallConstellation::Lattice() {
 
     Projectile* projectile;
     projectile = latticeEntity->AddComponent<Projectile>();
-    projectile->velocity = direction;
-    projectile->speed = 50;
+    projectile->direction = direction;
+    projectile->speed = 40;
 
     Constellation* constellation;
     constellation = latticeEntity->AddComponent<Constellation>();
@@ -104,5 +123,4 @@ void SmallConstellation::Lattice() {
 
     latticeTransform->qRotation = DirectX::XMQuaternionMultiply(latticeTransform->qRotation, quaternionRotation);
     latticeTransform->mRotation = DirectX::XMMatrixRotationQuaternion(latticeTransform->qRotation);
-
 }
