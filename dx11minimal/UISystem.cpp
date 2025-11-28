@@ -142,8 +142,8 @@ public:
 						Button* button = entity->GetComponent<Button>();
 						if (button != nullptr) {
 
-							point3d offset1 = -transform->scale * (rect->anchorPoint + 1) / 2;
-							point3d offset2 = point3d(0.5f, 0.5f, 0.0f) + transform->scale * ((rect->anchorPoint - 1) / 2);
+							point3d halfSize = transform->scale / 2;
+							point3d realPos = transform->position - rect->anchorPoint * halfSize;
 
 							/*if (transform->position - (transform->scale / 2) * (rect->anchorPoint + 1) <= mouse->pos.x <= transform->position + (transform->scale / 2) * (rect->anchorPoint - 1)) {
 								if (IsKeyPressed(VK_LBUTTON)) {
@@ -156,7 +156,7 @@ public:
 								}
 							}*/
 
-							if (mouse->pos.x <= transform->position.x + (transform->scale.x / 2) * (rect->anchorPoint.x - 1)) {
+							if (mouse->pos.x <= realPos.x + transform->scale.x && mouse->pos.x >= realPos.x - transform->scale.x && mouse->pos.y <= realPos.y + transform->scale.y && mouse->pos.y >= realPos.y - transform->scale.y) {
 								if (IsKeyPressed(VK_LBUTTON)) {
 									rect->color = point3d(1, 0, 0);
 								}

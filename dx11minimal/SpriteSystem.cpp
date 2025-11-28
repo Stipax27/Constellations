@@ -59,7 +59,9 @@ public:
 
 						point3d transformPos = transform->position;
 						vector<point3d> transformedStars;
+						int count;
 
+						ConstBuf::global[constCount - 1] = XMFLOAT4(1, 1, 1, 1);
 
 						////debug point
 						//Shaders::vShader(1);
@@ -87,33 +89,44 @@ public:
 						Shaders::vShader(4);
 						Shaders::pShader(4);
 
-						for (int a = 0; a < constellation->links.size() && a < constCount / 2 - 1; a++) {
+						count = 0;
+						for (int a = 0; a < constellation->links.size() && count < constCount / 2 - 1; a++) {
 							pair<int, int> link = constellation->links[a];
 							point3d point1 = transformedStars[link.first];
 							point3d point2 = transformedStars[link.second];
 
-							ConstBuf::global[a * 2] = XMFLOAT4(point1.x, point1.y, point1.z, 0.25f);
-							ConstBuf::global[a * 2 + 1] = XMFLOAT4(point2.x, point2.y, point2.z, 0.25f);
+							if (frustum->CheckSphere(point1.lerp(point2, 0.5f), max((point1 - point2).magnitude(), 0.25f))) {
+								ConstBuf::global[count * 2] = XMFLOAT4(point1.x, point1.y, point1.z, 0.25f);
+								ConstBuf::global[count * 2 + 1] = XMFLOAT4(point2.x, point2.y, point2.z, 0.25f);
+								count++;
+							}
 						}
 
-						ConstBuf::global[constCount - 1] = XMFLOAT4(1, 1, 1, 1);
-						ConstBuf::Update(5, ConstBuf::global);
-						ConstBuf::ConstToVertex(5);
+						if (count > 0) {
+							ConstBuf::Update(5, ConstBuf::global);
+							ConstBuf::ConstToVertex(5);
 
-						context->DrawInstanced(6, min(constellation->links.size(), constCount / 2 - 1), 0, 0);
+							context->DrawInstanced(6, min(count, constCount / 2 - 1), 0, 0);
+						}
 
 						Shaders::vShader(1);
 						Shaders::pShader(1);
 
-						for (int a = 0; a < transformedStars.size() && a < constCount - 1; a++) {
+						count = 0;
+						for (int a = 0; a < transformedStars.size() && count < constCount - 1; a++) {
 							point3d star = transformedStars[a];
-							ConstBuf::global[a] = XMFLOAT4(star.x, star.y, star.z, transform->scale.x);
+							if (frustum->CheckSphere(star, transform->scale.x)) {
+								ConstBuf::global[count] = XMFLOAT4(star.x, star.y, star.z, transform->scale.x);
+								count++;
+							}
 						}
 
-						ConstBuf::Update(5, ConstBuf::global);
-						ConstBuf::ConstToVertex(5);
+						if (count > 0) {
+							ConstBuf::Update(5, ConstBuf::global);
+							ConstBuf::ConstToVertex(5);
 
-						context->DrawInstanced(6, min(transformedStars.size(), constCount - 1), 0, 0);
+							context->DrawInstanced(6, min(count, constCount - 1), 0, 0);
+						}
 					}
 				}
 

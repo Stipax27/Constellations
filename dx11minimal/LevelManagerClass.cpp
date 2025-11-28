@@ -205,7 +205,7 @@ bool LevelManagerClass::Initialize()
 	rect = entity->AddComponent<Rect>();
 	rect->color = point3d(0.5f, 0.25f, 0.8f);
 	rect->opacity = 1.f;
-	rect->anchorPoint = point3d(-1, 0, 0);
+	//rect->anchorPoint = point3d(-1, 0, 0);
 	rect->ratio = ScreenAspectRatio::YY;
 	rect->cornerRadius = 0.25f;
 	rect->cornerType = CornerType::Strict;

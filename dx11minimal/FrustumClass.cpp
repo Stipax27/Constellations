@@ -120,8 +120,6 @@ void FrustumClass::ConstructFrustum(XMMATRIX viewMatrix, XMMATRIX projectionMatr
     planes[5].y /= t;
     planes[5].z /= t;
     planes[5].w /= t;
-
-    return;
 }
 
 
