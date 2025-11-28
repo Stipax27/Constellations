@@ -16,6 +16,8 @@ CameraClass::~CameraClass()
 
 void CameraClass::Initialize(float iAspect)
 {
+	frustum = new FrustumClass;
+
 	position = point3d();
 	rotationMatrix = XMMatrixIdentity();
 
@@ -121,25 +123,27 @@ void CameraClass::Render()
 	lookAtVector = XMVectorAdd(positionVector, lookAtVector);
 
 	// Finally create the view matrix from the three updated vectors.
-	m_viewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
+	viewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
 
-	ConstBuf::camera.view = XMMatrixTranspose(m_viewMatrix);
+	ConstBuf::camera.view = XMMatrixTranspose(viewMatrix);
 
 	ConstBuf::UpdateCamera();
 	ConstBuf::ConstToVertex(3);
 	ConstBuf::ConstToPixel(3);
+
+	frustum->ConstructFrustum(viewMatrix, projectionMatrix, 10000.0f);
 }
 
 
 XMMATRIX CameraClass::GetViewMatrix()
 {
-	return m_viewMatrix;
+	return viewMatrix;
 }
 
 
 XMMATRIX CameraClass::GetProjectionMatrix()
 {
-	return m_projectionMatrix;
+	return projectionMatrix;
 }
 
 
@@ -151,12 +155,12 @@ float CameraClass::GetFov()
 
 void CameraClass::UpdateProjectionMatrix()
 {
-	m_projectionMatrix = XMMatrixPerspectiveFovLH(
+	projectionMatrix = XMMatrixPerspectiveFovLH(
 		degreesToRadians(fov),
 		iaspect,
 		0.1f,
 		10000.0f
 	);
 
-	ConstBuf::camera.proj = XMMatrixTranspose(m_projectionMatrix);
+	ConstBuf::camera.proj = XMMatrixTranspose(projectionMatrix);
 }

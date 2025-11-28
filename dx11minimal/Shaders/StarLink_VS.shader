@@ -47,12 +47,12 @@ float3 rotZ(float3 pos, float a)
     return pos;
 }
 
-VS_OUTPUT VS(uint vID : SV_VertexID)
+VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 {
     VS_OUTPUT output;
 
-    float4 p1 = gConst[0];
-    float4 p2 = gConst[1];
+    float4 p1 = gConst[iID * 2];
+    float4 p2 = gConst[iID * 2 + 1];
 
     float4 pointsProj[] = {
         mul(mul(float4(p1.xyz, 1.0f), view), proj),
@@ -67,12 +67,13 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
         float2(1, -1), float2(-1, 1), float2(1, 1)
     };
 
-    float4 pos = gConst[vID % 2];
+    float4 poses[2] = {p1, p2};
+    float4 pos = poses[vID % 2];
 
     float4 viewPos = mul(float4(pos.xyz, 1.0f), view);
     float4 projPos = mul(viewPos, proj);
 
-    projPos.xy += perpendicular * quadUV[vID].y * gConst[0].w * float2(aspect.x, 1);
+    projPos.xy += perpendicular * quadUV[vID].y * pos.w * float2(aspect.x, 1);
 
     output.uv = quadUV[vID];
     output.pos = projPos;

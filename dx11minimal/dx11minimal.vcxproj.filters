@@ -141,6 +141,9 @@
     <ClInclude Include="MethodOfClosest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="frustumclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp">
@@ -235,6 +238,9 @@
     </ClCompile>
     <ClCompile Include="Button.cpp">
       <Filter>Source Files\Render\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="FrustumClass.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

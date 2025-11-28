@@ -1,0 +1,36 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: frustumclass.h
+////////////////////////////////////////////////////////////////////////////////
+#ifndef _FRUSTUMCLASS_H_
+#define _FRUSTUMCLASS_H_
+
+
+//////////////
+// INCLUDES //
+//////////////
+#include "dx11.h"
+#include "Point3d.h"
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: FrustumClass
+////////////////////////////////////////////////////////////////////////////////
+class FrustumClass
+{
+public:
+    FrustumClass();
+    FrustumClass(const FrustumClass&);
+    ~FrustumClass();
+
+    void ConstructFrustum(XMMATRIX, XMMATRIX, float);
+
+    bool CheckPoint(point3d);
+    bool CheckCube(point3d, float);
+    bool CheckSphere(point3d, float);
+    bool CheckRectangle(point3d, point3d);
+
+private:
+    XMFLOAT4 planes[6];
+};
+
+#endif

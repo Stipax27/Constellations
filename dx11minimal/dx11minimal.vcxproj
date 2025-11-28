@@ -169,6 +169,7 @@
     <ClInclude Include="Font_OLD.h" />
     <ClInclude Include="FpsCounter.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="frustumclass.h" />
     <ClInclude Include="LevelManagerClass.h" />
     <ClInclude Include="MethodOfClosest.h" />
     <ClInclude Include="mouseclass.h" />
@@ -335,6 +336,7 @@
     <ClCompile Include="dx11.cpp" />
     <ClCompile Include="dx11minimal.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="FrustumClass.cpp" />
     <ClCompile Include="LevelManagerClass.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshSystem.cpp" />

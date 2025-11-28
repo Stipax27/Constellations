@@ -9,12 +9,16 @@
 #include "dx11.h"
 #include "Point3d.h"
 
+#include "frustumclass.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: CameraClass
 ////////////////////////////////////////////////////////////////////////////////
 class CameraClass
 {
+public:
+	FrustumClass* frustum;
+
 public:
 	CameraClass();
 	CameraClass(const CameraClass&);
@@ -44,8 +48,8 @@ private:
 	float fov;
 	float iaspect;
 
-	XMMATRIX m_viewMatrix;
-	XMMATRIX m_projectionMatrix;
+	XMMATRIX viewMatrix;
+	XMMATRIX projectionMatrix;
 
 private:
 	void UpdateProjectionMatrix();

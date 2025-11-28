@@ -20,7 +20,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
 {
     float y = input.uv.y;
     float c = saturate(1 - sqrt(sqrt(abs(y))));
-    float4 color = gConst[2] * c;
+    float4 color = gConst[255] * c;
 
     return color;
 }

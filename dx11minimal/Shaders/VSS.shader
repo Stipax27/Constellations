@@ -35,11 +35,12 @@ struct VS_OUTPUT
     float4 worldpos : POSITION1;
 };
 
-VS_OUTPUT VS(uint vID : SV_VertexID)
+VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 {
     VS_OUTPUT output;
-    float sz = gConst[0].w;
-    float4 pos = float4(gConst[0].xyz, 1);
+
+    float4 pos = float4(gConst[iID].xyz, 1);
+    float sz = gConst[iID].w;
 
     float2 quadUV[6] = {
         float2(-1, -1), float2(1, -1), float2(-1, 1),

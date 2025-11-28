@@ -10,12 +10,15 @@
 #include "SpriteCluster.cpp"
 #include "Constellation.cpp"
 
+#include "frustumclass.h"
+
 
 class SpriteSystem : public System
 {
 public:
-	SpriteSystem()
+	SpriteSystem(FrustumClass* Frustum)
 	{
+		frustum = Frustum;
 	}
 
 
@@ -74,14 +77,6 @@ public:
 
 						//Draw::Drawer(1);
 
-
-						Shaders::vShader(4);
-						Shaders::pShader(4);
-
-						ConstBuf::global[2] = XMFLOAT4(1, 1, 1, 1);
-						ConstBuf::Update(5, ConstBuf::global);
-						ConstBuf::ConstToPixel(5);
-
 						for (int a = 0; a < constellation->stars.size(); a++) {
 							point3d star = constellation->stars[a];
 							star = transformPos + transform->GetLookVector() * star.z + transform->GetRightVector() * star.x + transform->GetUpVector() * star.y;
@@ -89,31 +84,36 @@ public:
 							transformedStars.push_back(star);
 						}
 
-						for (int a = 0; a < constellation->links.size(); a++) {
+						Shaders::vShader(4);
+						Shaders::pShader(4);
+
+						for (int a = 0; a < constellation->links.size() && a < constCount / 2 - 1; a++) {
 							pair<int, int> link = constellation->links[a];
 							point3d point1 = transformedStars[link.first];
 							point3d point2 = transformedStars[link.second];
 
-							ConstBuf::global[0] = XMFLOAT4(point1.x, point1.y, point1.z, 0.25);
-							ConstBuf::global[1] = XMFLOAT4(point2.x, point2.y, point2.z, 0.25);
-							ConstBuf::Update(5, ConstBuf::global);
-							ConstBuf::ConstToVertex(5);
-
-							Draw::Drawer(1);
+							ConstBuf::global[a * 2] = XMFLOAT4(point1.x, point1.y, point1.z, 0.25f);
+							ConstBuf::global[a * 2 + 1] = XMFLOAT4(point2.x, point2.y, point2.z, 0.25f);
 						}
+
+						ConstBuf::global[constCount - 1] = XMFLOAT4(1, 1, 1, 1);
+						ConstBuf::Update(5, ConstBuf::global);
+						ConstBuf::ConstToVertex(5);
+
+						context->DrawInstanced(6, min(constellation->links.size(), constCount / 2 - 1), 0, 0);
 
 						Shaders::vShader(1);
 						Shaders::pShader(1);
 
-						for (int a = 0; a < transformedStars.size(); a++) {
+						for (int a = 0; a < transformedStars.size() && a < constCount - 1; a++) {
 							point3d star = transformedStars[a];
-
-							ConstBuf::global[0] = XMFLOAT4(star.x, star.y, star.z, transform->scale.x);
-							ConstBuf::Update(5, ConstBuf::global);
-							ConstBuf::ConstToVertex(5);
-
-							Draw::Drawer(1);
+							ConstBuf::global[a] = XMFLOAT4(star.x, star.y, star.z, transform->scale.x);
 						}
+
+						ConstBuf::Update(5, ConstBuf::global);
+						ConstBuf::ConstToVertex(5);
+
+						context->DrawInstanced(6, min(transformedStars.size(), constCount - 1), 0, 0);
 					}
 				}
 
@@ -130,6 +130,10 @@ public:
 
 					if (transform != nullptr)
 					{
+						/*if (!frustum->CheckSphere(transform->position, transform->scale.x)) {
+							continue;
+						}*/
+
 						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
 						ConstBuf::Update(5, ConstBuf::global);
 						ConstBuf::ConstToVertex(5);
@@ -141,6 +145,9 @@ public:
 			}
 		}
 	}
+
+private:
+	FrustumClass* frustum;
 };
 
 #endif

@@ -9,12 +9,15 @@
 #include "Transform.cpp"
 #include "Mesh.cpp"
 
+#include "frustumclass.h"
+
 
 class MeshSystem : public System
 {
 public:
-	MeshSystem()
+	MeshSystem(FrustumClass* Frustum)
 	{
+		frustum = Frustum;
 	}
 
 
@@ -50,38 +53,44 @@ public:
 				{
 					Mesh* mesh = entity->GetComponent<Mesh>();
 					if (mesh != nullptr) {
-						ConstBuf::CreateVertexBuffer(15);
+						Transform worldTransform = GetWorldTransform(entity);
 
 						if (entity->parent != nullptr && !entity->parent->HasComponent<Transform>()) {
 							transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), -2 * RAD) * transform->mRotation;
 						}
 
-						Transform worldTransform = GetWorldTransform(entity);
+						if (frustum->CheckSphere(worldTransform.position, worldTransform.scale.magnitude())) {
+							ConstBuf::CreateVertexBuffer(15);
 
-						XMMATRIX rotateMatrix = worldTransform.mRotation;
-						XMMATRIX scaleMatrix = XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z);
-						XMMATRIX translateMatrix = XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z);
+							XMMATRIX rotateMatrix = worldTransform.mRotation;
+							XMMATRIX scaleMatrix = XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z);
+							XMMATRIX translateMatrix = XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z);
 
-						// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
-						XMMATRIX srMatrix = scaleMatrix * rotateMatrix;
-						XMMATRIX worldMatrix = srMatrix * translateMatrix;
+							// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
+							XMMATRIX srMatrix = scaleMatrix * rotateMatrix;
+							XMMATRIX worldMatrix = srMatrix * translateMatrix;
 
-						ConstBuf::camera.world = XMMatrixTranspose(worldMatrix);
-						ConstBuf::UpdateCamera();
+							ConstBuf::camera.world = XMMatrixTranspose(worldMatrix);
+							ConstBuf::UpdateCamera();
 
-						ConstBuf::ConstToVertex(5);
+							ConstBuf::ConstToVertex(5);
 
-						Rasterizer::Cull(mesh->cullMode);
+							Rasterizer::Cull(mesh->cullMode);
 
-						Shaders::vShader(15);
-						Shaders::pShader(15);
-						InputAssembler::IA(InputAssembler::topology::triList);
-						context->DrawIndexed(36, 0, 0);
+							Shaders::vShader(15);
+							Shaders::pShader(15);
+							InputAssembler::IA(InputAssembler::topology::triList);
+							context->DrawIndexed(36, 0, 0);
+						}
+
 					}
 				}
 			}
 		}
 	}
+
+private:
+	FrustumClass* frustum;
 };
 
 #endif
