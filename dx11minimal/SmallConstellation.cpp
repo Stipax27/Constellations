@@ -37,8 +37,10 @@ void SmallConstellation::Volley() {
         float spiralSpeed = 12.46f;
         projectile->spiralSpeed = spiralSpeed + ((rand() % 50 - 25) / 100.0f * spiralSpeed);
         projectile->startPosition = startPos;
-        float spiralRadius = 4.0f;
+        float spiralRadius = 0.0f;
         projectile->spiralRadius = spiralRadius + ((rand() % 50 - 25) / 100.0f * spiralRadius);
+        float radiusIncreaseSpeed = 2.5f;
+        projectile->radiusIncreaseSpeed = radiusIncreaseSpeed + ((rand() % 50 - 25) / 100.0f * radiusIncreaseSpeed);
 
         point3d temporaryVector;
         if (fabs(direction.y) < 0.9f) temporaryVector = point3d(0, 1, 0);

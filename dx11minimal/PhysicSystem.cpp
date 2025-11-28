@@ -70,6 +70,8 @@ public:
 							projectile->direction * distanceTraveled +
 							(projectile->spiralVector1 * localX +
 								projectile->spiralVector2 * localY);
+
+						projectile->spiralRadius += projectile->radiusIncreaseSpeed * deltaTime;
 					}
 					else
 					{

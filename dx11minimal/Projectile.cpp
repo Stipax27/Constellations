@@ -9,6 +9,7 @@ struct Projectile : Component
 {
 	float speed = 10.0f;
     float time = 0.0f;
+    float radiusIncreaseSpeed = 0.0f;
 
     bool spiralMovement = false;
     float spiralRadius = 0.0f;
