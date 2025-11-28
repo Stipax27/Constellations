@@ -172,6 +172,30 @@ bool LevelManagerClass::Initialize()
 	transform->scale = point3d(1.0f, 5.0f, 1.0f);
 	mesh = entity->AddComponent<Mesh>();
 
+	entity = m_World->CreateEntity("Cube", holder);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(-5.0f, 10.0f, 0.0f);
+	transform->scale = point3d(4.0f, 1.0f, 1.0f);
+	mesh = entity->AddComponent<Mesh>();
+
+	entity = m_World->CreateEntity("Cube", holder);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(5.0f, -10.0f, 0.0f);
+	transform->scale = point3d(4.0f, 1.0f, 1.0f);
+	mesh = entity->AddComponent<Mesh>();
+
+	entity = m_World->CreateEntity("Cube", holder);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(-10.0f, -5.0f, 0.0f);
+	transform->scale = point3d(1.0f, 4.0f, 1.0f);
+	mesh = entity->AddComponent<Mesh>();
+
+	entity = m_World->CreateEntity("Cube", holder);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(10.0f, 5.0f, 0.0f);
+	transform->scale = point3d(1.0f, 4.0f, 1.0f);
+	mesh = entity->AddComponent<Mesh>();
+
 	/////////////////////////
 
 	entity = m_World->CreateEntity("Enemy", folder);
@@ -198,18 +222,18 @@ bool LevelManagerClass::Initialize()
 
 	// MAIN MENU //
 	
-	entity = m_World->CreateEntity();
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0.0f, 0.1f, 0.0f);
-	transform->scale = point3d(0.25f, 0.05f, 0.0f);
-	rect = entity->AddComponent<Rect>();
-	rect->color = point3d(0.5f, 0.25f, 0.8f);
-	rect->opacity = 1.f;
-	//rect->anchorPoint = point3d(-1, 0, 0);
-	rect->ratio = ScreenAspectRatio::YY;
-	rect->cornerRadius = 0.25f;
-	rect->cornerType = CornerType::Strict;
-	entity->AddComponent<Button>();
+	//entity = m_World->CreateEntity();
+	//transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(0.0f, 0.1f, 0.0f);
+	//transform->scale = point3d(0.25f, 0.05f, 0.0f);
+	//rect = entity->AddComponent<Rect>();
+	//rect->color = point3d(0.5f, 0.25f, 0.8f);
+	//rect->opacity = 1.f;
+	////rect->anchorPoint = point3d(-1, 0, 0);
+	//rect->ratio = ScreenAspectRatio::YY;
+	//rect->cornerRadius = 0.25f;
+	//rect->cornerType = CornerType::Strict;
+	//entity->AddComponent<Button>();
 
 	/*entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
