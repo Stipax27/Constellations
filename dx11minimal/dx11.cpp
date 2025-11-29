@@ -727,6 +727,11 @@ void Shaders::Init()
 	
 	Shaders::CreatePS(200, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PerlinNoise.shader"));
 	Shaders::CreatePS(201, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VoronoiNoise.shader"));
+
+	//-----------------------------------------------
+
+	ConstBuf::CreateVertexBuffer(15);
+	ConstBuf::CreateVertexBuffer(17);
 }
 
 void Shaders::vShader(unsigned int n)

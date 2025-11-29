@@ -345,6 +345,7 @@
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Point3d.cpp" />
     <ClCompile Include="Point4d.cpp" />
+    <ClCompile Include="PointCloud.cpp" />
     <ClCompile Include="Rect.cpp" />
     <ClCompile Include="SpriteCluster.cpp" />
     <ClCompile Include="PhysicBody.cpp" />

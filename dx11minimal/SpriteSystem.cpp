@@ -9,6 +9,7 @@
 #include "Transform.cpp"
 #include "SpriteCluster.cpp"
 #include "Constellation.cpp"
+#include "PointCloud.cpp"
 
 #include "frustumclass.h"
 
@@ -131,8 +132,7 @@ public:
 				}
 
 				SpriteCluster* spriteCluster = entity->GetComponent<SpriteCluster>();
-				if (spriteCluster != nullptr)
-				{
+				if (spriteCluster != nullptr) {
 					ConstBuf::drawerV[0] = entity->timeScale;
 					ConstBuf::Update(0, ConstBuf::drawerV);
 					ConstBuf::ConstToVertex(0);
@@ -154,6 +154,11 @@ public:
 					}
 
 					context->DrawInstanced(6, spriteCluster->pointsNum, 0, 0);
+				}
+
+				PointCloud* pointCloud = entity->GetComponent<PointCloud>();
+				if (pointCloud != nullptr) {
+
 				}
 			}
 		}

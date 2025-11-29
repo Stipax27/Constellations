@@ -60,7 +60,7 @@ public:
 						}*/
 
 						if (frustum->CheckSphere(worldTransform.position, worldTransform.scale.magnitude())) {
-							ConstBuf::CreateVertexBuffer(15);
+							//ConstBuf::CreateVertexBuffer(15);
 
 							XMMATRIX rotateMatrix = worldTransform.mRotation;
 							XMMATRIX scaleMatrix = XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z);
