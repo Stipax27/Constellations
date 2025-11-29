@@ -124,7 +124,7 @@ bool LevelManagerClass::Initialize()
 	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -180 * RAD) * transform->mRotation;
 	mesh = holder->AddComponent<Mesh>();
 
-	entity = m_World->CreateEntity("Cube", holder);
+	/*entity = m_World->CreateEntity("Cube", holder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(6.0f, 0.0f, 0.0f);
 	transform->scale = point3d(5.0f, 1.0f, 1.0f);
@@ -194,7 +194,7 @@ bool LevelManagerClass::Initialize()
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(10.0f, 5.0f, 0.0f);
 	transform->scale = point3d(1.0f, 4.0f, 1.0f);
-	mesh = entity->AddComponent<Mesh>();
+	mesh = entity->AddComponent<Mesh>();*/
 
 	/////////////////////////
 
