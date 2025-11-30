@@ -41,7 +41,7 @@ struct VS_OUTPUT
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-    //return float4(1, 0, 1, 1);
+    return float4(1, 0, 1, 1);
 
     float3 lightDir = normalize(float3(1, -1, 0.25));
     float4 ambientColor = float4(0.15, 0.15, 0.15, 1);

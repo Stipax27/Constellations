@@ -37,25 +37,45 @@ struct VS_OUTPUT
     float4 worldpos : POSITION1;
 };
 
-[maxvertexcount(3)]
-void GS(triangle VS_OUTPUT input[3], inout TriangleStream< VS_OUTPUT > output)
+
+[maxvertexcount(18)]
+void GS( triangle VS_OUTPUT input[3], inout TriangleStream<VS_OUTPUT> output )
 {
 	float2 quadPos[6] = {
 		float2(-1, -1), float2(1, -1), float2(-1, 1),
 		float2(1, -1), float2(1, 1), float2(-1, 1)
 	};
-	float size = 100;
 
-	// for (uint i = 0; i < 3; i++) {
-	// 	VS_OUTPUT inElement = input[0];
-	// 	inElement.pos.xy += quadPos[i] * size;
-	// 	output.Append( inElement );
-	// }
-	// output.RestartStrip();
+	for (uint i = 0; i < 18; i++) {
+		float2 offset = quadPos[i % 6] * 0.1;
+		VS_OUTPUT element = input[i / 6];
+		element.pos.xy += offset;
+		output.Append( element );
+	}
 
-	output.Append( input[0] );
-	output.Append( input[1] );
-	output.Append( input[2] );
-
-	output.RestartStrip();
+    output.RestartStrip();
 }
+
+
+//[maxvertexcount(3)]
+//void GS(triangle VS_OUTPUT input[3], inout TriangleStream< VS_OUTPUT > output)
+//{
+//	float2 quadPos[6] = {
+//		float2(-1, -1), float2(1, -1), float2(-1, 1),
+//		float2(1, -1), float2(1, 1), float2(-1, 1)
+//	};
+//	float size = 100;
+//
+//	// for (uint i = 0; i < 3; i++) {
+//	// 	VS_OUTPUT inElement = input[0];
+//	// 	inElement.pos.xy += quadPos[i] * size;
+//	// 	output.Append( inElement );
+//	// }
+//	// output.RestartStrip();
+//
+//	output.Append( input[0] );
+//	output.Append( input[1] );
+//	output.Append( input[2] );
+//
+//	output.RestartStrip();
+//}

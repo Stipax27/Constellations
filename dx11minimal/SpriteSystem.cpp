@@ -89,6 +89,7 @@ public:
 
 						Shaders::vShader(4);
 						Shaders::pShader(4);
+						Shaders::gShader(0);
 
 						count = 0;
 						for (int a = 0; a < constellation->links.size() && count < constCount / 2 - 1; a++) {
@@ -112,6 +113,7 @@ public:
 
 						Shaders::vShader(1);
 						Shaders::pShader(1);
+						Shaders::gShader(0);
 
 						count = 0;
 						for (int a = 0; a < transformedStars.size() && count < constCount - 1; a++) {
@@ -140,6 +142,7 @@ public:
 
 					Shaders::vShader(spriteCluster->vShader);
 					Shaders::pShader(spriteCluster->pShader);
+					Shaders::gShader(0);
 
 					if (transform != nullptr)
 					{
@@ -158,6 +161,33 @@ public:
 
 				PointCloud* pointCloud = entity->GetComponent<PointCloud>();
 				if (pointCloud != nullptr) {
+					Transform worldTransform = GetWorldTransform(entity);
+
+					//if (frustum->CheckSphere(worldTransform.position, worldTransform.scale.magnitude())) {
+						//ConstBuf::CreateVertexBuffer(15);
+
+						XMMATRIX rotateMatrix = worldTransform.mRotation;
+						XMMATRIX scaleMatrix = XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z);
+						XMMATRIX translateMatrix = XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z);
+
+						// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
+						XMMATRIX srMatrix = scaleMatrix * rotateMatrix;
+						XMMATRIX worldMatrix = srMatrix * translateMatrix;
+
+						ConstBuf::camera.world = XMMatrixTranspose(worldMatrix);
+						ConstBuf::UpdateCamera();
+
+						ConstBuf::ConstToVertex(5);
+
+						//Rasterizer::Cull(Rasterizer::cullmode::front);
+
+						Shaders::vShader(17);
+						Shaders::pShader(17);
+						Shaders::gShader(17);
+
+						InputAssembler::IA(InputAssembler::topology::triList);
+						context->DrawIndexed(36, 0, 0);
+					//}
 
 				}
 			}

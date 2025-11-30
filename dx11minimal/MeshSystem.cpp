@@ -79,6 +79,8 @@ public:
 
 							Shaders::vShader(15);
 							Shaders::pShader(15);
+							Shaders::gShader(0);
+
 							InputAssembler::IA(InputAssembler::topology::triList);
 							context->DrawIndexed(36, 0, 0);
 						}

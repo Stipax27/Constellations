@@ -73,6 +73,7 @@ bool LevelManagerClass::Initialize()
 	TextLabel* textLabel;
 	Mesh* mesh;
 	PointCloud* pointCloud;
+	DelayedDestroy* delayedDestroy;
 
 	Entity* folder = m_World->CreateEntity("WorldFolder");
 	folder->SetActive(true);
@@ -124,84 +125,6 @@ bool LevelManagerClass::Initialize()
 	transform->position = point3d(0.0f, 0.0f, -50.0f);
 	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -180 * RAD) * transform->mRotation;
 	mesh = holder->AddComponent<Mesh>();
-
-	entity = m_World->CreateEntity("Cube", folder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(10.0f, 0.0f, 0.0f);
-	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -180 * RAD) * transform->mRotation;
-	pointCloud = entity->AddComponent<PointCloud>();
-
-	/*entity = m_World->CreateEntity("Cube", holder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(6.0f, 0.0f, 0.0f);
-	transform->scale = point3d(5.0f, 1.0f, 1.0f);
-	mesh = entity->AddComponent<Mesh>();
-
-	entity = m_World->CreateEntity("Cube", holder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-6.0f, 0.0f, 0.0f);
-	transform->scale = point3d(5.0f, 1.0f, 1.0f);
-	mesh = entity->AddComponent<Mesh>();
-
-	entity = m_World->CreateEntity("Cube", holder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0.0f, 6.0f, 0.0f);
-	transform->scale = point3d(1.0f, 5.0f, 1.0f);
-	mesh = entity->AddComponent<Mesh>();
-
-	entity = m_World->CreateEntity("Cube", holder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0.0f, -6.0f, 0.0f);
-	transform->scale = point3d(1.0f, 5.0f, 1.0f);
-	mesh = entity->AddComponent<Mesh>();
-
-	entity = m_World->CreateEntity("Cube", holder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(6.0f, 10.0f, 0.0f);
-	transform->scale = point3d(5.0f, 1.0f, 1.0f);
-	mesh = entity->AddComponent<Mesh>();
-
-	entity = m_World->CreateEntity("Cube", holder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-6.0f, -10.0f, 0.0f);
-	transform->scale = point3d(5.0f, 1.0f, 1.0f);
-	mesh = entity->AddComponent<Mesh>();
-
-	entity = m_World->CreateEntity("Cube", holder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-10.0f, 6.0f, 0.0f);
-	transform->scale = point3d(1.0f, 5.0f, 1.0f);
-	mesh = entity->AddComponent<Mesh>();
-
-	entity = m_World->CreateEntity("Cube", holder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(10.0f, -6.0f, 0.0f);
-	transform->scale = point3d(1.0f, 5.0f, 1.0f);
-	mesh = entity->AddComponent<Mesh>();
-
-	entity = m_World->CreateEntity("Cube", holder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-5.0f, 10.0f, 0.0f);
-	transform->scale = point3d(4.0f, 1.0f, 1.0f);
-	mesh = entity->AddComponent<Mesh>();
-
-	entity = m_World->CreateEntity("Cube", holder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(5.0f, -10.0f, 0.0f);
-	transform->scale = point3d(4.0f, 1.0f, 1.0f);
-	mesh = entity->AddComponent<Mesh>();
-
-	entity = m_World->CreateEntity("Cube", holder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-10.0f, -5.0f, 0.0f);
-	transform->scale = point3d(1.0f, 4.0f, 1.0f);
-	mesh = entity->AddComponent<Mesh>();
-
-	entity = m_World->CreateEntity("Cube", holder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(10.0f, 5.0f, 0.0f);
-	transform->scale = point3d(1.0f, 4.0f, 1.0f);
-	mesh = entity->AddComponent<Mesh>();*/
 
 	/////////////////////////
 
@@ -281,6 +204,7 @@ bool LevelManagerClass::Initialize()
 
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
+	m_World->AddPhysicSystem<EntityManagerSystem>();
 
 	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera->frustum);
 	//m_World->AddRenderSystem<CollisionDrawSystem>(); // DEBUG //
