@@ -117,12 +117,5 @@ void SmallConstellation::Lattice() {
     Transform* latticeTransform = latticeEntity->AddComponent<Transform>();
     latticeTransform->position = startPos;
 
-    point3d currentLookVector = latticeTransform->GetLookVector();
-    point3d rotationAxis = currentLookVector.cross(direction).normalized();
-    DirectX::XMVECTOR rotationAxisVector = DirectX::XMVectorSet(rotationAxis.x, rotationAxis.y, rotationAxis.z, 0.0f);
-    float angleBetweenVectors = acosf(currentLookVector.dot(direction));
-    DirectX::XMVECTOR quaternionRotation = DirectX::XMQuaternionRotationAxis(rotationAxisVector, angleBetweenVectors);
-
-    latticeTransform->qRotation = DirectX::XMQuaternionMultiply(latticeTransform->qRotation, quaternionRotation);
-    latticeTransform->mRotation = DirectX::XMMatrixRotationQuaternion(latticeTransform->qRotation);
+    SetLookVector(latticeTransform, direction);
 }

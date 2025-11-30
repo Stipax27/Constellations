@@ -8,6 +8,7 @@
 #include <corecrt_math.h>
 #include <DirectXMath.h>
 #include "Point3d.h"
+#include "Transform.cpp"
 
 
 /////////////
@@ -22,6 +23,7 @@ float smoothstep(float edge0, float edge1, float x);
 float fract(float);
 float lerp(float x1, float x2, float a);
 float degreesToRadians(float);
+void SetLookVector(Transform* transform, point3d direction);
 point3d quaternionToEuler(float x, float y, float z, float w);
 DirectX::XMVECTOR eulerToQuanternion(float x, float y, float z);
 
