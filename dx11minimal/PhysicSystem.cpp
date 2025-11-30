@@ -45,7 +45,7 @@ public:
 
 					float velMagnitude = physicBody->velocity.magnitude();
 					if (velMagnitude > 0) {
-						float deceleration = min(SPACE_DENSITY / velMagnitude * deltaTime, 1);
+						float deceleration = min(SPACE_DENSITY / velMagnitude * physicBody->airFriction * deltaTime, 1);
 						physicBody->velocity = physicBody->velocity.lerp(point3d(), deceleration);
 					}
 
