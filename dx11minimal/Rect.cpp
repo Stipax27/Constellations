@@ -6,6 +6,7 @@
 
 enum ScreenAspectRatio {
 	XY,
+	YX,
 	XX,
 	YY
 };

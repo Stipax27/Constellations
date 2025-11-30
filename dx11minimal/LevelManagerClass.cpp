@@ -72,6 +72,7 @@ bool LevelManagerClass::Initialize()
 	Rect* rect;
 	TextLabel* textLabel;
 	Mesh* mesh;
+	PointCloud* pointCloud;
 
 	Entity* folder = m_World->CreateEntity("WorldFolder");
 	folder->SetActive(true);
@@ -123,6 +124,12 @@ bool LevelManagerClass::Initialize()
 	transform->position = point3d(0.0f, 0.0f, -50.0f);
 	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -180 * RAD) * transform->mRotation;
 	mesh = holder->AddComponent<Mesh>();
+
+	entity = m_World->CreateEntity("Cube", folder);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(10.0f, 0.0f, 0.0f);
+	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -180 * RAD) * transform->mRotation;
+	pointCloud = entity->AddComponent<PointCloud>();
 
 	/*entity = m_World->CreateEntity("Cube", holder);
 	transform = entity->AddComponent<Transform>();

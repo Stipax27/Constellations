@@ -182,6 +182,10 @@ public:
 							ConstBuf::global[1].z = 1;
 							ConstBuf::global[1].w = 1;
 							break;
+						case ScreenAspectRatio::YX:
+							ConstBuf::global[1].z = ConstBuf::frame.aspect.x;
+							ConstBuf::global[1].w = ConstBuf::frame.aspect.y;
+							break;
 						case ScreenAspectRatio::XX:
 							ConstBuf::global[1].z = 1;
 							ConstBuf::global[1].w = ConstBuf::frame.aspect.y;

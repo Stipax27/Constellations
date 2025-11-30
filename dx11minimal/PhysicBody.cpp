@@ -7,7 +7,6 @@
 
 struct PhysicBody : Component
 {
-	float mass = 1.0f;
 	float airFriction = 1.0f;
 	point3d velocity = point3d();
 
