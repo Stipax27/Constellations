@@ -77,24 +77,26 @@ void PlayerController::ProcessInput()
 	if (playerEntity != nullptr && playerEntity->IsActive()) {
 		// ??????????  ?????????????
 		point3d velocity = point3d();
-
-		if (IsKeyPressed('W')) {
-			velocity += playerTransform->GetLookVector();
-		}
-		if (IsKeyPressed('S')) {
-			velocity += playerTransform->GetLookVector() * -1;
-		}
-		if (IsKeyPressed('A')) {
-			velocity += playerTransform->GetRightVector() * -1;
-		}
-		if (IsKeyPressed('D')) {
-			velocity += playerTransform->GetRightVector();
-		}
-		if (IsKeyPressed(VK_SPACE)) {
-			velocity += playerTransform->GetUpVector();
-		}
-		if (IsKeyPressed(VK_CONTROL)) {
-			velocity += playerTransform->GetUpVector() * -1;
+		if (ShiftFlag == false)
+		{
+			if (IsKeyPressed('W')) {
+				velocity += playerTransform->GetLookVector();
+			}
+			if (IsKeyPressed('S')) {
+				velocity += playerTransform->GetLookVector() * -1;
+			}
+			if (IsKeyPressed('A')) {
+				velocity += playerTransform->GetRightVector() * -1;
+			}
+			if (IsKeyPressed('D')) {
+				velocity += playerTransform->GetRightVector();
+			}
+			if (IsKeyPressed(VK_SPACE)) {
+				velocity += playerTransform->GetUpVector();
+			}
+			if (IsKeyPressed(VK_CONTROL)) {
+				velocity += playerTransform->GetUpVector() * -1;
+			}
 		}
 
 	if (velocity.magnitude() > 0) {
@@ -107,6 +109,17 @@ void PlayerController::ProcessInput()
 		}
 	}
 
+	if (playerPhysicBody->velocity.magnitude() < 15.0f) {
+		ShiftFlag = false;
+		playerPhysicBody->airFriction = 1;
+	}
+
+	if (IsKeyPressed(VK_LSHIFT) && ShiftFlag == false) {
+		playerPhysicBody->velocity *= 5.0f;
+		ShiftFlag = true;
+		playerPhysicBody->airFriction = 5;
+	}
+	
 		// ?????????? ????????
 		float roll = 0.0f;
 
