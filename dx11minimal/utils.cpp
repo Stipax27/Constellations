@@ -83,6 +83,10 @@ Transform GetWorldTransform(Entity* entity) {
     return worldTransform;
 }
 
+bool IsEntityValid(Entity* entity) {
+    return entity != nullptr && entity->IsActive();
+}
+
 bool IsKeyPressed(const int Key) {
     return GetAsyncKeyState(Key) & 0x8000;
 }

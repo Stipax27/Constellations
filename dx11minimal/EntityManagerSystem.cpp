@@ -34,10 +34,11 @@ public:
 		size_t size = entities.size();
 		for (int i = 0; i < size; i++) {
 			Entity* entity = entities[i];
-			if (entity->IsActive()) {
+			if (IsEntityValid(entity)) {
 				DelayedDestroy* delayedDestroy = entity->GetComponent<DelayedDestroy>();
 				if (delayedDestroy != nullptr && timer::currentTime >= delayedDestroy->startTime + delayedDestroy->lifeTime) {
 					entity->Destroy();
+					entity = nullptr;
 				}
 			}
 		}

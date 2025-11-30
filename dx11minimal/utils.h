@@ -33,6 +33,7 @@ DirectX::XMVECTOR eulerToQuanternion(float x, float y, float z);
 int getRandom(int min = 1, int max = 0);
 
 Transform GetWorldTransform(Entity*);
+bool IsEntityValid(Entity*);
 
 bool IsKeyPressed(const int);
 

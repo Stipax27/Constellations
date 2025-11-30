@@ -132,7 +132,7 @@ public:
 		size_t size = entities.size();
 		for (int i = 0; i < size; i++) {
 			Entity* entity = entities[i];
-			if (entity->IsActive()) {
+			if (IsEntityValid(entity)) {
 				Transform* transform = entity->GetComponent<Transform>();
 
 				if (transform != nullptr) {
