@@ -55,9 +55,9 @@ public:
 					if (mesh != nullptr) {
 						Transform worldTransform = GetWorldTransform(entity);
 
-						/*if (entity->parent != nullptr && !entity->parent->HasComponent<Transform>()) {
-							transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), -2 * RAD) * transform->mRotation;
-						}*/
+						if (entity->parent != nullptr && !entity->parent->HasComponent<Transform>()) {
+							transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -2 * RAD) * transform->mRotation;
+						}
 
 						if (frustum->CheckSphere(worldTransform.position, worldTransform.scale.magnitude())) {
 							//ConstBuf::CreateVertexBuffer(15);
