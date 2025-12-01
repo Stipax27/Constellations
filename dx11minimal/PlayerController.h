@@ -25,7 +25,7 @@
 const float MOUSE_SENSITIVITY = 0.002f;
 const float CURSOR_IGNORE_ZONE = 0.05f;
 const float MAX_CURSOR_DEVIATION = 0.45f;
-const float SENSIVITY = 1.5f;
+const float SENSIVITY = 2.0f;
 const float CURSOR_ZONE_DELTA = MAX_CURSOR_DEVIATION - CURSOR_IGNORE_ZONE;
 const float ROLL_SPEED = 1.0f;
 
@@ -58,6 +58,7 @@ private:
 	CameraClass* camera;
 	MouseClass* mouse;
 	WindowClass* window;
+	bool ShiftFlag;
 
 	bool mousePressed = false;
 };
