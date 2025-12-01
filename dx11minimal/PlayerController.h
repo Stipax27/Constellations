@@ -12,6 +12,7 @@
 #include "mouseclass.h"
 #include "windowclass.h"
 
+#include "timer.h"
 #include "entity.h"
 
 #include "Transform.cpp"
@@ -22,12 +23,16 @@
 /////////////
 // GLOBALS //
 /////////////
-const float MOUSE_SENSITIVITY = 0.002f;
+const float SENSIVITY = 1.5f;
 const float CURSOR_IGNORE_ZONE = 0.05f;
 const float MAX_CURSOR_DEVIATION = 0.45f;
-const float SENSIVITY = 2.0f;
 const float CURSOR_ZONE_DELTA = MAX_CURSOR_DEVIATION - CURSOR_IGNORE_ZONE;
 const float ROLL_SPEED = 1.0f;
+const float PLAYER_MOVE_SPEED = 15.0f;
+const float DASH_SPEED = 75.0f;
+const float DASH_AIR_FRICTION = 5.0f;
+
+const DWORD DASH_CD = 1000;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -58,9 +63,11 @@ private:
 	CameraClass* camera;
 	MouseClass* mouse;
 	WindowClass* window;
-	bool ShiftFlag;
 
+	bool movementLocked = false;
 	bool mousePressed = false;
+
+	DWORD lastDashTime = 0;
 };
 
 #endif

@@ -253,6 +253,13 @@ bool LevelManagerClass::Initialize()
 
 void LevelManagerClass::Shutdown()
 {
+	if (playerController)
+	{
+		playerController->Shutdown();
+		delete playerController;
+		playerController = 0;
+	}
+
 	if (m_World)
 	{
 		m_World->Shutdown();
@@ -270,13 +277,6 @@ void LevelManagerClass::Shutdown()
 	{
 		delete window;
 		window = 0;
-	}
-
-	if (playerController)
-	{
-		playerController->Shutdown();
-		delete playerController;
-		playerController = 0;
 	}
 }
 

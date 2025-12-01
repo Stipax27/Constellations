@@ -40,33 +40,31 @@ void PlayerController::Initialize(Entity* Player, CameraClass* Camera, MouseClas
 
 void PlayerController::Shutdown()
 {
-	if (playerTransform)
-	{
+	if (playerEntity) {
+		playerEntity = 0;
+	}
+
+	if (playerTransform) {
 		playerTransform = 0;
 	}
 
-	if (playerPhysicBody)
-	{
+	if (playerPhysicBody) {
 		playerPhysicBody = 0;
 	}
 
-	if (playerConstellation)
-	{
+	if (playerConstellation) {
 		playerConstellation = 0;
 	}
 
-	if (camera)
-	{
+	if (camera) {
 		camera = 0;
 	}
 
-	if (mouse)
-	{
+	if (mouse) {
 		mouse = 0;
 	}
 
-	if (window)
-	{
+	if (window) {
 		window = 0;
 	}
 }
@@ -75,10 +73,16 @@ void PlayerController::Shutdown()
 void PlayerController::ProcessInput()
 {
 	if (playerEntity != nullptr && playerEntity->IsActive()) {
-		// ??????????  ?????????????
-		point3d velocity = point3d();
-		if (ShiftFlag == false)
+
+		if (movementLocked && playerPhysicBody->velocity.magnitude() < PLAYER_MOVE_SPEED) {
+			movementLocked = false;
+			playerPhysicBody->airFriction = 1;
+		}
+
+		if (!movementLocked)
 		{
+			point3d velocity = point3d();
+
 			if (IsKeyPressed('W')) {
 				velocity += playerTransform->GetLookVector();
 			}
@@ -97,28 +101,33 @@ void PlayerController::ProcessInput()
 			if (IsKeyPressed(VK_CONTROL)) {
 				velocity += playerTransform->GetUpVector() * -1;
 			}
+
+			if (velocity.magnitude() > 0) {
+				point3d newVelocity = playerPhysicBody->velocity + velocity.normalized();
+				if (newVelocity.magnitude() > PLAYER_MOVE_SPEED) {
+					playerPhysicBody->velocity = newVelocity.normalized() * PLAYER_MOVE_SPEED;
+				}
+				else {
+					playerPhysicBody->velocity = newVelocity;
+				}
+			}
 		}
 
-	if (velocity.magnitude() > 0) {
-		point3d newVelocity = playerPhysicBody->velocity + velocity.normalized();
-		if (newVelocity.magnitude() > 15.0f) {
-			playerPhysicBody->velocity = newVelocity.normalized() * 15;
-		}
-		else {
-			playerPhysicBody->velocity = newVelocity;
-		}
-	}
+		if (!movementLocked && timer::currentTime >= lastDashTime + DASH_CD && IsKeyPressed(VK_LSHIFT)) {
+			lastDashTime = timer::currentTime;
 
-	if (playerPhysicBody->velocity.magnitude() < 15.0f) {
-		ShiftFlag = false;
-		playerPhysicBody->airFriction = 1;
-	}
+			point3d velocity;
+			if (playerPhysicBody->velocity.magnitude() > 0) {
+				velocity = playerPhysicBody->velocity.normalized();
+			}
+			else {
+				velocity = playerTransform->GetLookVector();
+			}
 
-	if (IsKeyPressed(VK_LSHIFT) && ShiftFlag == false) {
-		playerPhysicBody->velocity *= 5.0f;
-		ShiftFlag = true;
-		playerPhysicBody->airFriction = 5;
-	}
+			playerPhysicBody->velocity = velocity * DASH_SPEED;
+			movementLocked = true;
+			playerPhysicBody->airFriction = DASH_AIR_FRICTION;
+		}
 	
 		// ?????????? ????????
 		float roll = 0.0f;
