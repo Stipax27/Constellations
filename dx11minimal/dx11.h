@@ -117,6 +117,7 @@ namespace Textures
 	void TextureToShader(int, unsigned int, targetshader = targetshader::both);
 	void CreateMipMap();
 	void RenderTarget(int, unsigned int);
+	void DepthTarget(int, int);
 	void LoadTexture(const char*);
 }
 

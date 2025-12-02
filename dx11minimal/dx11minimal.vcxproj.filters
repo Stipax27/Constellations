@@ -386,6 +386,9 @@
     <None Include="Shaders\Sphere_PS.shader">
       <Filter>Shaders\Debug</Filter>
     </None>
+    <None Include="Shaders\DepthDraw_PS.shader">
+      <Filter>Shaders\PostProcess</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\StarLink_PS.shader">

@@ -1,4 +1,4 @@
-﻿#include "dx11.h"
+#include "dx11.h"
 
 static inline int32 _log2(float x)
 {
@@ -290,6 +290,14 @@ void Textures::RenderTarget(int target, unsigned int level = 0)
 	}
 
 	SetViewport(target, level);
+}
+
+void Textures::DepthTarget(int depthTarget, int depthMipLevel = 0)
+{
+	auto depthStencil = Texture[(int)depthTarget].depth ? Texture[(int)depthTarget].DepthStencilView[depthMipLevel] : 0;
+	context->OMSetRenderTargets(1, &Texture[currentRT].RenderTargetView[depthMipLevel][0], depthStencil);
+
+	SetViewport(currentRT, 0);
 }
 
 void Textures::LoadTexture(const char* filename)
@@ -721,7 +729,8 @@ void Shaders::Init()
 	//-----------------------------------------------
 	
 	Shaders::CreatePS(100, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ColorCorrection_PS.shader"));
-	Shaders::CreatePS(101, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Lensing_PS.shader"));
+	Shaders::CreatePS(101, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\DepthDraw_PS.shader"));
+	//Shaders::CreatePS(101, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Lensing_PS.shader"));
 	
 	//-----------------------------------------------
 	

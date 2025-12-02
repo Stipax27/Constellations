@@ -17,10 +17,8 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     float2 p = quad[vID];
 
-    float2 uv = float2(0.5 + p.x * 0.5, 0.5 - p.y * 0.5);
-
     output.pos = float4(p.xy, 0, 1);
-    output.uv = uv;
+    output.uv = float2(0.5 + p.x * 0.5, 0.5 - p.y * 0.5);
 
     return output;
 }

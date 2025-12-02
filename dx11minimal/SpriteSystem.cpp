@@ -158,15 +158,23 @@ public:
 
 					if (spriteCluster->halfSizedRender) {
 						int lastRT = Textures::currentRT;
+
 						Textures::RenderTarget(3, 0);
 						Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
 						Draw::ClearDepth();
 
+						context->PSSetShaderResources(0, 1, &Textures::Texture[lastRT].TextureResView);
+
 						context->DrawInstanced(6, spriteCluster->pointsNum, 0, 0);
 
+						Sampler::SamplerComp(0);
 						Textures::CreateMipMap();
+
 						Textures::RenderTarget(lastRT, 0);
+						//Textures::DepthTarget(lastRT, 1);
+
 						Textures::TextureToShader(3, 0);
+						context->PSSetShaderResources(0, 1, &Textures::Texture[3].TextureResView);
 
 						Shaders::vShader(10);
 						Shaders::pShader(100);
