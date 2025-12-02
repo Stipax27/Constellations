@@ -156,7 +156,25 @@ public:
 						ConstBuf::ConstToPixel(5);
 					}
 
-					context->DrawInstanced(6, spriteCluster->pointsNum, 0, 0);
+					if (spriteCluster->halfSizedRender) {
+						int lastRT = Textures::currentRT;
+						Textures::RenderTarget(3, 0);
+						Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
+						Draw::ClearDepth();
+
+						context->DrawInstanced(6, spriteCluster->pointsNum, 0, 0);
+
+						Textures::CreateMipMap();
+						Textures::RenderTarget(lastRT, 0);
+						Textures::TextureToShader(3, 0);
+
+						Shaders::vShader(10);
+						Shaders::pShader(100);
+						context->Draw(6, 0);
+					}
+					else {
+						context->DrawInstanced(6, spriteCluster->pointsNum, 0, 0);
+					}
 				}
 
 				PointCloud* pointCloud = entity->GetComponent<PointCloud>();

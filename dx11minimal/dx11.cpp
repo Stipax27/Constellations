@@ -1,4 +1,4 @@
-#include "dx11.h"
+﻿#include "dx11.h"
 
 static inline int32 _log2(float x)
 {
@@ -1152,11 +1152,13 @@ void Dx11Init(HWND hwnd, int width, int height)
 	Textures::Create(1, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
 	// rt2
 	Textures::Create(2, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
+	// half rt
+	Textures::Create(3, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 2, height / 2), true, true);
 
 	// perlin noise rt
-	Textures::Create(3, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
+	Textures::Create(4, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
 	// voronoi noise rt
-	Textures::Create(4, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
+	Textures::Create(5, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
 }
 
 //////////////////////////////////////////////////////////////////////////////////

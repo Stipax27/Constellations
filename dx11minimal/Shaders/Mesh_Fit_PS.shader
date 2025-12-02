@@ -1,5 +1,5 @@
-Texture2D inputTexture : register(t1);
-SamplerState samplerState : register(s1);
+Texture2D inputTexture : register(t2);
+SamplerState samplerState : register(s2);
 
 cbuffer global : register(b5)
 {

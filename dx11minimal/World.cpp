@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////////
 // Filename: World.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "World.h"
@@ -78,14 +78,14 @@ void World::PreCalculations()
 	Depth::Depth(Depth::depthmode::off);
 	Rasterizer::Cull(Rasterizer::cullmode::off);
 
-	Textures::RenderTarget(3, 0);
+	Textures::RenderTarget(4, 0);
 	Shaders::vShader(10);
 	Shaders::pShader(200);
 	Draw::Clear({ 0.0f, 0.0f, 0.0f, 1.0f });
 	context->Draw(6, 0);
 	Textures::CreateMipMap();
 
-	Textures::RenderTarget(4, 0);
+	Textures::RenderTarget(5, 0);
 	Shaders::pShader(201);
 	Draw::Clear({ 0.0f, 0.0f, 0.0f, 1.0f });
 	context->Draw(6, 0);
@@ -117,8 +117,8 @@ void World::UpdateRender()
 		firstFrame = false;
 		PreCalculations();
 	}
-	Textures::TextureToShader(3, 0);
 	Textures::TextureToShader(4, 1);
+	Textures::TextureToShader(5, 2);
 
 	Textures::RenderTarget(1, 0);
 	// Clear the buffers to begin the scene.

@@ -1,8 +1,8 @@
-Texture2D perlinTexture : register(t0);
-SamplerState perlinSamplerState : register(s0);
+Texture2D perlinTexture : register(t1);
+SamplerState perlinSamplerState : register(s1);
 
-Texture2D voronoiTexture : register(t1);
-SamplerState voronoiSamplerState : register(s1);
+Texture2D voronoiTexture : register(t2);
+SamplerState voronoiSamplerState : register(s2);
 
 cbuffer factors : register(b6)
 {

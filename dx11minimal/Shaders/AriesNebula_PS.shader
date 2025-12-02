@@ -1,5 +1,5 @@
-Texture2D perlinTexture : register(t0);
-SamplerState perlinSamplerState : register(s0);
+Texture2D perlinTexture : register(t1);
+SamplerState perlinSamplerState : register(s1);
 
 cbuffer factors : register(b6)
 {
