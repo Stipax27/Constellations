@@ -7,7 +7,7 @@ void SmallConstellation::Init(World* World, Entity* entity, Entity* target) {
     LastTime = timer::currentTime;
 }
 
-void SmallConstellation::Volley() {
+void SmallConstellation::VolleyStart() {
 
     for (int i = 0; i < m_entity->GetComponent<Constellation>()->stars.size(); i++) 
     {
@@ -25,32 +25,32 @@ void SmallConstellation::Volley() {
 
         Entity* volleyEntity = m_World->CreateEntity();
 
-        Projectile* projectile;
-        projectile = volleyEntity->AddComponent<Projectile>();
-        projectile->direction = direction;
-        float speed = 50;
-        projectile->speed = speed + ((rand() % 50 - 25) / 100.0f * speed);;
-        projectile->startPosition = startPos;
-
-        projectile->spiralMovement = true;
-       
-        float spiralSpeed = 12.46f;
-        projectile->spiralSpeed = spiralSpeed + ((rand() % 50 - 25) / 100.0f * spiralSpeed);
-        projectile->startPosition = startPos;
-        float spiralRadius = 0.0f;
-        projectile->spiralRadius = spiralRadius + ((rand() % 50 - 25) / 100.0f * spiralRadius);
-        float radiusIncreaseSpeed = 2.5f;
-        projectile->radiusIncreaseSpeed = radiusIncreaseSpeed + ((rand() % 50 - 25) / 100.0f * radiusIncreaseSpeed);
-
-        point3d temporaryVector;
-        if (fabs(direction.y) < 0.9f) temporaryVector = point3d(0, 1, 0);
-        else temporaryVector = point3d(1, 0, 0);
-        point3d spiralVector1 = temporaryVector.cross(direction);
-        spiralVector1.normalized();
-        projectile->spiralVector1 = spiralVector1;
-        point3d spiralVector2 = spiralVector1.cross(direction);
-        spiralVector2.normalized();
-        projectile->spiralVector2 = spiralVector2;
+        //Projectile* projectile;
+        //projectile = volleyEntity->AddComponent<Projectile>();
+        //projectile->direction = direction;
+        //float speed = 50;
+        //projectile->speed = speed + ((rand() % 50 - 25) / 100.0f * speed);;
+        //projectile->startPosition = startPos;
+        //
+        //projectile->spiralMovement = true;
+        //
+        //float spiralSpeed = 12.46f;
+        //projectile->spiralSpeed = spiralSpeed + ((rand() % 50 - 25) / 100.0f * spiralSpeed);
+        //projectile->startPosition = startPos;
+        //float spiralRadius = 0.0f;
+        //projectile->spiralRadius = spiralRadius + ((rand() % 50 - 25) / 100.0f * spiralRadius);
+        //float radiusIncreaseSpeed = 2.5f;
+        //projectile->radiusIncreaseSpeed = radiusIncreaseSpeed + ((rand() % 50 - 25) / 100.0f * radiusIncreaseSpeed);
+        //
+        //point3d temporaryVector;
+        //if (fabs(direction.y) < 0.9f) temporaryVector = point3d(0, 1, 0);
+        //else temporaryVector = point3d(1, 0, 0);
+        //point3d spiralVector1 = temporaryVector.cross(direction);
+        //spiralVector1.normalized();
+        //projectile->spiralVector1 = spiralVector1;
+        //point3d spiralVector2 = spiralVector1.cross(direction);
+        //spiralVector2.normalized();
+        //projectile->spiralVector2 = spiralVector2;
 
         Explosion* chargeExplosion = volleyEntity->AddComponent<Explosion>();
         chargeExplosion->max_radius = 1.0f;
@@ -59,8 +59,10 @@ void SmallConstellation::Volley() {
         throwTransform->position = startPos;
     }   
 }
+void SmallConstellation::VolleyUpdate(float deltaTime) {
+}
 
-void SmallConstellation::Lattice() {
+void SmallConstellation::LatticeStart() {
 
     point3d startPos = m_entity->GetComponent<Transform>()->position;
     point3d targetPoint = m_target->GetComponent<Transform>()->position;
@@ -71,10 +73,10 @@ void SmallConstellation::Lattice() {
 
     Entity* latticeEntity = m_World->CreateEntity();
 
-    Projectile* projectile;
-    projectile = latticeEntity->AddComponent<Projectile>();
-    projectile->direction = direction;
-    projectile->speed = 40;
+   //Projectile* projectile;
+   //projectile = latticeEntity->AddComponent<Projectile>();
+   //projectile->direction = direction;
+   //projectile->speed = 40;
 
     Constellation* constellation;
     constellation = latticeEntity->AddComponent<Constellation>();
@@ -118,4 +120,16 @@ void SmallConstellation::Lattice() {
     latticeTransform->position = startPos;
 
     SetLookVector(latticeTransform, direction);
+
+    Lattices.push_back(latticeEntity);
+}
+
+void SmallConstellation::LatticeUpdate(float deltaTime) {
+    for (const auto& Lattice : Lattices)
+    {
+        Transform* latticeTransform = Lattice->GetComponent<Transform>();
+        PhysicBody* latticePhysicBody = Lattice->GetComponent<PhysicBody>();
+        point3d velocity = latticeTransform->GetLookVector().normalized() * 50;
+        latticeTransform->position += velocity * deltaTime;
+    }
 }

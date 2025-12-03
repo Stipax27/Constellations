@@ -382,13 +382,15 @@ bool LevelManagerClass::Frame()
 		
 		switch (attackType) {
 		case 0:
-			smallConstellation->Volley();
+			smallConstellation->VolleyStart();
 			break;
 		case 1:
-			smallConstellation->Lattice();
+			smallConstellation->LatticeStart();
 			break;
 		}
 	}
+	smallConstellation->VolleyUpdate(0.01f);
+	smallConstellation->LatticeUpdate(0.01f);
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 

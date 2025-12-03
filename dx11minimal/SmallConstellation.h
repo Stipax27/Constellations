@@ -2,6 +2,7 @@
 #include "world.h"
 #include "Transform.cpp"
 #include "Projectile.cpp"
+#include "PhysicBody.cpp"
 #include "Constellation.cpp"
 #include "timer.h"
 #include <cstdlib>
@@ -16,14 +17,14 @@ public:
 	World* m_World;
 	Entity* m_entity;
 	Entity* m_target;
-	float speed;
-	float damage;
-	float rad;
 	DWORD LastTime;
-	vector<Entity*> effect;
+	vector<Entity*> Volleys;
+	vector<Entity*> Lattices;
 
 	void Init(World*, Entity*, Entity*);
-	void Volley();
-	void Lattice();
+	void VolleyStart();
+	void VolleyUpdate(float deltaTime);
+	void LatticeStart();	
+	void LatticeUpdate(float deltaTime);
 };
 
