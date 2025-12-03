@@ -156,20 +156,20 @@ public:
 						int lastRT = Textures::currentRT;
 						Textures::CreateDepthMipMap();
 
-						Depth::Depth(Depth::depthmode::on);
+						//Depth::Depth(Depth::depthmode::on);
 
 						Textures::RenderTarget(3, 0);
 						Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
 						Draw::ClearDepth();
 						//Textures::DepthTarget(lastRT, 0);
 
-						Shaders::vShader(10);
+						/*Shaders::vShader(10);
 						Shaders::pShader(101);
 						Shaders::gShader(0);
 						context->PSSetShaderResources(0, 1, &Textures::Texture[lastRT].DepthResView);
-						context->Draw(6, 0);
+						context->Draw(6, 0);*/
 
-						Depth::Depth(Depth::depthmode::readonly);
+						//Depth::Depth(Depth::depthmode::readonly);
 
 						Shaders::vShader(spriteCluster->vShader);
 						Shaders::pShader(spriteCluster->pShader);
