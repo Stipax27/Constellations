@@ -273,6 +273,11 @@ void Textures::CreateMipMap()
 	context->GenerateMips(Texture[currentRT].TextureResView);
 }
 
+void Textures::CreateDepthMipMap()
+{
+	context->GenerateMips(Texture[currentRT].DepthResView);
+}
+
 void Textures::RenderTarget(int target, unsigned int level = 0)
 {
 	currentRT = target;
@@ -729,8 +734,9 @@ void Shaders::Init()
 	//-----------------------------------------------
 	
 	Shaders::CreatePS(100, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ColorCorrection_PS.shader"));
-	Shaders::CreatePS(101, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\DepthDraw_PS.shader"));
+	//Shaders::CreatePS(101, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\DepthDraw_PS.shader"));
 	//Shaders::CreatePS(101, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Lensing_PS.shader"));
+	Shaders::CreatePS(101, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\DepthReduce_PS.shader"));
 	
 	//-----------------------------------------------
 	
