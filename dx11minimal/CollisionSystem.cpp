@@ -4,6 +4,10 @@
 //////////////
 // INCLUDES //
 //////////////
+#include <unordered_map>
+#include <typeindex>
+#include <functional>
+
 #include<cmath>
 #include "system.h"
 #include "Transform.cpp"
@@ -14,6 +18,7 @@
 #include "SurfaceCollider.cpp"
 
 #include "MethodOfClosest.h"
+
 
 class CollisionSystem : public System
 {
@@ -112,6 +117,28 @@ public:
 				}
 			}
 		}
+	}
+
+private:
+	struct CollisionResult {
+		bool collided = false;
+	};
+	using CollisionFn = CollisionResult(*)(const Component*, const Component*);
+
+	static unordered_map<
+		pair<type_index, type_index>,
+		CollisionFn,
+		hash<pair<type_index, type_index>>
+	> collisionMap;
+
+private:
+	CollisionResult sphere_vs_sphere(const Component* c1, const Component* c2) {
+		const auto* a = static_cast<const SphereCollider*>(c1);
+		const auto* b = static_cast<const SphereCollider*>(c2);
+
+
+
+		return { true };
 	}
 };
 
