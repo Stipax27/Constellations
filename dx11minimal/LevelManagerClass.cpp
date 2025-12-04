@@ -236,6 +236,7 @@ bool LevelManagerClass::Initialize()
 
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
+	m_World->AddPhysicSystem<CombatSystem>();
 	m_World->AddPhysicSystem<EntityManagerSystem>();
 
 	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera->frustum);

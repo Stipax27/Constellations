@@ -20,6 +20,7 @@
 
 #include "PhysicSystem.cpp"
 #include "CollisionSystem.cpp"
+#include "CombatSystem.cpp"
 #include "EntityManagerSystem.cpp"
 
 #include "CollisionDrawSystem.cpp"

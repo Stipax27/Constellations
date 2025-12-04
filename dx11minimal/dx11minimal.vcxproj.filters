@@ -73,6 +73,9 @@
     <Filter Include="Shaders\Debug">
       <UniqueIdentifier>{23f45357-5fcd-4cd2-be7d-530625f77f7a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Combat">
+      <UniqueIdentifier>{4b346e4f-153e-4b1a-9659-ebd9dc9ac7be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -250,6 +253,18 @@
     </ClCompile>
     <ClCompile Include="DelayedDestroy.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Health.cpp">
+      <Filter>Source Files\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="CombatSystem.cpp">
+      <Filter>Source Files\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleDamageGiver.cpp">
+      <Filter>Source Files\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiDamageGiver.cpp">
+      <Filter>Source Files\Combat</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
