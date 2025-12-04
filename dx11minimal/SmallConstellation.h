@@ -18,9 +18,30 @@ public:
 	Entity* m_entity;
 	Entity* m_target;
 	DWORD LastTime;
-	vector<Entity*> Volleys;
-	vector<Entity*> Lattices;
 
+	struct VolleyElement {
+		Entity* entity;
+		float speed = 10.0f;
+		float time = 0.0f;
+
+		bool spiralMovement = false;
+		float spiralRadius = 0.0f;
+		float spiralSpeed = 0.0f;
+		float radiusIncreaseSpeed = 0.0f;
+		point3d startPosition;
+		point3d direction = point3d(0, 0, 1);
+		point3d spiralVector1 = point3d(1, 0, 0);
+		point3d spiralVector2 = point3d(0, 1, 0);
+	};
+	vector<VolleyElement*> VolleyElements;
+
+	struct Lattice {
+		Entity* entity;
+		point3d direction;
+		float speed = 10.0f;
+	};
+	vector<Lattice*> Lattices;
+	
 	void Init(World*, Entity*, Entity*);
 	void VolleyStart();
 	void VolleyUpdate(float deltaTime);

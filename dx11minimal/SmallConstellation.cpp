@@ -25,41 +25,67 @@ void SmallConstellation::VolleyStart() {
 
         Entity* volleyEntity = m_World->CreateEntity();
 
-        //Projectile* projectile;
-        //projectile = volleyEntity->AddComponent<Projectile>();
-        //projectile->direction = direction;
-        //float speed = 50;
-        //projectile->speed = speed + ((rand() % 50 - 25) / 100.0f * speed);;
-        //projectile->startPosition = startPos;
-        //
-        //projectile->spiralMovement = true;
-        //
-        //float spiralSpeed = 12.46f;
-        //projectile->spiralSpeed = spiralSpeed + ((rand() % 50 - 25) / 100.0f * spiralSpeed);
-        //projectile->startPosition = startPos;
-        //float spiralRadius = 0.0f;
-        //projectile->spiralRadius = spiralRadius + ((rand() % 50 - 25) / 100.0f * spiralRadius);
-        //float radiusIncreaseSpeed = 2.5f;
-        //projectile->radiusIncreaseSpeed = radiusIncreaseSpeed + ((rand() % 50 - 25) / 100.0f * radiusIncreaseSpeed);
-        //
-        //point3d temporaryVector;
-        //if (fabs(direction.y) < 0.9f) temporaryVector = point3d(0, 1, 0);
-        //else temporaryVector = point3d(1, 0, 0);
-        //point3d spiralVector1 = temporaryVector.cross(direction);
-        //spiralVector1.normalized();
-        //projectile->spiralVector1 = spiralVector1;
-        //point3d spiralVector2 = spiralVector1.cross(direction);
-        //spiralVector2.normalized();
-        //projectile->spiralVector2 = spiralVector2;
-
         Explosion* chargeExplosion = volleyEntity->AddComponent<Explosion>();
         chargeExplosion->max_radius = 1.0f;
 
-        Transform* throwTransform = volleyEntity->AddComponent<Transform>();
-        throwTransform->position = startPos;
+        Transform* volleyTransform = volleyEntity->AddComponent<Transform>();
+        volleyTransform->position = startPos;
+
+        VolleyElement* element = new VolleyElement;
+        
+        float speed = 50;
+        element->speed = speed + ((rand() % 50 - 25) / 100.0f * speed);;
+        element->startPosition = startPos;
+        
+        element->spiralMovement = true;
+        
+        float spiralSpeed = 12.46f;
+        element->spiralSpeed = spiralSpeed + ((rand() % 50 - 25) / 100.0f * spiralSpeed);
+        element->startPosition = startPos;
+        float spiralRadius = 0.0f;
+        element->spiralRadius = spiralRadius + ((rand() % 50 - 25) / 100.0f * spiralRadius);
+        float radiusIncreaseSpeed = 2.5f;
+        element->radiusIncreaseSpeed = radiusIncreaseSpeed + ((rand() % 50 - 25) / 100.0f * radiusIncreaseSpeed);
+        
+        point3d temporaryVector;
+        if (fabs(direction.y) < 0.9f) temporaryVector = point3d(0, 1, 0);
+        else temporaryVector = point3d(1, 0, 0);
+        point3d spiralVector1 = temporaryVector.cross(direction);
+        spiralVector1.normalized();
+        element->spiralVector1 = spiralVector1;
+        point3d spiralVector2 = spiralVector1.cross(direction);
+        spiralVector2.normalized();
+        element->spiralVector2 = spiralVector2;
+
+        element->entity = volleyEntity;
+        element->direction = direction;
+        VolleyElements.push_back(element);
+
     }   
 }
 void SmallConstellation::VolleyUpdate(float deltaTime) {
+
+    for (auto* element : VolleyElements) {
+
+        Transform* elementTransform = element->entity->GetComponent<Transform>();
+        
+        //elementTransform->position += element->direction * element->speed * deltaTime;
+        
+        element->time += deltaTime;
+        
+        float distanceTraveled = element->speed * element->time;
+        
+        float angleTraveled = element->time * element->spiralSpeed;
+        float localX = cos(angleTraveled) * element->spiralRadius;
+        float localY = sin(angleTraveled) * element->spiralRadius;
+        
+        elementTransform->position = element->startPosition +
+            element->direction * distanceTraveled +
+            (element->spiralVector1 * localX +
+                element->spiralVector2 * localY);
+        
+        element->spiralRadius += element->radiusIncreaseSpeed * deltaTime; 
+    }
 }
 
 void SmallConstellation::LatticeStart() {
@@ -72,11 +98,6 @@ void SmallConstellation::LatticeStart() {
     direction = direction.normalized();
 
     Entity* latticeEntity = m_World->CreateEntity();
-
-   //Projectile* projectile;
-   //projectile = latticeEntity->AddComponent<Projectile>();
-   //projectile->direction = direction;
-   //projectile->speed = 40;
 
     Constellation* constellation;
     constellation = latticeEntity->AddComponent<Constellation>();
@@ -121,15 +142,17 @@ void SmallConstellation::LatticeStart() {
 
     SetLookVector(latticeTransform, direction);
 
-    Lattices.push_back(latticeEntity);
+    Lattice* lattice = new Lattice;
+    lattice->entity = latticeEntity; 
+    lattice->speed = 50;
+    lattice->direction = latticeTransform->GetLookVector();
+    Lattices.push_back(lattice);
 }
 
 void SmallConstellation::LatticeUpdate(float deltaTime) {
-    for (const auto& Lattice : Lattices)
+    for (auto* lattice : Lattices)
     {
-        Transform* latticeTransform = Lattice->GetComponent<Transform>();
-        PhysicBody* latticePhysicBody = Lattice->GetComponent<PhysicBody>();
-        point3d velocity = latticeTransform->GetLookVector().normalized() * 50;
-        latticeTransform->position += velocity * deltaTime;
+        Transform* latticeTransform = lattice->entity->GetComponent<Transform>();
+        latticeTransform->position += lattice->direction * lattice->speed * deltaTime;
     }
 }
