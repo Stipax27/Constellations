@@ -8,7 +8,6 @@
 #include "system.h"
 #include "Transform.cpp"
 #include "PhysicBody.cpp"
-#include "Projectile.cpp"
 
 
 class PhysicSystem : public System
@@ -51,32 +50,6 @@ public:
 					}
 
 					physicBody->mAngVelocity = XMMatrixIdentity();
-				}
-
-				Projectile* projectile = entity->GetComponent<Projectile>();
-				if (transform != nullptr && projectile != nullptr)
-				{
-					projectile->time += deltaTime;
-
-					float distanceTraveled = projectile->speed * projectile->time;
-
-					if (projectile->spiralMovement)
-					{
-						float angleTraveled = projectile->time * projectile->spiralSpeed;
-						float localX = cos(angleTraveled) * projectile->spiralRadius;
-						float localY = sin(angleTraveled) * projectile->spiralRadius;
-
-						transform->position = projectile->startPosition +
-							projectile->direction * distanceTraveled +
-							(projectile->spiralVector1 * localX +
-								projectile->spiralVector2 * localY);
-
-						projectile->spiralRadius += projectile->radiusIncreaseSpeed * deltaTime;
-					}
-					else
-					{
-						transform->position += projectile->direction * projectile->speed * deltaTime;
-					}
 				}
 			}
 		}

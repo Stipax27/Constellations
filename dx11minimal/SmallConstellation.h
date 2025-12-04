@@ -1,7 +1,6 @@
 #include "Explosion.cpp"
 #include "world.h"
 #include "Transform.cpp"
-#include "Projectile.cpp"
 #include "PhysicBody.cpp"
 #include "Constellation.cpp"
 #include "timer.h"

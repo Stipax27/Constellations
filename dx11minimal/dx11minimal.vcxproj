@@ -166,7 +166,6 @@
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="Point3d.h" />
-    <ClInclude Include="Projectile.h" />
     <ClInclude Include="SmallConstellation.h" />
     <ClInclude Include="StarAttack.h" />
     <ClInclude Include="system.h" />
@@ -327,7 +326,6 @@
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Point3d.cpp" />
     <ClCompile Include="Point4d.cpp" />
-    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Rect.cpp" />
     <ClCompile Include="SmallConstellation.cpp" />
     <ClCompile Include="SplinePath.cpp" />
