@@ -66,6 +66,12 @@ public:
 		return false;
 	}
 
+	template <typename T>
+	T* GetComponents()
+	{
+		//components.
+	}
+
 	void Destroy();
 
 	int GetId();

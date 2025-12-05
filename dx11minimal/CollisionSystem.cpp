@@ -21,6 +21,50 @@
 #include "MethodOfClosest.h"
 
 
+struct CollisionResult {
+	bool collided;
+	point3d normal;
+
+	CollisionResult(bool Collided = false)
+		: collided(Collided)
+	{
+	}
+};
+
+using CollisionFn = CollisionResult(*)(
+	const Transform*, const Component*,
+	const Transform*, const Component*
+	);
+
+struct TypePair {
+	std::type_index a, b;
+	bool operator<(const TypePair& other) const {
+		if (a != other.a) return a < other.a;
+		return b < other.b;
+	}
+};
+
+static std::map<TypePair, CollisionFn> collisionMap;
+
+static CollisionResult sphere_vs_sphere(
+	const Transform* t1, const Component* c1,
+	const Transform* t2, const Component* c2)
+{
+	CollisionResult result = CollisionResult();
+
+	const auto* a = static_cast<const SphereCollider*>(c1);
+	const auto* b = static_cast<const SphereCollider*>(c2);
+
+	point3d vector = t1->position - t2->position;
+	if (vector.magnitude() < a->radius + b->radius) {
+		result.collided = true;
+		result.normal = vector.normalized();
+	}
+
+	return result;
+}
+
+
 class CollisionSystem : public System
 {
 public:
@@ -60,6 +104,19 @@ public:
 					Entity* entity2 = entities[i];
 					if (IsEntityValid(entity1)) {
 						Transform* transform2 = entity2->GetComponent<Transform>();
+
+
+						/*TypePair key{ std::type_index(typeid(colliderA)), std::type_index(typeid(colliderB)) };
+
+						auto it = g_collisionMap.find(key);
+						if (it != g_collisionMap.end()) {
+							CollisionResult res = it->second(tA, colliderA, tB, colliderB);
+							if (res.collided) {
+								
+							}
+						}*/
+
+
 						PlaneCollider* planeCollider = entity2->GetComponent<PlaneCollider>();
 						if (transform2 != nullptr && planeCollider != nullptr)
 						{
@@ -118,50 +175,6 @@ public:
 				}
 			}
 		}
-	}
-
-private:
-	struct CollisionResult {
-		bool collided;
-		point3d normal;
-
-		CollisionResult(bool Collided = false)
-			: collided(Collided)
-		{}
-	};
-
-	using CollisionFn = CollisionResult(*)(
-		const Transform*, const Component*,
-		const Transform*, const Component*
-		);
-
-	struct TypePair {
-		std::type_index a, b;
-		bool operator<(const TypePair& other) const {
-			if (a != other.a) return a < other.a;
-			return b < other.b;
-		}
-	};
-
-	static std::map<TypePair, CollisionFn> collisionMap;
-
-private:
-	static CollisionResult sphere_vs_sphere(
-		const Transform* t1, const Component* c1,
-		const Transform* t2, const Component* c2)
-	{
-		CollisionResult result = CollisionResult();
-
-		const auto* a = static_cast<const SphereCollider*>(c1);
-		const auto* b = static_cast<const SphereCollider*>(c2);
-
-		point3d vector = t1->position - t2->position;
-		if (vector.magnitude() < a->radius + b->radius) {
-			result.collided = true;
-			result.normal = vector.normalized();
-		}
-
-		return result;
 	}
 };
 
