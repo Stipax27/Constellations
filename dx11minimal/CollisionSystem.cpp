@@ -106,7 +106,7 @@ public:
 						Transform* transform2 = entity2->GetComponent<Transform>();
 
 
-						/*TypePair key{ std::type_index(typeid(colliderA)), std::type_index(typeid(colliderB)) };
+						TypePair key{ std::type_index(typeid(colliderA)), std::type_index(typeid(colliderB)) };
 
 						auto it = g_collisionMap.find(key);
 						if (it != g_collisionMap.end()) {
@@ -114,7 +114,7 @@ public:
 							if (res.collided) {
 								
 							}
-						}*/
+						}
 
 
 						PlaneCollider* planeCollider = entity2->GetComponent<PlaneCollider>();
