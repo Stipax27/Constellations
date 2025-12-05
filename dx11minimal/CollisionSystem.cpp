@@ -4,6 +4,7 @@
 //////////////
 // INCLUDES //
 //////////////
+#include <map>
 #include <unordered_map>
 #include <typeindex>
 #include <functional>
@@ -28,9 +29,9 @@ public:
 	}
 
 
-
 	void Initialize()
 	{
+		collisionMap[{typeid(SphereCollider), typeid(SphereCollider)}] = sphere_vs_sphere;
 	}
 
 
@@ -121,24 +122,46 @@ public:
 
 private:
 	struct CollisionResult {
-		bool collided = false;
-	};
-	using CollisionFn = CollisionResult(*)(const Component*, const Component*);
+		bool collided;
+		point3d normal;
 
-	static unordered_map<
-		pair<type_index, type_index>,
-		CollisionFn,
-		hash<pair<type_index, type_index>>
-	> collisionMap;
+		CollisionResult(bool Collided = false)
+			: collided(Collided)
+		{}
+	};
+
+	using CollisionFn = CollisionResult(*)(
+		const Transform*, const Component*,
+		const Transform*, const Component*
+		);
+
+	struct TypePair {
+		std::type_index a, b;
+		bool operator<(const TypePair& other) const {
+			if (a != other.a) return a < other.a;
+			return b < other.b;
+		}
+	};
+
+	static std::map<TypePair, CollisionFn> collisionMap;
 
 private:
-	CollisionResult sphere_vs_sphere(const Component* c1, const Component* c2) {
+	static CollisionResult sphere_vs_sphere(
+		const Transform* t1, const Component* c1,
+		const Transform* t2, const Component* c2)
+	{
+		CollisionResult result = CollisionResult();
+
 		const auto* a = static_cast<const SphereCollider*>(c1);
 		const auto* b = static_cast<const SphereCollider*>(c2);
 
+		point3d vector = t1->position - t2->position;
+		if (vector.magnitude() < a->radius + b->radius) {
+			result.collided = true;
+			result.normal = vector.normalized();
+		}
 
-
-		return { true };
+		return result;
 	}
 };
 
