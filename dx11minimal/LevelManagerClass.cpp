@@ -394,7 +394,7 @@ bool LevelManagerClass::Frame()
 	}
 	smallConstellation->VolleyUpdate(0.01f);
 	smallConstellation->LatticeUpdate(0.01f);
-	smallConstellation->TransformationUpdate(0.01f);
+	smallConstellation->TransformationUpdate();
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 

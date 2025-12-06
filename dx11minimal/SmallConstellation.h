@@ -41,23 +41,18 @@ public:
 	};
 	vector<Lattice*> Lattices;
 
-	//struct TransformationParameter {
-	//	point3d LastStarPosition;
-	//	point3d CurrentStarPosition;
-	//	point3d FutureStarPosition;
-	//};
-	//vector<TransformationParameter*> TransformationParameters;
+
 	vector<point3d> LastStarsPositions;
-	//vector <point3d> CurrentStarsPositions;
 	vector <point3d> FutureStarsPositions;
-	float TransformationSpeed = 0.5f;
-	
+	float transformationTime = 1000.0f;
+	DWORD startTransformationTime;
+
 	void Init(World*, Entity*, Entity*);
 	void VolleyStart();
 	void VolleyUpdate(float deltaTime);
 	void LatticeStart();	
 	void LatticeUpdate(float deltaTime);
 	void TransformationStart();
-	void TransformationUpdate(float deltaTime);
+	void TransformationUpdate();
 };
 

@@ -154,7 +154,8 @@ void SmallConstellation::LatticeStart() {
     Lattices.push_back(lattice);
 }
 
-void SmallConstellation::LatticeUpdate(float deltaTime) {
+void SmallConstellation::LatticeUpdate(float deltaTime) 
+{
     for (auto* lattice : Lattices)
     {
         Transform* latticeTransform = lattice->entity->GetComponent<Transform>();
@@ -162,34 +163,65 @@ void SmallConstellation::LatticeUpdate(float deltaTime) {
     }
 }
 
-void SmallConstellation::TransformationStart() {
-    FutureStarsPositions = {
-        point3d(0, 1, 0),
-        point3d(1, 1, 0),
-        point3d(1, 0, 0),
-        point3d(0, 0, 0),
-    
-        point3d(2, 1, 0),
-        point3d(3, 1, 0),
-        point3d(3, 0, 0),
-        point3d(2, 0, 0),
-    
-        point3d(0, -2, 0),
-        point3d(1, -1, 0),
-        point3d(2, -1, 0),
-        point3d(3, -2, 0),
-    };
+void SmallConstellation::TransformationStart() 
+{
+    startTransformationTime = timer::currentTime;
+    int form = rand() % 2;
+
+    switch (form) {
+    case 0:
+        FutureStarsPositions = {
+            point3d(0, 0, 0),
+            point3d(0, 1, 0),
+            point3d(1, 1, 0),
+            point3d(1, 0, 0),
+
+            point3d(2, 0, 0),
+            point3d(2, 1, 0),
+            point3d(3, 1, 0),
+            point3d(3, 0, 0),
+
+            point3d(0, -1, 0),
+            point3d(1, -2, 0),
+            point3d(2, -2, 0),
+            point3d(3, -1, 0),
+        };
+        break;
+    case 1:
+        FutureStarsPositions = {
+            point3d(0, 1, 0),
+            point3d(1, 1, 0),
+            point3d(1, 0, 0),
+            point3d(0, 0, 0),
+
+            point3d(2, 1, 0),
+            point3d(3, 1, 0),
+            point3d(3, 0, 0),
+            point3d(2, 0, 0),
+
+            point3d(0, -2, 0),
+            point3d(1, -1, 0),
+            point3d(2, -1, 0),
+            point3d(3, -2, 0),
+        };
+        break;
+    }    
 }
 
-void SmallConstellation::TransformationUpdate(float deltaTime) {
+void SmallConstellation::TransformationUpdate() {
 
     Constellation* constellation = m_entity->GetComponent<Constellation>();
-    if (FutureStarsPositions != constellation->stars)
+    if (FutureStarsPositions.size() == constellation->stars.size() && FutureStarsPositions != constellation->stars)
     {
-        for (size_t i = 0; i < constellation->stars.size(); i++) {
-            constellation->stars[i] = constellation->stars[i].lerp(FutureStarsPositions[i], 0.1f); //Нужно переделать, отталкиваясь от deltaTime
-            //constellation->stars[i] = LastStarsPositions[i].lerp(FutureStarsPositions[i], нужноРассчитыватьДинамически);
+        float currentA = (timer::currentTime - startTransformationTime) / transformationTime;
+        if (currentA > 1) currentA = 1;
+
+        
+        for (size_t i = 0; i < constellation->stars.size(); i++) 
+        {          
+            constellation->stars[i] = LastStarsPositions[i].lerp(FutureStarsPositions[i], currentA);
         }
 
+        if (currentA == 1) LastStarsPositions = constellation->stars;
     }
 }
