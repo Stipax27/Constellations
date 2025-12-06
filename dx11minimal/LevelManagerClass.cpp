@@ -378,7 +378,7 @@ bool LevelManagerClass::Frame()
 
 		smallConstellation->LastTime = currentTime;
 
-		int attackType = rand() % 2;
+		int attackType = rand() % 3;
 		
 		switch (attackType) {
 		case 0:
@@ -387,10 +387,14 @@ bool LevelManagerClass::Frame()
 		case 1:
 			smallConstellation->LatticeStart();
 			break;
+		case 2:
+			smallConstellation->TransformationStart();
+			break;
 		}
 	}
 	smallConstellation->VolleyUpdate(0.01f);
 	smallConstellation->LatticeUpdate(0.01f);
+	smallConstellation->TransformationUpdate(0.01f);
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 

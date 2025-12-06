@@ -5,6 +5,11 @@ void SmallConstellation::Init(World* World, Entity* entity, Entity* target) {
     m_entity = entity;
     m_target = target;
     LastTime = timer::currentTime;
+    
+    Constellation* constellation = m_entity->GetComponent<Constellation>();
+
+    LastStarsPositions = m_entity->GetComponent<Constellation>()->stars;
+    FutureStarsPositions = m_entity->GetComponent<Constellation>()->stars;
 }
 
 void SmallConstellation::VolleyStart() {
@@ -154,5 +159,37 @@ void SmallConstellation::LatticeUpdate(float deltaTime) {
     {
         Transform* latticeTransform = lattice->entity->GetComponent<Transform>();
         latticeTransform->position += lattice->direction * lattice->speed * deltaTime;
+    }
+}
+
+void SmallConstellation::TransformationStart() {
+    FutureStarsPositions = {
+        point3d(0, 1, 0),
+        point3d(1, 1, 0),
+        point3d(1, 0, 0),
+        point3d(0, 0, 0),
+    
+        point3d(2, 1, 0),
+        point3d(3, 1, 0),
+        point3d(3, 0, 0),
+        point3d(2, 0, 0),
+    
+        point3d(0, -2, 0),
+        point3d(1, -1, 0),
+        point3d(2, -1, 0),
+        point3d(3, -2, 0),
+    };
+}
+
+void SmallConstellation::TransformationUpdate(float deltaTime) {
+
+    Constellation* constellation = m_entity->GetComponent<Constellation>();
+    if (FutureStarsPositions != constellation->stars)
+    {
+        for (size_t i = 0; i < constellation->stars.size(); i++) {
+            constellation->stars[i] = constellation->stars[i].lerp(FutureStarsPositions[i], 0.1f); //Нужно переделать, отталкиваясь от deltaTime
+            //constellation->stars[i] = LastStarsPositions[i].lerp(FutureStarsPositions[i], нужноРассчитыватьДинамически);
+        }
+
     }
 }
