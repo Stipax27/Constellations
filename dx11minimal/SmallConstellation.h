@@ -54,5 +54,7 @@ public:
 	void LatticeUpdate(float deltaTime);
 	void TransformationStart();
 	void TransformationUpdate();
+	void RamStart();
+	void RamUpdate();
 };
 

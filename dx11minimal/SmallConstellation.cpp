@@ -23,7 +23,6 @@ void SmallConstellation::VolleyStart() {
         startPos += m_entity->GetComponent<Transform>()->position;
 
         point3d targetPoint = m_target->GetComponent<Transform>()->position;
-        point3d distance = startPos - targetPoint;
 
         point3d direction = targetPoint - startPos;
         direction = direction.normalized();
@@ -224,4 +223,23 @@ void SmallConstellation::TransformationUpdate() {
 
         if (currentA == 1) LastStarsPositions = constellation->stars;
     }
+}
+
+void SmallConstellation::RamStart() {
+
+    TransformationStart();
+
+    point3d startPos = m_entity->GetComponent<Transform>()->position;
+    point3d targetPoint = m_target->GetComponent<Transform>()->position;
+    
+    point3d direction = targetPoint - startPos;    
+    direction = direction.normalized(); 
+
+    PhysicBody* physicBody = m_entity->GetComponent<PhysicBody>();
+    
+    physicBody->velocity = direction * 50;
+}
+
+void SmallConstellation::RamUpdate() {
+
 }

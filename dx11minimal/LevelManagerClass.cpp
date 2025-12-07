@@ -299,12 +299,12 @@ bool LevelManagerClass::Initialize()
 	playerController = new PlayerController();
 	playerController->Initialize(player, m_World->m_Camera, mouse, window);
 
-	AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
-
-	if (aiSystem)
-	{
-		aiSystem->SetPlayerEntity(player);
-	}
+	//AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
+	//
+	//if (aiSystem)
+	//{
+	//	aiSystem->SetPlayerEntity(player);
+	//}
 
 
 	return true;
@@ -388,13 +388,14 @@ bool LevelManagerClass::Frame()
 			smallConstellation->LatticeStart();
 			break;
 		case 2:
-			smallConstellation->TransformationStart();
+			smallConstellation->RamStart();
 			break;
 		}
 	}
 	smallConstellation->VolleyUpdate(0.01f);
 	smallConstellation->LatticeUpdate(0.01f);
 	smallConstellation->TransformationUpdate();
+	smallConstellation->RamUpdate();
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 
