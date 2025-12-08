@@ -299,12 +299,12 @@ bool LevelManagerClass::Initialize()
 	playerController = new PlayerController();
 	playerController->Initialize(player, m_World->m_Camera, mouse, window);
 
-	//AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
-	//
-	//if (aiSystem)
-	//{
-	//	aiSystem->SetPlayerEntity(player);
-	//}
+	AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
+	
+	if (aiSystem)
+	{
+		aiSystem->SetPlayerEntity(player);
+	}
 
 
 	return true;
@@ -374,11 +374,11 @@ bool LevelManagerClass::Frame()
 	//	Star->LastTime = currentTime;
 	//}
 
-	if (currentTime - smallConstellation->LastTime > 3000) {
+	if (currentTime - smallConstellation->LastTime > 5000) {
 
 		smallConstellation->LastTime = currentTime;
 
-		int attackType = rand() % 3;
+		int attackType = rand() % 4;
 		
 		switch (attackType) {
 		case 0:
@@ -388,6 +388,9 @@ bool LevelManagerClass::Frame()
 			smallConstellation->LatticeStart();
 			break;
 		case 2:
+			smallConstellation->TransformationStart();
+			break;
+		case 3:
 			smallConstellation->RamStart();
 			break;
 		}

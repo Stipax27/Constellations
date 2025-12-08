@@ -60,7 +60,7 @@ public:
                 AIComponent* aiComponent = entity->GetComponent<AIComponent>();
                 PhysicBody* physicBody = entity->GetComponent<PhysicBody>();
 
-                if (transform != nullptr && aiComponent != nullptr && physicBody != nullptr)
+                if (transform != nullptr && aiComponent != nullptr && physicBody != nullptr && aiComponent->enabled)
                 {
                     ProcessAIBehavior(entity, transform, aiComponent, physicBody, deltaTime);
                 }

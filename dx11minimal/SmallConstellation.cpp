@@ -227,7 +227,6 @@ void SmallConstellation::TransformationUpdate() {
 
 void SmallConstellation::RamStart() {
 
-    TransformationStart();
 
     point3d startPos = m_entity->GetComponent<Transform>()->position;
     point3d targetPoint = m_target->GetComponent<Transform>()->position;
@@ -237,9 +236,16 @@ void SmallConstellation::RamStart() {
 
     PhysicBody* physicBody = m_entity->GetComponent<PhysicBody>();
     
-    physicBody->velocity = direction * 50;
+    AIComponent* aiComponent = m_entity->GetComponent<AIComponent>();
+
+    aiComponent->enabled = false;
+
+    physicBody->velocity = direction * 75;
 }
 
 void SmallConstellation::RamUpdate() {
+    PhysicBody* physicBody = m_entity->GetComponent<PhysicBody>();
+    AIComponent* aiComponent = m_entity->GetComponent<AIComponent>();
 
+    if (physicBody->velocity == point3d(0, 0, 0)) aiComponent->enabled = true;
 }

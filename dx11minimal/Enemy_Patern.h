@@ -27,6 +27,7 @@ enum class AIBehaviorType
 struct AIComponent : Component
 {
 public:
+    bool enabled = true;
     AIBehaviorType behaviorType = AIBehaviorType::PATROL;
     //PhysicBody* enemyPhysicBody;
     // Параметры движения
