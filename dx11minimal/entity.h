@@ -12,6 +12,7 @@
 #include <typeindex>
 #include <unordered_map>
 #include "component.h"
+#include "collider.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: Entity
@@ -31,8 +32,12 @@ public:
 	template <typename T>
 	T* AddComponent()
 	{
+		static_assert(is_base_of<Component, T>::value, "T must inherit from Component");
+
 		T* component = new T;
 		components[typeid(T)] = component;
+
+		RegisterInHierarchy<T>(component);
 
 		return component;
 	}
@@ -72,6 +77,31 @@ public:
 		//components.
 	}
 
+	template <typename Base>
+	Base* GetFirstComponentOfBase()
+	{
+		auto it = baseToComponents.find(typeid(Base));
+		if (it != baseToComponents.end() && !it->second.empty()) {
+			return static_cast<Base*>(it->second.front());
+		}
+		return nullptr;
+	}
+
+	template <typename Base>
+	vector<Base*> GetAllComponentsOfBase()
+	{
+		vector<Base*> result;
+		auto it = baseToComponents.find(typeid(Base));
+
+		if (it != baseToComponents.end()) {
+			for (Component* comp : it->second) {
+				result.push_back(static_cast<Base*>(comp));
+			}
+		}
+
+		return result;
+	}
+
 	void Destroy();
 
 	int GetId();
@@ -89,7 +119,21 @@ private:
 	bool active = true;
 
 	unordered_map<type_index, Component*> components;
+	unordered_map<type_index, vector<Component*>> baseToComponents;
 	vector<Entity*> children;
+
+private:
+	template <typename T>
+	void RegisterInHierarchy(Component* component)
+	{
+		baseToComponents[typeid(T)].push_back(component);
+
+		if (std::is_base_of<Collider, T>::value) {
+			baseToComponents[typeid(Collider)].push_back(component);
+		}
+
+		baseToComponents[typeid(Component)].push_back(component);
+	}
 };
 
 #endif

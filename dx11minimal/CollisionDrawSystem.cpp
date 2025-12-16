@@ -51,16 +51,18 @@ public:
 				{
 					Transform worldTransform = GetWorldTransform(entity);
 
-					ConstBuf::global[0] = XMFLOAT4(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, worldTransform.scale.magnitude());
-					ConstBuf::Update(5, ConstBuf::global);
-					ConstBuf::ConstToVertex(5);
+					ConstBuf::global[0] = XMFLOAT4(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, 0);
 
 					SphereCollider* sphereCollider = entity->GetComponent<SphereCollider>();
 					if (sphereCollider != nullptr) {
+						ConstBuf::global[0].w = sphereCollider->radius;
+						ConstBuf::Update(5, ConstBuf::global);
+						ConstBuf::ConstToVertex(5);
+
 						Shaders::vShader(18);
 						Shaders::pShader(18);
 
-						int n = 11;
+						int n = 11 * sqrt(sphereCollider->radius);
 						ConstBuf::drawerV[0] = n;
 						Draw::Drawer(n * n);
 					}

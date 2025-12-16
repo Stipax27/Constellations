@@ -1,4 +1,4 @@
-﻿#ifndef _TEXTLABEL_C_
+#ifndef _TEXTLABEL_C_
 #define _TEXTLABEL_C_
 
 #include "component.h"

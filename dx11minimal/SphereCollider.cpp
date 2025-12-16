@@ -1,14 +1,11 @@
 #ifndef _SPHERECOLLIDER_C_
 #define _SPHERECOLLIDER_C_
 
-#include "component.h"
+#include "collider.h"
 
-struct SphereCollider : Component
+struct SphereCollider : Collider
 {
-	float friction = 1.0f;
 	float radius = 1.0f;
-
-	bool isTouchable = true;
 };
 
 #endif

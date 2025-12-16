@@ -1,4 +1,4 @@
-﻿#ifndef _SPRITECLUSTER_C_
+#ifndef _SPRITECLUSTER_C_
 #define _SPRITECLUSTER_C_
 
 #include "component.h"

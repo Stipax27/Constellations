@@ -167,6 +167,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="cameraclass.h" />
+    <ClInclude Include="collider.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="dx11.h" />
     <ClInclude Include="entity.h" />

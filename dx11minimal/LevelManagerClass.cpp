@@ -164,6 +164,8 @@ bool LevelManagerClass::Initialize()
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(2.0f, 0.0f, 0.0f);
 	transform->scale = point3d(1, 0, 0);
+	sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider->radius = 0.5f;
 	constellation = entity->AddComponent<Constellation>();
 	constellation->stars = {
 		point3d(-0.09, -0.7, 0),
@@ -184,18 +186,18 @@ bool LevelManagerClass::Initialize()
 
 	// MAIN MENU //
 	
-	entity = m_World->CreateEntity();
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0.0f, 0.1f, 0.0f);
-	transform->scale = point3d(0.25f, 0.05f, 0.0f);
-	rect = entity->AddComponent<Rect>();
-	rect->color = point3d(0.5f, 0.25f, 0.8f);
-	rect->opacity = 1.f;
-	//rect->anchorPoint = point3d(-1, 0, 0);
-	rect->ratio = ScreenAspectRatio::YY;
-	rect->cornerRadius = 0.25f;
-	rect->cornerType = CornerType::Strict;
-	//entity->AddComponent<Button>();
+	//entity = m_World->CreateEntity();
+	//transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(0.0f, 0.1f, 0.0f);
+	//transform->scale = point3d(0.25f, 0.05f, 0.0f);
+	//rect = entity->AddComponent<Rect>();
+	//rect->color = point3d(0.5f, 0.25f, 0.8f);
+	//rect->opacity = 1.f;
+	////rect->anchorPoint = point3d(-1, 0, 0);
+	//rect->ratio = ScreenAspectRatio::YY;
+	//rect->cornerRadius = 0.25f;
+	//rect->cornerType = CornerType::Strict;
+	////entity->AddComponent<Button>();
 
 	/*entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
@@ -240,7 +242,7 @@ bool LevelManagerClass::Initialize()
 	m_World->AddPhysicSystem<EntityManagerSystem>();
 
 	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera->frustum);
-	//m_World->AddRenderSystem<CollisionDrawSystem>(); // DEBUG //
+	m_World->AddRenderSystem<CollisionDrawSystem>(); // DEBUG //
 	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum);
 	m_World->AddRenderSystem<UISystem>(mouse);
 
