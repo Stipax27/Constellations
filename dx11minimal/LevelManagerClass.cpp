@@ -82,7 +82,6 @@ bool LevelManagerClass::Initialize()
 	player = m_World->CreateEntity("Player", folder);
 	transform = player->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, 0.0f);
-	transform->scale = point3d(1, 0, 0);
 	physicBody = player->AddComponent<PhysicBody>();
 	sphereCollider = player->AddComponent<SphereCollider>();
 	constellation = player->AddComponent<Constellation>();
@@ -171,7 +170,6 @@ bool LevelManagerClass::Initialize()
 	entity = m_World->CreateEntity("Enemy", folder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(2.0f, 0.0f, 0.0f);
-	transform->scale = point3d(1, 0, 0);
 	sphereCollider = entity->AddComponent<SphereCollider>();
 	sphereCollider->radius = 0.5f;
 	constellation = entity->AddComponent<Constellation>();
@@ -250,7 +248,7 @@ bool LevelManagerClass::Initialize()
 	m_World->AddPhysicSystem<EntityManagerSystem>();
 
 	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera->frustum);
-	m_World->AddRenderSystem<CollisionDrawSystem>(); // DEBUG //
+	//m_World->AddRenderSystem<CollisionDrawSystem>(); // DEBUG //
 	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum);
 	m_World->AddRenderSystem<UISystem>(mouse);
 

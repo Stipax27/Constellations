@@ -126,6 +126,7 @@ void CameraClass::Render()
 	viewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
 
 	ConstBuf::camera.view = XMMatrixTranspose(viewMatrix);
+	ConstBuf::camera.cPos = XMFLOAT4(position.x, position.y, position.z, 0);
 
 	ConstBuf::UpdateCamera();
 	ConstBuf::ConstToVertex(3);

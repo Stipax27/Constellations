@@ -8,6 +8,7 @@
 #include "system.h"
 #include "Transform.cpp"
 #include "Mesh.cpp"
+#include "Constellation.cpp"
 #include "Star.cpp"
 
 #include "frustumclass.h"
@@ -66,7 +67,6 @@ public:
 							//ConstBuf::CreateVertexBuffer(15);
 
 							UpdateWorldMatrix(worldTransform);
-							ConstBuf::ConstToVertex(5);
 
 							Rasterizer::Cull(mesh->cullMode);
 
@@ -79,9 +79,57 @@ public:
 
 					}
 
+					Constellation* constellation = entity->GetComponent<Constellation>();
+					if (constellation != nullptr) {
+						point3d transformPos = transform->position;
+						vector<point3d> transformedStars;
+
+						for (int a = 0; a < constellation->stars.size(); a++) {
+							point3d star = constellation->stars[a];
+							star = transformPos + transform->GetLookVector() * star.z + transform->GetRightVector() * star.x + transform->GetUpVector() * star.y;
+
+							transformedStars.push_back(star);
+						}
+
+						int n = 33;
+						ConstBuf::drawerV[0] = n;
+						ConstBuf::Update(0, ConstBuf::drawerV);
+						ConstBuf::ConstToVertex(0);
+
+						int count = 0;
+						for (int a = 0; a < transformedStars.size() && count < constCount - 1; a++) {
+							point3d star = transformedStars[a];
+							if (frustum->CheckSphere(star, constellation->starSize)) {
+								worldTransform.position = star;
+								ConstBuf::drawerMatrix[count] = GetWorldMatrix(worldTransform);
+								ConstBuf::global[count].w = constellation->starSize;
+								count++;
+							}
+						}
+
+						if (count > 0) {
+							Rasterizer::Cull(Rasterizer::cullmode::front);
+
+							Shaders::vShader(19);
+							Shaders::pShader(19);
+
+							ConstBuf::Update(5, ConstBuf::global);
+							ConstBuf::ConstToVertex(5);
+							ConstBuf::Update(8, ConstBuf::drawerMatrix);
+							ConstBuf::ConstToVertex(8);
+
+							context->DrawInstanced(n * n * 6, min(count, constCount - 1), 0, 0);
+						}
+					}
+
 					Star* star = entity->GetComponent<Star>();
 					if (star != nullptr) {
-						UpdateWorldMatrix(worldTransform);
+						ConstBuf::drawerMatrix[0] = GetWorldMatrix(worldTransform);
+						ConstBuf::Update(8, ConstBuf::drawerMatrix);
+						ConstBuf::ConstToVertex(8);
+
+						ConstBuf::global[0].w = star->radius;
+						ConstBuf::Update(5, ConstBuf::global);
 						ConstBuf::ConstToVertex(5);
 
 						Rasterizer::Cull(Rasterizer::cullmode::front);
@@ -102,7 +150,7 @@ private:
 	FrustumClass* frustum;
 
 private:
-	void UpdateWorldMatrix(Transform worldTransform) {
+	XMMATRIX GetWorldMatrix(Transform worldTransform) {
 		XMMATRIX rotateMatrix = worldTransform.mRotation;
 		XMMATRIX scaleMatrix = XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z);
 		XMMATRIX translateMatrix = XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z);
@@ -111,7 +159,11 @@ private:
 		XMMATRIX srMatrix = scaleMatrix * rotateMatrix;
 		XMMATRIX worldMatrix = srMatrix * translateMatrix;
 
-		ConstBuf::camera.world = XMMatrixTranspose(worldMatrix);
+		return XMMatrixTranspose(worldMatrix);
+	}
+
+	void UpdateWorldMatrix(Transform worldTransform) {
+		ConstBuf::camera.world = GetWorldMatrix(worldTransform);
 		ConstBuf::UpdateCamera();
 	}
 };

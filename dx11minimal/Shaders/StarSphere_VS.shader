@@ -8,11 +8,17 @@ cbuffer camera : register(b3)
     float4x4 world;
     float4x4 view;
     float4x4 proj;
+    float4 cPos;
 };
 
 cbuffer drawerV : register(b0)
 {
     float drawConst[256];
+}
+
+cbuffer drawerMatrix : register(b8)
+{
+    float4x4 model[256];
 }
 
 struct VS_OUTPUT
@@ -35,11 +41,11 @@ float3 ball(float2 p, float radius)
     return pos;
 }
 
-VS_OUTPUT VS(uint vID : SV_VertexID)
+VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 {
     VS_OUTPUT output;
 
-    uint n = drawConst[0];
+    uint n = drawConst[iID];
     uint instanceID = vID / 6;
 
     float row = instanceID % n;
@@ -58,11 +64,11 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
 
     output.uv = float2(1, -1) * pos.xy / 2. + .5;
 
-    pos.xyz = ball(pos.xy, 1);
+    pos.xyz = ball(pos.xy, gConst[iID].w);
 
     output.vpos = pos;
 
-    pos = mul(pos, world);
+    pos = mul(pos, model[iID]);
 
     output.pos = mul(pos, mul(view, proj));
     output.wpos = float4(pos.xyz, 0);

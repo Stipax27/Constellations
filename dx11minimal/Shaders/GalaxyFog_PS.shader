@@ -6,9 +6,10 @@ cbuffer frame : register(b4)
 
 cbuffer camera : register(b3)
 {
-    float4x4 world[2];
-    float4x4 view[2];
-    float4x4 proj[2];
+    float4x4 world;
+    float4x4 view;
+    float4x4 proj;
+    float4 cPos;
 };
 
 
@@ -216,7 +217,7 @@ float4 PS( VS_OUTPUT input ) : SV_Target
 
 // camera ----------------------------------------------
 
-    float4x4 v = view[0];
+    float4x4 v = view;
 
     float3 ro, rdcam, up;
     ro = float3(v._m30, v._m31, v._m32);
@@ -226,7 +227,7 @@ float4 PS( VS_OUTPUT input ) : SV_Target
     float3 ww = normalize( rdcam ),
          uu = normalize( cross(ww, up) ),
          vv = normalize( cross(uu, ww)),
-         rd = mul(float4(p.x, p.y, 1, 0), view[0]).xyz;
+         rd = mul(float4(p.x, p.y, 1, 0), view).xyz;
 
     rd = normalize(rd);
        

@@ -58,30 +58,11 @@ public:
 				{
 					Constellation* constellation = entity->GetComponent<Constellation>();
 					if (constellation != nullptr) {
-						// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-					//sprite->model.Render(m_Direct3D->GetDeviceContext());
-
 						point3d transformPos = transform->position;
 						vector<point3d> transformedStars;
 						int count;
 
 						ConstBuf::global[constCount - 1] = XMFLOAT4(1, 1, 1, 1);
-
-						////debug point
-						//Shaders::vShader(1);
-						//Shaders::pShader(1);
-
-						//point3d closestPoint;
-						//float distance;
-						//SurfaceCollider surface;
-
-						//bool collision = findClosestPointOnSurface(transformPos, surface, closestPoint, distance, 12, 3);
-
-						//ConstBuf::global[0] = XMFLOAT4(closestPoint.x, closestPoint.y, closestPoint.z, 5.0f);
-						//ConstBuf::Update(5, ConstBuf::global);
-						//ConstBuf::ConstToVertex(5);
-
-						//Draw::Drawer(1);
 
 						for (int a = 0; a < constellation->stars.size(); a++) {
 							point3d star = constellation->stars[a];
@@ -90,55 +71,59 @@ public:
 							transformedStars.push_back(star);
 						}
 
-						Shaders::vShader(4);
-						Shaders::pShader(4);
-
 						count = 0;
 						for (int a = 0; a < constellation->links.size() && count < constCount / 2 - 1; a++) {
 							pair<int, int> link = constellation->links[a];
 							point3d point1 = transformedStars[link.first];
 							point3d point2 = transformedStars[link.second];
 
-							if (frustum->CheckSphere(point1.lerp(point2, 0.5f), max((point1 - point2).magnitude(), 0.25f))) {
-								ConstBuf::global[count * 2] = XMFLOAT4(point1.x, point1.y, point1.z, 0.25f);
-								ConstBuf::global[count * 2 + 1] = XMFLOAT4(point2.x, point2.y, point2.z, 0.25f);
+							if (frustum->CheckSphere(point1.lerp(point2, 0.5f), max((point1 - point2).magnitude(), constellation->linkSize))) {
+								ConstBuf::global[count * 2] = XMFLOAT4(point1.x, point1.y, point1.z, constellation->linkSize);
+								ConstBuf::global[count * 2 + 1] = XMFLOAT4(point2.x, point2.y, point2.z, constellation->linkSize);
 								count++;
 							}
 						}
 
 						if (count > 0) {
+							Shaders::vShader(4);
+							Shaders::pShader(4);
+
 							ConstBuf::Update(5, ConstBuf::global);
 							ConstBuf::ConstToVertex(5);
 
 							context->DrawInstanced(6, min(count, constCount / 2 - 1), 0, 0);
 						}
 
-						Shaders::vShader(1);
-						Shaders::pShader(1);
+						int n = 48;
+						ConstBuf::drawerV[0] = n;
 
 						count = 0;
 						for (int a = 0; a < transformedStars.size() && count < constCount - 1; a++) {
 							point3d star = transformedStars[a];
 							if (frustum->CheckSphere(star, transform->scale.x)) {
-								ConstBuf::global[count] = XMFLOAT4(star.x, star.y, star.z, transform->scale.x);
+								ConstBuf::global[count] = XMFLOAT4(star.x, star.y, star.z, constellation->starSize);
 								count++;
 							}
 						}
 
 						if (count > 0) {
+							Shaders::vShader(20);
+							Shaders::pShader(20);
+
+							ConstBuf::Update(0, ConstBuf::drawerV);
 							ConstBuf::Update(5, ConstBuf::global);
+							ConstBuf::ConstToVertex(0);
 							ConstBuf::ConstToVertex(5);
 
-							context->DrawInstanced(6, min(count, constCount - 1), 0, 0);
+							context->DrawInstanced(n * 6, min(count, constCount - 1), 0, 0);
 						}
 					}
 
 					Star* star = entity->GetComponent<Star>();
 					if (star != nullptr) {
-						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
+						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, star->radius);
 						ConstBuf::Update(5, ConstBuf::global);
 						ConstBuf::ConstToVertex(5);
-						ConstBuf::ConstToPixel(5);
 
 						Shaders::vShader(20);
 						Shaders::pShader(20);

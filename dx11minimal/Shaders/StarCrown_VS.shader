@@ -14,6 +14,7 @@ cbuffer camera : register(b3)
     float4x4 world;
     float4x4 view;
     float4x4 proj;
+    float4 cPos;
 };
 
 cbuffer drawMat : register(b2)
@@ -31,8 +32,6 @@ struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
     float2 uv : TEXCOORD0;
-    uint   starID : COLOR0;
-    float4 worldpos : POSITION1;
 };
 
 #define PI 3.14159265358979323846
@@ -41,7 +40,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 {
     VS_OUTPUT output;
     
-    uint n = drawerV[iID];
+    uint n = drawerV[0];
     uint triangles = n / 3;
     float angle = PI * 2 / triangles;
 
@@ -63,12 +62,20 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     float4 pos = float4(gConst[iID].xyz, 1);
     float sz = gConst[iID].w;
 
-    //pos.xy += quadUV[vID] * sz;
+    float3 eye = cPos.xyz;
+    float3 front = normalize(eye - pos.xyz);
+
+    float3 up = abs(dot(front, float3(0, 1, 0))) > 0.9999 ? float3(0, 0, 1) : float3(0, 1, 0);
+    float3 right = normalize(cross(up, front));
+    up = normalize(cross(front, right));
+
+    float2 triangleUVpos = triangleUV[pID];
+    pos.xyz += (right * triangleUVpos.x + up * triangleUVpos.y) * sz * 1.75;
         
     float4 viewPos = mul(pos, view);
     float4 projPos = mul(viewPos, proj);
 
-    projPos.xy += triangleUV[pID] * float2(aspect.x, 1) * sz * 2;
+    //projPos.xy += triangleUV[pID] * float2(aspect.x, 1) * sz * 2;
 
     output.uv = triangleUV[pID];
     output.pos = projPos;

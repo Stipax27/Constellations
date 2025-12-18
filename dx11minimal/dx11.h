@@ -213,6 +213,7 @@ namespace ConstBuf
 		XMMATRIX world;
 		XMMATRIX view;
 		XMMATRIX proj;
+		XMFLOAT4 cPos;
 	};
 
 	struct Frame {
@@ -226,7 +227,7 @@ namespace ConstBuf
 
 	//----------------------------------------------------------------
 
-	extern ID3D11Buffer* buffer[8];
+	extern ID3D11Buffer* buffer[9];
 
 #define constCount 256
 
@@ -254,6 +255,9 @@ namespace ConstBuf
 	//b7
 	extern int drawerInt[constCount];
 
+	//b8
+	extern XMMATRIX drawerMatrix[constCount];
+
 	int roundUp(int, int);
 	void Create(ID3D11Buffer*&, int);
 	void CreateVertexBuffer(int);
@@ -273,7 +277,7 @@ namespace ConstBuf
 	void ConstToPixel(int);
 
 	namespace getbyname {
-		enum { drawerV, drawerP, drawerMat, camera, frame, global, factors, drawerInt };
+		enum { drawerV, drawerP, drawerMat, camera, frame, global, factors, drawerInt, drawerMatrix };
 	}
 }
 

@@ -835,7 +835,7 @@ void Sampler::SamplerComp(unsigned int slot)
 
 //////////////////////////////////////////////////////////////////////////////////
 
-ID3D11Buffer* ConstBuf::buffer[8];
+ID3D11Buffer* ConstBuf::buffer[9];
 
 //b0
 float ConstBuf::drawerV[constCount];
@@ -860,6 +860,9 @@ ConstBuf::Factors ConstBuf::factors;
 
 //b7
 int ConstBuf::drawerInt[constCount];
+
+//b8
+XMMATRIX ConstBuf::drawerMatrix[constCount];
 
 
 int ConstBuf::roundUp(int n, int r)
@@ -926,6 +929,7 @@ void ConstBuf::Init()
 	ConstBuf::Create(ConstBuf::buffer[5], sizeof(global));
 	ConstBuf::Create(ConstBuf::buffer[6], sizeof(factors));
 	ConstBuf::Create(ConstBuf::buffer[7], sizeof(drawerInt));
+	ConstBuf::Create(ConstBuf::buffer[8], sizeof(drawerMatrix));
 }
 
 void ConstBuf::UpdateFrame()

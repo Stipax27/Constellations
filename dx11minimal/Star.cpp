@@ -6,6 +6,7 @@
 
 struct Star : Component
 {
+	float radius = 0.5f;
 };
 
 #endif

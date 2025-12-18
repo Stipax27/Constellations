@@ -14,6 +14,7 @@ cbuffer camera : register(b3)
     float4x4 world;
     float4x4 view;
     float4x4 proj;
+    float4 cPos;
 };
 
 float3 rotY(float3 p, float a)

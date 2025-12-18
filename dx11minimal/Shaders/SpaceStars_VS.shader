@@ -11,9 +11,10 @@ cbuffer frame : register(b4)
 
 cbuffer camera : register(b3)
 {
-    float4x4 world[2];
-    float4x4 view[2];
-    float4x4 proj[2];
+    float4x4 world;
+    float4x4 view;
+    float4x4 proj;
+    float4 cPos;
 };
 
 cbuffer drawMat : register(b2)
@@ -95,7 +96,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 
     float size = 16;
     float range = 2000.0f;
-    float4 camPos = -view[0]._m30_m31_m32_m33;
+    float4 camPos = -view._m30_m31_m32_m33;
     //float3 starPos = float3(
     //    perlinNoise(camPos),
     //    perlinNoise(camPos + float3(0, 100.0f, 0)),
@@ -107,7 +108,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     deltaPos *= range * 2 - range;
 
     //-----
-    float4 viewPos = mul(float4(starPos, 1.0f), view[0]);
+    float4 viewPos = mul(float4(starPos, 1.0f), view);
     float4 projPos = mul(viewPos, proj[0]);
     projPos.xy += quadPos[vertexInQuad] * float2(aspect.x, 1) * size;
 
