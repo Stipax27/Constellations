@@ -730,6 +730,12 @@ void Shaders::Init()
 
 	Shaders::CreateVS(18, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Sphere_VS.shader"));
 	Shaders::CreatePS(18, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Sphere_PS.shader"));
+
+	Shaders::CreateVS(19, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarSphere_VS.shader"));
+	Shaders::CreatePS(19, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarSphere_PS.shader"));
+
+	Shaders::CreateVS(20, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarCrown_VS.shader"));
+	Shaders::CreatePS(20, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarCrown_PS.shader"));
 	
 	//-----------------------------------------------
 	

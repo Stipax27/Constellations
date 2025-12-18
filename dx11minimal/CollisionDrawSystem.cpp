@@ -42,6 +42,8 @@ public:
 		size_t size = entities.size();
 		for (int i = 0; i < size; i++)
 		{
+			Shaders::gShader(0);
+
 			Entity* entity = entities[i];
 			if (IsEntityValid(entity))
 			{

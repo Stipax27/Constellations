@@ -8,6 +8,7 @@
 #include "system.h"
 #include "Transform.cpp"
 #include "Mesh.cpp"
+#include "Star.cpp"
 
 #include "frustumclass.h"
 
@@ -47,14 +48,16 @@ public:
 			Entity* entity = entities[i];
 			if (IsEntityValid(entity))
 			{
+				Shaders::gShader(0);
+
 				Transform* transform = entity->GetComponent<Transform>();
 
 				if (transform != nullptr)
 				{
+					Transform worldTransform = GetWorldTransform(entity);
+
 					Mesh* mesh = entity->GetComponent<Mesh>();
 					if (mesh != nullptr) {
-						Transform worldTransform = GetWorldTransform(entity);
-
 						if (entity->parent != nullptr && !entity->parent->HasComponent<Transform>()) {
 							transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -2 * RAD) * transform->mRotation;
 						}
@@ -62,29 +65,33 @@ public:
 						if (frustum->CheckSphere(worldTransform.position, worldTransform.scale.magnitude())) {
 							//ConstBuf::CreateVertexBuffer(15);
 
-							XMMATRIX rotateMatrix = worldTransform.mRotation;
-							XMMATRIX scaleMatrix = XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z);
-							XMMATRIX translateMatrix = XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z);
-
-							// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
-							XMMATRIX srMatrix = scaleMatrix * rotateMatrix;
-							XMMATRIX worldMatrix = srMatrix * translateMatrix;
-
-							ConstBuf::camera.world = XMMatrixTranspose(worldMatrix);
-							ConstBuf::UpdateCamera();
-
+							UpdateWorldMatrix(worldTransform);
 							ConstBuf::ConstToVertex(5);
 
 							Rasterizer::Cull(mesh->cullMode);
 
 							Shaders::vShader(15);
 							Shaders::pShader(15);
-							Shaders::gShader(0);
 
 							InputAssembler::IA(InputAssembler::topology::triList);
 							context->DrawIndexed(36, 0, 0);
 						}
 
+					}
+
+					Star* star = entity->GetComponent<Star>();
+					if (star != nullptr) {
+						UpdateWorldMatrix(worldTransform);
+						ConstBuf::ConstToVertex(5);
+
+						Rasterizer::Cull(Rasterizer::cullmode::front);
+
+						Shaders::vShader(19);
+						Shaders::pShader(19);
+
+						int n = 33;
+						ConstBuf::drawerV[0] = n;
+						Draw::Drawer(n * n);
 					}
 				}
 			}
@@ -93,6 +100,20 @@ public:
 
 private:
 	FrustumClass* frustum;
+
+private:
+	void UpdateWorldMatrix(Transform worldTransform) {
+		XMMATRIX rotateMatrix = worldTransform.mRotation;
+		XMMATRIX scaleMatrix = XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z);
+		XMMATRIX translateMatrix = XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z);
+
+		// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
+		XMMATRIX srMatrix = scaleMatrix * rotateMatrix;
+		XMMATRIX worldMatrix = srMatrix * translateMatrix;
+
+		ConstBuf::camera.world = XMMatrixTranspose(worldMatrix);
+		ConstBuf::UpdateCamera();
+	}
 };
 
 #endif

@@ -9,11 +9,6 @@ cbuffer frame : register(b4)
     float4 aspect;
 };
 
-float hash11(uint n) {
-    n = (n << 13u) ^ n;
-    return frac((n * (n * n * 15731u + 789221u) + 1376312589u) * 0.000000000931322574615478515625f);
-}
-
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;

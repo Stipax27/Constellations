@@ -129,6 +129,8 @@ public:
 		Rasterizer::Cull(Rasterizer::cullmode::off);
 		Depth::Depth(Depth::depthmode::off);
 
+		Shaders::gShader(0);
+
 		size_t size = entities.size();
 		for (int i = 0; i < size; i++) {
 			Entity* entity = entities[i];
@@ -170,7 +172,6 @@ public:
 
 						Shaders::vShader(13);
 						Shaders::pShader(13 + (int)rect->cornerType);
-						Shaders::gShader(0);
 
 						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, rect->cornerRadius);
 						ConstBuf::global[1] = XMFLOAT4(transform->scale.x, transform->scale.y, 0, 0);

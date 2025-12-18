@@ -74,6 +74,7 @@ bool LevelManagerClass::Initialize()
 	Mesh* mesh;
 	PointCloud* pointCloud;
 	DelayedDestroy* delayedDestroy;
+	Star* star;
 
 	Entity* folder = m_World->CreateEntity("WorldFolder");
 	folder->SetActive(true);
@@ -118,6 +119,13 @@ bool LevelManagerClass::Initialize()
 	spriteCluster->vShader = 2;
 	spriteCluster->pShader = 2;
 	spriteCluster->pointsNum = 10000;
+
+	/////////////////////////
+
+	entity = m_World->CreateEntity("Star", folder);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(0.0f, 0.0f, -20.0f);
+	star = entity->AddComponent<Star>();
 
 	/////////////////////////
 

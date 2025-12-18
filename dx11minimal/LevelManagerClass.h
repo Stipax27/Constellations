@@ -22,6 +22,7 @@
 #include "CollisionSystem.cpp"
 #include "CombatSystem.cpp"
 #include "EntityManagerSystem.cpp"
+#include "Star.cpp"
 
 #include "CollisionDrawSystem.cpp"
 

@@ -147,6 +147,9 @@
     <ClInclude Include="frustumclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="collider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp">
@@ -265,6 +268,9 @@
     </ClCompile>
     <ClCompile Include="MultiDamageGiver.cpp">
       <Filter>Source Files\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="Star.cpp">
+      <Filter>Source Files\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -406,6 +412,18 @@
     </None>
     <None Include="Shaders\DepthReduce_PS.shader">
       <Filter>Shaders\PostProcess</Filter>
+    </None>
+    <None Include="Shaders\StarSphere_VS.shader">
+      <Filter>Shaders\Mesh</Filter>
+    </None>
+    <None Include="Shaders\StarSphere_PS.shader">
+      <Filter>Shaders\Mesh</Filter>
+    </None>
+    <None Include="Shaders\StarCrown_VS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\StarCrown_PS.shader">
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

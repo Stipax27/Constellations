@@ -9,6 +9,7 @@
 #include "Transform.cpp"
 #include "SpriteCluster.cpp"
 #include "Constellation.cpp"
+#include "Star.cpp"
 #include "PointCloud.cpp"
 
 #include "frustumclass.h"
@@ -49,6 +50,8 @@ public:
 			Entity* entity = entities[i];
 			if (IsEntityValid(entity))
 			{
+				Shaders::gShader(0);
+
 				Transform* transform = entity->GetComponent<Transform>();
 
 				if (transform != nullptr)
@@ -89,7 +92,6 @@ public:
 
 						Shaders::vShader(4);
 						Shaders::pShader(4);
-						Shaders::gShader(0);
 
 						count = 0;
 						for (int a = 0; a < constellation->links.size() && count < constCount / 2 - 1; a++) {
@@ -113,7 +115,6 @@ public:
 
 						Shaders::vShader(1);
 						Shaders::pShader(1);
-						Shaders::gShader(0);
 
 						count = 0;
 						for (int a = 0; a < transformedStars.size() && count < constCount - 1; a++) {
@@ -130,6 +131,21 @@ public:
 
 							context->DrawInstanced(6, min(count, constCount - 1), 0, 0);
 						}
+					}
+
+					Star* star = entity->GetComponent<Star>();
+					if (star != nullptr) {
+						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
+						ConstBuf::Update(5, ConstBuf::global);
+						ConstBuf::ConstToVertex(5);
+						ConstBuf::ConstToPixel(5);
+
+						Shaders::vShader(20);
+						Shaders::pShader(20);
+
+						int n = 48;
+						ConstBuf::drawerV[0] = n;
+						Draw::Drawer(n);
 					}
 				}
 
@@ -165,7 +181,6 @@ public:
 
 						/*Shaders::vShader(10);
 						Shaders::pShader(101);
-						Shaders::gShader(0);
 						context->PSSetShaderResources(0, 1, &Textures::Texture[lastRT].DepthResView);
 						context->Draw(6, 0);*/
 
@@ -190,7 +205,6 @@ public:
 					else {
 						Shaders::vShader(spriteCluster->vShader);
 						Shaders::pShader(spriteCluster->pShader);
-						Shaders::gShader(0);
 
 						context->DrawInstanced(6, spriteCluster->pointsNum, 0, 0);
 					}
