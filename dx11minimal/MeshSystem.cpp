@@ -128,7 +128,7 @@ public:
 						Shaders::vShader(19);
 						Shaders::pShader(19);
 
-						int n = GetVertexCount(worldTransform.position, 5, 27);
+						int n = GetVertexCount(worldTransform.position, 5, 33);
 						n += 1 - n % 2;
 
 						ConstBuf::drawerV[0] = n;
@@ -172,7 +172,7 @@ public:
 							Shaders::vShader(19);
 							Shaders::pShader(19);
 
-							int n = GetVertexCount(worldTransform.position, 5, 27);
+							int n = GetVertexCount(worldTransform.position, 5, 75);
 							n += 1 - n % 2;
 
 							ConstBuf::drawerV[0] = n;
