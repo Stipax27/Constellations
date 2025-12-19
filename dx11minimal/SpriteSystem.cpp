@@ -56,6 +56,8 @@ public:
 
 				if (transform != nullptr)
 				{
+					Transform worldTransform = GetWorldTransform(entity);
+
 					Constellation* constellation = entity->GetComponent<Constellation>();
 					if (constellation != nullptr) {
 						point3d transformPos = transform->position;
@@ -121,16 +123,18 @@ public:
 
 					Star* star = entity->GetComponent<Star>();
 					if (star != nullptr) {
-						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, star->radius);
-						ConstBuf::Update(5, ConstBuf::global);
-						ConstBuf::ConstToVertex(5);
+						if (frustum->CheckSphere(worldTransform.position, star->radius)) {
+							ConstBuf::global[0] = XMFLOAT4(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, star->radius);
+							ConstBuf::Update(5, ConstBuf::global);
+							ConstBuf::ConstToVertex(5);
 
-						Shaders::vShader(20);
-						Shaders::pShader(20);
+							Shaders::vShader(20);
+							Shaders::pShader(20);
 
-						int n = 48;
-						ConstBuf::drawerV[0] = n;
-						Draw::Drawer(n);
+							int n = 48;
+							ConstBuf::drawerV[0] = n;
+							Draw::Drawer(n);
+						}
 					}
 				}
 

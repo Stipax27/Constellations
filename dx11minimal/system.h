@@ -19,6 +19,10 @@ using namespace std;
 /////////////
 #define SPACE_DENSITY 25.0f
 
+#define HIGH_RENDER_DISTANCE 10.0f
+#define LOW_RENDER_DISTANCE 100.0f
+#define RENDR_DISTANCE_DELTA LOW_RENDER_DISTANCE - HIGH_RENDER_DISTANCE
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: System

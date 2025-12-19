@@ -12,14 +12,16 @@
 #include "Star.cpp"
 
 #include "frustumclass.h"
+#include "cameraclass.h"
 
 
 class MeshSystem : public System
 {
 public:
-	MeshSystem(FrustumClass* Frustum)
+	MeshSystem(FrustumClass* Frustum, CameraClass* Camera)
 	{
 		frustum = Frustum;
+		camera = Camera;
 	}
 
 
@@ -91,7 +93,7 @@ public:
 							transformedStars.push_back(star);
 						}
 
-						int n = 33;
+						/*int n = 33;
 						ConstBuf::drawerV[0] = n;
 						ConstBuf::Update(0, ConstBuf::drawerV);
 						ConstBuf::ConstToVertex(0);
@@ -119,18 +121,7 @@ public:
 							ConstBuf::ConstToVertex(8);
 
 							context->DrawInstanced(n * n * 6, min(count, constCount - 1), 0, 0);
-						}
-					}
-
-					Star* star = entity->GetComponent<Star>();
-					if (star != nullptr) {
-						ConstBuf::drawerMatrix[0] = GetWorldMatrix(worldTransform);
-						ConstBuf::Update(8, ConstBuf::drawerMatrix);
-						ConstBuf::ConstToVertex(8);
-
-						ConstBuf::global[0].w = star->radius;
-						ConstBuf::Update(5, ConstBuf::global);
-						ConstBuf::ConstToVertex(5);
+						}*/
 
 						Rasterizer::Cull(Rasterizer::cullmode::front);
 
@@ -139,8 +130,53 @@ public:
 
 						int n = 33;
 						ConstBuf::drawerV[0] = n;
-						Draw::Drawer(n * n);
+						ConstBuf::Update(0, ConstBuf::drawerV);
+						ConstBuf::ConstToVertex(0);
+
+						int count = 0;
+						for (int a = 0; a < transformedStars.size() && count < constCount - 1; a++) {
+							point3d star = transformedStars[a];
+							if (frustum->CheckSphere(star, constellation->starSize)) {
+								worldTransform.position = star;
+
+								ConstBuf::global[0].w = constellation->starSize;
+								ConstBuf::Update(5, ConstBuf::global);
+								ConstBuf::ConstToVertex(5);
+
+								ConstBuf::drawerMatrix[0] = GetWorldMatrix(worldTransform);
+								ConstBuf::Update(8, ConstBuf::drawerMatrix);
+								ConstBuf::ConstToVertex(8);
+
+								context->Draw(n * n * 6, 0);
+
+								count++;
+							}
+						}
 					}
+
+					Star* star = entity->GetComponent<Star>();
+					if (star != nullptr) {
+						if (frustum->CheckSphere(worldTransform.position, star->radius)) {
+							ConstBuf::drawerMatrix[0] = GetWorldMatrix(worldTransform);
+							ConstBuf::Update(8, ConstBuf::drawerMatrix);
+							ConstBuf::ConstToVertex(8);
+
+							ConstBuf::global[0].w = star->radius;
+							ConstBuf::Update(5, ConstBuf::global);
+							ConstBuf::ConstToVertex(5);
+
+							Rasterizer::Cull(Rasterizer::cullmode::wireframe);
+
+							Shaders::vShader(19);
+							Shaders::pShader(19);
+
+
+							int n = 33;
+							ConstBuf::drawerV[0] = n;
+							Draw::Drawer(n * n);
+						}
+					}
+
 				}
 			}
 		}
@@ -148,6 +184,7 @@ public:
 
 private:
 	FrustumClass* frustum;
+	CameraClass* camera;
 
 private:
 	XMMATRIX GetWorldMatrix(Transform worldTransform) {
@@ -165,6 +202,8 @@ private:
 	void UpdateWorldMatrix(Transform worldTransform) {
 		ConstBuf::camera.world = GetWorldMatrix(worldTransform);
 		ConstBuf::UpdateCamera();
+		ConstBuf::ConstToVertex(3);
+		ConstBuf::ConstToPixel(3);
 	}
 };
 
