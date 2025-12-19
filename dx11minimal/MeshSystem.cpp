@@ -128,7 +128,9 @@ public:
 						Shaders::vShader(19);
 						Shaders::pShader(19);
 
-						int n = 33;
+						int n = GetVertexCount(worldTransform.position, 5, 27);
+						n += 1 - n % 2;
+
 						ConstBuf::drawerV[0] = n;
 						ConstBuf::Update(0, ConstBuf::drawerV);
 						ConstBuf::ConstToVertex(0);
@@ -165,13 +167,14 @@ public:
 							ConstBuf::Update(5, ConstBuf::global);
 							ConstBuf::ConstToVertex(5);
 
-							Rasterizer::Cull(Rasterizer::cullmode::wireframe);
+							Rasterizer::Cull(Rasterizer::cullmode::front);
 
 							Shaders::vShader(19);
 							Shaders::pShader(19);
 
+							int n = GetVertexCount(worldTransform.position, 5, 27);
+							n += 1 - n % 2;
 
-							int n = 33;
 							ConstBuf::drawerV[0] = n;
 							Draw::Drawer(n * n);
 						}
@@ -204,6 +207,15 @@ private:
 		ConstBuf::UpdateCamera();
 		ConstBuf::ConstToVertex(3);
 		ConstBuf::ConstToPixel(3);
+	}
+
+	int GetVertexCount(point3d position, int min, int max) {
+		float dist = (camera->GetPosition() - position).magnitude();
+		float a = dist - HIGH_RENDER_DISTANCE;
+		a /= RENDR_DISTANCE_DELTA;
+		a = clamp(a, 0, 1);
+
+		return (int)lerp((float)max, (float)min, a);
 	}
 };
 
