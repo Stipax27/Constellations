@@ -75,7 +75,7 @@ Textures::textureDesc Textures::Texture[max_tex];
 int Textures::currentRT = 0;
 int Textures::texturesCount = 0;
 
-void Textures::CreateTex(int i)
+void Textures::CreateTex(int i, bool uav)
 {
 	auto cTex = Texture[i];
 
@@ -90,6 +90,12 @@ void Textures::CreateTex(int i)
 	tdesc.SampleDesc.Quality = 0;
 	tdesc.Usage = D3D11_USAGE_DEFAULT;
 	tdesc.Format = dxTFormat[cTex.format];
+
+	if (uav)
+	{
+		tdesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
+		tdesc.MiscFlags = 0;
+	}
 
 	if (cTex.type == cube)
 	{
@@ -189,7 +195,7 @@ void Textures::shaderResDepth(int i)
 	HRESULT hr = device->CreateShaderResourceView(Texture[i].pDepth, &svDesc, &Texture[i].DepthResView);
 }
 
-void Textures::Create(int i, tType type, tFormat format, XMFLOAT2 size, bool mipMaps, bool depth)
+void Textures::Create(int i, tType type, tFormat format, XMFLOAT2 size, bool mipMaps, bool depth, bool uav)
 {
 	texturesCount = max(i, texturesCount + 1);
 
@@ -206,9 +212,21 @@ void Textures::Create(int i, tType type, tFormat format, XMFLOAT2 size, bool mip
 
 	if (i > 0)
 	{
-		Textures::CreateTex(i);
+		Textures::CreateTex(i, uav);
 		Textures::ShaderRes(i);
-		Textures::rtView(i);
+
+		if (!uav) {
+			Textures::rtView(i);
+		}
+		else {
+			D3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc;
+			ZeroMemory(&uavDesc, sizeof(uavDesc));
+			uavDesc.Format = dxTFormat[format];
+			uavDesc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE2D;
+			uavDesc.Texture2D.MipSlice = 0;
+
+			HRESULT hr = device->CreateUnorderedAccessView(Texture[i].pTexture, &uavDesc, &Texture[i].UnorderedAccessView);
+		}
 	}
 
 	if (depth)
@@ -594,6 +612,7 @@ void Models::LoadModelFromGltfFile(const char* filename)
 Shaders::VertexShader Shaders::VS[255];
 Shaders::PixelShader Shaders::PS[255];
 Shaders::GeometryShader Shaders::GS[255];
+Shaders::ComputeShader Shaders::CS[255];
 
 ID3DBlob* Shaders::pErrorBlob;
 wchar_t Shaders::shaderPathW[MAX_PATH];
@@ -601,6 +620,7 @@ wchar_t Shaders::shaderPathW[MAX_PATH];
 int Shaders::currentVS = 0;
 int Shaders::currentPS = 0;
 int Shaders::currentGS = 0;
+int Shaders::currentCS = 0;
 
 LPCWSTR Shaders::nameToPatchLPCWSTR(const char* path)
 {
@@ -668,6 +688,19 @@ void Shaders::CreateGS(int i, LPCWSTR name)
 	if (hr == S_OK)
 	{
 		hr = device->CreateGeometryShader(GS[i].pBlob->GetBufferPointer(), GS[i].pBlob->GetBufferSize(), NULL, &GS[i].gShader);
+	}
+}
+
+void Shaders::CreateCS(int i, LPCWSTR name)
+{
+	HRESULT hr;
+
+	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "CS", "cs_5_0", NULL, NULL, &CS[i].pBlob, &pErrorBlob);
+	Shaders::CompilerLog(name, hr, "compute shader compiled: ");
+
+	if (hr == S_OK)
+	{
+		hr = device->CreateComputeShader(CS[i].pBlob->GetBufferPointer(), CS[i].pBlob->GetBufferSize(), NULL, &CS[i].cShader);
 	}
 }
 
@@ -751,6 +784,10 @@ void Shaders::Init()
 
 	//-----------------------------------------------
 
+	Shaders::CreateCS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\DepthDown_x2.shader"));
+
+	//-----------------------------------------------
+
 	ConstBuf::CreateVertexBuffer(15);
 	ConstBuf::CreateVertexBuffer(17);
 }
@@ -771,6 +808,12 @@ void Shaders::gShader(unsigned int n)
 {
 	currentGS = n;
 	context->GSSetShader(GS[n].gShader, NULL, 0);
+}
+
+void Shaders::cShader(unsigned int n)
+{
+	currentCS = n;
+	context->CSSetShader(CS[n].cShader, NULL, 0);
 }
 
 //////////////////////////////////////////////////////////////////////////////////

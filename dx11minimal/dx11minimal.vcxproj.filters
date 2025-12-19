@@ -76,6 +76,9 @@
     <Filter Include="Source Files\Combat">
       <UniqueIdentifier>{4b346e4f-153e-4b1a-9659-ebd9dc9ac7be}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\DepthDownsample">
+      <UniqueIdentifier>{48bd1f1f-d55d-4607-8b51-9bba84719d1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -424,6 +427,9 @@
     </None>
     <None Include="Shaders\StarCrown_PS.shader">
       <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\DepthDown_x2.shader">
+      <Filter>Shaders\DepthDownsample</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

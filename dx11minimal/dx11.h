@@ -81,6 +81,8 @@ namespace Textures
 		ID3D11Texture2D* pDepth;
 		ID3D11ShaderResourceView* DepthResView;
 		ID3D11DepthStencilView* DepthStencilView[16];
+		
+		ID3D11UnorderedAccessView* UnorderedAccessView;
 
 		tType type;
 		tFormat format;
@@ -104,12 +106,12 @@ namespace Textures
 	extern int currentRT;
 	extern int texturesCount;
 
-	void CreateTex(int);
+	void CreateTex(int, bool);
 	void ShaderRes(int);
 	void rtView(int);
 	void Depth(int);
 	void shaderResDepth(int);
-	void Create(int, tType, tFormat, XMFLOAT2, bool, bool);
+	void Create(int, tType, tFormat, XMFLOAT2, bool, bool, bool = false);
 	void UnbindAll();
 	void SetViewport(int, byte);
 	void CopyColor(int, int);
@@ -162,9 +164,15 @@ namespace Shaders {
 		ID3DBlob* pBlob;
 	};
 
+	struct ComputeShader {
+		ID3D11ComputeShader* cShader;
+		ID3DBlob* pBlob;
+	};
+
 	extern VertexShader VS[255];
 	extern PixelShader PS[255];
 	extern GeometryShader GS[255];
+	extern ComputeShader CS[255];
 
 	extern ID3DBlob* pErrorBlob;
 
@@ -173,17 +181,23 @@ namespace Shaders {
 	extern int currentVS;
 	extern int currentPS;
 	extern int currentGS;
+	extern int currentCS;
 
 	LPCWSTR nameToPatchLPCWSTR(const char*);
 	void Log(const char*);
 	void CompilerLog(LPCWSTR, HRESULT, const char*);
+
 	void CreateVS(int, LPCWSTR);
 	void CreatePS(int, LPCWSTR);
 	void CreateGS(int, LPCWSTR);
+	void CreateCS(int, LPCWSTR);
+
 	void Init();
+
 	void vShader(unsigned int);
 	void pShader(unsigned int);
 	void gShader(unsigned int);
+	void cShader(unsigned int);
 
 }
 
