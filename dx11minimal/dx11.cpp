@@ -291,11 +291,6 @@ void Textures::CreateMipMap()
 	context->GenerateMips(Texture[currentRT].TextureResView);
 }
 
-void Textures::CreateDepthMipMap()
-{
-	context->GenerateMips(Texture[currentRT].DepthResView);
-}
-
 void Textures::RenderTarget(int target, unsigned int level = 0)
 {
 	currentRT = target;
@@ -773,9 +768,8 @@ void Shaders::Init()
 	//-----------------------------------------------
 	
 	Shaders::CreatePS(100, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ColorCorrection_PS.shader"));
-	//Shaders::CreatePS(101, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\DepthDraw_PS.shader"));
 	//Shaders::CreatePS(101, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Lensing_PS.shader"));
-	Shaders::CreatePS(101, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\DepthReduce_PS.shader"));
+	Shaders::CreatePS(101, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\DepthCutoff_PS.shader"));
 	
 	//-----------------------------------------------
 	
@@ -814,6 +808,32 @@ void Shaders::cShader(unsigned int n)
 {
 	currentCS = n;
 	context->CSSetShader(CS[n].cShader, NULL, 0);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+
+void Compute::Dispatch(int csIndex, int texInput, int texOutput)
+{
+	Shaders::cShader(csIndex);
+
+	// Input texture
+	context->CSSetShaderResources(0, 1, &Textures::Texture[texInput].DepthResView);
+
+	// Out UAV
+	Textures::textureDesc outTexture = Textures::Texture[texOutput];
+	context->CSSetUnorderedAccessViews(0, 1, &outTexture.UnorderedAccessView, nullptr);
+
+	// Num of thread groups
+	uint32_t groupCountX = ((int)outTexture.size.x + 7) / 8;
+	uint32_t groupCountY = ((int)outTexture.size.y + 7) / 8;
+
+	context->Dispatch(groupCountX, groupCountY, 1);
+
+	// Disable resources
+	ID3D11ShaderResourceView* nullSRV = nullptr;
+	ID3D11UnorderedAccessView* nullUAV = nullptr;
+	context->CSSetShaderResources(0, 1, &nullSRV);
+	context->CSSetUnorderedAccessViews(0, 1, &nullUAV, nullptr);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -1220,13 +1240,16 @@ void Dx11Init(HWND hwnd, int width, int height)
 	Textures::Create(1, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
 	// rt2
 	Textures::Create(2, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
-	// half rt
-	Textures::Create(3, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 2, height / 2), true, true);
+
+	// 1/2 sized uav
+	Textures::Create(3, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 2, height / 2), false, false, true);
+	// 1/2 sized rt
+	Textures::Create(4, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 2, height / 2), true, true);
 
 	// perlin noise rt
-	Textures::Create(4, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
+	Textures::Create(5, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
 	// voronoi noise rt
-	Textures::Create(5, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
+	Textures::Create(6, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
 }
 
 //////////////////////////////////////////////////////////////////////////////////

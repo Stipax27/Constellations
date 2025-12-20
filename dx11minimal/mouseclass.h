@@ -41,6 +41,7 @@ public:
 	point3d absolutePos;
 	point3d worldPos;
 	MouseState state;
+	bool visible;
 
 	vector<MouseParticle> particles;
 

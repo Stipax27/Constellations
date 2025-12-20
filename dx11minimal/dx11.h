@@ -118,7 +118,6 @@ namespace Textures
 	void CopyDepth(int, int);
 	void TextureToShader(int, unsigned int, targetshader = targetshader::both);
 	void CreateMipMap();
-	void CreateDepthMipMap();
 	void RenderTarget(int, unsigned int);
 	void DepthTarget(int, int);
 	void LoadTexture(const char*);
@@ -198,7 +197,11 @@ namespace Shaders {
 	void pShader(unsigned int);
 	void gShader(unsigned int);
 	void cShader(unsigned int);
+}
 
+namespace Compute
+{
+	void Dispatch(int csIndex, int texInput, int texOutput);
 }
 
 namespace Sampler

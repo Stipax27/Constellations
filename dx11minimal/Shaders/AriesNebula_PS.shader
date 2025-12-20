@@ -1,3 +1,9 @@
+//Texture2D<float> DepthTexture : register(t0);
+//SamplerComparisonState DepthSampler : register(s0);
+
+Texture2D<float> DepthTexture : register(t0);
+SamplerState DepthSampler : register(s0);
+
 Texture2D perlinTexture : register(t1);
 SamplerState perlinSamplerState : register(s1);
 
@@ -25,14 +31,36 @@ cbuffer objParams : register(b0)
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
+    float4 worldpos : POSITION0;
     float2 uv : TEXCOORD0;
     uint   starID : COLOR0;
-    float4 worldpos : POSITION1;
 };
 
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
+    //float3 projCoords = input.pos.xyz / input.pos.w;
+    //projCoords.xy = projCoords.xy * 0.5 + 0.5;
+    //projCoords.y = 1.0 - projCoords.y;
+    //
+    //float bias = 0.005; // Adjust this value if needed
+    //float shadow = DepthTexture.SampleCmpLevelZero(DepthSampler, projCoords.xy, projCoords.z);
+    //
+    //if (shadow == 0) {
+    //    discard;
+    //}
+
+    //return float4(input.pos.xy / float2(aspect.z, aspect.w), 0, 1);
+
+    float2 halfResUV = input.pos.xy / float2(aspect.z, aspect.w) * 2;
+    float sceneDepth = DepthTexture.Sample(DepthSampler, halfResUV);
+    //float bias = 0.005 * (1 - input.depth);
+    
+    if (input.pos.z > sceneDepth)
+    {
+        discard;
+    }
+
     float2 uv = input.uv;
 
     float3 pos = gConst[0].xyz;

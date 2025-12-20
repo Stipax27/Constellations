@@ -19,15 +19,17 @@ struct VS_OUTPUT
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
+    float4 basecolor = float4(1.0, 0.95, 0.3, 1.0);
+    float4 color;
+
     float angle = atan2(input.uv.y, input.uv.x) + PI;
     float deg = degrees(angle);
 
     float fading = 1 - length(input.uv);
 
-    float c = max(sin(angle * 64 + time.x), 0) * pow(fading, 2 + abs(sin(time.x * 0.2)) * 0.5);
-    c += max(-sin(angle * 48 + time.x * cos(time.x * 0.04) * 0.25), 0) * pow(fading, 2 + abs(sin(time.x * 0.2)) * 0.25);
-    c += max(cos(angle * 16 - time.x * 0.5), 0) * pow(fading, 2.5) * (abs(sin(time.x * 0.03)) / 2 + 0.5);
+    color = basecolor * (pow(fading, 0.85) - 0.3);
+    //color += basecolor * max(sin(deg % 4), 0);
 
-    return saturate(float4(1.0, 0.95, 0.4, 1.0) * c);
+    return saturate(color);
 
 }

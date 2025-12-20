@@ -192,7 +192,7 @@ void PlayerController::ProcessMouse()
 	}
 	case MouseState::Free:
 	{
-		if (IsKeyPressed(VK_LBUTTON))
+		if (IsKeyPressed(VK_LBUTTON) && mouse->visible)
 		{
 
 			if (!mousePressed)

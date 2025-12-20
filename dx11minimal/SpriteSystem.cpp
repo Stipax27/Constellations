@@ -159,13 +159,22 @@ public:
 
 					if (spriteCluster->halfSizedRender) {
 						int lastRT = Textures::currentRT;
-						Textures::CreateDepthMipMap();
+
+						Textures::RenderTarget(4, 0);
+						Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
+						Draw::ClearDepth();
+
+
 
 						//Depth::Depth(Depth::depthmode::on);
 
-						Textures::RenderTarget(3, 0);
-						Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
-						Draw::ClearDepth();
+						Compute::Dispatch(0, lastRT, 3);
+						Textures::TextureToShader(3, 0);
+
+						//Depth::Depth(Depth::depthmode::off);
+
+
+
 						//Textures::DepthTarget(lastRT, 0);
 
 						/*Shaders::vShader(10);
@@ -175,21 +184,24 @@ public:
 
 						//Depth::Depth(Depth::depthmode::readonly);
 
+						Sampler::SamplerComp(0);
+
 						Shaders::vShader(spriteCluster->vShader);
 						Shaders::pShader(spriteCluster->pShader);
 						context->DrawInstanced(6, spriteCluster->pointsNum, 0, 0);
 
-						Sampler::SamplerComp(0);
+						//Sampler::SamplerComp(0);
 						Textures::CreateMipMap();
 
 						Textures::RenderTarget(lastRT, 0);
 
-						Textures::TextureToShader(3, 0);
-						context->PSSetShaderResources(0, 1, &Textures::Texture[3].TextureResView);
+						Textures::TextureToShader(4, 0, targetshader::pixel);
 
 						Shaders::vShader(10);
 						Shaders::pShader(100);
 						context->Draw(6, 0);
+
+						//Depth::Depth(Depth::depthmode::readonly);
 					}
 					else {
 						Shaders::vShader(spriteCluster->vShader);
