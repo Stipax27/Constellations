@@ -410,12 +410,6 @@
     <None Include="Shaders\Sphere_PS.shader">
       <Filter>Shaders\Debug</Filter>
     </None>
-    <None Include="Shaders\DepthDraw_PS.shader">
-      <Filter>Shaders\PostProcess</Filter>
-    </None>
-    <None Include="Shaders\DepthReduce_PS.shader">
-      <Filter>Shaders\PostProcess</Filter>
-    </None>
     <None Include="Shaders\StarSphere_VS.shader">
       <Filter>Shaders\Mesh</Filter>
     </None>
@@ -430,6 +424,9 @@
     </None>
     <None Include="Shaders\DepthDown_x2.shader">
       <Filter>Shaders\DepthDownsample</Filter>
+    </None>
+    <None Include="Shaders\DepthCutoff_PS.shader">
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
