@@ -39,20 +39,10 @@ struct VS_OUTPUT
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-    //float3 projCoords = input.pos.xyz / input.pos.w;
-    //projCoords.xy = projCoords.xy * 0.5 + 0.5;
-    //projCoords.y = 1.0 - projCoords.y;
-    //
-    //float bias = 0.005; // Adjust this value if needed
-    //float shadow = DepthTexture.SampleCmpLevelZero(DepthSampler, projCoords.xy, projCoords.z);
-    //
-    //if (shadow == 0) {
-    //    discard;
-    //}
+    uint width, height;
+    DepthTexture.GetDimensions(width, height);
 
-    //return float4(input.pos.xy / float2(aspect.z, aspect.w), 0, 1);
-
-    float2 halfResUV = input.pos.xy / float2(aspect.z, aspect.w) * 2;
+    float2 halfResUV = input.pos.xy / float2(width, height);
     float sceneDepth = DepthTexture.Sample(DepthSampler, halfResUV);
     //float bias = 0.005 * (1 - input.depth);
     
