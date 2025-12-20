@@ -39,6 +39,8 @@ struct VS_OUTPUT
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
+    // DEPTH TEST //
+
     uint width, height;
     DepthTexture.GetDimensions(width, height);
 
@@ -50,6 +52,8 @@ float4 PS(VS_OUTPUT input) : SV_Target
     {
         discard;
     }
+
+    ////////////////
 
     float2 uv = input.uv;
 
