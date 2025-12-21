@@ -134,13 +134,13 @@ bool LevelManagerClass::Initialize()
 	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -180 * RAD) * transform->mRotation;
 	mesh = holder->AddComponent<Mesh>();
 
-	//entity = m_World->CreateEntity("Cube", folder);
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(10.0f, 0.0f, 0.0f);
-	//transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -180 * RAD) * transform->mRotation;
-	//pointCloud = entity->AddComponent<PointCloud>();
-	////delayedDestroy = entity->AddComponent<DelayedDestroy>();
-	////delayedDestroy->lifeTime = 5000;
+	entity = m_World->CreateEntity("Cube", folder);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(10.0f, 0.0f, 0.0f);
+	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -180 * RAD) * transform->mRotation;
+	pointCloud = entity->AddComponent<PointCloud>();
+	//delayedDestroy = entity->AddComponent<DelayedDestroy>();
+	//delayedDestroy->lifeTime = 5000;
 
 	//entity = m_World->CreateEntity("Cube", holder);
 	//transform = entity->AddComponent<Transform>();

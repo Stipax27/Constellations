@@ -117,7 +117,7 @@ public:
 							ConstBuf::ConstToVertex(0);
 							ConstBuf::ConstToVertex(5);
 
-							context->DrawInstanced(n * 6, min(count, constCount - 1), 0, 0);
+							context->DrawInstanced(n * 3, min(count, constCount - 1), 0, 0);
 						}
 					}
 
@@ -132,8 +132,12 @@ public:
 							Shaders::pShader(20);
 
 							int n = 48;
+
 							ConstBuf::drawerV[0] = n;
-							Draw::Drawer(n);
+							ConstBuf::Update(0, ConstBuf::drawerV);
+							ConstBuf::ConstToVertex(0);
+
+							context->Draw(n * 3, 0);
 						}
 					}
 				}

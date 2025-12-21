@@ -30,6 +30,6 @@ float4 PS(VS_OUTPUT input) : SV_Target
     color = basecolor * (pow(fading, 0.85) - 0.3);
     //color += basecolor * max(sin(deg % 4), 0);
 
-    return saturate(color);
+    return saturate(color * 1.5);
 
 }
