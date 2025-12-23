@@ -291,6 +291,7 @@ namespace ConstBuf
 	void UpdateCamera();
 	void UpdateFactors();
 	void ConstToVertex(int);
+	void ConstToGeometry(int);
 	void ConstToPixel(int);
 
 	namespace getbyname {
@@ -343,7 +344,7 @@ namespace Device
 
 namespace InputAssembler
 {
-	enum class topology { triList, lineList, lineStrip };
+	enum class topology { triList, lineList, lineStrip, pointList };
 
 	void IA(topology);
 }

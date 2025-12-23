@@ -111,6 +111,7 @@ void World::UpdateRender()
 	ConstBuf::frame.time = XMFLOAT4{ (float)(timer::frameBeginTime * 0.01f), 0, 0, 0 };
 	ConstBuf::UpdateFrame();
 	ConstBuf::ConstToVertex(4);
+	ConstBuf::ConstToGeometry(4);
 	ConstBuf::ConstToPixel(4);
 
 	if (firstFrame) {

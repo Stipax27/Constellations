@@ -130,6 +130,7 @@ void CameraClass::Render()
 
 	ConstBuf::UpdateCamera();
 	ConstBuf::ConstToVertex(3);
+	ConstBuf::ConstToGeometry(3);
 	ConstBuf::ConstToPixel(3);
 
 	frustum->ConstructFrustum(viewMatrix, projectionMatrix, 10000.0f);

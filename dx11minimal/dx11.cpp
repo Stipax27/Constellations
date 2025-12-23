@@ -1020,6 +1020,11 @@ void ConstBuf::ConstToVertex(int i)
 	context->VSSetConstantBuffers(i, 1, &ConstBuf::buffer[i]);
 }
 
+void ConstBuf::ConstToGeometry(int i)
+{
+	context->GSSetConstantBuffers(i, 1, &ConstBuf::buffer[i]);
+}
+
 void ConstBuf::ConstToPixel(int i)
 {
 	context->PSSetConstantBuffers(i, 1, &ConstBuf::buffer[i]);
@@ -1206,6 +1211,10 @@ void InputAssembler::IA(topology topoType)
 		break;
 	case topology::lineStrip:
 		ttype = D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_LINESTRIP;
+		break;
+	case topology::pointList:
+		ttype = D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST;
+		break;
 	}
 
 	context->IASetPrimitiveTopology(ttype);

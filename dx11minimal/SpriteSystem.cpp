@@ -51,6 +51,7 @@ public:
 			if (IsEntityValid(entity))
 			{
 				Shaders::gShader(0);
+				InputAssembler::IA(InputAssembler::topology::triList);
 
 				Transform* transform = entity->GetComponent<Transform>();
 
@@ -241,7 +242,7 @@ public:
 						Shaders::pShader(17);
 						Shaders::gShader(17);
 
-						InputAssembler::IA(InputAssembler::topology::triList);
+						InputAssembler::IA(InputAssembler::topology::pointList);
 						context->DrawIndexed(36, 0, 0);
 					//}
 

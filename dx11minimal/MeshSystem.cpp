@@ -52,6 +52,7 @@ public:
 			if (IsEntityValid(entity))
 			{
 				Shaders::gShader(0);
+				InputAssembler::IA(InputAssembler::topology::triList);
 
 				Transform* transform = entity->GetComponent<Transform>();
 

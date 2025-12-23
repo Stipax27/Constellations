@@ -1,3 +1,10 @@
+cbuffer frame : register(b4)
+{
+    float4 time;
+    float4 aspect;
+};
+
+
 //struct GSOutput
 //{
 //	float4 pos : SV_POSITION;
@@ -32,23 +39,24 @@
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
+    float4 vpos : POSITION0;
+    float4 wpos : POSITION1;
+    float4 vnorm : NORMAL0;
     float2 uv : TEXCOORD0;
-    uint   starID : COLOR0;
-    float4 worldpos : POSITION1;
 };
 
 
 [maxvertexcount(18)]
-void GS( triangle VS_OUTPUT input[3], inout TriangleStream<VS_OUTPUT> output )
+void GS( point VS_OUTPUT input[1], inout TriangleStream<VS_OUTPUT> output )
 {
 	float2 quadPos[6] = {
 		float2(-1, -1), float2(1, -1), float2(-1, 1),
 		float2(1, -1), float2(1, 1), float2(-1, 1)
 	};
 
-	for (uint i = 0; i < 18; i++) {
-		float2 offset = quadPos[i % 6] * 0.1;
-		VS_OUTPUT element = input[i / 6];
+	for (uint i = 0; i < 6; i++) {
+		float2 offset = quadPos[i] * float2(aspect.x, 1) * 0.1;
+		VS_OUTPUT element = input[0];
 		element.pos.xy += offset;
 		output.Append( element );
 	}
