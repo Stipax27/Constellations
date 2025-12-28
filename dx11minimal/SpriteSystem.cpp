@@ -163,8 +163,10 @@ public:
 					}
 
 					int lastRT = Textures::currentRT;
+
 					ConstBuf::drawerInt[0] = pow(2, (int)spriteCluster->compress);
 					ConstBuf::Update(7, ConstBuf::drawerInt);
+					ConstBuf::ConstToPixel(7);
 
 					if (spriteCluster->compress != RenderCompress::none) {
 
@@ -217,8 +219,6 @@ public:
 					else {
 						Shaders::vShader(spriteCluster->vShader);
 						Shaders::pShader(spriteCluster->pShader);
-
-						ConstBuf::ConstToPixel(7);
 
 						context->DrawInstanced(6, spriteCluster->pointsNum, 0, 0);
 					}
