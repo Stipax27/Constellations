@@ -162,19 +162,25 @@ public:
 						ConstBuf::ConstToPixel(5);
 					}
 
-					if (spriteCluster->halfSizedRender) {
-						int lastRT = Textures::currentRT;
+					int lastRT = Textures::currentRT;
+					ConstBuf::drawerInt[0] = pow(2, (int)spriteCluster->compress);
+					ConstBuf::Update(7, ConstBuf::drawerInt);
 
-						Textures::RenderTarget(4, 0);
+					if (spriteCluster->compress != RenderCompress::none) {
+
+						int uavIndex = (int)spriteCluster->compress * 2 + 1;
+						int rtIndex = (int)spriteCluster->compress * 2 + 2;
+
+						Textures::RenderTarget(rtIndex, 0);
 						Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
 						Draw::ClearDepth();
 
-
-
 						//Depth::Depth(Depth::depthmode::on);
 
-						Compute::Dispatch(0, lastRT, 3);
-						Textures::TextureToShader(3, 0);
+						ConstBuf::ConstToCompute(7);
+
+						Compute::Dispatch(0, lastRT, uavIndex);
+						Textures::TextureToShader(uavIndex, 0);
 
 						//Depth::Depth(Depth::depthmode::off);
 
@@ -200,7 +206,7 @@ public:
 
 						Textures::RenderTarget(lastRT, 0);
 
-						Textures::TextureToShader(4, 0, targetshader::pixel);
+						Textures::TextureToShader(rtIndex, 0, targetshader::pixel);
 
 						Shaders::vShader(10);
 						Shaders::pShader(100);
@@ -211,6 +217,8 @@ public:
 					else {
 						Shaders::vShader(spriteCluster->vShader);
 						Shaders::pShader(spriteCluster->pShader);
+
+						ConstBuf::ConstToPixel(7);
 
 						context->DrawInstanced(6, spriteCluster->pointsNum, 0, 0);
 					}

@@ -293,6 +293,7 @@ namespace ConstBuf
 	void ConstToVertex(int);
 	void ConstToGeometry(int);
 	void ConstToPixel(int);
+	void ConstToCompute(int);
 
 	namespace getbyname {
 		enum { drawerV, drawerP, drawerMat, camera, frame, global, factors, drawerInt, drawerMatrix };

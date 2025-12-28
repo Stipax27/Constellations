@@ -2,6 +2,7 @@
 #define _SPRITECLUSTER_C_
 
 #include "component.h"
+#include "renderCompress.h"
 
 
 struct SpriteCluster : Component
@@ -10,7 +11,7 @@ struct SpriteCluster : Component
 	int pShader = 0;
 
 	int pointsNum = 1;
-	bool halfSizedRender = false;
+	RenderCompress compress = RenderCompress::none;
 };
 
 #endif

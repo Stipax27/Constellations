@@ -778,7 +778,7 @@ void Shaders::Init()
 
 	//-----------------------------------------------
 
-	Shaders::CreateCS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\DepthDown_x2.shader"));
+	Shaders::CreateCS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\DepthDown.shader"));
 
 	//-----------------------------------------------
 
@@ -1030,6 +1030,11 @@ void ConstBuf::ConstToPixel(int i)
 	context->PSSetConstantBuffers(i, 1, &ConstBuf::buffer[i]);
 }
 
+void ConstBuf::ConstToCompute(int i)
+{
+	context->CSSetConstantBuffers(i, 1, &ConstBuf::buffer[i]);
+}
+
 //////////////////////////////////////////////////////////////////////////////////
 
 ID3D11BlendState* Blend::blendState[3][5];
@@ -1255,10 +1260,25 @@ void Dx11Init(HWND hwnd, int width, int height)
 	// 1/2 sized rt
 	Textures::Create(4, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 2, height / 2), true, true);
 
+	// 1/4 sized uav
+	Textures::Create(5, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 4, height / 4), false, false, true);
+	// 1/4 sized rt
+	Textures::Create(6, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 4, height / 4), true, true);
+
+	// 1/8 sized uav
+	Textures::Create(7, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 8, height / 8), false, false, true);
+	// 1/8 sized rt
+	Textures::Create(8, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 8, height / 8), true, true);
+
+	// 1/16 sized uav
+	Textures::Create(9, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 16, height / 16), false, false, true);
+	// 1/16 sized rt
+	Textures::Create(10, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 16, height / 16), true, true);
+
 	// perlin noise rt
-	Textures::Create(5, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
+	Textures::Create(11, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
 	// voronoi noise rt
-	Textures::Create(6, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
+	Textures::Create(12, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
 }
 
 //////////////////////////////////////////////////////////////////////////////////

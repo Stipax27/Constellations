@@ -153,6 +153,9 @@
     <ClInclude Include="collider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="renderCompress.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp">
@@ -422,11 +425,11 @@
     <None Include="Shaders\StarCrown_PS.shader">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\DepthDown_x2.shader">
-      <Filter>Shaders\DepthDownsample</Filter>
-    </None>
     <None Include="Shaders\DepthCutoff_PS.shader">
       <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\DepthDown.shader">
+      <Filter>Shaders\DepthDownsample</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
