@@ -60,6 +60,8 @@ float4 PS(VS_OUTPUT input) : SV_Target
 
     ////////////////
 
+    //return float4(1, 1, 1, 1);
+
     float2 uv = input.uv;
 
     float3 pos = gConst[0].xyz;

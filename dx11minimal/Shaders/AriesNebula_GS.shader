@@ -1,36 +1,42 @@
+cbuffer global : register(b5)
+{
+    float4 gConst[256];
+};
+
 cbuffer frame : register(b4)
 {
     float4 time;
     float4 aspect;
 };
 
+
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
+    float4 worldpos : POSITION0;
     float2 uv : TEXCOORD0;
     uint   starID : COLOR0;
-    float4 worldpos : POSITION1;
 };
 
-[maxvertexcount(3)]
-void GS(triangle VS_OUTPUT input[3], inout TriangleStream< VS_OUTPUT > output)
+
+[maxvertexcount(6)]
+void GS( point VS_OUTPUT input[1], inout TriangleStream<VS_OUTPUT> output )
 {
+	float scale = gConst[0].w;
+	float size = 1 * scale;
+
 	float2 quadPos[6] = {
 		float2(-1, -1), float2(1, -1), float2(-1, 1),
 		float2(1, -1), float2(1, 1), float2(-1, 1)
 	};
-	float size = 100;
 
-	// for (uint i = 0; i < 3; i++) {
-	// 	VS_OUTPUT inElement = input[0];
-	// 	inElement.pos.xy += quadPos[i] * size;
-	// 	output.Append( inElement );
-	// }
-	// output.RestartStrip();
+	for (uint i = 0; i < 6; i++) {
+		float2 offset = quadPos[i] * float2(aspect.x, 1) * 0.2;
+		VS_OUTPUT element = input[0];
+		element.pos.xy += offset;
+		element.uv = quadPos[i];
+		output.Append( element );
+	}
 
-	output.Append( input[0] );
-	output.Append( input[1] );
-	output.Append( input[2] );
-
-	output.RestartStrip();
+    output.RestartStrip();
 }

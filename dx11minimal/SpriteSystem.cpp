@@ -160,6 +160,7 @@ public:
 						ConstBuf::Update(5, ConstBuf::global);
 						ConstBuf::ConstToVertex(5);
 						ConstBuf::ConstToPixel(5);
+						ConstBuf::ConstToGeometry(5);
 					}
 
 					int lastRT = Textures::currentRT;
@@ -200,7 +201,10 @@ public:
 						Sampler::SamplerComp(0);
 
 						Shaders::vShader(spriteCluster->vShader);
+						Shaders::gShader(spriteCluster->gShader);
 						Shaders::pShader(spriteCluster->pShader);
+
+						InputAssembler::IA(spriteCluster->topology);
 						context->DrawInstanced(6, spriteCluster->pointsNum, 0, 0);
 
 						//Sampler::SamplerComp(0);
@@ -212,14 +216,18 @@ public:
 
 						Shaders::vShader(10);
 						Shaders::pShader(100);
+
+						InputAssembler::IA(InputAssembler::topology::triList);
 						context->Draw(6, 0);
 
 						//Depth::Depth(Depth::depthmode::readonly);
 					}
 					else {
 						Shaders::vShader(spriteCluster->vShader);
+						Shaders::gShader(spriteCluster->gShader);
 						Shaders::pShader(spriteCluster->pShader);
 
+						InputAssembler::IA(spriteCluster->topology);
 						context->DrawInstanced(6, spriteCluster->pointsNum, 0, 0);
 					}
 				}
