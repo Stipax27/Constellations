@@ -61,7 +61,7 @@ float3 spiral(uint index) {
     uint localIndex = index - getSectorsOfLevel(level - 1);
 
     float angle = PI * 2 / sectors * localIndex;
-    float radius = 0.5 * level / 6 * gConst[0].w;
+    float radius = 0.75 * level / 6 * gConst[0].w * 2;
 
     return float3(sin(angle), 0, cos(angle)) * radius;
 }
@@ -79,10 +79,10 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 {
     VS_OUTPUT output;
 
-    float2 quadPos[6] = {
-        float2(-1, -1), float2(1, -1), float2(-1, 1),
-        float2(1, -1), float2(1, 1), float2(-1, 1)
-    };
+    //float2 quadPos[6] = {
+    //    float2(-1, -1), float2(1, -1), float2(-1, 1),
+    //    float2(1, -1), float2(1, 1), float2(-1, 1)
+    //};
 
     //calc star position
 
