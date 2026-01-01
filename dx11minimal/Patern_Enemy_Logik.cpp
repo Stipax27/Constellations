@@ -130,7 +130,7 @@ private:
         else
         {
             // Движение к точке
-            direction.normalized();
+            direction = direction.normalized();
             physicBody->velocity = direction * ai->movementSpeed;
 
             // Проверка на обнаружение игрока

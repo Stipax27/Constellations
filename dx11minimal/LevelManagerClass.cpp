@@ -211,6 +211,7 @@ bool LevelManagerClass::Initialize()
 		 point3d(0.0f, 0.0f, 0.0f)
 	};
 
+	aiComponent->movementSpeed = 10.0;
 
 
 	//entity = m_World->CreateEntity();
@@ -378,7 +379,7 @@ bool LevelManagerClass::Frame()
 
 		smallConstellation->LastTime = currentTime;
 
-		int attackType = rand() % 4;
+		int attackType = rand() % 3;
 		
 		switch (attackType) {
 		case 0:
@@ -389,9 +390,6 @@ bool LevelManagerClass::Frame()
 			break;
 		case 2:
 			smallConstellation->TransformationStart();
-			break;
-		case 3:
-			smallConstellation->RamStart();
 			break;
 		}
 	}
