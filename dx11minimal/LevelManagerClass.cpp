@@ -106,10 +106,10 @@ bool LevelManagerClass::Initialize()
 	transform->scale = point3d(1, 0, 0);
 	spriteCluster = entity->AddComponent<SpriteCluster>();
 	spriteCluster->vShader = 7;
-	spriteCluster->gShader = 7;
+	//spriteCluster->gShader = 7;
 	spriteCluster->pShader = 7;
-	spriteCluster->pointsNum = 150000;
-	spriteCluster->topology = InputAssembler::topology::pointList;
+	spriteCluster->pointsNum = 900000;
+	//spriteCluster->topology = InputAssembler::topology::pointList;
 	//spriteCluster->compress = RenderCompress::x2;
 	entity->AddComponent<SurfaceCollider>();
 	//planeCollider = entity->AddComponent<PlaneCollider>();

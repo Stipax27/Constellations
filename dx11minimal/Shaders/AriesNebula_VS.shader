@@ -61,7 +61,7 @@ float3 spiral(uint index) {
     uint localIndex = index - getSectorsOfLevel(level - 1);
 
     float angle = PI * 2 / sectors * localIndex;
-    float radius = 0.75 * level / 6 * gConst[0].w * 2;
+    float radius = 0.25 * level / 6 * gConst[0].w * 2;
 
     return float3(sin(angle), 0, cos(angle)) * radius;
 }
@@ -79,10 +79,10 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 {
     VS_OUTPUT output;
 
-    //float2 quadPos[6] = {
-    //    float2(-1, -1), float2(1, -1), float2(-1, 1),
-    //    float2(1, -1), float2(1, 1), float2(-1, 1)
-    //};
+    float2 quadPos[6] = {
+        float2(-1, -1), float2(1, -1), float2(-1, 1),
+        float2(1, -1), float2(1, 1), float2(-1, 1)
+    };
 
     //calc star position
 
@@ -91,7 +91,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     float timeScale = drawerV[0];
 
     float range = 65 * scale;
-    //float size = 1 * scale;
+    float size = 1 * scale;
     //starPos = spiral(iID) * range * 2 - range;
     float3 spiralPos = spiral(iID);
     float3 starPos = spiralPos + pos;
@@ -114,9 +114,9 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     float4 viewPos = mul(float4(starPos, 1.0f), view);
     float4 projPos = mul(viewPos, proj);
     //projPos.xy /= max(projPos.w, 0);
-    //projPos.xy += quadPos[vID] * float2(aspect.x, 1) * size;
+    projPos.xy += quadPos[vID] * float2(aspect.x, 1) * size;
 
-    //output.uv = quadPos[vID];
+    output.uv = quadPos[vID];
     output.pos = projPos;
     output.starID = iID;
     output.worldpos = float4(starPos, 1);
