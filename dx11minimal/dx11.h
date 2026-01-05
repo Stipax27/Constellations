@@ -141,8 +141,9 @@ namespace Models
 
 	extern ID3D11Buffer* vertexBuffer, * indexBuffer;
 
-	void LoadModelFromTxtFile(const char* filename);
-	void LoadModelFromGltfFile(const char* filename);
+	void LoadTxtModel(const char* filename);
+	void LoadGltfModel(const char* filename);
+	void LoadObjModel(const char* filename);
 }
 
 namespace Shaders {

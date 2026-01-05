@@ -54,7 +54,7 @@ bool LevelManagerClass::Initialize()
 	ConstBuf::UpdateFactors();
 
 	Textures::LoadTexture("..\\dx11minimal\\Resourses\\Textures\\testTexture.tga");
-	Models::LoadModelFromTxtFile("..\\dx11minimal\\Resourses\\Models\\Cube.txt");
+	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cube.txt");
 	//Models::LoadModelFromGltfFile("..\\dx11minimal\\Resourses\\Models\\Cube.gltf");
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
