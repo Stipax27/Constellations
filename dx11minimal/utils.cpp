@@ -64,3 +64,46 @@ void SetLookVector(Transform* transform, point3d direction){
 
     transform->mRotation = matrixRotation * transform->mRotation;
 }
+
+vector<point3d> smoothCornersPath(const vector<point3d>& pointsBefore, int numberIterations) {
+
+    if (pointsBefore.size() <= 1) return pointsBefore;
+
+    vector<point3d> pointsAfter;
+
+    for (int i = 0; i < pointsBefore.size(); i++) {
+
+        int iPrevious;
+        int iNext;
+
+        if (i == 0) {
+            iPrevious = pointsBefore.size() - 1;
+            iNext = i + 1;
+        }
+        else if (i == pointsBefore.size() - 1) {
+            iPrevious = i - 1;
+            iNext = 0;
+        }
+        else {
+            iPrevious = i - 1;
+            iNext = i + 1;
+        }
+
+        point3d previousPoint = pointsBefore[iPrevious];
+        point3d currentPoint = pointsBefore[i];
+        point3d nextPoint = pointsBefore[iNext];
+
+        point3d localStartPoint = previousPoint.lerp(currentPoint, 0.6666f);
+        point3d localEndPoint = currentPoint.lerp(nextPoint, 0.3333f);
+        point3d supportivePoint = localStartPoint.lerp(localEndPoint, 0.5f);
+        point3d localMiddlePoint = supportivePoint.lerp(currentPoint, 0.5f);
+
+        pointsAfter.push_back(localStartPoint);
+        pointsAfter.push_back(localMiddlePoint);
+        pointsAfter.push_back(localEndPoint);
+
+    }
+
+    if (numberIterations <= 1) return pointsAfter;
+    else return smoothCornersPath(pointsAfter, numberIterations-1);
+}

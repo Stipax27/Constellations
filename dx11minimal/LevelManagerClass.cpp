@@ -204,15 +204,18 @@ bool LevelManagerClass::Initialize()
 
 	aiComponent = entity->AddComponent<AIComponent>();
 
-	aiComponent->patrolPoints = {
+	vector<point3d> patrolPoints = {
 		 point3d(25.0f, 0.0f, 0.0f),
 		 point3d(25.0f, 25.0f, 0.0f),
 		 point3d(0.0f, 25.0f, 0.0f),
 		 point3d(0.0f, 0.0f, 0.0f)
 	};
 
-	aiComponent->movementSpeed = 10.0;
+	patrolPoints = smoothCornersPath(patrolPoints, 3);
 
+	aiComponent->patrolPoints = patrolPoints;
+
+	aiComponent->movementSpeed = 10.0;
 
 	//entity = m_World->CreateEntity();
 	//transform = entity->AddComponent<Transform>();

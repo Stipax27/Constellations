@@ -15,7 +15,7 @@
 /////////////
 // GLOBALS //
 /////////////
-const float AI_UPDATE_INTERVAL = 0.1f; // Частота обновления ИИ в секундах
+const float AI_UPDATE_INTERVAL = 0.01f; // Частота обновления ИИ в секундах
 
 class AISystem : public System
 {
@@ -132,13 +132,12 @@ private:
             // Движение к точке
             direction = direction.normalized();
             physicBody->velocity = direction * ai->movementSpeed;
-
-            // Проверка на обнаружение игрока
-            if (playerEntity && DetectPlayer(transform, ai))
-            {
-                ai->behaviorType = AIBehaviorType::CHASE;
-                ai->stateTimer = 0.0f;
-            }
+        }
+        // Проверка на обнаружение игрока
+        if (playerEntity && DetectPlayer(transform, ai))
+        {
+            ai->behaviorType = AIBehaviorType::CHASE;
+            ai->stateTimer = 0.0f;
         }
     }
 
@@ -172,7 +171,7 @@ private:
         else
         {
             // Продолжаем преследование
-            direction.normalized();
+            direction = direction.normalized();
             physicBody->velocity = direction * ai->movementSpeed;
         }
     }
@@ -225,7 +224,7 @@ private:
         if (!playerTransform) return;
 
         point3d direction = transform->position - playerTransform->position;
-        direction.normalized();
+        direction = direction.normalized();
 
         physicBody->velocity = direction * ai->movementSpeed;
 
