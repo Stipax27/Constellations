@@ -60,7 +60,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     float4 pos = starPos;
 
     output.pos = mul(float4(pos.xyz, 1), mul(view, proj));
-    //output.pos.xy += quadPos[vID] * float2(aspect.x, 1) / (1 / dist) / 100;
+    //output.pos.xy += quadPos[vID] * float2(aspect.x, 1) * dist * 0.01;
 
     output.vpos = mul(float4(pos.xyz, 1), view);
     output.wpos = float4(pos.xyz, 0);

@@ -205,7 +205,7 @@ public:
 						Shaders::pShader(spriteCluster->pShader);
 
 						InputAssembler::IA(spriteCluster->topology);
-						context->DrawInstanced(6, spriteCluster->pointsNum, 0, 0);
+						context->DrawInstanced(spriteCluster->vertexNum, spriteCluster->pointsNum, 0, 0);
 
 						//Sampler::SamplerComp(0);
 						Textures::CreateMipMap();
@@ -215,6 +215,7 @@ public:
 						Textures::TextureToShader(rtIndex, 0, targetshader::pixel);
 
 						Shaders::vShader(10);
+						Shaders::gShader(0);
 						Shaders::pShader(100);
 
 						InputAssembler::IA(InputAssembler::topology::triList);
@@ -228,7 +229,7 @@ public:
 						Shaders::pShader(spriteCluster->pShader);
 
 						InputAssembler::IA(spriteCluster->topology);
-						context->DrawInstanced(6, spriteCluster->pointsNum, 0, 0);
+						context->DrawInstanced(spriteCluster->vertexNum, spriteCluster->pointsNum, 0, 0);
 					}
 				}
 

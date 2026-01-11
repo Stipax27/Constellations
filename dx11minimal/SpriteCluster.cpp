@@ -15,6 +15,8 @@ struct SpriteCluster : Component
 	InputAssembler::topology topology = InputAssembler::topology::triList;
 
 	int pointsNum = 1;
+	int vertexNum = 6;
+
 	RenderCompress compress = RenderCompress::none;
 };
 

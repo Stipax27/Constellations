@@ -70,7 +70,7 @@ float3 spiral(uint index) {
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
-    float4 worldpos : POSITION0;
+    float4 wpos : POSITION0;
     float2 uv : TEXCOORD0;
     uint   starID : COLOR0;
 };
@@ -111,14 +111,18 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 
     // //-----
 
+    //float dist = length(cPos.xyz - starPos);
+
     float4 viewPos = mul(float4(starPos, 1.0f), view);
     float4 projPos = mul(viewPos, proj);
     //projPos.xy /= max(projPos.w, 0);
-    projPos.xy += quadPos[vID] * float2(aspect.x, 1) * size;
+    //projPos.xy += quadPos[vID] * float2(aspect.x, 1) * size;
+
+    //projPos.xy += quadPos[vID] * float2(aspect.x, 1) * size;
 
     output.uv = quadPos[vID];
     output.pos = projPos;
     output.starID = iID;
-    output.worldpos = float4(starPos, 1);
+    output.wpos = float4(starPos, 0);
     return output;
 }

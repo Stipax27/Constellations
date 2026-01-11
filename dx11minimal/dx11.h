@@ -336,7 +336,7 @@ void InitD2D(HWND);
 
 namespace Device
 {
-#define DirectXDebugMode false
+#define DirectXDebugMode true
 
 	extern D3D_DRIVER_TYPE	driverType;
 

@@ -20,6 +20,14 @@ cbuffer frame : register(b4)
     float4 aspect;
 };
 
+cbuffer camera : register(b3)
+{
+    float4x4 world;
+    float4x4 view;
+    float4x4 proj;
+    float4 cPos;
+};
+
 cbuffer objParams : register(b0)
 {
     float drawerV[256];
@@ -33,7 +41,7 @@ cbuffer drawerInt : register(b7)
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
-    float4 worldpos : POSITION0;
+    float4 wpos : POSITION0;
     float2 uv : TEXCOORD0;
     uint   starID : COLOR0;
 };
@@ -70,8 +78,8 @@ float4 PS(VS_OUTPUT input) : SV_Target
 
     float range = 65 * scale;
 
-    float2 posXZ = (input.worldpos.xz - pos.xz) / scale;
-    float posY = (input.worldpos.y - pos.y) / scale;
+    float2 posXZ = (input.wpos.xz - pos.xz) / scale;
+    float posY = (input.wpos.y - pos.y) / scale;
 
     float n = saturate(perlinTexture.Sample(perlinSamplerState, posXZ / (range * 2) + 0.5).r - 0.25);
 
@@ -81,7 +89,8 @@ float4 PS(VS_OUTPUT input) : SV_Target
     float brightness = exp(-dot(uv, uv) * 20) * 0.025;
 
     float offset = max(length(posXZ) - 40, 0);
-    float sat = max(1 - offset / 20, 0);
+    float dist = length(cPos.xyz - input.wpos.xyz);
+    float sat = max(1 - offset / 20, 0) * min(max(dist - 1, 0) / 16, 1);
     brightness *= sat;
 
     float shine = 1 + 0.3 * sin(log2(input.starID) * 3 + time.x * -0.25 * timeScale);

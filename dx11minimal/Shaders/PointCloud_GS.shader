@@ -36,7 +36,7 @@ void GS( point VS_OUTPUT input[1], inout TriangleStream<VS_OUTPUT> output )
 		VS_OUTPUT element = input[0];
 
 		float dist = length(cPos.xyz - element.wpos.xyz);
-		float2 offset = quadPos[i] * float2(aspect.x, 1) / (1 / dist) / 100;
+		float2 offset = quadPos[i] * float2(aspect.x, 1) * dist * 0.005;
 
 		element.pos.xy += offset;
 		output.Append( element );
