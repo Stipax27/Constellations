@@ -602,116 +602,116 @@ void Models::LoadGltfModel(const char* filename)
 	Shaders::Log("Model glTF file was read succesfully\n");
 }
 
-void Models::LoadObjModel(const char* filename)
-{
-	Model model;
-	std::vector<SimpleVertex> vertices;
-	std::vector<UINT> indices;
-
-	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(filename.c_str(),
-		aiProcess_Triangulate |
-		aiProcess_GenSmoothNormals |
-		aiProcess_FlipUVs |
-		aiProcess_JoinIdenticalVertices
-	);
-
-	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-	{
-		OutputDebugStringA("Failed to load model\n");
-		return model;
-	}
-
-	// ???????? ?? ???? ?????
-	for (unsigned int m = 0; m < scene->mNumMeshes; m++)
-	{
-		aiMesh* mesh = scene->mMeshes[m];
-
-		for (unsigned int v = 0; v < mesh->mNumVertices; v++)
-		{
-			SimpleVertex vertex;
-
-			// ???????
-			vertex.Pos.x = mesh->mVertices[v].x;
-			vertex.Pos.y = mesh->mVertices[v].y;
-			vertex.Pos.z = mesh->mVertices[v].z;
-
-			// ???????
-			if (mesh->HasNormals())
-			{
-				vertex.Normal.x = mesh->mNormals[v].x;
-				vertex.Normal.y = mesh->mNormals[v].y;
-				vertex.Normal.z = mesh->mNormals[v].z;
-			}
-
-			// ?????????? ??????????
-			if (mesh->HasTextureCoords(0))
-			{
-				vertex.TexCoord.x = mesh->mTextureCoords[0][v].x;
-				vertex.TexCoord.y = mesh->mTextureCoords[0][v].y;
-			}
-
-			vertices.push_back(vertex);
-		}
-
-		// ???????
-		for (unsigned int f = 0; f < mesh->mNumFaces; f++)
-		{
-			aiFace face = mesh->mFaces[f];
-			for (unsigned int i = 0; i < face.mNumIndices; i++)
-			{
-				indices.push_back(face.mIndices[i] + model.vertexCount);
-			}
-		}
-
-		model.vertexCount += mesh->mNumVertices;
-	}
-
-	model.indexCount = (UINT)indices.size();
-
-	// ??????? ????????? ?????
-	D3D11_BUFFER_DESC vbd;
-	ZeroMemory(&vbd, sizeof(vbd));
-	vbd.Usage = D3D11_USAGE_DEFAULT;
-	vbd.ByteWidth = sizeof(SimpleVertex) * (UINT)vertices.size();
-	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vbd.CPUAccessFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA vinitData;
-	ZeroMemory(&vinitData, sizeof(vinitData));
-	vinitData.pSysMem = vertices.data();
-
-	HRESULT hr = device->CreateBuffer(&vbd, &vinitData, &model.vertexBuffer);
-	if (FAILED(hr))
-	{
-		OutputDebugStringA("Failed to create vertex buffer\n");
-	}
-
-	// ??????? ????????? ?????
-	D3D11_BUFFER_DESC ibd;
-	ZeroMemory(&ibd, sizeof(ibd));
-	ibd.Usage = D3D11_USAGE_DEFAULT;
-	ibd.ByteWidth = sizeof(UINT) * (UINT)indices.size();
-	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	ibd.CPUAccessFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA iinitData;
-	ZeroMemory(&iinitData, sizeof(iinitData));
-	iinitData.pSysMem = indices.data();
-
-	hr = device->CreateBuffer(&ibd, &iinitData, &model.indexBuffer);
-	if (FAILED(hr))
-	{
-		OutputDebugStringA("Failed to create index buffer\n");
-	}
-
-	char debugMsg[256];
-	sprintf_s(debugMsg, "Model loaded: %d vertices, %d indices\n",
-		model.vertexCount, model.indexCount);
-	OutputDebugStringA(debugMsg);
-
-	return model;
-}
+//void Models::LoadObjModel(const char* filename)
+//{
+//	Model model;
+//	std::vector<SimpleVertex> vertices;
+//	std::vector<UINT> indices;
+//
+//	Assimp::Importer importer;
+//	const aiScene* scene = importer.ReadFile(filename.c_str(),
+//		aiProcess_Triangulate |
+//		aiProcess_GenSmoothNormals |
+//		aiProcess_FlipUVs |
+//		aiProcess_JoinIdenticalVertices
+//	);
+//
+//	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+//	{
+//		OutputDebugStringA("Failed to load model\n");
+//		return model;
+//	}
+//
+//	// ???????? ?? ???? ?????
+//	for (unsigned int m = 0; m < scene->mNumMeshes; m++)
+//	{
+//		aiMesh* mesh = scene->mMeshes[m];
+//
+//		for (unsigned int v = 0; v < mesh->mNumVertices; v++)
+//		{
+//			SimpleVertex vertex;
+//
+//			// ???????
+//			vertex.Pos.x = mesh->mVertices[v].x;
+//			vertex.Pos.y = mesh->mVertices[v].y;
+//			vertex.Pos.z = mesh->mVertices[v].z;
+//
+//			// ???????
+//			if (mesh->HasNormals())
+//			{
+//				vertex.Normal.x = mesh->mNormals[v].x;
+//				vertex.Normal.y = mesh->mNormals[v].y;
+//				vertex.Normal.z = mesh->mNormals[v].z;
+//			}
+//
+//			// ?????????? ??????????
+//			if (mesh->HasTextureCoords(0))
+//			{
+//				vertex.TexCoord.x = mesh->mTextureCoords[0][v].x;
+//				vertex.TexCoord.y = mesh->mTextureCoords[0][v].y;
+//			}
+//
+//			vertices.push_back(vertex);
+//		}
+//
+//		// ???????
+//		for (unsigned int f = 0; f < mesh->mNumFaces; f++)
+//		{
+//			aiFace face = mesh->mFaces[f];
+//			for (unsigned int i = 0; i < face.mNumIndices; i++)
+//			{
+//				indices.push_back(face.mIndices[i] + model.vertexCount);
+//			}
+//		}
+//
+//		model.vertexCount += mesh->mNumVertices;
+//	}
+//
+//	model.indexCount = (UINT)indices.size();
+//
+//	// ??????? ????????? ?????
+//	D3D11_BUFFER_DESC vbd;
+//	ZeroMemory(&vbd, sizeof(vbd));
+//	vbd.Usage = D3D11_USAGE_DEFAULT;
+//	vbd.ByteWidth = sizeof(SimpleVertex) * (UINT)vertices.size();
+//	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+//	vbd.CPUAccessFlags = 0;
+//
+//	D3D11_SUBRESOURCE_DATA vinitData;
+//	ZeroMemory(&vinitData, sizeof(vinitData));
+//	vinitData.pSysMem = vertices.data();
+//
+//	HRESULT hr = device->CreateBuffer(&vbd, &vinitData, &model.vertexBuffer);
+//	if (FAILED(hr))
+//	{
+//		OutputDebugStringA("Failed to create vertex buffer\n");
+//	}
+//
+//	// ??????? ????????? ?????
+//	D3D11_BUFFER_DESC ibd;
+//	ZeroMemory(&ibd, sizeof(ibd));
+//	ibd.Usage = D3D11_USAGE_DEFAULT;
+//	ibd.ByteWidth = sizeof(UINT) * (UINT)indices.size();
+//	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+//	ibd.CPUAccessFlags = 0;
+//
+//	D3D11_SUBRESOURCE_DATA iinitData;
+//	ZeroMemory(&iinitData, sizeof(iinitData));
+//	iinitData.pSysMem = indices.data();
+//
+//	hr = device->CreateBuffer(&ibd, &iinitData, &model.indexBuffer);
+//	if (FAILED(hr))
+//	{
+//		OutputDebugStringA("Failed to create index buffer\n");
+//	}
+//
+//	char debugMsg[256];
+//	sprintf_s(debugMsg, "Model loaded: %d vertices, %d indices\n",
+//		model.vertexCount, model.indexCount);
+//	OutputDebugStringA(debugMsg);
+//
+//	return model;
+//}
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -890,6 +890,7 @@ void Shaders::Init()
 	//-----------------------------------------------
 
 	Shaders::CreateCS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\DepthDown.shader"));
+	//Shaders::CreateCS(1, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Lib\\utils.shader"));
 
 	//-----------------------------------------------
 

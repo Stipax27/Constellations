@@ -254,12 +254,22 @@ public:
 
 						//Rasterizer::Cull(Rasterizer::cullmode::front);
 
+						//Shaders::vShader(17);
+						//Shaders::pShader(17);
+						////Shaders::gShader(17);
+
+						//InputAssembler::IA(InputAssembler::topology::triList);
+						////context->DrawIndexed(16777216, 0, 0);
+						//context->DrawInstanced(6, 2097152, 0, 0);
+
+
 						Shaders::vShader(17);
 						Shaders::pShader(17);
 						Shaders::gShader(17);
 
 						InputAssembler::IA(InputAssembler::topology::pointList);
-						context->DrawIndexed(36, 0, 0);
+						//context->DrawIndexed(16777216, 0, 0);
+						context->DrawInstanced(1, 2097152 / 6, 0, 0);
 					//}
 
 				}

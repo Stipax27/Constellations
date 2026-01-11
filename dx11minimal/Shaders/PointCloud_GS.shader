@@ -4,6 +4,14 @@ cbuffer frame : register(b4)
     float4 aspect;
 };
 
+cbuffer camera : register(b3)
+{
+    float4x4 world;
+    float4x4 view;
+    float4x4 proj;
+    float4 cPos;
+};
+
 
 struct VS_OUTPUT
 {
@@ -23,9 +31,13 @@ void GS( point VS_OUTPUT input[1], inout TriangleStream<VS_OUTPUT> output )
 		float2(1, -1), float2(1, 1), float2(-1, 1)
 	};
 
+	[unroll]
 	for (uint i = 0; i < 6; i++) {
-		float2 offset = quadPos[i] * float2(aspect.x, 1) * 0.1;
 		VS_OUTPUT element = input[0];
+
+		float dist = length(cPos.xyz - element.wpos.xyz);
+		float2 offset = quadPos[i] * float2(aspect.x, 1) / (1 / dist) / 100;
+
 		element.pos.xy += offset;
 		output.Append( element );
 	}
