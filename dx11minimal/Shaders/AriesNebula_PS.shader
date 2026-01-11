@@ -43,6 +43,7 @@ struct VS_OUTPUT
     float4 pos : SV_POSITION;
     float4 wpos : POSITION0;
     float2 uv : TEXCOORD0;
+    float sat : TEXCOORD1;
     uint   starID : COLOR0;
 };
 
@@ -89,8 +90,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
     float brightness = exp(-dot(uv, uv) * 20) * 0.025;
 
     float offset = max(length(posXZ) - 40, 0);
-    float dist = length(cPos.xyz - input.wpos.xyz);
-    float sat = max(1 - offset / 20, 0) * min(max(dist - 1, 0) / 16, 1);
+    float sat = max(1 - offset / 20, 0) * input.sat;
     brightness *= sat;
 
     float shine = 1 + 0.3 * sin(log2(input.starID) * 3 + time.x * -0.25 * timeScale);
