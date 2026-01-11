@@ -58,6 +58,7 @@ bool LevelManagerClass::Initialize()
 	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cube.txt");
 	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cube2.txt");
 	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cat.txt", true);
+	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\cat2.obj", true);
 	//Models::LoadModelFromGltfFile("..\\dx11minimal\\Resourses\\Models\\Cube.gltf");
 
 	//////////////////////////////////////////////////////////////////////////////////////////////

@@ -625,116 +625,81 @@ void Models::LoadGltfModel(const char* filename)
 	Shaders::Log("Model glTF file was read succesfully\n");
 }
 
-//void Models::LoadObjModel(const char* filename)
-//{
-//	Model model;
-//	std::vector<SimpleVertex> vertices;
-//	std::vector<UINT> indices;
-//
-//	Assimp::Importer importer;
-//	const aiScene* scene = importer.ReadFile(filename.c_str(),
-//		aiProcess_Triangulate |
-//		aiProcess_GenSmoothNormals |
-//		aiProcess_FlipUVs |
-//		aiProcess_JoinIdenticalVertices
-//	);
-//
-//	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-//	{
-//		OutputDebugStringA("Failed to load model\n");
-//		return model;
-//	}
-//
-//	// ???????? ?? ???? ?????
-//	for (unsigned int m = 0; m < scene->mNumMeshes; m++)
-//	{
-//		aiMesh* mesh = scene->mMeshes[m];
-//
-//		for (unsigned int v = 0; v < mesh->mNumVertices; v++)
-//		{
-//			SimpleVertex vertex;
-//
-//			// ???????
-//			vertex.Pos.x = mesh->mVertices[v].x;
-//			vertex.Pos.y = mesh->mVertices[v].y;
-//			vertex.Pos.z = mesh->mVertices[v].z;
-//
-//			// ???????
-//			if (mesh->HasNormals())
-//			{
-//				vertex.Normal.x = mesh->mNormals[v].x;
-//				vertex.Normal.y = mesh->mNormals[v].y;
-//				vertex.Normal.z = mesh->mNormals[v].z;
-//			}
-//
-//			// ?????????? ??????????
-//			if (mesh->HasTextureCoords(0))
-//			{
-//				vertex.TexCoord.x = mesh->mTextureCoords[0][v].x;
-//				vertex.TexCoord.y = mesh->mTextureCoords[0][v].y;
-//			}
-//
-//			vertices.push_back(vertex);
-//		}
-//
-//		// ???????
-//		for (unsigned int f = 0; f < mesh->mNumFaces; f++)
-//		{
-//			aiFace face = mesh->mFaces[f];
-//			for (unsigned int i = 0; i < face.mNumIndices; i++)
-//			{
-//				indices.push_back(face.mIndices[i] + model.vertexCount);
-//			}
-//		}
-//
-//		model.vertexCount += mesh->mNumVertices;
-//	}
-//
-//	model.indexCount = (UINT)indices.size();
-//
-//	// ??????? ????????? ?????
-//	D3D11_BUFFER_DESC vbd;
-//	ZeroMemory(&vbd, sizeof(vbd));
-//	vbd.Usage = D3D11_USAGE_DEFAULT;
-//	vbd.ByteWidth = sizeof(SimpleVertex) * (UINT)vertices.size();
-//	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-//	vbd.CPUAccessFlags = 0;
-//
-//	D3D11_SUBRESOURCE_DATA vinitData;
-//	ZeroMemory(&vinitData, sizeof(vinitData));
-//	vinitData.pSysMem = vertices.data();
-//
-//	HRESULT hr = device->CreateBuffer(&vbd, &vinitData, &model.vertexBuffer);
-//	if (FAILED(hr))
-//	{
-//		OutputDebugStringA("Failed to create vertex buffer\n");
-//	}
-//
-//	// ??????? ????????? ?????
-//	D3D11_BUFFER_DESC ibd;
-//	ZeroMemory(&ibd, sizeof(ibd));
-//	ibd.Usage = D3D11_USAGE_DEFAULT;
-//	ibd.ByteWidth = sizeof(UINT) * (UINT)indices.size();
-//	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-//	ibd.CPUAccessFlags = 0;
-//
-//	D3D11_SUBRESOURCE_DATA iinitData;
-//	ZeroMemory(&iinitData, sizeof(iinitData));
-//	iinitData.pSysMem = indices.data();
-//
-//	hr = device->CreateBuffer(&ibd, &iinitData, &model.indexBuffer);
-//	if (FAILED(hr))
-//	{
-//		OutputDebugStringA("Failed to create index buffer\n");
-//	}
-//
-//	char debugMsg[256];
-//	sprintf_s(debugMsg, "Model loaded: %d vertices, %d indices\n",
-//		model.vertexCount, model.indexCount);
-//	OutputDebugStringA(debugMsg);
-//
-//	return model;
-//}
+void Models::LoadObjModel(const char* filename, bool vertexOnly)
+{
+	std::ifstream fin;
+	char input;
+
+	// Open the model file.
+	fin.open(filename);
+
+	// If it could not open the file then exit.
+	if (fin.fail())
+	{
+		Shaders::Log("Failed to read the obj model file\n");
+		return;
+	}
+
+	vector<ModelType> model;
+
+	// Read up to the beginning of the data.
+	fin.get(input);
+
+	string prefix;
+	fin >> prefix;
+	while (prefix == "v")
+	{
+		ModelType mType = ModelType();
+
+		fin >> mType.x >> mType.y >> mType.z;
+		if (vertexOnly) {
+			mType.tu = 0;
+			mType.tv = 0;
+
+			mType.nx = 0;
+			mType.ny = 0;
+			mType.nz = 0;
+		}
+
+		model.push_back(mType);
+	}
+
+	vertexCount = (int)model.size();
+	indexCount = vertexCount;
+
+	// Close the model file.
+	fin.close();
+
+	VertexType* vertices;
+	unsigned long* indices;
+
+	// Create the vertex array.
+	vertices = new VertexType[vertexCount];
+
+	// Create the index array.
+	indices = new unsigned long[indexCount];
+
+	// Load the vertex array and index array with data.
+	for (int i = 0; i < vertexCount; i++)
+	{
+		vertices[i].position = XMFLOAT3(model[i].x, model[i].y, model[i].z);
+		vertices[i].texture = XMFLOAT2(model[i].tu, model[i].tv);
+		vertices[i].normal = XMFLOAT3(model[i].nx, model[i].ny, model[i].nz);
+
+		indices[i] = i;
+	}
+
+	Create(modelsCount, vertices, indices);
+
+	// Release the arrays now that the vertex and index buffers have been created and loaded.
+	delete[] vertices;
+	vertices = 0;
+
+	delete[] indices;
+	indices = 0;
+
+	Shaders::Log("Model obj file was read succesfully\n");
+}
 
 //////////////////////////////////////////////////////////////////////////////////
 

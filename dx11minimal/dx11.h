@@ -164,7 +164,7 @@ namespace Models
 
 	void LoadTxtModel(const char* filename, bool = false);
 	void LoadGltfModel(const char* filename);
-	void LoadObjModel(const char* filename);
+	void LoadObjModel(const char* filename, bool = false);
 }
 
 namespace Shaders {
@@ -357,7 +357,7 @@ void InitD2D(HWND);
 
 namespace Device
 {
-#define DirectXDebugMode true
+#define DirectXDebugMode false
 
 	extern D3D_DRIVER_TYPE	driverType;
 
