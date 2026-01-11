@@ -54,7 +54,10 @@ bool LevelManagerClass::Initialize()
 	ConstBuf::UpdateFactors();
 
 	Textures::LoadTexture("..\\dx11minimal\\Resourses\\Textures\\testTexture.tga");
-	//Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cube.txt");
+
+	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cube.txt");
+	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cube2.txt");
+	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cat.txt", true);
 	//Models::LoadModelFromGltfFile("..\\dx11minimal\\Resourses\\Models\\Cube.gltf");
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
@@ -138,11 +141,22 @@ bool LevelManagerClass::Initialize()
 	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -180 * RAD) * transform->mRotation;
 	mesh = holder->AddComponent<Mesh>();
 
+	holder = m_World->CreateEntity("Holder", folder);
+	transform = holder->AddComponent<Transform>();
+	transform->scale = point3d(1, 6, 1);
+	transform->position = point3d(0.0f, 10.0f, -50.0f);
+	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -180 * RAD) * transform->mRotation;
+	mesh = holder->AddComponent<Mesh>();
+	mesh->index = 1;
+
 	entity = m_World->CreateEntity("Cube", folder);
 	transform = entity->AddComponent<Transform>();
+	transform->scale = point3d(20, 20, 20);
 	transform->position = point3d(10.0f, 0.0f, 0.0f);
 	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -180 * RAD) * transform->mRotation;
 	pointCloud = entity->AddComponent<PointCloud>();
+	pointCloud->index = 2;
+
 	//delayedDestroy = entity->AddComponent<DelayedDestroy>();
 	//delayedDestroy->lifeTime = 5000;
 

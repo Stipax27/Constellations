@@ -72,7 +72,6 @@ struct VS_OUTPUT
     float4 pos : SV_POSITION;
     float4 wpos : POSITION0;
     float2 uv : TEXCOORD0;
-    float sat : TEXCOORD1;
     uint   starID : COLOR0;
 };
 
@@ -112,8 +111,6 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 
     // //-----
 
-    float dist = length(cPos.xyz - starPos);
-
     float4 viewPos = mul(float4(starPos, 1.0f), view);
     float4 projPos = mul(viewPos, proj);
     //projPos.xy /= max(projPos.w, 0);
@@ -125,8 +122,6 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     output.pos = projPos;
     output.starID = iID;
     output.wpos = float4(starPos, 0);
-
-    output.sat = min(max(dist - 1, 0) / 16, 1);
 
     return output;
 }

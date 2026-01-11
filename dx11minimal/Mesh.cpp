@@ -8,6 +8,7 @@
 struct Mesh : Component
 {
 	Rasterizer::cullmode cullMode = Rasterizer::cullmode::front;
+	int index = 0;
 };
 
 #endif

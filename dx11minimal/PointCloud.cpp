@@ -7,7 +7,7 @@
 
 struct PointCloud : Component
 {
-	
+	int index = 0;
 };
 
 #endif

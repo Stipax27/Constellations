@@ -125,6 +125,9 @@ namespace Textures
 
 namespace Models
 {
+
+#define max_models 255
+
 	struct VertexType
 	{
 		XMFLOAT3 position;
@@ -139,9 +142,27 @@ namespace Models
 		float nx, ny, nz;
 	};
 
-	extern ID3D11Buffer* vertexBuffer, * indexBuffer;
+	extern D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
+	extern D3D11_SUBRESOURCE_DATA vertexData, indexData;
 
-	void LoadTxtModel(const char* filename);
+	extern int vertexCount;
+	extern int indexCount;
+
+	struct modelDesc
+	{
+		ID3D11Buffer* vertexBuffer;
+		ID3D11Buffer* indexBuffer;
+
+		int indexes;
+	};
+
+	extern modelDesc Model[max_models];
+	extern int modelsCount;
+
+	void CreateModel(int, VertexType*, unsigned long*);
+	void Create(int, VertexType*, unsigned long*);
+
+	void LoadTxtModel(const char* filename, bool = false);
 	void LoadGltfModel(const char* filename);
 	void LoadObjModel(const char* filename);
 }
@@ -349,6 +370,7 @@ namespace InputAssembler
 	enum class topology { triList, lineList, lineStrip, pointList };
 
 	void IA(topology);
+	void vBuffer(int);
 }
 
 

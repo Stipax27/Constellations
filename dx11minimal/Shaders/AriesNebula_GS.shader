@@ -23,7 +23,6 @@ struct VS_OUTPUT
     float4 pos : SV_POSITION;
     float4 wpos : POSITION0;
     float2 uv : TEXCOORD0;
-    float sat : TEXCOORD1;
     uint   starID : COLOR0;
 };
 

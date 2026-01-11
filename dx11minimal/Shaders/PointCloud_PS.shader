@@ -36,32 +36,18 @@ struct VS_OUTPUT
     float4 pos : SV_POSITION;
     float4 vpos : POSITION0;
     float4 wpos : POSITION1;
-    float4 vnorm : NORMAL1;
     float2 uv : TEXCOORD0;
 };
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-    return float4(1, 0, 1, 1);
+    float2 uv = input.uv;
+    float brightness = exp(-dot(uv, uv) * 20);
 
-    float3 lightDir = normalize(float3(1, -1, 0.25));
-    float4 ambientColor = float4(0.15, 0.15, 0.15, 1);
-    float specularPower = 2;
-
-    lightDir = -lightDir;
-
-    float3 eye = -(view._m02_m12_m22) * view._m32;
-    float3 viewDir = normalize(input.wpos.xyz - eye);
-
-    float3 diffuse = saturate(dot(lightDir, input.vnorm));
-
-    float3 reflectDir = normalize(reflect(lightDir, input.vnorm));
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    float3 specular = specularPower * spec;
+    return float4(brightness, brightness, brightness, 1) * float4(1, 0.6, 0.9, 1) * 0.5;
 
     float3 tex = inputTexture.Sample(samplerState, input.uv);
 
     return float4(tex, 1);
     //return saturate(float4(reflectDir, 1));
-    return saturate(float4(tex * (ambientColor.xyz + diffuse + specular), 1));
 }

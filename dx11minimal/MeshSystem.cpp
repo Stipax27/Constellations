@@ -77,7 +77,9 @@ public:
 							Shaders::pShader(15);
 
 							InputAssembler::IA(InputAssembler::topology::triList);
-							context->DrawIndexed(36, 0, 0);
+							InputAssembler::vBuffer(mesh->index);
+
+							context->DrawIndexed(Models::Model[mesh->index].indexes, 0, 0);
 						}
 
 					}

@@ -271,8 +271,10 @@ public:
 						Shaders::gShader(17);
 
 						InputAssembler::IA(InputAssembler::topology::pointList);
-						//context->DrawIndexed(16777216, 0, 0);
-						context->DrawInstanced(1, 2097152 / 6, 0, 0);
+						InputAssembler::vBuffer(pointCloud->index);
+
+						context->DrawIndexed(Models::Model[pointCloud->index].indexes, 0, 0);
+						//context->DrawInstanced(1, 2097152 / 6, 0, 0);
 					//}
 
 				}

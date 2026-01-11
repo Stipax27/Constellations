@@ -40,33 +40,21 @@ struct VS_OUTPUT
     float4 pos : SV_POSITION;
     float4 vpos : POSITION0;
     float4 wpos : POSITION1;
-    float4 vnorm : NORMAL0;
     float2 uv : TEXCOORD0;
 };
 
-VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
+VS_OUTPUT VS(VS_INPUT input)
 {
     VS_OUTPUT output = (VS_OUTPUT)0;
 
-    float2 quadPos[6] = {
-		float2(-1, -1), float2(1, -1), float2(-1, 1),
-		float2(1, -1), float2(1, 1), float2(-1, 1)
-	};
+    float4 pos = float4(input.position.xyz, 1);
+    pos = mul(pos, world);
 
-    float4 starPos = float4(0, 0, 0, 1);
-    starPos = mul(starPos, world);
-
-    //float dist = length(cPos.xyz - starPos.xyz);
-    float4 pos = starPos;
-
-    output.pos = mul(float4(pos.xyz, 1), mul(view, proj));
-    //output.pos.xy += quadPos[vID] * float2(aspect.x, 1) * dist * 0.01;
-
+    output.pos = mul(pos, mul(view, proj));
     output.vpos = mul(float4(pos.xyz, 1), view);
     output.wpos = float4(pos.xyz, 0);
-    //output.vnorm = normalize(mul(input.normal, world));
-    //output.vnorm = float4(normalize(input.normal), 1);
-    output.uv = quadPos[vID];
+    //output.pos.xy += quadPos[vID] * float2(aspect.x, 1) * dist * 0.01;
+    output.uv = input.uv;
 
     return output;
 }
