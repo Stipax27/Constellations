@@ -4,6 +4,11 @@ cbuffer frame : register(b4)
     float4 aspect;
 };
 
+cbuffer global : register(b5)
+{
+    float4 gConst[256];
+};
+
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
@@ -74,5 +79,5 @@ float4 PS(VS_OUTPUT input) : SV_Target
 {
 	float n = abs(snoise(normalize(input.vpos.xyz) * 3 + Animation * time.x * 0.02));
 
-	return lerp(float4(1.0, 0.95, 0.25, 1.0), float4(0.75, 0.015, 0.0, 1.0), n);
+	return lerp(float4(gConst[0].xyz, 1), float4(gConst[1].xyz, 1), n);
 }

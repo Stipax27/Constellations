@@ -19,7 +19,7 @@ struct VS_OUTPUT
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-    float4 basecolor = float4(1.0, 0.95, 0.3, 1.0);
+    float4 basecolor = gConst[255];
     float4 color;
 
     float angle = atan2(input.uv.y, input.uv.x) + PI;

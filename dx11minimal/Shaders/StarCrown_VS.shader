@@ -41,6 +41,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     VS_OUTPUT output;
     
     uint n = drawerV[0];
+
     uint triangles = n / 3;
     float angle = PI * 2 / triangles;
 
@@ -54,11 +55,6 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
         float2(0, 0), float2(sin(startAngle), cos(startAngle)), float2(sin(endAngle), cos(endAngle))
     };
 
-    float2 quadUV[6] = {
-        float2(-1, -1), float2(1, -1), float2(-1, 1),
-        float2(1, -1), float2(1, 1), float2(-1, 1)
-    };
-
     float4 pos = float4(gConst[iID].xyz, 1);
     float sz = gConst[iID].w;
 
@@ -70,7 +66,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     up = normalize(cross(front, right));
 
     float2 triangleUVpos = triangleUV[pID];
-    pos.xyz += (right * triangleUVpos.x + up * triangleUVpos.y) * sz * 1.75;
+    pos.xyz += (right * triangleUVpos.x + up * triangleUVpos.y) * sz;
         
     float4 viewPos = mul(pos, view);
     float4 projPos = mul(viewPos, proj);

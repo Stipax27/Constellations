@@ -142,6 +142,9 @@ public:
 							if (frustum->CheckSphere(star, constellation->starSize)) {
 								worldTransform.position = star;
 
+								ConstBuf::global[0] = XMFLOAT4(constellation->starColor1.x, constellation->starColor1.y, constellation->starColor1.z, 0);
+								ConstBuf::global[1] = XMFLOAT4(constellation->starColor2.x, constellation->starColor2.y, constellation->starColor2.z, 0);
+
 								ConstBuf::global[0].w = constellation->starSize;
 								ConstBuf::Update(5, ConstBuf::global);
 								ConstBuf::ConstToVertex(5);
@@ -163,6 +166,9 @@ public:
 							ConstBuf::drawerMatrix[0] = GetWorldMatrix(worldTransform);
 							ConstBuf::Update(8, ConstBuf::drawerMatrix);
 							ConstBuf::ConstToVertex(8);
+
+							ConstBuf::global[0] = XMFLOAT4(star->color1.x, star->color1.y, star->color1.z, 0);
+							ConstBuf::global[1] = XMFLOAT4(star->color2.x, star->color2.y, star->color2.z, 0);
 
 							ConstBuf::global[0].w = star->radius;
 							ConstBuf::Update(5, ConstBuf::global);

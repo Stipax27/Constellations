@@ -93,9 +93,9 @@ float snoise(float3 v)
 	return 42.0 * dot( m*m, float4( dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
 }
 
-float3 ball(float2 p, float radius)
+float3 ball(float2 p, float radius, uint iID)
 {
-    float n = (float)drawConst[0];
+    float n = (float)drawConst[iID];
 
     p.x = -(p.x / n) * 3.141592653589793;
     p.y = (p.y / n) * 3.141592653589793 / 2;
@@ -129,7 +129,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     output.uv = float2(1, -1) * pos.xy / 2. + .5;
 
 	float radius = gConst[iID].w;
-    pos.xyz = ball(pos.xy, radius);
+    pos.xyz = ball(pos.xy, radius, iID);
 
     output.vpos = pos;
 
