@@ -151,9 +151,8 @@ bool LevelManagerClass::Initialize()
 
 	entity = m_World->CreateEntity("Cube", folder);
 	transform = entity->AddComponent<Transform>();
-	transform->scale = point3d(20, 20, 20);
-	transform->position = point3d(10.0f, 0.0f, 0.0f);
-	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -180 * RAD) * transform->mRotation;
+	transform->scale = point3d(20.0f, 20.0f, 20.0f);
+	transform->position = point3d(10.0f, 0.0f, -30.0f);
 	pointCloud = entity->AddComponent<PointCloud>();
 	pointCloud->index = 2;
 
