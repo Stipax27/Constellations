@@ -11,6 +11,7 @@ struct Constellation : Component
 {
 	float starSize = 0.05f;
 	float linkSize = 0.15f;
+	float crownRadius = 0.1f;
 
 	point3d starColor1 = point3d(0.95, 0.98, 1);
 	point3d starColor2 = point3d(0.55, 0.4, 0.85);

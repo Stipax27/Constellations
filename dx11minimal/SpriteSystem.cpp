@@ -104,7 +104,7 @@ public:
 						for (int a = 0; a < transformedStars.size() && count < constCount - 2; a++) {
 							point3d star = transformedStars[a];
 							if (frustum->CheckSphere(star, transform->scale.x)) {
-								ConstBuf::global[count] = XMFLOAT4(star.x, star.y, star.z, constellation->starSize);
+								ConstBuf::global[count] = XMFLOAT4(star.x, star.y, star.z, constellation->crownRadius);
 								count++;
 							}
 						}
