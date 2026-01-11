@@ -149,91 +149,89 @@ public:
 
 				SpriteCluster* spriteCluster = entity->GetComponent<SpriteCluster>();
 				if (spriteCluster != nullptr) {
-					ConstBuf::drawerV[0] = entity->timeScale;
-					ConstBuf::Update(0, ConstBuf::drawerV);
-					ConstBuf::ConstToVertex(0);
-					ConstBuf::ConstToPixel(0);
+					if (transform == nullptr || frustum->CheckSphere(transform->position, spriteCluster->frustumRadius)) {
+						ConstBuf::drawerV[0] = entity->timeScale;
+						ConstBuf::Update(0, ConstBuf::drawerV);
+						ConstBuf::ConstToVertex(0);
+						ConstBuf::ConstToPixel(0);
 
-					if (transform != nullptr)
-					{
-						/*if (!frustum->CheckSphere(transform->position, transform->scale.x)) {
-							continue;
-						}*/
+						if (transform != nullptr)
+						{
+							ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
+							ConstBuf::Update(5, ConstBuf::global);
+							ConstBuf::ConstToVertex(5);
+							ConstBuf::ConstToPixel(5);
+							ConstBuf::ConstToGeometry(5);
+						}
 
-						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, transform->scale.x);
-						ConstBuf::Update(5, ConstBuf::global);
-						ConstBuf::ConstToVertex(5);
-						ConstBuf::ConstToPixel(5);
-						ConstBuf::ConstToGeometry(5);
-					}
+						int lastRT = Textures::currentRT;
 
-					int lastRT = Textures::currentRT;
+						ConstBuf::drawerInt[0] = pow(2, (int)spriteCluster->compress);
+						ConstBuf::Update(7, ConstBuf::drawerInt);
+						ConstBuf::ConstToPixel(7);
 
-					ConstBuf::drawerInt[0] = pow(2, (int)spriteCluster->compress);
-					ConstBuf::Update(7, ConstBuf::drawerInt);
-					ConstBuf::ConstToPixel(7);
+						if (spriteCluster->compress != RenderCompress::none) {
 
-					if (spriteCluster->compress != RenderCompress::none) {
+							int uavIndex = (int)spriteCluster->compress * 2 + 1;
+							int rtIndex = (int)spriteCluster->compress * 2 + 2;
 
-						int uavIndex = (int)spriteCluster->compress * 2 + 1;
-						int rtIndex = (int)spriteCluster->compress * 2 + 2;
+							Textures::RenderTarget(rtIndex, 0);
+							Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
+							Draw::ClearDepth();
 
-						Textures::RenderTarget(rtIndex, 0);
-						Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
-						Draw::ClearDepth();
+							//Depth::Depth(Depth::depthmode::on);
 
-						//Depth::Depth(Depth::depthmode::on);
+							ConstBuf::ConstToCompute(7);
 
-						ConstBuf::ConstToCompute(7);
+							Compute::Dispatch(0, lastRT, uavIndex);
+							Textures::TextureToShader(uavIndex, 0);
 
-						Compute::Dispatch(0, lastRT, uavIndex);
-						Textures::TextureToShader(uavIndex, 0);
-
-						//Depth::Depth(Depth::depthmode::off);
+							//Depth::Depth(Depth::depthmode::off);
 
 
 
-						//Textures::DepthTarget(lastRT, 0);
+							//Textures::DepthTarget(lastRT, 0);
 
-						/*Shaders::vShader(10);
-						Shaders::pShader(101);
-						context->PSSetShaderResources(0, 1, &Textures::Texture[lastRT].DepthResView);
-						context->Draw(6, 0);*/
+							/*Shaders::vShader(10);
+							Shaders::pShader(101);
+							context->PSSetShaderResources(0, 1, &Textures::Texture[lastRT].DepthResView);
+							context->Draw(6, 0);*/
 
-						//Depth::Depth(Depth::depthmode::readonly);
+							//Depth::Depth(Depth::depthmode::readonly);
 
-						Sampler::SamplerComp(0);
+							Sampler::SamplerComp(0);
 
-						Shaders::vShader(spriteCluster->vShader);
-						Shaders::gShader(spriteCluster->gShader);
-						Shaders::pShader(spriteCluster->pShader);
+							Shaders::vShader(spriteCluster->vShader);
+							Shaders::gShader(spriteCluster->gShader);
+							Shaders::pShader(spriteCluster->pShader);
 
-						InputAssembler::IA(spriteCluster->topology);
-						context->DrawInstanced(spriteCluster->vertexNum, spriteCluster->pointsNum, 0, 0);
+							InputAssembler::IA(spriteCluster->topology);
+							context->DrawInstanced(spriteCluster->vertexNum, spriteCluster->pointsNum, 0, 0);
 
-						//Sampler::SamplerComp(0);
-						Textures::CreateMipMap();
+							//Sampler::SamplerComp(0);
+							Textures::CreateMipMap();
 
-						Textures::RenderTarget(lastRT, 0);
+							Textures::RenderTarget(lastRT, 0);
 
-						Textures::TextureToShader(rtIndex, 0, targetshader::pixel);
+							Textures::TextureToShader(rtIndex, 0, targetshader::pixel);
 
-						Shaders::vShader(10);
-						Shaders::gShader(0);
-						Shaders::pShader(100);
+							Shaders::vShader(10);
+							Shaders::gShader(0);
+							Shaders::pShader(100);
 
-						InputAssembler::IA(InputAssembler::topology::triList);
-						context->Draw(6, 0);
+							InputAssembler::IA(InputAssembler::topology::triList);
+							context->Draw(6, 0);
 
-						//Depth::Depth(Depth::depthmode::readonly);
-					}
-					else {
-						Shaders::vShader(spriteCluster->vShader);
-						Shaders::gShader(spriteCluster->gShader);
-						Shaders::pShader(spriteCluster->pShader);
+							//Depth::Depth(Depth::depthmode::readonly);
+						}
+						else {
+							Shaders::vShader(spriteCluster->vShader);
+							Shaders::gShader(spriteCluster->gShader);
+							Shaders::pShader(spriteCluster->pShader);
 
-						InputAssembler::IA(spriteCluster->topology);
-						context->DrawInstanced(spriteCluster->vertexNum, spriteCluster->pointsNum, 0, 0);
+							InputAssembler::IA(spriteCluster->topology);
+							context->DrawInstanced(spriteCluster->vertexNum, spriteCluster->pointsNum, 0, 0);
+						}
 					}
 				}
 

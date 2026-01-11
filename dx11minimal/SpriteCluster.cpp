@@ -17,6 +17,8 @@ struct SpriteCluster : Component
 	int pointsNum = 1;
 	int vertexNum = 6;
 
+	float frustumRadius = 10.0f;
+
 	RenderCompress compress = RenderCompress::none;
 };
 

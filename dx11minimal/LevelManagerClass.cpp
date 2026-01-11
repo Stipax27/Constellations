@@ -110,6 +110,7 @@ bool LevelManagerClass::Initialize()
 	spriteCluster->pShader = 7;
 	spriteCluster->pointsNum = 900000;
 	spriteCluster->vertexNum = 1;
+	spriteCluster->frustumRadius = 60;
 	spriteCluster->topology = InputAssembler::topology::pointList;
 	spriteCluster->compress = RenderCompress::x2;
 	entity->AddComponent<SurfaceCollider>();
