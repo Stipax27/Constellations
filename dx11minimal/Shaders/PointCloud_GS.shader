@@ -18,6 +18,7 @@ struct VS_OUTPUT
     float4 pos : SV_POSITION;
     float4 vpos : POSITION0;
     float4 wpos : POSITION1;
+    float4 vnorm : NORMAL0;
     float2 uv : TEXCOORD0;
 };
 
@@ -34,8 +35,11 @@ void GS( point VS_OUTPUT input[1], inout TriangleStream<VS_OUTPUT> output )
 	for (uint i = 0; i < 6; i++) {
 		VS_OUTPUT element = input[0];
 
-		float dist = length(cPos.xyz - element.wpos.xyz);
-		float2 offset = quadPos[i] * float2(aspect.x, 1) * min(dist, 18) * 0.04;
+        float3 viewDir = element.wpos.xyz - cPos.xyz;
+		float dist = length(viewDir);
+        float scale = clamp(abs(dot(float3(-1, 0, 0), element.vnorm)), 0.5, 1);
+
+		float2 offset = quadPos[i] * float2(aspect.x, 1) * min(dist, 18) * scale * 0.04 ;
 
 		element.pos.xy += offset;
 		element.uv = quadPos[i];

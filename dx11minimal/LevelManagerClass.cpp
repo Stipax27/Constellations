@@ -135,19 +135,20 @@ bool LevelManagerClass::Initialize()
 
 	/////////////////////////
 
-	/*entity = m_World->CreateEntity("Star", folder);
+	entity = m_World->CreateEntity("Star", folder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, -20.0f);
-	star = entity->AddComponent<Star>();*/
+	star = entity->AddComponent<Star>();
 
 	/////////////////////////
 
-	/*Entity* holder = m_World->CreateEntity("Holder", folder);
+	Entity* holder = m_World->CreateEntity("Holder", folder);
 	transform = holder->AddComponent<Transform>();
+	transform->scale = point3d(10, 10, 10);
 	transform->position = point3d(0.0f, 0.0f, -50.0f);
 	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -180 * RAD) * transform->mRotation;
 	mesh = holder->AddComponent<Mesh>();
-	mesh->index = 3;
+	mesh->index = 4;
 
 	holder = m_World->CreateEntity("Holder", folder);
 	transform = holder->AddComponent<Transform>();
@@ -155,7 +156,7 @@ bool LevelManagerClass::Initialize()
 	transform->position = point3d(0.0f, 10.0f, -50.0f);
 	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -180 * RAD) * transform->mRotation;
 	mesh = holder->AddComponent<Mesh>();
-	mesh->index = 1;*/
+	mesh->index = 1;
 
 	entity = m_World->CreateEntity("Cat", folder);
 	transform = entity->AddComponent<Transform>();

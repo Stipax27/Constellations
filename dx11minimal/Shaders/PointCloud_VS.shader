@@ -34,6 +34,7 @@ struct VS_OUTPUT
     float4 pos : SV_POSITION;
     float4 vpos : POSITION0;
     float4 wpos : POSITION1;
+    float4 vnorm : NORMAL0;
     float2 uv : TEXCOORD0;
 };
 
@@ -48,6 +49,7 @@ VS_OUTPUT VS(VS_INPUT input)
     output.vpos = mul(float4(pos.xyz, 1), view);
     output.wpos = float4(pos.xyz, 0);
     //output.pos.xy += quadPos[vID] * float2(aspect.x, 1) * dist * 0.01;
+    output.vnorm = float4(normalize(input.normal), 1);
     output.uv = input.uv;
 
     return output;
