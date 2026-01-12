@@ -14,6 +14,8 @@
 
 #include "world.h"
 
+#include "CollisionManagerClass.h"
+
 #include "SpriteSystem.cpp"
 #include "MeshSystem.cpp"
 #include "UISystem.cpp"
@@ -62,6 +64,7 @@ public:
 private:
 	World* m_World;
 	PlayerController* playerController;
+	CollisionManagerClass* collisionManager;
 };
 
 #endif

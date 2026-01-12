@@ -31,6 +31,9 @@ public:
 
 	void Shutdown()
 	{
+		if (frustum) {
+			frustum = 0;
+		}
 	}
 
 

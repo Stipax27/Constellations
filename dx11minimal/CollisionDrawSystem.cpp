@@ -14,6 +14,11 @@
 
 #include "cameraclass.h"
 
+/////////////
+// GLOBALS //
+/////////////
+const bool DEPTH_OFF = true;
+
 
 class CollisionDrawSystem : public System
 {
@@ -37,7 +42,13 @@ public:
 	{
 		Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
 		Rasterizer::Cull(Rasterizer::cullmode::wireframe);
-		Depth::Depth(Depth::depthmode::readonly);
+
+		if (DEPTH_OFF) {
+			Depth::Depth(Depth::depthmode::off);
+		}
+		else {
+			Depth::Depth(Depth::depthmode::readonly);
+		}
 
 		size_t size = entities.size();
 		for (int i = 0; i < size; i++)

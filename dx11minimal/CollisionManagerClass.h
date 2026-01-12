@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Filename: CollisionManagerClass.h
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _COLLISIONMANAGERCLASS_H
-#define _COLLISIONMANAGERCLASS_H
+#ifndef _COLLISIONMANAGERCLASS_H_
+#define _COLLISIONMANAGERCLASS_H_
 
 
 //////////////
@@ -12,6 +12,8 @@
 #include <unordered_map>
 #include <typeindex>
 #include <functional>
+#include <memory>
+#include <mutex>
 
 #include "Transform.cpp"
 
@@ -26,13 +28,9 @@
 /////////////
 
 struct CollisionResult {
-	bool collided;
+	bool collided = false;
 	point3d normal;
-
-	CollisionResult(bool Collided = false)
-		: collided(Collided)
-	{
-	}
+	float distance;
 };
 
 
@@ -49,24 +47,6 @@ struct TypePair {
 	}
 };
 
-static CollisionResult sphere_vs_sphere(
-	const Transform* t1, const Component* c1,
-	const Transform* t2, const Component* c2)
-{
-	CollisionResult result = CollisionResult();
-
-	const auto* a = static_cast<const SphereCollider*>(c1);
-	const auto* b = static_cast<const SphereCollider*>(c2);
-
-	point3d vector = t1->position - t2->position;
-	if (vector.magnitude() < a->radius + b->radius) {
-		result.collided = true;
-		result.normal = vector.normalized();
-	}
-
-	return result;
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: CollisionManagerClass
@@ -77,11 +57,15 @@ class CollisionManagerClass
 {
 public:
 	CollisionManagerClass();
-	CollisionManagerClass(const CollisionManagerClass&);
 	~CollisionManagerClass();
+	CollisionManagerClass(const CollisionManagerClass&);
 
 	void Initialize();
 	void Shutdown();
+
+	static CollisionResult sphere_vs_sphere(
+		const Transform t1, const SphereCollider* c1,
+		const Transform t2, const SphereCollider* c2);
 
 private:
 	static std::map<TypePair, CollisionFn> collisionMap;

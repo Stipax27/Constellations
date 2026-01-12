@@ -20,14 +20,15 @@
 #include "SurfaceCollider.cpp"
 
 #include "MethodOfClosest.h"
-
+#include "CollisionManagerClass.h"
 
 
 class CollisionSystem : public System
 {
 public:
-	CollisionSystem()
+	CollisionSystem(CollisionManagerClass* CollisionManager)
 	{
+		collisionManager = CollisionManager;
 	}
 
 
@@ -38,6 +39,9 @@ public:
 
 	void Shutdown()
 	{
+		if (collisionManager) {
+			collisionManager = 0;
+		}
 	}
 
 	float f(float x) {
@@ -52,19 +56,18 @@ public:
 			if (IsEntityValid(entity1)) {
 				Transform* transform1 = entity1->GetComponent<Transform>();
 				PhysicBody* physicBody1 = entity1->GetComponent<PhysicBody>();
-				auto* collider1 = entity1->GetFirstComponentOfBase<Collider>();
-				if (transform1 != nullptr && physicBody1 != nullptr && collider1 != nullptr) {
+				SphereCollider* collider1 = entity1->GetFirstComponentOfBase<SphereCollider>();
+				if (transform1 != nullptr && physicBody1 != nullptr && collider1 != nullptr && collider1->isTouchable) {
 
+					Transform worldTransform1 = GetWorldTransform(entity1);
 					size_t size = entities.size();
 					for (int i = 0; i < size; i++)
 					{
 						Entity* entity2 = entities[i];
-						if (IsEntityValid(entity1)) {
-							Transform* transform2 = entity2->GetComponent<Transform>();
-							auto* collider2 = entity2->GetFirstComponentOfBase<Collider>();
-
-							if (collider2 != nullptr) {
-								TypePair key{ std::type_index(typeid(collider1)), std::type_index(typeid(collider2)) };
+						if (entity2 != entity1 && IsEntityValid(entity1)) {
+							SphereCollider* collider2 = entity2->GetFirstComponentOfBase<SphereCollider>();
+							if (collider2 != nullptr && collider2->isTouchable) {
+								/*TypePair key{ std::type_index(typeid(collider1)), std::type_index(typeid(collider2)) };
 
 								auto it = collisionMap.find(key);
 								if (it != collisionMap.end()) {
@@ -72,6 +75,30 @@ public:
 									if (res.collided) {
 
 									}
+								}*/
+
+								Transform worldTransform1 = GetWorldTransform(entity1);
+								Transform worldTransform2 = GetWorldTransform(entity2);
+
+								CollisionResult result = collisionManager->sphere_vs_sphere(worldTransform1, collider1, worldTransform2, collider2);
+								if (result.collided) {
+									//transform1->position += planeCollider->normal * (sphereCollider->radius - distance);
+									
+									transform1->position += result.normal * result.distance;
+									point3d nVel = physicBody1->velocity.normalized();
+									physicBody1->velocity = (nVel + result.normal * result.normal.dot(-nVel)) * physicBody1->velocity.magnitude();
+
+									/*float sideVelocity = (physicBody1->velocity - res.normal * res.distance).magnitude();
+									if (sideVelocity > 0.0f)
+									{
+										physicBody1->velocity = (physicBody1->velocity.normalized() + res.normal) * (physicBody1->velocity.magnitude() - ((sideVelocity * collider1->friction + collider1->friction) * deltaTime));
+									}*/
+
+									/*PhysicBody* physicBody2 = entity2->GetComponent<PhysicBody>();
+									if (physicBody2 != nullptr)
+									{
+										transform2->position -= planeCollider->normal * (sphereCollider->radius - distance);
+									}*/
 								}
 							}
 
@@ -135,6 +162,9 @@ public:
 			}
 		}
 	}
+
+private:
+	CollisionManagerClass* collisionManager;
 };
 
 #endif

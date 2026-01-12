@@ -42,6 +42,9 @@ bool LevelManagerClass::Initialize()
 		return false;
 	}
 
+	collisionManager = new CollisionManagerClass;
+	collisionManager->Initialize();
+
 	mouse = new MouseClass;
 	mouse->Initialize(window, m_World->m_Camera);
 
@@ -89,6 +92,7 @@ bool LevelManagerClass::Initialize()
 	transform->position = point3d(0.0f, 0.0f, 0.0f);
 	physicBody = player->AddComponent<PhysicBody>();
 	sphereCollider = player->AddComponent<SphereCollider>();
+	sphereCollider->radius = 0.75f;
 	/*constellation = player->AddComponent<Constellation>();
 	constellation->stars = {
 		point3d(-0.09, -0.7, 0),
@@ -106,7 +110,7 @@ bool LevelManagerClass::Initialize()
 	};*/
 	pointCloud = player->AddComponent<PointCloud>();
 	pointCloud->index = 4;
-	pointCloud->position = point3d(0, -1.5, 0);
+	pointCloud->position = point3d(0, -0.8, 0);
 	pointCloud->scale = point3d(7, 7, 7);
 	pointCloud->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -PI / 2);
 
@@ -139,6 +143,8 @@ bool LevelManagerClass::Initialize()
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, -20.0f);
 	star = entity->AddComponent<Star>();
+	sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider->radius = 0.5f;
 
 	/////////////////////////
 
@@ -269,12 +275,12 @@ bool LevelManagerClass::Initialize()
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
 	m_World->AddPhysicSystem<PhysicSystem>();
-	m_World->AddPhysicSystem<CollisionSystem>();
+	m_World->AddPhysicSystem<CollisionSystem>(collisionManager);
 	m_World->AddPhysicSystem<CombatSystem>();
 	m_World->AddPhysicSystem<EntityManagerSystem>();
 
 	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera);
-	//m_World->AddRenderSystem<CollisionDrawSystem>(); // DEBUG //
+	m_World->AddRenderSystem<CollisionDrawSystem>(); // DEBUG //
 	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum);
 	m_World->AddRenderSystem<UISystem>(mouse);
 
@@ -301,6 +307,13 @@ void LevelManagerClass::Shutdown()
 		m_World->Shutdown();
 		delete m_World;
 		m_World = 0;
+	}
+
+	if (collisionManager)
+	{
+		collisionManager->Shutdown();
+		delete collisionManager;
+		collisionManager = 0;
 	}
 
 	if (mouse)

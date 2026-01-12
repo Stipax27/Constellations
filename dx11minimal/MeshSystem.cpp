@@ -32,6 +32,13 @@ public:
 
 	void Shutdown()
 	{
+		if (frustum) {
+			frustum = 0;
+		}
+
+		if (camera) {
+			camera = 0;
+		}
 	}
 
 
