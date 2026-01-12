@@ -84,9 +84,14 @@ public:
 								if (result.collided) {
 									//transform1->position += planeCollider->normal * (sphereCollider->radius - distance);
 									
-									transform1->position += result.normal * result.distance;
 									point3d nVel = physicBody1->velocity.normalized();
-									physicBody1->velocity = (nVel + result.normal * result.normal.dot(-nVel)) * physicBody1->velocity.magnitude();
+									if (collider1->softness == 0 && collider2->softness == 0) {
+										transform1->position += result.normal * result.distance;
+										physicBody1->velocity = (nVel + result.normal * result.normal.dot(-nVel)) * physicBody1->velocity.magnitude();
+									}
+									else {
+										physicBody1->velocity += result.normal * pow(SPACE_DENSITY, 2) * (result.distance / (collider1->radius + collider2->radius)) * timer::deltaTime / 1000;
+									}
 
 									/*float sideVelocity = (physicBody1->velocity - res.normal * res.distance).magnitude();
 									if (sideVelocity > 0.0f)

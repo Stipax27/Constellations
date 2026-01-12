@@ -127,7 +127,10 @@ bool LevelManagerClass::Initialize()
 	spriteCluster->frustumRadius = 60;
 	spriteCluster->topology = InputAssembler::topology::pointList;
 	spriteCluster->compress = RenderCompress::x2;
-	entity->AddComponent<SurfaceCollider>();
+	sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider->radius = 25.0f;
+	sphereCollider->softness = 0.5f;
+	//entity->AddComponent<SurfaceCollider>();
 	//planeCollider = entity->AddComponent<PlaneCollider>();
 	//planeCollider->gravityDistance = 20.0f;
 
