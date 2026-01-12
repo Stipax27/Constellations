@@ -37,4 +37,6 @@ bool IsEntityValid(Entity*);
 
 bool IsKeyPressed(const int);
 
+vector<string> split(string, string);
+
 #endif

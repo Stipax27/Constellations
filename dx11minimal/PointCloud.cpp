@@ -7,6 +7,10 @@
 
 struct PointCloud : Component
 {
+	point3d position = point3d();
+	point3d scale = point3d(1.0f, 1.0f, 1.0f);
+	DirectX::XMMATRIX mRotation = DirectX::XMMatrixIdentity();
+
 	int index = 0;
 };
 

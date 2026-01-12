@@ -58,7 +58,8 @@ bool LevelManagerClass::Initialize()
 	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cube.txt");
 	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cube2.txt");
 	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cat.txt", true);
-	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\cat2.obj", true);
+	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\Cube.obj");
+	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\cat2.obj");
 	//Models::LoadModelFromGltfFile("..\\dx11minimal\\Resourses\\Models\\Cube.gltf");
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
@@ -88,7 +89,7 @@ bool LevelManagerClass::Initialize()
 	transform->position = point3d(0.0f, 0.0f, 0.0f);
 	physicBody = player->AddComponent<PhysicBody>();
 	sphereCollider = player->AddComponent<SphereCollider>();
-	constellation = player->AddComponent<Constellation>();
+	/*constellation = player->AddComponent<Constellation>();
 	constellation->stars = {
 		point3d(-0.09, -0.7, 0),
 		point3d(-0.05, -0.15, 0),
@@ -102,7 +103,12 @@ bool LevelManagerClass::Initialize()
 		{1,2},
 		{2,3},
 		{2,5}
-	};
+	};*/
+	pointCloud = player->AddComponent<PointCloud>();
+	pointCloud->index = 4;
+	pointCloud->position = point3d(0, -1.5, 0);
+	pointCloud->scale = point3d(7, 7, 7);
+	pointCloud->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -PI / 2);
 
 	entity = m_World->CreateEntity("AriesNebulaLocation", folder);
 	transform = entity->AddComponent<Transform>();
@@ -129,18 +135,19 @@ bool LevelManagerClass::Initialize()
 
 	/////////////////////////
 
-	entity = m_World->CreateEntity("Star", folder);
+	/*entity = m_World->CreateEntity("Star", folder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, -20.0f);
-	star = entity->AddComponent<Star>();
+	star = entity->AddComponent<Star>();*/
 
 	/////////////////////////
 
-	Entity* holder = m_World->CreateEntity("Holder", folder);
+	/*Entity* holder = m_World->CreateEntity("Holder", folder);
 	transform = holder->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, -50.0f);
 	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -180 * RAD) * transform->mRotation;
 	mesh = holder->AddComponent<Mesh>();
+	mesh->index = 3;
 
 	holder = m_World->CreateEntity("Holder", folder);
 	transform = holder->AddComponent<Transform>();
@@ -148,14 +155,14 @@ bool LevelManagerClass::Initialize()
 	transform->position = point3d(0.0f, 10.0f, -50.0f);
 	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -180 * RAD) * transform->mRotation;
 	mesh = holder->AddComponent<Mesh>();
-	mesh->index = 1;
+	mesh->index = 1;*/
 
-	entity = m_World->CreateEntity("Cube", folder);
+	entity = m_World->CreateEntity("Cat", folder);
 	transform = entity->AddComponent<Transform>();
-	transform->scale = point3d(20.0f, 20.0f, 20.0f);
-	transform->position = point3d(10.0f, 0.0f, -30.0f);
+	transform->scale = point3d(30, 30, 30);
+	transform->position = point3d(0.0f, 15.0f, 50.0f);
 	pointCloud = entity->AddComponent<PointCloud>();
-	pointCloud->index = 2;
+	pointCloud->index = 4;
 
 	//delayedDestroy = entity->AddComponent<DelayedDestroy>();
 	//delayedDestroy->lifeTime = 5000;

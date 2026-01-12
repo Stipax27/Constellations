@@ -497,33 +497,25 @@ void Models::LoadTxtModel(const char* filename, bool vertexOnly)
 	std::ifstream fin;
 	char input;
 
-	// Open the model file.
 	fin.open(filename);
 
-	// If it could not open the file then exit.
 	if (fin.fail())
 	{
 		Shaders::Log("Failed to read the txt model file\n");
 		return;
 	}
 
-	// Read up to the value of vertex count.
 	fin.get(input);
 	while (input != ':')
 	{
 		fin.get(input);
 	}
 
-	// Read in the vertex count.
 	fin >> vertexCount;
-
-	// Set the number of indices to be the same as the vertex count.
 	indexCount = vertexCount;
 
-	// Create the model using the vertex count that was read in.
 	ModelType* model = new ModelType[vertexCount];
 
-	// Read up to the beginning of the data.
 	fin.get(input);
 	while (input != ':')
 	{
@@ -542,19 +534,14 @@ void Models::LoadTxtModel(const char* filename, bool vertexOnly)
 		}
 	}
 
-	// Close the model file.
 	fin.close();
 
 	VertexType* vertices;
 	unsigned long* indices;
 
-	// Set the number of indices in the index array.
 	indexCount = vertexCount;
 
-	// Create the vertex array.
 	vertices = new VertexType[vertexCount];
-
-	// Create the index array.
 	indices = new unsigned long[indexCount];
 
 	// Load the vertex array and index array with data.
@@ -569,7 +556,6 @@ void Models::LoadTxtModel(const char* filename, bool vertexOnly)
 
 	Create(modelsCount, vertices, indices);
 
-	// Release the arrays now that the vertex and index buffers have been created and loaded.
 	delete[] vertices;
 	vertices = 0;
 
@@ -591,7 +577,6 @@ void Models::LoadGltfModel(const char* filename)
 
 	fin.open(filename);
 
-	// If it could not open the file then exit.
 	if (fin.fail())
 	{
 		Shaders::Log("Failed to read the gltf model file\n");
@@ -630,10 +615,8 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 	std::ifstream fin;
 	char input;
 
-	// Open the model file.
 	fin.open(filename);
 
-	// If it could not open the file then exit.
 	if (fin.fail())
 	{
 		Shaders::Log("Failed to read the obj model file\n");
@@ -643,55 +626,142 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 	vector<ModelType> model;
 
 	// Read up to the beginning of the data.
-	fin.get(input);
+	//fin.get(input);
 
 	string prefix;
 	fin >> prefix;
+
+	while (prefix != "v")
+	{
+		fin >> prefix;
+	}
+
 	while (prefix == "v")
 	{
 		ModelType mType = ModelType();
 
 		fin >> mType.x >> mType.y >> mType.z;
-		if (vertexOnly) {
-			mType.tu = 0;
-			mType.tv = 0;
-
-			mType.nx = 0;
-			mType.ny = 0;
-			mType.nz = 0;
-		}
 
 		model.push_back(mType);
+		fin >> prefix;
 	}
 
 	vertexCount = (int)model.size();
-	indexCount = vertexCount;
 
-	// Close the model file.
+	bool nInclude = false;
+	bool tInclude = false;
+
+	if (!vertexOnly) {
+		int c = 0;
+		while (prefix == "vn")
+		{
+			nInclude = true;
+
+			if (c < model.size()) {
+				fin >> model[c].nx >> model[c].ny >> model[c].nz;
+			}
+			else {
+				ModelType mType = ModelType();
+				fin >> mType.nx >> mType.ny >> mType.nz;
+				model.push_back(mType);
+			}
+
+			fin >> prefix;
+			c++;
+		}
+
+		c = 0;
+		while (prefix == "vt")
+		{
+			tInclude = true;
+
+			if (c < model.size()) {
+				fin >> model[c].tu >> model[c].tv;
+			}
+			else {
+				ModelType mType = ModelType();
+				fin >> mType.tu >> mType.tv;
+				model.push_back(mType);
+			}
+
+			fin >> prefix;
+			c++;
+		}
+	}
+
+	while (prefix != "f")
+	{
+		fin >> prefix;
+	}
+
+	vector<ModelType> indexedModel;
+	while (prefix == "f")
+	{
+		fin.get(input);
+		if (input == '\n') {
+			break;
+		}
+
+		fin >> prefix;
+		while (prefix != "f") {
+			ModelType imType = ModelType();
+
+			vector<string> words = split(prefix, "/");
+			
+			int vIndex = stoi(words[0]);
+			imType.x = model[vIndex - 1].x;
+			imType.y = model[vIndex - 1].y;
+			imType.z = model[vIndex - 1].z;
+
+			if (words[1] != "") {
+				int tIndex = stoi(words[1]);
+				imType.tu = model[tIndex - 1].tu;
+				imType.tv = model[tIndex - 1].tv;
+			}
+
+			if (words[2] != "") {
+				int nIndex = stoi(words[2]);
+				imType.nx = model[nIndex - 1].nx;
+				imType.ny = model[nIndex - 1].ny;
+				imType.nz = model[nIndex - 1].nz;
+			}
+
+			indexedModel.push_back(imType);
+
+			fin.get(input);
+			if (input == '\n') {
+				fin >> prefix;
+				break;
+			}
+			fin >> prefix;
+		}
+
+		//fin >> prefix;
+	}
+
 	fin.close();
+
+	indexCount = (int)indexedModel.size();
+	vertexCount = indexCount;
 
 	VertexType* vertices;
 	unsigned long* indices;
 
-	// Create the vertex array.
 	vertices = new VertexType[vertexCount];
-
-	// Create the index array.
 	indices = new unsigned long[indexCount];
 
 	// Load the vertex array and index array with data.
 	for (int i = 0; i < vertexCount; i++)
 	{
-		vertices[i].position = XMFLOAT3(model[i].x, model[i].y, model[i].z);
-		vertices[i].texture = XMFLOAT2(model[i].tu, model[i].tv);
-		vertices[i].normal = XMFLOAT3(model[i].nx, model[i].ny, model[i].nz);
+		vertices[i].position = XMFLOAT3(indexedModel[i].x, indexedModel[i].y, indexedModel[i].z);
+		vertices[i].texture = XMFLOAT2(indexedModel[i].tu, indexedModel[i].tv);
+		vertices[i].normal = XMFLOAT3(indexedModel[i].nx, indexedModel[i].ny, indexedModel[i].nz);
 
 		indices[i] = i;
 	}
 
 	Create(modelsCount, vertices, indices);
 
-	// Release the arrays now that the vertex and index buffers have been created and loaded.
 	delete[] vertices;
 	vertices = 0;
 

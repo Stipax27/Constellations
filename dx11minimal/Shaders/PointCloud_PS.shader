@@ -45,10 +45,10 @@ float4 PS(VS_OUTPUT input) : SV_Target
     float brightness = exp(-dot(uv, uv) * 20);
 
     float dist = length(cPos.xyz - input.wpos);
-    float sat = min(max(dist - 1, 0) / 10, 1);
+    float sat = min(max(dist - 1, 0) / 5, 1);
     brightness *= sat;
 
-    return float4(brightness, brightness, brightness, 1) * float4(1, 0.6, 0.9, 1) * 0.25;
+    return float4(brightness, brightness, brightness, 1) * float4(1, 0.6, 0.9, 1) * 0.01;
 
     float3 tex = inputTexture.Sample(samplerState, input.uv);
 

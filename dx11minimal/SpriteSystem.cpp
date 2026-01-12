@@ -239,6 +239,11 @@ public:
 				if (pointCloud != nullptr) {
 					Transform worldTransform = GetWorldTransform(entity);
 
+					worldTransform.position += (worldTransform.GetRightVector() * pointCloud->position.x + worldTransform.GetUpVector() * pointCloud->position.y + worldTransform.GetLookVector() * pointCloud->position.z) * worldTransform.scale;
+					worldTransform.scale *= pointCloud->scale;
+					worldTransform.mRotation = pointCloud->mRotation * worldTransform.mRotation;
+
+
 					//if (frustum->CheckSphere(worldTransform.position, worldTransform.scale.magnitude())) {
 						//ConstBuf::CreateVertexBuffer(15);
 

@@ -22,12 +22,6 @@ cbuffer camera : register(b3)
     float4 cPos;
 };
 
-cbuffer drawMat : register(b2)
-{
-    float4x4 model;
-    float hilight;
-};
-
 struct VS_INPUT
 {
     float4 position : POSITION;

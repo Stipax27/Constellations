@@ -90,3 +90,18 @@ bool IsEntityValid(Entity* entity) {
 bool IsKeyPressed(const int Key) {
     return GetAsyncKeyState(Key) & 0x8000;
 }
+
+vector<string> split(string s, string temp) {
+    vector<string> tokens;
+    size_t pos = 0;
+    string token;
+
+    while ((pos = s.find(temp)) != string::npos) {
+        token = s.substr(0, pos);
+        tokens.push_back(token);
+        s.erase(0, pos + temp.length());
+    }
+    tokens.push_back(s);
+
+    return tokens;
+}
