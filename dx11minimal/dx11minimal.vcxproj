@@ -168,6 +168,7 @@
   <ItemGroup>
     <ClInclude Include="cameraclass.h" />
     <ClInclude Include="collider.h" />
+    <ClInclude Include="CollisionManagerClass.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="dx11.h" />
     <ClInclude Include="entity.h" />
@@ -375,6 +376,7 @@
   <ItemGroup>
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="cameraclass.cpp" />
+    <ClCompile Include="CollisionManagerClass.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="CombatSystem.cpp" />
     <ClCompile Include="Constellation.cpp" />

@@ -156,6 +156,9 @@
     <ClInclude Include="renderCompress.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CollisionManagerClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp">
@@ -277,6 +280,9 @@
     </ClCompile>
     <ClCompile Include="Star.cpp">
       <Filter>Source Files\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionManagerClass.cpp">
+      <Filter>Source Files\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -431,6 +437,7 @@
     <None Include="Shaders\DepthDown.shader">
       <Filter>Shaders\DepthDownsample</Filter>
     </None>
+    <None Include="Shaders\Lib\utils.shader" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\StarLink_PS.shader">
