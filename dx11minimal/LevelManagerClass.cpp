@@ -148,6 +148,7 @@ bool LevelManagerClass::Initialize()
 	star = entity->AddComponent<Star>();
 	sphereCollider = entity->AddComponent<SphereCollider>();
 	sphereCollider->radius = 0.5f;
+	//sphereCollider->softness = 0.5f;
 
 	/////////////////////////
 
