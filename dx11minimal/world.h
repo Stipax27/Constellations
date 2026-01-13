@@ -62,7 +62,7 @@ public:
 	}
 
 	Entity* CreateEntity(string = "Unnamed", Entity* = nullptr);
-	void RemoveEntityByObject(Entity*);
+	//void RemoveEntityByObject(Entity*);
 
 	bool Initialize(float);
 	void Shutdown();

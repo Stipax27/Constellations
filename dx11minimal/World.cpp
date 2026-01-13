@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Filename: World.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include "World.h"
+#include "world.h"
 
 
 World::World()
@@ -58,17 +58,17 @@ Entity* World::CreateEntity(string Name, Entity* Parent)
 }
 
 
-void World::RemoveEntityByObject(Entity* object)
-{
-	for (int i = 0; i < entities.size(); i++) {
-		Entity* entity = entities[i];
-		if (entity == object) {
-			entity->Destroy();
-			entities.erase(entities.begin() + i);
-			break;
-		}
-	}
-}
+//void World::RemoveEntityByObject(Entity* object)
+//{
+//	for (int i = 0; i < entities.size(); i++) {
+//		Entity* entity = entities[i];
+//		if (entity == object) {
+//			entity->Destroy();
+//			entities.erase(entities.begin() + i);
+//			break;
+//		}
+//	}
+//}
 
 
 void World::PreCalculations()
@@ -102,6 +102,7 @@ void World::UpdatePhysic()
 	{
 		physicSystems[i]->Update(entities, 0.01f);
 	}
+	CleanMem();
 }
 
 
@@ -153,13 +154,14 @@ void World::UpdateRender()
 
 void World::CleanMem()
 {
-	size_t size = entities.size();
 	int i = 0;
-	while (i < size)
+	while (i < entities.size())
 	{
 		Entity* entity = entities[i];
-		if (entity == nullptr)
+		if (entity->IsDeleting())
 		{
+			delete entity;
+			entity = 0;
 			entities.erase(entities.begin() + i);
 		}
 		else

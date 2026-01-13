@@ -22,8 +22,12 @@ void Entity::Destroy() {
 	for (int i = 0; i < children.size(); i++) {
 		children[i]->Destroy();
 	}
+	deleted = true;
+}
 
-	delete this;
+
+bool Entity::IsDeleting() {
+	return deleted;
 }
 
 
@@ -103,10 +107,9 @@ void Entity::SetActive(bool mode) {
 
 
 bool Entity::IsActive() {
-	if (active) {
-		Entity* ancestor = parent;
-		while (ancestor != nullptr) {
-			return ancestor->IsActive();
+	if (active && !deleted) {
+		if (parent != nullptr) {
+			return parent->IsActive();
 		}
 
 		return true;

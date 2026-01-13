@@ -38,7 +38,6 @@ public:
 				DelayedDestroy* delayedDestroy = entity->GetComponent<DelayedDestroy>();
 				if (delayedDestroy != nullptr && timer::currentTime >= delayedDestroy->startTime + delayedDestroy->lifeTime) {
 					entity->Destroy();
-					entity = nullptr;
 				}
 			}
 		}

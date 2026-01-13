@@ -103,6 +103,7 @@ public:
 	}
 
 	void Destroy();
+	bool IsDeleting();
 
 	int GetId();
 
@@ -117,6 +118,7 @@ public:
 private:
 	int id;
 	bool active = true;
+	bool deleted = false;
 
 	unordered_map<type_index, Component*> components;
 	unordered_map<type_index, vector<Component*>> baseToComponents;

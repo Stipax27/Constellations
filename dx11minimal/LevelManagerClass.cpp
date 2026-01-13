@@ -136,6 +136,8 @@ bool LevelManagerClass::Initialize()
 	//entity->AddComponent<SurfaceCollider>();
 	//planeCollider = entity->AddComponent<PlaneCollider>();
 	//planeCollider->gravityDistance = 20.0f;
+	/*delayedDestroy = entity->AddComponent<DelayedDestroy>();
+	delayedDestroy->lifeTime = 5000;*/
 
 	entity = m_World->CreateEntity("StarsBackground", folder);
 	spriteCluster = entity->AddComponent<SpriteCluster>();
@@ -179,9 +181,6 @@ bool LevelManagerClass::Initialize()
 	transform->position = point3d(0.0f, 15.0f, 50.0f);
 	pointCloud = entity->AddComponent<PointCloud>();
 	pointCloud->index = 4;
-
-	//delayedDestroy = entity->AddComponent<DelayedDestroy>();
-	//delayedDestroy->lifeTime = 5000;
 
 	//entity = m_World->CreateEntity("Cube", holder);
 	//transform = entity->AddComponent<Transform>();
