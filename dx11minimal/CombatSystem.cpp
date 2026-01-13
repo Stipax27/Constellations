@@ -38,6 +38,9 @@ public:
 				Health* health = entity->GetComponent<Health>();
 				if (health != nullptr) {
 					health->hp = clamp(health->hp, 0, health->maxHp);
+					if (health->hp == 0.0f) {
+						entity->Destroy();
+					}
 				}
 
 			}

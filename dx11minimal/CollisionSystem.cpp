@@ -19,6 +19,10 @@
 #include "PlaneCollider.cpp"
 #include "SurfaceCollider.cpp"
 
+#include "Health.cpp"
+#include "SingleDamageGiver.cpp"
+#include "MultiDamageGiver.cpp"
+
 #include "MethodOfClosest.h"
 #include "CollisionManagerClass.h"
 
@@ -104,6 +108,22 @@ public:
 									{
 										transform2->position -= planeCollider->normal * (sphereCollider->radius - distance);
 									}*/
+
+									Health* health = entity1->GetComponent<Health>();
+									if (health != nullptr) {
+
+										SingleDamageGiver* singleDamageGiver = entity2->GetComponent<SingleDamageGiver>();
+										if (singleDamageGiver != nullptr) {
+											health->hp -= singleDamageGiver->damage;
+											entity2->RemoveComponent<SingleDamageGiver>();
+										}
+
+										/*MultiDamageGiver* multiDamageGiver = entity2->GetComponent<MultiDamageGiver>();
+										if (multiDamageGiver != nullptr) {
+											health->hp -= multiDamageGiver->damage;
+										}*/
+
+									}
 								}
 							}
 

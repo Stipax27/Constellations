@@ -83,6 +83,8 @@ bool LevelManagerClass::Initialize()
 	PointCloud* pointCloud;
 	DelayedDestroy* delayedDestroy;
 	Star* star;
+	Health* health;
+	SingleDamageGiver* singleDamageGiver;
 
 	Entity* folder = m_World->CreateEntity("WorldFolder");
 	folder->SetActive(true);
@@ -93,6 +95,7 @@ bool LevelManagerClass::Initialize()
 	physicBody = player->AddComponent<PhysicBody>();
 	sphereCollider = player->AddComponent<SphereCollider>();
 	sphereCollider->radius = 0.75f;
+	health = player->AddComponent<Health>();
 	/*constellation = player->AddComponent<Constellation>();
 	constellation->stars = {
 		point3d(-0.09, -0.7, 0),
@@ -149,6 +152,8 @@ bool LevelManagerClass::Initialize()
 	sphereCollider = entity->AddComponent<SphereCollider>();
 	sphereCollider->radius = 0.5f;
 	//sphereCollider->softness = 0.5f;
+	singleDamageGiver = entity->AddComponent<SingleDamageGiver>();
+	singleDamageGiver->damage = 1000;
 
 	/////////////////////////
 
