@@ -13,6 +13,7 @@
 #include "PointCloud.cpp"
 
 #include "frustumclass.h"
+#include "Explosion.cpp" 
 
 
 class SpriteSystem : public System
@@ -281,6 +282,29 @@ public:
 						//context->DrawInstanced(1, 2097152 / 6, 0, 0);
 					//}
 
+				}
+
+				Explosion* explosion = entity->GetComponent<Explosion>();
+
+				if (explosion != nullptr) {
+
+					Shaders::vShader(1);
+					Shaders::pShader(1);
+
+					transform->position;
+					explosion->radius = min(explosion->max_radius, explosion->radius + explosion->speed * deltaTime);
+
+					ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, explosion->radius);
+					ConstBuf::Update(5, ConstBuf::global);
+					ConstBuf::ConstToVertex(5);
+					ConstBuf::ConstToPixel(5);
+
+					Draw::Drawer(1);
+					if (timer::currentTime - explosion->lifeStartTime >= explosion->lifeTime)
+					{
+						//entity->RemoveComponent<Explosion>();
+						entity->SetActive(false);
+					}
 				}
 			}
 		}

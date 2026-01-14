@@ -13,8 +13,25 @@
 #include "PlayerController.h"
 
 #include "world.h"
+#include "system.h"
+#include "entity.h"
+#include "component.h"
+#include "Enemy_Patern.h"
+#include "BaseStar.h"
+#include "SmallConstellation.h"
 
 #include "CollisionManagerClass.h"
+
+#include "Transform.cpp"
+#include "PhysicBody.cpp"
+#include "SphereCollider.cpp"
+#include "PlaneCollider.cpp"
+#include "SpriteCluster.cpp"
+#include "Constellation.cpp"
+#include "Explosion.cpp"
+#include "SplinePath.cpp"
+#include "Patern_Enemy_Logik.cpp"
+
 
 #include "SpriteSystem.cpp"
 #include "MeshSystem.cpp"
@@ -62,9 +79,11 @@ public:
 	}
 
 private:
-	World* m_World;
 	PlayerController* playerController;
 	CollisionManagerClass* collisionManager;
+	BaseStar* Star;
+	SmallConstellation* smallConstellation;
+
 };
 
 #endif

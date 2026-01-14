@@ -41,13 +41,13 @@ public:
 					transform->position += physicBody->velocity * deltaTime * entity->timeScale;
 					XMMATRIX result = physicBody->mAngVelocity * transform->mRotation;
 					transform->mRotation = result;
-
+					
 					float velMagnitude = physicBody->velocity.magnitude();
 					if (velMagnitude > 0) {
 						float deceleration = min(SPACE_DENSITY / velMagnitude * physicBody->airFriction * deltaTime, 1);
 						physicBody->velocity = physicBody->velocity.lerp(point3d(), deceleration);
 					}
-
+					
 					physicBody->mAngVelocity = XMMatrixIdentity();
 				}
 			}

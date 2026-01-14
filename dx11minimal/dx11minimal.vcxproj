@@ -166,11 +166,13 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BaseStar.h" />
     <ClInclude Include="cameraclass.h" />
     <ClInclude Include="collider.h" />
     <ClInclude Include="CollisionManagerClass.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="dx11.h" />
+    <ClInclude Include="Enemy_Patern.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="Font_OLD.h" />
     <ClInclude Include="FpsCounter.h" />
@@ -184,6 +186,8 @@
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="Point3d.h" />
     <ClInclude Include="renderCompress.h" />
+    <ClInclude Include="SmallConstellation.h" />
+    <ClInclude Include="StarAttack.h" />
     <ClInclude Include="system.h" />
     <ClInclude Include="windowclass.h" />
     <ClInclude Include="world.h" />
@@ -375,6 +379,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="BaseStar.cpp" />
     <ClCompile Include="cameraclass.cpp" />
     <ClCompile Include="CollisionManagerClass.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
@@ -390,16 +395,21 @@
     <ClCompile Include="EntityManagerSystem.cpp" />
     <ClCompile Include="FrustumClass.cpp" />
     <ClCompile Include="Health.cpp" />
+    <ClCompile Include="Explosion.cpp" />
+    <ClCompile Include="ExplosionSystem.cpp" />
     <ClCompile Include="LevelManagerClass.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshSystem.cpp" />
     <ClCompile Include="MethodOfClosest.cpp" />
     <ClCompile Include="MouseClass.cpp" />
+    <ClCompile Include="Patern_Enemy_Logik.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Point3d.cpp" />
     <ClCompile Include="Point4d.cpp" />
     <ClCompile Include="PointCloud.cpp" />
     <ClCompile Include="Rect.cpp" />
+    <ClCompile Include="SmallConstellation.cpp" />
+    <ClCompile Include="SplinePath.cpp" />
     <ClCompile Include="SpriteCluster.cpp" />
     <ClCompile Include="PhysicBody.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />

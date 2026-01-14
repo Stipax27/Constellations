@@ -27,6 +27,8 @@ float fract(float);
 float lerp(float x1, float x2, float a);
 
 float degreesToRadians(float);
+vector<point3d> smoothCornersPath(const vector<point3d>& points, int numberIterations);
+void SetLookVector(Transform* transform, point3d direction);
 point3d quaternionToEuler(float x, float y, float z, float w);
 DirectX::XMVECTOR eulerToQuanternion(float x, float y, float z);
 
