@@ -42,13 +42,13 @@ public:
         playerEntity = player;
     }
 
-    bool Update(vector<Entity*>& entities, float deltaTime)
+    void Update(vector<Entity*>& entities, float deltaTime)
     {
         lastUpdateTime += deltaTime;
 
         // Обновляем ИИ с определенным интервалом для оптимизации
         if (lastUpdateTime < AI_UPDATE_INTERVAL)
-            return true;
+            return;
 
         size_t size = entities.size();
         for (int i = 0; i < size; i++)
@@ -68,7 +68,6 @@ public:
         }
 
         lastUpdateTime = 0.0f;
-        return true;
     }
 
 private:

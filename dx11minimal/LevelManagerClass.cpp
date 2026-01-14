@@ -391,8 +391,8 @@ bool LevelManagerClass::Initialize()
 	m_World->AddRenderSystem<UISystem>(mouse);
 
 	//m_World->PreCalculations();
-	Star = new BaseStar();
-	Star->Init(m_World, entity);
+	bStar = new BaseStar();
+	bStar->Init(m_World, entity);
 	
 	smallConstellation = new SmallConstellation();
 	smallConstellation->Init(m_World, entity, player);

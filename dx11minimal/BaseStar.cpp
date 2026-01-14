@@ -12,7 +12,7 @@ void BaseStar::LifeTimeParticl() {
     if (currentTimeEff - LastTime > 2000) {
         for (int i = 0; i < effect.size(); i++)
         {
-            m_World->RemoveEntityByObject(effect[i]);
+            effect[i]->Destroy();
         }
         LastTime = currentTimeEff;
     }

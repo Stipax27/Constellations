@@ -105,7 +105,6 @@ vector<string> split(string s, string temp) {
 
     return tokens;
 }
-}
 
 void SetLookVector(Transform* transform, point3d direction){
     point3d currentLookVector = transform->GetLookVector();

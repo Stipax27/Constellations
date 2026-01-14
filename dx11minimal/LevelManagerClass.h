@@ -79,9 +79,10 @@ public:
 	}
 
 private:
+	World* m_World;
 	PlayerController* playerController;
 	CollisionManagerClass* collisionManager;
-	BaseStar* Star;
+	BaseStar* bStar;
 	SmallConstellation* smallConstellation;
 
 };
