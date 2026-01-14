@@ -1,6 +1,6 @@
-cbuffer global : register(b5)
+cbuffer objParams : register(b0)
 {
-    float4 gConst[256];
+    float drawerV[256];
 };
 
 cbuffer frame : register(b4)
@@ -57,7 +57,7 @@ void GS( point VS_OUTPUT input[1], inout TriangleStream<VS_OUTPUT> output )
 
 
     float angle = PI * 2 / triangles;
-    float pointSize = gConst[0].x;
+    float pointSize = drawerV[0];
 
     [unroll]
     for (int triangleID = 0; triangleID < triangles; triangleID++) {
@@ -73,7 +73,7 @@ void GS( point VS_OUTPUT input[1], inout TriangleStream<VS_OUTPUT> output )
             VS_OUTPUT element = input[0];
 
             float dist = length(element.wpos.xyz - cPos.xyz);
-            float scale = clamp(abs(dot(float3(-1, 0, 0), element.vnorm)), 0.75, 1);
+            float scale = clamp(abs(dot(float3(-1, 0, 0), element.vnorm)), 0.5, 1);
             //float scale = 1 - clamp(abs(dot(float3(-1, 0, 0), element.vnorm)), 0, 1);
 
             float2 offset = triangleUV[pID] * float2(aspect.x, 1) * min(dist, 18) * scale * pointSize * 0.05;

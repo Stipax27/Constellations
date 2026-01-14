@@ -252,10 +252,12 @@ public:
 
 						UpdateWorldMatrix(worldTransform);
 
-						ConstBuf::global[0] = XMFLOAT4(pointCloud->pointSize, pointCloud->brightness, 0, 0);
+						ConstBuf::drawerV[0] = pointCloud->pointSize;
+						ConstBuf::global[0] = XMFLOAT4(pointCloud->color.x, pointCloud->color.y, pointCloud->color.z, pointCloud->brightness);
+						ConstBuf::Update(0, ConstBuf::drawerV);
 						ConstBuf::Update(5, ConstBuf::global);
+						ConstBuf::ConstToGeometry(0);
 						ConstBuf::ConstToPixel(5);
-						ConstBuf::ConstToGeometry(5);
 
 						//Rasterizer::Cull(Rasterizer::cullmode::front);
 

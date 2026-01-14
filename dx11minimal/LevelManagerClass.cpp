@@ -117,6 +117,7 @@ bool LevelManagerClass::Initialize()
 	pointCloud->scale = point3d(7, 7, 7);
 	pointCloud->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -PI / 2);
 	pointCloud->brightness = 0.25f;
+	pointCloud->color = point3d(1, 0.6f, 0.9f);
 
 	entity = m_World->CreateEntity("AriesNebulaLocation", folder);
 	transform = entity->AddComponent<Transform>();
@@ -131,9 +132,9 @@ bool LevelManagerClass::Initialize()
 	spriteCluster->frustumRadius = 60;
 	spriteCluster->topology = InputAssembler::topology::pointList;
 	spriteCluster->compress = RenderCompress::x2;
-	/*sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider = entity->AddComponent<SphereCollider>(); 
 	sphereCollider->radius = 25.0f;
-	sphereCollider->softness = 0.5f;*/
+	sphereCollider->softness = 0.5f;
 	//entity->AddComponent<SurfaceCollider>();
 	//planeCollider = entity->AddComponent<PlaneCollider>();
 	//planeCollider->gravityDistance = 20.0f;
@@ -184,6 +185,7 @@ bool LevelManagerClass::Initialize()
 	pointCloud->index = 4;
 	pointCloud->pointSize = 2.0f;
 	pointCloud->brightness = 0.25f;
+	pointCloud->color = point3d(1, 0.1f, 0.2f);
 
 	//entity = m_World->CreateEntity("Cube", holder);
 	//transform = entity->AddComponent<Transform>();
@@ -291,7 +293,7 @@ bool LevelManagerClass::Initialize()
 	m_World->AddPhysicSystem<EntityManagerSystem>();
 
 	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera);
-	//m_World->AddRenderSystem<CollisionDrawSystem>(); // DEBUG //
+	m_World->AddRenderSystem<CollisionDrawSystem>(); // DEBUG //
 	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum);
 	m_World->AddRenderSystem<UISystem>(mouse);
 

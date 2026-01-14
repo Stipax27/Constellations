@@ -13,6 +13,7 @@ struct PointCloud : Component
 
 	float pointSize = 1.0f;
 	float brightness = 1.0f;
+	point3d color = point3d(1.0f, 1.0f, 1.0f);
 
 	int index = 0;
 };
