@@ -43,16 +43,12 @@ struct VS_OUTPUT
 float4 PS(VS_OUTPUT input) : SV_Target
 {
     float2 uv = input.uv;
-    float brightness = exp(-dot(uv, uv) * 20);
+    float brightness = exp(-dot(uv, uv) * 20) * gConst[0].y;
 
     float dist = length(cPos.xyz - input.wpos);
     float sat = min(max(dist - 1, 0) / 5, 1);
+    sat *= 1 - clamp(abs(dot(float3(-1, 0, 0), input.vnorm)), 0, 1);
     brightness *= sat;
 
-    return float4(brightness, brightness, brightness, 1) * float4(1, 0.6, 0.9, 1) * 0.01;
-
-    float3 tex = inputTexture.Sample(samplerState, input.uv);
-
-    return float4(tex, 1);
-    //return saturate(float4(reflectDir, 1));
+    return float4(brightness, brightness, brightness, 1) * float4(1, 0.6, 0.9, 1) * 0.05;
 }

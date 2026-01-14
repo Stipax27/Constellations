@@ -100,7 +100,7 @@ public:
 							context->DrawInstanced(6, min(count, constCount / 2 - 1), 0, 0);
 						}
 
-						int n = 48;
+						int n = 12;
 						ConstBuf::drawerV[0] = n;
 
 						count = 0;
@@ -139,7 +139,7 @@ public:
 							Shaders::vShader(20);
 							Shaders::pShader(20);
 
-							int n = 48;
+							int n = 12;
 
 							ConstBuf::drawerV[0] = n;
 							ConstBuf::Update(0, ConstBuf::drawerV);
@@ -250,18 +250,12 @@ public:
 					//if (frustum->CheckSphere(worldTransform.position, worldTransform.scale.magnitude())) {
 						//ConstBuf::CreateVertexBuffer(15);
 
-						XMMATRIX rotateMatrix = worldTransform.mRotation;
-						XMMATRIX scaleMatrix = XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z);
-						XMMATRIX translateMatrix = XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z);
+						UpdateWorldMatrix(worldTransform);
 
-						// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
-						XMMATRIX srMatrix = scaleMatrix * rotateMatrix;
-						XMMATRIX worldMatrix = srMatrix * translateMatrix;
-
-						ConstBuf::camera.world = XMMatrixTranspose(worldMatrix);
-						ConstBuf::UpdateCamera();
-
-						ConstBuf::ConstToVertex(5);
+						ConstBuf::global[0] = XMFLOAT4(pointCloud->pointSize, pointCloud->brightness, 0, 0);
+						ConstBuf::Update(5, ConstBuf::global);
+						ConstBuf::ConstToPixel(5);
+						ConstBuf::ConstToGeometry(5);
 
 						//Rasterizer::Cull(Rasterizer::cullmode::front);
 
@@ -292,6 +286,26 @@ public:
 
 private:
 	FrustumClass* frustum;
+
+private:
+	XMMATRIX GetWorldMatrix(Transform worldTransform) {
+		XMMATRIX rotateMatrix = worldTransform.mRotation;
+		XMMATRIX scaleMatrix = XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z);
+		XMMATRIX translateMatrix = XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z);
+
+		// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
+		XMMATRIX srMatrix = scaleMatrix * rotateMatrix;
+		XMMATRIX worldMatrix = srMatrix * translateMatrix;
+
+		return XMMatrixTranspose(worldMatrix);
+	}
+
+	void UpdateWorldMatrix(Transform worldTransform) {
+		ConstBuf::camera.world = GetWorldMatrix(worldTransform);
+		ConstBuf::UpdateCamera();
+		ConstBuf::ConstToVertex(3);
+		ConstBuf::ConstToPixel(3);
+	}
 };
 
 #endif

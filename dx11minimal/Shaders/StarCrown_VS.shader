@@ -39,10 +39,9 @@ struct VS_OUTPUT
 VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 {
     VS_OUTPUT output;
-    
-    uint n = drawerV[0];
 
-    uint triangles = n / 3;
+    uint triangles = drawerV[0];
+
     float angle = PI * 2 / triangles;
 
     uint triangleID = vID / 3;
