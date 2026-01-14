@@ -47,7 +47,9 @@ void GS( point VS_OUTPUT input[1], inout TriangleStream<VS_OUTPUT> output )
 		element.pos.xy += offset;
 		element.uv = quadPos[i];
 		output.Append( element );
-	}
 
-    output.RestartStrip();
+        if (i == 2) {
+            output.RestartStrip();
+        }
+	}
 }
