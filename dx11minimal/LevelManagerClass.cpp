@@ -383,6 +383,7 @@ bool LevelManagerClass::Initialize()
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>(collisionManager);
 	m_World->AddPhysicSystem<CombatSystem>();
+	//AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
 	m_World->AddPhysicSystem<EntityManagerSystem>();
 
 	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera);
@@ -399,13 +400,11 @@ bool LevelManagerClass::Initialize()
 
 	playerController = new PlayerController();
 	playerController->Initialize(player, m_World->m_Camera, mouse, window);
-
-	AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
 	
-	if (aiSystem)
+	/*if (aiSystem)
 	{
 		aiSystem->SetPlayerEntity(player);
-	}
+	}*/
 
 
 	return true;
@@ -457,8 +456,8 @@ void LevelManagerClass::Frame()
 
 	
 	// ��������� ������� ��� ���� ������
-	DWORD currentTime = timer::currentTime;
-	srand(time(0));
+	//DWORD currentTime = timer::currentTime;
+	//srand(time(0));
 	// ������: ����� ������ 3 �������
 	//if (currentTime - Star->LastTime > 3000) {
 	//	Star->FartingEffect();
@@ -479,7 +478,7 @@ void LevelManagerClass::Frame()
 	//	Star->LastTime = currentTime;
 	//}
 
-	if (currentTime - smallConstellation->LastTime > 5000) {
+	/*if (currentTime - smallConstellation->LastTime > 5000) {
 
 		smallConstellation->LastTime = currentTime;
 
@@ -500,7 +499,7 @@ void LevelManagerClass::Frame()
 	smallConstellation->VolleyUpdate(0.01f);
 	smallConstellation->LatticeUpdate(0.01f);
 	smallConstellation->TransformationUpdate();
-	smallConstellation->RamUpdate();
+	smallConstellation->RamUpdate();*/
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 
