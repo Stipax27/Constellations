@@ -153,6 +153,9 @@
     <ClCompile Include="World.cpp">
       <Filter>SystemFiles</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerAbilities.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseStar.h">
@@ -243,6 +246,12 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="world.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="damagetarget.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerAbilities.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

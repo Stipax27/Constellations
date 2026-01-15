@@ -184,8 +184,33 @@ void PlayerController::ProcessMouse()
 
 				playerPhysicBody->mAngVelocity = playerPhysicBody->mAngVelocity * additionalRotation;
 			}
-			else {
+			//else {
 				//Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
+			//}
+
+			if (IsKeyPressed(VK_LBUTTON))
+			{
+
+				if (!mousePressed)
+				{
+					mousePressed = true;
+
+					for (int i = 0; i < 20; i++)
+					{
+						MouseParticle particle = MouseParticle();
+						particle.pos = mouse->pos;
+						particle.angle = (float)getRandom(0, 100) / 100.0f * PI * 2.0f;
+						//particle.vel = point3d(getRandom(-100, 100), getRandom(-100, 100), 0).normalized() * point3d(window->aspect, 1, 0) * (float)getRandom(8, 30) / 100.0f * 0.002f;
+						particle.lifetime = getRandom(500, 1500);
+						particle.startTime = timer::currentTime;
+
+						mouse->particles.push_back(particle);
+					}
+				}
+			}
+			else
+			{
+				mousePressed = false;
 			}
 		}
 		break;

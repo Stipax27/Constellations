@@ -171,6 +171,7 @@
     <ClInclude Include="collider.h" />
     <ClInclude Include="CollisionManagerClass.h" />
     <ClInclude Include="component.h" />
+    <ClInclude Include="damagetarget.h" />
     <ClInclude Include="dx11.h" />
     <ClInclude Include="Enemy_Patern.h" />
     <ClInclude Include="entity.h" />
@@ -183,6 +184,7 @@
     <ClInclude Include="mouseclass.h" />
     <ClInclude Include="ParticleObject.h" />
     <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="PlayerAbilities.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="Point3d.h" />
     <ClInclude Include="renderCompress.h" />
@@ -387,6 +389,7 @@
     <ClCompile Include="Constellation.cpp" />
     <ClCompile Include="CollisionDrawSystem.cpp" />
     <ClCompile Include="MultiDamageGiver.cpp" />
+    <ClCompile Include="PlayerAbilities.cpp" />
     <ClCompile Include="SingleDamageGiver.cpp" />
     <ClCompile Include="DelayedDestroy.cpp" />
     <ClCompile Include="dx11.cpp" />
