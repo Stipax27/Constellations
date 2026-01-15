@@ -17,6 +17,8 @@ PlayerAbilities::~PlayerAbilities()
 
 void PlayerAbilities::Initialize(World* m_World)
 {
+	weapon = PlayerWeapons::Fists;
+
 	world = m_World;
 }
 

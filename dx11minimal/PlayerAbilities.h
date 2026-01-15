@@ -21,6 +21,18 @@
 
 
 /////////////
+// STRUCTS //
+/////////////
+
+enum PlayerWeapons
+{
+	Fists,
+	Sword,
+	Bow
+};
+
+
+/////////////
 // GLOBALS //
 /////////////
 
@@ -32,6 +44,8 @@
 
 class PlayerAbilities
 {
+public:
+	PlayerWeapons weapon;
 public:
 	PlayerAbilities();
 	PlayerAbilities(const PlayerAbilities&);

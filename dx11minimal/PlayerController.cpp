@@ -43,6 +43,12 @@ void PlayerController::Initialize(Entity* Player, World* m_World, MouseClass* Mo
 
 void PlayerController::Shutdown()
 {
+	if (abilities) {
+		abilities->Shutdown();
+		delete abilities;
+		abilities = 0;
+	}
+
 	if (playerEntity) {
 		playerEntity = 0;
 	}
@@ -69,11 +75,6 @@ void PlayerController::Shutdown()
 
 	if (window) {
 		window = 0;
-	}
-
-	if (abilities) {
-		delete abilities;
-		abilities = 0;
 	}
 }
 
