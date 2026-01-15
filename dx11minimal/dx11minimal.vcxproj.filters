@@ -12,53 +12,147 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Button.cpp" />
-    <ClCompile Include="BaseStar.cpp" />
-    <ClCompile Include="cameraclass.cpp" />
-    <ClCompile Include="CollisionManagerClass.cpp" />
-    <ClCompile Include="CollisionSystem.cpp" />
-    <ClCompile Include="CombatSystem.cpp" />
-    <ClCompile Include="Constellation.cpp" />
-    <ClCompile Include="CollisionDrawSystem.cpp" />
-    <ClCompile Include="MultiDamageGiver.cpp" />
-    <ClCompile Include="SingleDamageGiver.cpp" />
-    <ClCompile Include="DelayedDestroy.cpp" />
-    <ClCompile Include="dx11.cpp" />
-    <ClCompile Include="dx11minimal.cpp" />
-    <ClCompile Include="Entity.cpp" />
-    <ClCompile Include="EntityManagerSystem.cpp" />
-    <ClCompile Include="FrustumClass.cpp" />
-    <ClCompile Include="Health.cpp" />
-    <ClCompile Include="Explosion.cpp" />
-    <ClCompile Include="ExplosionSystem.cpp" />
-    <ClCompile Include="LevelManagerClass.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="MeshSystem.cpp" />
-    <ClCompile Include="MethodOfClosest.cpp" />
-    <ClCompile Include="MouseClass.cpp" />
-    <ClCompile Include="Patern_Enemy_Logik.cpp" />
-    <ClCompile Include="PlayerController.cpp" />
-    <ClCompile Include="Point3d.cpp" />
-    <ClCompile Include="Point4d.cpp" />
-    <ClCompile Include="PointCloud.cpp" />
-    <ClCompile Include="Rect.cpp" />
-    <ClCompile Include="SmallConstellation.cpp" />
-    <ClCompile Include="SplinePath.cpp" />
-    <ClCompile Include="SpriteCluster.cpp" />
-    <ClCompile Include="PhysicBody.cpp" />
-    <ClCompile Include="PhysicSystem.cpp" />
-    <ClCompile Include="PlaneCollider.cpp" />
-    <ClCompile Include="SpriteSystem.cpp" />
-    <ClCompile Include="SphereCollider.cpp" />
-    <ClCompile Include="Star.cpp" />
-    <ClCompile Include="SurfaceCollider.cpp" />
-    <ClCompile Include="TextLabel.cpp" />
-    <ClCompile Include="timer.cpp" />
-    <ClCompile Include="Transform.cpp" />
-    <ClCompile Include="UISystem.cpp" />
-    <ClCompile Include="utils.cpp" />
-    <ClCompile Include="WindowClass.cpp" />
-    <ClCompile Include="World.cpp" />
+    <ClCompile Include="BaseStar.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="cameraclass.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionDrawSystem.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionManagerClass.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionSystem.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="CombatSystem.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Constellation.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="DelayedDestroy.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="dx11.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="dx11minimal.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityManagerSystem.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Explosion.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="ExplosionSystem.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="FrustumClass.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Health.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelManagerClass.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshSystem.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="MethodOfClosest.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseClass.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiDamageGiver.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Patern_Enemy_Logik.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicBody.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicSystem.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="PlaneCollider.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerController.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Point3d.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Point4d.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="PointCloud.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Rect.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleDamageGiver.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="SmallConstellation.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereCollider.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="SplinePath.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteCluster.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteSystem.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Star.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="SurfaceCollider.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="TextLabel.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="UISystem.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowClass.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>SystemFiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseStar.h">
@@ -312,6 +406,9 @@
     </Filter>
     <Filter Include="Headers">
       <UniqueIdentifier>{9fc2c6b2-ffcd-4bfc-8e84-f94c441b789b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SystemFiles">
+      <UniqueIdentifier>{b79734ff-4a71-4b97-9119-2b93e1bec80c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
