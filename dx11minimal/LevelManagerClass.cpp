@@ -102,6 +102,7 @@ bool LevelManagerClass::Initialize()
 	sphereCollider = player->AddComponent<SphereCollider>();
 	sphereCollider->radius = 0.75f;
 	health = player->AddComponent<Health>();
+	health->fraction = Fraction::Player;
 	/*constellation = player->AddComponent<Constellation>();
 	constellation->stars = {
 		point3d(-0.09, -0.7, 0),
@@ -171,6 +172,23 @@ bool LevelManagerClass::Initialize()
 	//sphereCollider->softness = 0.5f;
 	singleDamageGiver = entity->AddComponent<SingleDamageGiver>();
 	singleDamageGiver->damage = 1000;
+
+	for (int i = 0; i < 5; i++) {
+		entity = m_World->CreateEntity("Star", folder);
+		transform = entity->AddComponent<Transform>();
+		transform->position = point3d(10.0f + 5.0f * i, 0.0f, -35.0f);
+		star = entity->AddComponent<Star>();
+		star->radius = 2.0f;
+		star->crownRadius = 3.5f;
+		star->color1 = point3d(0.87f, 0.79f, 1.0f);
+		star->color2 = point3d(0.7f, 0.0f, 0.47f);
+		star->crownColor = point3d(0.47f, 0.65f, 1.0f);
+		sphereCollider = entity->AddComponent<SphereCollider>();
+		sphereCollider->radius = 2.0f;
+		health = entity->AddComponent<Health>();
+		health->hp = 10;
+		health->maxHp = 10;
+	}
 
 	/////////////////////////
 
@@ -387,7 +405,7 @@ bool LevelManagerClass::Initialize()
 	m_World->AddPhysicSystem<EntityManagerSystem>();
 
 	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera);
-	m_World->AddRenderSystem<CollisionDrawSystem>(); // DEBUG //
+	//m_World->AddRenderSystem<CollisionDrawSystem>(); // DEBUG //
 	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum);
 	m_World->AddRenderSystem<UISystem>(mouse);
 
@@ -399,7 +417,7 @@ bool LevelManagerClass::Initialize()
 	smallConstellation->Init(m_World, entity, player);
 
 	playerController = new PlayerController();
-	playerController->Initialize(player, m_World->m_Camera, mouse, window);
+	playerController->Initialize(player, m_World, mouse, window);
 	
 	/*if (aiSystem)
 	{

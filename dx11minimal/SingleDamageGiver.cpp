@@ -2,11 +2,12 @@
 #define _SINGLE_DAMAGE_GIVER_C_
 
 #include "component.h"
-#include "damagetarget.h"
+#include "fraction.h"
 
 struct SingleDamageGiver : Component
 {
-	DamageTarget target = DamageTarget::Player;
+	Fraction target = Fraction::Player;
+	bool destroyable = true;
 	float damage = 10.0f;
 };
 

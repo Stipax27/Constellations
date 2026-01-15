@@ -61,7 +61,7 @@ public:
 				Transform* transform1 = entity1->GetComponent<Transform>();
 				PhysicBody* physicBody1 = entity1->GetComponent<PhysicBody>();
 				SphereCollider* collider1 = entity1->GetFirstComponentOfBase<SphereCollider>();
-				if (transform1 != nullptr && physicBody1 != nullptr && collider1 != nullptr && collider1->isTouchable) {
+				if (transform1 != nullptr && collider1 != nullptr) {
 
 					Transform worldTransform1 = GetWorldTransform(entity1);
 					size_t size = entities.size();
@@ -70,7 +70,8 @@ public:
 						Entity* entity2 = entities[i];
 						if (entity2 != entity1 && IsEntityValid(entity1)) {
 							SphereCollider* collider2 = entity2->GetFirstComponentOfBase<SphereCollider>();
-							if (collider2 != nullptr && collider2->isTouchable) {
+							PhysicBody* physicBody2 = entity2->GetComponent<PhysicBody>();
+							if (collider2 != nullptr && (physicBody1 != nullptr || physicBody2 != nullptr)) {
 								/*TypePair key{ std::type_index(typeid(collider1)), std::type_index(typeid(collider2)) };
 
 								auto it = collisionMap.find(key);
@@ -88,13 +89,15 @@ public:
 								if (result.collided) {
 									//transform1->position += planeCollider->normal * (sphereCollider->radius - distance);
 									
-									point3d nVel = physicBody1->velocity.normalized();
-									if (collider1->softness == 0 && collider2->softness == 0) {
-										transform1->position += result.normal * result.distance;
-										physicBody1->velocity = (nVel + result.normal * result.normal.dot(-nVel)) * physicBody1->velocity.magnitude();
-									}
-									else {
-										physicBody1->velocity += result.normal * pow(SPACE_DENSITY, 2) * (result.distance / (collider1->radius + collider2->radius)) * timer::deltaTime / 1000;
+									if (collider1->isTouchable && collider2->isTouchable && physicBody1 != nullptr) {
+										point3d nVel = physicBody1->velocity.normalized();
+										if (collider1->softness == 0 && collider2->softness == 0) {
+											transform1->position += result.normal * result.distance;
+											physicBody1->velocity = (nVel + result.normal * result.normal.dot(-nVel)) * physicBody1->velocity.magnitude();
+										}
+										else {
+											physicBody1->velocity += result.normal * pow(SPACE_DENSITY, 2) * (result.distance / (collider1->radius + collider2->radius)) * timer::deltaTime / 1000;
+										}
 									}
 
 									/*float sideVelocity = (physicBody1->velocity - res.normal * res.distance).magnitude();
@@ -113,8 +116,12 @@ public:
 									if (health != nullptr) {
 
 										SingleDamageGiver* singleDamageGiver = entity2->GetComponent<SingleDamageGiver>();
-										if (singleDamageGiver != nullptr) {
+										if (singleDamageGiver != nullptr && singleDamageGiver->target == health->fraction) {
 											health->hp -= singleDamageGiver->damage;
+
+											if (singleDamageGiver->destroyable) {
+												entity2->Destroy();
+											}
 											entity2->RemoveComponent<SingleDamageGiver>();
 										}
 

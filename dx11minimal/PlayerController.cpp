@@ -24,7 +24,7 @@ PlayerController::~PlayerController()
 }
 
 
-void PlayerController::Initialize(Entity* Player, CameraClass* Camera, MouseClass* Mouse, WindowClass* Window)
+void PlayerController::Initialize(Entity* Player, World* m_World, MouseClass* Mouse, WindowClass* Window)
 {
 	playerEntity = Player;
 
@@ -32,9 +32,12 @@ void PlayerController::Initialize(Entity* Player, CameraClass* Camera, MouseClas
 	playerPhysicBody = Player->GetComponent<PhysicBody>();
 	playerConstellation = Player->GetComponent<Constellation>();
 
-	camera = Camera;
+	camera = m_World->m_Camera;
 	mouse = Mouse;
 	window = Window;
+
+	abilities = new PlayerAbilities;
+	abilities->Initialize(m_World);
 }
 
 
@@ -66,6 +69,11 @@ void PlayerController::Shutdown()
 
 	if (window) {
 		window = 0;
+	}
+
+	if (abilities) {
+		delete abilities;
+		abilities = 0;
 	}
 }
 
@@ -194,18 +202,7 @@ void PlayerController::ProcessMouse()
 				if (!mousePressed)
 				{
 					mousePressed = true;
-
-					for (int i = 0; i < 20; i++)
-					{
-						MouseParticle particle = MouseParticle();
-						particle.pos = mouse->pos;
-						particle.angle = (float)getRandom(0, 100) / 100.0f * PI * 2.0f;
-						//particle.vel = point3d(getRandom(-100, 100), getRandom(-100, 100), 0).normalized() * point3d(window->aspect, 1, 0) * (float)getRandom(8, 30) / 100.0f * 0.002f;
-						particle.lifetime = getRandom(500, 1500);
-						particle.startTime = timer::currentTime;
-
-						mouse->particles.push_back(particle);
-					}
+					abilities->Attack(*playerTransform, mouse->GetMouseRay());
 				}
 			}
 			else

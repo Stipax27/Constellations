@@ -171,7 +171,7 @@
     <ClInclude Include="collider.h" />
     <ClInclude Include="CollisionManagerClass.h" />
     <ClInclude Include="component.h" />
-    <ClInclude Include="damagetarget.h" />
+    <ClInclude Include="fraction.h" />
     <ClInclude Include="dx11.h" />
     <ClInclude Include="Enemy_Patern.h" />
     <ClInclude Include="entity.h" />

@@ -13,11 +13,14 @@
 #include "windowclass.h"
 
 #include "timer.h"
+#include "world.h"
 #include "entity.h"
 
 #include "Transform.cpp"
 #include "PhysicBody.cpp"
 #include "Constellation.cpp"
+
+#include "PlayerAbilities.h"
 
 
 /////////////
@@ -46,7 +49,7 @@ public:
 	PlayerController(const PlayerController&);
 	~PlayerController();
 
-	void Initialize(Entity*, CameraClass*, MouseClass*, WindowClass*);
+	void Initialize(Entity*, World*, MouseClass*, WindowClass*);
 	void Shutdown();
 
 	void ProcessInput();
@@ -63,6 +66,8 @@ private:
 	CameraClass* camera;
 	MouseClass* mouse;
 	WindowClass* window;
+
+	PlayerAbilities* abilities;
 
 	bool movementLocked = false;
 	bool mousePressed = false;
