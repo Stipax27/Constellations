@@ -63,6 +63,7 @@ bool LevelManagerClass::Initialize()
 	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cat.txt", true);
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\Cube.obj");
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\cat2.obj");
+	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\Aries.obj");
 	//Models::LoadModelFromGltfFile("..\\dx11minimal\\Resourses\\Models\\Cube.gltf");
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
@@ -146,9 +147,9 @@ bool LevelManagerClass::Initialize()
 	spriteCluster->frustumRadius = 60;
 	spriteCluster->topology = InputAssembler::topology::pointList;
 	spriteCluster->compress = RenderCompress::x2;
-	sphereCollider = entity->AddComponent<SphereCollider>(); 
+	/*sphereCollider = entity->AddComponent<SphereCollider>(); 
 	sphereCollider->radius = 25.0f;
-	sphereCollider->softness = 0.5f;
+	sphereCollider->softness = 0.5f;*/
 	//entity->AddComponent<SurfaceCollider>();
 	//planeCollider = entity->AddComponent<PlaneCollider>();
 	//planeCollider->gravityDistance = 20.0f;
@@ -208,15 +209,42 @@ bool LevelManagerClass::Initialize()
 	mesh = holder->AddComponent<Mesh>();
 	mesh->index = 1;
 
-	entity = m_World->CreateEntity("Cat", folder);
+	entity = m_World->CreateEntity("Aries", folder);
 	transform = entity->AddComponent<Transform>();
-	transform->scale = point3d(30, 30, 30);
-	transform->position = point3d(0.0f, 15.0f, 50.0f);
+	transform->scale = point3d(4, 4, 4);
+	transform->position = point3d(0.0f, 20.0f, 50.0f);
+	pointCloud = entity->AddComponent<PointCloud>();
+	pointCloud->index = 5;
+	pointCloud->pointSize = 1.5f;
+	pointCloud->brightness = 0.5f;
+	pointCloud->color = point3d(1, 0.1f, 0.2f);
+	/*constellation = entity->AddComponent<Constellation>();
+	constellation->stars = {
+		point3d(0, 2.5f, 3.0f),
+		point3d(0, 1.7f, -1.4f),
+		point3d(0, 0.4f, -3.9f),
+		point3d(0, -0.9f, -6.0f),
+		point3d(1.8f, -2.0f, 0.4f),
+		point3d(-1.8f, -2.0f, 0.4f),
+	};
+	constellation->links = {
+		{0,1},
+		{1,2},
+		{2,3},
+		{1,4},
+		{1,5},
+	};*/
+
+	/*entity = m_World->CreateEntity("Cat", folder);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(0.0f, 0.0f, 0.0f);
 	pointCloud = entity->AddComponent<PointCloud>();
 	pointCloud->index = 4;
-	pointCloud->pointSize = 2.0f;
-	pointCloud->brightness = 0.25f;
-	pointCloud->color = point3d(1, 0.1f, 0.2f);
+	transform->position = point3d(0.0f, 15.0f, 65.0f);
+	pointCloud->scale = point3d(7, 7, 7);
+	pointCloud->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), PI / 2);
+	pointCloud->brightness = 0.15f;
+	pointCloud->color = point3d(1, 0.6f, 0.9f);*/
 
 	//entity = m_World->CreateEntity("Cube", holder);
 	//transform = entity->AddComponent<Transform>();
