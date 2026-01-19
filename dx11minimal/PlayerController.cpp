@@ -151,6 +151,10 @@ void PlayerController::ProcessInput()
 		if (roll != 0) {
 			playerPhysicBody->mAngVelocity = XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), roll * RAD);
 		}
+
+		if (IsKeyPressed('1')) {
+			abilities->weapon = PlayerWeapons::Fists;
+		}
 	}
 }
 
