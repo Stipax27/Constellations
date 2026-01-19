@@ -278,7 +278,7 @@ public:
 						InputAssembler::IA(InputAssembler::topology::pointList);
 						InputAssembler::vBuffer(pointCloud->index);
 
-						context->DrawIndexed(Models::Model[pointCloud->index].indexes, 0, 0);
+						context->DrawIndexedInstanced(Models::Model[pointCloud->index].indexes, pointCloud->instances, 0, 0, 0);
 						//context->DrawInstanced(1, 2097152 / 6, 0, 0);
 					//}
 

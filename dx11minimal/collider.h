@@ -17,6 +17,7 @@ struct Collider : Component
 	float friction = 1.0f;
 	float softness = 0.0f;
 	bool isTouchable = true;
+	bool anti = false;
 };
 
 #endif

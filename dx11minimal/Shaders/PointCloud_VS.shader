@@ -38,12 +38,29 @@ struct VS_OUTPUT
     float2 uv : TEXCOORD0;
 };
 
-VS_OUTPUT VS(VS_INPUT input)
+
+uint hash(uint x)
+{
+    x = (x ^ 61) ^ (x >> 16);
+    x = x + (x << 3);
+    x = x ^ (x >> 4);
+    x = x * 0x27d4eb2d;
+    x = x ^ (x >> 15);
+    return x;
+}
+
+
+VS_OUTPUT VS(VS_INPUT input, uint vID : SV_VertexID, uint iID : SV_InstanceID)
 {
     VS_OUTPUT output = (VS_OUTPUT)0;
 
     float4 pos = float4(input.position.xyz, 1);
     pos = mul(pos, world);
+
+    if (iID > 0)
+    {
+        pos.y += (float)vID;
+    }
 
     output.pos = mul(pos, mul(view, proj));
     output.vpos = mul(float4(pos.xyz, 1), view);

@@ -1,10 +1,15 @@
-Texture2D inputTexture : register(t1);
-SamplerState samplerState : register(s1);
+Texture2D<float> DepthTexture : register(t0);
+SamplerState DepthSampler : register(s0);
 
 cbuffer global : register(b5)
 {
     float4 gConst[256];
 };
+
+cbuffer drawerInt : register(b7)
+{
+    int drawInt[256];
+}
 
 cbuffer frame : register(b4)
 {
@@ -42,6 +47,25 @@ struct VS_OUTPUT
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
+    // DEPTH TEST //
+
+    if (drawInt[0] > 1)
+    {
+        uint width, height;
+        DepthTexture.GetDimensions(width, height);
+
+        float2 halfResUV = input.pos.xy / float2(width, height);
+        float sceneDepth = DepthTexture.Sample(DepthSampler, halfResUV);
+        //float bias = 0.005 * (1 - input.depth);
+    
+        if (input.pos.z > sceneDepth)
+        {
+            discard;
+        }
+    }
+
+    ////////////////
+
     float2 uv = input.uv;
     float brightness = exp(-dot(uv, uv) * 20) * gConst[0].w;
 

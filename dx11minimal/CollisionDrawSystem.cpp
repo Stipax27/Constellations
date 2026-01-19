@@ -69,6 +69,7 @@ public:
 					SphereCollider* sphereCollider = entity->GetComponent<SphereCollider>();
 					if (sphereCollider != nullptr) {
 						ConstBuf::global[0].w = sphereCollider->radius;
+						ConstBuf::global[1] = XMFLOAT4(1, 0, 0, 0);
 						ConstBuf::Update(5, ConstBuf::global);
 						ConstBuf::ConstToVertex(5);
 

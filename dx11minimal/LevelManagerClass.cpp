@@ -218,6 +218,7 @@ bool LevelManagerClass::Initialize()
 	pointCloud->pointSize = 1.5f;
 	pointCloud->brightness = 0.5f;
 	pointCloud->color = point3d(1, 0.1f, 0.2f);
+	pointCloud->instances = 2;
 	/*constellation = entity->AddComponent<Constellation>();
 	constellation->stars = {
 		point3d(0, 2.5f, 3.0f),
