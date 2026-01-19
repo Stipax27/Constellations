@@ -155,6 +155,12 @@ void PlayerController::ProcessInput()
 		if (IsKeyPressed('1')) {
 			abilities->weapon = PlayerWeapons::Fists;
 		}
+		if (IsKeyPressed('2')) {
+			abilities->weapon = PlayerWeapons::Sword;
+		}
+		if (IsKeyPressed('3')) {
+			abilities->weapon = PlayerWeapons::Bow;
+		}
 	}
 }
 
