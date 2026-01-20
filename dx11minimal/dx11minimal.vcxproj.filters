@@ -161,31 +161,16 @@
     <ClInclude Include="BaseStar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cameraclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="collider.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CollisionManagerClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="component.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Enemy_Patern.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Font_OLD.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FpsCounter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="frustumclass.h">
@@ -197,31 +182,7 @@
     <ClInclude Include="MethodOfClosest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dx11.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mouseclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticleObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticleSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PlayerController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Point3d.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Point4d.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="renderCompress.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SmallConstellation.h">
@@ -230,29 +191,68 @@
     <ClInclude Include="StarAttack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="system.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="windowclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="world.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="fraction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PlayerAbilities.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerWeaponClass.h">
+      <Filter>Header Files\PlayerWeapon</Filter>
+    </ClInclude>
+    <ClInclude Include="collider.h">
+      <Filter>Header Files\ECS base</Filter>
+    </ClInclude>
+    <ClInclude Include="system.h">
+      <Filter>Header Files\ECS base</Filter>
+    </ClInclude>
+    <ClInclude Include="world.h">
+      <Filter>Header Files\ECS base</Filter>
+    </ClInclude>
+    <ClInclude Include="entity.h">
+      <Filter>Header Files\ECS base</Filter>
+    </ClInclude>
+    <ClInclude Include="dx11.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="component.h">
+      <Filter>Header Files\ECS base</Filter>
+    </ClInclude>
+    <ClInclude Include="cameraclass.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="mouseclass.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Point3d.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Point4d.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="renderCompress.h">
+      <Filter>Header Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="fraction.h">
+      <Filter>Header Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="FistsClass.h">
+      <Filter>Header Files\PlayerWeapon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -439,6 +439,21 @@
     </Filter>
     <Filter Include="Source Files\Render\UI">
       <UniqueIdentifier>{baf20da3-17b1-47e1-9d09-11b266c61adf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\PlayerWeapon">
+      <UniqueIdentifier>{057d3ba2-3f2d-4faa-acc3-17fb4910629c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base">
+      <UniqueIdentifier>{47663e43-5bbd-48ed-ad70-4524c1b19523}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\System">
+      <UniqueIdentifier>{ce93f03f-7503-4c37-ba9b-0be89576fc6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Enums">
+      <UniqueIdentifier>{2662e969-253d-46ed-a7ff-1f1eecc1e552}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utils">
+      <UniqueIdentifier>{6140eb2c-475c-46c4-866d-6e7b2564880c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
