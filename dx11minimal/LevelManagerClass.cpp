@@ -63,7 +63,8 @@ bool LevelManagerClass::Initialize()
 	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cat.txt", true);
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\Cube.obj");
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\cat2.obj");
-	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\Aries.obj");
+	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesBody.obj");
+	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesArmor.obj");
 	//Models::LoadModelFromGltfFile("..\\dx11minimal\\Resourses\\Models\\Cube.gltf");
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
@@ -209,17 +210,17 @@ bool LevelManagerClass::Initialize()
 	mesh = holder->AddComponent<Mesh>();
 	mesh->index = 1;
 
-	entity = m_World->CreateEntity("Aries", folder);
-	transform = entity->AddComponent<Transform>();
+	Entity* aries = m_World->CreateEntity("Aries", folder);
+	transform = aries->AddComponent<Transform>();
 	transform->scale = point3d(4, 4, 4);
 	transform->position = point3d(0.0f, 20.0f, 50.0f);
-	pointCloud = entity->AddComponent<PointCloud>();
+	pointCloud = aries->AddComponent<PointCloud>();
 	pointCloud->index = 5;
 	pointCloud->pointSize = 1.5f;
-	pointCloud->brightness = 0.5f;
+	pointCloud->brightness = 0.4f;
 	pointCloud->color = point3d(1, 0.1f, 0.2f);
-	pointCloud->instances = 2;
-	/*constellation = entity->AddComponent<Constellation>();
+	pointCloud->instances = 1;
+	/*constellation = aries->AddComponent<Constellation>();
 	constellation->stars = {
 		point3d(0, 2.5f, 3.0f),
 		point3d(0, 1.7f, -1.4f),
@@ -235,6 +236,14 @@ bool LevelManagerClass::Initialize()
 		{1,4},
 		{1,5},
 	};*/
+
+	entity = m_World->CreateEntity("Armor", aries);
+	transform = entity->AddComponent<Transform>();
+	pointCloud = entity->AddComponent<PointCloud>();
+	pointCloud->index = 6;
+	pointCloud->pointSize = 1.5f;
+	pointCloud->brightness = 0.2f;
+	pointCloud->color = point3d(1, 0.9f, 0.2f);
 
 	/*entity = m_World->CreateEntity("Cat", folder);
 	transform = entity->AddComponent<Transform>();

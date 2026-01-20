@@ -27,6 +27,9 @@ struct VS_INPUT
     float4 position : POSITION;
     float3 normal : NORMAL;
     float2 uv : TEXCOORD0;
+
+    //uint vertexID : SV_VertexID;
+    //uint instanceID : SV_InstanceID;
 };
 
 struct VS_OUTPUT
@@ -50,17 +53,17 @@ uint hash(uint x)
 }
 
 
-VS_OUTPUT VS(VS_INPUT input, uint vID : SV_VertexID, uint iID : SV_InstanceID)
+VS_OUTPUT VS(VS_INPUT input)
 {
     VS_OUTPUT output = (VS_OUTPUT)0;
 
     float4 pos = float4(input.position.xyz, 1);
     pos = mul(pos, world);
 
-    if (iID > 0)
-    {
-        pos.y += (float)vID;
-    }
+    //if (input.instanceID > 0)
+    //{
+    //    pos.y += (float)input.vertexID;
+    //}
 
     output.pos = mul(pos, mul(view, proj));
     output.vpos = mul(float4(pos.xyz, 1), view);
