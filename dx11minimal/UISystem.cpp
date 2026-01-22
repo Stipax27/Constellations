@@ -169,39 +169,41 @@ public:
 						}
 					}
 
-					Shaders::vShader(13);
-					Shaders::pShader(13 + (int)rect->cornerType);
+					if (rect->opacity > 0.0f) {
+						Shaders::vShader(13);
+						Shaders::pShader(13 + (int)rect->cornerType);
 
-					ConstBuf::global[0] = XMFLOAT4(transform.position.x, transform.position.y, transform.position.z, rect->cornerRadius);
-					ConstBuf::global[1] = XMFLOAT4(transform.scale.x, transform.scale.y, 0, 0);
-					ConstBuf::global[2] = XMFLOAT4(rect->anchorPoint.x, rect->anchorPoint.y, rect->rotation, 0);
-					ConstBuf::global[3] = XMFLOAT4(rect->color.x, rect->color.y, rect->color.z, rect->opacity);
+						ConstBuf::global[0] = XMFLOAT4(transform.position.x, transform.position.y, transform.position.z, rect->cornerRadius);
+						ConstBuf::global[1] = XMFLOAT4(transform.scale.x, transform.scale.y, 0, 0);
+						ConstBuf::global[2] = XMFLOAT4(rect->anchorPoint.x, rect->anchorPoint.y, rect->rotation, 0);
+						ConstBuf::global[3] = XMFLOAT4(rect->color.x, rect->color.y, rect->color.z, rect->opacity);
 
-					switch (rect->ratio)
-					{
-					case ScreenAspectRatio::XY:
-						ConstBuf::global[1].z = 1;
-						ConstBuf::global[1].w = 1;
-						break;
-					case ScreenAspectRatio::YX:
-						ConstBuf::global[1].z = ConstBuf::frame.aspect.x;
-						ConstBuf::global[1].w = ConstBuf::frame.aspect.y;
-						break;
-					case ScreenAspectRatio::XX:
-						ConstBuf::global[1].z = 1;
-						ConstBuf::global[1].w = ConstBuf::frame.aspect.y;
-						break;
-					case ScreenAspectRatio::YY:
-						ConstBuf::global[1].z = ConstBuf::frame.aspect.x;
-						ConstBuf::global[1].w = 1;
-						break;
+						switch (rect->ratio)
+						{
+						case ScreenAspectRatio::XY:
+							ConstBuf::global[1].z = 1;
+							ConstBuf::global[1].w = 1;
+							break;
+						case ScreenAspectRatio::YX:
+							ConstBuf::global[1].z = ConstBuf::frame.aspect.x;
+							ConstBuf::global[1].w = ConstBuf::frame.aspect.y;
+							break;
+						case ScreenAspectRatio::XX:
+							ConstBuf::global[1].z = 1;
+							ConstBuf::global[1].w = ConstBuf::frame.aspect.y;
+							break;
+						case ScreenAspectRatio::YY:
+							ConstBuf::global[1].z = ConstBuf::frame.aspect.x;
+							ConstBuf::global[1].w = 1;
+							break;
+						}
+
+						ConstBuf::Update(5, ConstBuf::global);
+						ConstBuf::ConstToVertex(5);
+						ConstBuf::ConstToPixel(5);
+
+						Draw::Drawer(1);
 					}
-
-					ConstBuf::Update(5, ConstBuf::global);
-					ConstBuf::ConstToVertex(5);
-					ConstBuf::ConstToPixel(5);
-
-					Draw::Drawer(1);
 				}
 
 				//TextLabel* textLabel = entity->GetComponent<TextLabel>();

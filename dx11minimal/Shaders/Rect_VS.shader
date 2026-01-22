@@ -58,7 +58,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     float2 anchorPoint = gConst[2].xy;
 
     float3 screenPos = float3((quadPos[vID] - anchorPoint) * size, 0.0) * float3(gConst[1].zw, 1) + pos;
-    screenPos = rotatePoint(screenPos, time.x * 0.1);
+    //screenPos = rotatePoint(screenPos, time.x * 0.1);
     screenPos.x *= aspect.x;
 
     output.pos = float4(screenPos, 1);
