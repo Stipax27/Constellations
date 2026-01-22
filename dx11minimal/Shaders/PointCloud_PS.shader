@@ -71,8 +71,8 @@ float4 PS(VS_OUTPUT input) : SV_Target
 
     float dist = length(cPos.xyz - input.wpos);
     float sat = min(max(dist - 1, 0) / 5, 1);
-    sat *= 1 - clamp(abs(dot(float3(-1, 0, 0), input.vnorm)), 0, 1);
+    //sat *= 1 - clamp(abs(dot(float3(-1, 0, 0), input.vnorm)), 0, 1);
     brightness *= sat;
 
-    return float4(brightness, brightness, brightness, 1) * float4(gConst[0].xyz, 1) * 0.05;
+    return float4(brightness, brightness, brightness, 1) * float4(gConst[0].xyz, 1) * 0.015;
 }
