@@ -386,18 +386,26 @@ bool LevelManagerClass::Initialize()
 
 	// MAIN MENU //
 	
-	//entity = m_World->CreateEntity();
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(0.0f, 0.1f, 0.0f);
-	//transform->scale = point3d(0.25f, 0.05f, 0.0f);
-	//rect = entity->AddComponent<Rect>();
-	//rect->color = point3d(0.5f, 0.25f, 0.8f);
-	//rect->opacity = 1.f;
-	////rect->anchorPoint = point3d(-1, 0, 0);
-	//rect->ratio = ScreenAspectRatio::YY;
-	//rect->cornerRadius = 0.25f;
-	//rect->cornerType = CornerType::Strict;
-	////entity->AddComponent<Button>();
+	entity = m_World->CreateEntity();
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(0.5f, 0.1f, 0.0f);
+	transform->scale = point3d(0.25f, 0.05f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.5f, 0.25f, 0.8f);
+	rect->opacity = 1.0f;
+	rect->anchorPoint = point3d(-1, 0, 0);
+	rect->ratio = ScreenAspectRatio::YY;
+	//rect->cornerRadius = 1.0f;
+	rect->cornerType = CornerType::Strict;
+	//entity->AddComponent<Button>();
+
+	entity = m_World->CreateEntity("Rect", entity);
+	transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(0.5f, 0.1f, 0.0f);
+	transform->scale = point3d(0.5f, 0.5f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.5f, 0.1f, 0.2f);
+	rect->opacity = 1.0f;
 
 	/*entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
@@ -449,11 +457,11 @@ bool LevelManagerClass::Initialize()
 	m_World->AddRenderSystem<UISystem>(mouse);
 
 	//m_World->PreCalculations();
-	bStar = new BaseStar();
-	bStar->Init(m_World, entity);
+	//bStar = new BaseStar();
+	//bStar->Init(m_World, entity);
 	
-	smallConstellation = new SmallConstellation();
-	smallConstellation->Init(m_World, entity, player);
+	//smallConstellation = new SmallConstellation();
+	//smallConstellation->Init(m_World, entity, player);
 
 	playerController = new PlayerController();
 	playerController->Initialize(player, m_World, mouse, window);

@@ -28,12 +28,14 @@ float3 rotY(float3 p, float a)
 
 float3 rotatePoint(float3 pos, float angle)
 {
-    float3 newPos = float3(0, 0, 0);
-    
-    newPos.x = pos.x * cos(angle) - pos.y * sin(angle);
-    newPos.y = pos.x * sin(angle) + pos.y * cos(angle);
+    float3 center = gConst[0].xyz;
 
-    return newPos;
+    float3 pos0 = pos - center;
+    float radius = length(pos0);
+    float angle0 = atan2(pos0.y, pos0.x);
+    angle0 += angle;
+
+    return float3(sin(angle0), cos(angle0), 0) * radius + center;
 }
 
 struct VS_OUTPUT
@@ -56,7 +58,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     float2 anchorPoint = gConst[2].xy;
 
     float3 screenPos = float3((quadPos[vID] - anchorPoint) * size, 0.0) * float3(gConst[1].zw, 1) + pos;
-    screenPos = rotatePoint(screenPos, 1);
+    screenPos = rotatePoint(screenPos, time.x * 0.1);
     screenPos.x *= aspect.x;
 
     output.pos = float4(screenPos, 1);
