@@ -70,7 +70,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
     float brightness = exp(-dot(uv, uv) * 20) * gConst[0].w;
 
     float dist = length(cPos.xyz - input.wpos);
-    float sat = min(max(dist - 1, 0) / 5, 1);
+    float sat = min(max(dist - 0.5, 0) / 2, 1);
     //sat *= 1 - clamp(abs(dot(float3(-1, 0, 0), input.vnorm)), 0, 1);
     brightness *= sat;
 
