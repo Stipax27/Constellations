@@ -135,46 +135,46 @@ public:
 		for (int i = 0; i < size; i++) {
 			Entity* entity = entities[i];
 			if (IsEntityValid(entity)) {
-				Transform* transform = entity->GetComponent<Transform>();
+				Transform transform = GetWorldTransform(entity);
 
-				if (transform != nullptr) {
-					Rect* rect = entity->GetComponent<Rect>();
-					if (rect != nullptr) {
+				Rect* rect = entity->GetComponent<Rect>();
+				if (rect != nullptr) {
 						
-						Button* button = entity->GetComponent<Button>();
-						if (button != nullptr) {
+					Button* button = entity->GetComponent<Button>();
+					if (button != nullptr) {
 
-							point3d halfSize = transform->scale / 2;
-							point3d realPos = transform->position - rect->anchorPoint * halfSize;
+						point3d halfSize = transform.scale / 2;
+						point3d realPos = transform.position - rect->anchorPoint * halfSize;
 
-							/*if (transform->position - (transform->scale / 2) * (rect->anchorPoint + 1) <= mouse->pos.x <= transform->position + (transform->scale / 2) * (rect->anchorPoint - 1)) {
-								if (IsKeyPressed(VK_LBUTTON)) {
-									rect->color = point3d(1, 0, 0);
-								}
-							}
-							else {
-								if (IsKeyPressed(VK_LBUTTON)) {
-									rect->color = point3d(0.5f, 0.25f, 0.8f);
-								}
-							}*/
-
-							if (mouse->pos.x <= realPos.x + transform->scale.x && mouse->pos.x >= realPos.x - transform->scale.x && mouse->pos.y <= realPos.y + transform->scale.y && mouse->pos.y >= realPos.y - transform->scale.y) {
-								if (IsKeyPressed(VK_LBUTTON)) {
-									rect->color = point3d(1, 0, 0);
-								}
-							}
-							else {
-								if (IsKeyPressed(VK_LBUTTON)) {
-									rect->color = point3d(0.5f, 0.25f, 0.8f);
-								}
+						/*if (transform.position - (transform.scale / 2) * (rect->anchorPoint + 1) <= mouse->pos.x <= transform.position + (transform.scale / 2) * (rect->anchorPoint - 1)) {
+							if (IsKeyPressed(VK_LBUTTON)) {
+								rect->color = point3d(1, 0, 0);
 							}
 						}
+						else {
+							if (IsKeyPressed(VK_LBUTTON)) {
+								rect->color = point3d(0.5f, 0.25f, 0.8f);
+							}
+						}*/
 
+						if (mouse->pos.x <= realPos.x + transform.scale.x && mouse->pos.x >= realPos.x - transform.scale.x && mouse->pos.y <= realPos.y + transform.scale.y && mouse->pos.y >= realPos.y - transform.scale.y) {
+							if (IsKeyPressed(VK_LBUTTON)) {
+								rect->color = point3d(1, 0, 0);
+							}
+						}
+						else {
+							if (IsKeyPressed(VK_LBUTTON)) {
+								rect->color = point3d(0.5f, 0.25f, 0.8f);
+							}
+						}
+					}
+
+					if (rect->opacity > 0.0f) {
 						Shaders::vShader(13);
 						Shaders::pShader(13 + (int)rect->cornerType);
 
-						ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, rect->cornerRadius);
-						ConstBuf::global[1] = XMFLOAT4(transform->scale.x, transform->scale.y, 0, 0);
+						ConstBuf::global[0] = XMFLOAT4(transform.position.x, transform.position.y, transform.position.z, rect->cornerRadius);
+						ConstBuf::global[1] = XMFLOAT4(transform.scale.x, transform.scale.y, 0, 0);
 						ConstBuf::global[2] = XMFLOAT4(rect->anchorPoint.x, rect->anchorPoint.y, rect->rotation, 0);
 						ConstBuf::global[3] = XMFLOAT4(rect->color.x, rect->color.y, rect->color.z, rect->opacity);
 
@@ -204,63 +204,63 @@ public:
 
 						Draw::Drawer(1);
 					}
-
-					//TextLabel* textLabel = entity->GetComponent<TextLabel>();
-					//if (textLabel != nullptr) {
-					//	point3d pos = transform->position;
-					//	const char* str = textLabel->text.c_str();
-
-					//	Shaders::vShader(0);
-					//	Shaders::pShader(0);
-
-					//	ConstBuf::global[0] = XMFLOAT4(pos.x, pos.y, pos.z, textLabel->fontSize);
-
-					//	preprocessFont();
-					//	//scale = scale * window.width / 2560.;
-
-					//	float tracking = 10;
-					//	float interline = 40 * textLabel->fontSize;
-
-					//	int letters_count = strlen(str);
-					//	float base_x = pos.x;
-					//	float base_y = pos.y;
-					//	int i = 0;
-					//	float maxStringWidth = 0;
-					//	float stringWidth = 0;
-
-					//	while (i < letters_count)
-					//	{
-					//		float offset = 0;
-
-					//		/*if (centered)
-					//		{
-					//			int j = i;
-					//			while (j < letters_count && str[j] != '\n')
-					//			{
-					//				offset += letter_width[str[j] - 32] * textLabel->fontSize + tracking;
-					//				j++;
-					//			}
-					//			offset /= 2.;
-					//		}*/
-
-					//		while (i < letters_count && str[i] != '\n')
-					//		{
-					//			float sz = drawLetter(str[i] - 32, pos.x - offset, pos.y, textLabel->fontSize, textLabel->fontSize) + tracking;
-					//			pos.x += sz;
-					//			stringWidth += sz;
-					//			i++;
-					//		}
-
-					//		maxStringWidth = max(maxStringWidth, stringWidth);
-
-					//		i++;
-					//		pos.x = base_x;
-					//		pos.y += interline;
-					//	}
-
-					//	//return { maxStringWidth ,y - base_y,0 };
-					//}
 				}
+
+				//TextLabel* textLabel = entity->GetComponent<TextLabel>();
+				//if (textLabel != nullptr) {
+				//	point3d pos = transform.position;
+				//	const char* str = textLabel->text.c_str();
+
+				//	Shaders::vShader(0);
+				//	Shaders::pShader(0);
+
+				//	ConstBuf::global[0] = XMFLOAT4(pos.x, pos.y, pos.z, textLabel->fontSize);
+
+				//	preprocessFont();
+				//	//scale = scale * window.width / 2560.;
+
+				//	float tracking = 10;
+				//	float interline = 40 * textLabel->fontSize;
+
+				//	int letters_count = strlen(str);
+				//	float base_x = pos.x;
+				//	float base_y = pos.y;
+				//	int i = 0;
+				//	float maxStringWidth = 0;
+				//	float stringWidth = 0;
+
+				//	while (i < letters_count)
+				//	{
+				//		float offset = 0;
+
+				//		/*if (centered)
+				//		{
+				//			int j = i;
+				//			while (j < letters_count && str[j] != '\n')
+				//			{
+				//				offset += letter_width[str[j] - 32] * textLabel->fontSize + tracking;
+				//				j++;
+				//			}
+				//			offset /= 2.;
+				//		}*/
+
+				//		while (i < letters_count && str[i] != '\n')
+				//		{
+				//			float sz = drawLetter(str[i] - 32, pos.x - offset, pos.y, textLabel->fontSize, textLabel->fontSize) + tracking;
+				//			pos.x += sz;
+				//			stringWidth += sz;
+				//			i++;
+				//		}
+
+				//		maxStringWidth = max(maxStringWidth, stringWidth);
+
+				//		i++;
+				//		pos.x = base_x;
+				//		pos.y += interline;
+				//	}
+
+				//	//return { maxStringWidth ,y - base_y,0 };
+				//}
 			}
 		}
 	}

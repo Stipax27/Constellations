@@ -125,7 +125,8 @@ bool LevelManagerClass::Initialize()
 	pointCloud->position = point3d(0, -0.8, 0);
 	pointCloud->scale = point3d(7, 7, 7);
 	pointCloud->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -PI / 2);
-	pointCloud->brightness = 0.25f;
+	//pointCloud->pointSize = 0.5f;
+	pointCloud->brightness = 0.5f;
 	pointCloud->color = point3d(1, 0.6f, 0.9f);
 
 
@@ -216,9 +217,9 @@ bool LevelManagerClass::Initialize()
 	transform->position = point3d(0.0f, 20.0f, 50.0f);
 	pointCloud = aries->AddComponent<PointCloud>();
 	pointCloud->index = 5;
-	pointCloud->pointSize = 1.5f;
+	pointCloud->pointSize = 1.0f;
 	pointCloud->brightness = 0.4f;
-	pointCloud->color = point3d(1, 0.1f, 0.2f);
+	pointCloud->color = point3d(1, 0.2, 0.25);
 	pointCloud->instances = 1;
 	/*constellation = aries->AddComponent<Constellation>();
 	constellation->stars = {
@@ -241,7 +242,7 @@ bool LevelManagerClass::Initialize()
 	transform = entity->AddComponent<Transform>();
 	pointCloud = entity->AddComponent<PointCloud>();
 	pointCloud->index = 6;
-	pointCloud->pointSize = 1.5f;
+	pointCloud->pointSize = 0.75f;
 	pointCloud->brightness = 0.2f;
 	pointCloud->color = point3d(1, 0.9f, 0.2f);
 
@@ -385,42 +386,26 @@ bool LevelManagerClass::Initialize()
 
 	// MAIN MENU //
 	
-	//entity = m_World->CreateEntity();
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(0.0f, 0.1f, 0.0f);
-	//transform->scale = point3d(0.25f, 0.05f, 0.0f);
-	//rect = entity->AddComponent<Rect>();
-	//rect->color = point3d(0.5f, 0.25f, 0.8f);
-	//rect->opacity = 1.f;
-	////rect->anchorPoint = point3d(-1, 0, 0);
-	//rect->ratio = ScreenAspectRatio::YY;
-	//rect->cornerRadius = 0.25f;
-	//rect->cornerType = CornerType::Strict;
-	////entity->AddComponent<Button>();
-
-	/*entity = m_World->CreateEntity();
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0.0f, -0.1f, 0.0f);
-	transform->scale = point3d(0.25f, 0.05f, 0.0f);
-	rect = entity->AddComponent<Rect>();
-	rect->color = point3d(0.5f, 0.25f, 0.8f);
-	rect->opacity = 1.f;
-	rect->anchorPoint = point3d(0, 0, 0);
-	rect->ratio = ScreenAspectRatio::YY;
-	rect->cornerRadius = 0.25f;
-	rect->cornerType = CornerType::Strict;
-
 	entity = m_World->CreateEntity();
 	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0.0f, -0.3f, 0.0f);
+	//transform->position = point3d(0.5f, 0.1f, 0.0f);
 	transform->scale = point3d(0.25f, 0.05f, 0.0f);
 	rect = entity->AddComponent<Rect>();
 	rect->color = point3d(0.5f, 0.25f, 0.8f);
-	rect->opacity = 1.f;
-	rect->anchorPoint = point3d(0, 0, 0);
+	rect->opacity = 1.0f;
+	rect->anchorPoint = point3d(-1, 0, 0);
 	rect->ratio = ScreenAspectRatio::YY;
-	rect->cornerRadius = 0.25f;
-	rect->cornerType = CornerType::Strict;*/
+	//rect->cornerRadius = 1.0f;
+	rect->cornerType = CornerType::Strict;
+	entity->AddComponent<Button>();
+
+	//entity = m_World->CreateEntity("Rect", entity);
+	//transform = entity->AddComponent<Transform>();
+	////transform->position = point3d(0.5f, 0.1f, 0.0f);
+	//transform->scale = point3d(0.5f, 0.5f, 0.0f);
+	//rect = entity->AddComponent<Rect>();
+	//rect->color = point3d(0.5f, 0.1f, 0.2f);
+	//rect->opacity = 1.0f;
 
 	// MAIN MENU END //
 
@@ -448,11 +433,11 @@ bool LevelManagerClass::Initialize()
 	m_World->AddRenderSystem<UISystem>(mouse);
 
 	//m_World->PreCalculations();
-	bStar = new BaseStar();
-	bStar->Init(m_World, entity);
+	//bStar = new BaseStar();
+	//bStar->Init(m_World, entity);
 	
-	smallConstellation = new SmallConstellation();
-	smallConstellation->Init(m_World, entity, player);
+	//smallConstellation = new SmallConstellation();
+	//smallConstellation->Init(m_World, entity, player);
 
 	playerController = new PlayerController();
 	playerController->Initialize(player, m_World, mouse, window);
@@ -511,13 +496,13 @@ void LevelManagerClass::Frame()
 	playerController->ProcessMouse();
 
 	
-	// ��������� ������� ��� ���� ������
+	// ??????????????????????????? ????????????????????? ????????? ???????????? ??????????????????
 	//DWORD currentTime = timer::currentTime;
 	//srand(time(0));
-	// ������: ����� ������ 3 �������
+	// ??????????????????: ??????????????? ?????????????????? 3 ?????????????????????
 	//if (currentTime - Star->LastTime > 3000) {
 	//	Star->FartingEffect();
-	//	// ��������� ����� �����
+	//	// ??????????????????????????? ??????????????? ???????????????
 	//	int attackType = rand() % 3;
 	//	switch (attackType) {
 	//	case 0:
