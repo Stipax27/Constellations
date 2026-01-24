@@ -36,7 +36,7 @@ public:
 			Entity* entity = entities[i];
 			if (IsEntityValid(entity)) {
 				DelayedDestroy* delayedDestroy = entity->GetComponent<DelayedDestroy>();
-				if (delayedDestroy != nullptr && timer::currentTime >= delayedDestroy->startTime + delayedDestroy->lifeTime) {
+				if (delayedDestroy != nullptr && timer::currentTime >= delayedDestroy->startTime + delayedDestroy->lifeTime / entity->timeScale) {
 					entity->Destroy();
 				}
 			}

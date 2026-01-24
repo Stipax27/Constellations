@@ -60,12 +60,10 @@ bool LevelManagerClass::Initialize()
 
 	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cube.txt");
 	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cube2.txt");
-	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cat.txt", true);
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\Cube.obj");
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\cat2.obj");
-	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesBody.obj");
-	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesArmor.obj");
-	//Models::LoadModelFromGltfFile("..\\dx11minimal\\Resourses\\Models\\Cube.gltf");
+	//Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesBody.obj");
+	//Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesArmor.obj");
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING START //
@@ -121,7 +119,7 @@ bool LevelManagerClass::Initialize()
 		{2,5}
 	};*/
 	pointCloud = player->AddComponent<PointCloud>();
-	pointCloud->index = 4;
+	pointCloud->index = 3;
 	pointCloud->position = point3d(0, -0.8, 0);
 	pointCloud->scale = point3d(7, 7, 7);
 	pointCloud->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -PI / 2);
@@ -153,10 +151,6 @@ bool LevelManagerClass::Initialize()
 	sphereCollider->radius = 25.0f;
 	sphereCollider->softness = 0.5f;*/
 	//entity->AddComponent<SurfaceCollider>();
-	//planeCollider = entity->AddComponent<PlaneCollider>();
-	//planeCollider->gravityDistance = 20.0f;
-	/*delayedDestroy = entity->AddComponent<DelayedDestroy>();
-	delayedDestroy->lifeTime = 5000;*/
 
 	entity = m_World->CreateEntity("StarsBackground", folder);
 	spriteCluster = entity->AddComponent<SpriteCluster>();
@@ -201,7 +195,7 @@ bool LevelManagerClass::Initialize()
 	transform->position = point3d(0.0f, 0.0f, -50.0f);
 	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -180 * RAD) * transform->mRotation;
 	mesh = holder->AddComponent<Mesh>();
-	mesh->index = 4;
+	mesh->index = 3;
 
 	holder = m_World->CreateEntity("Holder", folder);
 	transform = holder->AddComponent<Transform>();
@@ -211,74 +205,40 @@ bool LevelManagerClass::Initialize()
 	mesh = holder->AddComponent<Mesh>();
 	mesh->index = 1;
 
-	Entity* aries = m_World->CreateEntity("Aries", folder);
-	transform = aries->AddComponent<Transform>();
-	transform->scale = point3d(4, 4, 4);
-	transform->position = point3d(0.0f, 20.0f, 50.0f);
-	pointCloud = aries->AddComponent<PointCloud>();
-	pointCloud->index = 5;
-	pointCloud->pointSize = 1.0f;
-	pointCloud->brightness = 0.4f;
-	pointCloud->color = point3d(1, 0.2, 0.25);
-	pointCloud->instances = 1;
-	/*constellation = aries->AddComponent<Constellation>();
-	constellation->stars = {
-		point3d(0, 2.5f, 3.0f),
-		point3d(0, 1.7f, -1.4f),
-		point3d(0, 0.4f, -3.9f),
-		point3d(0, -0.9f, -6.0f),
-		point3d(1.8f, -2.0f, 0.4f),
-		point3d(-1.8f, -2.0f, 0.4f),
-	};
-	constellation->links = {
-		{0,1},
-		{1,2},
-		{2,3},
-		{1,4},
-		{1,5},
-	};*/
+	//Entity* aries = m_World->CreateEntity("Aries", folder);
+	//transform = aries->AddComponent<Transform>();
+	//transform->scale = point3d(4, 4, 4);
+	//transform->position = point3d(0.0f, 20.0f, 50.0f);
+	//pointCloud = aries->AddComponent<PointCloud>();
+	//pointCloud->index = 4;
+	//pointCloud->pointSize = 1.0f;
+	//pointCloud->brightness = 0.4f;
+	//pointCloud->color = point3d(1, 0.2, 0.25);
+	//pointCloud->instances = 1;
+	///*constellation = aries->AddComponent<Constellation>();
+	//constellation->stars = {
+	//	point3d(0, 2.5f, 3.0f),
+	//	point3d(0, 1.7f, -1.4f),
+	//	point3d(0, 0.4f, -3.9f),
+	//	point3d(0, -0.9f, -6.0f),
+	//	point3d(1.8f, -2.0f, 0.4f),
+	//	point3d(-1.8f, -2.0f, 0.4f),
+	//};
+	//constellation->links = {
+	//	{0,1},
+	//	{1,2},
+	//	{2,3},
+	//	{1,4},
+	//	{1,5},
+	//};*/
 
-	entity = m_World->CreateEntity("Armor", aries);
-	transform = entity->AddComponent<Transform>();
-	pointCloud = entity->AddComponent<PointCloud>();
-	pointCloud->index = 6;
-	pointCloud->pointSize = 0.75f;
-	pointCloud->brightness = 0.2f;
-	pointCloud->color = point3d(1, 0.9f, 0.2f);
-
-	/*entity = m_World->CreateEntity("Cat", folder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0.0f, 0.0f, 0.0f);
-	pointCloud = entity->AddComponent<PointCloud>();
-	pointCloud->index = 4;
-	transform->position = point3d(0.0f, 15.0f, 65.0f);
-	pointCloud->scale = point3d(7, 7, 7);
-	pointCloud->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), PI / 2);
-	pointCloud->brightness = 0.15f;
-	pointCloud->color = point3d(1, 0.6f, 0.9f);*/
-
-	//entity = m_World->CreateEntity("Cube", holder);
+	//entity = m_World->CreateEntity("Armor", aries);
 	//transform = entity->AddComponent<Transform>();
-	//transform->scale = point3d(2.0f, 10.0f, 2.0f);
-	//mesh = entity->AddComponent<Mesh>();
-
-	//entity = m_World->CreateEntity("Cube", holder);
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(0.0f, 12.0f, 0.0f);
-	//transform->scale = point3d(2.25f, 2.75f, 2.25f);
-	//mesh = entity->AddComponent<Mesh>();
-
-	//entity = m_World->CreateEntity("Cube", holder);
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(-3.25f, -12.0f, 0.0f);
-	//transform->scale = point3d(3.0f, 3.0f, 3.0f);
-	//mesh = entity->AddComponent<Mesh>();
-
-	//entity = m_World->CreateEntity("Cube", holder);
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(3.25f, -12.0f, 0.0f);
-	//transform->scale = point3d(2.75f, 2.75f, 2.75f);
-	//mesh = entity->AddComponent<Mesh>();
+	//pointCloud = entity->AddComponent<PointCloud>();
+	//pointCloud->index = 5;
+	//pointCloud->pointSize = 0.75f;
+	//pointCloud->brightness = 0.2f;
+	//pointCloud->color = point3d(1, 0.9f, 0.2f);
 
 	/////////////////////////
 
