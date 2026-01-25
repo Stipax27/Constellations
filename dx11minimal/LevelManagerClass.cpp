@@ -388,7 +388,7 @@ bool LevelManagerClass::Initialize()
 	m_World->AddPhysicSystem<EntityManagerSystem>();
 
 	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera);
-	//m_World->AddRenderSystem<CollisionDrawSystem>(); // DEBUG //
+	m_World->AddRenderSystem<CollisionDrawSystem>(); // DEBUG //
 	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum);
 	m_World->AddRenderSystem<UISystem>(mouse);
 

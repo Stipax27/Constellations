@@ -58,8 +58,8 @@ public:
 		for (int i = 0; i < size; i++) {
 			Entity* entity1 = entities[i];
 			if (IsEntityValid(entity1)) {
-				Transform* transform1 = entity1->GetComponent<Transform>();
-				PhysicBody* physicBody1 = entity1->GetComponent<PhysicBody>();
+				Transform* transform1 = entity1->GetComponentInAncestor<Transform>();
+				PhysicBody* physicBody1 = entity1->GetComponentInAncestor<PhysicBody>();
 				SphereCollider* collider1 = entity1->GetFirstComponentOfBase<SphereCollider>();
 				if (transform1 != nullptr && collider1 != nullptr) {
 
@@ -70,7 +70,7 @@ public:
 						Entity* entity2 = entities[i];
 						if (entity2 != entity1 && IsEntityValid(entity1)) {
 							SphereCollider* collider2 = entity2->GetFirstComponentOfBase<SphereCollider>();
-							PhysicBody* physicBody2 = entity2->GetComponent<PhysicBody>();
+							PhysicBody* physicBody2 = entity2->GetComponentInAncestor<PhysicBody>();
 							if (collider2 != nullptr && (physicBody1 != nullptr || physicBody2 != nullptr)) {
 								/*TypePair key{ std::type_index(typeid(collider1)), std::type_index(typeid(collider2)) };
 
@@ -115,14 +115,14 @@ public:
 									Health* health = entity1->GetComponent<Health>();
 									if (health != nullptr) {
 
-										SingleDamageGiver* singleDamageGiver = entity2->GetComponent<SingleDamageGiver>();
-										if (singleDamageGiver != nullptr && singleDamageGiver->target == health->fraction) {
-											health->hp -= singleDamageGiver->damage;
+										pair<Entity*, SingleDamageGiver*> res = entity2->GetAncestorWithComponent<SingleDamageGiver>();
+										if (res.first != nullptr && res.second->target == health->fraction) {
+											health->hp -= res.second->damage;
 
-											if (singleDamageGiver->destroyable) {
-												entity2->Destroy();
+											if (res.second->destroyable) {
+												res.first->Destroy();
 											}
-											entity2->RemoveComponent<SingleDamageGiver>();
+											res.first->RemoveComponent<SingleDamageGiver>();
 										}
 
 										/*MultiDamageGiver* multiDamageGiver = entity2->GetComponent<MultiDamageGiver>();

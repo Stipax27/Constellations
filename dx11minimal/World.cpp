@@ -50,7 +50,10 @@ Entity* World::CreateEntity(string Name, Entity* Parent)
 {
 	Entity* entity = new Entity;
 	entity->name = Name;
-	entity->parent = Parent;
+
+	if (Parent != nullptr) {
+		Parent->AddChild(entity);
+	}
 
 	entities.push_back(entity);
 

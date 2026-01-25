@@ -37,6 +37,7 @@ int Entity::GetId() {
 
 
 void Entity::AddChild(Entity* Child) {
+	Child->parent = this;
 	children.push_back(Child);
 }
 

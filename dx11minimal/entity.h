@@ -72,6 +72,32 @@ public:
 	}
 
 	template <typename T>
+	T* GetComponentInAncestor()
+	{
+		T* it = GetComponent<T>();
+		if (it == nullptr && parent != nullptr) {
+			return parent->GetComponentInAncestor<T>();
+		}
+		return it;
+	}
+
+	template <typename T>
+	pair<Entity*, T*> GetAncestorWithComponent()
+	{
+		T* it = GetComponent<T>();
+		if (it == nullptr && parent != nullptr) {
+			return parent->GetAncestorWithComponent<T>();
+		}
+
+		if (it != nullptr) {
+			return { this, it };
+		}
+		else {
+			return { nullptr, nullptr };
+		}
+	}
+
+	template <typename T>
 	T* GetComponents()
 	{
 		//components.
