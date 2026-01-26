@@ -65,6 +65,7 @@ public:
 
 					Transform worldTransform1 = GetWorldTransform(entity1);
 					size_t size = entities.size();
+
 					for (int i = 0; i < size; i++)
 					{
 						Entity* entity2 = entities[i];
