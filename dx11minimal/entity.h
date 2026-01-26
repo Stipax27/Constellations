@@ -131,6 +131,7 @@ public:
 	void Destroy();
 	bool IsDeleting();
 
+	void SetId(int);
 	int GetId();
 
 	void AddChild(Entity*);
@@ -142,7 +143,7 @@ public:
 	bool IsActive();
 
 private:
-	int id;
+	int id = -1;
 	bool active = true;
 	bool deleted = false;
 

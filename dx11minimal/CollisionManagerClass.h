@@ -15,12 +15,12 @@
 #include <memory>
 #include <mutex>
 
-#include "Transform.cpp"
+#include "Transform.h"
 
 #include "collider.h"
-#include "SphereCollider.cpp"
-#include "PlaneCollider.cpp"
-#include "SurfaceCollider.cpp"
+#include "SphereCollider.h"
+#include "PlaneCollider.h"
+#include "SurfaceCollider.h"
 
 
 /////////////

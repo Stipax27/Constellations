@@ -12,7 +12,7 @@
 
 #include "Point3d.h"
 
-#include "Transform.cpp"
+#include "Transform.h"
 #include "PhysicBody.cpp"
 #include "SphereCollider.cpp"
 #include "Star.cpp"

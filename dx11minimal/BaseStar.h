@@ -1,6 +1,6 @@
 #include "Explosion.cpp"
 #include "world.h"
-#include "Transform.cpp"
+#include "Transform.h"
 #include "timer.h"
 #include <cstdlib> // для rand()
 #include <cmath> 

@@ -8,7 +8,7 @@
 #include "system.h"
 #include "timer.h"
 
-#include "DelayedDestroy.cpp"
+#include "DelayedDestroy.h"
 
 
 class EntityManagerSystem : public System
@@ -36,7 +36,7 @@ public:
 			Entity* entity = entities[i];
 			if (IsEntityValid(entity)) {
 				DelayedDestroy* delayedDestroy = entity->GetComponent<DelayedDestroy>();
-				if (delayedDestroy != nullptr && timer::currentTime >= delayedDestroy->startTime + delayedDestroy->lifeTime / entity->timeScale) {
+				if (delayedDestroy != nullptr && delayedDestroy->active && timer::currentTime >= delayedDestroy->startTime + delayedDestroy->lifeTime / entity->timeScale) {
 					entity->Destroy();
 				}
 			}

@@ -1,5 +1,5 @@
-#ifndef _SURFACECOLLIDER_C_
-#define _SURFACECOLLIDER_C_
+#ifndef _SURFACE_COLLIDER_H_
+#define _SURFACE_COLLIDER_H_
 
 #include "collider.h"
 #include "point3d.h"

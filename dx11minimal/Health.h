@@ -1,5 +1,5 @@
-#ifndef _HEALTH_C_
-#define _HEALTH_C_
+#ifndef _HEALTH_H_
+#define _HEALTH_H_
 
 #include "component.h"
 #include "fraction.h"

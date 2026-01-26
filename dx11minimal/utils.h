@@ -11,7 +11,7 @@
 #include "Point3d.h"
 
 #include "entity.h"
-#include "Transform.cpp"
+#include "Transform.h"
 
 
 /////////////

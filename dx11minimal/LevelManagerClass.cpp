@@ -99,8 +99,10 @@ bool LevelManagerClass::Initialize()
 	transform = player->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, 0.0f);
 	physicBody = player->AddComponent<PhysicBody>();
+	physicBody->preciseMovement = false;
 	sphereCollider = player->AddComponent<SphereCollider>();
 	sphereCollider->radius = 0.75f;
+	sphereCollider->collisionGroup = CollisionFilter::Group::Player;
 	health = player->AddComponent<Health>();
 	health->fraction = Fraction::Player;
 	/*constellation = player->AddComponent<Constellation>();
@@ -166,6 +168,8 @@ bool LevelManagerClass::Initialize()
 	star = entity->AddComponent<Star>();
 	sphereCollider = entity->AddComponent<SphereCollider>();
 	sphereCollider->radius = 0.5f;
+	sphereCollider->active = false;
+	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
 	//sphereCollider->softness = 0.5f;
 	singleDamageGiver = entity->AddComponent<SingleDamageGiver>();
 	singleDamageGiver->damage = 1000;
@@ -182,6 +186,7 @@ bool LevelManagerClass::Initialize()
 		star->crownColor = point3d(0.47f, 0.65f, 1.0f);
 		sphereCollider = entity->AddComponent<SphereCollider>();
 		sphereCollider->radius = 2.0f;
+		sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
 		health = entity->AddComponent<Health>();
 		health->hp = 10;
 		health->maxHp = 10;
@@ -277,6 +282,7 @@ bool LevelManagerClass::Initialize()
 	transform->position = point3d(2.0f, 0.0f, 0.0f);
 	sphereCollider = entity->AddComponent<SphereCollider>();
 	sphereCollider->radius = 0.5f;
+	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
 	physicBody = entity->AddComponent<PhysicBody>();
 	constellation = entity->AddComponent<Constellation>();
 	constellation->stars = {

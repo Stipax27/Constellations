@@ -1,5 +1,5 @@
-#ifndef _RECT_C_
-#define _RECT_C_
+#ifndef _RECT_H_
+#define _RECT_H_
 
 #include "component.h"
 #include "point3d.h"

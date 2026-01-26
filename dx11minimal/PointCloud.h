@@ -1,5 +1,5 @@
-#ifndef _POINT_CLOUD_C_
-#define _POINT_CLOUD_C_
+#ifndef _POINT_CLOUD_H_
+#define _POINT_CLOUD_H_
 
 #include "component.h"
 #include "renderCompress.h"

@@ -7,9 +7,9 @@
 //////////////
 #include<cmath>
 #include "system.h"
-#include "Transform.cpp"
+#include "Transform.h"
 #include "Enemy_Patern.h"
-#include "PhysicBody.cpp"
+#include "PhysicBody.h"
 
 
 /////////////

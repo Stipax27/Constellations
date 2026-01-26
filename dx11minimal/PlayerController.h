@@ -16,9 +16,9 @@
 #include "world.h"
 #include "entity.h"
 
-#include "Transform.cpp"
-#include "PhysicBody.cpp"
-#include "Constellation.cpp"
+#include "Transform.h"
+#include "PhysicBody.h"
+#include "Constellation.h"
 
 #include "PlayerAbilities.h"
 

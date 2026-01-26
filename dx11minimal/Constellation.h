@@ -1,5 +1,5 @@
-#ifndef _CONSTELLATION_C_
-#define _CONSTELLATION_C_
+#ifndef _CONSTELLATION_H_
+#define _CONSTELLATION_H_
 
 #include "component.h"
 #include "point3d.h"

@@ -1,5 +1,5 @@
-#ifndef _MULTI_DAMAGE_GIVER_C_
-#define _MULTI_DAMAGE_GIVER_C_
+#ifndef _MULTI_DAMAGE_GIVER_H_
+#define _MULTI_DAMAGE_GIVER_H_
 
 #include "component.h"
 #include "timer.h"

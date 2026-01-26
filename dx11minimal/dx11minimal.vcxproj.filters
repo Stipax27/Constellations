@@ -15,12 +15,6 @@
     <ClCompile Include="BaseStar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DelayedDestroy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EntityManagerSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Explosion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -39,25 +33,10 @@
     <ClCompile Include="PlayerAbilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Constellation.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
     <ClCompile Include="MeshSystem.cpp">
       <Filter>Source Files\Render</Filter>
     </ClCompile>
-    <ClCompile Include="PointCloud.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteCluster.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
     <ClCompile Include="SpriteSystem.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Star.cpp">
       <Filter>Source Files\Render</Filter>
     </ClCompile>
     <ClCompile Include="CollisionDrawSystem.cpp">
@@ -72,19 +51,7 @@
     <ClCompile Include="MethodOfClosest.cpp">
       <Filter>Source Files\Physic</Filter>
     </ClCompile>
-    <ClCompile Include="PhysicBody.cpp">
-      <Filter>Source Files\Physic</Filter>
-    </ClCompile>
     <ClCompile Include="PhysicSystem.cpp">
-      <Filter>Source Files\Physic</Filter>
-    </ClCompile>
-    <ClCompile Include="PlaneCollider.cpp">
-      <Filter>Source Files\Physic</Filter>
-    </ClCompile>
-    <ClCompile Include="SphereCollider.cpp">
-      <Filter>Source Files\Physic</Filter>
-    </ClCompile>
-    <ClCompile Include="SurfaceCollider.cpp">
       <Filter>Source Files\Physic</Filter>
     </ClCompile>
     <ClCompile Include="dx11.cpp">
@@ -100,15 +67,6 @@
       <Filter>Source Files\System</Filter>
     </ClCompile>
     <ClCompile Include="CombatSystem.cpp">
-      <Filter>Source Files\Combat</Filter>
-    </ClCompile>
-    <ClCompile Include="Health.cpp">
-      <Filter>Source Files\Combat</Filter>
-    </ClCompile>
-    <ClCompile Include="MultiDamageGiver.cpp">
-      <Filter>Source Files\Combat</Filter>
-    </ClCompile>
-    <ClCompile Include="SingleDamageGiver.cpp">
       <Filter>Source Files\Combat</Filter>
     </ClCompile>
     <ClCompile Include="timer.cpp">
@@ -144,17 +102,11 @@
     <ClCompile Include="FrustumClass.cpp">
       <Filter>Source Files\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Button.cpp">
-      <Filter>Source Files\Render\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Rect.cpp">
-      <Filter>Source Files\Render\UI</Filter>
-    </ClCompile>
     <ClCompile Include="UISystem.cpp">
       <Filter>Source Files\Render\UI</Filter>
     </ClCompile>
-    <ClCompile Include="TextLabel.cpp">
-      <Filter>Source Files\Render\UI</Filter>
+    <ClCompile Include="EntityManagerSystem.cpp">
+      <Filter>Source Files\EntityManagment</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -253,6 +205,63 @@
     </ClInclude>
     <ClInclude Include="FistsClass.h">
       <Filter>Header Files\PlayerWeapon</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitter.h">
+      <Filter>Header Files\ECS base\Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="PointCloud.h">
+      <Filter>Header Files\ECS base\Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteCluster.h">
+      <Filter>Header Files\ECS base\Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Constellation.h">
+      <Filter>Header Files\ECS base\Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files\ECS base\Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Star.h">
+      <Filter>Header Files\ECS base\Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Header Files\ECS base\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Health.h">
+      <Filter>Header Files\ECS base\Components\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleDamageGiver.h">
+      <Filter>Header Files\ECS base\Components\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiDamageGiver.h">
+      <Filter>Header Files\ECS base\Components\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files\ECS base\Components\Render\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Rect.h">
+      <Filter>Header Files\ECS base\Components\Render\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TextLabel.h">
+      <Filter>Header Files\ECS base\Components\Render\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicBody.h">
+      <Filter>Header Files\ECS base\Components\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="PlaneCollider.h">
+      <Filter>Header Files\ECS base\Components\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereCollider.h">
+      <Filter>Header Files\ECS base\Components\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="SurfaceCollider.h">
+      <Filter>Header Files\ECS base\Components\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="DelayedDestroy.h">
+      <Filter>Header Files\ECS base\Components\EntityManagment</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionGroup.h">
+      <Filter>Header Files\Enums</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -454,6 +463,27 @@
     </Filter>
     <Filter Include="Header Files\Utils">
       <UniqueIdentifier>{6140eb2c-475c-46c4-866d-6e7b2564880c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Components">
+      <UniqueIdentifier>{b21ea245-af26-4e6a-bef6-ff7c61d2c465}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Components\Render">
+      <UniqueIdentifier>{dd034252-9b43-4801-ad5f-68d4c39ca6fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Components\Combat">
+      <UniqueIdentifier>{5b41c122-efb6-4121-9b82-27e69f096143}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Components\Render\UI">
+      <UniqueIdentifier>{b5fa5c8a-08e2-4cce-b755-1a13d518d35e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Components\Physic">
+      <UniqueIdentifier>{18b7899b-4dd6-47ca-b9e1-9caf4ddb781a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\EntityManagment">
+      <UniqueIdentifier>{7fd2d49d-bf4a-4917-a60a-9681de3f0141}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Components\EntityManagment">
+      <UniqueIdentifier>{1c127b4f-b832-48d9-96f3-2f2e710d2814}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

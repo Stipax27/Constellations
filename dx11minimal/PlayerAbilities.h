@@ -12,12 +12,12 @@
 
 #include "Point3d.h"
 
-#include "Transform.cpp"
-#include "PhysicBody.cpp"
-#include "SphereCollider.cpp"
-#include "Star.cpp"
-#include "DelayedDestroy.cpp"
-#include "SingleDamageGiver.cpp"
+#include "Transform.h"
+#include "PhysicBody.h"
+#include "SphereCollider.h"
+#include "Star.h"
+#include "DelayedDestroy.h"
+#include "SingleDamageGiver.h"
 
 
 /////////////

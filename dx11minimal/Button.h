@@ -1,5 +1,5 @@
-#ifndef _BUTTON_C_
-#define _BUTTON_C_
+#ifndef _BUTTON_H_
+#define _BUTTON_H_
 
 #include "component.h"
 #include "point3d.h"

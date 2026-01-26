@@ -6,11 +6,12 @@
 //////////////
 #include<cmath>
 #include "system.h"
-#include "Transform.cpp"
-#include "SpriteCluster.cpp"
-#include "Constellation.cpp"
-#include "Star.cpp"
-#include "PointCloud.cpp"
+#include "Transform.h"
+#include "SpriteCluster.h"
+#include "Constellation.h"
+#include "Star.h"
+#include "PointCloud.h"
+#include "ParticleEmitter.h"
 
 #include "frustumclass.h"
 #include "Explosion.cpp" 
@@ -64,7 +65,7 @@ public:
 					Transform worldTransform = GetWorldTransform(entity);
 
 					Constellation* constellation = entity->GetComponent<Constellation>();
-					if (constellation != nullptr) {
+					if (constellation != nullptr && constellation->active) {
 						point3d transformPos = transform->position;
 						vector<point3d> transformedStars;
 						int count;
@@ -129,7 +130,7 @@ public:
 					}
 
 					Star* star = entity->GetComponent<Star>();
-					if (star != nullptr) {
+					if (star != nullptr && star->active) {
 						if (frustum->CheckSphere(worldTransform.position, star->radius)) {
 
 							ConstBuf::global[0] = XMFLOAT4(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, star->crownRadius);
@@ -149,10 +150,122 @@ public:
 							context->Draw(n * 3, 0);
 						}
 					}
+
+					PointCloud* pointCloud = entity->GetComponent<PointCloud>();
+					if (pointCloud != nullptr && pointCloud->active) {
+						Transform cloudTransform = worldTransform;
+
+						cloudTransform.position += (cloudTransform.GetRightVector() * pointCloud->position.x + cloudTransform.GetUpVector() * pointCloud->position.y + cloudTransform.GetLookVector() * pointCloud->position.z) * cloudTransform.scale;
+						cloudTransform.scale *= pointCloud->scale;
+						cloudTransform.mRotation = pointCloud->mRotation * cloudTransform.mRotation;
+
+
+						//if (frustum->CheckSphere(worldTransform.position, worldTransform.scale.magnitude())) {
+							//ConstBuf::CreateVertexBuffer(15);
+
+						UpdateWorldMatrix(cloudTransform);
+
+						ConstBuf::drawerV[0] = pointCloud->pointSize;
+						ConstBuf::global[0] = XMFLOAT4(pointCloud->color.x, pointCloud->color.y, pointCloud->color.z, pointCloud->brightness);
+						ConstBuf::Update(0, ConstBuf::drawerV);
+						ConstBuf::Update(5, ConstBuf::global);
+						ConstBuf::ConstToGeometry(0);
+						ConstBuf::ConstToPixel(5);
+
+						//Rasterizer::Cull(Rasterizer::cullmode::front);
+
+						//Shaders::vShader(17);
+						//Shaders::pShader(17);
+						////Shaders::gShader(17);
+
+						//InputAssembler::IA(InputAssembler::topology::triList);
+						////context->DrawIndexed(16777216, 0, 0);
+						//context->DrawInstanced(6, 2097152, 0, 0);
+
+
+						Shaders::vShader(17);
+						Shaders::pShader(17);
+						Shaders::gShader(17);
+
+						InputAssembler::IA(InputAssembler::topology::pointList);
+						InputAssembler::vBuffer(pointCloud->index);
+
+						context->DrawIndexedInstanced(Models::Model[pointCloud->index].indexes, pointCloud->instances, 0, 0, 0);
+						//context->DrawInstanced(1, 2097152 / 6, 0, 0);
+					//}
+
+					}
+
+					ParticleEmitter* particleEmitter = entity->GetComponent<ParticleEmitter>();
+					if (particleEmitter != nullptr) {
+
+						if (particleEmitter->active) {
+							float emitDelta = 500 / particleEmitter->rate;
+							if (timer::deltaTime >= emitDelta)
+							{
+								particleEmitter->lastEmitTime = timer::currentTime;
+
+								for (int i = 0; i < min((int)(timer::deltaTime / emitDelta), constCount - 1); i++)
+								{
+									particleEmitter->particles.push_back(timer::currentTime);
+								}
+							}
+						}
+
+						ConstBuf::global[0] = XMFLOAT4(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, (float)particleEmitter->lifetime);
+
+						int i = 0;
+						DWORD curTime = timer::GetCounter();
+						while (i < particleEmitter->particles.size())
+						{
+							DWORD startTime = particleEmitter->particles[i];
+
+							if (curTime - startTime < particleEmitter->lifetime)
+							{
+								if (i < constCount - 1) {
+									ConstBuf::global[i + 1].w = (float)particleEmitter->particles[i];
+								}
+
+								i++;
+							}
+							else
+							{
+								particleEmitter->particles.erase(particleEmitter->particles.begin() + i);
+							}
+						}
+
+						ConstBuf::Update(5, ConstBuf::global);
+						ConstBuf::ConstToVertex(5);
+
+						size_t size = particleEmitter->particles.size();
+						if (size > 0) {
+							Shaders::vShader(particleEmitter->vShader);
+							Shaders::pShader(particleEmitter->pShader);
+							Shaders::gShader(particleEmitter->gShader);
+
+							/*for (int i = 0; i < size; i++) {
+								ConstBuf::global[i + 1].w = (float)particleEmitter->particles[i];
+							}*/
+
+							ConstBuf::Update(5, ConstBuf::global);
+							ConstBuf::ConstToVertex(5);
+							ConstBuf::ConstToPixel(5);
+							ConstBuf::ConstToGeometry(5);
+
+							if (particleEmitter->gShader == 0) {
+								InputAssembler::IA(InputAssembler::topology::triList);
+							}
+							else {
+								InputAssembler::IA(InputAssembler::topology::pointList);
+							}
+
+							context->DrawInstanced(6, min(size, constCount - 1), 0, 0);
+						}
+					}
 				}
 
 				SpriteCluster* spriteCluster = entity->GetComponent<SpriteCluster>();
-				if (spriteCluster != nullptr) {
+				if (spriteCluster != nullptr && spriteCluster->active) {
 					if (transform == nullptr || frustum->CheckSphere(transform->position, spriteCluster->frustumRadius)) {
 						ConstBuf::drawerV[0] = entity->timeScale;
 						ConstBuf::Update(0, ConstBuf::drawerV);
@@ -239,73 +352,28 @@ public:
 					}
 				}
 
-				PointCloud* pointCloud = entity->GetComponent<PointCloud>();
-				if (pointCloud != nullptr) {
-					Transform worldTransform = GetWorldTransform(entity);
+				//Explosion* explosion = entity->GetComponent<Explosion>();
 
-					worldTransform.position += (worldTransform.GetRightVector() * pointCloud->position.x + worldTransform.GetUpVector() * pointCloud->position.y + worldTransform.GetLookVector() * pointCloud->position.z) * worldTransform.scale;
-					worldTransform.scale *= pointCloud->scale;
-					worldTransform.mRotation = pointCloud->mRotation * worldTransform.mRotation;
+				//if (explosion != nullptr) {
 
+				//	Shaders::vShader(1);
+				//	Shaders::pShader(1);
 
-					//if (frustum->CheckSphere(worldTransform.position, worldTransform.scale.magnitude())) {
-						//ConstBuf::CreateVertexBuffer(15);
+				//	transform->position;
+				//	explosion->radius = min(explosion->max_radius, explosion->radius + explosion->speed * deltaTime);
 
-						UpdateWorldMatrix(worldTransform);
+				//	ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, explosion->radius);
+				//	ConstBuf::Update(5, ConstBuf::global);
+				//	ConstBuf::ConstToVertex(5);
+				//	ConstBuf::ConstToPixel(5);
 
-						ConstBuf::drawerV[0] = pointCloud->pointSize;
-						ConstBuf::global[0] = XMFLOAT4(pointCloud->color.x, pointCloud->color.y, pointCloud->color.z, pointCloud->brightness);
-						ConstBuf::Update(0, ConstBuf::drawerV);
-						ConstBuf::Update(5, ConstBuf::global);
-						ConstBuf::ConstToGeometry(0);
-						ConstBuf::ConstToPixel(5);
-
-						//Rasterizer::Cull(Rasterizer::cullmode::front);
-
-						//Shaders::vShader(17);
-						//Shaders::pShader(17);
-						////Shaders::gShader(17);
-
-						//InputAssembler::IA(InputAssembler::topology::triList);
-						////context->DrawIndexed(16777216, 0, 0);
-						//context->DrawInstanced(6, 2097152, 0, 0);
-
-
-						Shaders::vShader(17);
-						Shaders::pShader(17);
-						Shaders::gShader(17);
-
-						InputAssembler::IA(InputAssembler::topology::pointList);
-						InputAssembler::vBuffer(pointCloud->index);
-
-						context->DrawIndexedInstanced(Models::Model[pointCloud->index].indexes, pointCloud->instances, 0, 0, 0);
-						//context->DrawInstanced(1, 2097152 / 6, 0, 0);
-					//}
-
-				}
-
-				Explosion* explosion = entity->GetComponent<Explosion>();
-
-				if (explosion != nullptr) {
-
-					Shaders::vShader(1);
-					Shaders::pShader(1);
-
-					transform->position;
-					explosion->radius = min(explosion->max_radius, explosion->radius + explosion->speed * deltaTime);
-
-					ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, explosion->radius);
-					ConstBuf::Update(5, ConstBuf::global);
-					ConstBuf::ConstToVertex(5);
-					ConstBuf::ConstToPixel(5);
-
-					Draw::Drawer(1);
-					if (timer::currentTime - explosion->lifeStartTime >= explosion->lifeTime)
-					{
-						//entity->RemoveComponent<Explosion>();
-						entity->SetActive(false);
-					}
-				}
+				//	Draw::Drawer(1);
+				//	if (timer::currentTime - explosion->lifeStartTime >= explosion->lifeTime)
+				//	{
+				//		//entity->RemoveComponent<Explosion>();
+				//		entity->SetActive(false);
+				//	}
+				//}
 			}
 		}
 	}

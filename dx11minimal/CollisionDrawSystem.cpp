@@ -6,11 +6,11 @@
 //////////////
 #include<cmath>
 #include "system.h"
-#include "Transform.cpp"
+#include "Transform.h"
 
-#include "SphereCollider.cpp"
-#include "PlaneCollider.cpp"
-#include "SurfaceCollider.cpp"
+#include "SphereCollider.h"
+#include "PlaneCollider.h"
+#include "SurfaceCollider.h"
 
 #include "cameraclass.h"
 
@@ -69,7 +69,14 @@ public:
 					SphereCollider* sphereCollider = entity->GetComponent<SphereCollider>();
 					if (sphereCollider != nullptr) {
 						ConstBuf::global[0].w = sphereCollider->radius;
-						ConstBuf::global[1] = XMFLOAT4(1, 0, 0, 0);
+
+						if (sphereCollider->active) {
+							ConstBuf::global[1] = XMFLOAT4(1, 0, 0, 0);
+						}
+						else {
+							ConstBuf::global[1] = XMFLOAT4(0.5f, 0.5f, 0.5f, 0);
+						}
+
 						ConstBuf::Update(5, ConstBuf::global);
 						ConstBuf::ConstToVertex(5);
 

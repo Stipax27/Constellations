@@ -1,5 +1,5 @@
-#ifndef _SPRITECLUSTER_C_
-#define _SPRITECLUSTER_C_
+#ifndef _SPRITECLUSTER_H_
+#define _SPRITECLUSTER_H_
 
 #include "component.h"
 #include "renderCompress.h"

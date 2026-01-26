@@ -96,6 +96,7 @@ void PlayerAbilities::Attack(Transform startTransform, point3d direction)
 		SingleDamageGiver* singleDamageGiver = projectile->AddComponent<SingleDamageGiver>();
 		singleDamageGiver->target = Fraction::Enemy;
 		singleDamageGiver->damage = 5.0f;
+		singleDamageGiver->maxHitCount = 3;
 
 		DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
 		delayedDestroy->lifeTime = 5000;
@@ -104,6 +105,33 @@ void PlayerAbilities::Attack(Transform startTransform, point3d direction)
 	}
 	case PlayerWeapons::Bow:
 	{
+		Entity* projectile = world->CreateEntity("PlayerProjectile");
+		Transform* transform = projectile->AddComponent<Transform>();
+		transform->position = startTransform.position;
+		transform->mRotation = startTransform.mRotation;
+
+		PhysicBody* physicBody = projectile->AddComponent<PhysicBody>();
+		physicBody->airFriction = 0.0f;
+		physicBody->velocity = direction.normalized() * 150.0f;
+
+		Star* star = projectile->AddComponent<Star>();
+		star->radius = 0.4f;
+		star->color1 = point3d(0.9f, 1.0f, 0.99f);
+		star->color2 = point3d(0.34f, 0.8f, 0.45f);
+		star->crownColor = point3d(0.27f, 0.63f, 1.0f);
+
+		SingleDamageGiver* singleDamageGiver = projectile->AddComponent<SingleDamageGiver>();
+		singleDamageGiver->target = Fraction::Enemy;
+		singleDamageGiver->damage = 15.0f;
+		singleDamageGiver->maxHitCount = 5;
+
+		SphereCollider* sphereCollider = projectile->AddComponent<SphereCollider>();
+		sphereCollider->isTouchable = false;
+		sphereCollider->radius = 0.4f;
+
+		DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
+		delayedDestroy->lifeTime = 5000;
+
 		break;
 	}
 	}

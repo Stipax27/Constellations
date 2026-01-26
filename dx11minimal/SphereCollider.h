@@ -1,5 +1,5 @@
-#ifndef _SPHERECOLLIDER_C_
-#define _SPHERECOLLIDER_C_
+#ifndef _SPHERECOLLIDER_H_
+#define _SPHERECOLLIDER_H_
 
 #include "collider.h"
 

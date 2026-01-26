@@ -1,5 +1,5 @@
-#ifndef _TEXTLABEL_C_
-#define _TEXTLABEL_C_
+#ifndef _TEXTLABEL_H_
+#define _TEXTLABEL_H_
 
 #include "component.h"
 #include "point3d.h"

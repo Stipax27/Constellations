@@ -1,5 +1,5 @@
-#ifndef _STAR_C_
-#define _STAR_C_
+#ifndef _STAR_H_
+#define _STAR_H_
 
 #include "component.h"
 #include "Point3d.h"

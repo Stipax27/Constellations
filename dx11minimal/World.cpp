@@ -50,6 +50,7 @@ Entity* World::CreateEntity(string Name, Entity* Parent)
 {
 	Entity* entity = new Entity;
 	entity->name = Name;
+	entity->SetId(entityCount++);
 
 	if (Parent != nullptr) {
 		Parent->AddChild(entity);
@@ -100,10 +101,11 @@ void World::PreCalculations()
 
 void World::UpdatePhysic()
 {
+	double deltaTime = timer::deltaTime / 1000;
 	size_t size = physicSystems.size();
 	for (int i = 0; i < size; i++)
 	{
-		physicSystems[i]->Update(entities, 0.01f);
+		physicSystems[i]->Update(entities, deltaTime);
 	}
 	CleanMem();
 }
@@ -112,7 +114,7 @@ void World::UpdatePhysic()
 void World::UpdateRender()
 {
 	// Updating time in const buffer
-	ConstBuf::frame.time = XMFLOAT4{ (float)(timer::frameBeginTime * 0.01f), 0, 0, 0 };
+	ConstBuf::frame.time = XMFLOAT4{ (float)timer::frameBeginTime * 0.01f, 0, 0, 0 };
 	ConstBuf::UpdateFrame();
 	ConstBuf::ConstToVertex(4);
 	ConstBuf::ConstToGeometry(4);
@@ -137,10 +139,11 @@ void World::UpdateRender()
 
 	m_Camera->Render();
 
+	double deltaTime = timer::deltaTime / 1000;
 	size_t size = renderSystems.size();
 	for (int i = 0; i < size; i++)
 	{
-		renderSystems[i]->Update(entities, timer::deltaTime);
+		renderSystems[i]->Update(entities, deltaTime);
 	}
 
 	Textures::CreateMipMap();

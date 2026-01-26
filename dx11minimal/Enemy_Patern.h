@@ -11,8 +11,8 @@
 #include <DirectXMath.h>
 #include "SplinePath.cpp"
 #include "entity.h"
-#include "Transform.cpp"
-#include "Constellation.cpp"
+#include "Transform.h"
+#include "Constellation.h"
 #include "timer.h"
 
 enum class AIBehaviorType

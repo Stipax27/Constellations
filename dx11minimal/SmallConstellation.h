@@ -1,9 +1,9 @@
 #include "Explosion.cpp"
 #include "world.h"
 #include "Enemy_Patern.h"
-#include "Transform.cpp"
-#include "PhysicBody.cpp"
-#include "Constellation.cpp"
+#include "Transform.h"
+#include "PhysicBody.h"
+#include "Constellation.h"
 #include "timer.h"
 #include <cstdlib>
 #include <cmath> 

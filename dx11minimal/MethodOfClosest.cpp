@@ -2,7 +2,7 @@
 #define SURFACECOLLISION_CPP
 
 #include "MethodOfClosest.h"
-#include "SurfaceCollider.cpp"
+#include "SurfaceCollider.h"
 #include <cmath>
 #include <random>
 

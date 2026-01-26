@@ -8,6 +8,7 @@
 // INCLUDES //
 //////////////
 #include "component.h"
+#include "CollisionGroup.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Struct name: Collider
@@ -18,6 +19,8 @@ struct Collider : Component
 	float softness = 0.0f;
 	bool isTouchable = true;
 	bool anti = false;
+
+	CollisionFilter::Group collisionGroup = CollisionFilter::Group::Projectile;
 };
 
 #endif

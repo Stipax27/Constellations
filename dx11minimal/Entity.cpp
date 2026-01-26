@@ -31,6 +31,13 @@ bool Entity::IsDeleting() {
 }
 
 
+void Entity::SetId(int ID) {
+	if (id == -1) {
+		id = ID;
+	}
+}
+
+
 int Entity::GetId() {
 	return id;
 }

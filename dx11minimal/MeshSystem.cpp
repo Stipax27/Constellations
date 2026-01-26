@@ -6,10 +6,10 @@
 //////////////
 #include<cmath>
 #include "system.h"
-#include "Transform.cpp"
-#include "Mesh.cpp"
-#include "Constellation.cpp"
-#include "Star.cpp"
+#include "Transform.h"
+#include "Mesh.h"
+#include "Constellation.h"
+#include "Star.h"
 
 #include "frustumclass.h"
 #include "cameraclass.h"
@@ -68,7 +68,7 @@ public:
 					Transform worldTransform = GetWorldTransform(entity);
 
 					Mesh* mesh = entity->GetComponent<Mesh>();
-					if (mesh != nullptr) {
+					if (mesh != nullptr && mesh->active) {
 						if (entity->parent != nullptr && !entity->parent->HasComponent<Transform>()) {
 							transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -2 * RAD) * transform->mRotation;
 						}
@@ -92,7 +92,7 @@ public:
 					}
 
 					Constellation* constellation = entity->GetComponent<Constellation>();
-					if (constellation != nullptr) {
+					if (constellation != nullptr && constellation->active) {
 						point3d transformPos = transform->position;
 						vector<point3d> transformedStars;
 
@@ -170,7 +170,7 @@ public:
 					}
 
 					Star* star = entity->GetComponent<Star>();
-					if (star != nullptr) {
+					if (star != nullptr && star->active) {
 						if (frustum->CheckSphere(worldTransform.position, star->radius)) {
 							ConstBuf::drawerMatrix[0] = GetWorldMatrix(worldTransform);
 							ConstBuf::Update(8, ConstBuf::drawerMatrix);

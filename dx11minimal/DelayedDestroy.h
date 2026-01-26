@@ -1,5 +1,5 @@
-#ifndef _DELAYED_DESTROY_C_
-#define _DELAYED_DESTROY_C_
+#ifndef _DELAYED_DESTROY_H_
+#define _DELAYED_DESTROY_H_
 
 #include "component.h"
 #include "timer.h"

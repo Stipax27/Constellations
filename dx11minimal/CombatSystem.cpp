@@ -6,8 +6,8 @@
 //////////////
 #include<cmath>
 #include "system.h"
-#include "Transform.cpp"
-#include "Health.cpp"
+#include "Transform.h"
+#include "Health.h"
 
 
 class CombatSystem : public System
@@ -36,7 +36,7 @@ public:
 			if (IsEntityValid(entity)) {
 				
 				Health* health = entity->GetComponent<Health>();
-				if (health != nullptr) {
+				if (health != nullptr && health->active) {
 					health->hp = clamp(health->hp, 0, health->maxHp);
 					if (health->hp == 0.0f) {
 						entity->Destroy();

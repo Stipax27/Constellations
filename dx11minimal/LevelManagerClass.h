@@ -22,13 +22,6 @@
 
 #include "CollisionManagerClass.h"
 
-#include "Transform.cpp"
-#include "PhysicBody.cpp"
-#include "SphereCollider.cpp"
-#include "PlaneCollider.cpp"
-#include "SpriteCluster.cpp"
-#include "Constellation.cpp"
-#include "Explosion.cpp"
 #include "SplinePath.cpp"
 #include "Patern_Enemy_Logik.cpp"
 
@@ -41,7 +34,6 @@
 #include "CollisionSystem.cpp"
 #include "CombatSystem.cpp"
 #include "EntityManagerSystem.cpp"
-#include "Star.cpp"
 
 #include "CollisionDrawSystem.cpp"
 

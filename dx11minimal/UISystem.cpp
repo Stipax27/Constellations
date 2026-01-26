@@ -6,10 +6,10 @@
 //////////////
 #include<cmath>
 #include "system.h"
-#include "Transform.cpp"
-#include "Rect.cpp"
-#include "Button.cpp"
-#include "TextLabel.cpp"
+#include "Transform.h"
+#include "Rect.h"
+#include "Button.h"
+#include "TextLabel.h"
 //#include "font.h"
 
 #include "mouseclass.h"
@@ -138,10 +138,10 @@ public:
 				Transform transform = GetWorldTransform(entity);
 
 				Rect* rect = entity->GetComponent<Rect>();
-				if (rect != nullptr) {
+				if (rect != nullptr && rect->active) {
 						
 					Button* button = entity->GetComponent<Button>();
-					if (button != nullptr) {
+					if (button != nullptr && button->active) {
 
 						point3d halfSize = transform.scale / 2;
 						point3d realPos = transform.position - rect->anchorPoint * halfSize;

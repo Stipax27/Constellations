@@ -1,5 +1,5 @@
-#ifndef _MESH_C_
-#define _MESH_C_
+#ifndef _MESH_H_
+#define _MESH_H_
 
 #include "component.h"
 #include "dx11.h"

@@ -76,6 +76,7 @@ private:
 	vector<unique_ptr<System>> renderSystems;
 
 	bool firstFrame = true;
+	int entityCount = 0;
 };
 
 #endif

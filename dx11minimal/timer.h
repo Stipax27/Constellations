@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _TIMER_H_
+#define _TIMER_H_
 
 #include <wtypes.h>
 
@@ -12,10 +13,12 @@ namespace timer
 	extern double nextFrameTime;
 	extern double frameRenderingDuration;
 	
-	extern DWORD currentTime;
-	extern DWORD lastFrameTime;
-	extern DWORD deltaTime;
+	extern double currentTime;
+	extern double lastFrameTime;
+	extern double deltaTime;
 
 	void StartCounter();
 	double GetCounter();
 }
+
+#endif

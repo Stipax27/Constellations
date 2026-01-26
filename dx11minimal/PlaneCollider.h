@@ -1,5 +1,5 @@
-#ifndef _PLANECOLLIDER_C_
-#define _PLANECOLLIDER_C_
+#ifndef _PLANECOLLIDER_H_
+#define _PLANECOLLIDER_H_
 
 #include "collider.h"
 #include "point3d.h"

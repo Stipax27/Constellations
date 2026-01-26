@@ -1,5 +1,5 @@
-#ifndef _PHYSICBODY_C_
-#define _PHYSICBODY_C_
+#ifndef _PHYSICBODY_H_
+#define _PHYSICBODY_H_
 
 #include "component.h"
 #include "point3d.h"
@@ -18,6 +18,7 @@ struct PhysicBody : Component
 	};
 
 	bool useGravity = true;
+	bool preciseMovement = false;
 };
 
 #endif
