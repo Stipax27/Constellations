@@ -176,6 +176,7 @@
     <ClInclude Include="CollisionManagerClass.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="Constellation.h" />
+    <ClInclude Include="cornerType.h" />
     <ClInclude Include="DelayedDestroy.h" />
     <ClInclude Include="FistsClass.h" />
     <ClInclude Include="fraction.h" />
@@ -212,6 +213,7 @@
     <ClInclude Include="system.h" />
     <ClInclude Include="TextLabel.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="Transform2D.h" />
     <ClInclude Include="windowclass.h" />
     <ClInclude Include="world.h" />
     <None Include="Shaders\DepthDown.shader">
@@ -463,6 +465,7 @@
     <ClCompile Include="SpriteSystem.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="Transform2D.cpp" />
     <ClCompile Include="UISystem.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="WindowClass.cpp" />

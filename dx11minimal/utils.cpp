@@ -83,6 +83,35 @@ Transform GetWorldTransform(Entity* entity) {
     return worldTransform;
 }
 
+Transform2D GetWorldTransform2D(Entity* entity) {
+    Transform2D worldTransform2D = Transform2D();
+
+    Transform2D* originTransform2D = entity->GetComponent<Transform2D>();
+    if (originTransform2D != nullptr) {
+
+        vector<Transform2D*> transforms2d = { originTransform2D };
+
+        Entity* ancestor = entity->parent;
+        while (ancestor != nullptr) {
+
+            Transform2D* parentTransform2D = ancestor->GetComponent<Transform2D>();
+            if (parentTransform2D != nullptr) {
+                transforms2d.push_back(parentTransform2D);
+                ancestor = ancestor->parent;
+            }
+            else {
+                break;
+            }
+        }
+
+        for (int i = transforms2d.size() - 1; i >= 0; i--) {
+            worldTransform2D += *transforms2d[i];
+        }
+    }
+
+    return worldTransform2D;
+}
+
 bool IsEntityValid(Entity* entity) {
     return entity != nullptr && entity->IsActive();
 }

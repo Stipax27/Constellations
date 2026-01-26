@@ -12,6 +12,7 @@
 
 #include "entity.h"
 #include "Transform.h"
+#include "Transform2D.h"
 
 
 /////////////
@@ -35,6 +36,7 @@ DirectX::XMVECTOR eulerToQuanternion(float x, float y, float z);
 int getRandom(int min = 1, int max = 0);
 
 Transform GetWorldTransform(Entity*);
+Transform2D GetWorldTransform2D(Entity*);
 bool IsEntityValid(Entity*);
 
 bool IsKeyPressed(const int);

@@ -139,71 +139,46 @@ public:
 
 				Rect* rect = entity->GetComponent<Rect>();
 				if (rect != nullptr && rect->active) {
-						
-					Button* button = entity->GetComponent<Button>();
-					if (button != nullptr && button->active) {
+					Shaders::pShader(13 + (int)rect->cornerType);
 
-						point3d halfSize = transform.scale / 2;
-						point3d realPos = transform.position - rect->anchorPoint * halfSize;
+					ConstBuf::global[0].w = rect->cornerRadius;
+					ConstBuf::global[3] = XMFLOAT4(rect->color.x, rect->color.y, rect->color.z, 0);
 
-						/*if (transform.position - (transform.scale / 2) * (rect->anchorPoint + 1) <= mouse->pos.x <= transform.position + (transform.scale / 2) * (rect->anchorPoint - 1)) {
-							if (IsKeyPressed(VK_LBUTTON)) {
-								rect->color = point3d(1, 0, 0);
-							}
+					DrawUiObject(rect, transform);
+				}
+
+				Button* button = entity->GetComponent<Button>();
+				if (button != nullptr && button->active) {
+
+					point3d halfSize = transform.scale / 2;
+					point3d realPos = transform.position - button->anchorPoint * halfSize;
+
+					/*if (transform.position - (transform.scale / 2) * (button->anchorPoint + 1) <= mouse->pos.x <= transform.position + (transform.scale / 2) * (button->anchorPoint - 1)) {
+						if (IsKeyPressed(VK_LBUTTON)) {
+							button->color = point3d(1, 0, 0);
 						}
-						else {
-							if (IsKeyPressed(VK_LBUTTON)) {
-								rect->color = point3d(0.5f, 0.25f, 0.8f);
-							}
-						}*/
-
-						if (mouse->pos.x <= realPos.x + transform.scale.x && mouse->pos.x >= realPos.x - transform.scale.x && mouse->pos.y <= realPos.y + transform.scale.y && mouse->pos.y >= realPos.y - transform.scale.y) {
-							if (IsKeyPressed(VK_LBUTTON)) {
-								rect->color = point3d(1, 0, 0);
-							}
+					}
+					else {
+						if (IsKeyPressed(VK_LBUTTON)) {
+							button->color = point3d(0.5f, 0.25f, 0.8f);
 						}
-						else {
-							if (IsKeyPressed(VK_LBUTTON)) {
-								rect->color = point3d(0.5f, 0.25f, 0.8f);
-							}
+					}*/
+
+					if (mouse->pos.x <= realPos.x + transform.scale.x && mouse->pos.x >= realPos.x - transform.scale.x && mouse->pos.y <= realPos.y + transform.scale.y && mouse->pos.y >= realPos.y - transform.scale.y) {
+						if (IsKeyPressed(VK_LBUTTON)) {
+							button->color = point3d(1, 0, 0);
+						}
+					}
+					else {
+						if (IsKeyPressed(VK_LBUTTON)) {
+							button->color = point3d(0.5f, 0.25f, 0.8f);
 						}
 					}
 
-					if (rect->opacity > 0.0f) {
-						Shaders::vShader(13);
-						Shaders::pShader(13 + (int)rect->cornerType);
+					Shaders::pShader(13);
+					ConstBuf::global[3] = XMFLOAT4(button->color.x, button->color.y, button->color.z, 0);
 
-						ConstBuf::global[0] = XMFLOAT4(transform.position.x, transform.position.y, transform.position.z, rect->cornerRadius);
-						ConstBuf::global[1] = XMFLOAT4(transform.scale.x, transform.scale.y, 0, 0);
-						ConstBuf::global[2] = XMFLOAT4(rect->anchorPoint.x, rect->anchorPoint.y, rect->rotation, 0);
-						ConstBuf::global[3] = XMFLOAT4(rect->color.x, rect->color.y, rect->color.z, rect->opacity);
-
-						switch (rect->ratio)
-						{
-						case ScreenAspectRatio::XY:
-							ConstBuf::global[1].z = 1;
-							ConstBuf::global[1].w = 1;
-							break;
-						case ScreenAspectRatio::YX:
-							ConstBuf::global[1].z = ConstBuf::frame.aspect.x;
-							ConstBuf::global[1].w = ConstBuf::frame.aspect.y;
-							break;
-						case ScreenAspectRatio::XX:
-							ConstBuf::global[1].z = 1;
-							ConstBuf::global[1].w = ConstBuf::frame.aspect.y;
-							break;
-						case ScreenAspectRatio::YY:
-							ConstBuf::global[1].z = ConstBuf::frame.aspect.x;
-							ConstBuf::global[1].w = 1;
-							break;
-						}
-
-						ConstBuf::Update(5, ConstBuf::global);
-						ConstBuf::ConstToVertex(5);
-						ConstBuf::ConstToPixel(5);
-
-						Draw::Drawer(1);
-					}
+					DrawUiObject(button, transform);
 				}
 
 				//TextLabel* textLabel = entity->GetComponent<TextLabel>();
@@ -267,6 +242,44 @@ public:
 
 private:
 	MouseClass* mouse;
+
+private:
+	void DrawUiObject(UIObject* object, Transform transform) {
+		if (object->opacity > 0.0f) {
+			Shaders::vShader(13);
+
+			ConstBuf::global[0] = XMFLOAT4(transform.position.x, transform.position.y, transform.position.z, ConstBuf::global[0].w);
+			ConstBuf::global[1] = XMFLOAT4(transform.scale.x, transform.scale.y, 0, 0);
+			ConstBuf::global[2] = XMFLOAT4(object->anchorPoint.x, object->anchorPoint.y, object->rotation, 0);
+			ConstBuf::global[3].w = object->opacity;
+
+			switch (object->ratio)
+			{
+			case ScreenAspectRatio::XY:
+				ConstBuf::global[1].z = 1;
+				ConstBuf::global[1].w = 1;
+				break;
+			case ScreenAspectRatio::YX:
+				ConstBuf::global[1].z = ConstBuf::frame.aspect.x;
+				ConstBuf::global[1].w = ConstBuf::frame.aspect.y;
+				break;
+			case ScreenAspectRatio::XX:
+				ConstBuf::global[1].z = 1;
+				ConstBuf::global[1].w = ConstBuf::frame.aspect.y;
+				break;
+			case ScreenAspectRatio::YY:
+				ConstBuf::global[1].z = ConstBuf::frame.aspect.x;
+				ConstBuf::global[1].w = 1;
+				break;
+			}
+
+			ConstBuf::Update(5, ConstBuf::global);
+			ConstBuf::ConstToVertex(5);
+			ConstBuf::ConstToPixel(5);
+
+			Draw::Drawer(1);
+		}
+	}
 };
 
 #endif

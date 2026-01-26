@@ -108,6 +108,9 @@
     <ClCompile Include="EntityManagerSystem.cpp">
       <Filter>Source Files\EntityManagment</Filter>
     </ClCompile>
+    <ClCompile Include="Transform2D.cpp">
+      <Filter>Source Files\ECS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseStar.h">
@@ -151,9 +154,6 @@
     </ClInclude>
     <ClInclude Include="PlayerWeaponClass.h">
       <Filter>Header Files\PlayerWeapon</Filter>
-    </ClInclude>
-    <ClInclude Include="collider.h">
-      <Filter>Header Files\ECS base</Filter>
     </ClInclude>
     <ClInclude Include="system.h">
       <Filter>Header Files\ECS base</Filter>
@@ -262,6 +262,15 @@
     </ClInclude>
     <ClInclude Include="CollisionGroup.h">
       <Filter>Header Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="cornerType.h">
+      <Filter>Header Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="collider.h">
+      <Filter>Header Files\ECS base\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform2D.h">
+      <Filter>Header Files\ECS base\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

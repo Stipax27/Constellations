@@ -2,11 +2,17 @@
 #define _BUTTON_H_
 
 #include "component.h"
-#include "point3d.h"
+#include "cornerType.h"
 
 struct Button : Component
 {
 	bool isClicked = false;
+
+	point3d color = point3d(1, 1, 1);
+	float opacity = 1.0f;
+
+	float cornerRadius = 0.0f;
+	CornerType cornerType = CornerType::Strict;
 };
 
 #endif

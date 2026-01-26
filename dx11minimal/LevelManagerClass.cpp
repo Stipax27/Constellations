@@ -84,6 +84,7 @@ bool LevelManagerClass::Initialize()
 	SpriteCluster* spriteCluster;
 	PlaneCollider* planeCollider;
 	Rect* rect;
+	Button* button;
 	TextLabel* textLabel;
 	Mesh* mesh;
 	PointCloud* pointCloud;
@@ -356,14 +357,13 @@ bool LevelManagerClass::Initialize()
 	//transform = entity->AddComponent<Transform>();
 	////transform->position = point3d(0.5f, 0.1f, 0.0f);
 	//transform->scale = point3d(0.25f, 0.05f, 0.0f);
-	//rect = entity->AddComponent<Rect>();
-	//rect->color = point3d(0.5f, 0.25f, 0.8f);
-	//rect->opacity = 1.0f;
-	//rect->anchorPoint = point3d(-1, 0, 0);
-	//rect->ratio = ScreenAspectRatio::YY;
+	//button = entity->AddComponent<Button>();
+	//button->color = point3d(0.5f, 0.25f, 0.8f);
+	//button->opacity = 1.0f;
+	//button->anchorPoint = point3d(-1, 0, 0);
+	//button->ratio = ScreenAspectRatio::YY;
 	////rect->cornerRadius = 1.0f;
-	//rect->cornerType = CornerType::Strict;
-	//entity->AddComponent<Button>();
+	////rect->cornerType = CornerType::Strict;
 
 	//entity = m_World->CreateEntity("Rect", entity);
 	//transform = entity->AddComponent<Transform>();
