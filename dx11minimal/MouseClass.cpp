@@ -16,9 +16,10 @@ MouseClass::~MouseClass()
 }
 
 
-void MouseClass::Initialize(WindowClass* Window, CameraClass* Camera) {
+void MouseClass::Initialize(WindowClass* Window, CameraClass* Camera, CollisionManagerClass* CollisionManager) {
 	window = Window;
 	camera = Camera;
+	collisionManager = CollisionManager;
 
 	state = MouseState::Centered;
 	visible = true;
@@ -27,14 +28,16 @@ void MouseClass::Initialize(WindowClass* Window, CameraClass* Camera) {
 
 void MouseClass::Shutdown()
 {
-	if (window)
-	{
+	if (window) {
 		window = 0;
 	}
 
-	if (camera)
-	{
+	if (camera) {
 		camera = 0;
+	}
+
+	if (collisionManager) {
+		collisionManager = 0;
 	}
 }
 
@@ -65,6 +68,12 @@ point3d MouseClass::GetMouseRay() {
 	XMVECTOR ray = XMVector4Transform(rayEye, XMMatrixInverse(nullptr, view));
 	point3d rayWorld = point3d(XMVectorGetX(ray), XMVectorGetY(ray), XMVectorGetZ(ray));
 	rayWorld = rayWorld.normalized();
+
+	RayInfo rayInfo = RayInfo(camera->GetPosition(), rayWorld * 1000.0f);
+	RaycastResult result = collisionManager->Raycast(rayInfo);
+	if (result.hit) {
+
+	}
 
 	return rayWorld;
 }

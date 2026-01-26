@@ -36,7 +36,7 @@ void PlayerAbilities::Attack(Transform startTransform, point3d direction)
 	switch (weapon) {
 	case PlayerWeapons::Fists:
 	{
-		Entity* projectile = world->CreateEntity("PlayerProjectile");
+		Entity* projectile = world->entityStorage->CreateEntity("PlayerProjectile");
 		Transform* transform = projectile->AddComponent<Transform>();
 		transform->position = startTransform.position;
 		transform->mRotation = startTransform.mRotation;
@@ -66,7 +66,7 @@ void PlayerAbilities::Attack(Transform startTransform, point3d direction)
 	}
 	case PlayerWeapons::Sword:
 	{
-		Entity* projectile = world->CreateEntity("PlayerProjectile");
+		Entity* projectile = world->entityStorage->CreateEntity("PlayerProjectile");
 		Transform* transform = projectile->AddComponent<Transform>();
 		transform->position = startTransform.position;
 		transform->mRotation = startTransform.mRotation;
@@ -78,7 +78,7 @@ void PlayerAbilities::Attack(Transform startTransform, point3d direction)
 		for (int i = -5; i < 6; i++) {
 			float offset = (float)i * 0.4f;
 
-			Entity* entity = world->CreateEntity("ProjectileCollider", projectile);
+			Entity* entity = world->entityStorage->CreateEntity("ProjectileCollider", projectile);
 			Transform* transform = entity->AddComponent<Transform>();
 			transform->position = point3d(offset, offset, 0);
 
@@ -105,7 +105,7 @@ void PlayerAbilities::Attack(Transform startTransform, point3d direction)
 	}
 	case PlayerWeapons::Bow:
 	{
-		Entity* projectile = world->CreateEntity("PlayerProjectile");
+		Entity* projectile = world->entityStorage->CreateEntity("PlayerProjectile");
 		Transform* transform = projectile->AddComponent<Transform>();
 		transform->position = startTransform.position;
 		transform->mRotation = startTransform.mRotation;

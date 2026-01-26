@@ -10,7 +10,7 @@
 #include <vector>
 #include <memory>
 #include "component.h"
-#include "entity.h"
+#include "entityStorage.h"
 #include "system.h"
 
 #include "cameraclass.h"
@@ -33,6 +33,7 @@ class World
 {
 public:
 	CameraClass* m_Camera;
+	EntityStorage* entityStorage;
 
 public:
 	World();
@@ -61,22 +62,16 @@ public:
 		return raw_ptr;
 	}
 
-	Entity* CreateEntity(string = "Unnamed", Entity* = nullptr);
-	//void RemoveEntityByObject(Entity*);
-
 	bool Initialize(float);
 	void Shutdown();
 	void PreCalculations();
 	void UpdatePhysic();
 	void UpdateRender();
-	void CleanMem();
 private:
-	vector<Entity*> entities;
 	vector<unique_ptr<System>> physicSystems;
 	vector<unique_ptr<System>> renderSystems;
 
 	bool firstFrame = true;
-	int entityCount = 0;
 };
 
 #endif

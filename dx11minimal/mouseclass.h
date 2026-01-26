@@ -10,6 +10,8 @@
 #include "windowclass.h"
 #include <vector>
 
+#include "CollisionManagerClass.h"
+
 using namespace std;
 
 ///////////
@@ -50,7 +52,7 @@ public:
 	MouseClass(const MouseClass&);
 	~MouseClass();
 
-	void Initialize(WindowClass* window, CameraClass* camera);
+	void Initialize(WindowClass*, CameraClass*, CollisionManagerClass*);
 	void Shutdown();
 	void Update();
 
@@ -60,6 +62,7 @@ public:
 private:
 	WindowClass* window;
 	CameraClass* camera;
+	CollisionManagerClass* collisionManager;
 };
 
 #endif

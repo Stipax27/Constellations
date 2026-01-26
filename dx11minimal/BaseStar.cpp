@@ -24,7 +24,7 @@ void BaseStar::FartingEffect() {
     point3d starPos = m_entity->GetComponent<Transform>()->position;
 
     for (int i = 0; i < 6; i++) {
-        Entity* sparkEntity = m_World->CreateEntity();
+        Entity* sparkEntity = m_World->entityStorage->CreateEntity();
         effect.push_back(sparkEntity);
         Transform* sparkTransform = sparkEntity->AddComponent<Transform>();
 
@@ -53,7 +53,7 @@ void BaseStar::Flash()
     point3d starPos = m_entity->GetComponent<Transform>()->position;
 
     // Основная мощная вспышка
-    Entity* flashEntity = m_World->CreateEntity();
+    Entity* flashEntity = m_World->entityStorage->CreateEntity();
     Transform* flashTransform = flashEntity->AddComponent<Transform>();
     flashTransform->position = starPos;
 
@@ -66,7 +66,7 @@ void BaseStar::Flash()
 
     // Дополнительные быстрые вспышки
     for (int i = 0; i < 6; i++) {
-        Entity* sparkEntity = m_World->CreateEntity();
+        Entity* sparkEntity = m_World->entityStorage->CreateEntity();
         Transform* sparkTransform = sparkEntity->AddComponent<Transform>();
 
         float angle = (i * 60.0f) * 3.14159f / 180.0f;
@@ -93,7 +93,7 @@ void BaseStar::CoronalEjection()
 
     // Фаза зарядки - интенсивные маленькие взрывы
     for (int i = 0; i < 8; i++) {
-        Entity* chargeEntity = m_World->CreateEntity();
+        Entity* chargeEntity = m_World->entityStorage->CreateEntity();
         Transform* chargeTransform = chargeEntity->AddComponent<Transform>();
 
         float angle = (rand() % 360) * 3.14159f / 180.0f;
@@ -116,7 +116,7 @@ void BaseStar::CoronalEjection()
     // Основной выброс плазмы - медленные, большие взрывы
     for (int wave = 0; wave < 2; wave++) {
         for (int i = 0; i < 15; i++) {
-            Entity* ejectionEntity = m_World->CreateEntity();
+            Entity* ejectionEntity = m_World->entityStorage->CreateEntity();
             Transform* ejectionTransform = ejectionEntity->AddComponent<Transform>();
 
             float angle = (-40.0f + i * 5.0f) * 3.14159f / 180.0f;
@@ -155,7 +155,7 @@ void BaseStar::SunWind()
         float spiralPhase = (float)spiral / (float)spirals * 2.0f * 3.14159f;
 
         for (int i = 0; i < particlesPerSpiral; i++) {
-            Entity* windEntity = m_World->CreateEntity();
+            Entity* windEntity = m_World->entityStorage->CreateEntity();
             Transform* windTransform = windEntity->AddComponent<Transform>();
 
             // Прогресс вдоль спирали (0..1)
@@ -194,7 +194,7 @@ void BaseStar::SunWind()
 
     // Добавляем центральный поток - более плотные частицы по оси
     for (int i = 0; i < 40; i++) {
-        Entity* coreEntity = m_World->CreateEntity();
+        Entity* coreEntity = m_World->entityStorage->CreateEntity();
         Transform* coreTransform = coreEntity->AddComponent<Transform>();
 
         float progress = (float)i / 40.0f;
@@ -220,7 +220,7 @@ void BaseStar::SunWind()
 
     // Вихрь у основания с более мелкими частицами
     for (int i = 0; i < 25; i++) {
-        Entity* vortexEntity = m_World->CreateEntity();
+        Entity* vortexEntity = m_World->entityStorage->CreateEntity();
         Transform* vortexTransform = vortexEntity->AddComponent<Transform>();
 
         float angle = (rand() % 360) * 3.14159f / 180.0f;

@@ -178,6 +178,7 @@
     <ClInclude Include="Constellation.h" />
     <ClInclude Include="cornerType.h" />
     <ClInclude Include="DelayedDestroy.h" />
+    <ClInclude Include="entityStorage.h" />
     <ClInclude Include="FistsClass.h" />
     <ClInclude Include="fraction.h" />
     <ClInclude Include="dx11.h" />
@@ -443,6 +444,7 @@
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="CombatSystem.cpp" />
     <ClCompile Include="CollisionDrawSystem.cpp" />
+    <ClCompile Include="EntityStorage.cpp" />
     <ClCompile Include="PlayerAbilities.cpp" />
     <ClCompile Include="dx11.cpp" />
     <ClCompile Include="dx11minimal.cpp" />

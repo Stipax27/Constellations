@@ -111,6 +111,9 @@
     <ClCompile Include="Transform2D.cpp">
       <Filter>Source Files\ECS</Filter>
     </ClCompile>
+    <ClCompile Include="EntityStorage.cpp">
+      <Filter>Source Files\ECS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseStar.h">
@@ -135,9 +138,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MethodOfClosest.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SmallConstellation.h">
@@ -271,6 +271,12 @@
     </ClInclude>
     <ClInclude Include="Transform2D.h">
       <Filter>Header Files\ECS base\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="entityStorage.h">
+      <Filter>Header Files\ECS base</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerController.h">
+      <Filter>Header Files\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

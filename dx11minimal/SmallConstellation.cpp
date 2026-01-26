@@ -27,7 +27,7 @@ void SmallConstellation::VolleyStart() {
         point3d direction = targetPoint - startPos;
         direction = direction.normalized();
 
-        Entity* volleyEntity = m_World->CreateEntity();
+        Entity* volleyEntity = m_World->entityStorage->CreateEntity();
 
         Explosion* chargeExplosion = volleyEntity->AddComponent<Explosion>();
         chargeExplosion->max_radius = 1.0f;
@@ -101,7 +101,7 @@ void SmallConstellation::LatticeStart() {
     point3d direction = targetPoint - startPos;
     direction = direction.normalized();
 
-    Entity* latticeEntity = m_World->CreateEntity();
+    Entity* latticeEntity = m_World->entityStorage->CreateEntity();
 
     Constellation* constellation;
     constellation = latticeEntity->AddComponent<Constellation>();

@@ -23,8 +23,10 @@ bool World::Initialize(float iaspect)
 {
 	m_Camera = new CameraClass;
 	m_Camera->Initialize(iaspect);
-
 	m_Camera->SetPosition(point3d(0.0f, 0.0f, -10.0f));
+
+	entityStorage = new EntityStorage;
+	entityStorage->Initialize();
 
 	return true;
 }
@@ -43,36 +45,12 @@ void World::Shutdown()
 	{
 		renderSystems[i]->Shutdown();
 	}
-}
 
-
-Entity* World::CreateEntity(string Name, Entity* Parent)
-{
-	Entity* entity = new Entity;
-	entity->name = Name;
-	entity->SetId(entityCount++);
-
-	if (Parent != nullptr) {
-		Parent->AddChild(entity);
+	if (entityStorage) {
+		entityStorage->Shutdown();
+		entityStorage = 0;
 	}
-
-	entities.push_back(entity);
-
-	return entity;
 }
-
-
-//void World::RemoveEntityByObject(Entity* object)
-//{
-//	for (int i = 0; i < entities.size(); i++) {
-//		Entity* entity = entities[i];
-//		if (entity == object) {
-//			entity->Destroy();
-//			entities.erase(entities.begin() + i);
-//			break;
-//		}
-//	}
-//}
 
 
 void World::PreCalculations()
@@ -105,9 +83,9 @@ void World::UpdatePhysic()
 	size_t size = physicSystems.size();
 	for (int i = 0; i < size; i++)
 	{
-		physicSystems[i]->Update(entities, deltaTime);
+		physicSystems[i]->Update(entityStorage->entities, deltaTime);
 	}
-	CleanMem();
+	entityStorage->CleanMem();
 }
 
 
@@ -143,7 +121,7 @@ void World::UpdateRender()
 	size_t size = renderSystems.size();
 	for (int i = 0; i < size; i++)
 	{
-		renderSystems[i]->Update(entities, deltaTime);
+		renderSystems[i]->Update(entityStorage->entities, deltaTime);
 	}
 
 	Textures::CreateMipMap();
@@ -156,23 +134,4 @@ void World::UpdateRender()
 	Shaders::vShader(10);
 	Shaders::pShader(100);
 	context->Draw(6, 0);
-}
-
-void World::CleanMem()
-{
-	int i = 0;
-	while (i < entities.size())
-	{
-		Entity* entity = entities[i];
-		if (entity->IsDeleting())
-		{
-			delete entity;
-			entity = 0;
-			entities.erase(entities.begin() + i);
-		}
-		else
-		{
-			i++;
-		}
-	}
 }

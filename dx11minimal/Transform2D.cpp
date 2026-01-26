@@ -3,8 +3,10 @@
 
 Transform2D& Transform2D::operator=(const Transform2D& other) {
     position = other.position;
+    anchorPoint = other.position;
     scale = other.scale;
     rotation = other.rotation;
+    ratio = other.ratio;
 
     return *this;
 }

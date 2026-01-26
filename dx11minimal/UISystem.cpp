@@ -6,7 +6,7 @@
 //////////////
 #include<cmath>
 #include "system.h"
-#include "Transform.h"
+#include "Transform2D.h"
 #include "Rect.h"
 #include "Button.h"
 #include "TextLabel.h"
@@ -134,24 +134,24 @@ public:
 		size_t size = entities.size();
 		for (int i = 0; i < size; i++) {
 			Entity* entity = entities[i];
-			if (IsEntityValid(entity)) {
-				Transform transform = GetWorldTransform(entity);
+			if (IsEntityValid(entity) && entity->GetComponent<Transform2D>() != nullptr) {
+				Transform2D transform2D = GetWorldTransform2D(entity);
 
 				Rect* rect = entity->GetComponent<Rect>();
-				if (rect != nullptr && rect->active) {
+				if (rect != nullptr && rect->active && rect->opacity > 0.0f) {
 					Shaders::pShader(13 + (int)rect->cornerType);
 
 					ConstBuf::global[0].w = rect->cornerRadius;
-					ConstBuf::global[3] = XMFLOAT4(rect->color.x, rect->color.y, rect->color.z, 0);
+					ConstBuf::global[3] = XMFLOAT4(rect->color.x, rect->color.y, rect->color.z, rect->opacity);
 
-					DrawUiObject(rect, transform);
+					DrawUiObject(transform2D);
 				}
 
 				Button* button = entity->GetComponent<Button>();
 				if (button != nullptr && button->active) {
 
-					point3d halfSize = transform.scale / 2;
-					point3d realPos = transform.position - button->anchorPoint * halfSize;
+					point3d halfSize = transform2D.scale / 2;
+					point3d realPos = transform2D.position - transform2D.anchorPoint * halfSize;
 
 					/*if (transform.position - (transform.scale / 2) * (button->anchorPoint + 1) <= mouse->pos.x <= transform.position + (transform.scale / 2) * (button->anchorPoint - 1)) {
 						if (IsKeyPressed(VK_LBUTTON)) {
@@ -164,7 +164,7 @@ public:
 						}
 					}*/
 
-					if (mouse->pos.x <= realPos.x + transform.scale.x && mouse->pos.x >= realPos.x - transform.scale.x && mouse->pos.y <= realPos.y + transform.scale.y && mouse->pos.y >= realPos.y - transform.scale.y) {
+					if (mouse->pos.x <= realPos.x + transform2D.scale.x && mouse->pos.x >= realPos.x - transform2D.scale.x && mouse->pos.y <= realPos.y + transform2D.scale.y && mouse->pos.y >= realPos.y - transform2D.scale.y) {
 						if (IsKeyPressed(VK_LBUTTON)) {
 							button->color = point3d(1, 0, 0);
 						}
@@ -176,9 +176,9 @@ public:
 					}
 
 					Shaders::pShader(13);
-					ConstBuf::global[3] = XMFLOAT4(button->color.x, button->color.y, button->color.z, 0);
+					ConstBuf::global[3] = XMFLOAT4(button->color.x, button->color.y, button->color.z, button->opacity);
 
-					DrawUiObject(button, transform);
+					DrawUiObject(transform2D);
 				}
 
 				//TextLabel* textLabel = entity->GetComponent<TextLabel>();
@@ -244,41 +244,38 @@ private:
 	MouseClass* mouse;
 
 private:
-	void DrawUiObject(UIObject* object, Transform transform) {
-		if (object->opacity > 0.0f) {
-			Shaders::vShader(13);
+	void DrawUiObject(Transform2D transform2D) {
+		Shaders::vShader(13);
 
-			ConstBuf::global[0] = XMFLOAT4(transform.position.x, transform.position.y, transform.position.z, ConstBuf::global[0].w);
-			ConstBuf::global[1] = XMFLOAT4(transform.scale.x, transform.scale.y, 0, 0);
-			ConstBuf::global[2] = XMFLOAT4(object->anchorPoint.x, object->anchorPoint.y, object->rotation, 0);
-			ConstBuf::global[3].w = object->opacity;
+		ConstBuf::global[0] = XMFLOAT4(transform2D.position.x, transform2D.position.y, transform2D.position.z, ConstBuf::global[0].w);
+		ConstBuf::global[1] = XMFLOAT4(transform2D.scale.x, transform2D.scale.y, 0, 0);
+		ConstBuf::global[2] = XMFLOAT4(transform2D.anchorPoint.x, transform2D.anchorPoint.y, transform2D.rotation, 0);
 
-			switch (object->ratio)
-			{
-			case ScreenAspectRatio::XY:
-				ConstBuf::global[1].z = 1;
-				ConstBuf::global[1].w = 1;
-				break;
-			case ScreenAspectRatio::YX:
-				ConstBuf::global[1].z = ConstBuf::frame.aspect.x;
-				ConstBuf::global[1].w = ConstBuf::frame.aspect.y;
-				break;
-			case ScreenAspectRatio::XX:
-				ConstBuf::global[1].z = 1;
-				ConstBuf::global[1].w = ConstBuf::frame.aspect.y;
-				break;
-			case ScreenAspectRatio::YY:
-				ConstBuf::global[1].z = ConstBuf::frame.aspect.x;
-				ConstBuf::global[1].w = 1;
-				break;
-			}
-
-			ConstBuf::Update(5, ConstBuf::global);
-			ConstBuf::ConstToVertex(5);
-			ConstBuf::ConstToPixel(5);
-
-			Draw::Drawer(1);
+		switch (transform2D.ratio)
+		{
+		case ScreenAspectRatio::XY:
+			ConstBuf::global[1].z = 1;
+			ConstBuf::global[1].w = 1;
+			break;
+		case ScreenAspectRatio::YX:
+			ConstBuf::global[1].z = ConstBuf::frame.aspect.x;
+			ConstBuf::global[1].w = ConstBuf::frame.aspect.y;
+			break;
+		case ScreenAspectRatio::XX:
+			ConstBuf::global[1].z = 1;
+			ConstBuf::global[1].w = ConstBuf::frame.aspect.y;
+			break;
+		case ScreenAspectRatio::YY:
+			ConstBuf::global[1].z = ConstBuf::frame.aspect.x;
+			ConstBuf::global[1].w = 1;
+			break;
 		}
+
+		ConstBuf::Update(5, ConstBuf::global);
+		ConstBuf::ConstToVertex(5);
+		ConstBuf::ConstToPixel(5);
+
+		Draw::Drawer(1);
 	}
 };
 

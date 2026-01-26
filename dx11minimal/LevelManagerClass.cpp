@@ -43,10 +43,10 @@ bool LevelManagerClass::Initialize()
 	}
 
 	collisionManager = new CollisionManagerClass;
-	collisionManager->Initialize();
+	collisionManager->Initialize(m_World->entityStorage);
 
 	mouse = new MouseClass;
-	mouse->Initialize(window, m_World->m_Camera);
+	mouse->Initialize(window, m_World->m_Camera, collisionManager);
 
 	Dx11Init(window->hWnd, window->width, window->height);
 
@@ -83,9 +83,12 @@ bool LevelManagerClass::Initialize()
 
 	SpriteCluster* spriteCluster;
 	PlaneCollider* planeCollider;
+
+	Transform2D* transform2D;
 	Rect* rect;
 	Button* button;
 	TextLabel* textLabel;
+
 	Mesh* mesh;
 	PointCloud* pointCloud;
 	DelayedDestroy* delayedDestroy;
@@ -93,10 +96,10 @@ bool LevelManagerClass::Initialize()
 	Health* health;
 	SingleDamageGiver* singleDamageGiver;
 
-	Entity* folder = m_World->CreateEntity("WorldFolder");
+	Entity* folder = m_World->entityStorage->CreateEntity("WorldFolder");
 	folder->SetActive(true);
 
-	player = m_World->CreateEntity("Player", folder);
+	player = m_World->entityStorage->CreateEntity("Player", folder);
 	transform = player->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, 0.0f);
 	physicBody = player->AddComponent<PhysicBody>();
@@ -135,9 +138,9 @@ bool LevelManagerClass::Initialize()
 	explosion = entity->AddComponent<Explosion>();
 	transform = entity->AddComponent<Transform>();*/
 
-	entity = m_World->CreateEntity();
+	entity = m_World->entityStorage->CreateEntity();
 
-	entity = m_World->CreateEntity("AriesNebulaLocation", folder);
+	entity = m_World->entityStorage->CreateEntity("AriesNebulaLocation", folder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, 50.0f);
 	transform->scale = point3d(1, 0, 0);
@@ -155,7 +158,7 @@ bool LevelManagerClass::Initialize()
 	sphereCollider->softness = 0.5f;*/
 	//entity->AddComponent<SurfaceCollider>();
 
-	entity = m_World->CreateEntity("StarsBackground", folder);
+	entity = m_World->entityStorage->CreateEntity("StarsBackground", folder);
 	spriteCluster = entity->AddComponent<SpriteCluster>();
 	spriteCluster->vShader = 2;
 	spriteCluster->pShader = 2;
@@ -163,7 +166,7 @@ bool LevelManagerClass::Initialize()
 
 	/////////////////////////
 
-	entity = m_World->CreateEntity("Star", folder);
+	entity = m_World->entityStorage->CreateEntity("Star", folder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, -20.0f);
 	star = entity->AddComponent<Star>();
@@ -176,7 +179,7 @@ bool LevelManagerClass::Initialize()
 	singleDamageGiver->damage = 1000;
 
 	for (int i = 0; i < 5; i++) {
-		entity = m_World->CreateEntity("Star", folder);
+		entity = m_World->entityStorage->CreateEntity("Star", folder);
 		transform = entity->AddComponent<Transform>();
 		transform->position = point3d(10.0f + 5.0f * i, 0.0f, -35.0f);
 		star = entity->AddComponent<Star>();
@@ -195,7 +198,7 @@ bool LevelManagerClass::Initialize()
 
 	/////////////////////////
 
-	Entity* holder = m_World->CreateEntity("Holder", folder);
+	Entity* holder = m_World->entityStorage->CreateEntity("Holder", folder);
 	transform = holder->AddComponent<Transform>();
 	transform->scale = point3d(10, 10, 10);
 	transform->position = point3d(0.0f, 0.0f, -50.0f);
@@ -203,7 +206,7 @@ bool LevelManagerClass::Initialize()
 	mesh = holder->AddComponent<Mesh>();
 	mesh->index = 3;
 
-	holder = m_World->CreateEntity("Holder", folder);
+	holder = m_World->entityStorage->CreateEntity("Holder", folder);
 	transform = holder->AddComponent<Transform>();
 	transform->scale = point3d(1, 6, 1);
 	transform->position = point3d(0.0f, 10.0f, -50.0f);
@@ -278,7 +281,7 @@ bool LevelManagerClass::Initialize()
 	//	{2,5}
 	//};
 
-	entity = m_World->CreateEntity();
+	entity = m_World->entityStorage->CreateEntity();
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(2.0f, 0.0f, 0.0f);
 	sphereCollider = entity->AddComponent<SphereCollider>();
@@ -354,24 +357,16 @@ bool LevelManagerClass::Initialize()
 	// MAIN MENU //
 	
 	//entity = m_World->CreateEntity();
-	//transform = entity->AddComponent<Transform>();
-	////transform->position = point3d(0.5f, 0.1f, 0.0f);
+	//transform2D = entity->AddComponent<Transform2D>();
+	//transform2D->anchorPoint = point3d(-1, 0, 0);
+	//transform2D->ratio = ScreenAspectRatio::YY;
+	////transform2D->position = point3d(0.5f, 0.1f, 0.0f);
 	//transform->scale = point3d(0.25f, 0.05f, 0.0f);
 	//button = entity->AddComponent<Button>();
 	//button->color = point3d(0.5f, 0.25f, 0.8f);
 	//button->opacity = 1.0f;
-	//button->anchorPoint = point3d(-1, 0, 0);
-	//button->ratio = ScreenAspectRatio::YY;
 	////rect->cornerRadius = 1.0f;
 	////rect->cornerType = CornerType::Strict;
-
-	//entity = m_World->CreateEntity("Rect", entity);
-	//transform = entity->AddComponent<Transform>();
-	////transform->position = point3d(0.5f, 0.1f, 0.0f);
-	//transform->scale = point3d(0.5f, 0.5f, 0.0f);
-	//rect = entity->AddComponent<Rect>();
-	//rect->color = point3d(0.5f, 0.1f, 0.2f);
-	//rect->opacity = 1.0f;
 
 	// MAIN MENU END //
 
