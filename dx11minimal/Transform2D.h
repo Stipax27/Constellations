@@ -20,6 +20,9 @@ struct Transform2D : Component
 	float rotation = 0.0f;
 	ScreenAspectRatio ratio = ScreenAspectRatio::XY;
 
+	point3d GetRightVector();
+	point3d GetUpVector();
+
 	Transform2D& operator=(const Transform2D&);
 	Transform2D operator+(const Transform2D&);
 	Transform2D& operator+=(const Transform2D&);

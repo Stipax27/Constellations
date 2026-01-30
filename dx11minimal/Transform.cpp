@@ -26,13 +26,13 @@ Transform& Transform::operator=(const Transform& other) {
 }
 
 Transform Transform::operator+(const Transform& other) {
-    Transform tranform = Transform();
+    Transform transform = Transform();
 
-    tranform.position = position + (GetRightVector() * other.position.x + GetUpVector() * other.position.y + GetLookVector() * other.position.z) * scale;
-    tranform.scale = scale * other.scale;
-    tranform.mRotation = other.mRotation * mRotation;
+    transform.position = position + (GetRightVector() * other.position.x + GetUpVector() * other.position.y + GetLookVector() * other.position.z) * scale;
+    transform.scale = scale * other.scale;
+    transform.mRotation = other.mRotation * mRotation;
 
-    return tranform;
+    return transform;
 }
 
 Transform& Transform::operator+=(const Transform& other) {

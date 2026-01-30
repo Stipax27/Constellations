@@ -176,6 +176,7 @@ public:
 					}
 
 					Shaders::pShader(13);
+					ConstBuf::global[0].w = 0;
 					ConstBuf::global[3] = XMFLOAT4(button->color.x, button->color.y, button->color.z, button->opacity);
 
 					DrawUiObject(transform2D);
