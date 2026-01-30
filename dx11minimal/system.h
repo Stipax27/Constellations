@@ -10,6 +10,7 @@
 #include <vector>
 #include "component.h"
 #include "entity.h"
+#include "entityStorage.h"
 
 #include "dx11.h"
 using namespace std;

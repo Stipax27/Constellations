@@ -104,9 +104,10 @@
 class UISystem : public System
 {
 public:
-	UISystem(MouseClass* Mouse)
+	UISystem(MouseClass* Mouse, EntityStorage* _EntityStorage)
 	{
 		mouse = Mouse;
+		entityStorage = _EntityStorage;
 	}
 
 
@@ -119,6 +120,10 @@ public:
 	{
 		if (mouse) {
 			mouse = 0;
+		}
+
+		if (entityStorage) {
+			entityStorage = 0;
 		}
 	}
 
@@ -150,37 +155,58 @@ public:
 				Button* button = entity->GetComponent<Button>();
 				if (button != nullptr && button->active) {
 
-					point3d halfSize = transform2D.scale / 2;
-					point3d realPos = transform2D.position - transform2D.anchorPoint * halfSize;
-					point3d realScale = transform2D.scale;
+					//if (IsKeyPressed(VK_LBUTTON)) {
+						point3d aspectCorrection = point3d();
+						switch (transform2D.ratio)
+						{
+						case ScreenAspectRatio::XY:
+							aspectCorrection = point3d(1, 1, 0);
+							break;
+						case ScreenAspectRatio::YX:
+							aspectCorrection = point3d(ConstBuf::frame.aspect.x, ConstBuf::frame.aspect.y, 0);
+							break;
+						case ScreenAspectRatio::XX:
+							aspectCorrection = point3d(1, ConstBuf::frame.aspect.y, 0);
+							break;
+						case ScreenAspectRatio::YY:
+							aspectCorrection = point3d(ConstBuf::frame.aspect.x, 1, 0);
+							break;
+						}
 
-					switch (transform2D.ratio)
-					{
-					case ScreenAspectRatio::XY:
-						break;
-					case ScreenAspectRatio::YX:
-						realScale.x *= ConstBuf::frame.aspect.x;
-						realScale.y *= ConstBuf::frame.aspect.y;
-						break;
-					case ScreenAspectRatio::XX:
-						realScale.y *= ConstBuf::frame.aspect.y;
-						break;
-					case ScreenAspectRatio::YY:
-						realScale.x *= ConstBuf::frame.aspect.x;
-						break;
-					}
+						point3d realScale = transform2D.scale * aspectCorrection;
+						point3d realPos = transform2D.position - transform2D.anchorPoint * realScale;
+						point3d upVector = transform2D.GetUpVector();
+						upVector.x *= aspectCorrection.y;
+						upVector.y *= aspectCorrection.x;
+						point3d rightVector = transform2D.GetRightVector() * aspectCorrection;
+						rightVector.x *= aspectCorrection.y;
+						rightVector.y *= aspectCorrection.x;
 
-					if (IsKeyPressed(VK_LBUTTON)) {
-						if (mouse->pos.x <= realPos.x + realScale.x && mouse->pos.x >= realPos.x - realScale.x && mouse->pos.y <= realPos.y + realScale.y && mouse->pos.y >= realPos.y - realScale.y) {
+						point3d delta = mouse->pos - realPos;
+						float projX = delta.dot(rightVector.normalized());
+						float projY = delta.dot(upVector.normalized());
+
+						if (abs(projX) <= realScale.x && abs(projY) <= realScale.y) {
 							button->isClicked = true;
 						}
-					}
+						else {
+							button->isClicked = false;
+						}
+					/*}
 					else {
 						button->isClicked = false;
-					}
+					}*/
 
 					if (button->isClicked) {
 						button->color = point3d(1, 0, 0);
+
+						Entity* _entity = entityStorage->CreateEntity();
+						Transform2D* _transform2d = _entity->AddComponent<Transform2D>();
+						_transform2d->position = mouse->pos;
+						_transform2d->scale = point3d(0.02f, 0.02f, 0.0f);
+						_transform2d->ratio = ScreenAspectRatio::YY;
+						Rect* _rect = _entity->AddComponent<Rect>();
+						_rect->color = point3d(0, 1, 0);
 					}
 					else {
 						button->color = point3d(0.5f, 0.25f, 0.8f);
@@ -254,6 +280,7 @@ public:
 
 private:
 	MouseClass* mouse;
+	EntityStorage* entityStorage;
 
 private:
 	void DrawUiObject(Transform2D transform2D) {

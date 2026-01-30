@@ -359,9 +359,9 @@ bool LevelManagerClass::Initialize()
 	entity = m_World->entityStorage->CreateEntity();
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(0, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::XY;
-	transform2D->rotation = PI / 4;
-	//transform2D->position = point3d(0.5f, 0.1f, 0.0f);
+	transform2D->ratio = ScreenAspectRatio::YX;
+	transform2D->rotation = PI / 8;
+	transform2D->position = point3d(0.5f, 0.1f, 0.0f);
 	transform2D->scale = point3d(0.25f, 0.25f, 0.0f);
 	button = entity->AddComponent<Button>();
 	button->color = point3d(0.5f, 0.25f, 0.8f);
@@ -392,7 +392,7 @@ bool LevelManagerClass::Initialize()
 	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera);
 	m_World->AddRenderSystem<CollisionDrawSystem>(); // DEBUG //
 	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum);
-	m_World->AddRenderSystem<UISystem>(mouse);
+	m_World->AddRenderSystem<UISystem>(mouse, m_World->entityStorage);
 
 	//m_World->PreCalculations();
 	//bStar = new BaseStar();

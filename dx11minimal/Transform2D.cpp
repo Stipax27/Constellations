@@ -3,7 +3,7 @@
 
 point3d Transform2D::GetRightVector()
 {
-    return point3d(cos(rotation), sin(rotation), 0);
+    return point3d(cos(rotation), -sin(rotation), 0);
 }
 
 point3d Transform2D::GetUpVector()
