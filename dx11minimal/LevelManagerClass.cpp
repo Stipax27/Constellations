@@ -358,10 +358,11 @@ bool LevelManagerClass::Initialize()
 	
 	entity = m_World->entityStorage->CreateEntity();
 	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(-1, 0, 0);
+	transform2D->anchorPoint = point3d(0, 0, 0);
 	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->rotation = PI / 4;
 	//transform2D->position = point3d(0.5f, 0.1f, 0.0f);
-	transform2D->scale = point3d(0.25f, 0.05f, 0.0f);
+	transform2D->scale = point3d(0.25f, 0.25f, 0.0f);
 	button = entity->AddComponent<Button>();
 	button->color = point3d(0.5f, 0.25f, 0.8f);
 	button->opacity = 1.0f;

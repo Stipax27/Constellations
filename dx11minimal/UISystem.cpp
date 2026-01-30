@@ -152,27 +152,38 @@ public:
 
 					point3d halfSize = transform2D.scale / 2;
 					point3d realPos = transform2D.position - transform2D.anchorPoint * halfSize;
+					point3d realScale = transform2D.scale;
 
-					/*if (transform.position - (transform.scale / 2) * (button->anchorPoint + 1) <= mouse->pos.x <= transform.position + (transform.scale / 2) * (button->anchorPoint - 1)) {
-						if (IsKeyPressed(VK_LBUTTON)) {
-							button->color = point3d(1, 0, 0);
+					switch (transform2D.ratio)
+					{
+					case ScreenAspectRatio::XY:
+						break;
+					case ScreenAspectRatio::YX:
+						realScale.x *= ConstBuf::frame.aspect.x;
+						realScale.y *= ConstBuf::frame.aspect.y;
+						break;
+					case ScreenAspectRatio::XX:
+						realScale.y *= ConstBuf::frame.aspect.y;
+						break;
+					case ScreenAspectRatio::YY:
+						realScale.x *= ConstBuf::frame.aspect.x;
+						break;
+					}
+
+					if (IsKeyPressed(VK_LBUTTON)) {
+						if (mouse->pos.x <= realPos.x + realScale.x && mouse->pos.x >= realPos.x - realScale.x && mouse->pos.y <= realPos.y + realScale.y && mouse->pos.y >= realPos.y - realScale.y) {
+							button->isClicked = true;
 						}
 					}
 					else {
-						if (IsKeyPressed(VK_LBUTTON)) {
-							button->color = point3d(0.5f, 0.25f, 0.8f);
-						}
-					}*/
+						button->isClicked = false;
+					}
 
-					if (mouse->pos.x <= realPos.x + transform2D.scale.x && mouse->pos.x >= realPos.x - transform2D.scale.x && mouse->pos.y <= realPos.y + transform2D.scale.y && mouse->pos.y >= realPos.y - transform2D.scale.y) {
-						if (IsKeyPressed(VK_LBUTTON)) {
-							button->color = point3d(1, 0, 0);
-						}
+					if (button->isClicked) {
+						button->color = point3d(1, 0, 0);
 					}
 					else {
-						if (IsKeyPressed(VK_LBUTTON)) {
-							button->color = point3d(0.5f, 0.25f, 0.8f);
-						}
+						button->color = point3d(0.5f, 0.25f, 0.8f);
 					}
 
 					Shaders::pShader(13);
