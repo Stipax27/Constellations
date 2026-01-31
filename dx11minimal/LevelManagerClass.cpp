@@ -366,8 +366,6 @@ bool LevelManagerClass::Initialize()
 	button = entity->AddComponent<Button>();
 	button->color = point3d(0.5f, 0.25f, 0.8f);
 	button->opacity = 1.0f;
-	//rect->cornerRadius = 1.0f;
-	//rect->cornerType = CornerType::Strict;
 
 	// MAIN MENU END //
 

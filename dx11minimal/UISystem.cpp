@@ -155,7 +155,7 @@ public:
 				Button* button = entity->GetComponent<Button>();
 				if (button != nullptr && button->active) {
 
-					//if (IsKeyPressed(VK_LBUTTON)) {
+					if (mouse->IsLButtonDown()) {
 						point3d aspectCorrection = point3d();
 						switch (transform2D.ratio)
 						{
@@ -176,37 +176,41 @@ public:
 						point3d realScale = transform2D.scale * aspectCorrection;
 						point3d realPos = transform2D.position - transform2D.anchorPoint * realScale;
 						point3d upVector = transform2D.GetUpVector();
-						upVector.x *= aspectCorrection.y;
-						upVector.y *= aspectCorrection.x;
-						point3d rightVector = transform2D.GetRightVector() * aspectCorrection;
-						rightVector.x *= aspectCorrection.y;
-						rightVector.y *= aspectCorrection.x;
+						point3d rightVector = transform2D.GetRightVector();
 
-						point3d delta = mouse->pos - realPos;
-						float projX = delta.dot(rightVector.normalized());
-						float projY = delta.dot(upVector.normalized());
+						point3d delta = mouse->GetLButtonDownPosition() - realPos;
+						delta.x *= ConstBuf::frame.aspect.y;
+						float projX = delta.dot(rightVector) * ConstBuf::frame.aspect.x;
+						float projY = delta.dot(upVector);
 
 						if (abs(projX) <= realScale.x && abs(projY) <= realScale.y) {
-							button->isClicked = true;
+							delta = mouse->pos - realPos;
+							delta.x *= ConstBuf::frame.aspect.y;
+							projX = delta.dot(rightVector) * ConstBuf::frame.aspect.x;
+							projY = delta.dot(upVector);
+
+							if (abs(projX) <= realScale.x && abs(projY) <= realScale.y) {
+								button->isClicked = true;
+							}
+							else {
+								button->isClicked = false;
+							}
 						}
-						else {
-							button->isClicked = false;
-						}
-					/*}
+					}
 					else {
 						button->isClicked = false;
-					}*/
+					}
 
 					if (button->isClicked) {
 						button->color = point3d(1, 0, 0);
 
-						Entity* _entity = entityStorage->CreateEntity();
+						/*Entity* _entity = entityStorage->CreateEntity();
 						Transform2D* _transform2d = _entity->AddComponent<Transform2D>();
-						_transform2d->position = mouse->pos;
+						_transform2d->position = mouse->GetLButtonDownPosition();
 						_transform2d->scale = point3d(0.02f, 0.02f, 0.0f);
 						_transform2d->ratio = ScreenAspectRatio::YY;
 						Rect* _rect = _entity->AddComponent<Rect>();
-						_rect->color = point3d(0, 1, 0);
+						_rect->color = point3d(0, 1, 0);*/
 					}
 					else {
 						button->color = point3d(0.5f, 0.25f, 0.8f);

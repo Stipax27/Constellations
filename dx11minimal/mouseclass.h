@@ -56,6 +56,15 @@ public:
 	void Shutdown();
 	void Update();
 
+	bool IsLButtonDown();
+	bool IsRButtonDown();
+	
+	bool IsLButtonClicked();
+	bool IsRButtonClicked();
+
+	point3d GetLButtonDownPosition();
+	point3d GetRButtonDownPosition();
+
 	point3d GetMouseRay();
 	void RenderCursor();
 
@@ -63,6 +72,15 @@ private:
 	WindowClass* window;
 	CameraClass* camera;
 	CollisionManagerClass* collisionManager;
+
+	bool lbuttonDown;
+	bool rbuttonDown;
+
+	bool lbuttonClicked;
+	bool rbuttonClicked;
+
+	point3d lbuttonDownPos;
+	point3d rbuttonDownPos;
 };
 
 #endif

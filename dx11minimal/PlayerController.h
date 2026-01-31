@@ -70,7 +70,6 @@ private:
 	PlayerAbilities* abilities;
 
 	bool movementLocked = false;
-	bool mousePressed = false;
 
 	DWORD lastDashTime = 0;
 };

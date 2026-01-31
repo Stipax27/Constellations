@@ -23,6 +23,14 @@ void MouseClass::Initialize(WindowClass* Window, CameraClass* Camera, CollisionM
 
 	state = MouseState::Free;
 	visible = true;
+
+	lbuttonDown = false;
+	rbuttonDown = false;
+	lbuttonClicked = false;
+	lbuttonClicked = false;
+
+	lbuttonDownPos = point3d();
+	rbuttonDownPos = point3d();
 }
 
 
@@ -49,6 +57,69 @@ void MouseClass::Update() {
 
 	absolutePos = { (float)p.x, (float)p.y, 0.f };
 	pos = { absolutePos.x / window->width * 2 - 1, -(absolutePos.y / window->height * 2 - 1), 0.0f };
+
+	if (IsKeyPressed(VK_LBUTTON))
+	{
+		if (!lbuttonDown)
+		{
+			lbuttonDown = true;
+			lbuttonClicked = true;
+			lbuttonDownPos = pos;
+		}
+		else {
+			lbuttonClicked = false;
+		}
+	}
+	else
+	{
+		lbuttonDown = false;
+		lbuttonClicked = false;
+	}
+
+	if (IsKeyPressed(VK_RBUTTON))
+	{
+		if (!rbuttonDown)
+		{
+			rbuttonDown = true;
+			rbuttonClicked = true;
+			rbuttonDownPos = pos;
+		}
+		else {
+			rbuttonClicked = false;
+		}
+	}
+	else
+	{
+		rbuttonDown = false;
+		rbuttonClicked = false;
+	}
+}
+
+
+bool MouseClass::IsLButtonDown() {
+	return lbuttonDown;
+}
+
+bool MouseClass::IsRButtonDown() {
+	return rbuttonDown;
+}
+
+
+bool MouseClass::IsLButtonClicked() {
+	return lbuttonClicked;
+}
+
+bool MouseClass::IsRButtonClicked() {
+	return rbuttonClicked;
+}
+
+
+point3d MouseClass::GetLButtonDownPosition() {
+	return lbuttonDownPos;
+}
+
+point3d MouseClass::GetRButtonDownPosition() {
+	return rbuttonDownPos;
 }
 
 
