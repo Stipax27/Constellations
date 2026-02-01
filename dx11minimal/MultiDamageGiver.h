@@ -9,8 +9,8 @@ struct MultiDamageGiver : Component
 	float damage = 1.0f;
 	int repeats = 10;
 
-	DWORD inverval = 100;
-	DWORD lastDamageTime = 0;
+	double inverval = 100;
+	double lastDamageTime = 0;
 };
 
 #endif

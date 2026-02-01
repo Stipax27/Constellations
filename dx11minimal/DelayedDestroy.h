@@ -7,8 +7,8 @@
 
 struct DelayedDestroy : Component
 {
-	DWORD lifeTime = 1000;
-	DWORD startTime = timer::currentTime;
+	double lifeTime = 1000;
+	double startTime = timer::currentTime;
 };
 
 #endif
