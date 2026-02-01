@@ -14,6 +14,11 @@
 
 #include "mouseclass.h"
 
+/////////////
+// GLOBALS //
+/////////////
+//const bool SHOW_UI_ANCHOR_POINTS = true;
+
 ///////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////
@@ -115,7 +120,7 @@ private:
 	EntityStorage* entityStorage;
 
 private:
-	void DrawUiObject(Transform2D);
+	void DrawUiObject(Transform2D, int);
 };
 
 #endif

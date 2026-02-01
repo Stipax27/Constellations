@@ -114,8 +114,9 @@ Transform2D GetWorldTransform2D(Entity* entity) {
         }
 
         for (int i = transforms2d.size() - 1; i >= 0; i--) {
-            //worldTransform2D += *transforms2d[i];
-            Transform2D other = *transforms2d[i];
+            worldTransform2D += *transforms2d[i];
+
+            /*Transform2D other = *transforms2d[i];
 
             point3d aspectCorrection;
             switch (worldTransform2D.ratio)
@@ -142,7 +143,7 @@ Transform2D GetWorldTransform2D(Entity* entity) {
             worldTransform2D.anchorPoint = other.anchorPoint;
             worldTransform2D.scale *= other.scale;
             worldTransform2D.rotation += other.rotation;
-            worldTransform2D.ratio = other.ratio;
+            worldTransform2D.ratio = other.ratio;*/
         }
     }
 
@@ -224,4 +225,65 @@ vector<point3d> smoothCornersPath(const vector<point3d>& pointsBefore, int numbe
 
     if (numberIterations <= 1) return pointsAfter;
     else return smoothCornersPath(pointsAfter, numberIterations-1);
+}
+
+float hueToRgb(float p, float q, float t) {
+    if (t < 0.0f) t += 1.0f;
+    if (t > 1.0f) t -= 1.0f;
+
+    if (t < 1.0f / 6.0f) return p + (q - p) * 6.0f * t;
+    if (t < 1.0f / 2.0f) return q;
+    if (t < 2.0f / 3.0f) return p + (q - p) * (2.0f / 3.0f - t) * 6.0f;
+    return p;
+}
+
+point3d hslToRgb(const point3d& hsl) {
+    float h = hsl.x;
+    float s = hsl.y;
+    float l = hsl.z;
+
+    float r, g, b;
+
+    if (s == 0.0f) {
+        r = g = b = l;
+    }
+    else {
+        float q = (l < 0.5f) ? l * (1.0f + s) : l + s - l * s;
+        float p = 2.0f * l - q;
+
+        r = hueToRgb(p, q, h + 1.0f / 3.0f);
+        g = hueToRgb(p, q, h);
+        b = hueToRgb(p, q, h - 1.0f / 3.0f);
+    }
+
+    return point3d(r, g, b);
+}
+
+point3d rgbToHsl(const point3d& rgb) {
+    float r = rgb.x;
+    float g = rgb.y;
+    float b = rgb.z;
+
+    float maxVal = max(r, g, b);
+    float minVal = min(r, g, b);
+    float h = 0.0f, s = 0.0f, l = (maxVal + minVal) / 2.0f;
+
+    if (maxVal != minVal) {
+        float diff = maxVal - minVal;
+        s = (l > 0.5f) ? diff / (2.0f - maxVal - minVal) : diff / (maxVal + minVal);
+
+        if (maxVal == r) {
+            h = (g - b) / diff + ((g < b) ? 6.0f : 0.0f);
+        }
+        else if (maxVal == g) {
+            h = (b - r) / diff + 2.0f;
+        }
+        else {
+            h = (r - g) / diff + 4.0f;
+        }
+
+        h /= 6.0f;
+    }
+
+    return point3d(h, s, l);
 }

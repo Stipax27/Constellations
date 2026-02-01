@@ -42,12 +42,13 @@ void UISystem::Update(vector<Entity*>& entities, float deltaTime)
 
 			Rect* rect = entity->GetComponent<Rect>();
 			if (rect != nullptr && rect->active && rect->opacity > 0.0f) {
-				Shaders::pShader(13 + (int)rect->cornerType);
+				int pShader = rect->pShader == 13 ? 13 + (int)rect->cornerType : rect->pShader;
+				Shaders::pShader(pShader);
 
 				ConstBuf::global[0].w = rect->cornerRadius;
 				ConstBuf::global[3] = XMFLOAT4(rect->color.x, rect->color.y, rect->color.z, rect->opacity);
 
-				DrawUiObject(transform2D);
+				DrawUiObject(transform2D, rect->vShader);
 			}
 
 			Button* button = entity->GetComponent<Button>();
@@ -116,11 +117,13 @@ void UISystem::Update(vector<Entity*>& entities, float deltaTime)
 				//	button->color = point3d(0.5f, 0.25f, 0.8f);
 				//}
 
-				Shaders::pShader(13 + (int)button->cornerType);
+				int pShader = button->pShader == 13 ? 13 + (int)button->cornerType : button->pShader;
+				Shaders::pShader(pShader);
+
 				ConstBuf::global[0].w = button->cornerRadius;
 				ConstBuf::global[3] = XMFLOAT4(color.x, color.y, color.z, button->opacity);
 
-				DrawUiObject(transform2D);
+				DrawUiObject(transform2D, button->vShader);
 			}
 
 			//TextLabel* textLabel = entity->GetComponent<TextLabel>();
@@ -178,13 +181,31 @@ void UISystem::Update(vector<Entity*>& entities, float deltaTime)
 
 			//	//return { maxStringWidth ,y - base_y,0 };
 			//}
+
+			// DEBUG //
+
+			if (SHOW_UI_ANCHOR_POINTS) {
+				transform2D.scale = point3d(0.005f, 0.005f, 0);
+				transform2D.anchorPoint = point3d();
+				transform2D.rotation = 0;
+				transform2D.ratio = ScreenAspectRatio::YY;
+
+				point3d color = hslToRgb(point3d(sin(timer::currentTime / 1000.0f), 1.0f, 0.5f));
+
+				ConstBuf::global[0].w = 1;
+				ConstBuf::global[3] = XMFLOAT4(color.x, color.y, color.z, 1.0f);
+
+				DrawUiObject(transform2D, 13);
+			}
+
+			///////////
 		}
 	}
 }
 
 
-void UISystem::DrawUiObject(Transform2D transform2D) {
-	Shaders::vShader(13);
+void UISystem::DrawUiObject(Transform2D transform2D, int vShader) {
+	Shaders::vShader(vShader);
 
 	ConstBuf::global[0] = XMFLOAT4(transform2D.position.x, transform2D.position.y, transform2D.position.z, ConstBuf::global[0].w);
 	ConstBuf::global[1] = XMFLOAT4(transform2D.scale.x, transform2D.scale.y, 0, 0);

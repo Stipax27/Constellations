@@ -14,6 +14,9 @@ struct Button : Component
 
 	float cornerRadius = 0.0f;
 	CornerType cornerType = CornerType::Strict;
+
+	int vShader = 13;
+	int pShader = 13;
 };
 
 #endif

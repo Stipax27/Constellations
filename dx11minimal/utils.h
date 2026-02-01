@@ -39,4 +39,8 @@ bool IsKeyPressed(const int);
 
 vector<string> split(string, string);
 
+float hueToRgb(float, float, float);
+point3d hslToRgb(const point3d&);
+point3d rgbToHsl(const point3d&);
+
 #endif
