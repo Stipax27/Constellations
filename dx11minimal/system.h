@@ -22,7 +22,7 @@ using namespace std;
 
 #define HIGH_RENDER_DISTANCE 10.0f
 #define LOW_RENDER_DISTANCE 75.0f
-#define RENDR_DISTANCE_DELTA LOW_RENDER_DISTANCE - HIGH_RENDER_DISTANCE
+#define RENDER_DISTANCE_DELTA LOW_RENDER_DISTANCE - HIGH_RENDER_DISTANCE
 
 
 ////////////////////////////////////////////////////////////////////////////////
