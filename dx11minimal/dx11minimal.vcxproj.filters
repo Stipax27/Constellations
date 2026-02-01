@@ -42,13 +42,7 @@
     <ClCompile Include="CollisionDrawSystem.cpp">
       <Filter>Source Files\Render</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionManagerClass.cpp">
-      <Filter>Source Files\Physic</Filter>
-    </ClCompile>
     <ClCompile Include="CollisionSystem.cpp">
-      <Filter>Source Files\Physic</Filter>
-    </ClCompile>
-    <ClCompile Include="MethodOfClosest.cpp">
       <Filter>Source Files\Physic</Filter>
     </ClCompile>
     <ClCompile Include="PhysicSystem.cpp">
@@ -99,9 +93,6 @@
     <ClCompile Include="Transform.cpp">
       <Filter>Source Files\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="FrustumClass.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
     <ClCompile Include="UISystem.cpp">
       <Filter>Source Files\Render\UI</Filter>
     </ClCompile>
@@ -114,12 +105,18 @@
     <ClCompile Include="EntityStorage.cpp">
       <Filter>Source Files\ECS</Filter>
     </ClCompile>
+    <ClCompile Include="FrustumClass.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionManagerClass.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="MethodOfClosest.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseStar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionManagerClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Enemy_Patern.h">
@@ -131,13 +128,7 @@
     <ClInclude Include="FpsCounter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="frustumclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="LevelManagerClass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MethodOfClosest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SmallConstellation.h">
@@ -280,6 +271,39 @@
     </ClInclude>
     <ClInclude Include="constants.h">
       <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="uiSystem.h">
+      <Filter>Header Files\ECS base\Systems\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="spriteSystem.h">
+      <Filter>Header Files\ECS base\Systems\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="meshSystem.h">
+      <Filter>Header Files\ECS base\Systems\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="frustumclass.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="collisionDrawSystem.h">
+      <Filter>Header Files\ECS base\Systems\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManagerClass.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="MethodOfClosest.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="collisionSystem.h">
+      <Filter>Header Files\ECS base\Systems\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="physicSystem.h">
+      <Filter>Header Files\ECS base\Systems\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="combatSystem.h">
+      <Filter>Header Files\ECS base\Systems\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="entityManagerSystem.h">
+      <Filter>Header Files\ECS base\Systems\EntityManagment</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -502,6 +526,21 @@
     </Filter>
     <Filter Include="Header Files\ECS base\Components\EntityManagment">
       <UniqueIdentifier>{1c127b4f-b832-48d9-96f3-2f2e710d2814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Systems">
+      <UniqueIdentifier>{bbca0220-e3e7-4508-825a-070c849aa4b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Systems\Render">
+      <UniqueIdentifier>{e9f2a3e9-f2a4-4500-8de4-830b34ed595f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Systems\Physic">
+      <UniqueIdentifier>{75250631-cbc7-46ae-ae4a-0f44d5054363}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Systems\Combat">
+      <UniqueIdentifier>{944aaf3a-7900-4496-a1e5-8ea0d8ff82e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Systems\EntityManagment">
+      <UniqueIdentifier>{54470321-bad2-4de1-bd7e-a0cf08859864}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

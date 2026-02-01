@@ -249,111 +249,6 @@ bool LevelManagerClass::Initialize()
 	//pointCloud->brightness = 0.2f;
 	//pointCloud->color = point3d(1, 0.9f, 0.2f);
 
-	/////////////////////////
-
-	//entity = m_World->CreateEntity("Enemy", folder);
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(2.0f, 0.0f, 0.0f);
-	//transform->scale = point3d(1, 0, 0);
-	//physicBody = entity->AddComponent<PhysicBody>();
-	//aiComponent = entity->AddComponent<AIComponent>();
-	//
-	//aiComponent->patrolPoints = {
-	//	 point3d(-50.0f, 0.0f, 0.0f),
-	//	 point3d(0.0f, 0.0f, 25.0f),
-	//	 point3d(25.0f, 0.0f, 0.0f),
-	//	 point3d(0.0f, 0.0f, -50.0f)
-	//};
-	////star->AddComponent<SphereCollider>();
-	//constellation = entity->AddComponent<Constellation>();
-	//constellation->stars = {
-	//	point3d(-0.09, -0.7, 0),
-	//	point3d(-0.05, -0.15, 0),
-	//	point3d(0, 0, 0),
-	//	point3d(-0.4, 0.5, 0),
-	//	point3d(0, 0, 0),
-	//	point3d(0.4, 0.3, 0)
-	//};
-	//constellation->links = {
-	//	{0,1},
-	//	{1,2},
-	//	{2,3},
-	//	{2,5}
-	//};
-
-	entity = m_World->entityStorage->CreateEntity();
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(2.0f, 0.0f, 0.0f);
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->radius = 0.5f;
-	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	physicBody = entity->AddComponent<PhysicBody>();
-	constellation = entity->AddComponent<Constellation>();
-	constellation->stars = {
-		point3d(0, 0, 0),
-		point3d(0, 1, 0),
-		point3d(1, 1, 0),
-		point3d(1, 0, 0),
-
-		point3d(2, 0, 0),
-		point3d(2, 1, 0),
-		point3d(3, 1, 0),
-		point3d(3, 0, 0),
-
-		point3d(0, -1, 0),
-		point3d(1, -2, 0),
-		point3d(2, -2, 0),
-		point3d(3, -1, 0),
-	};
-	constellation->links = {
-		{0,1},
-		{1,2},
-		{2,3},
-		{3,0},
-
-		{4,5},
-		{5,6},
-		{6,7},
-		{7,4},
-
-		{8,9},
-		{9,10},
-		{10,11}
-	};
-
-	aiComponent = entity->AddComponent<AIComponent>();
-
-	vector<point3d> patrolPoints = {
-		 point3d(25.0f, 0.0f, 0.0f),
-		 point3d(25.0f, 25.0f, 0.0f),
-		 point3d(0.0f, 25.0f, 0.0f),
-		 point3d(0.0f, 0.0f, 0.0f)
-	};
-
-	patrolPoints = smoothCornersPath(patrolPoints, 3);
-
-	aiComponent->patrolPoints = patrolPoints;
-
-	aiComponent->movementSpeed = 10.0;
-
-	//entity = m_World->CreateEntity();
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(30.0f, 3.0f, 0.0f);
-	//transform->scale = point3d(1, 0, 0);
-	//physicBody = entity->AddComponent<PhysicBody>();
-	////star->AddComponent<SphereCollider>();
-	//constellation = entity->AddComponent<Constellation>();
-	//constellation->stars = {
-	//	point3d(0, 0, 0)
-	//};
-	//aiComponent = entity->AddComponent<AIComponent>();
-
-	//aiComponent->patrolPoints = {
-	//	 point3d(-10.0f, 0.0f, 0.0f),
-	//	 point3d(0.0f, 0.0f, 10.0f)
-	//};
-
-
 	// MAIN MENU //
 	
 	entity = m_World->entityStorage->CreateEntity("Ui");
@@ -364,28 +259,18 @@ bool LevelManagerClass::Initialize()
 	transform2D->position = point3d(0.5f, 0.1f, 0.0f);
 	transform2D->scale = point3d(0.25f, 0.25f, 0.0f);
 	button = entity->AddComponent<Button>();
-	button->color = point3d(0.5f, 0.25f, 0.8f);
+	//button->color = point3d(0.5f, 0.25f, 0.8f);
 	button->opacity = 0.5f;
 
 	entity = m_World->entityStorage->CreateEntity("Ui", entity);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(0, 0, 0);
 	transform2D->ratio = ScreenAspectRatio::XY;
-	transform2D->rotation = 0;
 	transform2D->position = point3d(-1.0f, 1.0f, 0.0f);
 	transform2D->scale = point3d(0.25f, 0.25f, 0.0f);
-	rect = entity->AddComponent<Rect>();
-	rect->color = point3d(0.5f, 0.5f, 0.3f);
-	rect->opacity = 1.0f;
+	button = entity->AddComponent<Button>();
 
 	// MAIN MENU END //
-
-	/*entity = m_World->CreateEntity();
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0, 0, 0);
-	transform->scale = point3d(0.5, 0.5, 0);
-	textLabel = entity->AddComponent<TextLabel>();
-	textLabel->text = "Test text";*/
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING END //

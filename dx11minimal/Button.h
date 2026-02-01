@@ -9,6 +9,7 @@ struct Button : Component
 	bool isClicked = false;
 
 	point3d color = point3d(1, 1, 1);
+	point3d clickColor = point3d(1, 0, 0);
 	float opacity = 1.0f;
 
 	float cornerRadius = 0.0f;

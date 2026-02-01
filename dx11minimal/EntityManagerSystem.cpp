@@ -1,47 +1,32 @@
-#ifndef _ENTITY_MANAGER_SYSTEM_
-#define _ENTITY_MANAGER_SYSTEM_
-
-//////////////
-// INCLUDES //
-//////////////
-#include<cmath>
-#include "system.h"
-#include "timer.h"
-
-#include "DelayedDestroy.h"
+#include "entityManagerSystem.h"
 
 
-class EntityManagerSystem : public System
+
+EntityManagerSystem::EntityManagerSystem()
 {
-public:
-	EntityManagerSystem()
-	{
-	}
+}
 
 
-	void Initialize()
-	{
-	}
+void EntityManagerSystem::Initialize()
+{
+}
 
 
-	void Shutdown()
-	{
-	}
+void EntityManagerSystem::Shutdown()
+{
+}
 
 
-	void Update(vector<Entity*>& entities, float deltaTime)
-	{
-		size_t size = entities.size();
-		for (int i = 0; i < size; i++) {
-			Entity* entity = entities[i];
-			if (IsEntityValid(entity)) {
-				DelayedDestroy* delayedDestroy = entity->GetComponent<DelayedDestroy>();
-				if (delayedDestroy != nullptr && delayedDestroy->active && timer::currentTime >= delayedDestroy->startTime + delayedDestroy->lifeTime / entity->timeScale) {
-					entity->Destroy();
-				}
+void EntityManagerSystem::Update(vector<Entity*>& entities, float deltaTime)
+{
+	size_t size = entities.size();
+	for (int i = 0; i < size; i++) {
+		Entity* entity = entities[i];
+		if (IsEntityValid(entity)) {
+			DelayedDestroy* delayedDestroy = entity->GetComponent<DelayedDestroy>();
+			if (delayedDestroy != nullptr && delayedDestroy->active && timer::currentTime >= delayedDestroy->startTime + delayedDestroy->lifeTime / entity->timeScale) {
+				entity->Destroy();
 			}
 		}
 	}
-};
-
-#endif
+}

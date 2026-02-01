@@ -26,16 +26,16 @@
 #include "Patern_Enemy_Logik.cpp"
 
 
-#include "SpriteSystem.cpp"
-#include "MeshSystem.cpp"
-#include "UISystem.cpp"
+#include "spriteSystem.h"
+#include "meshSystem.h"
+#include "uiSystem.h"
 
-#include "PhysicSystem.cpp"
-#include "CollisionSystem.cpp"
-#include "CombatSystem.cpp"
-#include "EntityManagerSystem.cpp"
+#include "physicSystem.h"
+#include "collisionSystem.h"
+#include "combatSystem.h"
+#include "entityManagerSystem.h"
 
-#include "CollisionDrawSystem.cpp"
+#include "collisionDrawSystem.h"
 
 /////////////
 // GLOBALS //

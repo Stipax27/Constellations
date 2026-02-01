@@ -172,13 +172,17 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="cameraclass.h" />
     <ClInclude Include="collider.h" />
+    <ClInclude Include="collisionDrawSystem.h" />
     <ClInclude Include="CollisionGroup.h" />
     <ClInclude Include="CollisionManagerClass.h" />
+    <ClInclude Include="collisionSystem.h" />
+    <ClInclude Include="combatSystem.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="Constellation.h" />
     <ClInclude Include="cornerType.h" />
     <ClInclude Include="DelayedDestroy.h" />
+    <ClInclude Include="entityManagerSystem.h" />
     <ClInclude Include="entityStorage.h" />
     <ClInclude Include="FistsClass.h" />
     <ClInclude Include="fraction.h" />
@@ -192,11 +196,13 @@
     <ClInclude Include="Health.h" />
     <ClInclude Include="LevelManagerClass.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="meshSystem.h" />
     <ClInclude Include="MethodOfClosest.h" />
     <ClInclude Include="mouseclass.h" />
     <ClInclude Include="MultiDamageGiver.h" />
     <ClInclude Include="ParticleEmitter.h" />
     <ClInclude Include="PhysicBody.h" />
+    <ClInclude Include="physicSystem.h" />
     <ClInclude Include="PlaneCollider.h" />
     <ClInclude Include="PlayerAbilities.h" />
     <ClInclude Include="PlayerController.h" />
@@ -209,6 +215,7 @@
     <ClInclude Include="SmallConstellation.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="SpriteCluster.h" />
+    <ClInclude Include="spriteSystem.h" />
     <ClInclude Include="Star.h" />
     <ClInclude Include="StarAttack.h" />
     <ClInclude Include="SurfaceCollider.h" />
@@ -216,6 +223,7 @@
     <ClInclude Include="TextLabel.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Transform2D.h" />
+    <ClInclude Include="uiSystem.h" />
     <ClInclude Include="windowclass.h" />
     <ClInclude Include="world.h" />
     <None Include="Shaders\DepthDown.shader">
