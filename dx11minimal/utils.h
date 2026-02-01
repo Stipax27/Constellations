@@ -6,20 +6,14 @@
 // INCLUDES //
 //////////////
 #include <corecrt_math.h>
-#include <DirectXMath.h>
-#include <d3d11.h>
+#include "dx11.h"
+#include "constants.h"
 #include "Point3d.h"
 
 #include "entity.h"
 #include "Transform.h"
 #include "Transform2D.h"
 
-
-/////////////
-// GLOBALS //
-/////////////
-#define PI 3.1415926535897932384626433832795f
-#define RAD 0.017453292519943295f
 
 
 float clamp(float x, float a, float b);
@@ -34,6 +28,8 @@ point3d quaternionToEuler(float x, float y, float z, float w);
 DirectX::XMVECTOR eulerToQuanternion(float x, float y, float z);
 
 int getRandom(int min = 1, int max = 0);
+
+point3d rotatePoint(point3d, float);
 
 Transform GetWorldTransform(Entity*);
 Transform2D GetWorldTransform2D(Entity*);

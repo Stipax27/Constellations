@@ -17,15 +17,6 @@ cbuffer camera : register(b3)
     float4 cPos;
 };
 
-float3 rotY(float3 p, float a)
-{
-    float3x3 r;
-    r[0] = float3(cos(a), 0, sin(a));
-    r[1] = float3(-sin(a), 0, cos(a));
-    r[2] = float3(0, 1, 0);
-    return mul(p, r);
-}
-
 float3 rotatePoint(float3 pos, float angle)
 {
     float radius = length(pos);

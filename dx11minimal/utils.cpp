@@ -54,6 +54,15 @@ int getRandom(int min, int max) {
     }
 }
 
+point3d rotatePoint(point3d pos, float angle)
+{
+    float radius = pos.magnitude();
+    float angle0 = atan2(pos.y, pos.x);
+    angle0 += angle;
+
+    return point3d(cos(angle0), sin(angle0), 0) * radius;
+}
+
 Transform GetWorldTransform(Entity* entity) {
     Transform worldTransform = Transform();
 
@@ -105,7 +114,35 @@ Transform2D GetWorldTransform2D(Entity* entity) {
         }
 
         for (int i = transforms2d.size() - 1; i >= 0; i--) {
-            worldTransform2D += *transforms2d[i];
+            //worldTransform2D += *transforms2d[i];
+            Transform2D other = *transforms2d[i];
+
+            point3d aspectCorrection;
+            switch (worldTransform2D.ratio)
+            {
+            case ScreenAspectRatio::XY:
+                aspectCorrection = point3d(1, 1, 0);
+                break;
+            case ScreenAspectRatio::YX:
+                aspectCorrection = point3d(ConstBuf::frame.aspect.x, ConstBuf::frame.aspect.y, 0);
+                break;
+            case ScreenAspectRatio::XX:
+                aspectCorrection = point3d(1, ConstBuf::frame.aspect.y, 0);
+                break;
+            case ScreenAspectRatio::YY:
+                aspectCorrection = point3d(ConstBuf::frame.aspect.x, 1, 0);
+                break;
+            }
+
+            worldTransform2D.position += other.position * worldTransform2D.scale * aspectCorrection;
+            worldTransform2D.position.x *= ConstBuf::frame.aspect.y;
+            worldTransform2D.position = rotatePoint(worldTransform2D.position, worldTransform2D.rotation);
+            worldTransform2D.position.x *= ConstBuf::frame.aspect.x;
+
+            worldTransform2D.anchorPoint = other.anchorPoint;
+            worldTransform2D.scale *= other.scale;
+            worldTransform2D.rotation += other.rotation;
+            worldTransform2D.ratio = other.ratio;
         }
     }
 

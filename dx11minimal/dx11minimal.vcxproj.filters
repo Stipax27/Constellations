@@ -278,6 +278,9 @@
     <ClInclude Include="PlayerController.h">
       <Filter>Header Files\System</Filter>
     </ClInclude>
+    <ClInclude Include="constants.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">

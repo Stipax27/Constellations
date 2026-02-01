@@ -175,6 +175,7 @@
     <ClInclude Include="CollisionGroup.h" />
     <ClInclude Include="CollisionManagerClass.h" />
     <ClInclude Include="component.h" />
+    <ClInclude Include="constants.h" />
     <ClInclude Include="Constellation.h" />
     <ClInclude Include="cornerType.h" />
     <ClInclude Include="DelayedDestroy.h" />
