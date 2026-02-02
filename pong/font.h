@@ -280,9 +280,9 @@ float drawLetterFX(int letter, float x, float y, float scale,int num=0)
         
 
         point3d p = { x_- letter_width[letter]/2, y_-20, 0};
-        p.rotateX(p, rs);
-        p.rotateY(p, rs);
-        p.rotateZ(p, rs);
+        rotateX(p, rs);
+        rotateY(p, rs);
+        rotateZ(p, rs);
 
         p.x *= 1+rs*.1;
         p.y *= 1+rs*.1;

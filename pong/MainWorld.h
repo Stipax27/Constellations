@@ -6,7 +6,7 @@ Constellation Aries(
     {.35, .12, 0.},
     {.43, .27, 0.}
 },
-
+    { 1,1,1,1 },//health
 {
     {0, 1},//indicies
     {1, 2},
@@ -33,7 +33,7 @@ Constellation Taurus(
     {.75, .05, 0},
     {.9, .25,0}
 },
-   
+    { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 },//health
 {
     {0, 1},//indicies
     {1, 2},
@@ -72,7 +72,7 @@ Constellation Gemini(
    {.5, 1, 0},
    {.65, 1.1, 0}
 },
-
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },//health
 {
     {0, 1},//indicies
     {1, 2},
@@ -97,16 +97,15 @@ Constellation Cancer(
     {-.05, -.15, 0},
     {0, 0, 0},
     {-.4, .5, 0},
-     
+    {0, 0, 0},
     {.4, .3, 0}
 
 },
-    
+    { 1, 1, 1, 1, 1, 1 },
 {
     {0,1},
     {1,2},
     {2,3},
-    {5,2},
     {2,5}
 }
 );
@@ -125,7 +124,7 @@ Constellation Leo(
     {.5, .2, 0},
     {.3, .01, 0}
 },
-    
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 {
     {0, 1},
     {1, 2},
@@ -158,7 +157,7 @@ Constellation Virgo(
     {-1.4, .01, 0},
     {-1.85, 0, 0}
 },
-    
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 {
     {0, 1},
     {1, 2},
@@ -171,10 +170,7 @@ Constellation Virgo(
     {10, 2},
     {10, 11},
     {11, 12},
-    {12, 13},
-    {13,14},
-    {14,15}
-    
+    {12, 13}
 }
 );
 Constellation Libra(
@@ -187,7 +183,7 @@ Constellation Libra(
     {-.4,-.1,0},
     {-.6, -.05, 0}
 },
-    
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 {
     {1, 4},
     {1, 2},
@@ -220,7 +216,7 @@ Constellation Scorpius(
     {.25, -.28, 0},
     {.1, -.15, 0}
 },
-    
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 {
     {0,1},
     {1,2},
@@ -261,7 +257,7 @@ Constellation Sagittarius(
     {-.5, 1.3, 0},
     {-.4, 1.6, 0},
 },
-    
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 {
     {0,1},
     {1,2},
@@ -296,7 +292,7 @@ Constellation Capricornus(
    {.4, 1.1, 0},
    {1.3, .1, 0},
 },
-    
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 {
     {0,1},
     {1,2},
@@ -327,7 +323,7 @@ Constellation Aquarius(
    {-.9, .8, 0}
 
 },
-    
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 {
     {0,1},
     {1,2},
@@ -359,7 +355,7 @@ Constellation Pisces(
     { -1, -1, 0 },
     { -.8, -1.2, 0 }
 },
-    
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 {
     {0,1},
     {1,2},
@@ -378,23 +374,23 @@ Constellation Pisces(
 );
 
 Constellation Sword(
-{ { 1.3, 1.4, 0 },
-    { 1.1, 1.2, 0 },
-    { .8, .9, 0 },
-    { .6, .9, 0 },
-    {.5, .5, 0 },
-    {.3, .4, 0 },
-    {.2, .2, 0 },
-    {0, 0, 0 },
-    {-.2, -.2, 0 },
-    {0, -.3, 0},
-    {.1,-.4,0},
-    {-.2,0,0},
-    {-.2,-.3,0},
-    {-.3,-.4, 0},
-    {-.5,-.7,0}
-},
-
+    { { 1.3, 1.4, 0 },
+        { 1.1, 1.2, 0 },
+        { .8, .9, 0 },
+        { .6, .9, 0 },
+        {.5, .5, 0 },
+        {.3, .4, 0 },
+        {.2, .2, 0 },
+        {0, 0, 0 },
+        {-.2, -.2, 0 },
+        {0, -.3, 0},
+        {.1,-.4,0},
+        {-.2,0,0},
+        {-.2,-.3,0},
+        {-.3,-.4, 0},
+        {-.5,-.7,0}
+    },
+    { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 },
 {
     {0,1},
     {1,2},
@@ -414,29 +410,29 @@ Constellation Sword(
 );
 
 Constellation Shield(
-{
-    {.4,1,0},
-    {.5,.6,0},
-    {.7,.8,0},
-    {.6,.5,0},
-    {1.1,.3,0},
-    {.7,.2,0},
-    {.6,0,0},
-    {.7,-.6,0},
-    {.5,-.3,0},
-    {0,0,0},
-    {-.5,-.3,0},
-    {-.7,-.6,0},
-    {-.6,0,0},
-    {-.7,.2,0},
-    {-1.1,.3,0},
-    {-.6,.5,0},
-    {-.7,.8,0},
-    {-.5,.6,0},
-    {-.4,1,0},
-    {0,1.2,0}
-},
-
+    {
+        {.4,1,0},
+        {.5,.6,0},
+        {.7,.8,0},
+        {.6,.5,0},
+        {1.1,.3,0},
+        {.7,.2,0},
+        {.6,0,0},
+        {.7,-.6,0},
+        {.5,-.3,0},
+        {0,0,0},
+        {-.5,-.3,0},
+        {-.7,-.6,0},
+        {-.6,0,0},
+        {-.7,.2,0},
+        {-1.1,.3,0},
+        {-.6,.5,0},
+        {-.7,.8,0},
+        {-.5,.6,0},
+        {-.4,1,0},
+        {0,1.2,0}
+    },
+    { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 },
 {
     {0,1},
     {1,2},
@@ -463,25 +459,25 @@ Constellation Shield(
 );
 
 Constellation Bow(
-{
-    {.5,.9,0},
-    {.8,1,0},
-    {.6,.6,0},
-    {.7,.8,0},
-    {.4,.6,0},
-    {.3,.3,0},
-    {.3,0,0},
-    {0,0,0},
-    {0,-.3,0},
-    {-.3,-.3,0},
-    {-.6,-.4,0},
-    {-.8,-.7,0},
-    {-.6,-.6,0},
-    {-1,-.8,0},
-    {-.9,-.5,0},
+    {
+        {.5,.9,0},
+        {.8,1,0},
+        {.6,.6,0},
+        {.7,.8,0},
+        {.4,.6,0},
+        {.3,.3,0},
+        {.3,0,0},
+        {0,0,0},
+        {0,-.3,0},
+        {-.3,-.3,0},
+        {-.6,-.4,0},
+        {-.8,-.7,0},
+        {-.6,-.6,0},
+        {-1,-.8,0},
+        {-.9,-.5,0},
 
-},
-
+    },
+    { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 },
 {
     {0,1},
     {1,2},
@@ -501,20 +497,20 @@ Constellation Bow(
 );
 
 Constellation Staff(
-{
-    {.7,.8,0},
-    {.5,.6,0},
-    {.3,.4,0},
-    {0,0,0},
-    {-.3,-.4,0},//4
-    {-.5,-.4,0},
-    {-.6,-.6,0},
-    {-.8,-.6,0},//7
-    {-.4,-.7,0},
-    {-.3,-.7,0},
-    {-.2,-.5,0}
-},
-
+    {
+        {.7,.8,0},
+        {.5,.6,0},
+        {.3,.4,0},
+        {0,0,0},
+        {-.3,-.4,0},//4
+        {-.5,-.4,0},
+        {-.6,-.6,0},
+        {-.8,-.6,0},//7
+        {-.4,-.7,0},
+        {-.3,-.7,0},
+        {-.2,-.5,0}
+    },
+    { 1,1,1,1,1,1,1,1,1,1,1 },
 {
     {0,1},
     {1,2},
@@ -530,30 +526,28 @@ Constellation Staff(
 );
 
 std::vector <Constellation*> starSet = {
-    &Aries,
-    &Taurus,
-    &Gemini,
-    &Cancer,
-    &Leo,
-    &Virgo,
-    &Libra,
-    &Scorpius,
-    &Sagittarius,
-    &Capricornus,
-    &Aquarius,
-    &Pisces,
-    &Sword,
-    &Shield,
-    &Bow,
-    &Staff
+&Aries,
+&Taurus,
+&Gemini,
+&Cancer,
+&Leo,
+&Virgo,
+&Libra,
+&Scorpius,
+&Sagittarius,
+&Capricornus,
+&Aquarius,
+&Pisces,
+&Sword,
+&Shield,
+&Bow,
+&Staff
 };
-
-std::vector<Entity> entities;
 
 void initWorld()
 {
     Aries.setStarsRenderedCords(-17, -25, 0);
-    Taurus.setStarsRenderedCords(-170, -25, 0);
+    Taurus.setStarsRenderedCords( - 170, -25, 0);
     Gemini.setStarsRenderedCords(-200, 0, 0);
     Cancer.setStarsRenderedCords(-20, -20, 0);
     Leo.setStarsRenderedCords(40, 50, 0);
@@ -568,26 +562,6 @@ void initWorld()
     Shield.setStarsRenderedCords(0, 0, 0);
     Bow.setStarsRenderedCords(0, 0, 0);
     Staff.setStarsRenderedCords(0, 0, 0);
-
-    entities.clear();
-    entities.reserve(16);
-
-    entities.push_back(Entity(Aries));
-    entities.push_back(Entity(Taurus));
-    entities.push_back(Entity(Gemini));
-    entities.push_back(Entity(Cancer));
-    entities.push_back(Entity(Leo));
-    entities.push_back(Entity(Virgo));
-    entities.push_back(Entity(Libra));
-    entities.push_back(Entity(Scorpius));
-    entities.push_back(Entity(Sagittarius));
-    entities.push_back(Entity(Capricornus));
-    entities.push_back(Entity(Aquarius));
-    entities.push_back(Entity(Pisces));
-    entities.push_back(Entity(Sword));
-    entities.push_back(Entity(Shield));
-    entities.push_back(Entity(Bow));
-    entities.push_back(Entity(Staff));
 }
 
 using namespace std;
@@ -602,10 +576,10 @@ enum MonthSign {
 };
 
 enum class gameState_ {
-    MainMenu, MonthSelection, DaySelection, confirmSign, selectEnemy, Fight, EndFight, DialogStruct,WinFight,Quest,Riddle,StarFight,Helper
+    MainMenu, MonthSelection, DaySelection, confirmSign, selectEnemy, Fight, EndFight, DialogStruct,WinFight
 };
 
-gameState_  gameState = gameState_::Fight;
+gameState_  gameState = gameState_::MainMenu;
 Constellation* currentEnemy = &Aries;
 ZodiacSign currentEnemyID = ZodiacSign::ARIES;
 

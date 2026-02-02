@@ -1,0 +1,48 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: PlayerWeaponClass.h
+////////////////////////////////////////////////////////////////////////////////
+#ifndef _PLAYER_WEAPONCLASS_H_
+#define _PLAYER_WEAPONCLASS_H_
+
+//////////////
+// INCLUDES //
+//////////////
+#include "world.h"
+#include "entity.h"
+
+#include "Point3d.h"
+
+#include "Transform.h"
+#include "PhysicBody.cpp"
+#include "SphereCollider.cpp"
+#include "Star.cpp"
+#include "DelayedDestroy.cpp"
+#include "SingleDamageGiver.cpp"
+
+
+/////////////
+// STRUCTS //
+/////////////
+
+
+/////////////
+// GLOBALS //
+/////////////
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: PlayerWeaponClass
+////////////////////////////////////////////////////////////////////////////////
+
+
+class PlayerWeaponClass
+{
+public:
+	virtual void InputStart(Transform, point3d);
+	virtual void InputEnd(Transform, point3d);
+
+private:
+	World* world;
+};
+
+#endif

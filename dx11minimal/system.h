@@ -1,0 +1,39 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: system.h
+////////////////////////////////////////////////////////////////////////////////
+#ifndef _SYSTEM_H_
+#define _SYSTEM_H_
+
+//////////////
+// INCLUDES //
+//////////////
+#include <vector>
+#include "component.h"
+#include "entity.h"
+#include "entityStorage.h"
+
+#include "dx11.h"
+using namespace std;
+
+/////////////
+// GLOBALS //
+/////////////
+#define SPACE_DENSITY 25.0f
+
+#define HIGH_RENDER_DISTANCE 10.0f
+#define LOW_RENDER_DISTANCE 75.0f
+#define RENDER_DISTANCE_DELTA LOW_RENDER_DISTANCE - HIGH_RENDER_DISTANCE
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: System
+////////////////////////////////////////////////////////////////////////////////
+class System
+{
+public:
+	virtual void Initialize() = 0;
+	virtual void Shutdown() = 0;
+	virtual void Update(vector<Entity*>& entities, float deltaTime) = 0;
+};
+
+#endif

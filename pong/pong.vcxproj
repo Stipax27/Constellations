@@ -76,7 +76,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -94,7 +93,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -110,7 +108,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -125,7 +122,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -149,24 +145,17 @@
     <Media Include="..\Debug\music.mp3" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camer.h" />
     <ClInclude Include="Constellation.h" />
     <ClInclude Include="DialogStruct.h" />
     <ClInclude Include="DiologTEXT.h" />
     <ClInclude Include="DodgeEnemy.h" />
     <ClInclude Include="drawer.h" />
-    <ClInclude Include="Elements.h" />
     <ClInclude Include="font.h" />
-    <ClInclude Include="Header.h" />
-    <ClInclude Include="Line.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="MainWorld.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="Navigation.h" />
-    <ClInclude Include="Parametrics.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="Point3d.h" />
     <ClInclude Include="StatusGame.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="utils.h" />

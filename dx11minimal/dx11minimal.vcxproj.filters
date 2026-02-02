@@ -1,0 +1,551 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <FxCompile Include="Shaders\BlackHole_Body_VS.shader">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SpaceStars_VS.shader">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\StarLink_PS.shader">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BaseStar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Explosion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ExplosionSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Patern_Enemy_Logik.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SmallConstellation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SplinePath.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshSystem.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteSystem.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionDrawSystem.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionSystem.cpp">
+      <Filter>Source Files\Physic</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicSystem.cpp">
+      <Filter>Source Files\Physic</Filter>
+    </ClCompile>
+    <ClCompile Include="dx11.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="dx11minimal.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="cameraclass.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowClass.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="CombatSystem.cpp">
+      <Filter>Source Files\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseClass.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelManagerClass.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerController.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Point4d.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Point3d.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Source Files\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Source Files\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Source Files\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="UISystem.cpp">
+      <Filter>Source Files\Render\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityManagerSystem.cpp">
+      <Filter>Source Files\EntityManagment</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform2D.cpp">
+      <Filter>Source Files\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityStorage.cpp">
+      <Filter>Source Files\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="FrustumClass.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionManagerClass.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="MethodOfClosest.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerAbilities.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BaseStar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy_Patern.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Font_OLD.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FpsCounter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelManagerClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SmallConstellation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StarAttack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="windowclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerAbilities.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerWeaponClass.h">
+      <Filter>Header Files\PlayerWeapon</Filter>
+    </ClInclude>
+    <ClInclude Include="system.h">
+      <Filter>Header Files\ECS base</Filter>
+    </ClInclude>
+    <ClInclude Include="world.h">
+      <Filter>Header Files\ECS base</Filter>
+    </ClInclude>
+    <ClInclude Include="entity.h">
+      <Filter>Header Files\ECS base</Filter>
+    </ClInclude>
+    <ClInclude Include="dx11.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="component.h">
+      <Filter>Header Files\ECS base</Filter>
+    </ClInclude>
+    <ClInclude Include="cameraclass.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="mouseclass.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Point3d.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Point4d.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="renderCompress.h">
+      <Filter>Header Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="fraction.h">
+      <Filter>Header Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="FistsClass.h">
+      <Filter>Header Files\PlayerWeapon</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitter.h">
+      <Filter>Header Files\ECS base\Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="PointCloud.h">
+      <Filter>Header Files\ECS base\Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteCluster.h">
+      <Filter>Header Files\ECS base\Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Constellation.h">
+      <Filter>Header Files\ECS base\Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files\ECS base\Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Star.h">
+      <Filter>Header Files\ECS base\Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Header Files\ECS base\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Health.h">
+      <Filter>Header Files\ECS base\Components\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleDamager.h">
+      <Filter>Header Files\ECS base\Components\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiDamager.h">
+      <Filter>Header Files\ECS base\Components\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files\ECS base\Components\Render\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Rect.h">
+      <Filter>Header Files\ECS base\Components\Render\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TextLabel.h">
+      <Filter>Header Files\ECS base\Components\Render\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicBody.h">
+      <Filter>Header Files\ECS base\Components\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="PlaneCollider.h">
+      <Filter>Header Files\ECS base\Components\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereCollider.h">
+      <Filter>Header Files\ECS base\Components\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="SurfaceCollider.h">
+      <Filter>Header Files\ECS base\Components\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="DelayedDestroy.h">
+      <Filter>Header Files\ECS base\Components\EntityManagment</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionGroup.h">
+      <Filter>Header Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="cornerType.h">
+      <Filter>Header Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="collider.h">
+      <Filter>Header Files\ECS base\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform2D.h">
+      <Filter>Header Files\ECS base\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="entityStorage.h">
+      <Filter>Header Files\ECS base</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerController.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="constants.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="uiSystem.h">
+      <Filter>Header Files\ECS base\Systems\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="spriteSystem.h">
+      <Filter>Header Files\ECS base\Systems\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="meshSystem.h">
+      <Filter>Header Files\ECS base\Systems\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="frustumclass.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="collisionDrawSystem.h">
+      <Filter>Header Files\ECS base\Systems\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManagerClass.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="MethodOfClosest.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="collisionSystem.h">
+      <Filter>Header Files\ECS base\Systems\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="physicSystem.h">
+      <Filter>Header Files\ECS base\Systems\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="combatSystem.h">
+      <Filter>Header Files\ECS base\Systems\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="entityManagerSystem.h">
+      <Filter>Header Files\ECS base\Systems\EntityManagment</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resourses\Images\dx11minimal.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="small.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\AriesNebula_GS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\AriesNebula_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\AriesNebula_VS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\BlackHole_Body_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Cross_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Cross_VS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Cursor_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Cursor_VS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\DepthCutoff_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\DepthDown.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\DotText_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\DotText_VS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\GalaxyFog_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\GalaxyFog_VS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Lensing_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Mesh_Fit_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Mesh_Stretch_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Mesh_VS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PerlinNoise.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PointCloud_GS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PointCloud_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PointCloud_VS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PP_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PP_VS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PSFS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PSS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Rect_Smooth_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Rect_Strict_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Rect_VS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\SpaceStars_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\SpeedParticles_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\SpeedParticles_VS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Sphere_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Sphere_VS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\StarCrown_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\StarCrown_VS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\StarLink_VS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\StarSphere_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\StarSphere_VS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\UiParticle_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\UiParticle_VS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Lib\utils.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VoronoiNoise.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VSFS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VSS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{a787fe97-66c5-41bb-8f0c-a7e96fba0307}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{b79734ff-4a71-4b97-9119-2b93e1bec80c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{ca3c044b-6683-40a0-8577-ae71eecf0e28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{9fc2c6b2-ffcd-4bfc-8e84-f94c441b789b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render">
+      <UniqueIdentifier>{0f249e38-0294-4c3d-b8a7-5faf531b4d6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physic">
+      <UniqueIdentifier>{e08322b0-6770-436a-8fd0-b0d72e7a0de4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\System">
+      <UniqueIdentifier>{66b0734c-e97a-4206-91ee-c2e95e1ae908}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Combat">
+      <UniqueIdentifier>{a3485fa1-51aa-459f-ae72-c4bcd7eb71ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utils">
+      <UniqueIdentifier>{d0ab3c49-f465-4c40-8cf3-6859ac24cfa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ECS">
+      <UniqueIdentifier>{d3457a34-9e22-40be-88e5-d509e4a34920}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render\UI">
+      <UniqueIdentifier>{baf20da3-17b1-47e1-9d09-11b266c61adf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\PlayerWeapon">
+      <UniqueIdentifier>{057d3ba2-3f2d-4faa-acc3-17fb4910629c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base">
+      <UniqueIdentifier>{47663e43-5bbd-48ed-ad70-4524c1b19523}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\System">
+      <UniqueIdentifier>{ce93f03f-7503-4c37-ba9b-0be89576fc6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Enums">
+      <UniqueIdentifier>{2662e969-253d-46ed-a7ff-1f1eecc1e552}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utils">
+      <UniqueIdentifier>{6140eb2c-475c-46c4-866d-6e7b2564880c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Components">
+      <UniqueIdentifier>{b21ea245-af26-4e6a-bef6-ff7c61d2c465}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Components\Render">
+      <UniqueIdentifier>{dd034252-9b43-4801-ad5f-68d4c39ca6fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Components\Combat">
+      <UniqueIdentifier>{5b41c122-efb6-4121-9b82-27e69f096143}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Components\Render\UI">
+      <UniqueIdentifier>{b5fa5c8a-08e2-4cce-b755-1a13d518d35e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Components\Physic">
+      <UniqueIdentifier>{18b7899b-4dd6-47ca-b9e1-9caf4ddb781a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\EntityManagment">
+      <UniqueIdentifier>{7fd2d49d-bf4a-4917-a60a-9681de3f0141}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Components\EntityManagment">
+      <UniqueIdentifier>{1c127b4f-b832-48d9-96f3-2f2e710d2814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Systems">
+      <UniqueIdentifier>{bbca0220-e3e7-4508-825a-070c849aa4b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Systems\Render">
+      <UniqueIdentifier>{e9f2a3e9-f2a4-4500-8de4-830b34ed595f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Systems\Physic">
+      <UniqueIdentifier>{75250631-cbc7-46ae-ae4a-0f44d5054363}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Systems\Combat">
+      <UniqueIdentifier>{944aaf3a-7900-4496-a1e5-8ea0d8ff82e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS base\Systems\EntityManagment">
+      <UniqueIdentifier>{54470321-bad2-4de1-bd7e-a0cf08859864}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="dx11minimal.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

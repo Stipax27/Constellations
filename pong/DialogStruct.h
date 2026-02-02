@@ -28,6 +28,7 @@ std::vector<Dialog> currentDialogs;
 
 bool initDialogs = false;
 
+
 void initContentData() {
     if (initDialogs) return;
     initDialogs = true;
@@ -201,6 +202,7 @@ void renderContent() {
 void handleInput() {
     static double lastClickTime = 0.0; 
 
+    
     bool canClick = (currentTime - lastClickTime) >= 1.f;
 
     if (drawClickableText("If you don't want to read \n Start Game", true, RGB(0, 191, 255), window.width / 2, (1200. / 1440) * window.height) && canClick) {

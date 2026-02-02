@@ -1,34 +1,10 @@
-
-void navigationByMouse();
-void selectWeapon();
-
-struct Mouse
-{
-    point3d pos;
-    point3d Angle;
-    point3d oldPos;
-    point3d oldAngle;
-
-    void Input()
-    {
-        POINT p;
-        GetCursorPos(&p);
-        ScreenToClient(window.hWnd, &p); // Управление мышью.
-        
-        pos = { (float)p.x, (float)p.y, 0.f };
-
-        navigationByMouse();
-        selectWeapon();
-    }
-
-};
-
-Mouse mouse;
-
-bool rmb = false; 
+POINT mouse;
+point3d mouseAngle;
+point3d oldmouse;
+point3d oldmouseAngle;
+bool rmb = false; //Правая кнопка мыши
 bool lmb = false;
-//Mouse::mouse;
-//POINT& mouse, point3d& mouseAngle, point3d& oldmouse, point3d& oldmouseAngle
+
 void navigationByMouse()
 {
     if (GetAsyncKeyState(VK_RBUTTON))
@@ -36,16 +12,16 @@ void navigationByMouse()
         if (!rmb)
         {
             rmb = true;
-            mouse.oldPos.x = mouse.pos.x;
-            mouse.oldPos.y = mouse.pos.y;
-            mouse.oldAngle = mouse.Angle;
+            oldmouse.x = mouse.x;
+            oldmouse.y = mouse.y;
+            oldmouseAngle = mouseAngle;
         }
         float dx, dy;
-        dx = mouse.pos.x - mouse.oldPos.x;
-        dy = mouse.pos.y - mouse.oldPos.y;
+        dx = mouse.x - oldmouse.x;
+        dy = mouse.y - oldmouse.y;
 
-        mouse.Angle.x = mouse.oldAngle.x + dx;
-        mouse.Angle.y = mouse.oldAngle.y + dy;
+        mouseAngle.x = oldmouseAngle.x + dx;
+        mouseAngle.y = oldmouseAngle.y + dy;
     }
     else
     {
@@ -57,8 +33,8 @@ void selectWeapon()
 {
     if (GetAsyncKeyState(VK_LBUTTON))
     {
-        float dx = mouse.pos.x - window.width / 2.;
-        float dy = mouse.pos.y - window.height / 2.;
+        float dx = mouse.x - window.width / 2.;
+        float dy = mouse.y - window.height / 2.;
         float lenght = sqrt(dx * dx + dy * dy);
         if (lenght < circleRadius)
         {
@@ -71,4 +47,10 @@ void selectWeapon()
     }
 }
 
-
+void mouseInput()
+{
+    GetCursorPos(&mouse);
+    ScreenToClient(window.hWnd, &mouse); // Управление мышью.
+    navigationByMouse();
+    selectWeapon();
+}
