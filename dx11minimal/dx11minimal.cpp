@@ -101,11 +101,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             timer::deltaTime = timer::currentTime - timer::lastFrameTime;
             timer::lastFrameTime = timer::currentTime;
 
+            //timer::CalcDeltaAverage();
             timer::frameBeginTime = timer::GetCounter();
 
             levelManager.Frame();
-
-            //mainLoop(timer::deltaTime);
 
             timer::frameEndTime = timer::GetCounter();
             timer::frameRenderingDuration = timer::frameEndTime - timer::frameBeginTime;

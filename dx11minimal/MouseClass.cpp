@@ -21,7 +21,7 @@ void MouseClass::Initialize(WindowClass* Window, CameraClass* Camera, CollisionM
 	camera = Camera;
 	collisionManager = CollisionManager;
 
-	state = MouseState::Free;
+	state = MouseState::Centered;
 	visible = true;
 
 	lbuttonDown = false;

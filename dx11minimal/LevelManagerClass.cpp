@@ -103,7 +103,7 @@ bool LevelManagerClass::Initialize()
 	transform = player->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, 0.0f);
 	physicBody = player->AddComponent<PhysicBody>();
-	//physicBody->preciseMovement = true;
+	physicBody->preciseMovement = true;
 	sphereCollider = player->AddComponent<SphereCollider>();
 	sphereCollider->radius = 0.75f;
 	sphereCollider->collisionGroup = CollisionFilter::Group::Player;
@@ -251,25 +251,25 @@ bool LevelManagerClass::Initialize()
 
 	// MAIN MENU //
 	
-	entity = m_World->entityStorage->CreateEntity("Ui");
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(0, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::YX;
-	//transform2D->rotation = PI / 8;
-	transform2D->position = point3d(0.5f, 0.1f, 0.0f);
-	transform2D->scale = point3d(0.25f, 0.25f, 0.0f);
-	button = entity->AddComponent<Button>();
-	//button->color = point3d(0.5f, 0.25f, 0.8f);
-	button->opacity = 0.5f;
+	//entity = m_World->entityStorage->CreateEntity("Ui");
+	//transform2D = entity->AddComponent<Transform2D>();
+	//transform2D->anchorPoint = point3d(0, 0, 0);
+	//transform2D->ratio = ScreenAspectRatio::YX;
+	////transform2D->rotation = PI / 8;
+	//transform2D->position = point3d(0.5f, 0.1f, 0.0f);
+	//transform2D->scale = point3d(0.25f, 0.25f, 0.0f);
+	//button = entity->AddComponent<Button>();
+	////button->color = point3d(0.5f, 0.25f, 0.8f);
+	//button->opacity = 0.5f;
 
-	entity = m_World->entityStorage->CreateEntity("Ui");
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(-1, 1, 0);
-	transform2D->ratio = ScreenAspectRatio::XY;
-	//transform2D->position = point3d(-1.0f, 1.0f, 0.0f);
-	transform2D->scale = point3d(0.25f, 0.25f, 0.0f);
-	button = entity->AddComponent<Button>();
-	button->cornerRadius = 0.1f;
+	//entity = m_World->entityStorage->CreateEntity("Ui");
+	//transform2D = entity->AddComponent<Transform2D>();
+	//transform2D->anchorPoint = point3d(-1, 1, 0);
+	//transform2D->ratio = ScreenAspectRatio::XY;
+	////transform2D->position = point3d(-1.0f, 1.0f, 0.0f);
+	//transform2D->scale = point3d(0.25f, 0.25f, 0.0f);
+	//button = entity->AddComponent<Button>();
+	//button->cornerRadius = 0.1f;
 
 	// MAIN MENU END //
 
