@@ -1,11 +1,11 @@
-#ifndef _SINGLE_DAMAGE_GIVER_H_
-#define _SINGLE_DAMAGE_GIVER_H_
+#ifndef _SINGLE_DAMAGER_H_
+#define _SINGLE_DAMAGER_H_
 
 #include "component.h"
 #include "fraction.h"
 #include <vector>
 
-struct SingleDamageGiver : Component
+struct SingleDamager : Component
 {
 	Fraction target = Fraction::Player;
 	bool destroyable = true;

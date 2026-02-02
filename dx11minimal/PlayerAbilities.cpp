@@ -51,9 +51,9 @@ void PlayerAbilities::Attack(Transform startTransform, point3d direction)
 		star->color2 = point3d(0.34f, 0.8f, 0.45f);
 		star->crownColor = point3d(0.27f, 0.63f, 1.0f);
 
-		SingleDamageGiver* singleDamageGiver = projectile->AddComponent<SingleDamageGiver>();
-		singleDamageGiver->target = Fraction::Enemy;
-		singleDamageGiver->damage = 5.0f;
+		SingleDamager* singleDamager = projectile->AddComponent<SingleDamager>();
+		singleDamager->target = Fraction::Enemy;
+		singleDamager->damage = 5.0f;
 
 		SphereCollider* sphereCollider = projectile->AddComponent<SphereCollider>();
 		sphereCollider->isTouchable = false;
@@ -93,10 +93,10 @@ void PlayerAbilities::Attack(Transform startTransform, point3d direction)
 			sphereCollider->radius = 0.4f;
 		}
 
-		SingleDamageGiver* singleDamageGiver = projectile->AddComponent<SingleDamageGiver>();
-		singleDamageGiver->target = Fraction::Enemy;
-		singleDamageGiver->damage = 5.0f;
-		singleDamageGiver->maxHitCount = 3;
+		SingleDamager* singleDamager = projectile->AddComponent<SingleDamager>();
+		singleDamager->target = Fraction::Enemy;
+		singleDamager->damage = 5.0f;
+		singleDamager->maxHitCount = 3;
 
 		DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
 		delayedDestroy->lifeTime = 5000;
@@ -120,10 +120,10 @@ void PlayerAbilities::Attack(Transform startTransform, point3d direction)
 		star->color2 = point3d(0.34f, 0.8f, 0.45f);
 		star->crownColor = point3d(0.27f, 0.63f, 1.0f);
 
-		SingleDamageGiver* singleDamageGiver = projectile->AddComponent<SingleDamageGiver>();
-		singleDamageGiver->target = Fraction::Enemy;
-		singleDamageGiver->damage = 15.0f;
-		singleDamageGiver->maxHitCount = 5;
+		SingleDamager* singleDamager = projectile->AddComponent<SingleDamager>();
+		singleDamager->target = Fraction::Enemy;
+		singleDamager->damage = 15.0f;
+		singleDamager->maxHitCount = 5;
 
 		SphereCollider* sphereCollider = projectile->AddComponent<SphereCollider>();
 		sphereCollider->isTouchable = false;

@@ -20,8 +20,8 @@
 #include "SurfaceCollider.h"
 
 #include "Health.h"
-#include "SingleDamageGiver.h"
-#include "MultiDamageGiver.h"
+#include "SingleDamager.h"
+#include "MultiDamager.h"
 
 #include "MethodOfClosest.h"
 #include "CollisionManagerClass.h"

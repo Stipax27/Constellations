@@ -199,7 +199,7 @@
     <ClInclude Include="meshSystem.h" />
     <ClInclude Include="MethodOfClosest.h" />
     <ClInclude Include="mouseclass.h" />
-    <ClInclude Include="MultiDamageGiver.h" />
+    <ClInclude Include="MultiDamager.h" />
     <ClInclude Include="ParticleEmitter.h" />
     <ClInclude Include="PhysicBody.h" />
     <ClInclude Include="physicSystem.h" />
@@ -211,7 +211,7 @@
     <ClInclude Include="PointCloud.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="renderCompress.h" />
-    <ClInclude Include="SingleDamageGiver.h" />
+    <ClInclude Include="SingleDamager.h" />
     <ClInclude Include="SmallConstellation.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="SpriteCluster.h" />

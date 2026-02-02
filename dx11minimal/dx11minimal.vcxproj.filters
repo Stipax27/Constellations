@@ -30,9 +30,6 @@
     <ClCompile Include="SplinePath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerAbilities.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MeshSystem.cpp">
       <Filter>Source Files\Render</Filter>
     </ClCompile>
@@ -113,6 +110,9 @@
     </ClCompile>
     <ClCompile Include="MethodOfClosest.cpp">
       <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerAbilities.cpp">
+      <Filter>Source Files\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -221,10 +221,10 @@
     <ClInclude Include="Health.h">
       <Filter>Header Files\ECS base\Components\Combat</Filter>
     </ClInclude>
-    <ClInclude Include="SingleDamageGiver.h">
+    <ClInclude Include="SingleDamager.h">
       <Filter>Header Files\ECS base\Components\Combat</Filter>
     </ClInclude>
-    <ClInclude Include="MultiDamageGiver.h">
+    <ClInclude Include="MultiDamager.h">
       <Filter>Header Files\ECS base\Components\Combat</Filter>
     </ClInclude>
     <ClInclude Include="Button.h">

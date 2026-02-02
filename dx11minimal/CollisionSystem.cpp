@@ -90,7 +90,7 @@ void CollisionSystem::Update(vector<Entity*>& entities, float deltaTime)
 									Health* health = entity1->GetComponent<Health>();
 									if (health != nullptr && health->active) {
 
-										pair<Entity*, SingleDamageGiver*> res = entity2->GetAncestorWithComponent<SingleDamageGiver>();
+										pair<Entity*, SingleDamager*> res = entity2->GetAncestorWithComponent<SingleDamager>();
 										if (res.first != nullptr && res.second->active && res.second->target == health->fraction && find(res.second->entityFilter.begin(), res.second->entityFilter.end(), entity1->GetId()) == res.second->entityFilter.end()) {
 											health->hp -= res.second->damage;
 
@@ -99,13 +99,13 @@ void CollisionSystem::Update(vector<Entity*>& entities, float deltaTime)
 												if (res.second->destroyable) {
 													res.first->Destroy();
 												}
-												res.first->RemoveComponent<SingleDamageGiver>();
+												res.first->RemoveComponent<SingleDamager>();
 											}
 										}
 
-										/*MultiDamageGiver* multiDamageGiver = entity2->GetComponent<MultiDamageGiver>();
-										if (multiDamageGiver != nullptr) {
-											health->hp -= multiDamageGiver->damage;
+										/*MultiDamager* multiDamager = entity2->GetComponent<MultiDamager>();
+										if (multiDamager != nullptr) {
+											health->hp -= multiDamager->damage;
 										}*/
 
 									}

@@ -1,10 +1,10 @@
-#ifndef _MULTI_DAMAGE_GIVER_H_
-#define _MULTI_DAMAGE_GIVER_H_
+#ifndef _MULTI_DAMAGER_H_
+#define _MULTI_DAMAGER_H_
 
 #include "component.h"
 #include "timer.h"
 
-struct MultiDamageGiver : Component
+struct MultiDamager : Component
 {
 	float damage = 1.0f;
 	int repeats = 10;

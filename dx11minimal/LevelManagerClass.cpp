@@ -94,7 +94,7 @@ bool LevelManagerClass::Initialize()
 	DelayedDestroy* delayedDestroy;
 	Star* star;
 	Health* health;
-	SingleDamageGiver* singleDamageGiver;
+	SingleDamager* singleDamager;
 
 	Entity* folder = m_World->entityStorage->CreateEntity("WorldFolder");
 	folder->SetActive(true);
@@ -175,8 +175,8 @@ bool LevelManagerClass::Initialize()
 	sphereCollider->active = false;
 	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
 	//sphereCollider->softness = 0.5f;
-	singleDamageGiver = entity->AddComponent<SingleDamageGiver>();
-	singleDamageGiver->damage = 1000;
+	singleDamager = entity->AddComponent<SingleDamager>();
+	singleDamager->damage = 1000;
 
 	for (int i = 0; i < 5; i++) {
 		entity = m_World->entityStorage->CreateEntity("Star", folder);

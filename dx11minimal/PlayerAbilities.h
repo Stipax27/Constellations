@@ -17,7 +17,7 @@
 #include "SphereCollider.h"
 #include "Star.h"
 #include "DelayedDestroy.h"
-#include "SingleDamageGiver.h"
+#include "SingleDamager.h"
 
 
 /////////////
