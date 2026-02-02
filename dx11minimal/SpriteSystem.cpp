@@ -186,7 +186,7 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 						{
 							particleEmitter->lastEmitTime = timer::currentTime;
 
-							for (int i = 0; i < min((int)(timer::deltaTime / emitDelta), constCount - 1); i++)
+							for (int i = 0; i < min((int)(timer::deltaTime / emitDelta), constCount); i++)
 							{
 								particleEmitter->particles.push_back(timer::currentTime);
 							}
@@ -203,8 +203,9 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 
 						if (curTime - startTime < particleEmitter->lifetime)
 						{
-							if (i < constCount - 1) {
-								ConstBuf::global[i + 1].w = (float)particleEmitter->particles[i];
+							if (i < constCount) {
+								ConstBuf::global[i] = XMFLOAT4(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, (float)particleEmitter->lifetime);
+								//ConstBuf::global[i + 1].w = (float)particleEmitter->particles[i];
 							}
 
 							i++;
@@ -240,7 +241,7 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 							InputAssembler::IA(InputAssembler::topology::pointList);
 						}
 
-						context->DrawInstanced(6, min(size, constCount - 1), 0, 0);
+						context->DrawInstanced(6, min(size, constCount), 0, 0);
 					}
 				}
 			}

@@ -18,6 +18,7 @@
 #include "Star.h"
 #include "DelayedDestroy.h"
 #include "SingleDamager.h"
+#include "ParticleEmitter.h"
 
 
 /////////////

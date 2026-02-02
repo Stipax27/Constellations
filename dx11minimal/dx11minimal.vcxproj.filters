@@ -456,6 +456,12 @@
     <None Include="Shaders\VSS.shader">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Shaders\Particle_VS.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Particle_Star_PS.shader">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">

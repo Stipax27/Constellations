@@ -120,6 +120,8 @@ void PlayerAbilities::Attack(Transform startTransform, point3d direction)
 		star->color2 = point3d(0.34f, 0.8f, 0.45f);
 		star->crownColor = point3d(0.27f, 0.63f, 1.0f);
 
+		ParticleEmitter* particleEmitter = projectile->AddComponent<ParticleEmitter>();
+
 		SingleDamager* singleDamager = projectile->AddComponent<SingleDamager>();
 		singleDamager->target = Fraction::Enemy;
 		singleDamager->damage = 15.0f;

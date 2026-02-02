@@ -933,6 +933,9 @@ void Shaders::Init()
 
 	Shaders::CreateVS(20, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarCrown_VS.shader"));
 	Shaders::CreatePS(20, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarCrown_PS.shader"));
+
+	Shaders::CreateVS(21, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Particle_VS.shader"));
+	Shaders::CreatePS(21, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Particle_Star_PS.shader"));
 	
 	//-----------------------------------------------
 	
@@ -1068,7 +1071,7 @@ void Sampler::SamplerComp(unsigned int slot)
 
 //////////////////////////////////////////////////////////////////////////////////
 
-ID3D11Buffer* ConstBuf::buffer[9];
+ID3D11Buffer* ConstBuf::buffer[10];
 
 //b0
 float ConstBuf::drawerV[constCount];
@@ -1096,6 +1099,9 @@ int ConstBuf::drawerInt[constCount];
 
 //b8
 XMMATRIX ConstBuf::drawerMatrix[constCount];
+
+//b9
+ConstBuf::ParticleDesc ConstBuf::particleDrawer[constCount];
 
 
 int ConstBuf::roundUp(int n, int r)
@@ -1163,6 +1169,7 @@ void ConstBuf::Init()
 	ConstBuf::Create(ConstBuf::buffer[6], sizeof(factors));
 	ConstBuf::Create(ConstBuf::buffer[7], sizeof(drawerInt));
 	ConstBuf::Create(ConstBuf::buffer[8], sizeof(drawerMatrix));
+	ConstBuf::Create(ConstBuf::buffer[9], sizeof(particleDrawer));
 }
 
 void ConstBuf::UpdateFrame()

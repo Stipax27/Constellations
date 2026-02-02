@@ -264,9 +264,13 @@ namespace ConstBuf
 		float AriesNebulaLerpFactor;
 	};
 
+	struct ParticleDesc {
+
+	};
+
 	//----------------------------------------------------------------
 
-	extern ID3D11Buffer* buffer[9];
+	extern ID3D11Buffer* buffer[10];
 
 #define constCount 256
 
@@ -297,6 +301,9 @@ namespace ConstBuf
 	//b8
 	extern XMMATRIX drawerMatrix[constCount];
 
+	//b9
+	extern ParticleDesc particleDrawer[constCount];
+
 	int roundUp(int, int);
 	void Create(ID3D11Buffer*&, int);
 	void CreateVertexBuffer(int);
@@ -318,7 +325,18 @@ namespace ConstBuf
 	void ConstToCompute(int);
 
 	namespace getbyname {
-		enum { drawerV, drawerP, drawerMat, camera, frame, global, factors, drawerInt, drawerMatrix };
+		enum {
+			drawerV,
+			drawerP,
+			drawerMat,
+			camera,
+			frame,
+			global,
+			factors,
+			drawerInt,
+			drawerMatrix,
+			particleDrawer
+		};
 	}
 }
 

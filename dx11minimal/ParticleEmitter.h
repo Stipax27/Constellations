@@ -8,9 +8,9 @@
 
 struct ParticleEmitter : Component
 {
-	int vShader = 17;
-	int gShader = 17;
-	int pShader = 17;
+	int vShader = 21;
+	int gShader = 0;
+	int pShader = 21;
 
 	float size = 1.0f;
 	float brightness = 1.0f;
