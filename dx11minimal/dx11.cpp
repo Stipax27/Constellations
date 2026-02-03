@@ -1069,7 +1069,7 @@ void Sampler::SamplerComp(unsigned int slot)
 
 //////////////////////////////////////////////////////////////////////////////////
 
-ID3D11Buffer* ConstBuf::buffer[10];
+ID3D11Buffer* ConstBuf::buffer[11];
 
 //b0
 float ConstBuf::drawerV[constCount];
@@ -1100,6 +1100,9 @@ XMMATRIX ConstBuf::drawerMatrix[constCount];
 
 //b9
 ConstBuf::ParticlesDesc ConstBuf::particlesInfo;
+
+//b10
+XMFLOAT4X4 ConstBuf::drawerFloat4x4[constCount];
 
 
 int ConstBuf::roundUp(int n, int r)
@@ -1168,6 +1171,7 @@ void ConstBuf::Init()
 	ConstBuf::Create(ConstBuf::buffer[7], sizeof(drawerInt));
 	ConstBuf::Create(ConstBuf::buffer[8], sizeof(drawerMatrix));
 	ConstBuf::Create(ConstBuf::buffer[9], sizeof(particlesInfo));
+	ConstBuf::Create(ConstBuf::buffer[10], sizeof(drawerFloat4x4));
 }
 
 void ConstBuf::UpdateFrame()

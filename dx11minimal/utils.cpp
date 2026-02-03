@@ -287,3 +287,10 @@ point3d rgbToHsl(const point3d& rgb) {
 
     return point3d(h, s, l);
 }
+
+point3d rotateInPlane(const point3d& a, const point3d& b, float theta) {
+    point3d u1 = a.normalized();
+    point3d u2 = b.normalized();
+
+    return (u1 * cos(theta) + u2 * sin(theta));
+}

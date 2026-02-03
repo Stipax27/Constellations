@@ -1,6 +1,6 @@
-cbuffer global : register(b5)
+cbuffer drawerFloat4x4 : register(b10)
 {
-    float4 gConst[1024];
+    float4x4 fConst[1024];
 };
 
 cbuffer frame : register(b4)
@@ -21,6 +21,7 @@ cbuffer particlesDesc : register(b9)
 	float2 pOpacity;
 	float3 pColor;
 	float pLifetime;
+	float2 pSpeed;
 };
 
 
@@ -56,7 +57,7 @@ float star(float2 uv)
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-    float lifetime = (time.x * 100 - gConst[input.iID].w) / pLifetime;
+    float lifetime = (time.x * 100 - fConst[input.iID]._m30) / pLifetime;
     float4 color = float4(pColor, 1) * lerp(pOpacity.x, pOpacity.y, lifetime);
 
     float brightness = exp(-dot(input.uv, input.uv) * 20);

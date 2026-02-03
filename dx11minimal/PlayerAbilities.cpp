@@ -122,10 +122,12 @@ void PlayerAbilities::Attack(Transform startTransform, point3d direction)
 
 		ParticleEmitter* particleEmitter = projectile->AddComponent<ParticleEmitter>();
 		particleEmitter->rate = 100;
-		particleEmitter->lifetime = 500;
+		particleEmitter->lifetime = 1000;
 		particleEmitter->color = point3d(0.15f, 0.95f, 0.35f);
 		particleEmitter->size = { 1.5f, 5.0f };
 		particleEmitter->opacity = { 0.75f, 0.0f };
+		particleEmitter->emitDirectoin = EmitDirection::Front;
+		particleEmitter->speed = { 25.0f, -5.0f };
 
 		SingleDamager* singleDamager = projectile->AddComponent<SingleDamager>();
 		singleDamager->target = Fraction::Enemy;

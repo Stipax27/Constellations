@@ -83,6 +83,7 @@ bool LevelManagerClass::Initialize()
 
 	SpriteCluster* spriteCluster;
 	PlaneCollider* planeCollider;
+	ParticleEmitter* particleEmitter;
 
 	Transform2D* transform2D;
 	Rect* rect;
@@ -95,6 +96,7 @@ bool LevelManagerClass::Initialize()
 	Star* star;
 	Health* health;
 	SingleDamager* singleDamager;
+
 
 	Entity* folder = m_World->entityStorage->CreateEntity("WorldFolder");
 	folder->SetActive(true);
@@ -177,6 +179,15 @@ bool LevelManagerClass::Initialize()
 	//sphereCollider->softness = 0.5f;
 	singleDamager = entity->AddComponent<SingleDamager>();
 	singleDamager->damage = 1000;
+	particleEmitter = entity->AddComponent<ParticleEmitter>();
+	particleEmitter->rate = 100;
+	particleEmitter->lifetime = 1000;
+	particleEmitter->color = point3d(0.15f, 0.95f, 0.35f);
+	particleEmitter->size = { 1.0f, 4.0f };
+	particleEmitter->opacity = { 0.75f, 0.0f };
+	particleEmitter->emitDirectoin = EmitDirection::Up;
+	particleEmitter->speed = { 10.0f, 0.0f };
+	particleEmitter->spread = { 0, PI / 2 };
 
 	for (int i = 0; i < 5; i++) {
 		entity = m_World->entityStorage->CreateEntity("Star", folder);

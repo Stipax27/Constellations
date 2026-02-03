@@ -271,11 +271,14 @@ namespace ConstBuf
 		XMFLOAT2 opacity;
 		XMFLOAT3 color;
 		float lifetime;
+		XMFLOAT2 speed;
+		float _p1;
+		float _p2;
 	};
 
 	//----------------------------------------------------------------
 
-	extern ID3D11Buffer* buffer[10];
+	extern ID3D11Buffer* buffer[11];
 
 	//b0 - use "params" label in shader
 	extern float drawerV[constCount];//update per draw call
@@ -306,6 +309,9 @@ namespace ConstBuf
 
 	//b9
 	extern ParticlesDesc particlesInfo;
+
+	//b10
+	extern XMFLOAT4X4 drawerFloat4x4[constCount];
 
 	int roundUp(int, int);
 	void Create(ID3D11Buffer*&, int);
@@ -339,7 +345,8 @@ namespace ConstBuf
 			factors,
 			drawerInt,
 			drawerMatrix,
-			particlesInfo
+			particlesInfo,
+			drawerFloat4x4
 		};
 	}
 }

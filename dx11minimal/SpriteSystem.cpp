@@ -180,16 +180,69 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 				ParticleEmitter* particleEmitter = entity->GetComponent<ParticleEmitter>();
 				if (particleEmitter != nullptr) {
 
-					if (particleEmitter->active) {
+					if (particleEmitter->active && particleEmitter->rate > 0.0f) {
 						double emitDelta = 1000 / particleEmitter->rate;
 						double elapsedTime = timer::currentTime - particleEmitter->lastEmitTime;
 						if (elapsedTime >= emitDelta)
 						{
+							point3d direction;
+							point3d rVec;
+							point3d uVec;
+							switch (particleEmitter->emitDirectoin)
+							{
+							case EmitDirection::Front:
+								direction = worldTransform.GetLookVector();
+								rVec = worldTransform.GetRightVector();
+								uVec = worldTransform.GetUpVector();
+								break;
+							case EmitDirection::Back:
+								direction = -worldTransform.GetLookVector();
+								rVec = -worldTransform.GetRightVector();
+								uVec = worldTransform.GetUpVector();
+								break;
+							case EmitDirection::Right:
+								direction = worldTransform.GetRightVector();
+								rVec = -worldTransform.GetLookVector();
+								uVec = worldTransform.GetUpVector();
+								break;
+							case EmitDirection::Left:
+								direction = -worldTransform.GetRightVector();
+								rVec = worldTransform.GetLookVector();
+								uVec = worldTransform.GetUpVector();
+								break;
+							case EmitDirection::Up:
+								direction = worldTransform.GetUpVector();
+								rVec = worldTransform.GetRightVector();
+								uVec = -worldTransform.GetLookVector();
+								break;
+							case EmitDirection::Bottom:
+								direction = -worldTransform.GetUpVector();
+								rVec = worldTransform.GetRightVector();
+								uVec = worldTransform.GetLookVector();
+								break;
+							}
+
 							int count = min((int)(elapsedTime / emitDelta), constCount);
 							for (int i = 0; i < count; i++)
 							{
+								if (particleEmitter->spread.first > 0.0f) {
+									float s = particleEmitter->spread.first * 10000;
+									float angle = (float)getRandom(-s, s) / 10000;
+									direction = rotateInPlane(direction, uVec, angle);
+								}
+								if (particleEmitter->spread.second > 0.0f) {
+									float s = particleEmitter->spread.second * 10000;
+									float angle = (float)getRandom(-s, s) / 10000;
+									direction = rotateInPlane(direction, rVec, angle);
+								}
+								
 								double startTime = particleEmitter->lastEmitTime + emitDelta * (i + 1);
-								particleEmitter->particles.push_back(XMFLOAT4(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, (float)startTime));
+								particleEmitter->particles.push_back(XMFLOAT4X4(
+									worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, (float)startTime,
+									direction.x, direction.y, direction.z, 0,
+									0, 0, 0, 0,
+									0, 0, 0, 0
+								));
 							}
 
 							particleEmitter->lastEmitTime += emitDelta * count;
@@ -199,12 +252,12 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 					int i = 0;
 					while (i < particleEmitter->particles.size())
 					{
-						float startTime = particleEmitter->particles[i].w;
+						float startTime = particleEmitter->particles[i]._14;
 
 						if (timer::currentTime - startTime < particleEmitter->lifetime)
 						{
 							if (i < constCount) {
-								ConstBuf::global[i] = particleEmitter->particles[i];
+								ConstBuf::drawerFloat4x4[i] = particleEmitter->particles[i];
 							}
 
 							i++;
@@ -215,33 +268,31 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 						}
 					}
 
-					ConstBuf::Update(5, ConstBuf::global);
-					ConstBuf::ConstToVertex(5);
-
 					size_t size = particleEmitter->particles.size();
 					if (size > 0) {
 						Shaders::vShader(particleEmitter->vShader);
 						Shaders::pShader(particleEmitter->pShader);
 						Shaders::gShader(particleEmitter->gShader);
 
-						/*for (int i = 0; i < size; i++) {
-							ConstBuf::global[i + 1].w = (float)particleEmitter->particles[i];
-						}*/
+						ConstBuf::Update(10, ConstBuf::drawerFloat4x4);
+						ConstBuf::ConstToVertex(10);
+						ConstBuf::ConstToPixel(10);
+						ConstBuf::ConstToGeometry(10);
 
-						ConstBuf::Update(5, ConstBuf::global);
-						ConstBuf::ConstToVertex(5);
-						ConstBuf::ConstToPixel(5);
-						ConstBuf::ConstToGeometry(5);
+						// SETTING PARTICLE INFO //
 
 						ConstBuf::particlesInfo.size = XMFLOAT2(particleEmitter->size.first, particleEmitter->size.second);
 						ConstBuf::particlesInfo.opacity = XMFLOAT2(particleEmitter->opacity.first, particleEmitter->opacity.second);
 						ConstBuf::particlesInfo.color = XMFLOAT3(particleEmitter->color.x, particleEmitter->color.y, particleEmitter->color.z);
 						ConstBuf::particlesInfo.lifetime = particleEmitter->lifetime;
+						ConstBuf::particlesInfo.speed = XMFLOAT2(particleEmitter->speed.first, particleEmitter->speed.second);
 
 						ConstBuf::UpdateParticlesInfo();
 						ConstBuf::ConstToVertex(9);
 						ConstBuf::ConstToPixel(9);
 						ConstBuf::ConstToGeometry(9);
+
+						///////////////////////////
 
 						if (particleEmitter->gShader == 0) {
 							InputAssembler::IA(InputAssembler::topology::triList);
