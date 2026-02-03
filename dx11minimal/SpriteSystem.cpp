@@ -90,12 +90,12 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 					for (int a = 0; a < transformedStars.size() && count < constCount - 2; a++) {
 						point3d star = transformedStars[a];
 						if (frustum->CheckSphere(star, transform->scale.x)) {
-							ConstBuf::global[count] = XMFLOAT4(star.x, star.y, star.z, constellation->crownRadius);
+							ConstBuf::global[count + 1] = XMFLOAT4(star.x, star.y, star.z, constellation->crownRadius);
 							count++;
 						}
 					}
 
-					ConstBuf::global[constCount - 1] = XMFLOAT4(constellation->crownColor.x, constellation->crownColor.y, constellation->crownColor.z, 1);
+					ConstBuf::global[0] = XMFLOAT4(constellation->crownColor.x, constellation->crownColor.y, constellation->crownColor.z, 1);
 
 					if (count > 0) {
 						Shaders::vShader(20);
@@ -114,8 +114,8 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 				if (star != nullptr && star->active) {
 					if (frustum->CheckSphere(worldTransform.position, star->radius)) {
 
-						ConstBuf::global[0] = XMFLOAT4(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, star->crownRadius);
-						ConstBuf::global[constCount - 1] = XMFLOAT4(star->crownColor.x, star->crownColor.y, star->crownColor.z, 1);
+						ConstBuf::global[0] = XMFLOAT4(star->crownColor.x, star->crownColor.y, star->crownColor.z, 1);
+						ConstBuf::global[1] = XMFLOAT4(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, star->crownRadius);
 						ConstBuf::Update(5, ConstBuf::global);
 						ConstBuf::ConstToVertex(5);
 

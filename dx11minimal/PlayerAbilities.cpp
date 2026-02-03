@@ -123,7 +123,7 @@ void PlayerAbilities::Attack(Transform startTransform, point3d direction)
 		ParticleEmitter* particleEmitter = projectile->AddComponent<ParticleEmitter>();
 		particleEmitter->rate = 100;
 		particleEmitter->lifetime = 500;
-		particleEmitter->color = point3d(1.0f, 0.25f, 0.75f);
+		particleEmitter->color = point3d(0.15f, 0.95f, 0.35f);
 		particleEmitter->size = { 1.5f, 5.0f };
 		particleEmitter->opacity = { 0.75f, 0.0f };
 

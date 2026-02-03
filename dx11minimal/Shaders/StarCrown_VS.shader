@@ -54,8 +54,8 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
         float2(0, 0), float2(sin(startAngle), cos(startAngle)), float2(sin(endAngle), cos(endAngle))
     };
 
-    float4 pos = float4(gConst[iID].xyz, 1);
-    float sz = gConst[iID].w;
+    float4 pos = float4(gConst[iID + 1].xyz, 1);
+    float sz = gConst[iID + 1].w;
 
     float3 eye = cPos.xyz;
     float3 front = normalize(eye - pos.xyz);
