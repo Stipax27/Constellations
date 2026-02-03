@@ -1,6 +1,6 @@
 cbuffer global : register(b5)
 {
-    float4 gConst[256];
+    float4 gConst[1024];
 };
 
 cbuffer frame : register(b4)
@@ -25,7 +25,7 @@ cbuffer drawMat : register(b2)
 
 cbuffer objParams : register(b0)
 {
-    float drawerV[256];
+    float drawerV[1024];
 };
 
 

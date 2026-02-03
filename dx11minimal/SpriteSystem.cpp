@@ -181,31 +181,30 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 				if (particleEmitter != nullptr) {
 
 					if (particleEmitter->active) {
-						float emitDelta = 500 / particleEmitter->rate;
-						if (timer::deltaTime >= emitDelta)
+						double emitDelta = 1000 / particleEmitter->rate;
+						double elapsedTime = timer::currentTime - particleEmitter->lastEmitTime;
+						if (elapsedTime >= emitDelta)
 						{
-							particleEmitter->lastEmitTime = timer::currentTime;
-
-							for (int i = 0; i < min((int)(timer::deltaTime / emitDelta), constCount); i++)
+							int count = min((int)(elapsedTime / emitDelta), constCount);
+							for (int i = 0; i < count; i++)
 							{
-								particleEmitter->particles.push_back(timer::currentTime);
+								double startTime = particleEmitter->lastEmitTime + emitDelta * (i + 1);
+								particleEmitter->particles.push_back(XMFLOAT4(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, (float)startTime));
 							}
+
+							particleEmitter->lastEmitTime += emitDelta * count;
 						}
 					}
 
-					ConstBuf::global[0] = XMFLOAT4(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, (float)particleEmitter->lifetime);
-
 					int i = 0;
-					DWORD curTime = timer::GetCounter();
 					while (i < particleEmitter->particles.size())
 					{
-						DWORD startTime = particleEmitter->particles[i];
+						float startTime = particleEmitter->particles[i].w;
 
-						if (curTime - startTime < particleEmitter->lifetime)
+						if (timer::currentTime - startTime < particleEmitter->lifetime)
 						{
 							if (i < constCount) {
-								ConstBuf::global[i] = XMFLOAT4(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, (float)particleEmitter->lifetime);
-								//ConstBuf::global[i + 1].w = (float)particleEmitter->particles[i];
+								ConstBuf::global[i] = particleEmitter->particles[i];
 							}
 
 							i++;
@@ -233,6 +232,16 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 						ConstBuf::ConstToVertex(5);
 						ConstBuf::ConstToPixel(5);
 						ConstBuf::ConstToGeometry(5);
+
+						ConstBuf::particlesInfo.size = XMFLOAT2(particleEmitter->size.first, particleEmitter->size.second);
+						ConstBuf::particlesInfo.opacity = XMFLOAT2(particleEmitter->opacity.first, particleEmitter->opacity.second);
+						ConstBuf::particlesInfo.color = XMFLOAT3(particleEmitter->color.x, particleEmitter->color.y, particleEmitter->color.z);
+						ConstBuf::particlesInfo.lifetime = particleEmitter->lifetime;
+
+						ConstBuf::UpdateParticlesInfo();
+						ConstBuf::ConstToVertex(9);
+						ConstBuf::ConstToPixel(9);
+						ConstBuf::ConstToGeometry(9);
 
 						if (particleEmitter->gShader == 0) {
 							InputAssembler::IA(InputAssembler::topology::triList);

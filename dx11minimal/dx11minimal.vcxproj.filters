@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <FxCompile Include="Shaders\BlackHole_Body_VS.shader">
-      <Filter>Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="Shaders\SpaceStars_VS.shader">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\BlackHole_Body_VS.shader">
+      <Filter>Shaders\BlackHole</Filter>
+    </FxCompile>
     <FxCompile Include="Shaders\StarLink_PS.shader">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\Links</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -315,42 +315,6 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\AriesNebula_GS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\AriesNebula_PS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\AriesNebula_VS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\BlackHole_Body_PS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\Cross_PS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\Cross_VS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\Cursor_PS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\Cursor_VS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\DepthCutoff_PS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\DepthDown.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\DotText_PS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\DotText_VS.shader">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Shaders\GalaxyFog_PS.shader">
       <Filter>Shaders</Filter>
     </None>
@@ -358,33 +322,6 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\Lensing_PS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\Mesh_Fit_PS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\Mesh_Stretch_PS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\Mesh_VS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\PerlinNoise.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\PointCloud_GS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\PointCloud_PS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\PointCloud_VS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\PP_PS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\PP_VS.shader">
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\PS.shader">
@@ -396,15 +333,6 @@
     <None Include="Shaders\PSS.shader">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\Rect_Smooth_PS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\Rect_Strict_PS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\Rect_VS.shader">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Shaders\SpaceStars_PS.shader">
       <Filter>Shaders</Filter>
     </None>
@@ -412,39 +340,6 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\SpeedParticles_VS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\Sphere_PS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\Sphere_VS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\StarCrown_PS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\StarCrown_VS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\StarLink_VS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\StarSphere_PS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\StarSphere_VS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\UiParticle_PS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\UiParticle_VS.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\Lib\utils.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\VoronoiNoise.shader">
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\VS.shader">
@@ -456,11 +351,113 @@
     <None Include="Shaders\VSS.shader">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\Particle_VS.shader">
-      <Filter>Shaders</Filter>
+    <None Include="Shaders\AriesNebula_GS.shader">
+      <Filter>Shaders\AriesNebula</Filter>
     </None>
-    <None Include="Shaders\Particle_Star_PS.shader">
-      <Filter>Shaders</Filter>
+    <None Include="Shaders\AriesNebula_PS.shader">
+      <Filter>Shaders\AriesNebula</Filter>
+    </None>
+    <None Include="Shaders\AriesNebula_VS.shader">
+      <Filter>Shaders\AriesNebula</Filter>
+    </None>
+    <None Include="Shaders\Cross_PS.shader">
+      <Filter>Shaders\Cursor</Filter>
+    </None>
+    <None Include="Shaders\Cross_VS.shader">
+      <Filter>Shaders\Cursor</Filter>
+    </None>
+    <None Include="Shaders\Cursor_PS.shader">
+      <Filter>Shaders\Cursor</Filter>
+    </None>
+    <None Include="Shaders\Cursor_VS.shader">
+      <Filter>Shaders\Cursor</Filter>
+    </None>
+    <None Include="Shaders\BlackHole_Body_PS.shader">
+      <Filter>Shaders\BlackHole</Filter>
+    </None>
+    <None Include="Shaders\PointCloud_GS.shader">
+      <Filter>Shaders\PointCloud</Filter>
+    </None>
+    <None Include="Shaders\PointCloud_PS.shader">
+      <Filter>Shaders\PointCloud</Filter>
+    </None>
+    <None Include="Shaders\PointCloud_VS.shader">
+      <Filter>Shaders\PointCloud</Filter>
+    </None>
+    <None Include="Shaders\Rect_Smooth_PS.shader">
+      <Filter>Shaders\UI</Filter>
+    </None>
+    <None Include="Shaders\Rect_Strict_PS.shader">
+      <Filter>Shaders\UI</Filter>
+    </None>
+    <None Include="Shaders\Rect_VS.shader">
+      <Filter>Shaders\UI</Filter>
+    </None>
+    <None Include="Shaders\StarCrown_PS.shader">
+      <Filter>Shaders\Star</Filter>
+    </None>
+    <None Include="Shaders\StarCrown_VS.shader">
+      <Filter>Shaders\Star</Filter>
+    </None>
+    <None Include="Shaders\StarSphere_PS.shader">
+      <Filter>Shaders\Star</Filter>
+    </None>
+    <None Include="Shaders\StarSphere_VS.shader">
+      <Filter>Shaders\Star</Filter>
+    </None>
+    <None Include="Shaders\StarLink_VS.shader">
+      <Filter>Shaders\Links</Filter>
+    </None>
+    <None Include="Shaders\UiParticle_PS.shader">
+      <Filter>Shaders\Cursor</Filter>
+    </None>
+    <None Include="Shaders\UiParticle_VS.shader">
+      <Filter>Shaders\Cursor</Filter>
+    </None>
+    <None Include="Shaders\VoronoiNoise.shader">
+      <Filter>Shaders\Noises</Filter>
+    </None>
+    <None Include="Shaders\PerlinNoise.shader">
+      <Filter>Shaders\Noises</Filter>
+    </None>
+    <None Include="Shaders\Particle_Basic_PS.shader">
+      <Filter>Shaders\Particles</Filter>
+    </None>
+    <None Include="Shaders\Particle_VS.shader">
+      <Filter>Shaders\Particles</Filter>
+    </None>
+    <None Include="Shaders\DotText_VS.shader">
+      <Filter>Shaders\Text</Filter>
+    </None>
+    <None Include="Shaders\DotText_PS.shader">
+      <Filter>Shaders\Text</Filter>
+    </None>
+    <None Include="Shaders\DepthDown.shader">
+      <Filter>Shaders\Depth</Filter>
+    </None>
+    <None Include="Shaders\Lib\utils.shader">
+      <Filter>Shaders\utils</Filter>
+    </None>
+    <None Include="Shaders\Mesh_Fit_PS.shader">
+      <Filter>Shaders\Mesh</Filter>
+    </None>
+    <None Include="Shaders\Mesh_Stretch_PS.shader">
+      <Filter>Shaders\Mesh</Filter>
+    </None>
+    <None Include="Shaders\Mesh_VS.shader">
+      <Filter>Shaders\Mesh</Filter>
+    </None>
+    <None Include="Shaders\Sphere_PS.shader">
+      <Filter>Shaders\Sphere</Filter>
+    </None>
+    <None Include="Shaders\Sphere_VS.shader">
+      <Filter>Shaders\Sphere</Filter>
+    </None>
+    <None Include="Shaders\PP_PS.shader">
+      <Filter>Shaders\PostProcess</Filter>
+    </None>
+    <None Include="Shaders\PP_VS.shader">
+      <Filter>Shaders\PostProcess</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -547,6 +544,51 @@
     </Filter>
     <Filter Include="Header Files\ECS base\Systems\EntityManagment">
       <UniqueIdentifier>{54470321-bad2-4de1-bd7e-a0cf08859864}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\AriesNebula">
+      <UniqueIdentifier>{c81fbe8a-4aa0-4180-913e-dfafc3e975af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Cursor">
+      <UniqueIdentifier>{5c0555cc-9955-41f6-9ee0-db6cbf3d3818}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\BlackHole">
+      <UniqueIdentifier>{77bdc8ef-1f33-4187-b32b-833cc7691fae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\PointCloud">
+      <UniqueIdentifier>{8ab6539f-ff5e-4b5c-8075-b4438dbb68b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\UI">
+      <UniqueIdentifier>{6e7aedbc-fdbb-4988-b024-e6bdeeabaeee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Star">
+      <UniqueIdentifier>{8f69aac9-6755-4d69-9062-937bf755ccd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Links">
+      <UniqueIdentifier>{3aeb0223-b37b-4011-b4ef-fc09b0ac4aa7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Noises">
+      <UniqueIdentifier>{4348001b-36d1-4ef4-8d7b-78e62d7db129}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Particles">
+      <UniqueIdentifier>{b4ba70c0-e01d-4ed8-9c46-947b9f727f8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Text">
+      <UniqueIdentifier>{737c290b-ee6b-4082-b81e-1d6126b57ff2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Depth">
+      <UniqueIdentifier>{c3bef4a5-cb1f-457b-b672-2c14fc505922}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\utils">
+      <UniqueIdentifier>{7b14d747-f087-4854-81f6-fb7933caf6e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Mesh">
+      <UniqueIdentifier>{990df05e-0fd2-4a9b-b010-a86e911219a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Sphere">
+      <UniqueIdentifier>{c240b41f-5efd-481a-b71f-e34961e39fe8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\PostProcess">
+      <UniqueIdentifier>{4b8422da-68da-4654-8c63-f033fee43655}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

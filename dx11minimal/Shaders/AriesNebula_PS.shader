@@ -11,7 +11,7 @@ cbuffer factors : register(b6)
 
 cbuffer global : register(b5)
 {
-    float4 gConst[256];
+    float4 gConst[1024];
 };
 
 cbuffer frame : register(b4)
@@ -30,12 +30,12 @@ cbuffer camera : register(b3)
 
 cbuffer objParams : register(b0)
 {
-    float drawerV[256];
+    float drawerV[1024];
 };
 
 cbuffer drawerInt : register(b7)
 {
-    int drawInt[256];
+    int drawInt[1024];
 }
 
 struct VS_OUTPUT

@@ -1,6 +1,6 @@
-cbuffer particleDrawer : register(b9)
+cbuffer global : register(b5)
 {
-    float4 particleConst[256];
+    float4 gConst[1024];
 };
 
 cbuffer frame : register(b4)
@@ -17,11 +17,19 @@ cbuffer camera : register(b3)
     float4 cPos;
 };
 
+cbuffer particlesDesc : register(b9)
+{
+	float2 pSize;
+	float2 pOpacity;
+	float3 pColor;
+	float pLifetime;
+};
+
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
     float2 uv : TEXCOORD0;
-    uint   starID : COLOR0;
+    uint   iID : COLOR0;
     float4 worldpos : POSITION1;
 };
 
@@ -30,25 +38,24 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 {
     VS_OUTPUT output;
 
-    float2 mousepos = gConst[iID].xy;
-    float angle = gConst[iID].z;
-    float lifetime = gConst[iID].w;
-    float size = 0.025 * lifetime;
+    float3 pos = gConst[iID].xyz;
+    float lifetime = (time.x * 100 - gConst[iID].w) / pLifetime;
 
-    float2 offset = float2(sin(angle) * aspect.x, cos(angle)) * sqrt(1 - lifetime) * 0.15;
+    float size = lerp(pSize.x, pSize.y, lifetime);
+
+    //float2 offset = float2(sin(angle) * aspect.x, cos(angle)) * sqrt(1 - lifetime) * 0.15;
 
     float2 quadPos[6] = {
         float2(-1, -1), float2(1, -1), float2(-1, 1),
-        float2(1, -1), float2(1, 1), float2(-1, 1)
+        float2(-1, 1), float2(1, -1), float2(1, 1),
     };
 
-    float2 pos = quadPos[vID];
+    float4 projPos = mul(float4(pos, 1), mul(view, proj));
+    projPos.xy += quadPos[vID] * float2(aspect.x, 1) * size;
 
-    float2 screenPos = mul(float4(quadPos[vID], 0.0, 1.0), mul(view, proj)).xy;
-    screenPos = float2(mousepos.x + screenPos.x * size, mousepos.y - screenPos.y * size) + offset;
-
-    output.pos = float4(screenPos.xy, 0, 1);
+    output.pos = projPos;
     output.uv = quadPos[vID];
+    output.iID = iID;
 
     return output;
 }

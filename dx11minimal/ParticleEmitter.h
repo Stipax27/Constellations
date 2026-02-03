@@ -12,16 +12,16 @@ struct ParticleEmitter : Component
 	int gShader = 0;
 	int pShader = 21;
 
-	float size = 1.0f;
-	float brightness = 1.0f;
+	pair<float, float> size = {1.0f, 1.0f};
 	point3d color = point3d(1.0f, 1.0f, 1.0f);
-	DWORD lifetime = 1000;
+	pair<float, float> opacity = {1.0f, 0.0f};
 	float rate = 10.0f;
+	DWORD lifetime = 1000;
 
 	RenderCompress compress = RenderCompress::none;
 
-	DWORD lastEmitTime;
-	vector<DWORD> particles;
+	double lastEmitTime = timer::currentTime;
+	vector<XMFLOAT4> particles;
 };
 
 #endif

@@ -1,6 +1,6 @@
 cbuffer drawerInt : register(b7)
 {
-    int drawInt[256];
+    int drawInt[1024];
 }
 
 

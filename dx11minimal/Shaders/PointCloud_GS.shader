@@ -1,6 +1,6 @@
 cbuffer objParams : register(b0)
 {
-    float drawerV[256];
+    float drawerV[1024];
 };
 
 cbuffer frame : register(b4)

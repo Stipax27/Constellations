@@ -935,13 +935,11 @@ void Shaders::Init()
 	Shaders::CreatePS(20, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarCrown_PS.shader"));
 
 	Shaders::CreateVS(21, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Particle_VS.shader"));
-	Shaders::CreatePS(21, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Particle_Star_PS.shader"));
+	Shaders::CreatePS(21, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Particle_Basic_PS.shader"));
 	
 	//-----------------------------------------------
 	
 	Shaders::CreatePS(100, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ColorCorrection_PS.shader"));
-	//Shaders::CreatePS(101, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Lensing_PS.shader"));
-	Shaders::CreatePS(101, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\DepthCutoff_PS.shader"));
 	
 	//-----------------------------------------------
 	
@@ -1101,7 +1099,7 @@ int ConstBuf::drawerInt[constCount];
 XMMATRIX ConstBuf::drawerMatrix[constCount];
 
 //b9
-ConstBuf::ParticleDesc ConstBuf::particleDrawer[constCount];
+ConstBuf::ParticlesDesc ConstBuf::particlesInfo;
 
 
 int ConstBuf::roundUp(int n, int r)
@@ -1169,7 +1167,7 @@ void ConstBuf::Init()
 	ConstBuf::Create(ConstBuf::buffer[6], sizeof(factors));
 	ConstBuf::Create(ConstBuf::buffer[7], sizeof(drawerInt));
 	ConstBuf::Create(ConstBuf::buffer[8], sizeof(drawerMatrix));
-	ConstBuf::Create(ConstBuf::buffer[9], sizeof(particleDrawer));
+	ConstBuf::Create(ConstBuf::buffer[9], sizeof(particlesInfo));
 }
 
 void ConstBuf::UpdateFrame()
@@ -1190,6 +1188,11 @@ void ConstBuf::UpdateCamera()
 void ConstBuf::UpdateFactors()
 {
 	context->UpdateSubresource(ConstBuf::buffer[6], 0, NULL, &factors, 0, 0);
+}
+
+void ConstBuf::UpdateParticlesInfo()
+{
+	context->UpdateSubresource(ConstBuf::buffer[9], 0, NULL, &particlesInfo, 0, 0);
 }
 
 void ConstBuf::ConstToVertex(int i)
