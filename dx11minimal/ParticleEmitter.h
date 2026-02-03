@@ -34,9 +34,14 @@ struct ParticleEmitter : Component
 	float rate = 10.0f;
 	DWORD lifetime = 1000;
 
+	bool heapEmit = false;
+	int heapEmitRepeats = -1;
+	DWORD heapEmitInterval = 1000;
+
 	RenderCompress compress = RenderCompress::none;
 
 	double lastEmitTime = timer::currentTime;
+	int heapCount = 0;
 	vector<XMFLOAT4X4> particles;
 };
 

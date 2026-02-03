@@ -181,8 +181,15 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 				if (particleEmitter != nullptr) {
 
 					if (particleEmitter->active && particleEmitter->rate > 0.0f) {
-						double emitDelta = 1000 / particleEmitter->rate;
+						double emitDelta;
+						if (particleEmitter->heapEmit) {
+							emitDelta = particleEmitter->heapEmitInterval;
+						}
+						else {
+							emitDelta = 1000 / particleEmitter->rate;
+						}
 						double elapsedTime = timer::currentTime - particleEmitter->lastEmitTime;
+
 						if (elapsedTime >= emitDelta)
 						{
 							point3d direction;
@@ -222,21 +229,41 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 								break;
 							}
 
-							int count = min((int)(elapsedTime / emitDelta), constCount);
+							int count;
+							if (particleEmitter->heapEmit) {
+								count = min((int)particleEmitter->rate, constCount);
+							}
+							else {
+								count = min((int)(elapsedTime / emitDelta), constCount);
+							}
+
 							for (int i = 0; i < count; i++)
 							{
 								if (particleEmitter->spread.first > 0.0f) {
 									float s = particleEmitter->spread.first * 10000;
-									float angle = (float)getRandom(-s, s) / 10000;
+									float angle = (float)getRandom(s) / 10000;
+									if (getRandom(2) == 0) {
+										angle = -angle;
+									}
 									direction = rotateInPlane(direction, uVec, angle);
 								}
 								if (particleEmitter->spread.second > 0.0f) {
 									float s = particleEmitter->spread.second * 10000;
-									float angle = (float)getRandom(-s, s) / 10000;
+									float angle = (float)getRandom(s) / 10000;
+									if (getRandom(2) == 0) {
+										angle = -angle;
+									}
 									direction = rotateInPlane(direction, rVec, angle);
 								}
 								
-								double startTime = particleEmitter->lastEmitTime + emitDelta * (i + 1);
+								double startTime;
+								if (particleEmitter->heapEmit) {
+									startTime = timer::currentTime;
+								}
+								else {
+									startTime = particleEmitter->lastEmitTime + emitDelta * (i + 1);
+								}
+
 								particleEmitter->particles.push_back(XMFLOAT4X4(
 									worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, (float)startTime,
 									direction.x, direction.y, direction.z, 0,
@@ -244,8 +271,16 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 									0, 0, 0, 0
 								));
 							}
-
-							particleEmitter->lastEmitTime += emitDelta * count;
+							if (particleEmitter->heapEmit) {
+								particleEmitter->lastEmitTime = timer::currentTime;
+								particleEmitter->heapCount++;
+								if (particleEmitter->heapEmitRepeats > 0 && particleEmitter->heapCount >= particleEmitter->heapEmitRepeats) {
+									particleEmitter->active = false;
+								}
+							}
+							else {
+								particleEmitter->lastEmitTime += emitDelta * count;
+							}
 						}
 					}
 

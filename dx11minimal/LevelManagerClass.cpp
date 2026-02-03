@@ -187,7 +187,9 @@ bool LevelManagerClass::Initialize()
 	particleEmitter->opacity = { 0.75f, 0.0f };
 	particleEmitter->emitDirectoin = EmitDirection::Up;
 	particleEmitter->speed = { 10.0f, 0.0f };
-	particleEmitter->spread = { 0, PI / 2 };
+	particleEmitter->spread = { PI, PI };
+	particleEmitter->heapEmit = true;
+	particleEmitter->heapEmitRepeats = 10;
 
 	for (int i = 0; i < 5; i++) {
 		entity = m_World->entityStorage->CreateEntity("Star", folder);
