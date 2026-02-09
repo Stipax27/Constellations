@@ -23,7 +23,8 @@ void CameraClass::Initialize(float iAspect)
 
 	iaspect = iAspect;
 
-	SetFov(70);
+	distance = DEFAULT_CAMERA_DISTANCE;
+	SetFov(DEFAULT_FOV);
 }
 
 

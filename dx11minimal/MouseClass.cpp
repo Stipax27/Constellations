@@ -16,10 +16,9 @@ MouseClass::~MouseClass()
 }
 
 
-void MouseClass::Initialize(WindowClass* Window, CameraClass* Camera, CollisionManagerClass* CollisionManager) {
+void MouseClass::Initialize(WindowClass* Window, CameraClass* Camera) {
 	window = Window;
 	camera = Camera;
-	collisionManager = CollisionManager;
 
 	state = MouseState::Centered;
 	visible = true;
@@ -28,6 +27,8 @@ void MouseClass::Initialize(WindowClass* Window, CameraClass* Camera, CollisionM
 	rbuttonDown = false;
 	lbuttonClicked = false;
 	lbuttonClicked = false;
+	lbuttonUnclicked = false;
+	lbuttonUnclicked = false;
 
 	lbuttonDownPos = point3d();
 	rbuttonDownPos = point3d();
@@ -43,10 +44,6 @@ void MouseClass::Shutdown()
 	if (camera) {
 		camera = 0;
 	}
-
-	if (collisionManager) {
-		collisionManager = 0;
-	}
 }
 
 
@@ -60,6 +57,7 @@ void MouseClass::Update() {
 
 	if (IsKeyPressed(VK_LBUTTON))
 	{
+		lbuttonUnclicked = false;
 		if (!lbuttonDown)
 		{
 			lbuttonDown = true;
@@ -72,12 +70,19 @@ void MouseClass::Update() {
 	}
 	else
 	{
-		lbuttonDown = false;
 		lbuttonClicked = false;
+		if (lbuttonDown) {
+			lbuttonDown = false;
+			lbuttonUnclicked = true;
+		}
+		else {
+			lbuttonUnclicked = false;
+		}
 	}
 
 	if (IsKeyPressed(VK_RBUTTON))
 	{
+		rbuttonUnclicked = false;
 		if (!rbuttonDown)
 		{
 			rbuttonDown = true;
@@ -90,8 +95,14 @@ void MouseClass::Update() {
 	}
 	else
 	{
-		rbuttonDown = false;
 		rbuttonClicked = false;
+		if (rbuttonDown) {
+			rbuttonDown = false;
+			rbuttonUnclicked = true;
+		}
+		else {
+			rbuttonUnclicked = false;
+		}
 	}
 }
 
@@ -111,6 +122,15 @@ bool MouseClass::IsLButtonClicked() {
 
 bool MouseClass::IsRButtonClicked() {
 	return rbuttonClicked;
+}
+
+
+bool MouseClass::IsLButtonUnclicked() {
+	return lbuttonUnclicked;
+}
+
+bool MouseClass::IsRButtonUnclicked() {
+	return rbuttonUnclicked;
 }
 
 
@@ -139,12 +159,6 @@ point3d MouseClass::GetMouseRay() {
 	XMVECTOR ray = XMVector4Transform(rayEye, XMMatrixInverse(nullptr, view));
 	point3d rayWorld = point3d(XMVectorGetX(ray), XMVectorGetY(ray), XMVectorGetZ(ray));
 	rayWorld = rayWorld.normalized();
-
-	RayInfo rayInfo = RayInfo(camera->GetPosition(), rayWorld * 1000.0f);
-	RaycastResult result = collisionManager->Raycast(rayInfo);
-	if (result.hit) {
-
-	}
 
 	return rayWorld;
 }

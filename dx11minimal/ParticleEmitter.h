@@ -38,6 +38,8 @@ struct ParticleEmitter : Component
 	int heapEmitRepeats = -1;
 	DWORD heapEmitInterval = 1000;
 
+	bool reverse = false;
+
 	RenderCompress compress = RenderCompress::none;
 
 	double lastEmitTime = timer::currentTime;

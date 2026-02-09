@@ -7,13 +7,15 @@ namespace CollisionFilter
 	{
 		Projectile,
 		Player,
-		Enemy
+		Enemy,
+		PlayerRay
 	};
 
-	const bool collisionTable[3][3] = {
-		{false, true, true},
-		{true, false, true},
-		{true, true, false},
+	const bool collisionTable[4][4] = {
+		{false, true, true, false},
+		{true, false, true, false},
+		{true, true, false, true},
+		{false, false, true, false},
 	};
 }
 

@@ -169,6 +169,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BaseStar.h" />
+    <ClInclude Include="Beam.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="cameraclass.h" />
     <ClInclude Include="collider.h" />
@@ -194,6 +195,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="frustumclass.h" />
     <ClInclude Include="Health.h" />
+    <ClInclude Include="HpIndicator.h" />
     <ClInclude Include="LevelManagerClass.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="meshSystem.h" />
@@ -448,6 +450,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="Shaders\SwordBeam_PS.shader">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
   </ItemGroup>
   <ItemGroup>

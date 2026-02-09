@@ -51,8 +51,6 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 					vector<point3d> transformedStars;
 					int count;
 
-					ConstBuf::global[constCount - 1] = XMFLOAT4(1, 1, 1, 1);
-
 					for (int a = 0; a < constellation->stars.size(); a++) {
 						point3d star = constellation->stars[a];
 						star = transformPos + transform->GetLookVector() * star.z + transform->GetRightVector() * star.x + transform->GetUpVector() * star.y;
@@ -61,14 +59,21 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 					}
 
 					count = 0;
-					for (int a = 0; a < constellation->links.size() && count < constCount / 2 - 1; a++) {
+					for (int a = 0; a < constellation->links.size() && count < constCount; a++) {
 						pair<int, int> link = constellation->links[a];
 						point3d point1 = transformedStars[link.first];
 						point3d point2 = transformedStars[link.second];
 
 						if (frustum->CheckSphere(point1.lerp(point2, 0.5f), max((point1 - point2).magnitude(), constellation->linkSize))) {
-							ConstBuf::global[count * 2] = XMFLOAT4(point1.x, point1.y, point1.z, constellation->linkSize);
-							ConstBuf::global[count * 2 + 1] = XMFLOAT4(point2.x, point2.y, point2.z, constellation->linkSize);
+							/*ConstBuf::global[count * 2] = XMFLOAT4(point1.x, point1.y, point1.z, constellation->linkSize);
+							ConstBuf::global[count * 2 + 1] = XMFLOAT4(point2.x, point2.y, point2.z, constellation->linkSize);*/
+
+							ConstBuf::drawerFloat4x4[count] = XMFLOAT4X4(
+								point1.x, point1.y, point1.z, constellation->linkSize,
+								point2.x, point2.y, point2.z, constellation->linkSize,
+								1, 1, 1, 1,
+								1, 1, 1, 1
+								);
 							count++;
 						}
 					}
@@ -77,10 +82,14 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 						Shaders::vShader(4);
 						Shaders::pShader(4);
 
-						ConstBuf::Update(5, ConstBuf::global);
-						ConstBuf::ConstToVertex(5);
+						/*ConstBuf::Update(5, ConstBuf::global);
+						ConstBuf::ConstToVertex(5);*/
 
-						context->DrawInstanced(6, min(count, constCount / 2 - 1), 0, 0);
+						ConstBuf::Update(10, ConstBuf::drawerFloat4x4);
+						ConstBuf::ConstToVertex(10);
+						ConstBuf::ConstToPixel(10);
+
+						context->DrawInstanced(6, min(count, constCount - 1), 0, 0);
 					}
 
 					int n = 12;
@@ -264,17 +273,33 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 									startTime = particleEmitter->lastEmitTime + emitDelta * (i + 1);
 								}
 
-								particleEmitter->particles.push_back(XMFLOAT4X4(
-									worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, (float)startTime,
-									direction.x, direction.y, direction.z, 0,
-									0, 0, 0, 0,
-									0, 0, 0, 0
-								));
+								if (particleEmitter->reverse) {
+									float lifetime = particleEmitter->lifetime * 0.001;
+									float a = (particleEmitter->speed.second - particleEmitter->speed.first) / lifetime;
+									float s = particleEmitter->speed.first * lifetime + a * pow(lifetime, 2) / 2;
+									point3d pos = worldTransform.position + direction * s;
+
+									particleEmitter->particles.push_back(XMFLOAT4X4(
+										pos.x, pos.y, pos.z, (float)startTime,
+										-direction.x, -direction.y, -direction.z, 0,
+										0, 0, 0, 0,
+										0, 0, 0, 0
+									));
+								}
+								else {
+									particleEmitter->particles.push_back(XMFLOAT4X4(
+										worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, (float)startTime,
+										direction.x, direction.y, direction.z, 0,
+										0, 0, 0, 0,
+										0, 0, 0, 0
+									));
+								}
 							}
 							if (particleEmitter->heapEmit) {
 								particleEmitter->lastEmitTime = timer::currentTime;
 								particleEmitter->heapCount++;
 								if (particleEmitter->heapEmitRepeats > 0 && particleEmitter->heapCount >= particleEmitter->heapEmitRepeats) {
+									particleEmitter->heapCount = 0;
 									particleEmitter->active = false;
 								}
 							}
@@ -316,11 +341,19 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 
 						// SETTING PARTICLE INFO //
 
-						ConstBuf::particlesInfo.size = XMFLOAT2(particleEmitter->size.first, particleEmitter->size.second);
-						ConstBuf::particlesInfo.opacity = XMFLOAT2(particleEmitter->opacity.first, particleEmitter->opacity.second);
+						if (particleEmitter->reverse) {
+							ConstBuf::particlesInfo.size = XMFLOAT2(particleEmitter->size.second, particleEmitter->size.first);
+							ConstBuf::particlesInfo.opacity = XMFLOAT2(particleEmitter->opacity.second, particleEmitter->opacity.first);
+							ConstBuf::particlesInfo.speed = XMFLOAT2(particleEmitter->speed.second, particleEmitter->speed.first);
+						}
+						else {
+							ConstBuf::particlesInfo.size = XMFLOAT2(particleEmitter->size.first, particleEmitter->size.second);
+							ConstBuf::particlesInfo.opacity = XMFLOAT2(particleEmitter->opacity.first, particleEmitter->opacity.second);
+							ConstBuf::particlesInfo.speed = XMFLOAT2(particleEmitter->speed.first, particleEmitter->speed.second);
+						}
+						
 						ConstBuf::particlesInfo.color = XMFLOAT3(particleEmitter->color.x, particleEmitter->color.y, particleEmitter->color.z);
 						ConstBuf::particlesInfo.lifetime = particleEmitter->lifetime;
-						ConstBuf::particlesInfo.speed = XMFLOAT2(particleEmitter->speed.first, particleEmitter->speed.second);
 
 						ConstBuf::UpdateParticlesInfo();
 						ConstBuf::ConstToVertex(9);
@@ -336,8 +369,41 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 							InputAssembler::IA(InputAssembler::topology::pointList);
 						}
 
-						context->DrawInstanced(6, min(size, constCount), 0, 0);
+						context->DrawInstanced(6, min(size, constCount - 1), 0, 0);
 					}
+				}
+
+				Beam* beam = entity->GetComponent<Beam>();
+				if (beam != nullptr && beam->active) {
+
+					Transform wTransform1 = Transform();
+					wTransform1.position = beam->point1;
+					wTransform1 = worldTransform + wTransform1;
+
+					Transform wTransform2 = Transform();
+					wTransform2.position = beam->point2;
+					wTransform2 = worldTransform + wTransform2;
+
+					if (frustum->CheckSphere(wTransform1.position.lerp(wTransform2.position, 0.5f), max((wTransform1.position - wTransform2.position).magnitude(), max(beam->size1, beam->size2)))) {
+						ConstBuf::drawerFloat4x4[0] = XMFLOAT4X4(
+							wTransform1.position.x, wTransform1.position.y, wTransform1.position.z, beam->size1,
+							wTransform2.position.x, wTransform2.position.y, wTransform2.position.z, beam->size2,
+							beam->color1.x, beam->color1.y, beam->color1.z, beam->opacity1,
+							beam->color2.x, beam->color2.y, beam->color2.z, beam->opacity2
+						);
+
+						ConstBuf::Update(10, ConstBuf::drawerFloat4x4);
+						ConstBuf::ConstToVertex(10);
+						ConstBuf::ConstToPixel(10);
+
+						Shaders::vShader(4);
+						Shaders::gShader(0);
+						Shaders::pShader(beam->pShader);
+
+						InputAssembler::IA(InputAssembler::topology::triList);
+						context->Draw(6, 0);
+					}
+
 				}
 			}
 

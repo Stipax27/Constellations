@@ -12,6 +12,7 @@
 #include "Star.h"
 #include "PointCloud.h"
 #include "ParticleEmitter.h"
+#include "Beam.h"
 
 #include "frustumclass.h"
 #include "Explosion.cpp" 

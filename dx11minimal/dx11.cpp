@@ -914,7 +914,6 @@ void Shaders::Init()
 	Shaders::CreatePS(13, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Rect_Strict_PS.shader"));
 
 	Shaders::CreatePS(14, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Rect_Smooth_PS.shader"));
-	//Shaders::CreatePS(14, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\BlackHole_Body_PS.shader"));
 
 	Shaders::CreateVS(15, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Mesh_VS.shader"));
 	Shaders::CreatePS(15, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Mesh_Stretch_PS.shader"));
@@ -936,6 +935,8 @@ void Shaders::Init()
 
 	Shaders::CreateVS(21, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Particle_VS.shader"));
 	Shaders::CreatePS(21, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Particle_Basic_PS.shader"));
+
+	Shaders::CreatePS(22, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SwordBeam_PS.shader"));
 	
 	//-----------------------------------------------
 	

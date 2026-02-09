@@ -18,7 +18,7 @@
 
 #include "Transform.h"
 #include "PhysicBody.h"
-#include "Constellation.h"
+#include "PointCloud.h"
 
 #include "PlayerAbilities.h"
 
@@ -45,11 +45,14 @@ const DWORD DASH_CD = 1000;
 class PlayerController
 {
 public:
+	PlayerAbilities* abilities;
+
+public:
 	PlayerController();
 	PlayerController(const PlayerController&);
 	~PlayerController();
 
-	void Initialize(Entity*, World*, MouseClass*, WindowClass*);
+	void Initialize(Entity*, World*, MouseClass*, WindowClass*, CollisionManagerClass*);
 	void Shutdown();
 
 	void ProcessInput();
@@ -61,13 +64,11 @@ private:
 
 	Transform* playerTransform;
 	PhysicBody* playerPhysicBody;
-	Constellation* playerConstellation;
+	PointCloud* playerPointCloud;
 
 	CameraClass* camera;
 	MouseClass* mouse;
 	WindowClass* window;
-
-	PlayerAbilities* abilities;
 
 	bool movementLocked = false;
 
