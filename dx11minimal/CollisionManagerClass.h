@@ -33,14 +33,16 @@
 struct RayInfo {
 	point3d origin;
 	point3d direction;
+	CollisionFilter::Group collisionGroup;
 
 	RayInfo()
 	{
 		origin = point3d();
 		direction = point3d();
+		collisionGroup = CollisionFilter::Group::Projectile;
 	}
 
-	RayInfo(point3d Origin, point3d Direction) : origin(Origin), direction(Direction) {}
+	RayInfo(point3d Origin, point3d Direction, CollisionFilter::Group CollisionGroup) : origin(Origin), direction(Direction), collisionGroup(CollisionGroup) {}
 };
 
 struct RaycastResult {
@@ -50,12 +52,6 @@ struct RaycastResult {
 	point3d normal;
 	SphereCollider* collider;
 	Entity* entity;
-};
-
-struct CollisionResult {
-	bool collided = false;
-	point3d normal;
-	float distance;
 };
 
 using CollisionFn = CollisionResult(*)(

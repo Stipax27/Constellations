@@ -43,4 +43,6 @@ float hueToRgb(float, float, float);
 point3d hslToRgb(const point3d&);
 point3d rgbToHsl(const point3d&);
 
+point3d rotateInPlane(const point3d&, const point3d&, float);
+
 #endif

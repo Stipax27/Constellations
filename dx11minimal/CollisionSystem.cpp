@@ -61,6 +61,7 @@ void CollisionSystem::Update(vector<Entity*>& entities, float deltaTime)
 								Transform worldTransform2 = GetWorldTransform(entity2);
 
 								CollisionResult result = collisionManager->sphere_vs_sphere(worldTransform1, collider1, worldTransform2, collider2);
+								collider1->collision = result;
 								if (result.collided) {
 									//transform1->position += planeCollider->normal * (sphereCollider->radius - distance);
 

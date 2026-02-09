@@ -1,6 +1,6 @@
 cbuffer global : register(b5)
 {
-    float4 gConst[256];
+    float4 gConst[1024];
 };
 
 struct VS_OUTPUT

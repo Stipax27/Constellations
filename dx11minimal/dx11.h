@@ -241,6 +241,8 @@ namespace Sampler
 
 namespace ConstBuf
 {
+#define constCount 1024
+
 	// buffer structures
 	
 	struct DrawerMat {
@@ -264,11 +266,19 @@ namespace ConstBuf
 		float AriesNebulaLerpFactor;
 	};
 
+	struct ParticlesDesc {
+		XMFLOAT2 size;
+		XMFLOAT2 opacity;
+		XMFLOAT3 color;
+		float lifetime;
+		XMFLOAT2 speed;
+		float _p1;
+		float _p2;
+	};
+
 	//----------------------------------------------------------------
 
-	extern ID3D11Buffer* buffer[9];
-
-#define constCount 256
+	extern ID3D11Buffer* buffer[11];
 
 	//b0 - use "params" label in shader
 	extern float drawerV[constCount];//update per draw call
@@ -297,6 +307,12 @@ namespace ConstBuf
 	//b8
 	extern XMMATRIX drawerMatrix[constCount];
 
+	//b9
+	extern ParticlesDesc particlesInfo;
+
+	//b10
+	extern XMFLOAT4X4 drawerFloat4x4[constCount];
+
 	int roundUp(int, int);
 	void Create(ID3D11Buffer*&, int);
 	void CreateVertexBuffer(int);
@@ -312,13 +328,26 @@ namespace ConstBuf
 	void UpdateDrawerMat();
 	void UpdateCamera();
 	void UpdateFactors();
+	void UpdateParticlesInfo();
 	void ConstToVertex(int);
 	void ConstToGeometry(int);
 	void ConstToPixel(int);
 	void ConstToCompute(int);
 
 	namespace getbyname {
-		enum { drawerV, drawerP, drawerMat, camera, frame, global, factors, drawerInt, drawerMatrix };
+		enum {
+			drawerV,
+			drawerP,
+			drawerMat,
+			camera,
+			frame,
+			global,
+			factors,
+			drawerInt,
+			drawerMatrix,
+			particlesInfo,
+			drawerFloat4x4
+		};
 	}
 }
 
@@ -396,4 +425,4 @@ namespace Draw
 	void Present();
 }
 
-#endif // !DX11_H
+#endif

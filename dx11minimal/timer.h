@@ -2,6 +2,9 @@
 #define _TIMER_H_
 
 #include <wtypes.h>
+#include <vector>
+
+#define DELTALIST_COUNT 60
 
 namespace timer
 {
@@ -17,8 +20,12 @@ namespace timer
 	extern double lastFrameTime;
 	extern double deltaTime;
 
+	extern std::vector<double> deltaList;
+	extern double deltaAverage;
+
 	void StartCounter();
 	double GetCounter();
+	void CalcDeltaAverage();
 }
 
 #endif

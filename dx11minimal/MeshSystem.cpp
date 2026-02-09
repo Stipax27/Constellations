@@ -130,7 +130,7 @@ void MeshSystem::Update(vector<Entity*>& entities, float deltaTime)
 					ConstBuf::ConstToVertex(0);
 
 					int count = 0;
-					for (int a = 0; a < transformedStars.size() && count < constCount - 1; a++) {
+					for (int a = 0; a < transformedStars.size() && count < constCount; a++) {
 						point3d star = transformedStars[a];
 						if (frustum->CheckSphere(star, constellation->starSize)) {
 							worldTransform.position = star;

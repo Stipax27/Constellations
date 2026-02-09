@@ -1,6 +1,6 @@
-cbuffer global : register(b5)
+cbuffer drawerFloat4x4 : register(b10)
 {
-    float4 gConst[256];
+    float4x4 fConst[1024];
 };
 
 cbuffer frame : register(b4)
@@ -17,23 +17,16 @@ cbuffer camera : register(b3)
     float4 cPos;
 };
 
-cbuffer drawMat : register(b2)
-{
-    float4x4 model;
-    float hilight;
-};
-
 cbuffer objParams : register(b0)
 {
-    float drawerV[256];
+    float drawerV[1024];
 };
 
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
     float2 uv : TEXCOORD0;
-    uint   starID : COLOR0;
-    float4 worldpos : POSITION1;
+    float4 color : COLOR0;
 };
 
 float3 rotZ(float3 pos, float a)
@@ -52,8 +45,8 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 {
     VS_OUTPUT output;
 
-    float4 p1 = gConst[iID * 2];
-    float4 p2 = gConst[iID * 2 + 1];
+    float4 p1 = fConst[iID]._m00_m10_m20_m30;
+    float4 p2 = fConst[iID]._m01_m11_m21_m31;
 
     float4 pointsProj[] = {
         mul(mul(float4(p1.xyz, 1.0f), view), proj),
@@ -78,6 +71,9 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 
     output.uv = quadUV[vID];
     output.pos = projPos;
+
+    float4 colors[2] = {fConst[iID]._m02_m12_m22_m32, fConst[iID]._m03_m13_m23_m33};
+    output.color = colors[vID % 2];
 
     return output;
 }

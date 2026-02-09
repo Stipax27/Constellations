@@ -914,7 +914,6 @@ void Shaders::Init()
 	Shaders::CreatePS(13, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Rect_Strict_PS.shader"));
 
 	Shaders::CreatePS(14, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Rect_Smooth_PS.shader"));
-	//Shaders::CreatePS(14, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\BlackHole_Body_PS.shader"));
 
 	Shaders::CreateVS(15, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Mesh_VS.shader"));
 	Shaders::CreatePS(15, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Mesh_Stretch_PS.shader"));
@@ -933,12 +932,15 @@ void Shaders::Init()
 
 	Shaders::CreateVS(20, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarCrown_VS.shader"));
 	Shaders::CreatePS(20, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarCrown_PS.shader"));
+
+	Shaders::CreateVS(21, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Particle_VS.shader"));
+	Shaders::CreatePS(21, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Particle_Basic_PS.shader"));
+
+	Shaders::CreatePS(22, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SwordBeam_PS.shader"));
 	
 	//-----------------------------------------------
 	
 	Shaders::CreatePS(100, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ColorCorrection_PS.shader"));
-	//Shaders::CreatePS(101, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Lensing_PS.shader"));
-	Shaders::CreatePS(101, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\DepthCutoff_PS.shader"));
 	
 	//-----------------------------------------------
 	
@@ -1068,7 +1070,7 @@ void Sampler::SamplerComp(unsigned int slot)
 
 //////////////////////////////////////////////////////////////////////////////////
 
-ID3D11Buffer* ConstBuf::buffer[9];
+ID3D11Buffer* ConstBuf::buffer[11];
 
 //b0
 float ConstBuf::drawerV[constCount];
@@ -1096,6 +1098,12 @@ int ConstBuf::drawerInt[constCount];
 
 //b8
 XMMATRIX ConstBuf::drawerMatrix[constCount];
+
+//b9
+ConstBuf::ParticlesDesc ConstBuf::particlesInfo;
+
+//b10
+XMFLOAT4X4 ConstBuf::drawerFloat4x4[constCount];
 
 
 int ConstBuf::roundUp(int n, int r)
@@ -1163,6 +1171,8 @@ void ConstBuf::Init()
 	ConstBuf::Create(ConstBuf::buffer[6], sizeof(factors));
 	ConstBuf::Create(ConstBuf::buffer[7], sizeof(drawerInt));
 	ConstBuf::Create(ConstBuf::buffer[8], sizeof(drawerMatrix));
+	ConstBuf::Create(ConstBuf::buffer[9], sizeof(particlesInfo));
+	ConstBuf::Create(ConstBuf::buffer[10], sizeof(drawerFloat4x4));
 }
 
 void ConstBuf::UpdateFrame()
@@ -1183,6 +1193,11 @@ void ConstBuf::UpdateCamera()
 void ConstBuf::UpdateFactors()
 {
 	context->UpdateSubresource(ConstBuf::buffer[6], 0, NULL, &factors, 0, 0);
+}
+
+void ConstBuf::UpdateParticlesInfo()
+{
+	context->UpdateSubresource(ConstBuf::buffer[9], 0, NULL, &particlesInfo, 0, 0);
 }
 
 void ConstBuf::ConstToVertex(int i)

@@ -10,8 +10,6 @@
 #include "windowclass.h"
 #include <vector>
 
-#include "CollisionManagerClass.h"
-
 using namespace std;
 
 ///////////
@@ -52,7 +50,7 @@ public:
 	MouseClass(const MouseClass&);
 	~MouseClass();
 
-	void Initialize(WindowClass*, CameraClass*, CollisionManagerClass*);
+	void Initialize(WindowClass*, CameraClass*);
 	void Shutdown();
 	void Update();
 
@@ -61,6 +59,9 @@ public:
 	
 	bool IsLButtonClicked();
 	bool IsRButtonClicked();
+
+	bool IsLButtonUnclicked();
+	bool IsRButtonUnclicked();
 
 	point3d GetLButtonDownPosition();
 	point3d GetRButtonDownPosition();
@@ -71,13 +72,15 @@ public:
 private:
 	WindowClass* window;
 	CameraClass* camera;
-	CollisionManagerClass* collisionManager;
 
 	bool lbuttonDown;
 	bool rbuttonDown;
 
 	bool lbuttonClicked;
 	bool rbuttonClicked;
+
+	bool lbuttonUnclicked;
+	bool rbuttonUnclicked;
 
 	point3d lbuttonDownPos;
 	point3d rbuttonDownPos;

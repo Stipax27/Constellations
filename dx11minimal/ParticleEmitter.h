@@ -6,22 +6,45 @@
 #include "dx11.h"
 
 
+enum EmitDirection
+{
+	Front,
+	Back,
+	Right,
+	Left,
+	Up,
+	Bottom
+};
+
+
 struct ParticleEmitter : Component
 {
-	int vShader = 17;
-	int gShader = 17;
-	int pShader = 17;
+	int vShader = 21;
+	int gShader = 0;
+	int pShader = 21;
 
-	float size = 1.0f;
-	float brightness = 1.0f;
+	pair<float, float> size = {1.0f, 1.0f};
 	point3d color = point3d(1.0f, 1.0f, 1.0f);
-	DWORD lifetime = 1000;
+	pair<float, float> opacity = {1.0f, 0.0f};
+
+	EmitDirection emitDirectoin = EmitDirection::Front;
+	pair<float, float> spread = { 0.0f, 0.0f };
+	pair<float, float> speed = { 10.0f, 0.0f };
+
 	float rate = 10.0f;
+	DWORD lifetime = 1000;
+
+	bool heapEmit = false;
+	int heapEmitRepeats = -1;
+	DWORD heapEmitInterval = 1000;
+
+	bool reverse = false;
 
 	RenderCompress compress = RenderCompress::none;
 
-	DWORD lastEmitTime;
-	vector<DWORD> particles;
+	double lastEmitTime = timer::currentTime;
+	int heapCount = 0;
+	vector<XMFLOAT4X4> particles;
 };
 
 #endif

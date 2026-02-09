@@ -51,8 +51,6 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 					vector<point3d> transformedStars;
 					int count;
 
-					ConstBuf::global[constCount - 1] = XMFLOAT4(1, 1, 1, 1);
-
 					for (int a = 0; a < constellation->stars.size(); a++) {
 						point3d star = constellation->stars[a];
 						star = transformPos + transform->GetLookVector() * star.z + transform->GetRightVector() * star.x + transform->GetUpVector() * star.y;
@@ -61,14 +59,21 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 					}
 
 					count = 0;
-					for (int a = 0; a < constellation->links.size() && count < constCount / 2 - 1; a++) {
+					for (int a = 0; a < constellation->links.size() && count < constCount; a++) {
 						pair<int, int> link = constellation->links[a];
 						point3d point1 = transformedStars[link.first];
 						point3d point2 = transformedStars[link.second];
 
 						if (frustum->CheckSphere(point1.lerp(point2, 0.5f), max((point1 - point2).magnitude(), constellation->linkSize))) {
-							ConstBuf::global[count * 2] = XMFLOAT4(point1.x, point1.y, point1.z, constellation->linkSize);
-							ConstBuf::global[count * 2 + 1] = XMFLOAT4(point2.x, point2.y, point2.z, constellation->linkSize);
+							/*ConstBuf::global[count * 2] = XMFLOAT4(point1.x, point1.y, point1.z, constellation->linkSize);
+							ConstBuf::global[count * 2 + 1] = XMFLOAT4(point2.x, point2.y, point2.z, constellation->linkSize);*/
+
+							ConstBuf::drawerFloat4x4[count] = XMFLOAT4X4(
+								point1.x, point1.y, point1.z, constellation->linkSize,
+								point2.x, point2.y, point2.z, constellation->linkSize,
+								1, 1, 1, 1,
+								1, 1, 1, 1
+								);
 							count++;
 						}
 					}
@@ -77,10 +82,14 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 						Shaders::vShader(4);
 						Shaders::pShader(4);
 
-						ConstBuf::Update(5, ConstBuf::global);
-						ConstBuf::ConstToVertex(5);
+						/*ConstBuf::Update(5, ConstBuf::global);
+						ConstBuf::ConstToVertex(5);*/
 
-						context->DrawInstanced(6, min(count, constCount / 2 - 1), 0, 0);
+						ConstBuf::Update(10, ConstBuf::drawerFloat4x4);
+						ConstBuf::ConstToVertex(10);
+						ConstBuf::ConstToPixel(10);
+
+						context->DrawInstanced(6, min(count, constCount - 1), 0, 0);
 					}
 
 					int n = 12;
@@ -90,12 +99,12 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 					for (int a = 0; a < transformedStars.size() && count < constCount - 2; a++) {
 						point3d star = transformedStars[a];
 						if (frustum->CheckSphere(star, transform->scale.x)) {
-							ConstBuf::global[count] = XMFLOAT4(star.x, star.y, star.z, constellation->crownRadius);
+							ConstBuf::global[count + 1] = XMFLOAT4(star.x, star.y, star.z, constellation->crownRadius);
 							count++;
 						}
 					}
 
-					ConstBuf::global[constCount - 1] = XMFLOAT4(constellation->crownColor.x, constellation->crownColor.y, constellation->crownColor.z, 1);
+					ConstBuf::global[0] = XMFLOAT4(constellation->crownColor.x, constellation->crownColor.y, constellation->crownColor.z, 1);
 
 					if (count > 0) {
 						Shaders::vShader(20);
@@ -114,8 +123,8 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 				if (star != nullptr && star->active) {
 					if (frustum->CheckSphere(worldTransform.position, star->radius)) {
 
-						ConstBuf::global[0] = XMFLOAT4(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, star->crownRadius);
-						ConstBuf::global[constCount - 1] = XMFLOAT4(star->crownColor.x, star->crownColor.y, star->crownColor.z, 1);
+						ConstBuf::global[0] = XMFLOAT4(star->crownColor.x, star->crownColor.y, star->crownColor.z, 1);
+						ConstBuf::global[1] = XMFLOAT4(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, star->crownRadius);
 						ConstBuf::Update(5, ConstBuf::global);
 						ConstBuf::ConstToVertex(5);
 
@@ -180,31 +189,135 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 				ParticleEmitter* particleEmitter = entity->GetComponent<ParticleEmitter>();
 				if (particleEmitter != nullptr) {
 
-					if (particleEmitter->active) {
-						float emitDelta = 500 / particleEmitter->rate;
-						if (timer::deltaTime >= emitDelta)
-						{
-							particleEmitter->lastEmitTime = timer::currentTime;
+					if (particleEmitter->active && particleEmitter->rate > 0.0f) {
+						double emitDelta;
+						if (particleEmitter->heapEmit) {
+							emitDelta = particleEmitter->heapEmitInterval;
+						}
+						else {
+							emitDelta = 1000 / particleEmitter->rate;
+						}
+						double elapsedTime = timer::currentTime - particleEmitter->lastEmitTime;
 
-							for (int i = 0; i < min((int)(timer::deltaTime / emitDelta), constCount - 1); i++)
+						if (elapsedTime >= emitDelta)
+						{
+							point3d direction;
+							point3d rVec;
+							point3d uVec;
+							switch (particleEmitter->emitDirectoin)
 							{
-								particleEmitter->particles.push_back(timer::currentTime);
+							case EmitDirection::Front:
+								direction = worldTransform.GetLookVector();
+								rVec = worldTransform.GetRightVector();
+								uVec = worldTransform.GetUpVector();
+								break;
+							case EmitDirection::Back:
+								direction = -worldTransform.GetLookVector();
+								rVec = -worldTransform.GetRightVector();
+								uVec = worldTransform.GetUpVector();
+								break;
+							case EmitDirection::Right:
+								direction = worldTransform.GetRightVector();
+								rVec = -worldTransform.GetLookVector();
+								uVec = worldTransform.GetUpVector();
+								break;
+							case EmitDirection::Left:
+								direction = -worldTransform.GetRightVector();
+								rVec = worldTransform.GetLookVector();
+								uVec = worldTransform.GetUpVector();
+								break;
+							case EmitDirection::Up:
+								direction = worldTransform.GetUpVector();
+								rVec = worldTransform.GetRightVector();
+								uVec = -worldTransform.GetLookVector();
+								break;
+							case EmitDirection::Bottom:
+								direction = -worldTransform.GetUpVector();
+								rVec = worldTransform.GetRightVector();
+								uVec = worldTransform.GetLookVector();
+								break;
+							}
+
+							int count;
+							if (particleEmitter->heapEmit) {
+								count = min((int)particleEmitter->rate, constCount);
+							}
+							else {
+								count = min((int)(elapsedTime / emitDelta), constCount);
+							}
+
+							for (int i = 0; i < count; i++)
+							{
+								if (particleEmitter->spread.first > 0.0f) {
+									float s = particleEmitter->spread.first * 10000;
+									float angle = (float)getRandom(s) / 10000;
+									if (getRandom(2) == 0) {
+										angle = -angle;
+									}
+									direction = rotateInPlane(direction, uVec, angle);
+								}
+								if (particleEmitter->spread.second > 0.0f) {
+									float s = particleEmitter->spread.second * 10000;
+									float angle = (float)getRandom(s) / 10000;
+									if (getRandom(2) == 0) {
+										angle = -angle;
+									}
+									direction = rotateInPlane(direction, rVec, angle);
+								}
+								
+								double startTime;
+								if (particleEmitter->heapEmit) {
+									startTime = timer::currentTime;
+								}
+								else {
+									startTime = particleEmitter->lastEmitTime + emitDelta * (i + 1);
+								}
+
+								if (particleEmitter->reverse) {
+									float lifetime = particleEmitter->lifetime * 0.001;
+									float a = (particleEmitter->speed.second - particleEmitter->speed.first) / lifetime;
+									float s = particleEmitter->speed.first * lifetime + a * pow(lifetime, 2) / 2;
+									point3d pos = worldTransform.position + direction * s;
+
+									particleEmitter->particles.push_back(XMFLOAT4X4(
+										pos.x, pos.y, pos.z, (float)startTime,
+										-direction.x, -direction.y, -direction.z, 0,
+										0, 0, 0, 0,
+										0, 0, 0, 0
+									));
+								}
+								else {
+									particleEmitter->particles.push_back(XMFLOAT4X4(
+										worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, (float)startTime,
+										direction.x, direction.y, direction.z, 0,
+										0, 0, 0, 0,
+										0, 0, 0, 0
+									));
+								}
+							}
+							if (particleEmitter->heapEmit) {
+								particleEmitter->lastEmitTime = timer::currentTime;
+								particleEmitter->heapCount++;
+								if (particleEmitter->heapEmitRepeats > 0 && particleEmitter->heapCount >= particleEmitter->heapEmitRepeats) {
+									particleEmitter->heapCount = 0;
+									particleEmitter->active = false;
+								}
+							}
+							else {
+								particleEmitter->lastEmitTime += emitDelta * count;
 							}
 						}
 					}
 
-					ConstBuf::global[0] = XMFLOAT4(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, (float)particleEmitter->lifetime);
-
 					int i = 0;
-					DWORD curTime = timer::GetCounter();
 					while (i < particleEmitter->particles.size())
 					{
-						DWORD startTime = particleEmitter->particles[i];
+						float startTime = particleEmitter->particles[i]._14;
 
-						if (curTime - startTime < particleEmitter->lifetime)
+						if (timer::currentTime - startTime < particleEmitter->lifetime)
 						{
-							if (i < constCount - 1) {
-								ConstBuf::global[i + 1].w = (float)particleEmitter->particles[i];
+							if (i < constCount) {
+								ConstBuf::drawerFloat4x4[i] = particleEmitter->particles[i];
 							}
 
 							i++;
@@ -215,23 +328,39 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 						}
 					}
 
-					ConstBuf::Update(5, ConstBuf::global);
-					ConstBuf::ConstToVertex(5);
-
 					size_t size = particleEmitter->particles.size();
 					if (size > 0) {
 						Shaders::vShader(particleEmitter->vShader);
 						Shaders::pShader(particleEmitter->pShader);
 						Shaders::gShader(particleEmitter->gShader);
 
-						/*for (int i = 0; i < size; i++) {
-							ConstBuf::global[i + 1].w = (float)particleEmitter->particles[i];
-						}*/
+						ConstBuf::Update(10, ConstBuf::drawerFloat4x4);
+						ConstBuf::ConstToVertex(10);
+						ConstBuf::ConstToPixel(10);
+						ConstBuf::ConstToGeometry(10);
 
-						ConstBuf::Update(5, ConstBuf::global);
-						ConstBuf::ConstToVertex(5);
-						ConstBuf::ConstToPixel(5);
-						ConstBuf::ConstToGeometry(5);
+						// SETTING PARTICLE INFO //
+
+						if (particleEmitter->reverse) {
+							ConstBuf::particlesInfo.size = XMFLOAT2(particleEmitter->size.second, particleEmitter->size.first);
+							ConstBuf::particlesInfo.opacity = XMFLOAT2(particleEmitter->opacity.second, particleEmitter->opacity.first);
+							ConstBuf::particlesInfo.speed = XMFLOAT2(particleEmitter->speed.second, particleEmitter->speed.first);
+						}
+						else {
+							ConstBuf::particlesInfo.size = XMFLOAT2(particleEmitter->size.first, particleEmitter->size.second);
+							ConstBuf::particlesInfo.opacity = XMFLOAT2(particleEmitter->opacity.first, particleEmitter->opacity.second);
+							ConstBuf::particlesInfo.speed = XMFLOAT2(particleEmitter->speed.first, particleEmitter->speed.second);
+						}
+						
+						ConstBuf::particlesInfo.color = XMFLOAT3(particleEmitter->color.x, particleEmitter->color.y, particleEmitter->color.z);
+						ConstBuf::particlesInfo.lifetime = particleEmitter->lifetime;
+
+						ConstBuf::UpdateParticlesInfo();
+						ConstBuf::ConstToVertex(9);
+						ConstBuf::ConstToPixel(9);
+						ConstBuf::ConstToGeometry(9);
+
+						///////////////////////////
 
 						if (particleEmitter->gShader == 0) {
 							InputAssembler::IA(InputAssembler::topology::triList);
@@ -242,6 +371,39 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 
 						context->DrawInstanced(6, min(size, constCount - 1), 0, 0);
 					}
+				}
+
+				Beam* beam = entity->GetComponent<Beam>();
+				if (beam != nullptr && beam->active) {
+
+					Transform wTransform1 = Transform();
+					wTransform1.position = beam->point1;
+					wTransform1 = worldTransform + wTransform1;
+
+					Transform wTransform2 = Transform();
+					wTransform2.position = beam->point2;
+					wTransform2 = worldTransform + wTransform2;
+
+					if (frustum->CheckSphere(wTransform1.position.lerp(wTransform2.position, 0.5f), max((wTransform1.position - wTransform2.position).magnitude(), max(beam->size1, beam->size2)))) {
+						ConstBuf::drawerFloat4x4[0] = XMFLOAT4X4(
+							wTransform1.position.x, wTransform1.position.y, wTransform1.position.z, beam->size1,
+							wTransform2.position.x, wTransform2.position.y, wTransform2.position.z, beam->size2,
+							beam->color1.x, beam->color1.y, beam->color1.z, beam->opacity1,
+							beam->color2.x, beam->color2.y, beam->color2.z, beam->opacity2
+						);
+
+						ConstBuf::Update(10, ConstBuf::drawerFloat4x4);
+						ConstBuf::ConstToVertex(10);
+						ConstBuf::ConstToPixel(10);
+
+						Shaders::vShader(4);
+						Shaders::gShader(0);
+						Shaders::pShader(beam->pShader);
+
+						InputAssembler::IA(InputAssembler::topology::triList);
+						context->Draw(6, 0);
+					}
+
 				}
 			}
 

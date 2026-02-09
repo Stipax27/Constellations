@@ -1,6 +1,6 @@
 cbuffer global : register(b5)
 {
-    float4 gConst[256];
+    float4 gConst[1024];
 };
 
 cbuffer frame : register(b4)
@@ -19,7 +19,7 @@ struct VS_OUTPUT
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-    float4 basecolor = gConst[255];
+    float4 basecolor = gConst[0];
     float4 color;
 
     //float angle = atan2(input.uv.y, input.uv.x) + PI;

@@ -9,6 +9,18 @@
 //////////////
 #include "component.h"
 #include "CollisionGroup.h"
+#include "Point3d.h"
+
+/////////////
+// STRUCTS //
+/////////////
+
+struct CollisionResult {
+	bool collided = false;
+	point3d normal;
+	point3d position;
+	float distance;
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // Struct name: Collider
@@ -21,6 +33,8 @@ struct Collider : Component
 	bool anti = false;
 
 	CollisionFilter::Group collisionGroup = CollisionFilter::Group::Projectile;
+
+	CollisionResult collision = CollisionResult();
 };
 
 #endif

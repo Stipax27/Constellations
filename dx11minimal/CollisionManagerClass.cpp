@@ -43,6 +43,7 @@ CollisionResult CollisionManagerClass::sphere_vs_sphere(
 	if (magnitude < c1->radius + c2->radius) {
 		result.collided = true;
 		result.normal = vector.normalized();
+        result.position = t2.position + result.normal * c2->radius;
 		result.distance = (c1->radius + c2->radius) - magnitude;
 	}
 
@@ -58,7 +59,7 @@ RaycastResult CollisionManagerClass::Raycast(const RayInfo& ray)
 		RaycastResult hit;
 
         SphereCollider* sphereCollider = entity->GetComponent<SphereCollider>();
-        if (sphereCollider != nullptr && sphereCollider->active) {
+        if (sphereCollider != nullptr && sphereCollider->active && CollisionFilter::collisionTable[(int)sphereCollider->collisionGroup][(int)ray.collisionGroup]) {
             if (raycast_sphere(ray, GetWorldTransform(entity), sphereCollider, hit) && hit.distance < closestHit.distance) {
                 closestHit.hit = true;
                 closestHit.distance = hit.distance;

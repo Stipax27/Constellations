@@ -7,7 +7,7 @@ PlayerController::PlayerController()
 
 	playerTransform = 0;
 	playerPhysicBody = 0;
-	playerConstellation = 0;
+	playerPointCloud = 0;
 
 	camera = 0;
 	mouse = 0;
@@ -24,20 +24,20 @@ PlayerController::~PlayerController()
 }
 
 
-void PlayerController::Initialize(Entity* Player, World* m_World, MouseClass* Mouse, WindowClass* Window)
+void PlayerController::Initialize(Entity* Player, World* m_World, MouseClass* Mouse, WindowClass* Window, CollisionManagerClass* CollisionManager)
 {
 	playerEntity = Player;
 
 	playerTransform = Player->GetComponent<Transform>();
 	playerPhysicBody = Player->GetComponent<PhysicBody>();
-	playerConstellation = Player->GetComponent<Constellation>();
+	playerPointCloud = Player->GetComponent<PointCloud>();
 
 	camera = m_World->m_Camera;
 	mouse = Mouse;
 	window = Window;
 
 	abilities = new PlayerAbilities;
-	abilities->Initialize(m_World);
+	abilities->Initialize(m_World, camera, playerEntity, CollisionManager);
 }
 
 
@@ -61,8 +61,8 @@ void PlayerController::Shutdown()
 		playerPhysicBody = 0;
 	}
 
-	if (playerConstellation) {
-		playerConstellation = 0;
+	if (playerPointCloud) {
+		playerPointCloud = 0;
 	}
 
 	if (camera) {
@@ -167,7 +167,7 @@ void PlayerController::ProcessInput()
 
 void PlayerController::ProcessCamera()
 {
-	camera->SetPosition(camera->GetPosition().lerp(playerTransform->position - playerTransform->GetLookVector() * 7 + playerTransform->GetUpVector() * 2, 0.2f));
+	camera->SetPosition(camera->GetPosition().lerp(playerTransform->position - playerTransform->GetLookVector() * camera->distance + playerTransform->GetUpVector() * 2, 0.2f));
 	camera->SetMatrixRotation(playerTransform->mRotation);
 }
 
@@ -207,9 +207,18 @@ void PlayerController::ProcessMouse()
 				//Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
 			//}
 
-			if (mouse->IsLButtonClicked())
-			{
+			if (mouse->IsLButtonDown()) {
+				abilities->Charging();
+			}
+			else if (mouse->IsLButtonUnclicked()) {
 				abilities->Attack(*playerTransform, mouse->GetMouseRay());
+			}
+
+			if (mouse->IsRButtonClicked()) {
+				abilities->BlockStart();
+			}
+			else if (mouse->IsRButtonUnclicked()) {
+				abilities->BlockEnd();
 			}
 		}
 		break;
