@@ -205,7 +205,8 @@ bool LevelManagerClass::Initialize()
 	particleEmitter->emitDirectoin = EmitDirection::Up;
 	particleEmitter->speed = { 10.0f, 0.0f };
 	particleEmitter->spread = { PI, PI };
-	particleEmitter->reverse = true;
+	//particleEmitter->reverse = true;
+	particleEmitter->heapEmit = true;
 
 	entity = m_World->entityStorage->CreateEntity("Particles", folder);
 	transform = entity->AddComponent<Transform>();
