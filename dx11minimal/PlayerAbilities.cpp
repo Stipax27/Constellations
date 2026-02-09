@@ -99,6 +99,10 @@ void PlayerAbilities::Attack(Transform startTransform, point3d direction)
 
 void PlayerAbilities::Charging()
 {
+	if (block) {
+		return;
+	}
+
 	if (!charging) {
 		charging = true;
 		chargeAnim = true;
@@ -351,6 +355,10 @@ void PlayerAbilities::ChargedAttack(Transform startTransform, point3d direction)
 
 void PlayerAbilities::BlockStart()
 {
+	if (charging) {
+		return;
+	}
+
 	block = true;
 
 	PointCloud* pointCloud = playerEntity->GetComponent<PointCloud>();
