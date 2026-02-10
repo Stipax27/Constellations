@@ -1,6 +1,9 @@
 #ifndef _COLLISION_GROUP_H_
 #define _COLLISION_GROUP_H_
 
+#define T true
+#define F false
+
 namespace CollisionFilter
 {
 	enum Group
@@ -12,11 +15,14 @@ namespace CollisionFilter
 	};
 
 	const bool collisionTable[4][4] = {
-		{false, true, true, false},
-		{true, false, true, false},
-		{true, true, false, true},
-		{false, false, true, false},
+		{F, T, T, F},
+		{T, F, T, F},
+		{T, T, F, T},
+		{F, F, T, F},
 	};
 }
+
+#undef T
+#undef F
 
 #endif
