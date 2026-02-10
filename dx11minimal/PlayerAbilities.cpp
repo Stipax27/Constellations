@@ -211,7 +211,7 @@ void PlayerAbilities::CommonAttack(Transform startTransform, point3d direction)
 		particleEmitter->color = point3d(0.15f, 0.95f, 0.35f);
 		particleEmitter->size = { 1.5f, 5.0f };
 		particleEmitter->opacity = { 0.75f, 0.0f };
-		particleEmitter->emitDirectoin = EmitDirection::Front;
+		particleEmitter->emitDirection = EmitDirection::Front;
 		particleEmitter->speed = { 25.0f, -5.0f };
 
 		SingleDamager* singleDamager = projectile->AddComponent<SingleDamager>();
@@ -332,7 +332,7 @@ void PlayerAbilities::ChargedAttack(Transform startTransform, point3d direction)
 		particleEmitter->color = point3d(0.15f, 0.95f, 0.35f);
 		particleEmitter->size = { 1.5f, 5.0f };
 		particleEmitter->opacity = { 0.75f, 0.0f };
-		particleEmitter->emitDirectoin = EmitDirection::Front;
+		particleEmitter->emitDirection = EmitDirection::Front;
 		particleEmitter->speed = { 25.0f, -5.0f };
 
 		SingleDamager* singleDamager = projectile->AddComponent<SingleDamager>();

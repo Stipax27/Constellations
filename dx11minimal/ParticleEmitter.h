@@ -27,18 +27,18 @@ struct ParticleEmitter : Component
 	point3d color = point3d(1.0f, 1.0f, 1.0f);
 	pair<float, float> opacity = {1.0f, 0.0f};
 
-	EmitDirection emitDirectoin = EmitDirection::Front;
+	EmitDirection emitDirection = EmitDirection::Front;
 	pair<float, float> spread = { 0.0f, 0.0f };
 	pair<float, float> speed = { 10.0f, 0.0f };
 
 	float rate = 10.0f;
 	DWORD lifetime = 1000;
 
-	bool heapEmit = false;
+	bool isHeapEmit = true;
 	int heapEmitRepeats = -1;
 	DWORD heapEmitInterval = 1000;
 
-	bool reverse = false;
+	bool isReverse = false;
 
 	RenderCompress compress = RenderCompress::none;
 

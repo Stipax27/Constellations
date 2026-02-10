@@ -211,6 +211,7 @@
     <ClInclude Include="PlayerWeaponClass.h" />
     <ClInclude Include="Point3d.h" />
     <ClInclude Include="PointCloud.h" />
+    <ClInclude Include="Components\Orientation.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="renderCompress.h" />
     <ClInclude Include="SingleDamager.h" />
