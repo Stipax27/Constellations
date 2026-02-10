@@ -2,7 +2,6 @@
 #include "../Point3d.h"
 #include "../component.h"
 #include "../Transform.h"
-#include <DirectXMath.h>
 
 class Orientation : public Component {
 public:
@@ -15,9 +14,21 @@ public:
     Orientation(const point3d& f, const point3d& r, const point3d& u)
         : forward(f), right(r), up(u) {}
 
-    void SetFromTransform(Transform& transform);
+    void SetFromTransform(Transform& transform) {
+        forward = transform.GetLookVector();
+        right = transform.GetRightVector();
+        up = transform.GetUpVector();
+    }
 
-    void SetFromDirections(const point3d& f, const point3d& r, const point3d& u);
+    void SetFromDirections(const point3d& f, const point3d& r, const point3d& u) {
+        forward = f;
+        right = r;
+        up = u;
+    }
 
-    void Orthogonalize();
+    void Orthogonalize() {
+        forward = forward.normalized();
+        right = (right - forward * forward.dot(right)).normalized();
+        up = forward.cross(right);
+    }
 };
