@@ -15,7 +15,8 @@
 #include "Beam.h"
 
 #include "frustumclass.h"
-#include "Explosion.cpp" 
+#include "Explosion.cpp"
+#include "Components/Orientation.h"
 
 
 class SpriteSystem : public System
@@ -33,6 +34,26 @@ private:
 private:
 	XMMATRIX GetWorldMatrix(Transform);
 	void UpdateWorldMatrix(Transform);
+
+	void ProcessParticle(Entity*, Transform&);
+	void AddEmitterOrientation(Entity*, Transform&);
+	void EmitNewParticles(Entity*, const Transform&, ParticleEmitter*);
+	double CalculateEmitDelta(const ParticleEmitter&);
+	int CalculateEmitCount(const ParticleEmitter&, double, double);
+	Orientation ApplySpread(Orientation, const ParticleEmitter&);
+	float GenerateRandomAngle(float spread);
+	double CalculateParticleStartTime(const ParticleEmitter&, double, int);
+	void CreateParticle(const Transform&, ParticleEmitter*, const Orientation&, double);
+	void CreateReversedParticle(const Transform&, ParticleEmitter*, const Orientation&, double);
+	void CreateNormalParticle(const Transform&, ParticleEmitter*, const Orientation&, double);
+	void UpdateEmitTiming(ParticleEmitter*, double, int);
+	void UpdateExistingParticles(ParticleEmitter*);
+	void RenderParticles(const ParticleEmitter*);
+	void SetupShaders(const ParticleEmitter*);
+	void SetupConstantBuffers();
+	void SetupParticleInfo(const ParticleEmitter*);
+	void SetupInputAssembler(const ParticleEmitter*);
+	Orientation CalculateEmitOrientation(const Orientation&, EmitDirection);
 };
 
 #endif
