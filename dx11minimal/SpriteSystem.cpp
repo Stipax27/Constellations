@@ -386,7 +386,7 @@ void SpriteSystem::UpdateWorldMatrix(Transform worldTransform)
 }
 
 // Start process particle.
-void SpriteSystem::ProcessParticle(Entity* entity, Transform& worldTransform) const
+void SpriteSystem::ProcessParticle(Entity* entity, Transform& worldTransform)
 {
 	ParticleEmitter* particleEmitter = entity->GetComponent<ParticleEmitter>();
 	if (!particleEmitter)
@@ -415,7 +415,7 @@ void SpriteSystem::AddEmitterOrientation(Entity* entity, Transform& transform)
 	point3d right = transform.GetRightVector();
 	point3d up = transform.GetUpVector();
 
-	OrientationComponent* orientation = entity->AddComponent<OrientationComponent>();
+	Orientation* orientation = entity->AddComponent<Orientation>();
 	orientation->SetFromDirections(forward, right, up);
 }
 
@@ -426,14 +426,14 @@ void SpriteSystem::EmitNewParticles(Entity* entity, const Transform& worldTransf
 
 	if (elapsedTime >= emitDelta)
 	{
-		OrientationComponent* baseOrientation = entity->GetComponent<OrientationComponent>();
-		OrientationComponent emitOrientation = CalculateEmitOrientation(*baseOrientation, emitter->emitDirection);
+		Orientation* baseOrientation = entity->GetComponent<Orientation>();
+		Orientation emitOrientation = CalculateEmitOrientation(*baseOrientation, emitter->emitDirection);
 
 		int particlesToEmit = CalculateEmitCount(*emitter, elapsedTime, emitDelta);
 
 		for (int i = 0; i < particlesToEmit; i++)
 		{
-			OrientationComponent particleOrientation = ApplySpread(emitOrientation, *emitter);
+			Orientation particleOrientation = ApplySpread(emitOrientation, *emitter);
 			double startTime = CalculateParticleStartTime(*emitter, emitDelta, i);
 
 			CreateParticle(worldTransform, emitter, particleOrientation, startTime);
@@ -462,7 +462,7 @@ int SpriteSystem::CalculateEmitCount(const ParticleEmitter& emitter, double elap
 	}
 }
 
-OrientationComponent SpriteSystem::ApplySpread(OrientationComponent orientation,
+Orientation SpriteSystem::ApplySpread(Orientation orientation,
                                                const ParticleEmitter& emitter)
 {
 	if (emitter.spread.first > 0.0f)
@@ -496,7 +496,7 @@ double SpriteSystem::CalculateParticleStartTime(const ParticleEmitter& emitter, 
 }
 
 void SpriteSystem::CreateParticle(const Transform& worldTransform, ParticleEmitter* emitter,
-                                  const OrientationComponent& direction, double startTime)
+                                  const Orientation& direction, double startTime)
 {
 	if (emitter->isReverse)
 	{
@@ -509,7 +509,7 @@ void SpriteSystem::CreateParticle(const Transform& worldTransform, ParticleEmitt
 }
 
 void SpriteSystem::CreateReversedParticle(const Transform& worldTransform, ParticleEmitter* emitter,
-                                          const OrientationComponent& direction, double startTime)
+                                          const Orientation& direction, double startTime)
 {
 	float lifetime = emitter->lifetime * 0.001f;
 	float acceleration = (emitter->speed.second - emitter->speed.first) / lifetime;
@@ -526,7 +526,7 @@ void SpriteSystem::CreateReversedParticle(const Transform& worldTransform, Parti
 }
 
 void SpriteSystem::CreateNormalParticle(const Transform& worldTransform, ParticleEmitter* emitter,
-                                        const OrientationComponent& direction, double startTime)
+                                        const Orientation& direction, double startTime)
 {
 	emitter->particles.push_back(XMFLOAT4X4(
 		worldTransform.position.x, worldTransform.position.y, worldTransform.position.z,
@@ -578,7 +578,7 @@ void SpriteSystem::UpdateExistingParticles(ParticleEmitter* emitter)
 	}
 }
 
-void SpriteSystem::RenderParticles(const ParticleEmitter* emitter) const
+void SpriteSystem::RenderParticles(const ParticleEmitter* emitter)
 {
 	SetupShaders(emitter);
 	SetupConstantBuffers();
@@ -642,11 +642,11 @@ void SpriteSystem::SetupInputAssembler(const ParticleEmitter* emitter)
 	}
 }
 
-OrientationComponent SpriteSystem::CalculateEmitOrientation(
-	const OrientationComponent& baseOrientation,
+Orientation SpriteSystem::CalculateEmitOrientation(
+	const Orientation& baseOrientation,
 	EmitDirection emitDir)
 {
-	OrientationComponent result;
+	Orientation result;
 
 	switch (emitDir)
 	{

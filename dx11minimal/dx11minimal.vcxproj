@@ -179,6 +179,7 @@
     <ClInclude Include="collisionSystem.h" />
     <ClInclude Include="combatSystem.h" />
     <ClInclude Include="component.h" />
+    <ClInclude Include="Components\Orientation.cpp" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="Constellation.h" />
     <ClInclude Include="cornerType.h" />
