@@ -155,7 +155,7 @@ bool LevelManagerClass::Initialize()
 	spriteCluster->frustumRadius = 60;
 	spriteCluster->topology = InputAssembler::topology::pointList;
 	spriteCluster->compress = RenderCompress::x2;
-	/*sphereCollider = entity->AddComponent<SphereCollider>(); 
+	/*sphereCollider = entity->AddComponent<SphereCollider>();
 	sphereCollider->radius = 25.0f;
 	sphereCollider->softness = 0.5f;*/
 	//entity->AddComponent<SurfaceCollider>();
@@ -189,7 +189,7 @@ bool LevelManagerClass::Initialize()
 	particleEmitter->color = point3d(0.15f, 0.95f, 0.35f);
 	particleEmitter->size = { 1.0f, 4.0f };
 	particleEmitter->opacity = { 0.75f, 0.0f };
-	particleEmitter->emitDirectoin = EmitDirection::Up;
+	particleEmitter->emitDirection = EmitDirection::Up;
 	particleEmitter->speed = { 10.0f, 0.0f };
 	particleEmitter->spread = { PI / 8, PI / 8 };
 
@@ -202,10 +202,10 @@ bool LevelManagerClass::Initialize()
 	particleEmitter->color = point3d(1.0f, 0.15f, 0.1f);
 	particleEmitter->size = { 0.0f, 4.0f };
 	particleEmitter->opacity = { 1.0f, 0.0f };
-	particleEmitter->emitDirectoin = EmitDirection::Up;
+	particleEmitter->emitDirection = EmitDirection::Up;
 	particleEmitter->speed = { 10.0f, 0.0f };
 	particleEmitter->spread = { PI, PI };
-	particleEmitter->reverse = true;
+	particleEmitter->isReverse = true;
 
 	entity = m_World->entityStorage->CreateEntity("Particles", folder);
 	transform = entity->AddComponent<Transform>();
@@ -216,7 +216,7 @@ bool LevelManagerClass::Initialize()
 	particleEmitter->color = point3d(1, 1, 1);
 	particleEmitter->size = { 0.0f, 6.0f };
 	particleEmitter->opacity = { 0.75f, 0.0f };
-	particleEmitter->emitDirectoin = EmitDirection::Front;
+	particleEmitter->emitDirection = EmitDirection::Front;
 	particleEmitter->speed = { 2.0f, 50.0f };
 	particleEmitter->spread = { 0, PI };
 
@@ -229,7 +229,7 @@ bool LevelManagerClass::Initialize()
 	particleEmitter->color = point3d(0.95f, 0.65f, 0.25f);
 	particleEmitter->size = { 3.0f, 0.0f };
 	particleEmitter->opacity = { 1.0f, 0.0f };
-	particleEmitter->emitDirectoin = EmitDirection::Up;
+	particleEmitter->emitDirection = EmitDirection::Up;
 	particleEmitter->speed = { 10.0f, 0.0f };
 
 	for (int i = 0; i < 5; i++) {
@@ -320,7 +320,7 @@ bool LevelManagerClass::Initialize()
 	//pointCloud->color = point3d(1, 0.9f, 0.2f);
 
 	// MAIN MENU //
-	
+
 	//entity = m_World->entityStorage->CreateEntity("Ui");
 	//transform2D = entity->AddComponent<Transform2D>();
 	//transform2D->anchorPoint = point3d(0, 0, 0);
@@ -347,7 +347,7 @@ bool LevelManagerClass::Initialize()
 	// WORLD CREATING END //
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
-	
+
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>(collisionManager);
 	m_World->AddPhysicSystem<CombatSystem>();
@@ -362,13 +362,13 @@ bool LevelManagerClass::Initialize()
 	//m_World->PreCalculations();
 	//bStar = new BaseStar();
 	//bStar->Init(m_World, entity);
-	
+
 	//smallConstellation = new SmallConstellation();
 	//smallConstellation->Init(m_World, entity, player);
 
 	playerController = new PlayerController();
 	playerController->Initialize(player, m_World, mouse, window, collisionManager);
-	
+
 	/*if (aiSystem)
 	{
 		aiSystem->SetPlayerEntity(player);
@@ -423,7 +423,7 @@ void LevelManagerClass::Frame()
 	playerController->ProcessMouse();
 	playerController->abilities->Update();
 
-	
+
 	// ??????????????????????????? ????????????????????? ????????? ???????????? ??????????????????
 	//DWORD currentTime = timer::currentTime;
 	//srand(time(0));
@@ -452,7 +452,7 @@ void LevelManagerClass::Frame()
 		smallConstellation->LastTime = currentTime;
 
 		int attackType = rand() % 3;
-		
+
 		switch (attackType) {
 		case 0:
 			smallConstellation->VolleyStart();
