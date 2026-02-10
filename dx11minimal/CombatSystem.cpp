@@ -27,7 +27,7 @@ void CombatSystem::Update(vector<Entity*>& entities, float deltaTime)
 			Health* health = entity->GetComponent<Health>();
 			if (health != nullptr && health->active) {
 				health->hp = clamp(health->hp, 0, health->maxHp);
-				if (health->hp == 0.0f) {
+				if (health->hp == 0.0f && health->destroyOnDeath) {
 					entity->Destroy();
 				}
 			}

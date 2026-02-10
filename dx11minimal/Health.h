@@ -10,6 +10,7 @@ struct Health : Component
 	float maxHp = 100.0f;
 
 	Fraction fraction = Fraction::Enemy;
+	bool destroyOnDeath = true;
 };
 
 #endif
