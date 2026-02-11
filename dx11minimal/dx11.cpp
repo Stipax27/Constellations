@@ -1,4 +1,4 @@
-#include "dx11.h"
+﻿#include "dx11.h"
 
 static inline int32 _log2(float x)
 {
@@ -612,163 +612,170 @@ void Models::LoadGltfModel(const char* filename)
 
 void Models::LoadObjModel(const char* filename, bool vertexOnly)
 {
-	std::ifstream fin;
-	char input;
-
-	fin.open(filename);
-
-	if (fin.fail())
-	{
+	ifstream fin(filename);
+	if (!fin) {
 		Shaders::Log("Failed to read the obj model file\n");
 		return;
 	}
 
-	vector<ModelType> model;
+	// Temporary storage for raw OBJ data (1‑based indices, we’ll keep them 1‑based until conversion)
+	std::vector<XMFLOAT3> positions;   // v
+	std::vector<XMFLOAT2> texcoords;   // vt
+	std::vector<XMFLOAT3> normals;     // vn
 
-	// Read up to the beginning of the data.
-	//fin.get(input);
-
+	// ----------------------------------------------------------------------
+	// 1. Read vertices, texture coordinates and normals
+	// ----------------------------------------------------------------------
 	string prefix;
-	fin >> prefix;
-
-	while (prefix != "v")
-	{
-		fin >> prefix;
-	}
-
-	while (prefix == "v")
-	{
-		ModelType mType = ModelType();
-
-		fin >> mType.x >> mType.y >> mType.z;
-
-		model.push_back(mType);
-		fin >> prefix;
-	}
-
-	vertexCount = (int)model.size();
-
-	bool nInclude = false;
-	bool tInclude = false;
-
-	if (!vertexOnly) {
-		int c = 0;
-		while (prefix == "vn")
-		{
-			nInclude = true;
-
-			if (c < model.size()) {
-				fin >> model[c].nx >> model[c].ny >> model[c].nz;
-			}
-			else {
-				ModelType mType = ModelType();
-				fin >> mType.nx >> mType.ny >> mType.nz;
-				model.push_back(mType);
-			}
-
-			fin >> prefix;
-			c++;
+	while (fin >> prefix) {
+		if (prefix == "v") {
+			XMFLOAT3 p;
+			fin >> p.x >> p.y >> p.z;
+			positions.push_back(p);
 		}
-
-		c = 0;
-		while (prefix == "vt")
-		{
-			tInclude = true;
-
-			if (c < model.size()) {
-				fin >> model[c].tu >> model[c].tv;
-			}
-			else {
-				ModelType mType = ModelType();
-				fin >> mType.tu >> mType.tv;
-				model.push_back(mType);
-			}
-
-			fin >> prefix;
-			c++;
+		else if (!vertexOnly && prefix == "vt") {
+			XMFLOAT2 t;
+			fin >> t.x >> t.y;
+			texcoords.push_back(t);
 		}
-	}
-
-	while (prefix != "f")
-	{
-		fin >> prefix;
-	}
-
-	vector<ModelType> indexedModel;
-	while (prefix == "f")
-	{
-		fin.get(input);
-		if (input == '\n') {
+		else if (!vertexOnly && prefix == "vn") {
+			XMFLOAT3 n;
+			fin >> n.x >> n.y >> n.z;
+			normals.push_back(n);
+		}
+		else if (prefix == "f") {
+			// Stop reading attributes, now process faces
 			break;
 		}
+	}
 
-		fin >> prefix;
-		while (prefix != "f") {
-			ModelType imType = ModelType();
+	// ----------------------------------------------------------------------
+	// 2. Process face data
+	// ----------------------------------------------------------------------
+	std::vector<VertexType> uniqueVertices;   // final vertex buffer data
+	std::vector<unsigned long> indices;       // final index buffer
+	unordered_map<tuple<int, int, int>, unsigned int, VertexKeyHash> vertexMap;
 
-			vector<string> words = split(prefix, "/");
-			
-			int vIndex = stoi(words[0]);
-			imType.x = model[vIndex - 1].x;
-			imType.y = model[vIndex - 1].y;
-			imType.z = model[vIndex - 1].z;
+	// Helper to convert OBJ index (1‑based, may be negative) to 0‑based vector index
+	auto resolveIndex = [](int idx, size_t size) -> int {
+		if (idx > 0) return idx - 1;
+		if (idx < 0) return (int)size + idx;   // negative means relative to end
+		return -1;                             // missing index (0 or empty)
+		};
 
-			if (words[1] != "") {
-				int tIndex = stoi(words[1]);
-				imType.tu = model[tIndex - 1].tu;
-				imType.tv = model[tIndex - 1].tv;
-			}
-
-			if (words[2] != "") {
-				int nIndex = stoi(words[2]);
-				imType.nx = model[nIndex - 1].nx;
-				imType.ny = model[nIndex - 1].ny;
-				imType.nz = model[nIndex - 1].nz;
-			}
-
-			indexedModel.push_back(imType);
-
-			fin.get(input);
-			if (input == '\n') {
-				fin >> prefix;
-				break;
-			}
+	string line;
+	do {
+		if (prefix != "f") {
+			// Not a face line – read next line and continue
+			getline(fin, line);
 			fin >> prefix;
+			continue;
 		}
 
-		//fin >> prefix;
-	}
+		// Read the whole face line
+		getline(fin, line);
+		istringstream iss(line);
+		string vertexSpec;
+
+		while (iss >> vertexSpec) {
+			// Split vertex specification (e.g., "1/2/3" or "1//2")
+			std::vector<string> parts = split(vertexSpec, "/");
+			// parts[0] = v, parts[1] = vt, parts[2] = vn  (some may be empty)
+
+			int vIdx = -1, vtIdx = -1, vnIdx = -1;
+
+			// Position index (always present in valid OBJ)
+			if (!parts.empty() && !parts[0].empty())
+				vIdx = stoi(parts[0]);
+
+			// Texture coordinate index
+			if (parts.size() > 1 && !parts[1].empty())
+				vtIdx = stoi(parts[1]);
+
+			// Normal index
+			if (parts.size() > 2 && !parts[2].empty())
+				vnIdx = stoi(parts[2]);
+
+			// Convert to 0‑based and clamp to valid range
+			int posIndex = resolveIndex(vIdx, positions.size());
+			if (posIndex < 0 || posIndex >= (int)positions.size())
+				continue; // invalid position – skip this vertex
+
+			int texIndex = -1;
+			if (!vertexOnly && vtIdx != -1) {
+				texIndex = resolveIndex(vtIdx, texcoords.size());
+				if (texIndex < 0 || texIndex >= (int)texcoords.size())
+					texIndex = -1; // invalid – treat as missing
+			}
+
+			int normIndex = -1;
+			if (!vertexOnly && vnIdx != -1) {
+				normIndex = resolveIndex(vnIdx, normals.size());
+				if (normIndex < 0 || normIndex >= (int)normals.size())
+					normIndex = -1;
+			}
+
+			// Create unique key: (position index, texcoord index, normal index)
+			// Use -1 for missing attributes.
+			auto key = make_tuple(posIndex, texIndex, normIndex);
+
+			auto it = vertexMap.find(key);
+			if (it == vertexMap.end()) {
+				// New unique vertex – create it
+				VertexType vert;
+
+				// Position (always present)
+				vert.position = positions[posIndex];
+
+				// Texture coordinate (or default 0,0)
+				if (!vertexOnly && texIndex >= 0)
+					vert.texture = texcoords[texIndex];
+				else
+					vert.texture = XMFLOAT2(0.0f, 0.0f);
+
+				// Normal (or default 0,0,0)
+				if (!vertexOnly && normIndex >= 0)
+					vert.normal = normals[normIndex];
+				else
+					vert.normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
+
+				unsigned int newIndex = (unsigned int)uniqueVertices.size();
+				uniqueVertices.push_back(vert);
+				vertexMap[key] = newIndex;
+				indices.push_back(newIndex);
+			}
+			else {
+				// Reuse existing vertex
+				indices.push_back(it->second);
+			}
+		}
+
+		fin >> prefix;
+	} while (!fin.eof() && prefix == "f");
 
 	fin.close();
 
-	indexCount = (int)indexedModel.size();
-	vertexCount = indexCount;
+	// ----------------------------------------------------------------------
+	// 3. Create DirectX buffers
+	// ----------------------------------------------------------------------
+	vertexCount = (int)uniqueVertices.size();
+	indexCount = (int)indices.size();
 
-	VertexType* vertices;
-	unsigned long* indices;
+	VertexType* vertices = new VertexType[vertexCount];
+	unsigned long* idxArray = new unsigned long[indexCount];
 
-	vertices = new VertexType[vertexCount];
-	indices = new unsigned long[indexCount];
+	for (int i = 0; i < vertexCount; ++i)
+		vertices[i] = uniqueVertices[i];
 
-	// Load the vertex array and index array with data.
-	for (int i = 0; i < vertexCount; i++)
-	{
-		vertices[i].position = XMFLOAT3(indexedModel[i].x, indexedModel[i].y, indexedModel[i].z);
-		vertices[i].texture = XMFLOAT2(indexedModel[i].tu, indexedModel[i].tv);
-		vertices[i].normal = XMFLOAT3(indexedModel[i].nx, indexedModel[i].ny, indexedModel[i].nz);
+	for (int i = 0; i < indexCount; ++i)
+		idxArray[i] = indices[i];
 
-		indices[i] = i;
-	}
-
-	Create(modelsCount, vertices, indices);
+	Create(modelsCount, vertices, idxArray);
 
 	delete[] vertices;
-	vertices = 0;
+	delete[] idxArray;
 
-	delete[] indices;
-	indices = 0;
-
-	Shaders::Log("Model obj file was read succesfully\n");
+	Shaders::Log("Model obj file was read successfully\n");
 }
 
 //////////////////////////////////////////////////////////////////////////////////

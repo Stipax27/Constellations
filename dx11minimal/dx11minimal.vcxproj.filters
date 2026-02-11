@@ -311,6 +311,9 @@
     <ClInclude Include="HpIndicator.h">
       <Filter>Header Files\ECS\Components\Render\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Components\Orientation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">

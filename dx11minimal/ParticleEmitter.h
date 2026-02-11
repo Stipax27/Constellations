@@ -34,7 +34,7 @@ struct ParticleEmitter : Component
 	float rate = 10.0f;
 	DWORD lifetime = 1000;
 
-	bool isHeapEmit = true;
+	bool isHeapEmit = false;
 	int heapEmitRepeats = -1;
 	DWORD heapEmitInterval = 1000;
 

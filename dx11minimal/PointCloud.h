@@ -23,6 +23,8 @@ struct PointCloud : Component
 	int index = 0;
 	int instances = 1;
 
+	float frustumRadius = 10.0f;
+
 	RenderCompress compress = RenderCompress::none;
 };
 
