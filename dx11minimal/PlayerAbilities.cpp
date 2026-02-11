@@ -87,10 +87,10 @@ void PlayerAbilities::Attack(Transform startTransform, point3d direction)
 	charging = false;
 	chargeTimeAchor = timer::currentTime;
 
-	RayInfo rayInfo = RayInfo(camera->GetPosition(), direction * 500.0f, CollisionFilter::Group::PlayerRay);
+	RayInfo rayInfo = RayInfo(camera->GetPosition(), direction * RAY_DISTANCE, CollisionFilter::Group::PlayerRay);
 	RaycastResult result = collisionManager->Raycast(rayInfo);
 
-	point3d pos = result.hit ? result.position : camera->GetPosition() + direction * 500.0f;
+	point3d pos = result.hit ? result.position : camera->GetPosition() + direction * RAY_DISTANCE;
 	point3d dir = (pos - startTransform.position).normalized();
 
 	CommonAttack(startTransform, dir);

@@ -14,6 +14,11 @@
 #include <fstream>
 #include <unordered_map>
 
+#include <sys/stat.h>
+#ifdef _WIN32
+#include <sys/utime.h>
+#endif
+
 #pragma comment(lib, "d3d10.lib")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
@@ -129,6 +134,16 @@ namespace Models
 
 #define max_models 255
 
+#pragma pack(push, 1)  // выравнивание для бинарной записи
+	struct CacheHeader {
+		uint64_t sourceFileTime;    // время модификации исходного .obj
+		uint32_t vertexCount;       // количество вершин
+		uint32_t indexCount;        // количество индексов
+		uint32_t vertexStride;      // размер VertexType (обычно 32+12+8 = 52 байта)
+		uint32_t version = 1;       // версия формата кэша
+	};
+#pragma pack(pop)
+
 	struct VertexKeyHash {
 		size_t operator()(const std::tuple<int, int, int>& key) const {
 			size_t h1 = std::hash<int>()(std::get<0>(key));
@@ -168,6 +183,9 @@ namespace Models
 
 	extern modelDesc Model[max_models];
 	extern int modelsCount;
+
+	// Получение времени модификации файла
+	uint64_t GetFileModTime(const char* filename);
 
 	void CreateModel(int, VertexType*, unsigned long*);
 	void Create(int, VertexType*, unsigned long*);

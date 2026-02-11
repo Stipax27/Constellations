@@ -433,6 +433,14 @@ int Models::modelsCount = 0;
 int Models::vertexCount;
 int Models::indexCount;
 
+uint64_t Models::GetFileModTime(const char* filename) {
+	struct _stat64 fileStat;
+	if (_stat64(filename, &fileStat) == 0) {
+		return fileStat.st_mtime;
+	}
+	return 0;
+}
+
 void Models::CreateModel(int i, VertexType* vertices, unsigned long* indices)
 {
 	HRESULT result;
@@ -612,20 +620,62 @@ void Models::LoadGltfModel(const char* filename)
 
 void Models::LoadObjModel(const char* filename, bool vertexOnly)
 {
+	// ----------------------------------------------------------------------
+	// 1. Проверяем наличие кэша
+	// ----------------------------------------------------------------------
+	std::string cacheFilename = std::string(filename) + ".cache";
+	uint64_t sourceTime = GetFileModTime(filename);
+
+	// Пробуем загрузить из кэша
+	std::ifstream cacheFile(cacheFilename, std::ios::binary);
+	if (cacheFile && sourceTime != 0) {
+		CacheHeader header;
+		cacheFile.read((char*)&header, sizeof(header));
+
+		// Проверяем валидность кэша
+		if (header.version == 1 &&
+			header.sourceFileTime == sourceTime &&
+			header.vertexStride == sizeof(VertexType)) {
+
+			// Загружаем вершины
+			vertexCount = header.vertexCount;
+			indexCount = header.indexCount;
+
+			VertexType* vertices = new VertexType[vertexCount];
+			unsigned long* idxArray = new unsigned long[indexCount];
+
+			cacheFile.read((char*)vertices, vertexCount * sizeof(VertexType));
+			cacheFile.read((char*)idxArray, indexCount * sizeof(unsigned long));
+
+			// Создаем DirectX буферы
+			Create(modelsCount, vertices, idxArray);
+
+			delete[] vertices;
+			delete[] idxArray;
+
+			cacheFile.close();
+
+			Shaders::Log("Model loaded from cache: ");
+			Shaders::Log(filename);
+			Shaders::Log("\n");
+
+			return;
+		}
+		cacheFile.close();
+	}
+	// ----------------------------------------------------------------------
+	// 2. Если кэша нет или он устарел - читаем .obj файл
+	// ----------------------------------------------------------------------
 	ifstream fin(filename);
 	if (!fin) {
 		Shaders::Log("Failed to read the obj model file\n");
 		return;
 	}
 
-	// Temporary storage for raw OBJ data (1‑based indices, we’ll keep them 1‑based until conversion)
 	std::vector<XMFLOAT3> positions;   // v
 	std::vector<XMFLOAT2> texcoords;   // vt
 	std::vector<XMFLOAT3> normals;     // vn
 
-	// ----------------------------------------------------------------------
-	// 1. Read vertices, texture coordinates and normals
-	// ----------------------------------------------------------------------
 	string prefix;
 	while (fin >> prefix) {
 		if (prefix == "v") {
@@ -644,14 +694,10 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 			normals.push_back(n);
 		}
 		else if (prefix == "f") {
-			// Stop reading attributes, now process faces
 			break;
 		}
 	}
 
-	// ----------------------------------------------------------------------
-	// 2. Process face data
-	// ----------------------------------------------------------------------
 	std::vector<VertexType> uniqueVertices;   // final vertex buffer data
 	std::vector<unsigned long> indices;       // final index buffer
 	unordered_map<tuple<int, int, int>, unsigned int, VertexKeyHash> vertexMap;
@@ -771,6 +817,28 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 		idxArray[i] = indices[i];
 
 	Create(modelsCount, vertices, idxArray);
+
+	// ----------------------------------------------------------------------
+	// 4. Сохраняем в кэш
+	// ----------------------------------------------------------------------
+	std::ofstream outCache(cacheFilename, std::ios::binary);
+	if (outCache) {
+		CacheHeader header;
+		header.sourceFileTime = sourceTime;
+		header.vertexCount = vertexCount;
+		header.indexCount = indexCount;
+		header.vertexStride = sizeof(VertexType);
+		header.version = 1;
+
+		outCache.write((char*)&header, sizeof(header));
+		outCache.write((char*)vertices, vertexCount * sizeof(VertexType));
+		outCache.write((char*)idxArray, indexCount * sizeof(unsigned long));
+		outCache.close();
+
+		Shaders::Log("Model cached to: ");
+		Shaders::Log(cacheFilename.c_str());
+		Shaders::Log("\n");
+	}
 
 	delete[] vertices;
 	delete[] idxArray;

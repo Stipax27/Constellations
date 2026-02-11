@@ -77,6 +77,9 @@ private:
 	BaseStar* bStar;
 	SmallConstellation* smallConstellation;
 
+private:
+	void CreateAries(Entity*);
+
 };
 
 #endif
