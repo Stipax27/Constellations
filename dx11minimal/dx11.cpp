@@ -9,6 +9,28 @@ static inline int32 _log2(float x)
 	return log2;
 }
 
+static bool GetFileModificationTime(const char* filePath, time_t& modTime) {
+	struct stat st;
+	if (stat(filePath, &st) == 0) {
+		modTime = st.st_mtime;
+		return true;
+	}
+	return false;
+}
+
+// wide version
+static bool GetFileModificationTimeW(LPCWSTR filePath, time_t& modTime) {
+	struct _stat st;
+	char filePathA[MAX_PATH];
+	WideCharToMultiByte(CP_ACP, 0, filePath, -1, filePathA, MAX_PATH, NULL, NULL);
+
+	if (_stat(filePathA, &st) == 0) {
+		modTime = st.st_mtime;
+		return true;
+	}
+	return false;
+}
+
 //////////////////////////////////////////////////////////////////////////////////
 
 ID3D11Device* device = NULL;
@@ -920,14 +942,37 @@ std::string Shaders::GetCacheFileName(const char* shaderName, const char* shader
 	return std::string(cachePathA) + cacheName;
 }
 
-bool Shaders::LoadShaderFromCache(const char* shaderName, const char* shaderType, void** shader, ID3DBlob** blob) {
+bool Shaders::IsCacheValid(const char* shaderName, const char* shaderType) {
 	std::string cacheFile = GetCacheFileName(shaderName, shaderType);
 
-	// Check if the file exists
-	struct stat st;
-	if (stat(cacheFile.c_str(), &st) != 0) {
+	time_t sourceModTime;
+	if (!GetFileModificationTime(shaderName, sourceModTime)) {
+		Log("Warning: Cannot get source file modification time\n");
 		return false;
 	}
+
+	time_t cacheModTime;
+	if (!GetFileModificationTime(cacheFile.c_str(), cacheModTime)) {
+		return false;
+	}
+
+	bool isValid = cacheModTime >= sourceModTime - 1;
+
+	if (!isValid) {
+		Log("Cache outdated for ");
+		Log(shaderName);
+		Log("\n");
+	}
+
+	return isValid;
+}
+
+bool Shaders::LoadShaderFromCache(const char* shaderName, const char* shaderType, void** shader, ID3DBlob** blob) {
+	if (!IsCacheValid(shaderName, shaderType)) {
+		return false;
+	}
+
+	std::string cacheFile = GetCacheFileName(shaderName, shaderType);
 
 	// Opening file
 	std::ifstream file(cacheFile, std::ios::binary | std::ios::ate);

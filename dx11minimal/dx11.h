@@ -40,6 +40,8 @@ typedef unsigned long uint32;
 typedef long int32;
 
 static inline int32 _log2(float x);
+static bool GetFileModificationTime(const char* filePath, time_t& modTime);
+static bool GetFileModificationTimeW(LPCWSTR filePath, time_t& modTime);
 
 extern ID3D11Device* device;
 extern ID3D11DeviceContext* context;
@@ -244,6 +246,8 @@ namespace Shaders {
 	bool SaveShaderToCache(const char*, const char*, ID3DBlob*);
 	std::string GetCacheFileName(const char*, const char*);
 	void EnsureCacheDirectoryExists();
+
+	bool IsCacheValid(const char*, const char*);
 
 	void CreateVS(int, LPCWSTR);
 	void CreatePS(int, LPCWSTR);

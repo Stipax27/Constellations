@@ -18,6 +18,23 @@ cbuffer camera : register(b3)
 };
 
 
+bool IsPointInFrustum(float4 pos)
+{
+    float3 c = pos.xyz / pos.w;
+    return (abs(c.x) <= 1.0 && abs(c.y) <= 1.0 && abs(c.z) <= 1.0);
+}
+
+bool IsSphereInFrustum(float4 pos, float radius)
+{
+    float3 center = pos.xyz / pos.w;
+    float r = radius / abs(pos.w);
+    
+    return (abs(center.x) - r <= 1.0 && 
+            abs(center.y) - r <= 1.0 && 
+            abs(center.z) - r <= 1.0);
+}
+
+
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
@@ -33,6 +50,11 @@ struct VS_OUTPUT
 [maxvertexcount(36)]
 void GS( point VS_OUTPUT input[1], inout TriangleStream<VS_OUTPUT> output )
 {
+    if (!IsPointInFrustum(input[0].pos))
+    {
+        return;
+    }
+
     float2 quadPos[6] = {
         float2(-1, -1), float2(1, -1), float2(-1, 1),
         float2(-1, 1), float2(1, -1), float2(1, 1),
@@ -54,34 +76,4 @@ void GS( point VS_OUTPUT input[1], inout TriangleStream<VS_OUTPUT> output )
     }
 
     output.RestartStrip();
-
-
-    // float angle = PI * 2 / triangles;
-    // float pointSize = drawerV[0];
-
-    // [unroll]
-    // for (int triangleID = 0; triangleID < triangles; triangleID++) {
-    //     [unroll]
-    //     for (int pID = 0; pID < 3; pID++) {
-    //         float startAngle = angle * triangleID;
-    //         float endAngle = angle * (triangleID + 1);
-
-    //         float2 triangleUV[3] = {
-    //             float2(0, 0), float2(sin(startAngle), cos(startAngle)), float2(sin(endAngle), cos(endAngle))
-    //         };
-
-    //         VS_OUTPUT element = input[0];
-
-    //         float dist = length(element.wpos.xyz - cPos.xyz);
-    //         float scale = clamp(abs(dot(float3(-1, 0, 0), element.vnorm)), 0.5, 1);
-    //         //float scale = 1 - clamp(abs(dot(float3(-1, 0, 0), element.vnorm)), 0, 1);
-
-    //         float2 offset = triangleUV[pID] * float2(aspect.x, 1) * min(dist, 18) * scale * pointSize * 0.05;
-
-    //         element.pos.xy += offset;
-    //         element.uv = triangleUV[pID];
-    //         output.Append( element );
-    //     }
-    //     output.RestartStrip();
-    // }
 }

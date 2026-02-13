@@ -18,6 +18,13 @@ cbuffer camera : register(b3)
 };
 
 
+bool IsPointInFrustum(float4 pos)
+{
+    float3 c = pos.xyz / pos.w;
+    return (abs(c.x) <= 1.0 && abs(c.y) <= 1.0 && abs(c.z) <= 1.0);
+}
+
+
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
@@ -30,6 +37,11 @@ struct VS_OUTPUT
 [maxvertexcount(6)]
 void GS( point VS_OUTPUT input[1], inout TriangleStream<VS_OUTPUT> output )
 {
+    if (!IsPointInFrustum(input[0].pos))
+    {
+        return;
+    }
+
 	float scale = gConst[0].w;
 	float size = 1 * scale;
 

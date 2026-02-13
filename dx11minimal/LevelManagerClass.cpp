@@ -442,7 +442,7 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 	Health* health = player->AddComponent<Health>();
 	health->fraction = Fraction::Player;
 
-	/*Constellation* constellation = player->AddComponent<Constellation>();
+	Constellation* constellation = player->AddComponent<Constellation>();
 	constellation->stars = {
 		point3d(-0.09, -0.7, 0),
 		point3d(-0.05, -0.15, 0),
@@ -456,24 +456,24 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 		{1,2},
 		{2,3},
 		{2,5}
-	};*/
-
-	/*PointCloud* pointCloud = player->AddComponent<PointCloud>();
-	pointCloud->index = 3;
-	pointCloud->position = point3d(0, -0.8, 0);
-	pointCloud->scale = point3d(0.5f, 0.5f, 0.5f);
-	pointCloud->pointSize = 0.05f;
-	pointCloud->brightness = 0.05f;
-	pointCloud->color = point3d(1, 0.6f, 0.9f);
-	pointCloud->compress = RenderCompress::x2;*/
+	};
 
 	PointCloud* pointCloud = player->AddComponent<PointCloud>();
+	pointCloud->index = 4;
+	pointCloud->position = point3d(-0.83, -0.8, 0);
+	pointCloud->scale = point3d(0.3f, 0.3f, 0.3f);
+	pointCloud->pointSize = 0.04f;
+	pointCloud->brightness = 0.1f;
+	pointCloud->color = point3d(1, 0.6f, 0.9f);
+	pointCloud->compress = RenderCompress::x2;
+
+	/*PointCloud* pointCloud = player->AddComponent<PointCloud>();
 	pointCloud->index = 3;
 	pointCloud->position = point3d(0, -0.8, 0);
 	pointCloud->scale = point3d(7, 7, 7);
 	pointCloud->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -PI / 2);
 	pointCloud->brightness = 0.5f;
-	pointCloud->color = point3d(1, 0.6f, 0.9f);
+	pointCloud->color = point3d(1, 0.6f, 0.9f);*/
 
 	return player;
 }
