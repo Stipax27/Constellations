@@ -95,8 +95,6 @@ bool LevelManagerClass::Initialize()
 	explosion = entity->AddComponent<Explosion>();
 	transform = entity->AddComponent<Transform>();*/
 
-	entity = m_World->entityStorage->CreateEntity();
-
 	entity = m_World->entityStorage->CreateEntity("AriesNebulaLocation", folder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, 50.0f);
@@ -318,7 +316,7 @@ void LevelManagerClass::Frame()
 
 
 	//// FAST DEBUG CODE (DELETE LATER) ////
-	count++;
+	/*count++;
 	if (count > 30) {
 		count = 0;
 		
@@ -347,7 +345,7 @@ void LevelManagerClass::Frame()
 
 		DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
 		delayedDestroy->lifeTime = 5000;
-	}
+	}*/
 	//// FAST DEBUG CODE (DELETE LATER) ////
 
 
@@ -564,29 +562,55 @@ void LevelManagerClass::CreateAries(Entity* folder)
 	pointCloud->index = 5;
 	pointCloud->pointSize = 1.0f;
 	pointCloud->brightness = 0.4f;
-	pointCloud->color = point3d(1, 0.2, 0.25);
+	//pointCloud->color = point3d(1, 0.2, 0.25);
 	pointCloud->instances = 1;
 	pointCloud->frustumRadius = 8;
 	pointCloud->compress = RenderCompress::x2;
 	health = aries->AddComponent<Health>();
 	health->hp = 1000;
 	health->maxHp = 1000;
-	/*constellation = aries->AddComponent<Constellation>();
+
+	constellation = aries->AddComponent<Constellation>();
+	constellation->starSize = 0.04f;
 	constellation->stars = {
 		point3d(0, 2.5f, 3.0f),
 		point3d(0, 1.7f, -1.4f),
 		point3d(0, 0.4f, -3.9f),
 		point3d(0, -0.9f, -6.0f),
+
 		point3d(1.8f, -2.0f, 0.4f),
 		point3d(-1.8f, -2.0f, 0.4f),
+		point3d(1.9f, -4.2f, 0.6f),
+		point3d(-1.9f, -4.2f, 0.6f),
+		point3d(1.9f, -6.6f, 1.1f),
+		point3d(-1.9f, -6.6f, 1.1f),
+
+		point3d(1.8f, -2.0f, -6.0f),
+		point3d(-1.8f, -2.0f, -6.0f),
+		point3d(1.6f, -3.5f, -6.8f),
+		point3d(-1.6f, -3.5f, -6.8f),
+		point3d(1.6f, -6.6f, -6.6f),
+		point3d(-1.6f, -6.6f, -6.6f),
 	};
 	constellation->links = {
 		{0,1},
 		{1,2},
 		{2,3},
+
 		{1,4},
 		{1,5},
-	};*/
+		{4,6},
+		{5,7},
+		{6,8},
+		{7,9},
+
+		{3,10},
+		{3,11},
+		{10,12},
+		{11,13},
+		{12,14},
+		{13,15},
+	};
 
 	entity = m_World->entityStorage->CreateEntity("Armor", aries);
 	transform = entity->AddComponent<Transform>();
