@@ -185,7 +185,6 @@
     <ClInclude Include="DelayedDestroy.h" />
     <ClInclude Include="entityManagerSystem.h" />
     <ClInclude Include="entityStorage.h" />
-    <ClInclude Include="FistsClass.h" />
     <ClInclude Include="fraction.h" />
     <ClInclude Include="dx11.h" />
     <ClInclude Include="Enemy_Patern.h" />
@@ -208,7 +207,6 @@
     <ClInclude Include="PlaneCollider.h" />
     <ClInclude Include="PlayerAbilities.h" />
     <ClInclude Include="PlayerController.h" />
-    <ClInclude Include="PlayerWeaponClass.h" />
     <ClInclude Include="Point3d.h" />
     <ClInclude Include="PointCloud.h" />
     <ClInclude Include="Components\Orientation.h" />

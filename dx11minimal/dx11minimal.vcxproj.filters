@@ -140,9 +140,6 @@
     <ClInclude Include="windowclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerWeaponClass.h">
-      <Filter>Header Files\PlayerWeapon</Filter>
-    </ClInclude>
     <ClInclude Include="system.h">
       <Filter>Header Files\ECS</Filter>
     </ClInclude>
@@ -190,9 +187,6 @@
     </ClInclude>
     <ClInclude Include="timer.h">
       <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="FistsClass.h">
-      <Filter>Header Files\PlayerWeapon</Filter>
     </ClInclude>
     <ClInclude Include="ParticleEmitter.h">
       <Filter>Header Files\ECS\Components\Render</Filter>
@@ -505,9 +499,6 @@
     </Filter>
     <Filter Include="Source Files\Render\UI">
       <UniqueIdentifier>{baf20da3-17b1-47e1-9d09-11b266c61adf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\PlayerWeapon">
-      <UniqueIdentifier>{057d3ba2-3f2d-4faa-acc3-17fb4910629c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\System">
       <UniqueIdentifier>{ce93f03f-7503-4c37-ba9b-0be89576fc6d}</UniqueIdentifier>
