@@ -228,15 +228,15 @@ bool LevelManagerClass::Initialize()
 
 	/////////////////////////
 
-	Entity* holder = m_World->entityStorage->CreateEntity("Holder", folder);
+	/*Entity* holder = m_World->entityStorage->CreateEntity("Holder", folder);
 	transform = holder->AddComponent<Transform>();
 	transform->scale = point3d(10, 10, 10);
 	transform->position = point3d(0.0f, 0.0f, -50.0f);
 	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -180 * RAD) * transform->mRotation;
 	mesh = holder->AddComponent<Mesh>();
-	mesh->index = 3;
+	mesh->index = 3;*/
 
-	holder = m_World->entityStorage->CreateEntity("Holder", folder);
+	Entity* holder = m_World->entityStorage->CreateEntity("Holder", folder);
 	transform = holder->AddComponent<Transform>();
 	transform->scale = point3d(1, 6, 1);
 	transform->position = point3d(0.0f, 10.0f, -50.0f);
@@ -418,7 +418,7 @@ void LevelManagerClass::LoadModels()
 	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cube.txt");
 	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cube2.txt");
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\Cube.obj");
-	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\cat2.obj");
+	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\HeroFists.obj");
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesBody.obj");
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesArmor.obj");
 }
@@ -460,11 +460,11 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 	PointCloud* pointCloud = player->AddComponent<PointCloud>();
 	pointCloud->index = 3;
 	pointCloud->position = point3d(0, -0.8, 0);
-	pointCloud->scale = point3d(7, 7, 7);
-	pointCloud->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -PI / 2);
-	//pointCloud->pointSize = 0.5f;
-	pointCloud->brightness = 0.5f;
+	pointCloud->scale = point3d(0.5f, 0.5f, 0.5f);
+	pointCloud->pointSize = 0.05f;
+	pointCloud->brightness = 0.05f;
 	pointCloud->color = point3d(1, 0.6f, 0.9f);
+	pointCloud->compress = RenderCompress::x2;
 
 	return player;
 }
