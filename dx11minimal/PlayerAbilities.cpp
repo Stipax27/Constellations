@@ -24,6 +24,13 @@ void PlayerAbilities::Initialize(World* m_World, CameraClass* Camera, Entity* Pl
 	collisionManager = CollisionManager;
 	playerEntity = PlayerEntity;
 
+	Entity* ui = m_World->entityStorage->GetEntityByName("UI");
+	healthBar = ui->GetChildByName("HealthBar", true);
+	staminaBar = ui->GetChildByName("StaminaBar", true);
+
+	maxStamina = 1000;
+	stamina = maxStamina;
+
 	charging = false;
 	charge = 0;
 	maxCharge = 100;
@@ -52,6 +59,8 @@ void PlayerAbilities::Shutdown()
 
 void PlayerAbilities::Update()
 {
+	stamina = clamp(stamina + 0.5f, 0, maxStamina);
+
 	if (charging) {
 		double delta = timer::currentTime - chargeTimeAchor;
 		if (timer::currentTime - chargeTimeAchor >= CHARGE_START_DELTA) {
@@ -75,6 +84,8 @@ void PlayerAbilities::Update()
 	for (Entity* entity : projectiles) {
 		
 	}
+
+	UpdateUI();
 }
 
 
@@ -372,4 +383,14 @@ void PlayerAbilities::BlockEnd()
 
 	PointCloud* pointCloud = playerEntity->GetComponent<PointCloud>();
 	pointCloud->color = point3d(1, 0.6f, 0.9f);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void PlayerAbilities::UpdateUI()
+{
+	Transform2D* staminaTransform = staminaBar->GetComponent<Transform2D>();
+	staminaTransform->scale = point3d(stamina / maxStamina, 1, 0);
 }

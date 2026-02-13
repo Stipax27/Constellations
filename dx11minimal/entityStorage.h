@@ -28,6 +28,8 @@ public:
 
 	Entity* CreateEntity(string = "Unnamed", Entity* = nullptr);
 	//void RemoveEntityByObject(Entity*);
+	Entity* GetEntityByName(string);
+	vector<Entity*> GetEntitiesByName(string);
 
 	void Initialize();
 	void Shutdown();

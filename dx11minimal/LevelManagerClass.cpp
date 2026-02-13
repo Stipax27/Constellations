@@ -83,11 +83,6 @@ bool LevelManagerClass::Initialize()
 	PlaneCollider* planeCollider;
 	ParticleEmitter* particleEmitter;
 
-	Transform2D* transform2D;
-	Rect* rect;
-	Button* button;
-	TextLabel* textLabel;
-
 	Mesh* mesh;
 	PointCloud* pointCloud;
 	DelayedDestroy* delayedDestroy;
@@ -210,13 +205,14 @@ bool LevelManagerClass::Initialize()
 	transform->position = point3d(-30.0f, 0.0f, -20.0f);
 	particleEmitter = entity->AddComponent<ParticleEmitter>();
 	particleEmitter->rate = 100;
-	particleEmitter->lifetime = 500;
+	particleEmitter->lifetime = 750;
 	particleEmitter->color = point3d(1, 1, 1);
 	particleEmitter->size = { 0.0f, 6.0f };
 	particleEmitter->opacity = { 0.75f, 0.0f };
 	particleEmitter->emitDirection = EmitDirection::Front;
-	particleEmitter->speed = { 2.0f, 50.0f };
+	particleEmitter->speed = { 15.0f, 0.0f };
 	particleEmitter->spread = { 0, PI };
+	particleEmitter->isHeapEmit = true;
 
 	entity = m_World->entityStorage->CreateEntity("Particles", folder);
 	transform = entity->AddComponent<Transform>();
@@ -286,45 +282,13 @@ bool LevelManagerClass::Initialize()
 	mesh = holder->AddComponent<Mesh>();
 	mesh->index = 1;
 
-	// MAIN MENU //
-
-	//entity = m_World->entityStorage->CreateEntity("Ui");
-	//transform2D = entity->AddComponent<Transform2D>();
-	//transform2D->anchorPoint = point3d(0, 0, 0);
-	//transform2D->ratio = ScreenAspectRatio::YX;
-	////transform2D->rotation = PI / 8;
-	//transform2D->position = point3d(0.5f, 0.1f, 0.0f);
-	//transform2D->scale = point3d(0.25f, 0.25f, 0.0f);
-	//button = entity->AddComponent<Button>();
-	////button->color = point3d(0.5f, 0.25f, 0.8f);
-	//button->opacity = 0.5f;
-
-	//entity = m_World->entityStorage->CreateEntity("Ui");
-	//transform2D = entity->AddComponent<Transform2D>();
-	//transform2D->anchorPoint = point3d(-1, 1, 0);
-	//transform2D->ratio = ScreenAspectRatio::XY;
-	////transform2D->position = point3d(-1.0f, 1.0f, 0.0f);
-	//transform2D->scale = point3d(0.25f, 0.25f, 0.0f);
-	//button = entity->AddComponent<Button>();
-	//button->cornerRadius = 0.1f;
-
-	// MAIN MENU END //
+	CreateUI();
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING END //
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
-
-	m_World->AddPhysicSystem<PhysicSystem>();
-	m_World->AddPhysicSystem<CollisionSystem>(collisionManager);
-	m_World->AddPhysicSystem<CombatSystem>();
-	//AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
-	m_World->AddPhysicSystem<EntityManagerSystem>();
-
-	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera);
-	//m_World->AddRenderSystem<CollisionDrawSystem>(); // DEBUG //
-	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum);
-	m_World->AddRenderSystem<UISystem>(mouse, m_World->entityStorage);
+	InitSystems();
 
 	//m_World->PreCalculations();
 	//bStar = new BaseStar();
@@ -451,6 +415,70 @@ void LevelManagerClass::Frame()
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void LevelManagerClass::CreateUI()
+{
+	Entity* entity;
+	Transform2D* transform2D;
+	Rect* rect;
+	Button* button;
+	TextLabel* textLabel;
+
+	Entity* uiFolder = m_World->entityStorage->CreateEntity("UI");
+
+	entity = m_World->entityStorage->CreateEntity("HealthHolder", uiFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(-1, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.9f, -0.6f, 0.0f);
+	transform2D->scale = point3d(0.18f, 0.04f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.5f, 0.5f, 0.5f);
+	rect->opacity = 0.5f;
+
+	entity = m_World->entityStorage->CreateEntity("HealthBar", entity);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(-1, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	//transform2D->position = point3d(-1, 0, 0);
+	rect = entity->AddComponent<Rect>();
+
+	entity = m_World->entityStorage->CreateEntity("StaminaHolder", uiFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(-1, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.9f, -0.7f, 0.0f);
+	transform2D->scale = point3d(0.18f, 0.02f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.5f, 0.5f, 0.5f);
+	rect->opacity = 0.5f;
+
+	entity = m_World->entityStorage->CreateEntity("StaminaBar", entity);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(-1, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	//transform2D->position = point3d(-1, 0, 0);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.8f, 0.8f, 1);
+}
+
+
+void LevelManagerClass::InitSystems()
+{
+	m_World->AddPhysicSystem<PhysicSystem>();
+	m_World->AddPhysicSystem<CollisionSystem>(collisionManager);
+	m_World->AddPhysicSystem<CombatSystem>();
+	//AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
+	m_World->AddPhysicSystem<EntityManagerSystem>();
+
+	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera);
+	if (SHOW_COLLIDERS) {
+		m_World->AddRenderSystem<CollisionDrawSystem>();
+	}
+	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum);
+	m_World->AddRenderSystem<UISystem>(mouse, m_World->entityStorage);
+}
 
 
 void LevelManagerClass::CreateAries(Entity* folder)

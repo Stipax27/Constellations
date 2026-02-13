@@ -66,6 +66,29 @@ Entity* EntityStorage::CreateEntity(string Name, Entity* Parent)
 //}
 
 
+Entity* EntityStorage::GetEntityByName(string Name)
+{
+	for (Entity* entity : entities) {
+		if (entity->name == Name) {
+			return entity;
+		}
+	}
+}
+
+
+vector<Entity*> EntityStorage::GetEntitiesByName(string Name)
+{
+	vector<Entity*> array;
+	for (Entity* entity : entities) {
+		if (entity->name == Name) {
+			array.push_back(entity);
+		}
+	}
+
+	return array;
+}
+
+
 void EntityStorage::CleanMem()
 {
 	int i = 0;

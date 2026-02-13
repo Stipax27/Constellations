@@ -41,6 +41,7 @@
 // GLOBALS //
 /////////////
 //const bool VSYNC_ENABLED = true;
+const bool SHOW_COLLIDERS = false;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -78,6 +79,8 @@ private:
 	SmallConstellation* smallConstellation;
 
 private:
+	void CreateUI();
+	void InitSystems();
 	void CreateAries(Entity*);
 
 };

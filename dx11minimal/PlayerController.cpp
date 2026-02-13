@@ -136,6 +136,8 @@ void PlayerController::ProcessInput()
 			playerPhysicBody->velocity = velocity * DASH_SPEED;
 			movementLocked = true;
 			playerPhysicBody->airFriction = DASH_AIR_FRICTION;
+
+			abilities->stamina -= 50;
 		}
 	
 		// ?????????? ????????
