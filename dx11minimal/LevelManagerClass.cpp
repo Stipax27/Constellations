@@ -418,6 +418,7 @@ void LevelManagerClass::LoadModels()
 	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cube.txt");
 	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cube2.txt");
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\Cube.obj");
+	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\cat2.obj");
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\HeroFists.obj");
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesBody.obj");
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesArmor.obj");
@@ -457,14 +458,22 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 		{2,5}
 	};*/
 
-	PointCloud* pointCloud = player->AddComponent<PointCloud>();
+	/*PointCloud* pointCloud = player->AddComponent<PointCloud>();
 	pointCloud->index = 3;
 	pointCloud->position = point3d(0, -0.8, 0);
 	pointCloud->scale = point3d(0.5f, 0.5f, 0.5f);
 	pointCloud->pointSize = 0.05f;
 	pointCloud->brightness = 0.05f;
 	pointCloud->color = point3d(1, 0.6f, 0.9f);
-	pointCloud->compress = RenderCompress::x2;
+	pointCloud->compress = RenderCompress::x2;*/
+
+	PointCloud* pointCloud = player->AddComponent<PointCloud>();
+	pointCloud->index = 3;
+	pointCloud->position = point3d(0, -0.8, 0);
+	pointCloud->scale = point3d(7, 7, 7);
+	pointCloud->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -PI / 2);
+	pointCloud->brightness = 0.5f;
+	pointCloud->color = point3d(1, 0.6f, 0.9f);
 
 	return player;
 }
@@ -552,7 +561,7 @@ void LevelManagerClass::CreateAries(Entity* folder)
 	transform->scale = point3d(4, 4, 4);
 	transform->position = point3d(0.0f, 20.0f, 50.0f);
 	pointCloud = aries->AddComponent<PointCloud>();
-	pointCloud->index = 4;
+	pointCloud->index = 5;
 	pointCloud->pointSize = 1.0f;
 	pointCloud->brightness = 0.4f;
 	pointCloud->color = point3d(1, 0.2, 0.25);
@@ -582,7 +591,7 @@ void LevelManagerClass::CreateAries(Entity* folder)
 	entity = m_World->entityStorage->CreateEntity("Armor", aries);
 	transform = entity->AddComponent<Transform>();
 	pointCloud = entity->AddComponent<PointCloud>();
-	pointCloud->index = 5;
+	pointCloud->index = 6;
 	pointCloud->pointSize = 0.75f;
 	pointCloud->brightness = 0.2f;
 	pointCloud->color = point3d(1, 0.9f, 0.2f);
