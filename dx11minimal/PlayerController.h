@@ -64,6 +64,9 @@ public:
 	void ProcessMouse();
 	void ProccessUI();
 
+	// Ќовый метод дл€ обработки получени€ урона
+	void TakeDamage(float damage);
+
 private:
 	Entity* playerEntity;
 	Entity* ui;

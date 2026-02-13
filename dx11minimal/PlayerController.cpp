@@ -135,7 +135,18 @@ void PlayerController::ProcessInput()
 		if (IsKeyPressed(VK_LSHIFT)) {
 			Dash();
 		}
-		
+
+		// Обработка кнопки F для щита
+		static bool fKeyPressed = false;
+		if (IsKeyPressed('F') && !fKeyPressed) {
+			fKeyPressed = true;
+			abilities->ShieldStart(); // Активируем щит при нажатии F
+		}
+		else if (!IsKeyPressed('F') && fKeyPressed) {
+			fKeyPressed = false;
+			abilities->ShieldEnd(); // Деактивируем щит при отпускании F
+		}
+
 		float roll = 0.0f;
 
 		if (IsKeyPressed('E')) {
@@ -195,27 +206,26 @@ void PlayerController::ProcessMouse()
 				float k = (length - CURSOR_IGNORE_ZONE) / MAX_CURSOR_DEVIATION;
 				mousePos *= SENSIVITY * k;
 
-				//XMVECTOR addRotation = eulerToQuanternion(dPitch, dYaw, 0) * SENSIVITY * k;
 				XMMATRIX additionalRotation = XMMatrixRotationRollPitchYaw(XMConvertToRadians(mousePos.y), XMConvertToRadians(mousePos.x), 0);
 
 				playerPhysicBody->mAngVelocity = playerPhysicBody->mAngVelocity * additionalRotation;
 			}
-			//else {
-				//Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
-			//}
 
-			if (mouse->IsLButtonDown()) {
-				abilities->Charging();
-			}
-			else if (mouse->IsLButtonUnclicked()) {
-				abilities->Attack(*playerTransform, mouse->GetMouseRay());
-			}
+			// Обработка атак мышью - проверяем что щит не активен
+			if (!abilities->IsShieldActive()) {
+				if (mouse->IsLButtonDown()) {
+					abilities->Charging();
+				}
+				else if (mouse->IsLButtonUnclicked()) {
+					abilities->Attack(*playerTransform, mouse->GetMouseRay());
+				}
 
-			if (mouse->IsRButtonClicked()) {
-				abilities->BlockStart();
-			}
-			else if (mouse->IsRButtonUnclicked()) {
-				abilities->BlockEnd();
+				if (mouse->IsRButtonClicked()) {
+					abilities->BlockStart();
+				}
+				else if (mouse->IsRButtonUnclicked()) {
+					abilities->BlockEnd();
+				}
 			}
 		}
 		break;
@@ -224,15 +234,11 @@ void PlayerController::ProcessMouse()
 	{
 		if (mouse->IsLButtonClicked() && mouse->visible)
 		{
-			//ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Mouse_click1.wav");
-			//point3d mousePos = point3d(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1), 0);
-
 			for (int i = 0; i < 20; i++)
 			{
 				MouseParticle particle = MouseParticle();
 				particle.pos = mouse->pos;
 				particle.angle = (float)getRandom(0, 100) / 100.0f * PI * 2.0f;
-				//particle.vel = point3d(getRandom(-100, 100), getRandom(-100, 100), 0).normalized() * point3d(window->aspect, 1, 0) * (float)getRandom(8, 30) / 100.0f * 0.002f;
 				particle.lifetime = getRandom(500, 1500);
 				particle.startTime = timer::currentTime;
 
@@ -242,7 +248,6 @@ void PlayerController::ProcessMouse()
 		break;
 	}
 	}
-
 }
 
 
@@ -274,5 +279,21 @@ void PlayerController::Dash()
 		playerPhysicBody->airFriction = DASH_AIR_FRICTION;
 
 		abilities->stamina -= DASH_COST;
+	}
+}
+
+// Добавьте этот метод в PlayerController для обработки получения урона
+void PlayerController::TakeDamage(float damage)
+{
+	if (!playerEntity->IsActive()) return;
+
+	// Пытаемся заблокировать урон щитом
+	if (!abilities->TryBlockDamage(damage)) {
+		// Если не заблокировали - применяем урон
+		playerHealth->hp -= damage;
+
+		// Визуальный эффект получения урона
+		playerPointCloud->color = point3d(1.0f, 0.0f, 0.0f);
+		// Возвращаем цвет через некоторое время
 	}
 }
