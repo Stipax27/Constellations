@@ -316,7 +316,7 @@ void LevelManagerClass::Frame()
 
 
 	//// FAST DEBUG CODE (DELETE LATER) ////
-	/*count++;
+	count++;
 	if (count > 30) {
 		count = 0;
 		
@@ -345,7 +345,7 @@ void LevelManagerClass::Frame()
 
 		DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
 		delayedDestroy->lifeTime = 5000;
-	}*/
+	}
 	//// FAST DEBUG CODE (DELETE LATER) ////
 
 
