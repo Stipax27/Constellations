@@ -620,24 +620,22 @@ void Models::LoadGltfModel(const char* filename)
 
 void Models::LoadObjModel(const char* filename, bool vertexOnly)
 {
-	// ----------------------------------------------------------------------
-	// 1. Проверяем наличие кэша
-	// ----------------------------------------------------------------------
+	// Checking if cash exists
 	std::string cacheFilename = std::string(filename) + ".cache";
 	uint64_t sourceTime = GetFileModTime(filename);
 
-	// Пробуем загрузить из кэша
+	// Trying to load from cash
 	std::ifstream cacheFile(cacheFilename, std::ios::binary);
 	if (cacheFile && sourceTime != 0) {
 		CacheHeader header;
 		cacheFile.read((char*)&header, sizeof(header));
 
-		// Проверяем валидность кэша
+		// Checking cash valide
 		if (header.version == 1 &&
 			header.sourceFileTime == sourceTime &&
 			header.vertexStride == sizeof(VertexType)) {
 
-			// Загружаем вершины
+			// Loading vericles
 			vertexCount = header.vertexCount;
 			indexCount = header.indexCount;
 
@@ -647,7 +645,7 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 			cacheFile.read((char*)vertices, vertexCount * sizeof(VertexType));
 			cacheFile.read((char*)idxArray, indexCount * sizeof(unsigned long));
 
-			// Создаем DirectX буферы
+			// Creating DirectX buffers
 			Create(modelsCount, vertices, idxArray);
 
 			delete[] vertices;
@@ -663,9 +661,8 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 		}
 		cacheFile.close();
 	}
-	// ----------------------------------------------------------------------
-	// 2. Если кэша нет или он устарел - читаем .obj файл
-	// ----------------------------------------------------------------------
+
+	// If cash doesn't exist or expired then reading .obj file
 	ifstream fin(filename);
 	if (!fin) {
 		Shaders::Log("Failed to read the obj model file\n");
@@ -801,9 +798,7 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 
 	fin.close();
 
-	// ----------------------------------------------------------------------
-	// 3. Create DirectX buffers
-	// ----------------------------------------------------------------------
+	// Create DirectX buffers
 	vertexCount = (int)uniqueVertices.size();
 	indexCount = (int)indices.size();
 
@@ -818,9 +813,7 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 
 	Create(modelsCount, vertices, idxArray);
 
-	// ----------------------------------------------------------------------
-	// 4. Сохраняем в кэш
-	// ----------------------------------------------------------------------
+	// Saving cash
 	std::ofstream outCache(cacheFilename, std::ios::binary);
 	if (outCache) {
 		CacheHeader header;
