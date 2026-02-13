@@ -13,6 +13,8 @@
 #include <stdio.h>
 #include <fstream>
 #include <unordered_map>
+#include <wrl/client.h>
+#include <direct.h>
 
 #include <sys/stat.h>
 #ifdef _WIN32
@@ -226,6 +228,7 @@ namespace Shaders {
 	extern ID3DBlob* pErrorBlob;
 
 	extern wchar_t shaderPathW[MAX_PATH];
+	extern wchar_t cachePathW[MAX_PATH];
 
 	extern int currentVS;
 	extern int currentPS;
@@ -235,6 +238,12 @@ namespace Shaders {
 	LPCWSTR nameToPatchLPCWSTR(const char*);
 	void Log(const char*);
 	void CompilerLog(LPCWSTR, HRESULT, const char*);
+	const char* GetBuildConfig();
+
+	bool LoadShaderFromCache(const char*, const char*, void**, ID3DBlob**);
+	bool SaveShaderToCache(const char*, const char*, ID3DBlob*);
+	std::string GetCacheFileName(const char*, const char*);
+	void EnsureCacheDirectoryExists();
 
 	void CreateVS(int, LPCWSTR);
 	void CreatePS(int, LPCWSTR);
@@ -242,6 +251,7 @@ namespace Shaders {
 	void CreateCS(int, LPCWSTR);
 
 	void Init();
+	void CleanupCache();
 
 	void vShader(unsigned int);
 	void pShader(unsigned int);

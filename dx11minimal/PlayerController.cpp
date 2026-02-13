@@ -32,6 +32,10 @@ void PlayerController::Initialize(Entity* Player, World* m_World, MouseClass* Mo
 	playerPhysicBody = Player->GetComponent<PhysicBody>();
 	playerPointCloud = Player->GetComponent<PointCloud>();
 
+	ui = m_World->entityStorage->GetEntityByName("UI");
+	healthBar = ui->GetChildByName("HealthBar", true);
+	staminaBar = ui->GetChildByName("StaminaBar", true);
+
 	camera = m_World->m_Camera;
 	mouse = Mouse;
 	window = Window;
@@ -139,8 +143,7 @@ void PlayerController::ProcessInput()
 
 			abilities->stamina -= 50;
 		}
-	
-		// ?????????? ????????
+		
 		float roll = 0.0f;
 
 		if (IsKeyPressed('E')) {
@@ -248,4 +251,11 @@ void PlayerController::ProcessMouse()
 	}
 	}
 
+}
+
+
+void PlayerController::ProccessUI()
+{
+	Transform2D* staminaTransform = staminaBar->GetComponent<Transform2D>();
+	staminaTransform->scale = point3d(abilities->stamina / abilities->maxStamina, 1, 0);
 }

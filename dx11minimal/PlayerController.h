@@ -58,13 +58,18 @@ public:
 	void ProcessInput();
 	void ProcessCamera();
 	void ProcessMouse();
+	void ProccessUI();
 
 private:
 	Entity* playerEntity;
+	Entity* ui;
 
 	Transform* playerTransform;
 	PhysicBody* playerPhysicBody;
 	PointCloud* playerPointCloud;
+
+	Entity* healthBar;
+	Entity* staminaBar;
 
 	CameraClass* camera;
 	MouseClass* mouse;

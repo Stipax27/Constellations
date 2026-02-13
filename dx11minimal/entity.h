@@ -135,9 +135,9 @@ public:
 	int GetId();
 
 	void AddChild(Entity*);
-	Entity* GetChildByName(string, bool = false);
-	vector<Entity*> GetChildrenByName(string, bool = false);
-	vector<Entity*> GetChildren(bool = false);
+	Entity* GetChildByName(string name, bool recursive = false);
+	vector<Entity*> GetChildrenByName(string name, bool recursive = false);
+	vector<Entity*> GetChildren(bool recursive = false);
 
 	void SetActive(bool);
 	bool IsActive();

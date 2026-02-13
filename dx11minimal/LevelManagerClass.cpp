@@ -58,18 +58,13 @@ bool LevelManagerClass::Initialize()
 
 	//Textures::LoadTexture("..\\dx11minimal\\Resourses\\Textures\\testTexture.tga");
 
-	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cube.txt");
-	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cube2.txt");
-	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\Cube.obj");
-	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\cat2.obj");
-	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesBody.obj");
-	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesArmor.obj");
+	std::thread thr(&LevelManagerClass::LoadModels, this);
+	thr.detach();
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING START //
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
-	Entity* player;
 	Entity* entity;
 	Explosion* explosion;
 	Constellation* constellation;
@@ -94,40 +89,7 @@ bool LevelManagerClass::Initialize()
 	Entity* folder = m_World->entityStorage->CreateEntity("WorldFolder");
 	folder->SetActive(true);
 
-	player = m_World->entityStorage->CreateEntity("Player", folder);
-	transform = player->AddComponent<Transform>();
-	transform->position = point3d(0.0f, 0.0f, 0.0f);
-	physicBody = player->AddComponent<PhysicBody>();
-	physicBody->preciseMovement = true;
-	sphereCollider = player->AddComponent<SphereCollider>();
-	sphereCollider->radius = 0.75f;
-	sphereCollider->collisionGroup = CollisionFilter::Group::Player;
-	health = player->AddComponent<Health>();
-	health->fraction = Fraction::Player;
-	constellation = player->AddComponent<Constellation>();
-	/*constellation->stars = {
-		point3d(-0.09, -0.7, 0),
-		point3d(-0.05, -0.15, 0),
-		point3d(0, 0, 0),
-		point3d(-0.4, 0.5, 0),
-		point3d(0, 0, 0),
-		point3d(0.4, 0.3, 0)
-	};
-	constellation->links = {
-		{0,1},
-		{1,2},
-		{2,3},
-		{2,5}
-	};*/
-	pointCloud = player->AddComponent<PointCloud>();
-	pointCloud->index = 3;
-	pointCloud->position = point3d(0, -0.8, 0);
-	pointCloud->scale = point3d(7, 7, 7);
-	pointCloud->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -PI / 2);
-	//pointCloud->pointSize = 0.5f;
-	pointCloud->brightness = 0.5f;
-	pointCloud->color = point3d(1, 0.6f, 0.9f);
-
+	Entity* player = CreatePlayer(folder);
 
 	/*entity = m_World->CreateEntity();
 	explosion = entity->AddComponent<Explosion>();
@@ -353,6 +315,7 @@ void LevelManagerClass::Frame()
 	playerController->ProcessInput();
 	playerController->ProcessMouse();
 	playerController->abilities->Update();
+	playerController->ProccessUI();
 
 
 	// ??????????????????????????? ????????????????????? ????????? ???????????? ??????????????????
@@ -415,6 +378,63 @@ void LevelManagerClass::Frame()
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void LevelManagerClass::LoadModels()
+{
+	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cube.txt");
+	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cube2.txt");
+	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\Cube.obj");
+	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\cat2.obj");
+	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesBody.obj");
+	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesArmor.obj");
+}
+
+
+Entity* LevelManagerClass::CreatePlayer(Entity* folder)
+{
+	Entity* player = m_World->entityStorage->CreateEntity("Player", folder);
+
+	Transform* transform = player->AddComponent<Transform>();
+	transform->position = point3d(0.0f, 0.0f, 0.0f);
+
+	PhysicBody* physicBody = player->AddComponent<PhysicBody>();
+	physicBody->preciseMovement = true;
+
+	SphereCollider* sphereCollider = player->AddComponent<SphereCollider>();
+	sphereCollider->radius = 0.75f;
+	sphereCollider->collisionGroup = CollisionFilter::Group::Player;
+
+	Health* health = player->AddComponent<Health>();
+	health->fraction = Fraction::Player;
+
+	/*Constellation* constellation = player->AddComponent<Constellation>();
+	constellation->stars = {
+		point3d(-0.09, -0.7, 0),
+		point3d(-0.05, -0.15, 0),
+		point3d(0, 0, 0),
+		point3d(-0.4, 0.5, 0),
+		point3d(0, 0, 0),
+		point3d(0.4, 0.3, 0)
+	};
+	constellation->links = {
+		{0,1},
+		{1,2},
+		{2,3},
+		{2,5}
+	};*/
+
+	PointCloud* pointCloud = player->AddComponent<PointCloud>();
+	pointCloud->index = 3;
+	pointCloud->position = point3d(0, -0.8, 0);
+	pointCloud->scale = point3d(7, 7, 7);
+	pointCloud->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -PI / 2);
+	//pointCloud->pointSize = 0.5f;
+	pointCloud->brightness = 0.5f;
+	pointCloud->color = point3d(1, 0.6f, 0.9f);
+
+	return player;
+}
 
 
 void LevelManagerClass::CreateUI()

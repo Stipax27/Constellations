@@ -61,6 +61,7 @@ public:
 
 	float stamina;
 	float maxStamina;
+
 public:
 	PlayerAbilities();
 	PlayerAbilities(const PlayerAbilities&);
@@ -82,9 +83,6 @@ private:
 	CollisionManagerClass* collisionManager;
 	Entity* playerEntity;
 
-	Entity* healthBar;
-	Entity* staminaBar;
-
 	bool charging;
 	bool chargeAnim;
 	double chargeTimeAchor;
@@ -99,8 +97,6 @@ private:
 private:
 	void CommonAttack(Transform, point3d);
 	void ChargedAttack(Transform, point3d);
-
-	void UpdateUI();
 };
 
 #endif

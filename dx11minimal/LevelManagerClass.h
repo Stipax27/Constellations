@@ -7,6 +7,8 @@
 //////////////
 // INCLUDES //
 //////////////
+#include <thread>
+
 #include "windowclass.h"
 #include "mouseclass.h"
 
@@ -79,6 +81,8 @@ private:
 	SmallConstellation* smallConstellation;
 
 private:
+	void LoadModels();
+	Entity* CreatePlayer(Entity*);
 	void CreateUI();
 	void InitSystems();
 	void CreateAries(Entity*);
