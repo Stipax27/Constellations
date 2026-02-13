@@ -171,41 +171,71 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 				cloudTransform.mRotation = pointCloud->mRotation * cloudTransform.mRotation;
 
 
-				//if (frustum->CheckSphere(worldTransform.position, worldTransform.scale.magnitude())) {
-				//ConstBuf::CreateVertexBuffer(15);
+				if (frustum->CheckSphere(cloudTransform.position, pointCloud->frustumRadius)) {
+					UpdateWorldMatrix(cloudTransform);
 
-				UpdateWorldMatrix(cloudTransform);
+					ConstBuf::drawerV[0] = pointCloud->pointSize;
+					ConstBuf::global[0] = XMFLOAT4(pointCloud->color.x, pointCloud->color.y, pointCloud->color.z,
+												   pointCloud->brightness);
+					ConstBuf::Update(0, ConstBuf::drawerV);
+					ConstBuf::Update(5, ConstBuf::global);
+					ConstBuf::ConstToGeometry(0);
+					ConstBuf::ConstToPixel(5);
 
-				ConstBuf::drawerV[0] = pointCloud->pointSize;
-				ConstBuf::global[0] = XMFLOAT4(pointCloud->color.x, pointCloud->color.y, pointCloud->color.z,
-				                               pointCloud->brightness);
-				ConstBuf::Update(0, ConstBuf::drawerV);
-				ConstBuf::Update(5, ConstBuf::global);
-				ConstBuf::ConstToGeometry(0);
-				ConstBuf::ConstToPixel(5);
+					int lastRT = Textures::currentRT;
 
-				//Rasterizer::Cull(Rasterizer::cullmode::front);
+					ConstBuf::drawerInt[0] = pow(2, (int)pointCloud->compress);
+					ConstBuf::Update(7, ConstBuf::drawerInt);
+					ConstBuf::ConstToPixel(7);
 
-				//Shaders::vShader(17);
-				//Shaders::pShader(17);
-				////Shaders::gShader(17);
+					if (pointCloud->compress != RenderCompress::none)
+					{
+						int uavIndex = (int)pointCloud->compress * 2 + 1;
+						int rtIndex = (int)pointCloud->compress * 2 + 2;
 
-				//InputAssembler::IA(InputAssembler::topology::triList);
-				////context->DrawIndexed(16777216, 0, 0);
-				//context->DrawInstanced(6, 2097152, 0, 0);
+						Textures::RenderTarget(rtIndex, 0);
+						Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
+						Draw::ClearDepth();
 
+						ConstBuf::ConstToCompute(7);
 
-				Shaders::vShader(17);
-				Shaders::pShader(17);
-				Shaders::gShader(17);
+						Compute::Dispatch(0, lastRT, uavIndex);
+						Textures::TextureToShader(uavIndex, 0);
 
-				InputAssembler::IA(InputAssembler::topology::pointList);
-				InputAssembler::vBuffer(pointCloud->index);
+						Sampler::SamplerComp(0);
 
-				context->DrawIndexedInstanced(Models::Model[pointCloud->index].indexes, pointCloud->instances, 0, 0,
-				                              0);
-				//context->DrawInstanced(1, 2097152 / 6, 0, 0);
-				//}
+						Shaders::vShader(pointCloud->vShader);
+						Shaders::gShader(pointCloud->gShader);
+						Shaders::pShader(pointCloud->pShader);
+
+						InputAssembler::IA(InputAssembler::topology::pointList);
+						InputAssembler::vBuffer(pointCloud->index);
+						context->DrawIndexedInstanced(Models::Model[pointCloud->index].indexes, pointCloud->instances, 0, 0, 0);
+
+						Textures::CreateMipMap();
+
+						Textures::RenderTarget(lastRT, 0);
+
+						Textures::TextureToShader(rtIndex, 0, targetshader::pixel);
+
+						Shaders::vShader(10);
+						Shaders::gShader(0);
+						Shaders::pShader(100);
+
+						InputAssembler::IA(InputAssembler::topology::triList);
+						context->Draw(6, 0);
+					}
+					else
+					{
+						Shaders::vShader(pointCloud->vShader);
+						Shaders::gShader(pointCloud->gShader);
+						Shaders::pShader(pointCloud->pShader);
+
+						InputAssembler::IA(InputAssembler::topology::pointList);
+						InputAssembler::vBuffer(pointCloud->index);
+						context->DrawIndexedInstanced(Models::Model[pointCloud->index].indexes, pointCloud->instances, 0, 0, 0);
+					}
+				}
 			}
 
 			ProcessParticle(entity, worldTransform);

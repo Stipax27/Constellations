@@ -31,6 +31,11 @@ void PlayerController::Initialize(Entity* Player, World* m_World, MouseClass* Mo
 	playerTransform = Player->GetComponent<Transform>();
 	playerPhysicBody = Player->GetComponent<PhysicBody>();
 	playerPointCloud = Player->GetComponent<PointCloud>();
+	playerHealth = Player->GetComponent<Health>();
+
+	ui = m_World->entityStorage->GetEntityByName("UI");
+	healthBar = ui->GetChildByName("HealthBar", true);
+	staminaBar = ui->GetChildByName("StaminaBar", true);
 
 	camera = m_World->m_Camera;
 	mouse = Mouse;
@@ -49,33 +54,38 @@ void PlayerController::Shutdown()
 		abilities = 0;
 	}
 
-	if (playerEntity) {
+	if (playerEntity)
 		playerEntity = 0;
-	}
 
-	if (playerTransform) {
+	if (playerTransform)
 		playerTransform = 0;
-	}
 
-	if (playerPhysicBody) {
+	if (playerPhysicBody)
 		playerPhysicBody = 0;
-	}
 
-	if (playerPointCloud) {
+	if (playerPointCloud)
 		playerPointCloud = 0;
-	}
 
-	if (camera) {
+	if (playerHealth)
+		playerHealth = 0;
+
+	if (ui)
+		ui = 0;
+
+	if (healthBar)
+		healthBar = 0;
+
+	if (staminaBar)
+		staminaBar = 0;
+
+	if (camera)
 		camera = 0;
-	}
 
-	if (mouse) {
+	if (mouse)
 		mouse = 0;
-	}
 
-	if (window) {
+	if (window)
 		window = 0;
-	}
 }
 
 
@@ -122,23 +132,10 @@ void PlayerController::ProcessInput()
 			}
 		}
 
-		if (!movementLocked && timer::currentTime >= lastDashTime + DASH_CD && IsKeyPressed(VK_LSHIFT)) {
-			lastDashTime = timer::currentTime;
-
-			point3d velocity;
-			if (playerPhysicBody->velocity.magnitude() > 0) {
-				velocity = playerPhysicBody->velocity.normalized();
-			}
-			else {
-				velocity = playerTransform->GetLookVector();
-			}
-
-			playerPhysicBody->velocity = velocity * DASH_SPEED;
-			movementLocked = true;
-			playerPhysicBody->airFriction = DASH_AIR_FRICTION;
+		if (IsKeyPressed(VK_LSHIFT)) {
+			Dash();
 		}
-	
-		// ?????????? ????????
+		
 		float roll = 0.0f;
 
 		if (IsKeyPressed('E')) {
@@ -246,4 +243,36 @@ void PlayerController::ProcessMouse()
 	}
 	}
 
+}
+
+
+void PlayerController::ProccessUI()
+{
+	Transform2D* healthTransform = healthBar->GetComponent<Transform2D>();
+	healthTransform->scale = point3d(playerHealth->hp / playerHealth->maxHp, 1, 0);
+
+	Transform2D* staminaTransform = staminaBar->GetComponent<Transform2D>();
+	staminaTransform->scale = point3d(abilities->stamina / abilities->maxStamina, 1, 0);
+}
+
+
+void PlayerController::Dash()
+{
+	if (!movementLocked && timer::currentTime >= lastDashTime + DASH_CD && abilities->stamina >= DASH_COST) {
+		lastDashTime = timer::currentTime;
+
+		point3d velocity;
+		if (playerPhysicBody->velocity.magnitude() > 0) {
+			velocity = playerPhysicBody->velocity.normalized();
+		}
+		else {
+			velocity = playerTransform->GetLookVector();
+		}
+
+		playerPhysicBody->velocity = velocity * DASH_SPEED;
+		movementLocked = true;
+		playerPhysicBody->airFriction = DASH_AIR_FRICTION;
+
+		abilities->stamina -= DASH_COST;
+	}
 }

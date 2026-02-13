@@ -12,6 +12,14 @@
 #include <deque>
 #include <stdio.h>
 #include <fstream>
+#include <unordered_map>
+#include <wrl/client.h>
+#include <direct.h>
+
+#include <sys/stat.h>
+#ifdef _WIN32
+#include <sys/utime.h>
+#endif
 
 #pragma comment(lib, "d3d10.lib")
 #pragma comment(lib, "d3d11.lib")
@@ -128,6 +136,25 @@ namespace Models
 
 #define max_models 255
 
+#pragma pack(push, 1)  // выравнивание для бинарной записи
+	struct CacheHeader {
+		uint64_t sourceFileTime;    // время модификации исходного .obj
+		uint32_t vertexCount;       // количество вершин
+		uint32_t indexCount;        // количество индексов
+		uint32_t vertexStride;      // размер VertexType (обычно 32+12+8 = 52 байта)
+		uint32_t version = 1;       // версия формата кэша
+	};
+#pragma pack(pop)
+
+	struct VertexKeyHash {
+		size_t operator()(const std::tuple<int, int, int>& key) const {
+			size_t h1 = std::hash<int>()(std::get<0>(key));
+			size_t h2 = std::hash<int>()(std::get<1>(key));
+			size_t h3 = std::hash<int>()(std::get<2>(key));
+			return h1 ^ (h2 << 1) ^ (h3 << 2);
+		}
+	};
+
 	struct VertexType
 	{
 		XMFLOAT3 position;
@@ -158,6 +185,9 @@ namespace Models
 
 	extern modelDesc Model[max_models];
 	extern int modelsCount;
+
+	// Получение времени модификации файла
+	uint64_t GetFileModTime(const char* filename);
 
 	void CreateModel(int, VertexType*, unsigned long*);
 	void Create(int, VertexType*, unsigned long*);
@@ -198,6 +228,7 @@ namespace Shaders {
 	extern ID3DBlob* pErrorBlob;
 
 	extern wchar_t shaderPathW[MAX_PATH];
+	extern wchar_t cachePathW[MAX_PATH];
 
 	extern int currentVS;
 	extern int currentPS;
@@ -207,6 +238,12 @@ namespace Shaders {
 	LPCWSTR nameToPatchLPCWSTR(const char*);
 	void Log(const char*);
 	void CompilerLog(LPCWSTR, HRESULT, const char*);
+	const char* GetBuildConfig();
+
+	bool LoadShaderFromCache(const char*, const char*, void**, ID3DBlob**);
+	bool SaveShaderToCache(const char*, const char*, ID3DBlob*);
+	std::string GetCacheFileName(const char*, const char*);
+	void EnsureCacheDirectoryExists();
 
 	void CreateVS(int, LPCWSTR);
 	void CreatePS(int, LPCWSTR);
@@ -214,6 +251,7 @@ namespace Shaders {
 	void CreateCS(int, LPCWSTR);
 
 	void Init();
+	void CleanupCache();
 
 	void vShader(unsigned int);
 	void pShader(unsigned int);

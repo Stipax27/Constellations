@@ -19,6 +19,7 @@
 #include "Transform.h"
 #include "PhysicBody.h"
 #include "PointCloud.h"
+#include "Health.h"
 
 #include "PlayerAbilities.h"
 
@@ -26,16 +27,19 @@
 /////////////
 // GLOBALS //
 /////////////
-const float SENSIVITY = 1.5f;
+#define SENSIVITY 1.5f
+
 const float CURSOR_IGNORE_ZONE = 0.05f;
 const float MAX_CURSOR_DEVIATION = 0.45f;
 const float CURSOR_ZONE_DELTA = MAX_CURSOR_DEVIATION - CURSOR_IGNORE_ZONE;
-const float ROLL_SPEED = 1.0f;
-const float PLAYER_MOVE_SPEED = 15.0f;
-const float DASH_SPEED = 75.0f;
-const float DASH_AIR_FRICTION = 5.0f;
 
-const DWORD DASH_CD = 1000;
+#define ROLL_SPEED 1.0f
+#define PLAYER_MOVE_SPEED 15.0f
+
+#define DASH_SPEED 75.0f
+#define DASH_AIR_FRICTION 5.0f
+#define DASH_COST 50.0f
+#define DASH_CD 1000
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -58,13 +62,19 @@ public:
 	void ProcessInput();
 	void ProcessCamera();
 	void ProcessMouse();
+	void ProccessUI();
 
 private:
 	Entity* playerEntity;
+	Entity* ui;
 
 	Transform* playerTransform;
 	PhysicBody* playerPhysicBody;
 	PointCloud* playerPointCloud;
+	Health* playerHealth;
+
+	Entity* healthBar;
+	Entity* staminaBar;
 
 	CameraClass* camera;
 	MouseClass* mouse;
@@ -73,6 +83,9 @@ private:
 	bool movementLocked = false;
 
 	DWORD lastDashTime = 0;
+
+private:
+	void Dash();
 };
 
 #endif

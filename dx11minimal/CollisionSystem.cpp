@@ -88,19 +88,19 @@ void CollisionSystem::Update(vector<Entity*>& entities, float deltaTime)
 										transform2->position -= planeCollider->normal * (sphereCollider->radius - distance);
 									}*/
 
-									Health* health = entity1->GetComponent<Health>();
-									if (health != nullptr && health->active) {
+									pair<Entity*, Health*> hres = entity1->GetAncestorWithComponent<Health>();
+									if (hres.first != nullptr && hres.second->active) {
 
-										pair<Entity*, SingleDamager*> res = entity2->GetAncestorWithComponent<SingleDamager>();
-										if (res.first != nullptr && res.second->active && res.second->target == health->fraction && find(res.second->entityFilter.begin(), res.second->entityFilter.end(), entity1->GetId()) == res.second->entityFilter.end()) {
-											health->hp -= res.second->damage;
+										pair<Entity*, SingleDamager*> dres = entity2->GetAncestorWithComponent<SingleDamager>();
+										if (dres.first != nullptr && dres.second->active && dres.second->target == hres.second->fraction && find(dres.second->entityFilter.begin(), dres.second->entityFilter.end(), hres.first->GetId()) == dres.second->entityFilter.end()) {
+											hres.second->hp -= dres.second->damage;
 
-											res.second->entityFilter.push_back(entity1->GetId());
-											if (res.second->entityFilter.size() >= res.second->maxHitCount) {
-												if (res.second->destroyable) {
-													res.first->Destroy();
+											dres.second->entityFilter.push_back(hres.first->GetId());
+											if (dres.second->entityFilter.size() >= dres.second->maxHitCount) {
+												if (dres.second->destroyable) {
+													dres.first->Destroy();
 												}
-												res.first->RemoveComponent<SingleDamager>();
+												dres.first->RemoveComponent<SingleDamager>();
 											}
 										}
 

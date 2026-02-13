@@ -49,7 +49,7 @@ void Entity::AddChild(Entity* Child) {
 }
 
 
-Entity* Entity::GetChildByName(string Name, bool Recursive = false) {
+Entity* Entity::GetChildByName(string Name, bool Recursive) {
 	for (int i = 0; i < children.size(); i++) {
 		Entity* child = children[i];
 		if (child->name == Name) {
@@ -63,10 +63,12 @@ Entity* Entity::GetChildByName(string Name, bool Recursive = false) {
 			}
 		}
 	}
+
+	return nullptr;
 }
 
 
-vector<Entity*> Entity::GetChildrenByName(string Name, bool Recursive = false) {
+vector<Entity*> Entity::GetChildrenByName(string Name, bool Recursive) {
 	vector<Entity*> array;
 	for (int i = 0; i < children.size(); i++) {
 		Entity* child = children[i];
@@ -88,7 +90,7 @@ vector<Entity*> Entity::GetChildrenByName(string Name, bool Recursive = false) {
 }
 
 
-vector<Entity*> Entity::GetChildren(bool Recursive = false) {
+vector<Entity*> Entity::GetChildren(bool Recursive) {
 	vector<Entity*> array;
 	for (int i = 0; i < children.size(); i++) {
 		Entity* child = children[i];

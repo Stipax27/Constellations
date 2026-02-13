@@ -7,6 +7,8 @@
 //////////////
 // INCLUDES //
 //////////////
+#include <thread>
+
 #include "windowclass.h"
 #include "mouseclass.h"
 
@@ -41,6 +43,7 @@
 // GLOBALS //
 /////////////
 //const bool VSYNC_ENABLED = true;
+const bool SHOW_COLLIDERS = false;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,6 +79,15 @@ private:
 	CollisionManagerClass* collisionManager;
 	BaseStar* bStar;
 	SmallConstellation* smallConstellation;
+
+	int count = 0; //// FAST DEBUG CODE (DELETE LATER)
+
+private:
+	void LoadModels();
+	Entity* CreatePlayer(Entity*);
+	void CreateUI();
+	void InitSystems();
+	void CreateAries(Entity*);
 
 };
 

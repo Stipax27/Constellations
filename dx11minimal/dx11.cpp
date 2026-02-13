@@ -1,4 +1,4 @@
-#include "dx11.h"
+﻿#include "dx11.h"
 
 static inline int32 _log2(float x)
 {
@@ -433,6 +433,14 @@ int Models::modelsCount = 0;
 int Models::vertexCount;
 int Models::indexCount;
 
+uint64_t Models::GetFileModTime(const char* filename) {
+	struct _stat64 fileStat;
+	if (_stat64(filename, &fileStat) == 0) {
+		return fileStat.st_mtime;
+	}
+	return 0;
+}
+
 void Models::CreateModel(int i, VertexType* vertices, unsigned long* indices)
 {
 	HRESULT result;
@@ -612,163 +620,230 @@ void Models::LoadGltfModel(const char* filename)
 
 void Models::LoadObjModel(const char* filename, bool vertexOnly)
 {
-	std::ifstream fin;
-	char input;
+	// ----------------------------------------------------------------------
+	// 1. Проверяем наличие кэша
+	// ----------------------------------------------------------------------
+	std::string cacheFilename = std::string(filename) + ".cache";
+	uint64_t sourceTime = GetFileModTime(filename);
 
-	fin.open(filename);
+	// Пробуем загрузить из кэша
+	std::ifstream cacheFile(cacheFilename, std::ios::binary);
+	if (cacheFile && sourceTime != 0) {
+		CacheHeader header;
+		cacheFile.read((char*)&header, sizeof(header));
 
-	if (fin.fail())
-	{
+		// Проверяем валидность кэша
+		if (header.version == 1 &&
+			header.sourceFileTime == sourceTime &&
+			header.vertexStride == sizeof(VertexType)) {
+
+			// Загружаем вершины
+			vertexCount = header.vertexCount;
+			indexCount = header.indexCount;
+
+			VertexType* vertices = new VertexType[vertexCount];
+			unsigned long* idxArray = new unsigned long[indexCount];
+
+			cacheFile.read((char*)vertices, vertexCount * sizeof(VertexType));
+			cacheFile.read((char*)idxArray, indexCount * sizeof(unsigned long));
+
+			// Создаем DirectX буферы
+			Create(modelsCount, vertices, idxArray);
+
+			delete[] vertices;
+			delete[] idxArray;
+
+			cacheFile.close();
+
+			Shaders::Log("Model loaded from cache: ");
+			Shaders::Log(filename);
+			Shaders::Log("\n");
+
+			return;
+		}
+		cacheFile.close();
+	}
+	// ----------------------------------------------------------------------
+	// 2. Если кэша нет или он устарел - читаем .obj файл
+	// ----------------------------------------------------------------------
+	ifstream fin(filename);
+	if (!fin) {
 		Shaders::Log("Failed to read the obj model file\n");
 		return;
 	}
 
-	vector<ModelType> model;
-
-	// Read up to the beginning of the data.
-	//fin.get(input);
+	std::vector<XMFLOAT3> positions;   // v
+	std::vector<XMFLOAT2> texcoords;   // vt
+	std::vector<XMFLOAT3> normals;     // vn
 
 	string prefix;
-	fin >> prefix;
-
-	while (prefix != "v")
-	{
-		fin >> prefix;
-	}
-
-	while (prefix == "v")
-	{
-		ModelType mType = ModelType();
-
-		fin >> mType.x >> mType.y >> mType.z;
-
-		model.push_back(mType);
-		fin >> prefix;
-	}
-
-	vertexCount = (int)model.size();
-
-	bool nInclude = false;
-	bool tInclude = false;
-
-	if (!vertexOnly) {
-		int c = 0;
-		while (prefix == "vn")
-		{
-			nInclude = true;
-
-			if (c < model.size()) {
-				fin >> model[c].nx >> model[c].ny >> model[c].nz;
-			}
-			else {
-				ModelType mType = ModelType();
-				fin >> mType.nx >> mType.ny >> mType.nz;
-				model.push_back(mType);
-			}
-
-			fin >> prefix;
-			c++;
+	while (fin >> prefix) {
+		if (prefix == "v") {
+			XMFLOAT3 p;
+			fin >> p.x >> p.y >> p.z;
+			positions.push_back(p);
 		}
-
-		c = 0;
-		while (prefix == "vt")
-		{
-			tInclude = true;
-
-			if (c < model.size()) {
-				fin >> model[c].tu >> model[c].tv;
-			}
-			else {
-				ModelType mType = ModelType();
-				fin >> mType.tu >> mType.tv;
-				model.push_back(mType);
-			}
-
-			fin >> prefix;
-			c++;
+		else if (!vertexOnly && prefix == "vt") {
+			XMFLOAT2 t;
+			fin >> t.x >> t.y;
+			texcoords.push_back(t);
 		}
-	}
-
-	while (prefix != "f")
-	{
-		fin >> prefix;
-	}
-
-	vector<ModelType> indexedModel;
-	while (prefix == "f")
-	{
-		fin.get(input);
-		if (input == '\n') {
+		else if (!vertexOnly && prefix == "vn") {
+			XMFLOAT3 n;
+			fin >> n.x >> n.y >> n.z;
+			normals.push_back(n);
+		}
+		else if (prefix == "f") {
 			break;
 		}
+	}
 
-		fin >> prefix;
-		while (prefix != "f") {
-			ModelType imType = ModelType();
+	std::vector<VertexType> uniqueVertices;   // final vertex buffer data
+	std::vector<unsigned long> indices;       // final index buffer
+	unordered_map<tuple<int, int, int>, unsigned int, VertexKeyHash> vertexMap;
 
-			vector<string> words = split(prefix, "/");
-			
-			int vIndex = stoi(words[0]);
-			imType.x = model[vIndex - 1].x;
-			imType.y = model[vIndex - 1].y;
-			imType.z = model[vIndex - 1].z;
+	// Helper to convert OBJ index (1‑based, may be negative) to 0‑based vector index
+	auto resolveIndex = [](int idx, size_t size) -> int {
+		if (idx > 0) return idx - 1;
+		if (idx < 0) return (int)size + idx;   // negative means relative to end
+		return -1;                             // missing index (0 or empty)
+		};
 
-			if (words[1] != "") {
-				int tIndex = stoi(words[1]);
-				imType.tu = model[tIndex - 1].tu;
-				imType.tv = model[tIndex - 1].tv;
-			}
-
-			if (words[2] != "") {
-				int nIndex = stoi(words[2]);
-				imType.nx = model[nIndex - 1].nx;
-				imType.ny = model[nIndex - 1].ny;
-				imType.nz = model[nIndex - 1].nz;
-			}
-
-			indexedModel.push_back(imType);
-
-			fin.get(input);
-			if (input == '\n') {
-				fin >> prefix;
-				break;
-			}
+	string line;
+	do {
+		if (prefix != "f") {
+			// Not a face line – read next line and continue
+			getline(fin, line);
 			fin >> prefix;
+			continue;
 		}
 
-		//fin >> prefix;
-	}
+		// Read the whole face line
+		getline(fin, line);
+		istringstream iss(line);
+		string vertexSpec;
+
+		while (iss >> vertexSpec) {
+			// Split vertex specification (e.g., "1/2/3" or "1//2")
+			std::vector<string> parts = split(vertexSpec, "/");
+			// parts[0] = v, parts[1] = vt, parts[2] = vn  (some may be empty)
+
+			int vIdx = -1, vtIdx = -1, vnIdx = -1;
+
+			// Position index (always present in valid OBJ)
+			if (!parts.empty() && !parts[0].empty())
+				vIdx = stoi(parts[0]);
+
+			// Texture coordinate index
+			if (parts.size() > 1 && !parts[1].empty())
+				vtIdx = stoi(parts[1]);
+
+			// Normal index
+			if (parts.size() > 2 && !parts[2].empty())
+				vnIdx = stoi(parts[2]);
+
+			// Convert to 0‑based and clamp to valid range
+			int posIndex = resolveIndex(vIdx, positions.size());
+			if (posIndex < 0 || posIndex >= (int)positions.size())
+				continue; // invalid position – skip this vertex
+
+			int texIndex = -1;
+			if (!vertexOnly && vtIdx != -1) {
+				texIndex = resolveIndex(vtIdx, texcoords.size());
+				if (texIndex < 0 || texIndex >= (int)texcoords.size())
+					texIndex = -1; // invalid – treat as missing
+			}
+
+			int normIndex = -1;
+			if (!vertexOnly && vnIdx != -1) {
+				normIndex = resolveIndex(vnIdx, normals.size());
+				if (normIndex < 0 || normIndex >= (int)normals.size())
+					normIndex = -1;
+			}
+
+			// Create unique key: (position index, texcoord index, normal index)
+			// Use -1 for missing attributes.
+			auto key = make_tuple(posIndex, texIndex, normIndex);
+
+			auto it = vertexMap.find(key);
+			if (it == vertexMap.end()) {
+				// New unique vertex – create it
+				VertexType vert;
+
+				// Position (always present)
+				vert.position = positions[posIndex];
+
+				// Texture coordinate (or default 0,0)
+				if (!vertexOnly && texIndex >= 0)
+					vert.texture = texcoords[texIndex];
+				else
+					vert.texture = XMFLOAT2(0.0f, 0.0f);
+
+				// Normal (or default 0,0,0)
+				if (!vertexOnly && normIndex >= 0)
+					vert.normal = normals[normIndex];
+				else
+					vert.normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
+
+				unsigned int newIndex = (unsigned int)uniqueVertices.size();
+				uniqueVertices.push_back(vert);
+				vertexMap[key] = newIndex;
+				indices.push_back(newIndex);
+			}
+			else {
+				// Reuse existing vertex
+				indices.push_back(it->second);
+			}
+		}
+
+		fin >> prefix;
+	} while (!fin.eof() && prefix == "f");
 
 	fin.close();
 
-	indexCount = (int)indexedModel.size();
-	vertexCount = indexCount;
+	// ----------------------------------------------------------------------
+	// 3. Create DirectX buffers
+	// ----------------------------------------------------------------------
+	vertexCount = (int)uniqueVertices.size();
+	indexCount = (int)indices.size();
 
-	VertexType* vertices;
-	unsigned long* indices;
+	VertexType* vertices = new VertexType[vertexCount];
+	unsigned long* idxArray = new unsigned long[indexCount];
 
-	vertices = new VertexType[vertexCount];
-	indices = new unsigned long[indexCount];
+	for (int i = 0; i < vertexCount; ++i)
+		vertices[i] = uniqueVertices[i];
 
-	// Load the vertex array and index array with data.
-	for (int i = 0; i < vertexCount; i++)
-	{
-		vertices[i].position = XMFLOAT3(indexedModel[i].x, indexedModel[i].y, indexedModel[i].z);
-		vertices[i].texture = XMFLOAT2(indexedModel[i].tu, indexedModel[i].tv);
-		vertices[i].normal = XMFLOAT3(indexedModel[i].nx, indexedModel[i].ny, indexedModel[i].nz);
+	for (int i = 0; i < indexCount; ++i)
+		idxArray[i] = indices[i];
 
-		indices[i] = i;
+	Create(modelsCount, vertices, idxArray);
+
+	// ----------------------------------------------------------------------
+	// 4. Сохраняем в кэш
+	// ----------------------------------------------------------------------
+	std::ofstream outCache(cacheFilename, std::ios::binary);
+	if (outCache) {
+		CacheHeader header;
+		header.sourceFileTime = sourceTime;
+		header.vertexCount = vertexCount;
+		header.indexCount = indexCount;
+		header.vertexStride = sizeof(VertexType);
+		header.version = 1;
+
+		outCache.write((char*)&header, sizeof(header));
+		outCache.write((char*)vertices, vertexCount * sizeof(VertexType));
+		outCache.write((char*)idxArray, indexCount * sizeof(unsigned long));
+		outCache.close();
+
+		Shaders::Log("Model cached to: ");
+		Shaders::Log(cacheFilename.c_str());
+		Shaders::Log("\n");
 	}
 
-	Create(modelsCount, vertices, indices);
-
 	delete[] vertices;
-	vertices = 0;
+	delete[] idxArray;
 
-	delete[] indices;
-	indices = 0;
-
-	Shaders::Log("Model obj file was read succesfully\n");
+	Shaders::Log("Model obj file was read successfully\n");
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -780,6 +855,7 @@ Shaders::ComputeShader Shaders::CS[255];
 
 ID3DBlob* Shaders::pErrorBlob;
 wchar_t Shaders::shaderPathW[MAX_PATH];
+wchar_t Shaders::cachePathW[MAX_PATH];
 
 int Shaders::currentVS = 0;
 int Shaders::currentPS = 0;
@@ -816,60 +892,245 @@ void Shaders::CompilerLog(LPCWSTR source, HRESULT hr, const char* message)
 	}
 }
 
+const char* Shaders::GetBuildConfig() {
+#ifdef _DEBUG
+	return "_debug";
+#else
+	return "_release";
+#endif
+}
+
+void Shaders::EnsureCacheDirectoryExists() {
+	char cachePathA[MAX_PATH];
+	WideCharToMultiByte(CP_ACP, 0, L"..\\dx11minimal\\Shaders\\Cash", -1, cachePathA, MAX_PATH, NULL, NULL);
+
+	struct stat st = { 0 };
+	if (stat(cachePathA, &st) == -1) {
+		_mkdir(cachePathA);
+		Log("Created cache directory\n");
+	}
+}
+
+std::string Shaders::GetCacheFileName(const char* shaderName, const char* shaderType) {
+	std::string fullPath(shaderName);
+	size_t lastSlash = fullPath.find_last_of("\\/");
+	std::string fileName = (lastSlash != std::string::npos) ? fullPath.substr(lastSlash + 1) : fullPath;
+
+	size_t lastDot = fileName.find_last_of(".");
+	std::string baseName = (lastDot != std::string::npos) ? fileName.substr(0, lastDot) : fileName;
+
+	std::string cacheName = baseName + "_" + shaderType + GetBuildConfig() + ".cso";
+
+	char cachePathA[MAX_PATH];
+	WideCharToMultiByte(CP_ACP, 0, L"..\\dx11minimal\\Shaders\\Cash\\", -1, cachePathA, MAX_PATH, NULL, NULL);
+
+	return std::string(cachePathA) + cacheName;
+}
+
+bool Shaders::LoadShaderFromCache(const char* shaderName, const char* shaderType, void** shader, ID3DBlob** blob) {
+	std::string cacheFile = GetCacheFileName(shaderName, shaderType);
+
+	// Check if the file exists
+	struct stat st;
+	if (stat(cacheFile.c_str(), &st) != 0) {
+		return false;
+	}
+
+	// Opening file
+	std::ifstream file(cacheFile, std::ios::binary | std::ios::ate);
+	if (!file.is_open()) {
+		return false;
+	}
+
+	// Getting file size
+	size_t size = static_cast<size_t>(file.tellg());
+	file.seekg(0, std::ios::beg);
+
+	// Creating data buffer
+	std::vector<char> buffer(size);
+	if (!file.read(buffer.data(), size)) {
+		file.close();
+		return false;
+	}
+	file.close();
+
+	// Creating ID3DBlob out from data
+	HRESULT hr = D3DCreateBlob(size, blob);
+	if (FAILED(hr)) {
+		return false;
+	}
+
+	memcpy((*blob)->GetBufferPointer(), buffer.data(), size);
+
+	// Creating shader
+	if (strcmp(shaderType, "VS") == 0) {
+		hr = device->CreateVertexShader((*blob)->GetBufferPointer(), (*blob)->GetBufferSize(), NULL, (ID3D11VertexShader**)shader);
+	}
+	else if (strcmp(shaderType, "PS") == 0) {
+		hr = device->CreatePixelShader((*blob)->GetBufferPointer(), (*blob)->GetBufferSize(), NULL, (ID3D11PixelShader**)shader);
+	}
+	else if (strcmp(shaderType, "GS") == 0) {
+		hr = device->CreateGeometryShader((*blob)->GetBufferPointer(), (*blob)->GetBufferSize(), NULL, (ID3D11GeometryShader**)shader);
+	}
+	else if (strcmp(shaderType, "CS") == 0) {
+		hr = device->CreateComputeShader((*blob)->GetBufferPointer(), (*blob)->GetBufferSize(), NULL, (ID3D11ComputeShader**)shader);
+	}
+
+	if (FAILED(hr)) {
+		(*blob)->Release();
+		*blob = nullptr;
+		return false;
+	}
+
+	char logMsg[256];
+	sprintf_s(logMsg, "Loaded %s from cache: %s\n", shaderType, cacheFile.c_str());
+	Log(logMsg);
+
+	return true;
+}
+
+bool Shaders::SaveShaderToCache(const char* shaderName, const char* shaderType, ID3DBlob* blob) {
+	EnsureCacheDirectoryExists();
+
+	std::string cacheFile = GetCacheFileName(shaderName, shaderType);
+
+	// Open file for writing
+	std::ofstream file(cacheFile, std::ios::binary);
+	if (!file.is_open()) {
+		return false;
+	}
+
+	// Writing shader data
+	file.write(static_cast<char*>(blob->GetBufferPointer()), blob->GetBufferSize());
+	file.close();
+
+	char logMsg[256];
+	sprintf_s(logMsg, "Saved %s to cache: %s\n", shaderType, cacheFile.c_str());
+	Log(logMsg);
+
+	return true;
+}
+
 void Shaders::CreateVS(int i, LPCWSTR name)
 {
 	HRESULT hr;
+	char shaderNameA[1024];
+	WideCharToMultiByte(CP_ACP, NULL, name, -1, shaderNameA, sizeof(shaderNameA), NULL, NULL);
 
-	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "VS", "vs_5_0", NULL, NULL, &VS[i].pBlob, &pErrorBlob);
+	if (LoadShaderFromCache(shaderNameA, "VS", (void**)&VS[i].vShader, &VS[i].pBlob)) {
+		return;
+	}
+
+	Log("Compiling vertex shader (not found in cache)...\n");
+
+	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "VS", "vs_5_0",
+#ifdef _DEBUG
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+#else
+		D3DCOMPILE_OPTIMIZATION_LEVEL3,
+#endif
+		NULL, &VS[i].pBlob, &pErrorBlob);
+
 	Shaders::CompilerLog(name, hr, "vertex shader compiled: ");
 
 	if (hr == S_OK)
 	{
 		hr = device->CreateVertexShader(VS[i].pBlob->GetBufferPointer(), VS[i].pBlob->GetBufferSize(), NULL, &VS[i].vShader);
+		SaveShaderToCache(shaderNameA, "VS", VS[i].pBlob);
 	}
 }
 
 void Shaders::CreatePS(int i, LPCWSTR name)
 {
 	HRESULT hr;
+	char shaderNameA[1024];
+	WideCharToMultiByte(CP_ACP, NULL, name, -1, shaderNameA, sizeof(shaderNameA), NULL, NULL);
 
-	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PS", "ps_5_0", NULL, NULL, &PS[i].pBlob, &pErrorBlob);
+	if (LoadShaderFromCache(shaderNameA, "PS", (void**)&PS[i].pShader, &PS[i].pBlob)) {
+		return;
+	}
+
+	Log("Compiling pixel shader (not found in cache)...\n");
+
+	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PS", "ps_5_0",
+#ifdef _DEBUG
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+#else
+		D3DCOMPILE_OPTIMIZATION_LEVEL3,
+#endif
+		NULL, &PS[i].pBlob, &pErrorBlob);
+
 	Shaders::CompilerLog(name, hr, "pixel shader compiled: ");
 
 	if (hr == S_OK)
 	{
 		hr = device->CreatePixelShader(PS[i].pBlob->GetBufferPointer(), PS[i].pBlob->GetBufferSize(), NULL, &PS[i].pShader);
+		SaveShaderToCache(shaderNameA, "PS", PS[i].pBlob);
 	}
 }
 
 void Shaders::CreateGS(int i, LPCWSTR name)
 {
 	HRESULT hr;
+	char shaderNameA[1024];
+	WideCharToMultiByte(CP_ACP, NULL, name, -1, shaderNameA, sizeof(shaderNameA), NULL, NULL);
 
-	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "GS", "gs_5_0", NULL, NULL, &GS[i].pBlob, &pErrorBlob);
+	if (LoadShaderFromCache(shaderNameA, "GS", (void**)&GS[i].gShader, &GS[i].pBlob)) {
+		return;
+	}
+
+	Log("Compiling geometry shader (not found in cache)...\n");
+
+	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "GS", "gs_5_0",
+#ifdef _DEBUG
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+#else
+		D3DCOMPILE_OPTIMIZATION_LEVEL3,
+#endif
+		NULL, &GS[i].pBlob, &pErrorBlob);
+
 	Shaders::CompilerLog(name, hr, "geometry shader compiled: ");
 
 	if (hr == S_OK)
 	{
 		hr = device->CreateGeometryShader(GS[i].pBlob->GetBufferPointer(), GS[i].pBlob->GetBufferSize(), NULL, &GS[i].gShader);
+		SaveShaderToCache(shaderNameA, "GS", GS[i].pBlob);
 	}
 }
 
 void Shaders::CreateCS(int i, LPCWSTR name)
 {
 	HRESULT hr;
+	char shaderNameA[1024];
+	WideCharToMultiByte(CP_ACP, NULL, name, -1, shaderNameA, sizeof(shaderNameA), NULL, NULL);
 
-	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "CS", "cs_5_0", NULL, NULL, &CS[i].pBlob, &pErrorBlob);
+	if (LoadShaderFromCache(shaderNameA, "CS", (void**)&CS[i].cShader, &CS[i].pBlob)) {
+		return;
+	}
+
+	Log("Compiling compute shader (not found in cache)...\n");
+
+	hr = D3DCompileFromFile(name, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "CS", "cs_5_0",
+#ifdef _DEBUG
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+#else
+		D3DCOMPILE_OPTIMIZATION_LEVEL3,
+#endif
+		NULL, &CS[i].pBlob, &pErrorBlob);
+
 	Shaders::CompilerLog(name, hr, "compute shader compiled: ");
 
 	if (hr == S_OK)
 	{
 		hr = device->CreateComputeShader(CS[i].pBlob->GetBufferPointer(), CS[i].pBlob->GetBufferSize(), NULL, &CS[i].cShader);
+		SaveShaderToCache(shaderNameA, "CS", CS[i].pBlob);
 	}
 }
 
 void Shaders::Init()
 {
+	EnsureCacheDirectoryExists();
+
 	Shaders::CreateVS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VS.shader"));
 	Shaders::CreatePS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PS.shader"));
 	
@@ -956,6 +1217,25 @@ void Shaders::Init()
 
 	ConstBuf::CreateVertexBuffer(15);
 	ConstBuf::CreateVertexBuffer(17);
+}
+
+void Shaders::CleanupCache()
+{
+	std::string searchPath = "..\\dx11minimal\\Shaders\\Cash\\*" + std::string(GetBuildConfig()) + ".cso";
+
+	WIN32_FIND_DATAA findData;
+	HANDLE hFind = FindFirstFileA(searchPath.c_str(), &findData);
+
+	if (hFind != INVALID_HANDLE_VALUE) {
+		do {
+			std::string filePath = "..\\dx11minimal\\Shaders\\Cash\\" + std::string(findData.cFileName);
+			DeleteFileA(filePath.c_str());
+			Log("Deleted cache file: ");
+			Log(findData.cFileName);
+			Log("\n");
+		} while (FindNextFileA(hFind, &findData));
+		FindClose(hFind);
+	}
 }
 
 void Shaders::vShader(unsigned int n)

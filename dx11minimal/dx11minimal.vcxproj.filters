@@ -69,9 +69,6 @@
     <ClCompile Include="LevelManagerClass.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerController.cpp">
-      <Filter>Source Files\System</Filter>
-    </ClCompile>
     <ClCompile Include="utils.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
@@ -112,7 +109,10 @@
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
     <ClCompile Include="PlayerAbilities.cpp">
-      <Filter>Source Files\System</Filter>
+      <Filter>Source Files\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerController.cpp">
+      <Filter>Source Files\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -138,9 +138,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="windowclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerAbilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PlayerWeaponClass.h">
@@ -266,9 +263,6 @@
     <ClInclude Include="entityStorage.h">
       <Filter>Header Files\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerController.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
     <ClInclude Include="constants.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
@@ -310,6 +304,15 @@
     </ClInclude>
     <ClInclude Include="HpIndicator.h">
       <Filter>Header Files\ECS\Components\Render\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Orientation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerAbilities.h">
+      <Filter>Header Files\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerController.h">
+      <Filter>Header Files\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -598,6 +601,12 @@
     </Filter>
     <Filter Include="Header Files\ECS\Systems\EntityManagment">
       <UniqueIdentifier>{54470321-bad2-4de1-bd7e-a0cf08859864}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Player">
+      <UniqueIdentifier>{baa30b6d-12a5-4061-a1e3-de1bb43e0db9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Player">
+      <UniqueIdentifier>{83e44a4e-f786-4464-a8cf-5266248ab578}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
