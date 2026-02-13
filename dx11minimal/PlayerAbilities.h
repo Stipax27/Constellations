@@ -23,6 +23,7 @@
 #include "ParticleEmitter.h"
 #include "Beam.h"
 #include "PointCloud.h"
+#include "Health.h"
 
 #include "Transform2D.h"
 

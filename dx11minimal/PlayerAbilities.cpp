@@ -203,8 +203,13 @@ void PlayerAbilities::ShieldStart()
 
 	// ƒобавл€ем коллайдер дл€ обнаружени€ атак
 	SphereCollider* sphereCollider = shieldEntity->AddComponent<SphereCollider>();
-	sphereCollider->isTouchable = false;
+	sphereCollider->collisionGroup = CollisionFilter::Group::Player;
+	sphereCollider->isTouchable = true;
 	sphereCollider->radius = 2.0f;
+
+	Health* ShieldHp = shieldEntity->AddComponent<Health>();
+	ShieldHp->fraction = Fraction::Player;
+	ShieldHp->immortal = true;
 
 	shieldVisualIntensity = 0.5f;
 	shieldLastDamageTime = 0.0f;
