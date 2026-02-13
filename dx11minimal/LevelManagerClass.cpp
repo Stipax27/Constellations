@@ -308,7 +308,6 @@ void LevelManagerClass::Shutdown()
 	}
 }
 
-
 void LevelManagerClass::Frame()
 {
 	mouse->Update();
@@ -316,6 +315,40 @@ void LevelManagerClass::Frame()
 	playerController->ProcessMouse();
 	playerController->abilities->Update();
 	playerController->ProccessUI();
+
+
+	//// FAST DEBUG CODE (DELETE LATER) ////
+	count++;
+	if (count > 30) {
+		count = 0;
+		
+		Entity* projectile = m_World->entityStorage->CreateEntity("PlayerProjectile");
+		Transform* transform = projectile->AddComponent<Transform>();
+		transform->position = point3d(0, 23, 55);
+
+		PhysicBody* physicBody = projectile->AddComponent<PhysicBody>();
+		physicBody->airFriction = 0.0f;
+		physicBody->velocity = transform->GetLookVector() * 25.0f;
+
+		Star* star = projectile->AddComponent<Star>();
+		star->radius = 1.0f;
+		star->crownRadius = 1.5f;
+		star->color1 = point3d(0.9f, 1.0f, 0.99f);
+		star->color2 = point3d(0.34f, 0.8f, 0.45f);
+		star->crownColor = point3d(0.27f, 0.63f, 1.0f);
+
+		SingleDamager* singleDamager = projectile->AddComponent<SingleDamager>();
+		singleDamager->target = Fraction::Player;
+		singleDamager->damage = 5.0f;
+
+		SphereCollider* sphereCollider = projectile->AddComponent<SphereCollider>();
+		sphereCollider->isTouchable = false;
+		sphereCollider->radius = 1.0f;
+
+		DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
+		delayedDestroy->lifeTime = 5000;
+	}
+	//// FAST DEBUG CODE (DELETE LATER) ////
 
 
 	// ??????????????????????????? ????????????????????? ????????? ???????????? ??????????????????

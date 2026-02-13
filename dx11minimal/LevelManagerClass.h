@@ -80,6 +80,8 @@ private:
 	BaseStar* bStar;
 	SmallConstellation* smallConstellation;
 
+	int count = 0; //// FAST DEBUG CODE (DELETE LATER)
+
 private:
 	void LoadModels();
 	Entity* CreatePlayer(Entity*);

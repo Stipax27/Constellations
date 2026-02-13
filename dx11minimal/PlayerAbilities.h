@@ -45,8 +45,11 @@ enum PlayerWeapons
 // GLOBALS //
 /////////////
 
-const DWORD CHARGE_START_DELTA = 500;
-const float RAY_DISTANCE = 100;
+#define CHARGE_START_DELTA 500
+#define RAY_DISTANCE 100.0f
+#define STAMINA_RESTORE_STEP 0.5f
+
+#define ATTACK_COST 25.0f
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -86,6 +89,7 @@ private:
 	bool charging;
 	bool chargeAnim;
 	double chargeTimeAchor;
+	bool chargeDone;
 
 	float charge;
 	float maxCharge;
@@ -97,6 +101,14 @@ private:
 private:
 	void CommonAttack(Transform, point3d);
 	void ChargedAttack(Transform, point3d);
+
+	void FistsCommon(Transform, point3d);
+	void SwordCommon(Transform, point3d);
+	void BowCommon(Transform, point3d);
+
+	void FistsCharged(Transform, point3d);
+	void SwordCharged(Transform, point3d);
+	void BowCharged(Transform, point3d);
 };
 
 #endif
