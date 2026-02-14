@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /dx11minimal/assimp-vc143-mt.dll
 /dx11minimal/Shaders/Cash
+/dx11minimal/Shaders/cache
