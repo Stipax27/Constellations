@@ -287,11 +287,15 @@ void PlayerAbilities::BowCommon(Transform startTransform, point3d direction)
 	physicBody->airFriction = 0.0f;
 	physicBody->velocity = direction.normalized() * 150.0f;
 
-	Star* star = projectile->AddComponent<Star>();
+	/*Star* star = projectile->AddComponent<Star>();
 	star->radius = 0.4f;
 	star->color1 = point3d(0.9f, 1.0f, 0.99f);
 	star->color2 = point3d(0.34f, 0.8f, 0.45f);
-	star->crownColor = point3d(0.27f, 0.63f, 1.0f);
+	star->crownColor = point3d(0.27f, 0.63f, 1.0f);*/
+
+	Mesh* mesh = projectile->AddComponent<Mesh>();
+	mesh->index = 1;
+	//mesh->mRotation = XMMatrixRotationAxis(XMVectorSet(1, 0, 0, 0), 90 * RAD) * transform->mRotation;
 
 	ParticleEmitter* particleEmitter = projectile->AddComponent<ParticleEmitter>();
 	particleEmitter->rate = 100;
@@ -402,11 +406,8 @@ void PlayerAbilities::BowCharged(Transform startTransform, point3d direction)
 	physicBody->airFriction = 0.0f;
 	physicBody->velocity = direction.normalized() * 150.0f;
 
-	Star* star = projectile->AddComponent<Star>();
-	star->radius = 0.4f;
-	star->color1 = point3d(1.0f, 0.9f, 0.85f);
-	star->color2 = point3d(0.7f, 0.5f, 0.45f);
-	star->crownColor = point3d(0.74f, 0.23f, 0.35f);
+	Mesh* mesh = projectile->AddComponent<Mesh>();
+	mesh->index = 1;
 
 	ParticleEmitter* particleEmitter = projectile->AddComponent<ParticleEmitter>();
 	particleEmitter->rate = 100;

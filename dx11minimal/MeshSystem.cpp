@@ -53,19 +53,27 @@ void MeshSystem::Update(vector<Entity*>& entities, float deltaTime)
 
 				Mesh* mesh = entity->GetComponent<Mesh>();
 				if (mesh != nullptr && mesh->active) {
-					if (entity->parent != nullptr && !entity->parent->HasComponent<Transform>()) {
+					/*if (entity->parent != nullptr && !entity->parent->HasComponent<Transform>()) {
 						transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -2 * RAD) * transform->mRotation;
-					}
+					}*/
 
-					if (frustum->CheckSphere(worldTransform.position, worldTransform.scale.magnitude())) {
+					Transform meshTransform = worldTransform;
+
+					meshTransform.position += (meshTransform.GetRightVector() * mesh->position.x +
+						meshTransform.GetUpVector() * mesh->position.y + meshTransform.GetLookVector() *
+						mesh->position.z) * meshTransform.scale;
+					meshTransform.scale *= mesh->scale;
+					meshTransform.mRotation = mesh->mRotation * meshTransform.mRotation;
+
+					if (frustum->CheckSphere(meshTransform.position, meshTransform.scale.magnitude())) {
 						//ConstBuf::CreateVertexBuffer(15);
 
-						UpdateWorldMatrix(worldTransform);
+						UpdateWorldMatrix(meshTransform);
 
 						Rasterizer::Cull(mesh->cullMode);
 
-						Shaders::vShader(15);
-						Shaders::pShader(15);
+						Shaders::vShader(mesh->vShader);
+						Shaders::pShader(mesh->pShader);
 
 						InputAssembler::IA(InputAssembler::topology::triList);
 						InputAssembler::vBuffer(mesh->index);

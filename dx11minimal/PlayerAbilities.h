@@ -23,6 +23,7 @@
 #include "ParticleEmitter.h"
 #include "Beam.h"
 #include "PointCloud.h"
+#include "Mesh.h"
 
 #include "Transform2D.h"
 
