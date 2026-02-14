@@ -40,6 +40,8 @@ typedef unsigned long uint32;
 typedef long int32;
 
 static inline int32 _log2(float x);
+
+static void EnsureCacheDirectoryExists(LPCWSTR directoryPath);
 static bool GetFileModificationTime(const char* filePath, time_t& modTime);
 static bool GetFileModificationTimeW(LPCWSTR filePath, time_t& modTime);
 
@@ -190,6 +192,7 @@ namespace Models
 
 	// Получение времени модификации файла
 	uint64_t GetFileModTime(const char* filename);
+	std::string GetCacheFileName(const char* modelName);
 
 	void CreateModel(int, VertexType*, unsigned long*);
 	void Create(int, VertexType*, unsigned long*);
@@ -197,6 +200,8 @@ namespace Models
 	void LoadTxtModel(const char* filename, bool = false);
 	void LoadGltfModel(const char* filename);
 	void LoadObjModel(const char* filename, bool = false);
+
+	void Init();
 }
 
 namespace Shaders {
@@ -245,7 +250,6 @@ namespace Shaders {
 	bool LoadShaderFromCache(const char*, const char*, void**, ID3DBlob**);
 	bool SaveShaderToCache(const char*, const char*, ID3DBlob*);
 	std::string GetCacheFileName(const char*, const char*);
-	void EnsureCacheDirectoryExists();
 
 	bool IsCacheValid(const char*, const char*);
 

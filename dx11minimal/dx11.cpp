@@ -9,6 +9,18 @@ static inline int32 _log2(float x)
 	return log2;
 }
 
+
+void EnsureCacheDirectoryExists(LPCWSTR directoryPath) {
+	char cachePathA[MAX_PATH];
+	WideCharToMultiByte(CP_ACP, 0, directoryPath, -1, cachePathA, MAX_PATH, NULL, NULL);
+
+	struct stat st = { 0 };
+	if (stat(cachePathA, &st) == -1) {
+		_mkdir(cachePathA);
+		Shaders::Log("Created cache directory\n");
+	}
+}
+
 static bool GetFileModificationTime(const char* filePath, time_t& modTime) {
 	struct stat st;
 	if (stat(filePath, &st) == 0) {
@@ -463,6 +475,22 @@ uint64_t Models::GetFileModTime(const char* filename) {
 	return 0;
 }
 
+std::string Models::GetCacheFileName(const char* shaderName) {
+	std::string fullPath(shaderName);
+	size_t lastSlash = fullPath.find_last_of("\\/");
+	std::string fileName = (lastSlash != std::string::npos) ? fullPath.substr(lastSlash + 1) : fullPath;
+
+	size_t lastDot = fileName.find_last_of(".");
+	std::string baseName = (lastDot != std::string::npos) ? fileName.substr(0, lastDot) : fileName;
+
+	std::string cacheName = baseName + ".cache";
+
+	char cachePathA[MAX_PATH];
+	WideCharToMultiByte(CP_ACP, 0, L"..\\dx11minimal\\Resourses\\Models\\cache\\", -1, cachePathA, MAX_PATH, NULL, NULL);
+
+	return std::string(cachePathA) + cacheName;
+}
+
 void Models::CreateModel(int i, VertexType* vertices, unsigned long* indices)
 {
 	HRESULT result;
@@ -643,7 +671,7 @@ void Models::LoadGltfModel(const char* filename)
 void Models::LoadObjModel(const char* filename, bool vertexOnly)
 {
 	// Checking if cash exists
-	std::string cacheFilename = std::string(filename) + ".cache";
+	std::string cacheFilename = GetCacheFileName(filename);
 	uint64_t sourceTime = GetFileModTime(filename);
 
 	// Trying to load from cash
@@ -861,6 +889,11 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 	Shaders::Log("Model obj file was read successfully\n");
 }
 
+void Models::Init()
+{
+	EnsureCacheDirectoryExists(L"..\\dx11minimal\\Resourses\\Models\\cache");
+}
+
 //////////////////////////////////////////////////////////////////////////////////
 
 Shaders::VertexShader Shaders::VS[255];
@@ -915,17 +948,6 @@ const char* Shaders::GetBuildConfig() {
 #endif
 }
 
-void Shaders::EnsureCacheDirectoryExists() {
-	char cachePathA[MAX_PATH];
-	WideCharToMultiByte(CP_ACP, 0, L"..\\dx11minimal\\Shaders\\Cash", -1, cachePathA, MAX_PATH, NULL, NULL);
-
-	struct stat st = { 0 };
-	if (stat(cachePathA, &st) == -1) {
-		_mkdir(cachePathA);
-		Log("Created cache directory\n");
-	}
-}
-
 std::string Shaders::GetCacheFileName(const char* shaderName, const char* shaderType) {
 	std::string fullPath(shaderName);
 	size_t lastSlash = fullPath.find_last_of("\\/");
@@ -937,7 +959,7 @@ std::string Shaders::GetCacheFileName(const char* shaderName, const char* shader
 	std::string cacheName = baseName + "_" + shaderType + GetBuildConfig() + ".cso";
 
 	char cachePathA[MAX_PATH];
-	WideCharToMultiByte(CP_ACP, 0, L"..\\dx11minimal\\Shaders\\Cash\\", -1, cachePathA, MAX_PATH, NULL, NULL);
+	WideCharToMultiByte(CP_ACP, 0, L"..\\dx11minimal\\Shaders\\cache\\", -1, cachePathA, MAX_PATH, NULL, NULL);
 
 	return std::string(cachePathA) + cacheName;
 }
@@ -1028,7 +1050,7 @@ bool Shaders::LoadShaderFromCache(const char* shaderName, const char* shaderType
 }
 
 bool Shaders::SaveShaderToCache(const char* shaderName, const char* shaderType, ID3DBlob* blob) {
-	EnsureCacheDirectoryExists();
+	EnsureCacheDirectoryExists(L"..\\dx11minimal\\Shaders\\cache");
 
 	std::string cacheFile = GetCacheFileName(shaderName, shaderType);
 
@@ -1167,7 +1189,7 @@ void Shaders::CreateCS(int i, LPCWSTR name)
 
 void Shaders::Init()
 {
-	EnsureCacheDirectoryExists();
+	EnsureCacheDirectoryExists(L"..\\dx11minimal\\Shaders\\cache");
 
 	Shaders::CreateVS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VS.shader"));
 	Shaders::CreatePS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PS.shader"));
@@ -1259,14 +1281,14 @@ void Shaders::Init()
 
 void Shaders::CleanupCache()
 {
-	std::string searchPath = "..\\dx11minimal\\Shaders\\Cash\\*" + std::string(GetBuildConfig()) + ".cso";
+	std::string searchPath = "..\\dx11minimal\\Shaders\\cache\\*" + std::string(GetBuildConfig()) + ".cso";
 
 	WIN32_FIND_DATAA findData;
 	HANDLE hFind = FindFirstFileA(searchPath.c_str(), &findData);
 
 	if (hFind != INVALID_HANDLE_VALUE) {
 		do {
-			std::string filePath = "..\\dx11minimal\\Shaders\\Cash\\" + std::string(findData.cFileName);
+			std::string filePath = "..\\dx11minimal\\Shaders\\cache\\" + std::string(findData.cFileName);
 			DeleteFileA(filePath.c_str());
 			Log("Deleted cache file: ");
 			Log(findData.cFileName);
@@ -1753,6 +1775,7 @@ void Dx11Init(HWND hwnd, int width, int height)
 	ConstBuf::Init();
 	Sampler::Init();
 	Shaders::Init();
+	Models::Init();
 
 	// main RT
 	Textures::Create(0, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), false, true);

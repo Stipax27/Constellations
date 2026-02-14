@@ -226,21 +226,22 @@ bool LevelManagerClass::Initialize()
 
 	/////////////////////////
 
-	/*Entity* holder = m_World->entityStorage->CreateEntity("Holder", folder);
+	Entity* holder = m_World->entityStorage->CreateEntity("Holder", folder);
 	transform = holder->AddComponent<Transform>();
 	transform->scale = point3d(10, 10, 10);
 	transform->position = point3d(0.0f, 0.0f, -50.0f);
 	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -180 * RAD) * transform->mRotation;
 	mesh = holder->AddComponent<Mesh>();
-	mesh->index = 3;*/
+	mesh->index = 5;
+	mesh->cullMode = Rasterizer::cullmode::off;
 
-	Entity* holder = m_World->entityStorage->CreateEntity("Holder", folder);
+	/*holder = m_World->entityStorage->CreateEntity("Holder", folder);
 	transform = holder->AddComponent<Transform>();
 	transform->scale = point3d(1, 6, 1);
 	transform->position = point3d(0.0f, 10.0f, -50.0f);
 	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -180 * RAD) * transform->mRotation;
 	mesh = holder->AddComponent<Mesh>();
-	mesh->index = 1;
+	mesh->index = 1;*/
 
 	CreateUI();
 
@@ -417,7 +418,10 @@ void LevelManagerClass::LoadModels()
 	Models::LoadTxtModel("..\\dx11minimal\\Resourses\\Models\\Cube2.txt");
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\Cube.obj");
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\cat2.obj");
+
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\HeroFists.obj");
+	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\Arrow.obj");
+
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesBody.obj");
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesArmor.obj");
 }
@@ -524,23 +528,6 @@ void LevelManagerClass::CreateUI()
 }
 
 
-void LevelManagerClass::InitSystems()
-{
-	m_World->AddPhysicSystem<PhysicSystem>();
-	m_World->AddPhysicSystem<CollisionSystem>(collisionManager);
-	m_World->AddPhysicSystem<CombatSystem>();
-	//AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
-	m_World->AddPhysicSystem<EntityManagerSystem>();
-
-	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera);
-	if (SHOW_COLLIDERS) {
-		m_World->AddRenderSystem<CollisionDrawSystem>();
-	}
-	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum);
-	m_World->AddRenderSystem<UISystem>(mouse, m_World->entityStorage);
-}
-
-
 void LevelManagerClass::CreateAries(Entity* folder)
 {
 	Entity* entity;
@@ -559,7 +546,7 @@ void LevelManagerClass::CreateAries(Entity* folder)
 	transform->scale = point3d(4, 4, 4);
 	transform->position = point3d(0.0f, 20.0f, 50.0f);
 	pointCloud = aries->AddComponent<PointCloud>();
-	pointCloud->index = 5;
+	pointCloud->index = 6;
 	pointCloud->pointSize = 1.0f;
 	pointCloud->brightness = 0.4f;
 	//pointCloud->color = point3d(1, 0.2, 0.25);
@@ -615,7 +602,7 @@ void LevelManagerClass::CreateAries(Entity* folder)
 	entity = m_World->entityStorage->CreateEntity("Armor", aries);
 	transform = entity->AddComponent<Transform>();
 	pointCloud = entity->AddComponent<PointCloud>();
-	pointCloud->index = 6;
+	pointCloud->index = 7;
 	pointCloud->pointSize = 0.75f;
 	pointCloud->brightness = 0.2f;
 	pointCloud->color = point3d(1, 0.9f, 0.2f);
@@ -683,4 +670,21 @@ void LevelManagerClass::CreateAries(Entity* folder)
 	sphereCollider->softness = 0.7;
 	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
 	sphereCollider->radius = 1.6;
+}
+
+
+void LevelManagerClass::InitSystems()
+{
+	m_World->AddPhysicSystem<PhysicSystem>();
+	m_World->AddPhysicSystem<CollisionSystem>(collisionManager);
+	m_World->AddPhysicSystem<CombatSystem>();
+	//AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
+	m_World->AddPhysicSystem<EntityManagerSystem>();
+
+	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera);
+	if (SHOW_COLLIDERS) {
+		m_World->AddRenderSystem<CollisionDrawSystem>();
+	}
+	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum);
+	m_World->AddRenderSystem<UISystem>(mouse, m_World->entityStorage);
 }
