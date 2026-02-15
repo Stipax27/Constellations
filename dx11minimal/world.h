@@ -41,6 +41,17 @@ public:
 	~World();
 
 	template <typename T, typename... Args>
+	T* AddComputeSystem(Args&&... args)
+	{
+		auto system = make_unique<T>(forward<Args>(args)...);
+		T* raw_ptr = system.get();
+		system->Initialize();
+		computeSystems.push_back(move(system));
+
+		return raw_ptr;
+	}
+
+	template <typename T, typename... Args>
 	T* AddPhysicSystem(Args&&... args)
 	{
 		auto system = make_unique<T>(forward<Args>(args)...);
@@ -62,12 +73,17 @@ public:
 		return raw_ptr;
 	}
 
-	bool Initialize(float);
+	void Initialize(float);
 	void Shutdown();
+
 	void PreCalculations();
+
+	void UpdateCompute();
 	void UpdatePhysic();
 	void UpdateRender();
+
 private:
+	vector<unique_ptr<System>> computeSystems;
 	vector<unique_ptr<System>> physicSystems;
 	vector<unique_ptr<System>> renderSystems;
 

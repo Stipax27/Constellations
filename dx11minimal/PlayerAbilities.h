@@ -52,6 +52,8 @@ enum PlayerWeapons
 
 #define ATTACK_COST 25.0f
 
+#define TIMESTOP_STEP 0.15f
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: PlayerAbilities
@@ -81,11 +83,16 @@ public:
 	void BlockStart();
 	void BlockEnd();
 
+	void TimestopStart();
+	void TimestopEnd();
+
 private:
 	World* world;
 	CameraClass* camera;
 	CollisionManagerClass* collisionManager;
+
 	Entity* playerEntity;
+	Entity* worldFolder;
 
 	bool charging;
 	bool chargeAnim;
@@ -97,19 +104,24 @@ private:
 
 	bool block;
 
+	bool timeStopped;
+	float timestopProgress;
+
 	vector<Entity*> projectiles;
 
 private:
+	void UpdateProjectiles();
+
 	void CommonAttack(Transform, point3d);
 	void ChargedAttack(Transform, point3d);
 
-	void FistsCommon(Transform, point3d);
-	void SwordCommon(Transform, point3d);
-	void BowCommon(Transform, point3d);
+	Entity* FistsCommon(Transform, point3d);
+	Entity* SwordCommon(Transform, point3d);
+	Entity* BowCommon(Transform, point3d);
 
-	void FistsCharged(Transform, point3d);
-	void SwordCharged(Transform, point3d);
-	void BowCharged(Transform, point3d);
+	Entity* FistsCharged(Transform, point3d);
+	Entity* SwordCharged(Transform, point3d);
+	Entity* BowCharged(Transform, point3d);
 };
 
 #endif

@@ -29,7 +29,7 @@ void PhysicSystem::Update(vector<Entity*>& entities, float deltaTime)
 
 				float dTime = physicBody->preciseMovement ? 0.01f : deltaTime;
 
-				transform->position += physicBody->velocity * dTime * entity->timeScale;
+				transform->position += physicBody->velocity * dTime * entity->GetTimeScale();
 				XMMATRIX result = physicBody->mAngVelocity * transform->mRotation;
 				transform->mRotation = result;
 					

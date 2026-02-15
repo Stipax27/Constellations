@@ -28,19 +28,10 @@ void LevelManagerClass::InitWindow()
 
 bool LevelManagerClass::Initialize()
 {
-	char bitmapFilename[128];
-	char modelFilename[128];
-	char textureFilename[128];
-	bool result;
-
 	InitWindow();
 
 	m_World = new World;
-	result = m_World->Initialize(window->iaspect);
-	if (!result)
-	{
-		return false;
-	}
+	m_World->Initialize(window->iaspect);
 
 	collisionManager = new CollisionManagerClass;
 	collisionManager->Initialize(m_World->entityStorage);
@@ -66,7 +57,6 @@ bool LevelManagerClass::Initialize()
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
 	Entity* entity;
-	Explosion* explosion;
 	Constellation* constellation;
 	Transform* transform;
 	PhysicBody* physicBody;
@@ -86,14 +76,10 @@ bool LevelManagerClass::Initialize()
 	SingleDamager* singleDamager;
 
 
-	Entity* folder = m_World->entityStorage->CreateEntity("WorldFolder");
+	Entity* folder = m_World->entityStorage->CreateEntity("World");
 	folder->SetActive(true);
 
-	Entity* player = CreatePlayer(folder);
-
-	/*entity = m_World->CreateEntity();
-	explosion = entity->AddComponent<Explosion>();
-	transform = entity->AddComponent<Transform>();*/
+	Entity* player = CreatePlayer();
 
 	entity = m_World->entityStorage->CreateEntity("AriesNebulaLocation", folder);
 	transform = entity->AddComponent<Transform>();
@@ -242,20 +228,9 @@ bool LevelManagerClass::Initialize()
 	InitSystems();
 
 	//m_World->PreCalculations();
-	//bStar = new BaseStar();
-	//bStar->Init(m_World, entity);
-
-	//smallConstellation = new SmallConstellation();
-	//smallConstellation->Init(m_World, entity, player);
 
 	playerController = new PlayerController();
 	playerController->Initialize(player, m_World, mouse, window, collisionManager);
-
-	/*if (aiSystem)
-	{
-		aiSystem->SetPlayerEntity(player);
-	}*/
-
 
 	return true;
 }
@@ -305,89 +280,9 @@ void LevelManagerClass::Frame()
 	playerController->abilities->Update();
 	playerController->ProccessUI();
 
-
-	//// FAST DEBUG CODE (DELETE LATER) ////
-	count++;
-	if (count > 30) {
-		count = 0;
-		
-		Entity* projectile = m_World->entityStorage->CreateEntity("PlayerProjectile");
-		Transform* transform = projectile->AddComponent<Transform>();
-		transform->position = point3d(0, 23, 55);
-
-		PhysicBody* physicBody = projectile->AddComponent<PhysicBody>();
-		physicBody->airFriction = 0.0f;
-		physicBody->velocity = transform->GetLookVector() * 25.0f;
-
-		Star* star = projectile->AddComponent<Star>();
-		star->radius = 1.0f;
-		star->crownRadius = 1.5f;
-		star->color1 = point3d(0.9f, 1.0f, 0.99f);
-		star->color2 = point3d(0.34f, 0.8f, 0.45f);
-		star->crownColor = point3d(0.27f, 0.63f, 1.0f);
-
-		SingleDamager* singleDamager = projectile->AddComponent<SingleDamager>();
-		singleDamager->target = Fraction::Player;
-		singleDamager->damage = 5.0f;
-
-		SphereCollider* sphereCollider = projectile->AddComponent<SphereCollider>();
-		sphereCollider->isTouchable = false;
-		sphereCollider->radius = 1.0f;
-
-		DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
-		delayedDestroy->lifeTime = 5000;
-	}
-	//// FAST DEBUG CODE (DELETE LATER) ////
-
-
-	// ??????????????????????????? ????????????????????? ????????? ???????????? ??????????????????
-	//DWORD currentTime = timer::currentTime;
-	//srand(time(0));
-	// ??????????????????: ??????????????? ?????????????????? 3 ?????????????????????
-	//if (currentTime - Star->LastTime > 3000) {
-	//	Star->FartingEffect();
-	//	// ??????????????????????????? ??????????????? ???????????????
-	//	int attackType = rand() % 3;
-	//	switch (attackType) {
-	//	case 0:
-	//		Star->Flash();
-	//		break;
-	//	case 1:
-	//		Star->CoronalEjection();
-	//		break;
-	//	case 2:
-	//		Star->SunWind();
-	//		break;
-	//	}
-	//	//Star->LifeTimeParticl();
-	//	Star->LastTime = currentTime;
-	//}
-
-	/*if (currentTime - smallConstellation->LastTime > 5000) {
-
-		smallConstellation->LastTime = currentTime;
-
-		int attackType = rand() % 3;
-
-		switch (attackType) {
-		case 0:
-			smallConstellation->VolleyStart();
-			break;
-		case 1:
-			smallConstellation->LatticeStart();
-			break;
-		case 2:
-			smallConstellation->TransformationStart();
-			break;
-		}
-	}
-	smallConstellation->VolleyUpdate(0.01f);
-	smallConstellation->LatticeUpdate(0.01f);
-	smallConstellation->TransformationUpdate();
-	smallConstellation->RamUpdate();*/
-
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 
+	m_World->UpdateCompute();
 	m_World->UpdatePhysic();
 
 	playerController->ProcessCamera();
@@ -652,11 +547,13 @@ void LevelManagerClass::CreateAries(Entity* folder)
 
 void LevelManagerClass::InitSystems()
 {
+	m_World->AddComputeSystem<TimeSystem>();
+	m_World->AddComputeSystem<EntityManagerSystem>();
+
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>(collisionManager);
 	m_World->AddPhysicSystem<CombatSystem>();
 	//AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
-	m_World->AddPhysicSystem<EntityManagerSystem>();
 
 	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera);
 	if (SHOW_COLLIDERS) {

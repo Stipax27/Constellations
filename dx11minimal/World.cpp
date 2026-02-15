@@ -19,7 +19,7 @@ World::~World()
 }
 
 
-bool World::Initialize(float iaspect)
+void World::Initialize(float iaspect)
 {
 	m_Camera = new CameraClass;
 	m_Camera->Initialize(iaspect);
@@ -27,8 +27,6 @@ bool World::Initialize(float iaspect)
 
 	entityStorage = new EntityStorage;
 	entityStorage->Initialize();
-
-	return true;
 }
 
 
@@ -74,6 +72,17 @@ void World::PreCalculations()
 	Textures::CreateMipMap();
 
 	Textures::RenderTarget(1, 0);
+}
+
+
+void World::UpdateCompute()
+{
+	double deltaTime = timer::deltaTime / 1000;
+	size_t size = computeSystems.size();
+	for (int i = 0; i < size; i++)
+	{
+		computeSystems[i]->Update(entityStorage->entities, deltaTime);
+	}
 }
 
 

@@ -9,12 +9,18 @@ cbuffer global : register(b5)
     float4 gConst[1024];
 };
 
+cbuffer objParams : register(b0)
+{
+    float drawerV[1024];
+};
+
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
     float4 vpos : POSITION0;
     float4 wpos : POSITION1;
 	float2 uv : TEXCOORD0;
+	uint iID : COLOR0;
 };
 
 #define Animation float3(-1.3, -1.0, 0.7)
@@ -77,7 +83,8 @@ float snoise(float3 v)
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-	float n = abs(snoise(normalize(input.vpos.xyz) * 3 + Animation * time.x * 0.02));
+	float localTime = drawerV[input.iID];
+	float n = abs(snoise(normalize(input.vpos.xyz) * 3 + Animation * localTime * 0.02));
 
 	return lerp(float4(gConst[0].xyz, 1), float4(gConst[1].xyz, 1), n);
 }

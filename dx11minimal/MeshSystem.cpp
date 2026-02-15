@@ -133,9 +133,15 @@ void MeshSystem::Update(vector<Entity*>& entities, float deltaTime)
 					int n = GetVertexCount(worldTransform.position, 5, 33);
 					n += 1 - n % 2;
 
-					ConstBuf::drawerV[0] = n;
+					ConstBuf::drawerInt[0] = n;
+					ConstBuf::Update(7, ConstBuf::drawerInt);
+					ConstBuf::ConstToVertex(7);
+					ConstBuf::ConstToPixel(7);
+
+					ConstBuf::drawerV[0] = (float)entity->localTime * 0.01f;
 					ConstBuf::Update(0, ConstBuf::drawerV);
 					ConstBuf::ConstToVertex(0);
+					ConstBuf::ConstToPixel(0);
 
 					int count = 0;
 					for (int a = 0; a < transformedStars.size() && count < constCount; a++) {
@@ -183,7 +189,16 @@ void MeshSystem::Update(vector<Entity*>& entities, float deltaTime)
 						int n = GetVertexCount(worldTransform.position, 5, 255);
 						n += 1 - n % 2;
 
-						ConstBuf::drawerV[0] = n;
+						ConstBuf::drawerInt[0] = n;
+						ConstBuf::Update(7, ConstBuf::drawerInt);
+						ConstBuf::ConstToVertex(7);
+						ConstBuf::ConstToPixel(7);
+
+						ConstBuf::drawerV[0] = (float)entity->localTime * 0.01f;
+						ConstBuf::Update(0, ConstBuf::drawerV);
+						ConstBuf::ConstToVertex(0);
+						ConstBuf::ConstToPixel(0);
+
 						Draw::Drawer(n * n);
 					}
 				}

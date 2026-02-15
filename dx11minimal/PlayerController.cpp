@@ -158,6 +158,13 @@ void PlayerController::ProcessInput()
 		if (IsKeyPressed('3')) {
 			abilities->weapon = PlayerWeapons::Bow;
 		}
+
+		if (IsKeyPressed('T')) {
+			abilities->TimestopStart();
+		}
+		if (IsKeyPressed('Y')) {
+			abilities->TimestopEnd();
+		}
 	}
 }
 

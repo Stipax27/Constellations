@@ -22,7 +22,7 @@ class Entity
 public:
 	string name;
 	Entity* parent;
-	float timeScale = 1.0f;
+	double localTime;
 
 public:
 	Entity();
@@ -142,10 +142,16 @@ public:
 	void SetActive(bool);
 	bool IsActive();
 
+	void SetTimeScale(float);
+	float GetTimeScale();
+	float GetLocalTimeScale();
+
 private:
 	int id = -1;
 	bool active = true;
 	bool deleted = false;
+
+	float timeScale = 1.0f;
 
 	unordered_map<type_index, Component*> components;
 	unordered_map<type_index, vector<Component*>> baseToComponents;

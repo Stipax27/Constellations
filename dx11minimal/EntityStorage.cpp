@@ -42,6 +42,7 @@ Entity* EntityStorage::CreateEntity(string Name, Entity* Parent)
 	Entity* entity = new Entity;
 	entity->name = Name;
 	entity->SetId(entityCount++);
+	entity->localTime = timer::currentTime;
 
 	if (Parent != nullptr) {
 		Parent->AddChild(entity);

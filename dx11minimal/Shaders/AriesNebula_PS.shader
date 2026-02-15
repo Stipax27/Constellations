@@ -74,7 +74,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
 
     float3 pos = gConst[0].xyz;
     float scale = gConst[0].w;
-    float timeScale = drawerV[0];
+    float localTime = drawerV[0];
 
     float range = 65 * scale;
 
@@ -93,7 +93,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
     float sat = max(1 - offset / 20, 0) * min(max(dist - 1, 0) / 16, 1);
     brightness *= sat;
 
-    float shine = 1 + 0.3 * sin(log2(input.starID) * 3 + time.x * -0.25 * timeScale);
+    float shine = 1 + 0.3 * sin(log2(input.starID) * 3 + localTime * -0.25);
 
     return saturate(float4(color, 1) * float4(brightness, brightness, brightness * 1.4, 1) * shine);
 }

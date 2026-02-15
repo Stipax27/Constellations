@@ -168,7 +168,6 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BaseStar.h" />
     <ClInclude Include="Beam.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="cameraclass.h" />
@@ -213,15 +212,14 @@
     <ClInclude Include="Rect.h" />
     <ClInclude Include="renderCompress.h" />
     <ClInclude Include="SingleDamager.h" />
-    <ClInclude Include="SmallConstellation.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="SpriteCluster.h" />
     <ClInclude Include="spriteSystem.h" />
     <ClInclude Include="Star.h" />
-    <ClInclude Include="StarAttack.h" />
     <ClInclude Include="SurfaceCollider.h" />
     <ClInclude Include="system.h" />
     <ClInclude Include="TextLabel.h" />
+    <ClInclude Include="timeSystem.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Transform2D.h" />
     <ClInclude Include="uiSystem.h" />
@@ -456,7 +454,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BaseStar.cpp" />
     <ClCompile Include="cameraclass.cpp" />
     <ClCompile Include="CollisionManagerClass.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
@@ -469,21 +466,18 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityManagerSystem.cpp" />
     <ClCompile Include="FrustumClass.cpp" />
-    <ClCompile Include="Explosion.cpp" />
-    <ClCompile Include="ExplosionSystem.cpp" />
     <ClCompile Include="LevelManagerClass.cpp" />
     <ClCompile Include="MeshSystem.cpp" />
     <ClCompile Include="MethodOfClosest.cpp" />
     <ClCompile Include="MouseClass.cpp" />
-    <ClCompile Include="Patern_Enemy_Logik.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Point3d.cpp" />
     <ClCompile Include="Point4d.cpp" />
-    <ClCompile Include="SmallConstellation.cpp" />
     <ClCompile Include="SplinePath.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />
     <ClCompile Include="SpriteSystem.cpp" />
     <ClCompile Include="timer.cpp" />
+    <ClCompile Include="TimeSystem.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Transform2D.cpp" />
     <ClCompile Include="UISystem.cpp" />

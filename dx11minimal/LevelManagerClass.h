@@ -19,13 +19,10 @@
 #include "entity.h"
 #include "component.h"
 #include "Enemy_Patern.h"
-#include "BaseStar.h"
-#include "SmallConstellation.h"
 
 #include "CollisionManagerClass.h"
 
 #include "SplinePath.cpp"
-#include "Patern_Enemy_Logik.cpp"
 
 
 #include "spriteSystem.h"
@@ -35,7 +32,9 @@
 #include "physicSystem.h"
 #include "collisionSystem.h"
 #include "combatSystem.h"
+
 #include "entityManagerSystem.h"
+#include "timeSystem.h"
 
 #include "collisionDrawSystem.h"
 
@@ -77,14 +76,10 @@ private:
 	World* m_World;
 	PlayerController* playerController;
 	CollisionManagerClass* collisionManager;
-	BaseStar* bStar;
-	SmallConstellation* smallConstellation;
-
-	int count = 0; //// FAST DEBUG CODE (DELETE LATER)
 
 private:
 	void LoadModels();
-	Entity* CreatePlayer(Entity*);
+	Entity* CreatePlayer(Entity* = nullptr);
 	void CreateUI();
 	void InitSystems();
 	void CreateAries(Entity*);

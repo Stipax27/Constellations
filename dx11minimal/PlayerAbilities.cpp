@@ -22,7 +22,9 @@ void PlayerAbilities::Initialize(World* m_World, CameraClass* Camera, Entity* Pl
 	world = m_World;
 	camera = Camera;
 	collisionManager = CollisionManager;
+
 	playerEntity = PlayerEntity;
+	worldFolder = m_World->entityStorage->GetEntityByName("World");
 
 	maxStamina = 1000;
 	stamina = maxStamina;
@@ -31,6 +33,9 @@ void PlayerAbilities::Initialize(World* m_World, CameraClass* Camera, Entity* Pl
 	chargeDone = false;
 	charge = 0;
 	maxCharge = 100;
+
+	timeStopped = false;
+	timestopProgress = 1;
 }
 
 
@@ -81,9 +86,16 @@ void PlayerAbilities::Update()
 		}
 	}
 
-	for (Entity* entity : projectiles) {
-		
+	if (timeStopped) {
+		timestopProgress = max(timestopProgress - TIMESTOP_STEP * (timer::deltaTime * 0.01), 0);
+		worldFolder->SetTimeScale(timestopProgress);
 	}
+	else if (timestopProgress < 1.0f) {
+		timestopProgress = min(timestopProgress + TIMESTOP_STEP * (timer::deltaTime * 0.01), 1);
+		worldFolder->SetTimeScale(timestopProgress);
+	}
+
+	UpdateProjectiles();
 }
 
 
@@ -135,45 +147,53 @@ void PlayerAbilities::Charging()
 
 void PlayerAbilities::CommonAttack(Transform startTransform, point3d direction)
 {
+	Entity* projectile;
+
 	switch (weapon) {
 	case PlayerWeapons::Fists:
 	{
-		FistsCommon(startTransform, direction);
+		projectile = FistsCommon(startTransform, direction);
 		break;
 	}
 	case PlayerWeapons::Sword:
 	{
-		SwordCommon(startTransform, direction);
+		projectile = SwordCommon(startTransform, direction);
 		break;
 	}
 	case PlayerWeapons::Bow:
 	{
-		BowCommon(startTransform, direction);
+		projectile = BowCommon(startTransform, direction);
 		break;
 	}
 	}
+
+	projectiles.push_back(projectile);
 }
 
 
 void PlayerAbilities::ChargedAttack(Transform startTransform, point3d direction)
 {
+	Entity* projectile;
+
 	switch (weapon) {
 	case PlayerWeapons::Fists:
 	{
-		FistsCharged(startTransform, direction);
+		projectile = FistsCharged(startTransform, direction);
 		break;
 	}
 	case PlayerWeapons::Sword:
 	{
-		SwordCharged(startTransform, direction);
+		projectile = SwordCharged(startTransform, direction);
 		break;
 	}
 	case PlayerWeapons::Bow:
 	{
-		BowCharged(startTransform, direction);
+		projectile = BowCharged(startTransform, direction);
 		break;
 	}
 	}
+
+	projectiles.push_back(projectile);
 }
 
 
@@ -199,10 +219,47 @@ void PlayerAbilities::BlockEnd()
 }
 
 
+void PlayerAbilities::TimestopStart()
+{
+	timeStopped = true;
+}
+
+
+void PlayerAbilities::TimestopEnd()
+{
+	timeStopped = false;
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void PlayerAbilities::FistsCommon(Transform startTransform, point3d direction)
+void PlayerAbilities::UpdateProjectiles()
+{
+	int i = 0;
+	while (i < projectiles.size())
+	{
+		Entity* entity = projectiles[i];
+		if (entity->IsDeleting())
+		{
+			projectiles.erase(projectiles.begin() + i);
+		}
+		else
+		{
+			i++;
+
+			if (timeStopped) {
+				entity->SetTimeScale(max(entity->GetLocalTimeScale() - TIMESTOP_STEP * (timer::deltaTime * 0.01), 0));
+			}
+			else {
+				entity->SetTimeScale(min(entity->GetLocalTimeScale() + TIMESTOP_STEP * (timer::deltaTime * 0.01), 1));
+			}
+		}
+	}
+}
+
+
+Entity* PlayerAbilities::FistsCommon(Transform startTransform, point3d direction)
 {
 	Entity* projectile = world->entityStorage->CreateEntity("PlayerProjectile");
 	Transform* transform = projectile->AddComponent<Transform>();
@@ -229,10 +286,12 @@ void PlayerAbilities::FistsCommon(Transform startTransform, point3d direction)
 
 	DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
 	delayedDestroy->lifeTime = 5000;
+
+	return projectile;
 }
 
 
-void PlayerAbilities::SwordCommon(Transform startTransform, point3d direction)
+Entity* PlayerAbilities::SwordCommon(Transform startTransform, point3d direction)
 {
 	Entity* projectile = world->entityStorage->CreateEntity("PlayerProjectile");
 	Transform* transform = projectile->AddComponent<Transform>();
@@ -273,10 +332,12 @@ void PlayerAbilities::SwordCommon(Transform startTransform, point3d direction)
 
 	DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
 	delayedDestroy->lifeTime = 5000;
+
+	return projectile;
 }
 
 
-void PlayerAbilities::BowCommon(Transform startTransform, point3d direction)
+Entity* PlayerAbilities::BowCommon(Transform startTransform, point3d direction)
 {
 	Entity* projectile = world->entityStorage->CreateEntity("PlayerProjectile");
 	Transform* transform = projectile->AddComponent<Transform>();
@@ -317,10 +378,12 @@ void PlayerAbilities::BowCommon(Transform startTransform, point3d direction)
 
 	DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
 	delayedDestroy->lifeTime = 5000;
+
+	return projectile;
 }
 
 
-void PlayerAbilities::FistsCharged(Transform startTransform, point3d direction)
+Entity* PlayerAbilities::FistsCharged(Transform startTransform, point3d direction)
 {
 	Entity* projectile = world->entityStorage->CreateEntity("PlayerProjectile");
 	Transform* transform = projectile->AddComponent<Transform>();
@@ -348,10 +411,12 @@ void PlayerAbilities::FistsCharged(Transform startTransform, point3d direction)
 
 	DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
 	delayedDestroy->lifeTime = 5000;
+
+	return projectile;
 }
 
 
-void PlayerAbilities::SwordCharged(Transform startTransform, point3d direction)
+Entity* PlayerAbilities::SwordCharged(Transform startTransform, point3d direction)
 {
 	Entity* projectile = world->entityStorage->CreateEntity("PlayerProjectile");
 	Transform* transform = projectile->AddComponent<Transform>();
@@ -392,10 +457,12 @@ void PlayerAbilities::SwordCharged(Transform startTransform, point3d direction)
 
 	DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
 	delayedDestroy->lifeTime = 5000;
+
+	return projectile;
 }
 
 
-void PlayerAbilities::BowCharged(Transform startTransform, point3d direction)
+Entity* PlayerAbilities::BowCharged(Transform startTransform, point3d direction)
 {
 	Entity* projectile = world->entityStorage->CreateEntity("PlayerProjectile");
 	Transform* transform = projectile->AddComponent<Transform>();
@@ -429,4 +496,6 @@ void PlayerAbilities::BowCharged(Transform startTransform, point3d direction)
 
 	DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
 	delayedDestroy->lifeTime = 5000;
+
+	return projectile;
 }

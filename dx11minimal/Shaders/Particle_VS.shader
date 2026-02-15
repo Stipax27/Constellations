@@ -26,12 +26,17 @@ cbuffer particlesDesc : register(b9)
 	float2 pSpeed;
 };
 
+cbuffer objParams : register(b0)
+{
+    float drawerV[1024];
+};
+
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
     float2 uv : TEXCOORD0;
     uint   iID : COLOR0;
-    float4 worldpos : POSITION1;
+    float4 wpos : POSITION1;
 };
 
 
@@ -44,7 +49,8 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
         float2(-1, 1), float2(1, -1), float2(1, 1),
     };
 
-    float t = time.x * 100 - fConst[iID]._m30;
+    float localTime = drawerV[0];
+    float t = localTime - fConst[iID]._m30;
     float lifetime = t / pLifetime;
 
     float size = lerp(pSize.x, pSize.y, lifetime);
@@ -66,6 +72,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     output.pos = projPos;
     output.uv = quadPos[vID];
     output.iID = iID;
+    output.wpos = float4(pos, 0);
 
     return output;
 }

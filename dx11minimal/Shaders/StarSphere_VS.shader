@@ -17,9 +17,14 @@ cbuffer frame : register(b4)
     float4 aspect;
 };
 
-cbuffer drawerV : register(b0)
+cbuffer objParams : register(b0)
 {
-    float drawConst[1024];
+    float drawerV[1024];
+};
+
+cbuffer drawerInt : register(b7)
+{
+    int drawInt[1024];
 }
 
 cbuffer drawerMatrix : register(b8)
@@ -33,6 +38,7 @@ struct VS_OUTPUT
     float4 vpos : POSITION0;
     float4 wpos : POSITION1;
 	float2 uv : TEXCOORD0;
+	uint iID : COLOR0;
 };
 
 #define Animation float3(-1.3, -1.0, 0.7)
@@ -95,7 +101,7 @@ float snoise(float3 v)
 
 float3 ball(float2 p, float radius, uint iID)
 {
-    float n = (float)drawConst[iID];
+    float n = (float)drawInt[iID];
 
     p.x = -(p.x / n) * 3.141592653589793;
     p.y = (p.y / n) * 3.141592653589793 / 2;
@@ -109,7 +115,9 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 {
     VS_OUTPUT output;
 
-    uint n = drawConst[iID];
+	float localTime = drawerV[iID];
+
+    uint n = drawInt[iID];
     uint instanceID = vID / 6;
 
     float row = instanceID % n;
@@ -133,13 +141,14 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 
     output.vpos = pos;
 
-	float height = abs(snoise(normalize(pos.xyz) * 3 + Animation * time.x * 0.02));
+	float height = abs(snoise(normalize(pos.xyz) * 3 + Animation * localTime * 0.02));
 	pos.xyz += normalize(pos.xyz) * height * 0.075 * sqrt(radius);
 
     pos = mul(pos, model[iID]);
 
     output.pos = mul(pos, mul(view, proj));
     output.wpos = float4(pos.xyz, 0);
+	output.iID = iID;
 
     return output;
 }

@@ -281,7 +281,7 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 		{
 			if (transform == nullptr || frustum->CheckSphere(transform->position, spriteCluster->frustumRadius))
 			{
-				ConstBuf::drawerV[0] = entity->timeScale;
+				ConstBuf::drawerV[0] = (float)entity->localTime * 0.01f;
 				ConstBuf::Update(0, ConstBuf::drawerV);
 				ConstBuf::ConstToVertex(0);
 				ConstBuf::ConstToPixel(0);
@@ -431,11 +431,11 @@ void SpriteSystem::ProcessParticle(Entity* entity, Transform& worldTransform)
 		EmitNewParticles(entity, worldTransform, particleEmitter);
 	}
 
-	UpdateExistingParticles(particleEmitter);
+	UpdateExistingParticles(entity, particleEmitter);
 
 	if (!particleEmitter->particles.empty())
 	{
-		RenderParticles(particleEmitter);
+		RenderParticles(entity, particleEmitter);
 	}
 }
 
@@ -452,7 +452,7 @@ void SpriteSystem::AddEmitterOrientation(Entity* entity, Transform& transform)
 void SpriteSystem::EmitNewParticles(Entity* entity, const Transform& worldTransform, ParticleEmitter* emitter)
 {
 	double emitDelta = CalculateEmitDelta(*emitter);
-	double elapsedTime = timer::currentTime - emitter->lastEmitTime;
+	double elapsedTime = entity->localTime - emitter->lastEmitTime;
 
 	if (elapsedTime >= emitDelta)
 	{
@@ -464,12 +464,12 @@ void SpriteSystem::EmitNewParticles(Entity* entity, const Transform& worldTransf
 		for (int i = 0; i < particlesToEmit; i++)
 		{
 			Orientation particleOrientation = ApplySpread(emitOrientation, *emitter);
-			double startTime = CalculateParticleStartTime(*emitter, emitDelta, i);
+			double startTime = CalculateParticleStartTime(entity, *emitter, emitDelta, i);
 
 			CreateParticle(worldTransform, emitter, particleOrientation, startTime);
 		}
 
-		UpdateEmitTiming(emitter, emitDelta, particlesToEmit);
+		UpdateEmitTiming(entity, emitter, emitDelta, particlesToEmit);
 	}
 }
 
@@ -518,10 +518,10 @@ float SpriteSystem::GenerateRandomAngle(float spread)
 	return result;
 }
 
-double SpriteSystem::CalculateParticleStartTime(const ParticleEmitter& emitter, double emitDelta,
+double SpriteSystem::CalculateParticleStartTime(Entity* entity, const ParticleEmitter& emitter, double emitDelta,
                                                 int particleIndex)
 {
-	double result = emitter.isHeapEmit ? timer::currentTime : emitter.lastEmitTime + emitDelta * (particleIndex + 1);
+	double result = emitter.isHeapEmit ? entity->localTime : emitter.lastEmitTime + emitDelta * (particleIndex + 1);
 	return result;
 }
 
@@ -567,11 +567,11 @@ void SpriteSystem::CreateNormalParticle(const Transform& worldTransform, Particl
 	));
 }
 
-void SpriteSystem::UpdateEmitTiming(ParticleEmitter* emitter, double emitDelta, int emittedCount)
+void SpriteSystem::UpdateEmitTiming(Entity* entity, ParticleEmitter* emitter, double emitDelta, int emittedCount)
 {
 	if (emitter->isHeapEmit)
 	{
-		emitter->lastEmitTime = timer::currentTime;
+		emitter->lastEmitTime = entity->localTime;
 		emitter->heapCount++;
 
 		if (emitter->heapEmitRepeats > 0 && emitter->heapCount >= emitter->heapEmitRepeats)
@@ -586,14 +586,14 @@ void SpriteSystem::UpdateEmitTiming(ParticleEmitter* emitter, double emitDelta, 
 	}
 }
 
-void SpriteSystem::UpdateExistingParticles(ParticleEmitter* emitter)
+void SpriteSystem::UpdateExistingParticles(Entity* entity, ParticleEmitter* emitter)
 {
 	int i = 0;
 	while (i < emitter->particles.size())
 	{
 		float startTime = emitter->particles[i]._14;
 
-		if (timer::currentTime - startTime < emitter->lifetime)
+		if (entity->localTime - startTime < emitter->lifetime)
 		{
 			if (i < constCount)
 			{
@@ -608,10 +608,10 @@ void SpriteSystem::UpdateExistingParticles(ParticleEmitter* emitter)
 	}
 }
 
-void SpriteSystem::RenderParticles(const ParticleEmitter* emitter)
+void SpriteSystem::RenderParticles(Entity* entity, const ParticleEmitter* emitter)
 {
 	SetupShaders(emitter);
-	SetupConstantBuffers();
+	SetupConstantBuffers(entity);
 	SetupParticleInfo(emitter);
 	SetupInputAssembler(emitter);
 
@@ -626,12 +626,17 @@ void SpriteSystem::SetupShaders(const ParticleEmitter* emitter)
 	Shaders::gShader(emitter->gShader);
 }
 
-void SpriteSystem::SetupConstantBuffers()
+void SpriteSystem::SetupConstantBuffers(Entity* entity)
 {
 	ConstBuf::Update(10, ConstBuf::drawerFloat4x4);
 	ConstBuf::ConstToVertex(10);
 	ConstBuf::ConstToPixel(10);
 	ConstBuf::ConstToGeometry(10);
+
+	ConstBuf::drawerV[0] = (float)entity->localTime;
+	ConstBuf::Update(0, ConstBuf::drawerV);
+	ConstBuf::ConstToVertex(0);
+	ConstBuf::ConstToPixel(0);
 }
 
 void SpriteSystem::SetupParticleInfo(const ParticleEmitter* emitter)

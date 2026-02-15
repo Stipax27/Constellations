@@ -24,8 +24,17 @@ void EntityManagerSystem::Update(vector<Entity*>& entities, float deltaTime)
 		Entity* entity = entities[i];
 		if (IsEntityValid(entity)) {
 			DelayedDestroy* delayedDestroy = entity->GetComponent<DelayedDestroy>();
-			if (delayedDestroy != nullptr && delayedDestroy->active && timer::currentTime >= delayedDestroy->startTime + delayedDestroy->lifeTime / entity->timeScale) {
-				entity->Destroy();
+			if (delayedDestroy != nullptr && delayedDestroy->active) {
+
+				if (delayedDestroy->startTime < 0) {
+					delayedDestroy->startTime = entity->localTime;
+					continue;
+				}
+
+				if (entity->localTime >= delayedDestroy->startTime + delayedDestroy->lifeTime) {
+					entity->Destroy();
+				}
+
 			}
 		}
 	}
