@@ -58,6 +58,7 @@ cbuffer particlesDesc : register(b9)
 	float3 pColor;
 	float pLifetime;
 	float2 pSpeed;
+    float pTimescale;
 };
 
 cbuffer drawerFloat4x4 : register(b10)

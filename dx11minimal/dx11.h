@@ -318,8 +318,8 @@ namespace ConstBuf
 		XMFLOAT3 color;
 		float lifetime;
 		XMFLOAT2 speed;
+		float timescale;
 		float _p1;
-		float _p2;
 	};
 
 	//----------------------------------------------------------------

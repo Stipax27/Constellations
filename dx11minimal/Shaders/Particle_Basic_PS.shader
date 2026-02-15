@@ -11,8 +11,13 @@ struct VS_OUTPUT
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
+
     float localTime = drawerV[0];
-    float lifetime = (localTime - fConst[input.iID]._m30) / pLifetime;
+    float startTime = fConst[input.iID]._m30;
+
+    float lifetime = abs(localTime - startTime) / pLifetime;
+    lifetime = pTimescale < 0 ? 1 - lifetime : lifetime;
+
     float4 color = float4(pColor, 1) * lerp(pOpacity.x, pOpacity.y, lifetime);
 
     float brightness = exp(-dot(input.uv, input.uv) * 20);

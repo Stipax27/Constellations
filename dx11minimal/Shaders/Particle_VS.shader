@@ -19,8 +19,12 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     };
 
     float localTime = drawerV[0];
-    float t = localTime - fConst[iID]._m30;
+    float startTime = fConst[iID]._m30;
+
+    float t = abs(localTime - startTime);
+
     float lifetime = t / pLifetime;
+    lifetime = pTimescale < 0 ? 1 - lifetime : lifetime;
 
     float size = lerp(pSize.x, pSize.y, lifetime);
     float speed = 10;

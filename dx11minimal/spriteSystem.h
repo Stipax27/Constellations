@@ -42,7 +42,7 @@ private:
 	Orientation ApplySpread(Orientation, const ParticleEmitter&);
 	float GenerateRandomAngle(float spread);
 	double CalculateParticleStartTime(Entity*, const ParticleEmitter&, double, int);
-	void CreateParticle(const Transform&, ParticleEmitter*, const Orientation&, double);
+	void CreateParticle(Entity*, const Transform&, ParticleEmitter*, const Orientation&, double);
 	void CreateReversedParticle(const Transform&, ParticleEmitter*, const Orientation&, double);
 	void CreateNormalParticle(const Transform&, ParticleEmitter*, const Orientation&, double);
 	void UpdateEmitTiming(Entity*, ParticleEmitter*, double, int);
@@ -50,7 +50,7 @@ private:
 	void RenderParticles(Entity*, const ParticleEmitter*);
 	void SetupShaders(const ParticleEmitter*);
 	void SetupConstantBuffers(Entity*);
-	void SetupParticleInfo(const ParticleEmitter*);
+	void SetupParticleInfo(Entity*, const ParticleEmitter*);
 	void SetupInputAssembler(const ParticleEmitter*);
 	Orientation CalculateEmitOrientation(const Orientation&, EmitDirection);
 };
