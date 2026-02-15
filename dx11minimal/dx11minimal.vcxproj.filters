@@ -420,8 +420,8 @@
     <None Include="Shaders\DepthDown.shader">
       <Filter>Shaders\Depth</Filter>
     </None>
-    <None Include="Shaders\Lib\utils.shader">
-      <Filter>Shaders\utils</Filter>
+    <None Include="Shaders\lib\utils.shader">
+      <Filter>Shaders\lib</Filter>
     </None>
     <None Include="Shaders\Mesh_Fit_PS.shader">
       <Filter>Shaders\Mesh</Filter>
@@ -446,6 +446,12 @@
     </None>
     <None Include="Shaders\SwordBeam_PS.shader">
       <Filter>Shaders\Links</Filter>
+    </None>
+    <None Include="Shaders\lib\constBuf.shader">
+      <Filter>Shaders\lib</Filter>
+    </None>
+    <None Include="Shaders\lib\pi.shader">
+      <Filter>Shaders\lib</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -524,9 +530,6 @@
     <Filter Include="Shaders\Depth">
       <UniqueIdentifier>{c3bef4a5-cb1f-457b-b672-2c14fc505922}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders\utils">
-      <UniqueIdentifier>{7b14d747-f087-4854-81f6-fb7933caf6e2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\Mesh">
       <UniqueIdentifier>{990df05e-0fd2-4a9b-b010-a86e911219a3}</UniqueIdentifier>
     </Filter>
@@ -580,6 +583,9 @@
     </Filter>
     <Filter Include="Source Files\Compute">
       <UniqueIdentifier>{7fd2d49d-bf4a-4917-a60a-9681de3f0141}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\lib">
+      <UniqueIdentifier>{7b14d747-f087-4854-81f6-fb7933caf6e2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

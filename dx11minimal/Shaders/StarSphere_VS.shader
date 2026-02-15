@@ -1,36 +1,4 @@
-cbuffer global : register(b5)
-{
-    float4 gConst[1024];
-};
-
-cbuffer camera : register(b3)
-{
-    float4x4 world;
-    float4x4 view;
-    float4x4 proj;
-    float4 cPos;
-};
-
-cbuffer frame : register(b4)
-{
-    float4 time;
-    float4 aspect;
-};
-
-cbuffer objParams : register(b0)
-{
-    float drawerV[1024];
-};
-
-cbuffer drawerInt : register(b7)
-{
-    int drawInt[1024];
-}
-
-cbuffer drawerMatrix : register(b8)
-{
-    float4x4 model[1024];
-}
+#include <lib/constBuf.shader>
 
 struct VS_OUTPUT
 {

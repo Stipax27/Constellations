@@ -1,32 +1,5 @@
-cbuffer global : register(b5)
-{
-    float4 gConst[1024];
-};
-
-cbuffer frame : register(b4)
-{
-    float4 time;
-    float4 aspect;
-};
-
-cbuffer camera : register(b3)
-{
-    float4x4 world;
-    float4x4 view;
-    float4x4 proj;
-    float4 cPos;
-};
-
-cbuffer drawMat : register(b2)
-{
-    float4x4 model;
-    float hilight;
-};
-
-cbuffer params : register(b1)
-{
-    float r, g, b;
-};
+#include <lib/constBuf.shader>
+#include <lib/pi.shader>
 
 struct VS_OUTPUT
 {
@@ -54,8 +27,6 @@ float star(float2 uv)
     c += pow(sin(length(uv * 3.14)), 118) * .03;
     return c;
 }
-
-#define PI 3.1415926535897932384626433832795
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {

@@ -1,21 +1,11 @@
-cbuffer global : register(b5)
-{
-    float4 gConst[1024];
-};
-
-cbuffer frame : register(b4)
-{
-    float4 time;
-    float4 aspect;
-};
+#include <lib/constBuf.shader>
+#include <lib/pi.shader>
 
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
     float2 uv : TEXCOORD0;
 };
-
-#define PI 3.14159265358979323846
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {

@@ -1,11 +1,7 @@
+#include <lib/constBuf.shader>
+
 Texture2D renderTexture : register(t0);
 SamplerState samplerState : register(s0);
-
-cbuffer frame : register(b4)
-{
-    float4 time;
-    float4 aspect;
-};
 
 struct VS_OUTPUT
 {

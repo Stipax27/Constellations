@@ -1,7 +1,4 @@
-cbuffer drawerInt : register(b7)
-{
-    int drawInt[1024];
-}
+#include <lib/constBuf.shader>
 
 
 Texture2D<float> InputDepth : register(t0);

@@ -1,18 +1,4 @@
-cbuffer frame : register(b4)
-{
-    float4 time;
-    float4 aspect;
-};
-
-cbuffer global : register(b5)
-{
-    float4 gConst[1024];
-};
-
-cbuffer objParams : register(b0)
-{
-    float drawerV[1024];
-};
+#include <lib/constBuf.shader>
 
 struct VS_OUTPUT
 {

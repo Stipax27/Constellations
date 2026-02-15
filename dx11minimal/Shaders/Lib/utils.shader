@@ -1,4 +1,4 @@
-#define PI 3.1415926535897932384626433832795
+#include <lib/pi.shader>
 
 float4 getGrid(uint vID, float sep,int2 dim)
 {

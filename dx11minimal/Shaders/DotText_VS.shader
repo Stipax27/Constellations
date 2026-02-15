@@ -1,33 +1,5 @@
-cbuffer global : register(b5)
-{
-    float4 gConst[1024];
-};
-
-cbuffer frame : register(b4)
-{
-    float4 time;
-    float4 aspect;
-};
-
-cbuffer camera : register(b3)
-{
-    float4x4 world;
-    float4x4 view;
-    float4x4 proj;
-    float4 cPos;
-};
-
-cbuffer drawMat : register(b2)
-{
-    float4x4 model;
-    float hilight;
-};
-
-cbuffer objParams : register(b0)
-{
-    float drawerV[1024];
-};
-
+#include <lib/constBuf.shader>
+#include <lib/pi.shader>
 
 float hash2(uint n) {
     n = (n << 13u) ^ n;
@@ -40,9 +12,6 @@ float3 randomPosition(uint index) {
     float z = hash2(index * 3u + 2u);
     return float3(x, y, z);
 }
-
-
-#define PI 3.1415926535897932384626433832795
 
 struct VS_OUTPUT
 {

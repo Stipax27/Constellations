@@ -1,13 +1,4 @@
-cbuffer global : register(b5)
-{
-    float4 gConst[1024];
-};
-
-cbuffer frame : register(b4)
-{
-    float4 time;
-    float4 aspect;
-};
+#include <lib/constBuf.shader>
 
 struct VS_OUTPUT
 {

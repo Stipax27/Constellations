@@ -1,22 +1,4 @@
-cbuffer objParams : register(b0)
-{
-    float drawerV[1024];
-};
-
-cbuffer frame : register(b4)
-{
-    float4 time;
-    float4 aspect;
-};
-
-cbuffer camera : register(b3)
-{
-    float4x4 world;
-    float4x4 view;
-    float4x4 proj;
-    float4 cPos;
-};
-
+#include <lib/constBuf.shader>
 
 bool IsPointInFrustum(float4 pos)
 {
@@ -44,8 +26,6 @@ struct VS_OUTPUT
     float2 uv : TEXCOORD0;
 };
 
-#define PI 3.14159265358979323846
-#define triangles 12
 
 [maxvertexcount(36)]
 void GS( point VS_OUTPUT input[1], inout TriangleStream<VS_OUTPUT> output )
