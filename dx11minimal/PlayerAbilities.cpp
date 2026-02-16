@@ -87,7 +87,7 @@ void PlayerAbilities::Update()
 	}
 
 	if (timeStopped) {
-		timestopProgress = max(timestopProgress - TIMESTOP_STEP * (timer::deltaTime * 0.01), -1);
+		timestopProgress = max(timestopProgress - TIMESTOP_STEP * (timer::deltaTime * 0.01), 0);
 		worldFolder->SetTimeScale(timestopProgress);
 	}
 	else if (timestopProgress < 1.0f) {
