@@ -896,10 +896,10 @@ void Models::Init()
 
 //////////////////////////////////////////////////////////////////////////////////
 
-Shaders::VertexShader Shaders::VS[255];
-Shaders::PixelShader Shaders::PS[255];
-Shaders::GeometryShader Shaders::GS[255];
-Shaders::ComputeShader Shaders::CS[255];
+Shaders::VertexShader Shaders::VS[shaderCount];
+Shaders::PixelShader Shaders::PS[shaderCount];
+Shaders::GeometryShader Shaders::GS[shaderCount];
+Shaders::ComputeShader Shaders::CS[shaderCount];
 
 ID3DBlob* Shaders::pErrorBlob;
 wchar_t Shaders::shaderPathW[MAX_PATH];
@@ -1258,6 +1258,12 @@ void Shaders::Init()
 	Shaders::CreatePS(21, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Particle_Basic_PS.shader"));
 
 	Shaders::CreatePS(22, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SwordBeam_PS.shader"));
+
+	//-----------------------------------------------
+
+	Shaders::CreateVS(23, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\vs\\insideNebula.shader"));
+	Shaders::CreateVS(24, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\vs\\pillarsHand.shader"));
+	Shaders::CreateVS(25, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\vs\\space.shader"));
 	
 	//-----------------------------------------------
 	

@@ -528,6 +528,24 @@
     <None Include="Shaders\vs\waterfall.shader">
       <Filter>Shaders\VS</Filter>
     </None>
+    <None Include="Shaders\lib\constants.shader">
+      <Filter>Shaders\lib</Filter>
+    </None>
+    <None Include="Shaders\lib\girl_data.shader">
+      <Filter>Shaders\lib</Filter>
+    </None>
+    <None Include="Shaders\lib\hand_data.shader">
+      <Filter>Shaders\lib</Filter>
+    </None>
+    <None Include="Shaders\lib\io.shader">
+      <Filter>Shaders\lib</Filter>
+    </None>
+    <None Include="Shaders\lib\particleVS_main.shader">
+      <Filter>Shaders\lib</Filter>
+    </None>
+    <None Include="Shaders\lib\particleVS_main2.shader">
+      <Filter>Shaders\lib</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">

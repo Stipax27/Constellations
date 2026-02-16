@@ -205,6 +205,7 @@ namespace Models
 }
 
 namespace Shaders {
+#define shaderCount 255
 
 	struct VertexShader {
 		ID3D11VertexShader* vShader;
@@ -227,10 +228,10 @@ namespace Shaders {
 		ID3DBlob* pBlob;
 	};
 
-	extern VertexShader VS[255];
-	extern PixelShader PS[255];
-	extern GeometryShader GS[255];
-	extern ComputeShader CS[255];
+	extern VertexShader VS[shaderCount];
+	extern PixelShader PS[shaderCount];
+	extern GeometryShader GS[shaderCount];
+	extern ComputeShader CS[shaderCount];
 
 	extern ID3DBlob* pErrorBlob;
 
