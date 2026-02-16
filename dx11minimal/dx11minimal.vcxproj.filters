@@ -450,9 +450,6 @@
     <None Include="Shaders\lib\constBuf.shader">
       <Filter>Shaders\lib</Filter>
     </None>
-    <None Include="Shaders\lib\pi.shader">
-      <Filter>Shaders\lib</Filter>
-    </None>
     <None Include="Shaders\vs\blob.shader">
       <Filter>Shaders\VS</Filter>
     </None>

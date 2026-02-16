@@ -3,28 +3,20 @@
 #include <../lib/constants.shader>
 #include <../lib/utils.shader>
 
-cbuffer params : register(b0)
-{
-    float4x4 model;
-    int gX;
-    int gY;
-    int mode;
-    int skipper;
-}
 
 float4 transform2(float3 pos,float2 grid, float size)
 {
     float2 uv = grid-.5;
-    float2 scale = float2(proj[0]._m00,proj[0]._m11);
+    float2 scale = float2(proj._m00,proj._m11);
     float4 posT;
     posT.w=1;
-    posT.xyz = mul(pos/1.2, (float3x3)view[0]);
+    posT.xyz = mul(pos/1.2, (float3x3)view);
 
-        float4 pt = mul(posT, proj[0]);
+        float4 pt = mul(posT, proj);
         float2 sz = uv*.002*(posT.z/posT.w)*size;
         sz = uv*size*.1;
         posT.xy+=sz;
-        posT = mul(posT, proj[0]);
+        posT = mul(posT, proj);
 
         return posT;
 }
@@ -32,15 +24,15 @@ float4 transform2(float3 pos,float2 grid, float size)
 float4 transform_unisize2(float3 pos,float2 grid,float size)
 {
     float2 uv = grid-.5;
-    float2 scale = float2(proj[0]._m00,proj[0]._m11);
+    float2 scale = float2(proj._m00,proj._m11);
     float4 posT;
     posT.w=1;
-    posT.xyz = mul(pos, (float3x3)view[0]);
-        float4 pt = mul(posT, proj[0]);
+    posT.xyz = mul(pos, (float3x3)view);
+        float4 pt = mul(posT, proj);
         float2 sz = uv*.002*(posT.z/posT.w)*size;
 
         sz*=normalize(scale)*2;
-        posT = mul(posT, proj[0]);
+        posT = mul(posT, proj);
         posT.xy+=sz;
 
         return posT;
@@ -48,7 +40,7 @@ float4 transform_unisize2(float3 pos,float2 grid,float size)
 
 pos_color CalcParticles(uint qid, float4 grid)
 {
-    qid *= skipper;
+    qid *= lSkipper;
 
     float3 pos=shp(grid.xy);
     pos+=.7*rot3(pos,31/pos+.1*noise3(pos*3));
@@ -61,7 +53,7 @@ pos_color CalcParticles(uint qid, float4 grid)
     p.color = float4(float3(3,6,9),1)*.051+.0015;
 
 
-    if (mode==1)
+    if (lMode==1)
     {
         //hilight
         p.pos=transform2(pos,grid.zw,302);

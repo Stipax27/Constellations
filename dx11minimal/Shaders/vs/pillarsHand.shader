@@ -3,14 +3,6 @@
 #include <../lib/constants.shader>
 #include <../lib/utils.shader>
 
-cbuffer params : register(b0)
-{
-    float4x4 model;
-    int gX;
-    int gY;
-    int mode;
-    int skipper;
-}
 
 float toRad(float a)
 {
@@ -70,10 +62,10 @@ float3 pillar(uint qid,uint iid,float2 grid,float a, float t, float h)
 
 pos_color CalcParticles(uint qid,uint iid,float4 grid)
 {
-     qid *= skipper;
+     qid *= lSkipper;
      float t=time.x*.07;
      uint inStars = 10000;
-     if (mode==1||iid%inStars==0)
+     if (lMode==1||iid%inStars==0)
      {
         t=0;
      }
@@ -99,7 +91,7 @@ pos_color CalcParticles(uint qid,uint iid,float4 grid)
        pos=rotX(pos,toRad(65));
        pos.y-=.5;
        pos.z+=1.2;
-    if (mode==1)
+    if (lMode==1)
     {
         p.pos=transform(pos,grid.zw,22);
         p.color*=11;

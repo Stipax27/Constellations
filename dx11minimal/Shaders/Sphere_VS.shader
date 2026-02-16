@@ -10,7 +10,7 @@ struct VS_OUTPUT
 
 float3 ball(float2 p, float radius)
 {
-    float n = (float)drawConst[0];
+    float n = (float)drawerV[0];
 
     p.x = (p.x / n) * 3.141592653589793;
     p.y = (p.y / n) * 3.141592653589793 / 2;
@@ -25,7 +25,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID)
     VS_OUTPUT output;
     float3 worldPos = float3(gConst[0].xyz);
 
-    uint n = drawConst[0];
+    uint n = drawerV[0];
     uint instanceID = vID / 6;
 
     float row = instanceID % n;

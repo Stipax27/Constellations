@@ -65,3 +65,13 @@ cbuffer drawerFloat4x4 : register(b10)
 {
     float4x4 fConst[constCount];
 };
+
+cbuffer locationDesc : register(b11)
+{
+    float4x4 lModel;
+    int lgX;
+    int lgY;
+    int lMode;
+    int lSkipper;
+    float4 lBase_color;
+}

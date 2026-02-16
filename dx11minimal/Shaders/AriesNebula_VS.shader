@@ -1,5 +1,5 @@
 #include <lib/constBuf.shader>
-#include <lib/pi.shader>
+#include <lib/constants.shader>
 
 Texture2D perlinTexture : register(t1);
 SamplerState perlinSamplerState : register(s1);
