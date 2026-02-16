@@ -545,6 +545,98 @@ void LevelManagerClass::CreateAries(Entity* folder)
 }
 
 
+void LevelManagerClass::CreateZenithLocation(int quality)
+{
+	int pillars_cnt = 3725470 / 2 / quality;
+	int outerSpace_cnt = 6853 / quality;
+	int galaxy_cnt = 182361 / quality;
+
+	//hi
+	//RenderTarget::Set({ texture::pBuf,0 });
+	Draw::Clear({ 0,0,0,0 });
+
+	PillarsHand(pillars_cnt, 1, pMode::point);
+	InsideNebula(pillars_cnt, 1, pMode::point, 100, 200, 600);
+	OuterSpace(outerSpace_cnt, 1, pMode::point);
+
+	//mid
+	//RenderTarget::Set({ texture::pBufMid,0 });
+	Draw::Clear({ 0,0,0,0 });
+
+	//low
+	//RenderTarget::Set({ texture::pBufLow,0 });
+	Draw::Clear({ 0,0,0,0 });
+
+	PillarsHand(pillars_cnt, 1394 / 2, pMode::glow);
+	InsideNebula(pillars_cnt, 1394, pMode::glow ,100, 200, 600);
+	//	OuterSpace(outerSpace_cnt, 64, pMode::glow);
+}
+
+
+void LevelManagerClass::PillarsHand(int count, int skipper, pMode mode)
+{
+	int gX = sqrt(count / skipper);
+	int gY = sqrt(count / skipper);
+
+	//psModeSet(mode);
+
+	ConstBuf::locationInfo.model = XMMatrixTranspose(XMMatrixTranslation(0, 0, 0));
+	ConstBuf::locationInfo.gX = gX;
+	ConstBuf::locationInfo.gY = gY;
+	ConstBuf::locationInfo.mode = (int)mode;
+	ConstBuf::locationInfo.skipper = skipper;
+
+	Shaders::vShader(14);
+	ConstBuf::UpdateLocationInfo();
+	ConstBuf::ConstToVertex(11);
+
+	Draw::NullDrawer(1, (int)gX * (int)gY);
+}
+
+
+void LevelManagerClass::InsideNebula(int count, int skipper, pMode mode, int r, int g, int b)
+{
+	int gX = sqrt(count / skipper);
+	int gY = sqrt(count / skipper);
+
+	//psModeSet(mode);
+
+	ConstBuf::locationInfo.model = XMMatrixTranspose(XMMatrixTranslation(0, 0, 0));
+	ConstBuf::locationInfo.gX = gX;
+	ConstBuf::locationInfo.gY = gY;
+	ConstBuf::locationInfo.mode = (int)mode;
+	ConstBuf::locationInfo.skipper = skipper;
+	ConstBuf::locationInfo.base_color = XMFLOAT4(r / 100., g / 100., b / 100., 1);
+
+	Shaders::vShader(5);
+	ConstBuf::UpdateLocationInfo();
+	ConstBuf::ConstToVertex(11);
+
+	Draw::NullDrawer(1, (int)gX * (int)gY);
+}
+
+
+void LevelManagerClass::OuterSpace(int count, int skipper, pMode mode)
+{
+	int gX = sqrt(count / skipper);
+	int gY = sqrt(count / skipper);
+
+	//psModeSet(mode);
+
+	ConstBuf::locationInfo.model = XMMatrixTranspose(XMMatrixTranslation(0, 0, 0));
+	ConstBuf::locationInfo.gX = gX;
+	ConstBuf::locationInfo.gY = gY;
+	ConstBuf::locationInfo.mode = (int)mode;
+	ConstBuf::locationInfo.skipper = skipper;
+
+	Shaders::vShader(19);
+	ConstBuf::UpdateLocationInfo();
+	ConstBuf::ConstToVertex(11);
+
+	Draw::NullDrawer(1, (int)gX * (int)gY);
+}
+
+
 void LevelManagerClass::InitSystems()
 {
 	m_World->AddComputeSystem<TimeSystem>();
@@ -561,4 +653,22 @@ void LevelManagerClass::InitSystems()
 	}
 	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum);
 	m_World->AddRenderSystem<UISystem>(mouse, m_World->entityStorage);
+}
+
+
+void LevelManagerClass::psModeSet(pMode mode)
+{
+	switch (mode)
+	{
+	case pMode::point:
+	{
+		Shaders::pShader(0);
+		break;
+	}
+	case pMode::glow:
+	{
+		Shaders::pShader(1);
+		break;
+	}
+	}
 }

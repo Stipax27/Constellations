@@ -453,6 +453,81 @@
     <None Include="Shaders\lib\pi.shader">
       <Filter>Shaders\lib</Filter>
     </None>
+    <None Include="Shaders\vs\blob.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\capriStar.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\fish.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\galaxy.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\galaxy_2.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\insideNebula.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\islands.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\leo.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\libra_sph.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\Nebula2.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\neitron_star.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\objViewer.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\pearl.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\pillars.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\pillarsHand.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\quad.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\rocks.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\scorpBall.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\simpleCube.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\space.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\Tau.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\transporter.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\tree.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\Virgo.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\waterfall.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">
@@ -586,6 +661,9 @@
     </Filter>
     <Filter Include="Shaders\lib">
       <UniqueIdentifier>{7b14d747-f087-4854-81f6-fb7933caf6e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\VS">
+      <UniqueIdentifier>{47cf006f-7880-40a1-932c-ac7c3be2d199}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

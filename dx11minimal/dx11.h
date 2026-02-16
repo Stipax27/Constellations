@@ -322,9 +322,18 @@ namespace ConstBuf
 		float _p1;
 	};
 
+	struct LocationDesc {
+		XMMATRIX model;
+		int gX;
+		int gY;
+		int mode;
+		int skipper;
+		XMFLOAT4 base_color;
+	};
+
 	//----------------------------------------------------------------
 
-	extern ID3D11Buffer* buffer[11];
+	extern ID3D11Buffer* buffer[12];
 
 	//b0 - use "params" label in shader
 	extern float drawerV[constCount];//update per draw call
@@ -359,6 +368,9 @@ namespace ConstBuf
 	//b10
 	extern XMFLOAT4X4 drawerFloat4x4[constCount];
 
+	//b11
+	extern LocationDesc locationInfo;
+
 	int roundUp(int, int);
 	void Create(ID3D11Buffer*&, int);
 	void CreateVertexBuffer(int);
@@ -375,6 +387,7 @@ namespace ConstBuf
 	void UpdateCamera();
 	void UpdateFactors();
 	void UpdateParticlesInfo();
+	void UpdateLocationInfo();
 	void ConstToVertex(int);
 	void ConstToGeometry(int);
 	void ConstToPixel(int);
@@ -392,7 +405,8 @@ namespace ConstBuf
 			drawerInt,
 			drawerMatrix,
 			particlesInfo,
-			drawerFloat4x4
+			drawerFloat4x4,
+			locationInfo
 		};
 	}
 }

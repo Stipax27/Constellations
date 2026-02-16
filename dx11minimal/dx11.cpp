@@ -1410,7 +1410,7 @@ void Sampler::SamplerComp(unsigned int slot)
 
 //////////////////////////////////////////////////////////////////////////////////
 
-ID3D11Buffer* ConstBuf::buffer[11];
+ID3D11Buffer* ConstBuf::buffer[12];
 
 //b0
 float ConstBuf::drawerV[constCount];
@@ -1444,6 +1444,9 @@ ConstBuf::ParticlesDesc ConstBuf::particlesInfo;
 
 //b10
 XMFLOAT4X4 ConstBuf::drawerFloat4x4[constCount];
+
+//b11
+ConstBuf::LocationDesc ConstBuf::locationInfo;
 
 
 int ConstBuf::roundUp(int n, int r)
@@ -1513,6 +1516,7 @@ void ConstBuf::Init()
 	ConstBuf::Create(ConstBuf::buffer[8], sizeof(drawerMatrix));
 	ConstBuf::Create(ConstBuf::buffer[9], sizeof(particlesInfo));
 	ConstBuf::Create(ConstBuf::buffer[10], sizeof(drawerFloat4x4));
+	ConstBuf::Create(ConstBuf::buffer[11], sizeof(locationInfo));
 }
 
 void ConstBuf::UpdateFrame()
@@ -1538,6 +1542,11 @@ void ConstBuf::UpdateFactors()
 void ConstBuf::UpdateParticlesInfo()
 {
 	context->UpdateSubresource(ConstBuf::buffer[9], 0, NULL, &particlesInfo, 0, 0);
+}
+
+void ConstBuf::UpdateLocationInfo()
+{
+	context->UpdateSubresource(ConstBuf::buffer[11], 0, NULL, &locationInfo, 0, 0);
 }
 
 void ConstBuf::ConstToVertex(int i)

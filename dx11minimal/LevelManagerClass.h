@@ -44,6 +44,8 @@
 //const bool VSYNC_ENABLED = true;
 const bool SHOW_COLLIDERS = false;
 
+enum class pMode { point, glow };
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: LevelManagerClass
@@ -81,9 +83,16 @@ private:
 	void LoadModels();
 	Entity* CreatePlayer(Entity* = nullptr);
 	void CreateUI();
-	void InitSystems();
 	void CreateAries(Entity*);
 
+	void CreateZenithLocation(int);
+	void PillarsHand(int, int, pMode);
+	void InsideNebula(int, int, pMode, int, int, int);
+	void OuterSpace(int, int, pMode);
+
+	void InitSystems();
+
+	void psModeSet(pMode);
 };
 
 #endif
