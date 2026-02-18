@@ -19,6 +19,8 @@ public:
 	~WindowClass();
 
 	void Initialize();
+	bool IsActive();
+	bool IsFocused();
 
 public:
 	HWND hWnd; // window handle

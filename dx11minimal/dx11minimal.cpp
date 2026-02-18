@@ -30,7 +30,7 @@ DWORD battleStartTime;
 #include "LevelManagerClass.h"
 
 #define MAX_LOADSTRING 100
-#define _BORDERED_WINDOW
+//#define _BORDERED_WINDOW
                             // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
@@ -177,9 +177,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, WindowClass* window)
 #endif
     RegisterClassEx(&wcex);
 #ifdef _DEBUG
-    window->hWnd = CreateWindow("fx", "fx", WS_POPUP | WS_VISIBLE, 0, 0, width, height, NULL, NULL, hInst, NULL);
+    window->hWnd = CreateWindow("fx", "fx", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 0, width, height, NULL, NULL, hInst, NULL);
 #else
-    window->hWnd = CreateWindow(L"fx", L"fx", WS_POPUP | WS_VISIBLE, 0, 0, width, height, NULL, NULL, hInst, NULL);
+    window->hWnd = CreateWindow(L"fx", L"fx", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 0, width, height, NULL, NULL, hInst, NULL);
 #endif
 
 #else

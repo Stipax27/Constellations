@@ -91,80 +91,84 @@ void PlayerController::Shutdown()
 
 void PlayerController::ProcessInput()
 {
-	if (playerEntity != nullptr && playerEntity->IsActive()) {
+	if (!window->IsActive())
+		return;
 
-		if (movementLocked && playerPhysicBody->velocity.magnitude() < PLAYER_MOVE_SPEED) {
-			movementLocked = false;
-			playerPhysicBody->airFriction = 1;
+	if (playerEntity == nullptr || !playerEntity->IsActive())
+		return;
+
+
+	if (movementLocked && playerPhysicBody->velocity.magnitude() < PLAYER_MOVE_SPEED) {
+		movementLocked = false;
+		playerPhysicBody->airFriction = 1;
+	}
+
+	if (!movementLocked)
+	{
+		point3d velocity = point3d();
+
+		if (IsKeyPressed('W')) {
+			velocity += playerTransform->GetLookVector();
+		}
+		if (IsKeyPressed('S')) {
+			velocity += playerTransform->GetLookVector() * -1;
+		}
+		if (IsKeyPressed('A')) {
+			velocity += playerTransform->GetRightVector() * -1;
+		}
+		if (IsKeyPressed('D')) {
+			velocity += playerTransform->GetRightVector();
+		}
+		if (IsKeyPressed(VK_SPACE)) {
+			velocity += playerTransform->GetUpVector();
+		}
+		if (IsKeyPressed(VK_CONTROL)) {
+			velocity += playerTransform->GetUpVector() * -1;
 		}
 
-		if (!movementLocked)
-		{
-			point3d velocity = point3d();
-
-			if (IsKeyPressed('W')) {
-				velocity += playerTransform->GetLookVector();
+		if (velocity.magnitude() > 0) {
+			point3d newVelocity = playerPhysicBody->velocity + velocity.normalized();
+			if (newVelocity.magnitude() > PLAYER_MOVE_SPEED) {
+				playerPhysicBody->velocity = newVelocity.normalized() * PLAYER_MOVE_SPEED;
 			}
-			if (IsKeyPressed('S')) {
-				velocity += playerTransform->GetLookVector() * -1;
-			}
-			if (IsKeyPressed('A')) {
-				velocity += playerTransform->GetRightVector() * -1;
-			}
-			if (IsKeyPressed('D')) {
-				velocity += playerTransform->GetRightVector();
-			}
-			if (IsKeyPressed(VK_SPACE)) {
-				velocity += playerTransform->GetUpVector();
-			}
-			if (IsKeyPressed(VK_CONTROL)) {
-				velocity += playerTransform->GetUpVector() * -1;
-			}
-
-			if (velocity.magnitude() > 0) {
-				point3d newVelocity = playerPhysicBody->velocity + velocity.normalized();
-				if (newVelocity.magnitude() > PLAYER_MOVE_SPEED) {
-					playerPhysicBody->velocity = newVelocity.normalized() * PLAYER_MOVE_SPEED;
-				}
-				else {
-					playerPhysicBody->velocity = newVelocity;
-				}
+			else {
+				playerPhysicBody->velocity = newVelocity;
 			}
 		}
+	}
 
-		if (IsKeyPressed(VK_LSHIFT)) {
-			Dash();
-		}
+	if (IsKeyPressed(VK_LSHIFT)) {
+		Dash();
+	}
 		
-		float roll = 0.0f;
+	float roll = 0.0f;
 
-		if (IsKeyPressed('E')) {
-			roll = -ROLL_SPEED;
-		}
-		if (IsKeyPressed('Q')) {
-			roll = ROLL_SPEED;
-		}
+	if (IsKeyPressed('E')) {
+		roll = -ROLL_SPEED;
+	}
+	if (IsKeyPressed('Q')) {
+		roll = ROLL_SPEED;
+	}
 
-		if (roll != 0) {
-			playerPhysicBody->mAngVelocity = XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), roll * RAD);
-		}
+	if (roll != 0) {
+		playerPhysicBody->mAngVelocity = XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), roll * RAD);
+	}
 
-		if (IsKeyPressed('1')) {
-			abilities->weapon = PlayerWeapons::Fists;
-		}
-		if (IsKeyPressed('2')) {
-			abilities->weapon = PlayerWeapons::Sword;
-		}
-		if (IsKeyPressed('3')) {
-			abilities->weapon = PlayerWeapons::Bow;
-		}
+	if (IsKeyPressed('1')) {
+		abilities->weapon = PlayerWeapons::Fists;
+	}
+	if (IsKeyPressed('2')) {
+		abilities->weapon = PlayerWeapons::Sword;
+	}
+	if (IsKeyPressed('3')) {
+		abilities->weapon = PlayerWeapons::Bow;
+	}
 
-		if (IsKeyPressed('T')) {
-			abilities->TimestopStart();
-		}
-		if (IsKeyPressed('Y')) {
-			abilities->TimestopEnd();
-		}
+	if (IsKeyPressed('T')) {
+		abilities->TimestopStart();
+	}
+	if (IsKeyPressed('Y')) {
+		abilities->TimestopEnd();
 	}
 }
 
@@ -178,6 +182,9 @@ void PlayerController::ProcessCamera()
 
 void PlayerController::ProcessMouse()
 {
+	if (!window->IsActive())
+		return;
+
 	float x = mouse->absolutePos.x - window->width / 2;
 	float y = mouse->absolutePos.y - window->height / 2;
 	point3d mousePos = point3d(x / window->width / window->aspect, y / window->height, 0);

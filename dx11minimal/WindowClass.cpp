@@ -26,3 +26,15 @@ void WindowClass::Initialize()
 	aspect = float(height) / float(width);
 	iaspect = float(width) / float(height);
 }
+
+
+bool WindowClass::IsActive()
+{
+	return GetActiveWindow() == hWnd;
+}
+
+
+bool WindowClass::IsFocused()
+{
+	return GetFocus() == hWnd || GetActiveWindow() == hWnd;
+}
