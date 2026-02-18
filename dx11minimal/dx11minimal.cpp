@@ -30,6 +30,7 @@ DWORD battleStartTime;
 #include "LevelManagerClass.h"
 
 #define MAX_LOADSTRING 100
+#define _BORDERED_WINDOW
                             // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
@@ -75,7 +76,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     levelManager.Initialize();
     
-    //InitGame();
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_DX11MINIMAL));
 
     MSG msg = { 0 };
@@ -167,18 +167,37 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, WindowClass* window)
     auto height = GetSystemMetrics(SM_CYSCREEN);
 
     HBRUSH brush = CreateSolidBrush(RGB(0, 0, 0));
+
+#ifdef _BORDERED_WINDOW
+
+#ifdef _DEBUG
+    WNDCLASSEX wcex = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0,0, hInst, NULL, LoadCursor(NULL, IDC_ARROW), brush, NULL, "fx", NULL };
+#else
+    WNDCLASSEX wcex = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0,0, hInst, NULL, LoadCursor(NULL, IDC_ARROW), brush, NULL, L"fx", NULL };
+#endif
+    RegisterClassEx(&wcex);
+#ifdef _DEBUG
+    window->hWnd = CreateWindow("fx", "fx", WS_POPUP | WS_VISIBLE, 0, 0, width, height, NULL, NULL, hInst, NULL);
+#else
+    window->hWnd = CreateWindow(L"fx", L"fx", WS_POPUP | WS_VISIBLE, 0, 0, width, height, NULL, NULL, hInst, NULL);
+#endif
+
+#else
+
 #ifdef _DEBUG
     WNDCLASSEX wcex = { sizeof(WNDCLASSEX), CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS, WndProc, 0,0, hInst, NULL, LoadCursor(NULL, IDC_ARROW), brush, NULL, "fx", NULL };
 #else
     WNDCLASSEX wcex = { sizeof(WNDCLASSEX), CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS, WndProc, 0,0, hInst, NULL, LoadCursor(NULL, IDC_ARROW), brush, NULL, L"fx", NULL };
 #endif
     RegisterClassEx(&wcex);
-
 #ifdef _DEBUG
     window->hWnd = CreateWindow("fx", "fx", WS_POPUP | WS_VISIBLE | WS_MAXIMIZE, 0, 0, width, height, NULL, NULL, hInst, NULL);
 #else
     window->hWnd = CreateWindow(L"fx", L"fx", WS_POPUP | WS_VISIBLE | WS_MAXIMIZE, 0, 0, width, height, NULL, NULL, hInst, NULL);
 #endif
+
+#endif
+
     if (!window->hWnd) return FALSE;
 
     ShowWindow(window->hWnd, SW_SHOW);
