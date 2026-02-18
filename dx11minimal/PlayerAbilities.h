@@ -51,6 +51,11 @@ enum PlayerWeapons
 
 #define ATTACK_COST 25.0f
 
+#define HOOK_RADIUS 10.0f
+#define HOOK_SPEED_PROJ 10.0f
+#define HOOK_SPEED_ATT 10.0f
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: PlayerAbilities

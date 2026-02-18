@@ -1,4 +1,4 @@
-#include "PlayerAbilities.h" //
+#include "PlayerAbilities.h" 
 
 
 PlayerAbilities::PlayerAbilities()
@@ -196,6 +196,12 @@ void PlayerAbilities::BlockEnd()
 
 	PointCloud* pointCloud = playerEntity->GetComponent<PointCloud>();
 	pointCloud->color = point3d(1, 0.6f, 0.9f);
+}
+
+
+void PlayerAbilities::Hook()
+{
+
 }
 
 
