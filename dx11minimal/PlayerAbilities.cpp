@@ -31,6 +31,12 @@ void PlayerAbilities::Initialize(World* m_World, CameraClass* Camera, Entity* Pl
 	chargeDone = false;
 	charge = 0;
 	maxCharge = 100;
+
+	// Инициализация переменных хука
+	hookActive = false;
+	hookEntity = nullptr;
+	hookVisualIntensity = 0.0f;
+	hookStartTime = 0.0f;
 }
 
 

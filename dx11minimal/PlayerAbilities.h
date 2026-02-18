@@ -51,10 +51,10 @@ enum PlayerWeapons
 
 #define ATTACK_COST 25.0f
 
+//Константы хука
 #define HOOK_RADIUS 10.0f
 #define HOOK_SPEED_PROJ 10.0f
 #define HOOK_SPEED_ATT 10.0f
-
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,6 +69,9 @@ public:
 
 	float stamina;
 	float maxStamina;
+
+	//Новые публичные методы для работы хука
+	void Hook();
 
 public:
 	PlayerAbilities();
@@ -100,6 +103,12 @@ private:
 	float maxCharge;
 
 	bool block;
+
+	//Переменные хука
+	bool hookActive;
+	Entity* hookEntity;
+	float hookVisualIntensity;
+	double hookStartTime;
 
 	vector<Entity*> projectiles;
 
