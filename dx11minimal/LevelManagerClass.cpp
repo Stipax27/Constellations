@@ -1,5 +1,13 @@
 #include "LevelManagerClass.h"
 
+#include "Engine/Mesh/Animation.h"
+#include "Engine/Mesh/Skeleton.h"
+#include "Engine/Mesh/SkinnedMesh.h"
+#include "dx11.h"
+#include "Components/SkeletalAnimationComponent.h"
+#include "Systems/SkinnedMeshSystem.h"
+#include "Systems/SkeletalAnimationSystem.h"
+
 LevelManagerClass::LevelManagerClass()
 {
 	window = 0;
@@ -23,6 +31,11 @@ void LevelManagerClass::InitWindow()
 	if (window == 0) {
 		window = new WindowClass;
 	}
+}
+
+void LevelManagerClass::ProcessSound(const char* name)
+{
+	//PlaySound(TEXT(name), NULL, SND_FILENAME | SND_ASYNC);
 }
 
 
@@ -49,6 +62,14 @@ bool LevelManagerClass::Initialize()
 	mouse->Initialize(window, m_World->m_Camera);
 
 	Dx11Init(window->hWnd, window->width, window->height);
+	std::thread modelsLoadingThread(&LevelManagerClass::LoadModels, this);
+
+	D3D11_BUFFER_DESC boneDesc = {};
+	boneDesc.Usage = D3D11_USAGE_DEFAULT;
+	boneDesc.ByteWidth = sizeof(XMMATRIX) * 128;
+	boneDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+	device->CreateBuffer(&boneDesc, nullptr, &m_BoneBuffer);
 
 	// window params into const buffer
 	ConstBuf::frame.aspect = XMFLOAT4(window->aspect, window->iaspect, float(window->width), float(window->height));
@@ -57,9 +78,10 @@ bool LevelManagerClass::Initialize()
 	ConstBuf::UpdateFactors();
 
 	//Textures::LoadTexture("..\\dx11minimal\\Resourses\\Textures\\testTexture.tga");
-
-	std::thread thr(&LevelManagerClass::LoadModels, this);
-	thr.detach();
+	if (modelsLoadingThread.joinable())
+	{
+		modelsLoadingThread.join();
+	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING START //
@@ -265,6 +287,40 @@ bool LevelManagerClass::Initialize()
 		aiSystem->SetPlayerEntity(player);
 	}*/
 
+	auto spawnSkinned = [this, folder](
+		const char* name,
+		const point3d& pos,
+		const point3d& scale,
+		const SkinnedMesh& srcMesh,
+		Skeleton* skeleton,
+		std::vector<AnimationClip>* animations,
+		const char* preferredClip = nullptr)
+	{
+		Entity* e = m_World->entityStorage->CreateEntity(name, folder);
+		Transform* t = e->AddComponent<Transform>();
+		t->position = pos;
+		t->scale = scale;
+
+		SkinnedMesh* meshComp = e->AddComponent<SkinnedMesh>();
+		meshComp->vertices = srcMesh.vertices;
+		meshComp->indices = srcMesh.indices;
+		meshComp->gpuModelIndex = srcMesh.gpuModelIndex;
+
+		SkeletalAnimationComponent* animComp = e->AddComponent<SkeletalAnimationComponent>();
+		animComp->skeleton = skeleton;
+		animComp->animationClips = animations;
+		animComp->SetAnimationByIndex(0, true);
+		if (preferredClip && preferredClip[0] != '\0')
+		{
+			animComp->SetAnimationByName(preferredClip, true);
+		}
+		animComp->isPlaying = true;
+		animComp->isLooping = true;
+		animComp->currentTime = 0.0f;
+	};
+
+	spawnSkinned("Fox", point3d(0.0f, 0.0f, 10.0f), point3d(0.2f, 0.2f, 0.2f), m_FoxMesh, &m_FoxSkeleton, &m_FoxAnimations);
+	spawnSkinned("CesiumMan", point3d(3.0f, 0.0f, 10.0f), point3d(1.0f, 1.0f, 1.0f), m_CesiumMesh, &m_CesiumSkeleton, &m_CesiumAnimations);
 
 	return true;
 }
@@ -304,6 +360,12 @@ void LevelManagerClass::Shutdown()
 		delete window;
 		window = 0;
 	}
+
+	if (m_BoneBuffer)
+	{
+		m_BoneBuffer->Release();
+		m_BoneBuffer = nullptr;
+	}
 }
 
 void LevelManagerClass::Frame()
@@ -319,7 +381,7 @@ void LevelManagerClass::Frame()
 	/*count++;
 	if (count > 30) {
 		count = 0;
-		
+
 		Entity* projectile = m_World->entityStorage->CreateEntity("PlayerProjectile");
 		Transform* transform = projectile->AddComponent<Transform>();
 		transform->position = point3d(0, 23, 55);
@@ -347,7 +409,6 @@ void LevelManagerClass::Frame()
 		delayedDestroy->lifeTime = 5000;
 	}*/
 	//// FAST DEBUG CODE (DELETE LATER) ////
-
 
 	// ??????????????????????????? ????????????????????? ????????? ???????????? ??????????????????
 	//DWORD currentTime = timer::currentTime;
@@ -420,6 +481,8 @@ void LevelManagerClass::LoadModels()
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\HeroFists.obj");
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesBody.obj");
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesArmor.obj");
+	Models::LoadSkinnedModel("..\\dx11minimal\\Resourses\\Models\\Fox.glb", m_FoxMesh, m_FoxSkeleton, m_FoxAnimations);
+	Models::LoadSkinnedModel("..\\dx11minimal\\Resourses\\Models\\CesiumMan.glb", m_CesiumMesh, m_CesiumSkeleton, m_CesiumAnimations);
 }
 
 
@@ -531,8 +594,10 @@ void LevelManagerClass::InitSystems()
 	m_World->AddPhysicSystem<CombatSystem>();
 	//AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
 	m_World->AddPhysicSystem<EntityManagerSystem>();
+	m_World->AddPhysicSystem<SkeletalAnimationSystem>(context, m_BoneBuffer);
 
 	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera);
+	m_World->AddRenderSystem<SkinnedMeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera, m_BoneBuffer);
 	if (SHOW_COLLIDERS) {
 		m_World->AddRenderSystem<CollisionDrawSystem>();
 	}

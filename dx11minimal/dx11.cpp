@@ -1,5 +1,5 @@
 ﻿#include "dx11.h"
-
+#include "Engine/GLTFLoader.h"
 static inline int32 _log2(float x)
 {
 	uint32 ix = (uint32&)x;
@@ -721,13 +721,12 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 	std::vector<unsigned long> indices;       // final index buffer
 	unordered_map<tuple<int, int, int>, unsigned int, VertexKeyHash> vertexMap;
 
-	// Helper to convert OBJ index (1‑based, may be negative) to 0‑based vector index
+	// Helper to convert OBJ index (1-based, may be negative) to 0-based vector index
 	auto resolveIndex = [](int idx, size_t size) -> int {
 		if (idx > 0) return idx - 1;
 		if (idx < 0) return (int)size + idx;   // negative means relative to end
 		return -1;                             // missing index (0 or empty)
 		};
-
 	string line;
 	do {
 		if (prefix != "f") {
@@ -861,6 +860,53 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 	Shaders::Log("Model obj file was read successfully\n");
 }
 
+bool Models::LoadSkinnedModel(const char* filename, SkinnedMesh& outMesh, Skeleton& outSkeleton, std::vector<AnimationClip>& outAnimations)
+{
+	outMesh.vertices.clear();
+	outMesh.indices.clear();
+	outMesh.gpuModelIndex = -1;
+	outSkeleton.joints.clear();
+	outAnimations.clear();
+
+	GLTFLoader loader;
+	const bool ok = loader.Load(filename, outMesh, outSkeleton, outAnimations);
+	if (!ok)
+	{
+		Shaders::Log("Failed to read skinned glTF model file\n");
+		return false;
+	}
+
+	outMesh.UploadToGPU();
+	if (outMesh.gpuModelIndex < 0)
+	{
+		Shaders::Log("Failed to upload skinned model to GPU\n");
+		return false;
+	}
+
+	Shaders::Log("Skinned model glTF file was read succesfully\n");
+	return true;
+}
+
+bool Models::LoadSkinnedModel(const char* filename, SkinnedMesh& outMesh, Skeleton& outSkeleton, AnimationClip& outAnimation)
+{
+	std::vector<AnimationClip> animations;
+	if (!LoadSkinnedModel(filename, outMesh, outSkeleton, animations))
+	{
+		return false;
+	}
+
+	if (!animations.empty())
+	{
+		outAnimation = animations[0];
+	}
+	else
+	{
+		outAnimation = AnimationClip{};
+	}
+
+	return true;
+}
+
 //////////////////////////////////////////////////////////////////////////////////
 
 Shaders::VertexShader Shaders::VS[255];
@@ -894,7 +940,18 @@ void Shaders::CompilerLog(LPCWSTR source, HRESULT hr, const char* message)
 {
 	if (FAILED(hr))
 	{
-		Shaders::Log((char*)pErrorBlob->GetBufferPointer());
+		if (pErrorBlob)
+		{
+			Shaders::Log((char*)pErrorBlob->GetBufferPointer());
+		}
+		else
+		{
+			char shaderName[1024] = {};
+			WideCharToMultiByte(CP_ACP, 0, source, -1, shaderName, sizeof(shaderName), NULL, NULL);
+			Shaders::Log("Shader compile failed (no error blob): ");
+			Shaders::Log(shaderName);
+			Shaders::Log("\n");
+		}
 	}
 	else
 	{
@@ -1171,44 +1228,44 @@ void Shaders::Init()
 
 	Shaders::CreateVS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VS.shader"));
 	Shaders::CreatePS(0, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PS.shader"));
-	
+
 	Shaders::CreateVS(1, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VSS.shader"));
 	Shaders::CreatePS(1, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PSS.shader"));
-	
+
 	Shaders::CreateVS(2, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VSFS.shader"));
 	Shaders::CreatePS(2, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PSFS.shader"));
-	
+
 	Shaders::CreateVS(3, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SpaceStars_VS.shader"));
 	Shaders::CreatePS(3, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SpaceStars_PS.shader"));
-	
+
 	Shaders::CreateVS(4, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarLink_VS.shader"));
 	Shaders::CreatePS(4, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarLink_PS.shader"));
-	
+
 	Shaders::CreateVS(5, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\GalaxyFog_VS.shader"));
 	Shaders::CreatePS(5, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\GalaxyFog_PS.shader"));
-	
+
 	Shaders::CreateVS(6, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Cursor_VS.shader"));
 	Shaders::CreatePS(6, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Cursor_PS.shader"));
-	
+
 	Shaders::CreateVS(7, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\AriesNebula_VS.shader"));
 	Shaders::CreatePS(7, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\AriesNebula_PS.shader"));
 	Shaders::CreateGS(7, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\AriesNebula_GS.shader"));
-	
+
 	Shaders::CreateVS(8, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SpeedParticles_VS.shader"));
 	Shaders::CreatePS(8, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SpeedParticles_PS.shader"));
-	
+
 	Shaders::CreateVS(9, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\DotText_VS.shader"));
 	Shaders::CreatePS(9, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\DotText_PS.shader"));
-	
+
 	Shaders::CreateVS(10, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PP_VS.shader"));
 	Shaders::CreatePS(10, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PP_PS.shader"));
-	
+
 	Shaders::CreateVS(11, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Cross_VS.shader"));
 	Shaders::CreatePS(11, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Cross_PS.shader"));
-	
+
 	Shaders::CreateVS(12, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\UiParticle_VS.shader"));
 	Shaders::CreatePS(12, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\UiParticle_PS.shader"));
-	
+
 	Shaders::CreateVS(13, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Rect_VS.shader"));
 	Shaders::CreatePS(13, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Rect_Strict_PS.shader"));
 
@@ -1236,13 +1293,15 @@ void Shaders::Init()
 	Shaders::CreatePS(21, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\Particle_Basic_PS.shader"));
 
 	Shaders::CreatePS(22, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SwordBeam_PS.shader"));
-	
+
+	Shaders::CreateVS(23, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SkinnedMesh_VS.shader"));
+
 	//-----------------------------------------------
-	
+
 	Shaders::CreatePS(100, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ColorCorrection_PS.shader"));
-	
+
 	//-----------------------------------------------
-	
+
 	Shaders::CreatePS(200, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PerlinNoise.shader"));
 	Shaders::CreatePS(201, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VoronoiNoise.shader"));
 
@@ -1255,6 +1314,7 @@ void Shaders::Init()
 
 	ConstBuf::CreateVertexBuffer(15);
 	ConstBuf::CreateVertexBuffer(17);
+	ConstBuf::CreateVertexBuffer(23);
 }
 
 void Shaders::CleanupCache()
@@ -1279,7 +1339,14 @@ void Shaders::CleanupCache()
 void Shaders::vShader(unsigned int n)
 {
 	currentVS = n;
-	context->VSSetShader(VS[n].vShader, NULL, 0);
+	if (VS[n].vShader)
+	{
+		context->VSSetShader(VS[n].vShader, NULL, 0);
+	}
+	else
+	{
+		Shaders::Log("WARNING: Trying to set null vertex shader\n");
+	}
 }
 
 void Shaders::pShader(unsigned int n)
@@ -1399,7 +1466,7 @@ float ConstBuf::drawerP[constCount];
 //b2
 ConstBuf::DrawerMat ConstBuf::drawerMat;
 
-//b3 
+//b3
 ConstBuf::Camera ConstBuf::camera;
 
 //b4
@@ -1444,38 +1511,32 @@ void ConstBuf::Create(ID3D11Buffer*& buf, int size)
 
 void ConstBuf::CreateVertexBuffer(int vertexShader)
 {
-	D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
-	unsigned int numElements;
+	if (Shaders::VS[vertexShader].pBlob == nullptr)
+	{
+		OutputDebugStringA("CreateVertexBuffer: pBlob is null, cannot create InputLayout\n");
+		return;
+	}
 
-	polygonLayout[0].SemanticName = "POSITION";
-	polygonLayout[0].SemanticIndex = 0;
-	polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	polygonLayout[0].InputSlot = 0;
-	polygonLayout[0].AlignedByteOffset = 0;
-	polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	polygonLayout[0].InstanceDataStepRate = 0;
+	D3D11_INPUT_ELEMENT_DESC layout[5] = {
+		{ "POSITION",     0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL",       0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD",     0, DXGI_FORMAT_R32G32_FLOAT,       0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT,  0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDWEIGHT",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
 
-	polygonLayout[1].SemanticName = "NORMAL";
-	polygonLayout[1].SemanticIndex = 0;
-	polygonLayout[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	polygonLayout[1].InputSlot = 0;
-	polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	polygonLayout[1].InstanceDataStepRate = 0;
+	HRESULT hr = device->CreateInputLayout(
+		layout, 5,
+		Shaders::VS[vertexShader].pBlob->GetBufferPointer(),
+		Shaders::VS[vertexShader].pBlob->GetBufferSize(),
+		&Shaders::VS[vertexShader].pLayout
+	);
 
-	polygonLayout[2].SemanticName = "TEXCOORD";
-	polygonLayout[2].SemanticIndex = 0;
-	polygonLayout[2].Format = DXGI_FORMAT_R32G32_FLOAT;
-	polygonLayout[2].InputSlot = 0;
-	polygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	polygonLayout[2].InstanceDataStepRate = 0;
-
-	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
-
-	// Create the vertex input layout.
-	device->CreateInputLayout(polygonLayout, numElements, Shaders::VS[vertexShader].pBlob->GetBufferPointer(),
-		Shaders::VS[vertexShader].pBlob->GetBufferSize(), &Shaders::VS[vertexShader].pLayout);
+	if (FAILED(hr))
+	{
+		OutputDebugStringA("CreateVertexBuffer: CreateInputLayout failed\n");
+		Shaders::VS[vertexShader].pLayout = nullptr;
+	}
 }
 
 void ConstBuf::Init()
@@ -1578,7 +1639,7 @@ void Blend::Init()
 	//NO ALPHA
 	Blend::CreateMixStates(1);
 
-	//ALPHA 
+	//ALPHA
 	bSDesc.RenderTarget[0].BlendEnable = TRUE;
 	bSDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
 	bSDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
@@ -1617,7 +1678,7 @@ void Depth::Init()
 	dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 	dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-	// Stencil operations if pixel is back-facing 
+	// Stencil operations if pixel is back-facing
 	dsDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
 	dsDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
 	dsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;

@@ -1,7 +1,7 @@
 #ifndef DX11_H
 #define DX11_H
 
-#define _XM_SSE_INTRINSICS_ 
+#define _XM_SSE_INTRINSICS_
 #include <d3d11.h>
 #include <d2d1.h>
 #include <d3dcompiler.h>
@@ -10,6 +10,7 @@
 #include <debugapi.h>
 #include <algorithm>
 #include <deque>
+#include <vector>
 #include <stdio.h>
 #include <fstream>
 #include <unordered_map>
@@ -38,6 +39,10 @@ using namespace DirectX;
 
 typedef unsigned long uint32;
 typedef long int32;
+
+struct SkinnedMesh;
+struct Skeleton;
+struct AnimationClip;
 
 static inline int32 _log2(float x);
 static bool GetFileModificationTime(const char* filePath, time_t& modTime);
@@ -91,7 +96,7 @@ namespace Textures
 		ID3D11Texture2D* pDepth;
 		ID3D11ShaderResourceView* DepthResView;
 		ID3D11DepthStencilView* DepthStencilView[16];
-		
+
 		ID3D11UnorderedAccessView* UnorderedAccessView;
 
 		tType type;
@@ -162,6 +167,9 @@ namespace Models
 		XMFLOAT3 position;
 		XMFLOAT3 normal;
 		XMFLOAT2 texture;
+
+		XMUINT4 joints;
+		XMFLOAT4 weights;
 	};
 
 	struct ModelType
@@ -197,6 +205,8 @@ namespace Models
 	void LoadTxtModel(const char* filename, bool = false);
 	void LoadGltfModel(const char* filename);
 	void LoadObjModel(const char* filename, bool = false);
+	bool LoadSkinnedModel(const char* filename, SkinnedMesh& outMesh, Skeleton& outSkeleton, std::vector<AnimationClip>& outAnimations);
+	bool LoadSkinnedModel(const char* filename, SkinnedMesh& outMesh, Skeleton& outSkeleton, AnimationClip& outAnimation);
 }
 
 namespace Shaders {
@@ -286,7 +296,7 @@ namespace ConstBuf
 #define constCount 1024
 
 	// buffer structures
-	
+
 	struct DrawerMat {
 		XMMATRIX model;
 		float hilight;
@@ -331,7 +341,7 @@ namespace ConstBuf
 	//b2
 	extern DrawerMat drawerMat;
 
-	//b3 
+	//b3
 	extern Camera camera;
 
 	//b4
