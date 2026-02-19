@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <deque>
 #include <vector>
+#include <utility>
 #include <stdio.h>
 #include <fstream>
 #include <unordered_map>
@@ -205,6 +206,8 @@ namespace Models
 	void LoadTxtModel(const char* filename, bool = false);
 	void LoadGltfModel(const char* filename);
 	void LoadObjModel(const char* filename, bool = false);
+	bool LoadSkinnedAnimations(const char* filename, std::vector<AnimationClip>& outAnimations, Skeleton* outSourceSkeleton = nullptr);
+	bool LoadAndRemapAnimations(const char* filename, const Skeleton& targetSkeleton, std::vector<AnimationClip>& outAnimations, bool append = true);
 	bool LoadSkinnedModel(const char* filename, SkinnedMesh& outMesh, Skeleton& outSkeleton, std::vector<AnimationClip>& outAnimations);
 	bool LoadSkinnedModel(const char* filename, SkinnedMesh& outMesh, Skeleton& outSkeleton, AnimationClip& outAnimation);
 }

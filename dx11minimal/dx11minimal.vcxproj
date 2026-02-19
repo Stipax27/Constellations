@@ -197,6 +197,7 @@
     <ClInclude Include="DelayedDestroy.h" />
     <ClInclude Include="Engine\GLTFLoader.h" />
     <ClInclude Include="Engine\Mesh\Animation.h" />
+    <ClInclude Include="Engine\Mesh\AnimationRetarget.h" />
     <ClInclude Include="Engine\Mesh\Animator.h" />
     <ClInclude Include="Engine\Mesh\Skeleton.h" />
     <ClInclude Include="Engine\Mesh\SkinnedMesh.h" />
@@ -657,6 +658,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Engine\Mesh\AnimationRetarget.cpp" />
     <ClCompile Include="Engine\Mesh\Skeleton.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>

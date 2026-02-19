@@ -62,7 +62,13 @@ bool GLTFLoader::Load(
 	for (size_t i = 0; i < model.nodes.size(); ++i)
 	{
 		Joint j;
+		j.name = model.nodes[i].name;
+		if (j.name.empty())
+		{
+			j.name = "joint_" + std::to_string(i);
+		}
 		j.parent = parentOf[i];
+		j.children = model.nodes[i].children;
 
 		// Load local transform from node
 		const auto& node = model.nodes[i];

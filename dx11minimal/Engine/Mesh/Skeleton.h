@@ -1,9 +1,11 @@
 #pragma once
 #include <vector>
+#include <string>
 #include <DirectXMath.h>
 
 struct Joint
 {
+	std::string name;
 	int parent = -1;
 	std::vector<int> children;
 

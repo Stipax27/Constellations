@@ -1,5 +1,6 @@
-﻿#include "dx11.h"
+#include "dx11.h"
 #include "Engine/GLTFLoader.h"
+#include "Engine/Mesh/AnimationRetarget.h"
 static inline int32 _log2(float x)
 {
 	uint32 ix = (uint32&)x;
@@ -730,7 +731,7 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 	string line;
 	do {
 		if (prefix != "f") {
-			// Not a face line – read next line and continue
+			// Not a face line - read next line and continue
 			getline(fin, line);
 			fin >> prefix;
 			continue;
@@ -760,16 +761,16 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 			if (parts.size() > 2 && !parts[2].empty())
 				vnIdx = stoi(parts[2]);
 
-			// Convert to 0‑based and clamp to valid range
+			// Convert to 0-based and clamp to valid range
 			int posIndex = resolveIndex(vIdx, positions.size());
 			if (posIndex < 0 || posIndex >= (int)positions.size())
-				continue; // invalid position – skip this vertex
+				continue; // invalid position - skip this vertex
 
 			int texIndex = -1;
 			if (!vertexOnly && vtIdx != -1) {
 				texIndex = resolveIndex(vtIdx, texcoords.size());
 				if (texIndex < 0 || texIndex >= (int)texcoords.size())
-					texIndex = -1; // invalid – treat as missing
+					texIndex = -1; // invalid - treat as missing
 			}
 
 			int normIndex = -1;
@@ -785,7 +786,7 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 
 			auto it = vertexMap.find(key);
 			if (it == vertexMap.end()) {
-				// New unique vertex – create it
+				// New unique vertex - create it
 				VertexType vert;
 
 				// Position (always present)
@@ -860,6 +861,77 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 	Shaders::Log("Model obj file was read successfully\n");
 }
 
+bool Models::LoadSkinnedAnimations(const char* filename, std::vector<AnimationClip>& outAnimations, Skeleton* outSourceSkeleton)
+{
+	SkinnedMesh dummyMesh;
+	Skeleton loadedSkeleton;
+	std::vector<AnimationClip> loadedAnimations;
+
+	GLTFLoader loader;
+	const bool ok = loader.Load(filename, dummyMesh, loadedSkeleton, loadedAnimations);
+	if (!ok)
+	{
+		Shaders::Log("Failed to read skinned glTF animation file\n");
+		return false;
+	}
+
+	if (outSourceSkeleton)
+	{
+		*outSourceSkeleton = std::move(loadedSkeleton);
+	}
+
+	outAnimations = std::move(loadedAnimations);
+	return true;
+}
+
+bool Models::LoadAndRemapAnimations(const char* filename, const Skeleton& targetSkeleton, std::vector<AnimationClip>& outAnimations, bool append)
+{
+	Skeleton sourceSkeleton;
+	std::vector<AnimationClip> sourceAnimations;
+	if (!LoadSkinnedAnimations(filename, sourceAnimations, &sourceSkeleton))
+	{
+		return false;
+	}
+
+	if (sourceAnimations.empty())
+	{
+		Shaders::Log("No animation clips found in source file\n");
+		return false;
+	}
+
+	if (AnimationRetarget::CanUseAnimationDirectly(sourceSkeleton, targetSkeleton))
+	{
+		if (!append)
+		{
+			outAnimations.clear();
+		}
+
+		outAnimations.insert(outAnimations.end(), sourceAnimations.begin(), sourceAnimations.end());
+		return true;
+	}
+
+	std::vector<int> sourceToTargetJointMap;
+	if (!AnimationRetarget::BuildSourceToTargetJointMap(sourceSkeleton, targetSkeleton, sourceToTargetJointMap))
+	{
+		Shaders::Log("Skeletons are incompatible for animation remap\n");
+		return false;
+	}
+
+	std::vector<AnimationClip> remappedAnimations;
+	if (!AnimationRetarget::RemapAnimationsToSkeleton(sourceAnimations, sourceToTargetJointMap, remappedAnimations))
+	{
+		Shaders::Log("Failed to remap animation clips to target skeleton\n");
+		return false;
+	}
+
+	if (!append)
+	{
+		outAnimations.clear();
+	}
+
+	outAnimations.insert(outAnimations.end(), remappedAnimations.begin(), remappedAnimations.end());
+	return true;
+}
 bool Models::LoadSkinnedModel(const char* filename, SkinnedMesh& outMesh, Skeleton& outSkeleton, std::vector<AnimationClip>& outAnimations)
 {
 	outMesh.vertices.clear();
@@ -1907,3 +1979,5 @@ void Draw::Present()
 	Textures::UnbindAll();
 	swapChain->Present(1, 0);
 }
+
+
