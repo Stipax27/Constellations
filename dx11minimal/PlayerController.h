@@ -50,6 +50,7 @@ class PlayerController
 {
 public:
 	PlayerAbilities* abilities;
+	Health* boss;
 
 public:
 	PlayerController();
