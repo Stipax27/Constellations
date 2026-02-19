@@ -1,4 +1,4 @@
-#include "LevelManagerClass.h"
+﻿#include "LevelManagerClass.h"
 
 LevelManagerClass::LevelManagerClass()
 {
@@ -363,6 +363,8 @@ void LevelManagerClass::CreateUI()
 
 	Entity* uiFolder = m_World->entityStorage->CreateEntity("UI");
 
+
+
 	entity = m_World->entityStorage->CreateEntity("HealthHolder", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(-1, 0, 0);
@@ -397,6 +399,71 @@ void LevelManagerClass::CreateUI()
 	//transform2D->position = point3d(-1, 0, 0);
 	rect = entity->AddComponent<Rect>();
 	rect->color = point3d(0.8f, 0.8f, 1);
+
+
+	// UI Prototypes
+	// Selected weapon - circle
+	entity = m_World->entityStorage->CreateEntity("Rect", uiFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(-1, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::XX;
+	transform2D->position = point3d(-0.9f, -0.85f, 0.0f);
+	transform2D->scale = point3d(0.05f, 0.05f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.75f, 0.0f, 0.0f);
+	//rect->opacity = 0.5f;
+	rect->cornerRadius = 1.f;
+
+	// Charged attack - circle
+	entity = m_World->entityStorage->CreateEntity("Rect", uiFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(-1, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::XX;
+	transform2D->position = point3d(-0.75f, -0.85f, 0.0f);
+	transform2D->scale = point3d(0.05f, 0.05f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.75f, 0.0f, 0.0f);
+	rect->cornerRadius = 1.f;
+
+	// Battle end timer - icon
+	entity = m_World->entityStorage->CreateEntity("Rect", uiFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(-1, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::XX;
+	transform2D->position = point3d(-0.9f, 0.85f, 0.0f);
+	transform2D->scale = point3d(0.05f, 0.05f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.75f, 0.0f, 0.0f);
+
+	// Battle end timer - text
+	entity = m_World->entityStorage->CreateEntity("Rect", uiFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(-1, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::XX;
+	transform2D->position = point3d(-0.75f, 0.85f, 0.0f);
+	transform2D->scale = point3d(0.05f, 0.05f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.75f, 0.0f, 0.0f);
+
+	// Enemy name - text
+	entity = m_World->entityStorage->CreateEntity("Rect", uiFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::XX;
+	transform2D->position = point3d(0, 0.85f, 0.0f);
+	transform2D->scale = point3d(0.05f, 0.05f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.75f, 0.0f, 0.0f);
+
+	// Enemy HP bar - rectangle
+	entity = m_World->entityStorage->CreateEntity("Rect", uiFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(0, 0.7f, 0.0f);
+	transform2D->scale = point3d(0.5f, 0.025f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.75f, 0.0f, 0.0f);
 }
 
 
