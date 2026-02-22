@@ -61,6 +61,7 @@ bool LevelManagerClass::Initialize()
 	std::thread thr(&LevelManagerClass::LoadModels, this);
 	thr.detach();
 
+
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING START //
 	//////////////////////////////////////////////////////////////////////////////////////////////
@@ -264,6 +265,49 @@ bool LevelManagerClass::Initialize()
 	{
 		aiSystem->SetPlayerEntity(player);
 	}*/
+
+	// Тестовый враг для ИИ amogus
+	Entity* testEnemy = m_World->entityStorage->CreateEntity("TestEnemy", folder);
+	Transform* testTransform = testEnemy->AddComponent<Transform>();
+	testTransform->position = point3d(15.0f, -25.0f, 0.0f); // Стартовая позиция
+
+	PhysicBody* testPhysic = testEnemy->AddComponent<PhysicBody>();
+	testPhysic->airFriction = 1.0f; // Обычное трение
+
+	// Визуальная составляющая (можно использовать Star или любой другой компонент)
+	Star* testStar = testEnemy->AddComponent<Star>();
+	testStar->radius = 1.0f;
+	testStar->color1 = point3d(0.5f, 0.1f, 0.5f); // Цвет
+
+	// Компонент ИИ
+	AIComponent* ai = testEnemy->AddComponent<AIComponent>();
+	ai->enabled = true;
+	ai->behaviorType = AIBehaviorType::PATROL; // Начинаем с патруля
+
+	// Точки патрулирования (локальные координаты относительно врага? 
+	// В текущей реализации patrolPoints задаются в мировых координатах, 
+	// поэтому зададим абсолютные позиции)
+	ai->patrolPoints = {
+		point3d(15.0f, -25.0f, 0.0f),
+		point3d(25.0f, -25.0f, 0.0f),
+		point3d(25.0f, -35.0f, 0.0f),
+		point3d(15.0f, -35.0f, 0.0f)
+	};
+	ai->movementSpeed = 3.0f;
+	ai->arrivalDistance = 1.0f;
+
+	// Параметры обнаружения
+	ai->detectionRange = 12.0f;  // Радиус, в котором замечает игрока
+	ai->chaseRange = 18.0f;      // Радиус преследования
+	ai->attackRange = 3.0f;      // Радиус атаки
+
+	// Параметры атаки (пока атака не реализована, но можно оставить)
+	ai->attackCooldown = 1.5f;
+	ai->attackDamage = 5.0f;
+
+	// Таймеры состояний
+	ai->idleDuration = 2.0f;
+	ai->fleeDuration = 4.0f;
 
 
 	return true;
@@ -529,7 +573,9 @@ void LevelManagerClass::InitSystems()
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>(collisionManager);
 	m_World->AddPhysicSystem<CombatSystem>();
-	//AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
+	// Кодовое слово: amogus
+	AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
+
 	m_World->AddPhysicSystem<EntityManagerSystem>();
 
 	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera);
