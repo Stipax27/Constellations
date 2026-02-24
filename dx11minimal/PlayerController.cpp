@@ -91,12 +91,8 @@ void PlayerController::Shutdown()
 
 void PlayerController::ProcessInput()
 {
-	if (!window->IsActive())
-		return;
-
 	if (playerEntity == nullptr || !playerEntity->IsActive())
 		return;
-
 
 	if (movementLocked && playerPhysicBody->velocity.magnitude() < PLAYER_MOVE_SPEED) {
 		movementLocked = false;
@@ -182,9 +178,6 @@ void PlayerController::ProcessCamera()
 
 void PlayerController::ProcessMouse()
 {
-	if (!window->IsActive())
-		return;
-
 	float x = mouse->absolutePos.x - window->width / 2;
 	float y = mouse->absolutePos.y - window->height / 2;
 	point3d mousePos = point3d(x / window->width / window->aspect, y / window->height, 0);

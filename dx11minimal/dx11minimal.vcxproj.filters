@@ -543,6 +543,30 @@
     <None Include="Shaders\lib\particleVS_main2.shader">
       <Filter>Shaders\lib</Filter>
     </None>
+    <None Include="Shaders\ps\basic.shader">
+      <Filter>Shaders\PS</Filter>
+    </None>
+    <None Include="Shaders\ps\basicLow.shader">
+      <Filter>Shaders\PS</Filter>
+    </None>
+    <None Include="Shaders\ps\cat.shader">
+      <Filter>Shaders\PS</Filter>
+    </None>
+    <None Include="Shaders\ps\cubemapCreator.shader">
+      <Filter>Shaders\PS</Filter>
+    </None>
+    <None Include="Shaders\ps\cubeMapViewer.shader">
+      <Filter>Shaders\PS</Filter>
+    </None>
+    <None Include="Shaders\ps\genNormals.shader">
+      <Filter>Shaders\PS</Filter>
+    </None>
+    <None Include="Shaders\ps\obj1.shader">
+      <Filter>Shaders\PS</Filter>
+    </None>
+    <None Include="Shaders\ps\output.shader">
+      <Filter>Shaders\PS</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">
@@ -679,6 +703,9 @@
     </Filter>
     <Filter Include="Shaders\VS">
       <UniqueIdentifier>{47cf006f-7880-40a1-932c-ac7c3be2d199}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\PS">
+      <UniqueIdentifier>{904990b9-ae0b-4d38-b43d-7a34e9506127}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

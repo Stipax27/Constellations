@@ -274,6 +274,9 @@ void LevelManagerClass::Shutdown()
 
 void LevelManagerClass::Frame()
 {
+	if (!window->IsActive())
+		return;
+
 	mouse->Update();
 	playerController->ProcessInput();
 	playerController->ProcessMouse();
@@ -288,6 +291,7 @@ void LevelManagerClass::Frame()
 	playerController->ProcessCamera();
 
 	m_World->UpdateRender();
+	CreateZenithLocation(4);
 
 	mouse->RenderCursor();
 	Draw::Present();
@@ -614,29 +618,74 @@ void LevelManagerClass::CreateAries(Entity* folder)
 
 void LevelManagerClass::CreateZenithLocation(int quality)
 {
+	Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+	Rasterizer::Cull(Rasterizer::cullmode::off);
+	Depth::Depth(Depth::depthmode::off);
+
 	int pillars_cnt = 3725470 / 2 / quality;
 	int outerSpace_cnt = 6853 / quality;
 	int galaxy_cnt = 182361 / quality;
 
 	//hi
-	//RenderTarget::Set({ texture::pBuf,0 });
-	Draw::Clear({ 0,0,0,0 });
+	int lastRT = Textures::currentRT;
+	int uavIndex = (int)RenderCompress::x2 * 2 + 1;
+	int rtIndex = (int)RenderCompress::x2 * 2 + 2;
+
+	Textures::RenderTarget(rtIndex, 0);
+	Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
+	Draw::ClearDepth();
+
+	ConstBuf::ConstToCompute(7);
+
+	Compute::Dispatch(0, lastRT, uavIndex);
+	Textures::TextureToShader(uavIndex, 0);
+
+	Sampler::SamplerComp(0);
 
 	PillarsHand(pillars_cnt, 1, pMode::point);
 	InsideNebula(pillars_cnt, 1, pMode::point, 100, 200, 600);
 	OuterSpace(outerSpace_cnt, 1, pMode::point);
 
-	//mid
-	//RenderTarget::Set({ texture::pBufMid,0 });
-	Draw::Clear({ 0,0,0,0 });
+	Textures::CreateMipMap();
+	Textures::RenderTarget(lastRT, 0);
+	Textures::TextureToShader(rtIndex, 0, targetshader::pixel);
+
+	Shaders::vShader(10);
+	Shaders::gShader(0);
+	Shaders::pShader(100);
+
+	InputAssembler::IA(InputAssembler::topology::triList);
+	context->Draw(6, 0);
 
 	//low
-	//RenderTarget::Set({ texture::pBufLow,0 });
-	Draw::Clear({ 0,0,0,0 });
+	uavIndex = (int)RenderCompress::x8 * 2 + 1;
+	rtIndex = (int)RenderCompress::x8 * 2 + 2;
+
+	Textures::RenderTarget(rtIndex, 0);
+	Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
+	Draw::ClearDepth();
+
+	ConstBuf::ConstToCompute(7);
+
+	Compute::Dispatch(0, lastRT, uavIndex);
+	Textures::TextureToShader(uavIndex, 0);
+
+	Sampler::SamplerComp(0);
 
 	PillarsHand(pillars_cnt, 1394 / 2, pMode::glow);
 	InsideNebula(pillars_cnt, 1394, pMode::glow ,100, 200, 600);
 	//	OuterSpace(outerSpace_cnt, 64, pMode::glow);
+
+	Textures::CreateMipMap();
+	Textures::RenderTarget(lastRT, 0);
+	Textures::TextureToShader(rtIndex, 0, targetshader::pixel);
+
+	Shaders::vShader(10);
+	Shaders::gShader(0);
+	Shaders::pShader(100);
+
+	InputAssembler::IA(InputAssembler::topology::triList);
+	context->Draw(6, 0);
 }
 
 
@@ -645,7 +694,7 @@ void LevelManagerClass::PillarsHand(int count, int skipper, pMode mode)
 	int gX = sqrt(count / skipper);
 	int gY = sqrt(count / skipper);
 
-	//psModeSet(mode);
+	psModeSet(mode);
 
 	ConstBuf::locationInfo.model = XMMatrixTranspose(XMMatrixTranslation(0, 0, 0));
 	ConstBuf::locationInfo.gX = gX;
@@ -653,7 +702,7 @@ void LevelManagerClass::PillarsHand(int count, int skipper, pMode mode)
 	ConstBuf::locationInfo.mode = (int)mode;
 	ConstBuf::locationInfo.skipper = skipper;
 
-	Shaders::vShader(14);
+	Shaders::vShader(24);
 	ConstBuf::UpdateLocationInfo();
 	ConstBuf::ConstToVertex(11);
 
@@ -666,7 +715,7 @@ void LevelManagerClass::InsideNebula(int count, int skipper, pMode mode, int r, 
 	int gX = sqrt(count / skipper);
 	int gY = sqrt(count / skipper);
 
-	//psModeSet(mode);
+	psModeSet(mode);
 
 	ConstBuf::locationInfo.model = XMMatrixTranspose(XMMatrixTranslation(0, 0, 0));
 	ConstBuf::locationInfo.gX = gX;
@@ -675,7 +724,7 @@ void LevelManagerClass::InsideNebula(int count, int skipper, pMode mode, int r, 
 	ConstBuf::locationInfo.skipper = skipper;
 	ConstBuf::locationInfo.base_color = XMFLOAT4(r / 100., g / 100., b / 100., 1);
 
-	Shaders::vShader(5);
+	Shaders::vShader(23);
 	ConstBuf::UpdateLocationInfo();
 	ConstBuf::ConstToVertex(11);
 
@@ -688,7 +737,7 @@ void LevelManagerClass::OuterSpace(int count, int skipper, pMode mode)
 	int gX = sqrt(count / skipper);
 	int gY = sqrt(count / skipper);
 
-	//psModeSet(mode);
+	psModeSet(mode);
 
 	ConstBuf::locationInfo.model = XMMatrixTranspose(XMMatrixTranslation(0, 0, 0));
 	ConstBuf::locationInfo.gX = gX;
@@ -696,7 +745,7 @@ void LevelManagerClass::OuterSpace(int count, int skipper, pMode mode)
 	ConstBuf::locationInfo.mode = (int)mode;
 	ConstBuf::locationInfo.skipper = skipper;
 
-	Shaders::vShader(19);
+	Shaders::vShader(25);
 	ConstBuf::UpdateLocationInfo();
 	ConstBuf::ConstToVertex(11);
 
@@ -729,12 +778,12 @@ void LevelManagerClass::psModeSet(pMode mode)
 	{
 	case pMode::point:
 	{
-		Shaders::pShader(0);
+		Shaders::pShader(23);
 		break;
 	}
 	case pMode::glow:
 	{
-		Shaders::pShader(1);
+		Shaders::pShader(24);
 		break;
 	}
 	}
