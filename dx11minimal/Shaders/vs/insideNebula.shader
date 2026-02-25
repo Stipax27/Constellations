@@ -55,6 +55,9 @@ float3 pillar(uint qid,uint iid,float2 grid,float a, float t, float h)
 
 pos_color CalcParticles(uint qid,uint iid,float4 grid)
 {
+    float scale = 8;
+    float lowerScale = sqrt(scale);
+
      qid *= lSkipper;
      float t=time.x*.004;
      uint inStars = 10000;
@@ -67,7 +70,7 @@ pos_color CalcParticles(uint qid,uint iid,float4 grid)
 
 
     //calc
-    float3 pos = pillar(qid,iid,grid.xy,0,t,0);
+    float3 pos = pillar(qid,iid,grid.xy,0,t,0) * scale;
     float3 pos2=pos;
     
     //scatter
@@ -80,20 +83,20 @@ pos_color CalcParticles(uint qid,uint iid,float4 grid)
     if (lMode==1)
     {
         float s=hash(iid)*33+11;
-        p.pos=transform(pos,grid.zw,s);
+        p.pos=transform(pos,grid.zw,s * lowerScale);
         p.color*=12;
         p.sz=172;
     }
     else
     {
-        p.pos = transform_unisize(pos,grid.zw,1.5);
+        p.pos = transform_unisize(pos,grid.zw,1.5 * lowerScale);
        //p.color=-noise(pos*.3+12)*.04+.02;;
        // p.color +=min(0,sign(1./noise(-pos2*.2-2.6)))/91.;
          p.sz=1;
 
          if (iid%inStars==0)
          {
-              p.pos = transform_unisize(pos,grid.zw,151.5);
+              p.pos = transform_unisize(pos,grid.zw,151.5 * lowerScale);
                p.sz=2;
                p.color*=3;
          }
@@ -106,6 +109,8 @@ pos_color CalcParticles(uint qid,uint iid,float4 grid)
                p.color*=(float4(5,-.1,-1,1));
                p.color*=10;
          }*/
+
+    p.sz *= lowerScale;
   
    
     //density compensation

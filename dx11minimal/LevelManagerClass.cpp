@@ -81,7 +81,7 @@ bool LevelManagerClass::Initialize()
 
 	Entity* player = CreatePlayer();
 
-	entity = m_World->entityStorage->CreateEntity("AriesNebulaLocation", folder);
+	/*entity = m_World->entityStorage->CreateEntity("AriesNebulaLocation", folder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, 50.0f);
 	transform->scale = point3d(1, 0, 0);
@@ -93,118 +93,118 @@ bool LevelManagerClass::Initialize()
 	spriteCluster->vertexNum = 1;
 	spriteCluster->frustumRadius = 60;
 	spriteCluster->topology = InputAssembler::topology::pointList;
-	spriteCluster->compress = RenderCompress::x2;
+	spriteCluster->compress = RenderCompress::x2;*/
 	/*sphereCollider = entity->AddComponent<SphereCollider>();
 	sphereCollider->radius = 25.0f;
 	sphereCollider->softness = 0.5f;*/
 	//entity->AddComponent<SurfaceCollider>();
 
-	entity = m_World->entityStorage->CreateEntity("StarsBackground", folder);
+	/*entity = m_World->entityStorage->CreateEntity("StarsBackground", folder);
 	spriteCluster = entity->AddComponent<SpriteCluster>();
 	spriteCluster->vShader = 2;
 	spriteCluster->pShader = 2;
-	spriteCluster->pointsNum = 10000;
+	spriteCluster->pointsNum = 10000;*/
 
 	/////////////////////////
 
-	entity = m_World->entityStorage->CreateEntity("Star", folder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0.0f, 0.0f, -20.0f);
-	star = entity->AddComponent<Star>();
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->radius = 0.5f;
-	sphereCollider->active = false;
-	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	//sphereCollider->softness = 0.5f;
-	singleDamager = entity->AddComponent<SingleDamager>();
-	singleDamager->damage = 1000;
+	//entity = m_World->entityStorage->CreateEntity("Star", folder);
+	//transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(0.0f, 0.0f, -20.0f);
+	//star = entity->AddComponent<Star>();
+	//sphereCollider = entity->AddComponent<SphereCollider>();
+	//sphereCollider->radius = 0.5f;
+	//sphereCollider->active = false;
+	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	////sphereCollider->softness = 0.5f;
+	//singleDamager = entity->AddComponent<SingleDamager>();
+	//singleDamager->damage = 1000;
 
-	entity = m_World->entityStorage->CreateEntity("Particles", folder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-10.0f, 0.0f, -20.0f);
-	particleEmitter = entity->AddComponent<ParticleEmitter>();
-	particleEmitter->rate = 100;
-	particleEmitter->lifetime = 1000;
-	particleEmitter->color = point3d(0.15f, 0.95f, 0.35f);
-	particleEmitter->size = { 1.0f, 4.0f };
-	particleEmitter->opacity = { 0.75f, 0.0f };
-	particleEmitter->emitDirection = EmitDirection::Up;
-	particleEmitter->speed = { 10.0f, 0.0f };
-	particleEmitter->spread = { PI / 8, PI / 8 };
+	//entity = m_World->entityStorage->CreateEntity("Particles", folder);
+	//transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(-10.0f, 0.0f, -20.0f);
+	//particleEmitter = entity->AddComponent<ParticleEmitter>();
+	//particleEmitter->rate = 100;
+	//particleEmitter->lifetime = 1000;
+	//particleEmitter->color = point3d(0.15f, 0.95f, 0.35f);
+	//particleEmitter->size = { 1.0f, 4.0f };
+	//particleEmitter->opacity = { 0.75f, 0.0f };
+	//particleEmitter->emitDirection = EmitDirection::Up;
+	//particleEmitter->speed = { 10.0f, 0.0f };
+	//particleEmitter->spread = { PI / 8, PI / 8 };
 
-	entity = m_World->entityStorage->CreateEntity("Particles", folder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-20.0f, 0.0f, -20.0f);
-	particleEmitter = entity->AddComponent<ParticleEmitter>();
-	particleEmitter->rate = 150;
-	particleEmitter->lifetime = 1000;
-	particleEmitter->color = point3d(1.0f, 0.15f, 0.1f);
-	particleEmitter->size = { 0.0f, 4.0f };
-	particleEmitter->opacity = { 1.0f, 0.0f };
-	particleEmitter->emitDirection = EmitDirection::Up;
-	particleEmitter->speed = { 10.0f, 0.0f };
-	particleEmitter->spread = { PI, PI };
-	particleEmitter->isReverse = true;
+	//entity = m_World->entityStorage->CreateEntity("Particles", folder);
+	//transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(-20.0f, 0.0f, -20.0f);
+	//particleEmitter = entity->AddComponent<ParticleEmitter>();
+	//particleEmitter->rate = 150;
+	//particleEmitter->lifetime = 1000;
+	//particleEmitter->color = point3d(1.0f, 0.15f, 0.1f);
+	//particleEmitter->size = { 0.0f, 4.0f };
+	//particleEmitter->opacity = { 1.0f, 0.0f };
+	//particleEmitter->emitDirection = EmitDirection::Up;
+	//particleEmitter->speed = { 10.0f, 0.0f };
+	//particleEmitter->spread = { PI, PI };
+	//particleEmitter->isReverse = true;
 
-	entity = m_World->entityStorage->CreateEntity("Particles", folder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-30.0f, 0.0f, -20.0f);
-	particleEmitter = entity->AddComponent<ParticleEmitter>();
-	particleEmitter->rate = 100;
-	particleEmitter->lifetime = 750;
-	particleEmitter->color = point3d(1, 1, 1);
-	particleEmitter->size = { 0.0f, 6.0f };
-	particleEmitter->opacity = { 0.75f, 0.0f };
-	particleEmitter->emitDirection = EmitDirection::Front;
-	particleEmitter->speed = { 15.0f, 0.0f };
-	particleEmitter->spread = { 0, PI };
-	particleEmitter->isHeapEmit = true;
+	//entity = m_World->entityStorage->CreateEntity("Particles", folder);
+	//transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(-30.0f, 0.0f, -20.0f);
+	//particleEmitter = entity->AddComponent<ParticleEmitter>();
+	//particleEmitter->rate = 100;
+	//particleEmitter->lifetime = 750;
+	//particleEmitter->color = point3d(1, 1, 1);
+	//particleEmitter->size = { 0.0f, 6.0f };
+	//particleEmitter->opacity = { 0.75f, 0.0f };
+	//particleEmitter->emitDirection = EmitDirection::Front;
+	//particleEmitter->speed = { 15.0f, 0.0f };
+	//particleEmitter->spread = { 0, PI };
+	//particleEmitter->isHeapEmit = true;
 
-	entity = m_World->entityStorage->CreateEntity("Particles", folder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-40.0f, 0.0f, -20.0f);
-	particleEmitter = entity->AddComponent<ParticleEmitter>();
-	particleEmitter->rate = 100;
-	particleEmitter->lifetime = 1000;
-	particleEmitter->color = point3d(0.95f, 0.65f, 0.25f);
-	particleEmitter->size = { 3.0f, 0.0f };
-	particleEmitter->opacity = { 1.0f, 0.0f };
-	particleEmitter->emitDirection = EmitDirection::Up;
-	particleEmitter->speed = { 10.0f, 0.0f };
+	//entity = m_World->entityStorage->CreateEntity("Particles", folder);
+	//transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(-40.0f, 0.0f, -20.0f);
+	//particleEmitter = entity->AddComponent<ParticleEmitter>();
+	//particleEmitter->rate = 100;
+	//particleEmitter->lifetime = 1000;
+	//particleEmitter->color = point3d(0.95f, 0.65f, 0.25f);
+	//particleEmitter->size = { 3.0f, 0.0f };
+	//particleEmitter->opacity = { 1.0f, 0.0f };
+	//particleEmitter->emitDirection = EmitDirection::Up;
+	//particleEmitter->speed = { 10.0f, 0.0f };
 
-	for (int i = 0; i < 5; i++) {
-		entity = m_World->entityStorage->CreateEntity("Star", folder);
-		transform = entity->AddComponent<Transform>();
-		transform->position = point3d(10.0f + 5.0f * i, 0.0f, -35.0f);
-		star = entity->AddComponent<Star>();
-		star->radius = 2.0f;
-		star->crownRadius = 3.5f;
-		star->color1 = point3d(0.87f, 0.79f, 1.0f);
-		star->color2 = point3d(0.7f, 0.0f, 0.47f);
-		star->crownColor = point3d(0.47f, 0.65f, 1.0f);
-		sphereCollider = entity->AddComponent<SphereCollider>();
-		sphereCollider->radius = 2.0f;
-		sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-		health = entity->AddComponent<Health>();
-		health->hp = 10;
-		health->maxHp = 10;
-	}
+	//for (int i = 0; i < 5; i++) {
+	//	entity = m_World->entityStorage->CreateEntity("Star", folder);
+	//	transform = entity->AddComponent<Transform>();
+	//	transform->position = point3d(10.0f + 5.0f * i, 0.0f, -35.0f);
+	//	star = entity->AddComponent<Star>();
+	//	star->radius = 2.0f;
+	//	star->crownRadius = 3.5f;
+	//	star->color1 = point3d(0.87f, 0.79f, 1.0f);
+	//	star->color2 = point3d(0.7f, 0.0f, 0.47f);
+	//	star->crownColor = point3d(0.47f, 0.65f, 1.0f);
+	//	sphereCollider = entity->AddComponent<SphereCollider>();
+	//	sphereCollider->radius = 2.0f;
+	//	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	//	health = entity->AddComponent<Health>();
+	//	health->hp = 10;
+	//	health->maxHp = 10;
+	//}
 
-	entity = m_World->entityStorage->CreateEntity("Star", folder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(50, 0.0f, -35.0f);
-	star = entity->AddComponent<Star>();
-	star->radius = 8.0f;
-	star->crownRadius = 12.0f;
-	star->color1 = point3d(0.87f, 0.24f, 0.13f);
-	star->color2 = point3d(0.35f, 0.0f, 0.07f);
-	star->crownColor = point3d(0.87f, 0.25f, 0.15f);
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->radius = 8.0f;
-	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	health = entity->AddComponent<Health>();
-	health->hp = 100;
-	health->maxHp = 100;
+	//entity = m_World->entityStorage->CreateEntity("Star", folder);
+	//transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(50, 0.0f, -35.0f);
+	//star = entity->AddComponent<Star>();
+	//star->radius = 8.0f;
+	//star->crownRadius = 12.0f;
+	//star->color1 = point3d(0.87f, 0.24f, 0.13f);
+	//star->color2 = point3d(0.35f, 0.0f, 0.07f);
+	//star->crownColor = point3d(0.87f, 0.25f, 0.15f);
+	//sphereCollider = entity->AddComponent<SphereCollider>();
+	//sphereCollider->radius = 8.0f;
+	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	//health = entity->AddComponent<Health>();
+	//health->hp = 100;
+	//health->maxHp = 100;
 
 	/////////////////////////
 
@@ -212,12 +212,12 @@ bool LevelManagerClass::Initialize()
 
 	/////////////////////////
 
-	Entity* holder = m_World->entityStorage->CreateEntity("Holder", folder);
+	/*Entity* holder = m_World->entityStorage->CreateEntity("Holder", folder);
 	transform = holder->AddComponent<Transform>();
 	transform->scale = point3d(10, 10, 10);
 	transform->position = point3d(0.0f, 0.0f, -50.0f);
 	mesh = holder->AddComponent<Mesh>();
-	mesh->index = 1;
+	mesh->index = 1;*/
 
 	CreateUI();
 
@@ -658,8 +658,8 @@ void LevelManagerClass::CreateZenithLocation(int quality)
 	context->Draw(6, 0);
 
 	//low
-	uavIndex = (int)RenderCompress::x8 * 2 + 1;
-	rtIndex = (int)RenderCompress::x8 * 2 + 2;
+	uavIndex = (int)RenderCompress::x4 * 2 + 1;
+	rtIndex = (int)RenderCompress::x4 * 2 + 2;
 
 	Textures::RenderTarget(rtIndex, 0);
 	Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
