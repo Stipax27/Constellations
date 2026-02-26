@@ -13,7 +13,12 @@ float4 PS(VS_OUTPUT_PARTICLE input, bool isFrontFace : SV_IsFrontFace) : SV_Targ
           d+=2./(suv.x+suv.y);
     d*=saturate(1-max(suv.x,suv.y));
     //  d+=c*3;
-    if (length(input.size)<=1.1) return float4(15*input.color.rgb/9.,1);
 
-    return float4(d*input.color.rgb/9.,1);
+    float4 color = float4(d*input.color.rgb,1);
+    if (length(input.size)<=1.1) color = float4(15*input.color.rgb,1);
+
+    float dist = max(length(input.wpos.xyz - cPos.xyz), 1);
+    color /= dist;
+
+    return color;
 }

@@ -209,7 +209,7 @@ bool LevelManagerClass::Initialize()
 	/////////////////////////
 
 	CreateAries(folder);
-	CreateZenithLocation(2);
+	CreateZenithLocation(folder, 2);
 
 	/////////////////////////
 
@@ -616,162 +616,65 @@ void LevelManagerClass::CreateAries(Entity* folder)
 }
 
 
-void LevelManagerClass::CreateZenithLocation(int quality)
+void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 {
+	Entity* entity;
+	Nebula* nebula;
+
 	int pillars_cnt = 3725470 / 2 / quality;
 	int outerSpace_cnt = 6853 / quality;
 	int galaxy_cnt = 182361 / quality;
 
-	Entity* entity = m_World->entityStorage->CreateEntity();
+	Entity* location = m_World->entityStorage->CreateEntity("Zenith location", folder);
 
-	Nebula* nebula = entity->AddComponent<Nebula>();
+	// Pillars hand | point
+
+	entity = m_World->entityStorage->CreateEntity("PHP", folder);
+
+	nebula = location->AddComponent<Nebula>();
 	nebula->vShader = 24;
 	nebula->count = pillars_cnt;
 	nebula->mode = pMode::point;
 
+	// Inside nebula | point
 
+	entity = m_World->entityStorage->CreateEntity("INP", location);
 
+	nebula = entity->AddComponent<Nebula>();
+	nebula->vShader = 23;
+	nebula->count = pillars_cnt;
+	nebula->mode = pMode::point;
+	nebula->color = point3d(1, 2, 6);
 
+	// Outer space | point
 
+	entity = m_World->entityStorage->CreateEntity("OSP", location);
 
+	nebula = entity->AddComponent<Nebula>();
+	nebula->vShader = 25;
+	nebula->count = outerSpace_cnt;
+	nebula->mode = pMode::point;
 
-	//ConstBuf::drawerV[0] = (float)timer::frameBeginTime * 0.01f;
-	//ConstBuf::Update(0, ConstBuf::drawerV);
-	//ConstBuf::ConstToVertex(0);
-	//ConstBuf::ConstToPixel(0);
+	// Pillars hand | glow
 
-	//Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-	//Rasterizer::Cull(Rasterizer::cullmode::off);
-	//Depth::Depth(Depth::depthmode::off);
+	entity = m_World->entityStorage->CreateEntity("PHP", location);
 
-	//int pillars_cnt = 3725470 / 2 / quality;
-	//int outerSpace_cnt = 6853 / quality;
-	//int galaxy_cnt = 182361 / quality;
+	nebula = entity->AddComponent<Nebula>();
+	nebula->vShader = 24;
+	nebula->count = pillars_cnt;
+	nebula->skipper = 1394 / 2;
+	nebula->mode = pMode::glow;
 
-	////hi
-	//int lastRT = Textures::currentRT;
-	//int uavIndex = (int)RenderCompress::x2 * 2 + 1;
-	//int rtIndex = (int)RenderCompress::x2 * 2 + 2;
+	// Inside nebula | glow
 
-	//Textures::RenderTarget(rtIndex, 0);
-	//Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
-	//Draw::ClearDepth();
+	entity = m_World->entityStorage->CreateEntity("INP", location);
 
-	//ConstBuf::ConstToCompute(7);
-
-	//Compute::Dispatch(0, lastRT, uavIndex);
-	//Textures::TextureToShader(uavIndex, 0);
-
-	//Sampler::SamplerComp(0);
-
-	//PillarsHand(pillars_cnt, 1, pMode::point);
-	//InsideNebula(pillars_cnt, 1, pMode::point, 100, 200, 600);
-	//OuterSpace(outerSpace_cnt, 1, pMode::point);
-
-	//Textures::CreateMipMap();
-	//Textures::RenderTarget(lastRT, 0);
-	//Textures::TextureToShader(rtIndex, 0, targetshader::pixel);
-
-	//Shaders::vShader(10);
-	//Shaders::gShader(0);
-	//Shaders::pShader(100);
-
-	//InputAssembler::IA(InputAssembler::topology::triList);
-	//context->Draw(6, 0);
-
-	////low
-	//uavIndex = (int)RenderCompress::x4 * 2 + 1;
-	//rtIndex = (int)RenderCompress::x4 * 2 + 2;
-
-	//Textures::RenderTarget(rtIndex, 0);
-	//Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
-	//Draw::ClearDepth();
-
-	//ConstBuf::ConstToCompute(7);
-
-	//Compute::Dispatch(0, lastRT, uavIndex);
-	//Textures::TextureToShader(uavIndex, 0);
-
-	//Sampler::SamplerComp(0);
-
-	//PillarsHand(pillars_cnt, 1394 / 2, pMode::glow);
-	//InsideNebula(pillars_cnt, 1394, pMode::glow ,100, 200, 600);
-	////	OuterSpace(outerSpace_cnt, 64, pMode::glow);
-
-	//Textures::CreateMipMap();
-	//Textures::RenderTarget(lastRT, 0);
-	//Textures::TextureToShader(rtIndex, 0, targetshader::pixel);
-
-	//Shaders::vShader(10);
-	//Shaders::gShader(0);
-	//Shaders::pShader(100);
-
-	//InputAssembler::IA(InputAssembler::topology::triList);
-	//context->Draw(6, 0);
-}
-
-
-void LevelManagerClass::PillarsHand(int count, int skipper, pMode mode)
-{
-	int gX = sqrt(count / skipper);
-	int gY = sqrt(count / skipper);
-
-	psModeSet(mode);
-
-	ConstBuf::locationInfo.model = XMMatrixTranspose(XMMatrixTranslation(0, 0, 0));
-	ConstBuf::locationInfo.gX = gX;
-	ConstBuf::locationInfo.gY = gY;
-	ConstBuf::locationInfo.mode = (int)mode;
-	ConstBuf::locationInfo.skipper = skipper;
-
-	Shaders::vShader(24);
-	ConstBuf::UpdateLocationInfo();
-	ConstBuf::ConstToVertex(11);
-
-	Draw::NullDrawer(1, (int)gX * (int)gY);
-}
-
-
-void LevelManagerClass::InsideNebula(int count, int skipper, pMode mode, int r, int g, int b)
-{
-	int gX = sqrt(count / skipper);
-	int gY = sqrt(count / skipper);
-
-	psModeSet(mode);
-
-	ConstBuf::locationInfo.model = XMMatrixTranspose(XMMatrixTranslation(0, 0, 0));
-	ConstBuf::locationInfo.gX = gX;
-	ConstBuf::locationInfo.gY = gY;
-	ConstBuf::locationInfo.mode = (int)mode;
-	ConstBuf::locationInfo.skipper = skipper;
-	ConstBuf::locationInfo.base_color = XMFLOAT4(r / 100., g / 100., b / 100., 1);
-
-	Shaders::vShader(23);
-	ConstBuf::UpdateLocationInfo();
-	ConstBuf::ConstToVertex(11);
-
-	Draw::NullDrawer(1, (int)gX * (int)gY);
-}
-
-
-void LevelManagerClass::OuterSpace(int count, int skipper, pMode mode)
-{
-	int gX = sqrt(count / skipper);
-	int gY = sqrt(count / skipper);
-
-	psModeSet(mode);
-
-	ConstBuf::locationInfo.model = XMMatrixTranspose(XMMatrixTranslation(0, 0, 0));
-	ConstBuf::locationInfo.gX = gX;
-	ConstBuf::locationInfo.gY = gY;
-	ConstBuf::locationInfo.mode = (int)mode;
-	ConstBuf::locationInfo.skipper = skipper;
-
-	Shaders::vShader(25);
-	ConstBuf::UpdateLocationInfo();
-	ConstBuf::ConstToVertex(11);
-
-	Draw::NullDrawer(1, (int)gX * (int)gY);
+	nebula = entity->AddComponent<Nebula>();
+	nebula->vShader = 23;
+	nebula->count = pillars_cnt;
+	nebula->skipper = 1394;
+	nebula->mode = pMode::point;
+	nebula->color = point3d(1, 2, 6);
 }
 
 

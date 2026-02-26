@@ -40,13 +40,13 @@ void GS( point VS_OUTPUT input[1], inout TriangleStream<VS_OUTPUT> output )
         float2(-1, 1), float2(1, -1), float2(1, 1),
     };
 
+    float dist = length(input[0].wpos.xyz - cPos.xyz);
+    float scale = clamp(abs(dot(float3(-1, 0, 0), input[0].vnorm)), 0.75, 1);
+    //float scale = 1 - clamp(abs(dot(float3(-1, 0, 0), input[0].vnorm)), 0, 1);
+
     [unroll]
     for (uint i = 0; i < 6; i++) {
         VS_OUTPUT element = input[0];
-
-        float dist = length(element.wpos.xyz - cPos.xyz);
-        float scale = clamp(abs(dot(float3(-1, 0, 0), element.vnorm)), 0.75, 1);
-        //float scale = 1 - clamp(abs(dot(float3(-1, 0, 0), element.vnorm)), 0, 1);
 
         float2 offset = quadPos[i] * float2(aspect.x, 1) * min(dist, 18) * scale * 0.04 ;
 

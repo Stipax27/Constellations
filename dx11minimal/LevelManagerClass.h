@@ -81,13 +81,11 @@ private:
 private:
 	void LoadModels();
 	Entity* CreatePlayer(Entity* = nullptr);
-	void CreateUI();
-	void CreateAries(Entity*);
 
-	void CreateZenithLocation(int);
-	void PillarsHand(int, int, pMode);
-	void InsideNebula(int, int, pMode, int, int, int);
-	void OuterSpace(int, int, pMode);
+	void CreateAries(Entity*);
+	void CreateZenithLocation(Entity*, int);
+
+	void CreateUI();
 
 	void InitSystems();
 

@@ -90,6 +90,7 @@ pos_color CalcParticles(uint qid,uint iid,float4 grid)
     
     //color
     pos_color p;
+    p.wpos = float4(pos, 1);
     p.color = float4(noise3_u(float3(113,115,1)*221+177+sin(pos2*.48)),1)/30.+.0015;
     
        pos=rotX(pos,toRad(65));
@@ -131,7 +132,7 @@ pos_color CalcParticles(uint qid,uint iid,float4 grid)
     //q=saturate(q);
     p.color*=saturate(pow(abs(length(pos2+ofs)-q-3),2));
     p.color+=saturate(1-q)*.1*lerp(float4(3,2,2,0),float4(0,0,4,0),q*2-.4);
-   p.color*=.2;
+   p.color *= 0.1;
 
    p.sz *= lowerScale;
    

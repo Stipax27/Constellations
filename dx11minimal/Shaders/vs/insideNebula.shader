@@ -80,8 +80,9 @@ pos_color CalcParticles(uint qid,uint iid,float4 grid)
     
     //color
     pos_color p;
+    p.wpos = float4(pos, 1);
     p.color = float4(noise3_u(float3(113,115,1)*221+177+sin(pos2*.48)),1)/110.+.0015;
-    p.color*=lBase_color/2;
+    p.color *= lBase_color / 2;
 
     if (lMode==1)
     {

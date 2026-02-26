@@ -50,7 +50,8 @@ pos_color CalcParticles(uint qid, float4 grid)
 
     pos_color p;
 
-    p.color = float4(float3(3,6,9),1)*.051+.0015;
+    p.wpos = cPos;
+    p.color = float4(float3(0.3, 0.6, 0.9),1)*.051+.0015;
 
 
     if (lMode==1)
