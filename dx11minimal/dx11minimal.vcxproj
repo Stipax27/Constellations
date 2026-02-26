@@ -200,7 +200,8 @@
     <ClInclude Include="MethodOfClosest.h" />
     <ClInclude Include="mouseclass.h" />
     <ClInclude Include="MultiDamager.h" />
-    <ClInclude Include="Nebula.h" />
+    <ClInclude Include="Components\Nebula.h" />
+    <ClInclude Include="nebulaSystem.h" />
     <ClInclude Include="ParticleEmitter.h" />
     <ClInclude Include="PhysicBody.h" />
     <ClInclude Include="physicSystem.h" />
@@ -702,6 +703,7 @@
     <ClCompile Include="CombatSystem.cpp" />
     <ClCompile Include="CollisionDrawSystem.cpp" />
     <ClCompile Include="EntityStorage.cpp" />
+    <ClCompile Include="NebulaSystem.cpp" />
     <ClCompile Include="PlayerAbilities.cpp" />
     <ClCompile Include="dx11.cpp" />
     <ClCompile Include="dx11minimal.cpp" />

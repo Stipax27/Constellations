@@ -1,10 +1,10 @@
 #ifndef _NEBULA_H_
 #define _NEBULA_H_
 
-#include "component.h"
-#include "renderCompress.h"
-#include "dx11.h"
-#include "pmode.h"
+#include "../component.h"
+#include "../renderCompress.h"
+#include "../dx11.h"
+#include "../pmode.h"
 
 
 struct Nebula : Component
@@ -14,7 +14,8 @@ struct Nebula : Component
 
 	InputAssembler::topology topology = InputAssembler::topology::triList;
 
-	int pointsNum = 1;
+	int count = 1;
+	int skipper = 1;
 	pMode mode = pMode::point;
 
 	float frustumRadius = 10.0f;

@@ -102,6 +102,9 @@
     <ClCompile Include="TimeSystem.cpp">
       <Filter>Source Files\Compute</Filter>
     </ClCompile>
+    <ClCompile Include="NebulaSystem.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enemy_Patern.h">
@@ -290,11 +293,14 @@
     <ClInclude Include="timeSystem.h">
       <Filter>Header Files\ECS\Systems\Compute</Filter>
     </ClInclude>
-    <ClInclude Include="Nebula.h">
+    <ClInclude Include="Components\Nebula.h">
       <Filter>Header Files\ECS\Components\Render</Filter>
     </ClInclude>
     <ClInclude Include="pmode.h">
       <Filter>Header Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="nebulaSystem.h">
+      <Filter>Header Files\ECS\Systems\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
