@@ -28,6 +28,7 @@
 #include "spriteSystem.h"
 #include "meshSystem.h"
 #include "uiSystem.h"
+#include "nebulaSystem.h"
 
 #include "physicSystem.h"
 #include "collisionSystem.h"

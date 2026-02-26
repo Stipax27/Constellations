@@ -209,6 +209,7 @@ bool LevelManagerClass::Initialize()
 	/////////////////////////
 
 	CreateAries(folder);
+	CreateZenithLocation(2);
 
 	/////////////////////////
 
@@ -291,7 +292,6 @@ void LevelManagerClass::Frame()
 	playerController->ProcessCamera();
 
 	m_World->UpdateRender();
-	CreateZenithLocation(4);
 
 	mouse->RenderCursor();
 	Draw::Present();
@@ -618,79 +618,96 @@ void LevelManagerClass::CreateAries(Entity* folder)
 
 void LevelManagerClass::CreateZenithLocation(int quality)
 {
-	ConstBuf::drawerV[0] = (float)timer::frameBeginTime * 0.01f;
-	ConstBuf::Update(0, ConstBuf::drawerV);
-	ConstBuf::ConstToVertex(0);
-	ConstBuf::ConstToPixel(0);
-
-	Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
-	Rasterizer::Cull(Rasterizer::cullmode::off);
-	Depth::Depth(Depth::depthmode::off);
-
 	int pillars_cnt = 3725470 / 2 / quality;
 	int outerSpace_cnt = 6853 / quality;
 	int galaxy_cnt = 182361 / quality;
 
-	//hi
-	int lastRT = Textures::currentRT;
-	int uavIndex = (int)RenderCompress::x2 * 2 + 1;
-	int rtIndex = (int)RenderCompress::x2 * 2 + 2;
+	Entity* entity = m_World->entityStorage->CreateEntity();
 
-	Textures::RenderTarget(rtIndex, 0);
-	Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
-	Draw::ClearDepth();
+	Nebula* nebula = entity->AddComponent<Nebula>();
+	nebula->vShader = 24;
+	nebula->count = pillars_cnt;
+	nebula->mode = pMode::point;
 
-	ConstBuf::ConstToCompute(7);
 
-	Compute::Dispatch(0, lastRT, uavIndex);
-	Textures::TextureToShader(uavIndex, 0);
 
-	Sampler::SamplerComp(0);
 
-	PillarsHand(pillars_cnt, 1, pMode::point);
-	InsideNebula(pillars_cnt, 1, pMode::point, 100, 200, 600);
-	OuterSpace(outerSpace_cnt, 1, pMode::point);
 
-	Textures::CreateMipMap();
-	Textures::RenderTarget(lastRT, 0);
-	Textures::TextureToShader(rtIndex, 0, targetshader::pixel);
 
-	Shaders::vShader(10);
-	Shaders::gShader(0);
-	Shaders::pShader(100);
 
-	InputAssembler::IA(InputAssembler::topology::triList);
-	context->Draw(6, 0);
+	//ConstBuf::drawerV[0] = (float)timer::frameBeginTime * 0.01f;
+	//ConstBuf::Update(0, ConstBuf::drawerV);
+	//ConstBuf::ConstToVertex(0);
+	//ConstBuf::ConstToPixel(0);
 
-	//low
-	uavIndex = (int)RenderCompress::x4 * 2 + 1;
-	rtIndex = (int)RenderCompress::x4 * 2 + 2;
+	//Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+	//Rasterizer::Cull(Rasterizer::cullmode::off);
+	//Depth::Depth(Depth::depthmode::off);
 
-	Textures::RenderTarget(rtIndex, 0);
-	Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
-	Draw::ClearDepth();
+	//int pillars_cnt = 3725470 / 2 / quality;
+	//int outerSpace_cnt = 6853 / quality;
+	//int galaxy_cnt = 182361 / quality;
 
-	ConstBuf::ConstToCompute(7);
+	////hi
+	//int lastRT = Textures::currentRT;
+	//int uavIndex = (int)RenderCompress::x2 * 2 + 1;
+	//int rtIndex = (int)RenderCompress::x2 * 2 + 2;
 
-	Compute::Dispatch(0, lastRT, uavIndex);
-	Textures::TextureToShader(uavIndex, 0);
+	//Textures::RenderTarget(rtIndex, 0);
+	//Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
+	//Draw::ClearDepth();
 
-	Sampler::SamplerComp(0);
+	//ConstBuf::ConstToCompute(7);
 
-	PillarsHand(pillars_cnt, 1394 / 2, pMode::glow);
-	InsideNebula(pillars_cnt, 1394, pMode::glow ,100, 200, 600);
-	//	OuterSpace(outerSpace_cnt, 64, pMode::glow);
+	//Compute::Dispatch(0, lastRT, uavIndex);
+	//Textures::TextureToShader(uavIndex, 0);
 
-	Textures::CreateMipMap();
-	Textures::RenderTarget(lastRT, 0);
-	Textures::TextureToShader(rtIndex, 0, targetshader::pixel);
+	//Sampler::SamplerComp(0);
 
-	Shaders::vShader(10);
-	Shaders::gShader(0);
-	Shaders::pShader(100);
+	//PillarsHand(pillars_cnt, 1, pMode::point);
+	//InsideNebula(pillars_cnt, 1, pMode::point, 100, 200, 600);
+	//OuterSpace(outerSpace_cnt, 1, pMode::point);
 
-	InputAssembler::IA(InputAssembler::topology::triList);
-	context->Draw(6, 0);
+	//Textures::CreateMipMap();
+	//Textures::RenderTarget(lastRT, 0);
+	//Textures::TextureToShader(rtIndex, 0, targetshader::pixel);
+
+	//Shaders::vShader(10);
+	//Shaders::gShader(0);
+	//Shaders::pShader(100);
+
+	//InputAssembler::IA(InputAssembler::topology::triList);
+	//context->Draw(6, 0);
+
+	////low
+	//uavIndex = (int)RenderCompress::x4 * 2 + 1;
+	//rtIndex = (int)RenderCompress::x4 * 2 + 2;
+
+	//Textures::RenderTarget(rtIndex, 0);
+	//Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
+	//Draw::ClearDepth();
+
+	//ConstBuf::ConstToCompute(7);
+
+	//Compute::Dispatch(0, lastRT, uavIndex);
+	//Textures::TextureToShader(uavIndex, 0);
+
+	//Sampler::SamplerComp(0);
+
+	//PillarsHand(pillars_cnt, 1394 / 2, pMode::glow);
+	//InsideNebula(pillars_cnt, 1394, pMode::glow ,100, 200, 600);
+	////	OuterSpace(outerSpace_cnt, 64, pMode::glow);
+
+	//Textures::CreateMipMap();
+	//Textures::RenderTarget(lastRT, 0);
+	//Textures::TextureToShader(rtIndex, 0, targetshader::pixel);
+
+	//Shaders::vShader(10);
+	//Shaders::gShader(0);
+	//Shaders::pShader(100);
+
+	//InputAssembler::IA(InputAssembler::topology::triList);
+	//context->Draw(6, 0);
 }
 
 
@@ -773,6 +790,7 @@ void LevelManagerClass::InitSystems()
 		m_World->AddRenderSystem<CollisionDrawSystem>();
 	}
 	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum);
+	m_World->AddRenderSystem<NebulaSystem>(m_World->m_Camera->frustum);
 	m_World->AddRenderSystem<UISystem>(mouse, m_World->entityStorage);
 }
 

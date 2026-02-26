@@ -43,13 +43,25 @@ void NebulaSystem::Update(vector<Entity*>& entities, float deltaTime)
 		Shaders::gShader(0);
 		InputAssembler::IA(InputAssembler::topology::triList);
 
-		Transform* transform = entity->GetComponent<Transform>();
-
 		Nebula* nebula = entity->GetComponent<Nebula>();
 		if (nebula != nullptr && nebula->active)
 		{
+			Transform* transform = entity->GetComponent<Transform>();
 			if (transform == nullptr || frustum->CheckSphere(transform->position, nebula->frustumRadius))
 			{
+				int gX = sqrt(nebula->count / nebula->skipper);
+				int gY = sqrt(nebula->count / nebula->skipper);
+
+				ConstBuf::locationInfo.model = XMMatrixTranspose(XMMatrixTranslation(0, 0, 0));
+				ConstBuf::locationInfo.gX = gX;
+				ConstBuf::locationInfo.gY = gY;
+				ConstBuf::locationInfo.mode = (int)nebula->mode;
+				ConstBuf::locationInfo.skipper = nebula->skipper;
+				ConstBuf::locationInfo.base_color = XMFLOAT4(nebula->color.x, nebula->color.y, nebula->color.z, 1);
+
+				ConstBuf::UpdateLocationInfo();
+				ConstBuf::ConstToVertex(11);
+
 				ConstBuf::drawerV[0] = (float)entity->localTime * 0.01f;
 				ConstBuf::Update(0, ConstBuf::drawerV);
 				ConstBuf::ConstToVertex(0);
@@ -67,52 +79,35 @@ void NebulaSystem::Update(vector<Entity*>& entities, float deltaTime)
 
 				int lastRT = Textures::currentRT;
 
-				ConstBuf::drawerInt[0] = pow(2, (int)spriteCluster->compress);
+				ConstBuf::drawerInt[0] = pow(2, (int)nebula->compress);
 				ConstBuf::Update(7, ConstBuf::drawerInt);
 				ConstBuf::ConstToPixel(7);
 
-				if (spriteCluster->compress != RenderCompress::none)
+				if (nebula->compress != RenderCompress::none)
 				{
-					int uavIndex = (int)spriteCluster->compress * 2 + 1;
-					int rtIndex = (int)spriteCluster->compress * 2 + 2;
+					int uavIndex = (int)nebula->compress * 2 + 1;
+					int rtIndex = (int)nebula->compress * 2 + 2;
 
 					Textures::RenderTarget(rtIndex, 0);
 					Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
 					Draw::ClearDepth();
-
-					//Depth::Depth(Depth::depthmode::on);
 
 					ConstBuf::ConstToCompute(7);
 
 					Compute::Dispatch(0, lastRT, uavIndex);
 					Textures::TextureToShader(uavIndex, 0);
 
-					//Depth::Depth(Depth::depthmode::off);
-
-
-					//Textures::DepthTarget(lastRT, 0);
-
-					/*Shaders::vShader(10);
-					Shaders::pShader(101);
-					context->PSSetShaderResources(0, 1, &Textures::Texture[lastRT].DepthResView);
-					context->Draw(6, 0);*/
-
-					//Depth::Depth(Depth::depthmode::readonly);
-
 					Sampler::SamplerComp(0);
 
-					Shaders::vShader(spriteCluster->vShader);
-					Shaders::gShader(spriteCluster->gShader);
-					Shaders::pShader(spriteCluster->pShader);
+					Shaders::vShader(nebula->vShader);
+					Shaders::gShader(nebula->gShader);
+					PSModeSet(nebula->mode);
 
-					InputAssembler::IA(spriteCluster->topology);
-					context->DrawInstanced(spriteCluster->vertexNum, spriteCluster->pointsNum, 0, 0);
+					InputAssembler::IA(nebula->topology);
+					Draw::NullDrawer(1, (int)gX * (int)gY);
 
-					//Sampler::SamplerComp(0);
 					Textures::CreateMipMap();
-
 					Textures::RenderTarget(lastRT, 0);
-
 					Textures::TextureToShader(rtIndex, 0, targetshader::pixel);
 
 					Shaders::vShader(10);
@@ -121,65 +116,36 @@ void NebulaSystem::Update(vector<Entity*>& entities, float deltaTime)
 
 					InputAssembler::IA(InputAssembler::topology::triList);
 					context->Draw(6, 0);
-
-					//Depth::Depth(Depth::depthmode::readonly);
 				}
 				else
 				{
-					Shaders::vShader(spriteCluster->vShader);
-					Shaders::gShader(spriteCluster->gShader);
-					Shaders::pShader(spriteCluster->pShader);
+					Shaders::vShader(nebula->vShader);
+					Shaders::gShader(nebula->gShader);
+					PSModeSet(nebula->mode);
 
-					InputAssembler::IA(spriteCluster->topology);
-					context->DrawInstanced(spriteCluster->vertexNum, spriteCluster->pointsNum, 0, 0);
+					InputAssembler::IA(nebula->topology);
+					Draw::NullDrawer(1, (int)gX * (int)gY);
 				}
 			}
 		}
 
-		//Explosion* explosion = entity->GetComponent<Explosion>();
-
-		//if (explosion != nullptr) {
-
-		//	Shaders::vShader(1);
-		//	Shaders::pShader(1);
-
-		//	transform->position;
-		//	explosion->radius = min(explosion->max_radius, explosion->radius + explosion->speed * deltaTime);
-
-		//	ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y, transform->position.z, explosion->radius);
-		//	ConstBuf::Update(5, ConstBuf::global);
-		//	ConstBuf::ConstToVertex(5);
-		//	ConstBuf::ConstToPixel(5);
-
-		//	Draw::Drawer(1);
-		//	if (timer::currentTime - explosion->lifeStartTime >= explosion->lifeTime)
-		//	{
-		//		//entity->RemoveComponent<Explosion>();
-		//		entity->SetActive(false);
-		//	}
-		//}
 	}
 }
 
 
-XMMATRIX NebulaSystem::GetWorldMatrix(Transform worldTransform)
+void NebulaSystem::PSModeSet(pMode mode)
 {
-	XMMATRIX rotateMatrix = worldTransform.mRotation;
-	XMMATRIX scaleMatrix = XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z);
-	XMMATRIX translateMatrix = XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y,
-		worldTransform.position.z);
-
-	// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
-	XMMATRIX srMatrix = scaleMatrix * rotateMatrix;
-	XMMATRIX worldMatrix = srMatrix * translateMatrix;
-
-	return XMMatrixTranspose(worldMatrix);
-}
-
-void NebulaSystem::UpdateWorldMatrix(Transform worldTransform)
-{
-	ConstBuf::camera.world = GetWorldMatrix(worldTransform);
-	ConstBuf::UpdateCamera();
-	ConstBuf::ConstToVertex(3);
-	ConstBuf::ConstToPixel(3);
+	switch (mode)
+	{
+	case pMode::point:
+	{
+		Shaders::pShader(23);
+		break;
+	}
+	case pMode::glow:
+	{
+		Shaders::pShader(24);
+		break;
+	}
+	}
 }

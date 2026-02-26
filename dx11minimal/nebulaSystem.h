@@ -25,8 +25,7 @@ private:
 	FrustumClass* frustum;
 
 private:
-	XMMATRIX GetWorldMatrix(Transform);
-	void UpdateWorldMatrix(Transform);
+	void PSModeSet(pMode);
 };
 
 #endif

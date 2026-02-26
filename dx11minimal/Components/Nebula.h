@@ -5,6 +5,7 @@
 #include "../renderCompress.h"
 #include "../dx11.h"
 #include "../pmode.h"
+#include "../Point3d.h"
 
 
 struct Nebula : Component
@@ -17,6 +18,7 @@ struct Nebula : Component
 	int count = 1;
 	int skipper = 1;
 	pMode mode = pMode::point;
+	point3d color = point3d(1, 1, 1);
 
 	float frustumRadius = 10.0f;
 
