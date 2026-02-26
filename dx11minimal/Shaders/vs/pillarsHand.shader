@@ -62,11 +62,12 @@ float3 pillar(uint qid,uint iid,float2 grid,float a, float t, float h)
 
 pos_color CalcParticles(uint qid,uint iid,float4 grid)
 {
+    float localTime = drawerV[0];
     float scale = 8;
     float lowerScale = sqrt(scale);
 
      qid *= lSkipper;
-     float t=time.x*.07;
+     float t = localTime * .07;
      uint inStars = 10000;
      if (lMode==1||iid%inStars==0)
      {

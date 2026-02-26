@@ -200,12 +200,14 @@
     <ClInclude Include="MethodOfClosest.h" />
     <ClInclude Include="mouseclass.h" />
     <ClInclude Include="MultiDamager.h" />
+    <ClInclude Include="Nebula.h" />
     <ClInclude Include="ParticleEmitter.h" />
     <ClInclude Include="PhysicBody.h" />
     <ClInclude Include="physicSystem.h" />
     <ClInclude Include="PlaneCollider.h" />
     <ClInclude Include="PlayerAbilities.h" />
     <ClInclude Include="PlayerController.h" />
+    <ClInclude Include="pmode.h" />
     <ClInclude Include="Point3d.h" />
     <ClInclude Include="PointCloud.h" />
     <ClInclude Include="Components\Orientation.h" />

@@ -290,6 +290,12 @@
     <ClInclude Include="timeSystem.h">
       <Filter>Header Files\ECS\Systems\Compute</Filter>
     </ClInclude>
+    <ClInclude Include="Nebula.h">
+      <Filter>Header Files\ECS\Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="pmode.h">
+      <Filter>Header Files\Enums</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">

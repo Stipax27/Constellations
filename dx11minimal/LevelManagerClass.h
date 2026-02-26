@@ -44,8 +44,6 @@
 //const bool VSYNC_ENABLED = true;
 const bool SHOW_COLLIDERS = false;
 
-enum class pMode { point, glow };
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: LevelManagerClass

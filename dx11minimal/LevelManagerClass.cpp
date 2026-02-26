@@ -618,6 +618,11 @@ void LevelManagerClass::CreateAries(Entity* folder)
 
 void LevelManagerClass::CreateZenithLocation(int quality)
 {
+	ConstBuf::drawerV[0] = (float)timer::frameBeginTime * 0.01f;
+	ConstBuf::Update(0, ConstBuf::drawerV);
+	ConstBuf::ConstToVertex(0);
+	ConstBuf::ConstToPixel(0);
+
 	Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 	Rasterizer::Cull(Rasterizer::cullmode::off);
 	Depth::Depth(Depth::depthmode::off);

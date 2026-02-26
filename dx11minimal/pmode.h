@@ -1,0 +1,1 @@
+enum class pMode { point, glow };
