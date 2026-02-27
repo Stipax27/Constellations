@@ -40,7 +40,7 @@ float4 transform_unisize2(float3 pos,float2 grid,float size)
 
 pos_color CalcParticles(uint qid, float4 grid)
 {
-    qid *= lSkipper;
+    qid *= nSkipper;
 
     float3 pos=shp(grid.xy);
     pos+=.7*rot3(pos,31/pos+.1*noise3(pos*3));
@@ -54,7 +54,7 @@ pos_color CalcParticles(uint qid, float4 grid)
     p.color = float4(float3(0.3, 0.6, 0.9),1)*.051+.0015;
 
 
-    if (lMode==1)
+    if (nMode==1)
     {
         //hilight
         p.pos=transform2(pos,grid.zw,302);

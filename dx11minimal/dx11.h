@@ -323,7 +323,7 @@ namespace ConstBuf
 		float _p1;
 	};
 
-	struct LocationDesc {
+	struct NebulaDesc {
 		XMMATRIX model;
 		int gX;
 		int gY;
@@ -371,7 +371,7 @@ namespace ConstBuf
 	extern XMFLOAT4X4 drawerFloat4x4[constCount];
 
 	//b11
-	extern LocationDesc locationInfo;
+	extern NebulaDesc nebulaInfo;
 
 	int roundUp(int, int);
 	void Create(ID3D11Buffer*&, int);
@@ -389,7 +389,7 @@ namespace ConstBuf
 	void UpdateCamera();
 	void UpdateFactors();
 	void UpdateParticlesInfo();
-	void UpdateLocationInfo();
+	void UpdateNebulaInfo();
 	void ConstToVertex(int);
 	void ConstToGeometry(int);
 	void ConstToPixel(int);
@@ -408,7 +408,7 @@ namespace ConstBuf
 			drawerMatrix,
 			particlesInfo,
 			drawerFloat4x4,
-			locationInfo
+			nebulaInfo
 		};
 	}
 }
