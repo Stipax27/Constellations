@@ -58,6 +58,7 @@ void NebulaSystem::Update(vector<Entity*>& entities, float deltaTime)
 				ConstBuf::locationInfo.mode = (int)nebula->mode;
 				ConstBuf::locationInfo.skipper = nebula->skipper;
 				ConstBuf::locationInfo.base_color = XMFLOAT4(nebula->color.x, nebula->color.y, nebula->color.z, 1);
+				ConstBuf::locationInfo.scale = nebula->scale;
 
 				ConstBuf::UpdateLocationInfo();
 				ConstBuf::ConstToVertex(11);

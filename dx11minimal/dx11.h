@@ -330,6 +330,7 @@ namespace ConstBuf
 		int mode;
 		int skipper;
 		XMFLOAT4 base_color;
+		float scale;
 	};
 
 	//----------------------------------------------------------------

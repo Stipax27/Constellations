@@ -74,4 +74,5 @@ cbuffer locationDesc : register(b11)
     int lMode;
     int lSkipper;
     float4 lBase_color;
+    float lScale;
 }
