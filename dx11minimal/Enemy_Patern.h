@@ -21,7 +21,8 @@ enum class AIBehaviorType
     PATROL,
     CHASE,
     ATTACK,
-    FLEE
+    FLEE,
+    SEARCH
 };
 
 struct AIComponent : Component
@@ -54,6 +55,12 @@ public:
 
     // Таймеры
     float stateTimer = 0.0f;
+
+    // Поиск
+    point3d lastKnownPlayerPosition;   // последняя позиция, где видели игрока
+    bool hasLastKnownPosition = false; // флаг, есть ли сохранённая позиция
+    float searchDuration = 5.0f;       // сколько времени искать перед возвратом к патрулю
+    float searchPatrolRadius = 10.0f;   // радиус для точек патруля вокруг последней позиции
 
 };
 

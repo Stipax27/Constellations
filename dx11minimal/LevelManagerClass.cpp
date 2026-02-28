@@ -277,7 +277,7 @@ bool LevelManagerClass::Initialize()
 	// Визуальная составляющая (можно использовать Star или любой другой компонент)
 	Star* testStar = testEnemy->AddComponent<Star>();
 	testStar->radius = 1.0f;
-	testStar->color1 = point3d(0.5f, 0.1f, 0.5f); // Цвет
+	star->color1 = point3d(0.5f, 0.5f, 0.5f); // Цвет (бесполезен)
 
 	// Компонент ИИ
 	AIComponent* ai = testEnemy->AddComponent<AIComponent>();
