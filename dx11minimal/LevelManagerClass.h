@@ -89,6 +89,9 @@ private:
 	void InitSystems();
 	void CreateAries(Entity*);
 
+private: // AI amogus
+	Entity* testEnemy;
+	AISystem* aiSystem;
 
 };
 

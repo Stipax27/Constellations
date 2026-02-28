@@ -261,15 +261,15 @@ bool LevelManagerClass::Initialize()
 	playerController = new PlayerController();
 	playerController->Initialize(player, m_World, mouse, window, collisionManager);
 
-	/*if (aiSystem)
-	{
-		aiSystem->SetPlayerEntity(player);
-	}*/
+	
 
 	// Тестовый враг для ИИ amogus
-	Entity* testEnemy = m_World->entityStorage->CreateEntity("TestEnemy", folder);
+	testEnemy = m_World->entityStorage->CreateEntity("TestEnemy", folder);
 	Transform* testTransform = testEnemy->AddComponent<Transform>();
 	testTransform->position = point3d(15.0f, -25.0f, 0.0f); // Стартовая позиция
+
+	// Кодовое слово: amogus
+	AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
 
 	PhysicBody* testPhysic = testEnemy->AddComponent<PhysicBody>();
 	testPhysic->airFriction = 1.0f; // Обычное трение
@@ -309,6 +309,10 @@ bool LevelManagerClass::Initialize()
 	ai->idleDuration = 2.0f;
 	ai->fleeDuration = 4.0f;
 
+	if (aiSystem)
+	{
+		aiSystem->SetPlayerEntity(player);
+	}
 
 	return true;
 }
@@ -443,6 +447,31 @@ void LevelManagerClass::Frame()
 
 	m_World->UpdatePhysic();
 
+	// Изменение цвета testStar в зависимости от состояния ИИ
+	if (testEnemy && testEnemy->IsActive()) {
+		AIComponent* ai = testEnemy->GetComponent<AIComponent>();
+		Star* star = testEnemy->GetComponent<Star>();
+		if (ai && star) {
+			switch (ai->behaviorType) {
+			case AIBehaviorType::PATROL:
+				star->color1 = point3d(0.2f, 0.8f, 0.2f); // зелёный
+				break;
+			case AIBehaviorType::CHASE:
+				star->color1 = point3d(1.0f, 0.5f, 0.0f); // оранжевый
+				break;
+			case AIBehaviorType::ATTACK:
+				star->color1 = point3d(1.0f, 0.0f, 0.0f); // красный
+				break;
+			case AIBehaviorType::FLEE:
+				star->color1 = point3d(0.0f, 0.0f, 1.0f); // синий
+				break;
+			case AIBehaviorType::IDLE:
+				star->color1 = point3d(0.5f, 0.5f, 0.5f); // серый
+				break;
+			}
+		}
+	}
+
 	playerController->ProcessCamera();
 
 	m_World->UpdateRender();
@@ -573,8 +602,7 @@ void LevelManagerClass::InitSystems()
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>(collisionManager);
 	m_World->AddPhysicSystem<CombatSystem>();
-	// Кодовое слово: amogus
-	AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
+	
 
 	m_World->AddPhysicSystem<EntityManagerSystem>();
 
