@@ -42,7 +42,7 @@ public:
     float timeAgr = 1.f;
 
     // Параметры атаки
-    float attackCooldown = 2.0f;
+    float attackCooldown = 1.0f;
     float attackDamage = 10.0f;
 
     // Параметры состояний
@@ -59,8 +59,12 @@ public:
     // Поиск
     point3d lastKnownPlayerPosition;   // последняя позиция, где видели игрока
     bool hasLastKnownPosition = false; // флаг, есть ли сохранённая позиция
-    float searchDuration = 5.0f;       // сколько времени искать перед возвратом к патрулю
-    float searchPatrolRadius = 10.0f;   // радиус для точек патруля вокруг последней позиции
+    float searchDuration = 1.0f;       // сколько времени искать перед возвратом к патрулю
+    float searchPatrolRadius = 5.0f;   // радиус для точек патруля вокруг последней позиции
+
+    // Ускорение
+    float accelerationStrength = 0.25f;   // коэффициент пропорциональности (чем выше, тем быстрее разгон)
+    float maxAcceleration = 10.0f;       // ограничение, чтобы избежать рывков
 
 };
 

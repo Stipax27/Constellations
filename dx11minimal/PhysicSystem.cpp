@@ -29,17 +29,33 @@ void PhysicSystem::Update(vector<Entity*>& entities, float deltaTime)
 
 				float dTime = physicBody->preciseMovement ? 0.01f : deltaTime;
 
+
+				// Новое торможение
+				float velMag = physicBody->velocity.magnitude();
+				if (velMag > 0.0f) {
+					float frictionStrength = SPACE_DENSITY * physicBody->airFriction;
+					float maxDecel = velMag / dTime;
+					float actualFriction = min(frictionStrength, maxDecel);
+					point3d frictionAccel = -physicBody->velocity.normalized() * actualFriction;
+					physicBody->acceleration += frictionAccel;
+				}
+
+				physicBody->velocity += physicBody->acceleration * dTime * entity->timeScale;
+
 				transform->position += physicBody->velocity * dTime * entity->timeScale;
 				XMMATRIX result = physicBody->mAngVelocity * transform->mRotation;
 				transform->mRotation = result;
-					
-				float velMagnitude = physicBody->velocity.magnitude();
+				
+				// Старое торможение
+				/*float velMagnitude = physicBody->velocity.magnitude();
 				if (velMagnitude > 0) {
 					float deceleration = min(SPACE_DENSITY / velMagnitude * physicBody->airFriction * dTime, 1);
 					physicBody->velocity = physicBody->velocity.lerp(point3d(), deceleration);
-				}
+				}*/
+
 					
 				physicBody->mAngVelocity = XMMatrixIdentity();
+				physicBody->acceleration = point3d();
 			}
 		}
 	}

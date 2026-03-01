@@ -266,13 +266,16 @@ bool LevelManagerClass::Initialize()
 	// Тестовый враг для ИИ amogus
 	testEnemy = m_World->entityStorage->CreateEntity("TestEnemy", folder);
 	Transform* testTransform = testEnemy->AddComponent<Transform>();
-	testTransform->position = point3d(15.0f, -25.0f, 0.0f); // Стартовая позиция
+	point3d CentralPatrolPoint = point3d(10.0f, 5.0f, 15.0f);
+	testTransform->position = CentralPatrolPoint + point3d(5.0f, 0.0f, 0.0f); // Стартовая позиция
 
 	// Кодовое слово: amogus
 	AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
 
 	PhysicBody* testPhysic = testEnemy->AddComponent<PhysicBody>();
-	testPhysic->airFriction = 1.0f; // Обычное трение
+	testPhysic->airFriction = 0.01f; // Обычное трение
+
+	testPhysic->velocity = point3d(0.0f, 10.0f, 0.0f);
 
 	// Визуальная составляющая (можно использовать Star или любой другой компонент)
 	Star* testStar = testEnemy->AddComponent<Star>();
@@ -287,12 +290,15 @@ bool LevelManagerClass::Initialize()
 	// Точки патрулирования (локальные координаты относительно врага? 
 	// В текущей реализации patrolPoints задаются в мировых координатах, 
 	// поэтому зададим абсолютные позиции)
+	
 	ai->patrolPoints = {
-		point3d(15.0f, -25.0f, 0.0f),
-		point3d(25.0f, -25.0f, 0.0f),
-		point3d(25.0f, -35.0f, 0.0f),
-		point3d(15.0f, -35.0f, 0.0f)
+		CentralPatrolPoint + point3d(-2.0f, 2.0f, 0.0f),
+		CentralPatrolPoint + point3d(2.0f, 2.0f, 0.0f),
+		CentralPatrolPoint + point3d(2.0f, -2.0f, 0.0f),
+		CentralPatrolPoint + point3d(-2.0f, -2.0f, 0.0f)
 	};
+	//ai->patrolPoints = { CentralPatrolPoint };
+
 	ai->movementSpeed = 3.0f;
 	ai->arrivalDistance = 1.0f;
 
@@ -308,6 +314,10 @@ bool LevelManagerClass::Initialize()
 	// Таймеры состояний
 	ai->idleDuration = 2.0f;
 	ai->fleeDuration = 4.0f;
+
+	//Параметры ускорения
+	ai->accelerationStrength = 10;
+	ai->maxAcceleration = 100;
 
 	if (aiSystem)
 	{
