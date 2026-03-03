@@ -294,7 +294,8 @@ bool LevelManagerClass::Initialize()
 		const SkinnedMesh& srcMesh,
 		Skeleton* skeleton,
 		std::vector<AnimationClip>* animations,
-		const char* preferredClip = nullptr)
+		const char* preferredClip = nullptr,
+		bool autoPlay = true) -> Entity*
 	{
 		Entity* e = m_World->entityStorage->CreateEntity(name, folder);
 		Transform* t = e->AddComponent<Transform>();
@@ -305,22 +306,52 @@ bool LevelManagerClass::Initialize()
 		meshComp->vertices = srcMesh.vertices;
 		meshComp->indices = srcMesh.indices;
 		meshComp->gpuModelIndex = srcMesh.gpuModelIndex;
+		meshComp->active = false;
+
+		PointCloud* pointCloud = e->AddComponent<PointCloud>();
+		pointCloud->index = srcMesh.gpuModelIndex;
+		pointCloud->vShader = 24;
+		pointCloud->gShader = 17;
+		pointCloud->pShader = 17;
+		pointCloud->pointSize = 1.0f;
+		pointCloud->brightness = 1.25f;
+		pointCloud->color = point3d(1.0f, 0.95f, 0.85f);
+		pointCloud->compress = RenderCompress::x2;
+		pointCloud->frustumRadius = 12.0f;
 
 		SkeletalAnimationComponent* animComp = e->AddComponent<SkeletalAnimationComponent>();
 		animComp->skeleton = skeleton;
 		animComp->animationClips = animations;
-		animComp->SetAnimationByIndex(0, true);
-		if (preferredClip && preferredClip[0] != '\0')
+		animComp->rootMotionMode = RootMotionMode::Accumulate;
+		animComp->CaptureBindPose();
+		if (animations && !animations->empty())
 		{
-			animComp->SetAnimationByName(preferredClip, true);
+			animComp->SetAnimationByIndex(0, true);
+			if (preferredClip && preferredClip[0] != '\0')
+			{
+				animComp->SetAnimationByName(preferredClip, true);
+			}
 		}
-		animComp->isPlaying = true;
+		animComp->isPlaying = autoPlay && animComp->animationClip != nullptr;
 		animComp->isLooping = true;
 		animComp->currentTime = 0.0f;
+		return e;
 	};
 
 	spawnSkinned("Fox", point3d(0.0f, 0.0f, 10.0f), point3d(0.2f, 0.2f, 0.2f), m_FoxMesh, &m_FoxSkeleton, &m_FoxAnimations);
 	spawnSkinned("CesiumMan", point3d(3.0f, 0.0f, 10.0f), point3d(1.0f, 1.0f, 1.0f), m_CesiumMesh, &m_CesiumSkeleton, &m_CesiumAnimations);
+	m_TestAnimEntity = spawnSkinned("TestMannequin", point3d(6.0f, 0.0f, 10.0f), point3d(1.0f, 1.0f, 1.0f), m_TestAnimMesh, &m_TestAnimSkeleton, &m_TestAnimAnimations, nullptr, false);
+	m_TestAnimCycleIndex = 0;
+	if (m_TestAnimEntity)
+	{
+		if (SkeletalAnimationComponent* animComp = m_TestAnimEntity->GetComponent<SkeletalAnimationComponent>())
+		{
+			animComp->ResetToBindPose();
+			animComp->animationClip = nullptr;
+			animComp->isPlaying = false;
+			animComp->currentTime = 0.0f;
+		}
+	}
 
 	return true;
 }
@@ -371,6 +402,7 @@ void LevelManagerClass::Shutdown()
 void LevelManagerClass::Frame()
 {
 	mouse->Update();
+	UpdateTestAnimationToggle();
 	playerController->ProcessInput();
 	playerController->ProcessMouse();
 	playerController->abilities->Update();
@@ -483,6 +515,67 @@ void LevelManagerClass::LoadModels()
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesArmor.obj");
 	Models::LoadSkinnedModel("..\\dx11minimal\\Resourses\\Models\\Fox.glb", m_FoxMesh, m_FoxSkeleton, m_FoxAnimations);
 	Models::LoadSkinnedModel("..\\dx11minimal\\Resourses\\Models\\CesiumMan.glb", m_CesiumMesh, m_CesiumSkeleton, m_CesiumAnimations);
+	if (Models::LoadSkinnedModel("..\\dx11minimal\\Resourses\\Models\\TestAnims\\1.glb", m_TestAnimMesh, m_TestAnimSkeleton, m_TestAnimAnimations))
+	{
+		Models::LoadAndRemapAnimations("..\\dx11minimal\\Resourses\\Models\\TestAnims\\2.glb", m_TestAnimSkeleton, m_TestAnimAnimations, false);
+		Models::LoadAndRemapAnimations("..\\dx11minimal\\Resourses\\Models\\TestAnims\\3.glb", m_TestAnimSkeleton, m_TestAnimAnimations, true);
+		Models::LoadAndRemapAnimations("..\\dx11minimal\\Resourses\\Models\\TestAnims\\4.glb", m_TestAnimSkeleton, m_TestAnimAnimations, true);
+	}
+}
+
+// TODO: Remove, only for test animation change
+void LevelManagerClass::UpdateTestAnimationToggle()
+{
+	const bool isTogglePressed = IsKeyPressed('T');
+	if (!isTogglePressed)
+	{
+		m_WasToggleAnimationPressed = false;
+		return;
+	}
+
+	if (m_WasToggleAnimationPressed)
+	{
+		return;
+	}
+
+	m_WasToggleAnimationPressed = true;
+
+	if (!m_TestAnimEntity)
+	{
+		return;
+	}
+
+	SkeletalAnimationComponent* animComp = m_TestAnimEntity->GetComponent<SkeletalAnimationComponent>();
+	if (!animComp)
+	{
+		return;
+	}
+
+	const int clipCount = animComp->animationClips ? static_cast<int>(animComp->animationClips->size()) : 0;
+	if (clipCount <= 0)
+	{
+		animComp->ResetToBindPose();
+		animComp->animationClip = nullptr;
+		animComp->isPlaying = false;
+		animComp->currentTime = 0.0f;
+		m_TestAnimCycleIndex = 0;
+		return;
+	}
+
+	m_TestAnimCycleIndex = (m_TestAnimCycleIndex + 1) % (clipCount + 1);
+	if (m_TestAnimCycleIndex == 0)
+	{
+		animComp->ResetToBindPose();
+		animComp->animationClip = nullptr;
+		animComp->isPlaying = false;
+		animComp->currentTime = 0.0f;
+		return;
+	}
+
+	animComp->SetAnimationByIndex(static_cast<size_t>(m_TestAnimCycleIndex - 1), true);
+	animComp->isPlaying = animComp->animationClip != nullptr;
+	animComp->isLooping = true;
+	animComp->currentTime = 0.0f;
 }
 
 
@@ -601,7 +694,7 @@ void LevelManagerClass::InitSystems()
 	if (SHOW_COLLIDERS) {
 		m_World->AddRenderSystem<CollisionDrawSystem>();
 	}
-	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum);
+	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum, m_BoneBuffer);
 	m_World->AddRenderSystem<UISystem>(mouse, m_World->entityStorage);
 }
 

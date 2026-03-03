@@ -30,7 +30,7 @@ void SkinnedMeshSystem::Update(std::vector<Entity*>& entities, float deltaTime)
 		Transform* transform = entity->GetComponent<Transform>();
 		SkinnedMesh* skinned = entity->GetComponent<SkinnedMesh>();
 
-		if (!transform || !skinned)
+		if (!transform || !skinned || !skinned->active)
 		{
 			continue;
 		}

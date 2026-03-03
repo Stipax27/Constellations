@@ -145,18 +145,23 @@ bool GLTFLoader::Load(
 	// Initialize global poses from local transforms
 	skeleton.UpdateGlobalPose();
 
-	// Resolve mesh node and the skin used by that node.
-	int meshIndex = 0; // we load first mesh primitive
+	// Resolve the first skinned mesh node and the skin used by that node.
 	int meshNodeIndex = -1;
 	int skinIndex = -1;
 	for (size_t ni = 0; ni < model.nodes.size(); ++ni)
 	{
-		if (model.nodes[ni].mesh == meshIndex)
+		if (model.nodes[ni].mesh >= 0)
 		{
-			if (meshNodeIndex < 0)
+			if (model.nodes[ni].skin >= 0)
 			{
 				meshNodeIndex = static_cast<int>(ni);
 				skinIndex = model.nodes[ni].skin;
+				break;
+			}
+
+			if (meshNodeIndex < 0)
+			{
+				meshNodeIndex = static_cast<int>(ni);
 			}
 		}
 	}
@@ -350,10 +355,9 @@ bool GLTFLoader::Load(
 		animations.push_back(std::move(clip));
 	}
 
-	// Load first mesh primitive as skinned mesh geometry.
-	if (!model.meshes.empty() && !model.meshes[0].primitives.empty())
+	// Load all mesh primitives and merge them into one skinned mesh.
+	if (!model.meshes.empty())
 	{
-		const auto& prim = model.meshes[0].primitives[0];
 		auto readPrimitiveAccessorData = [&](int accessorIndex, const tinygltf::Accessor*& acc, const unsigned char*& base, int& stride) -> bool
 		{
 			if (accessorIndex < 0 || static_cast<size_t>(accessorIndex) >= model.accessors.size())
@@ -387,275 +391,267 @@ bool GLTFLoader::Load(
 			skinJointNodeIndex = skinPtr->joints;
 		}
 
-		// Resize vertex array based on POSITION accessor (we'll fill other attributes below).
-		auto posIt = prim.attributes.find("POSITION");
-		if (posIt != prim.attributes.end())
+		mesh.vertices.clear();
+		mesh.indices.clear();
+
+		for (size_t meshIdx = 0; meshIdx < model.meshes.size(); ++meshIdx)
 		{
-			if (posIt->second < 0 || static_cast<size_t>(posIt->second) >= model.accessors.size())
+			const auto& srcMesh = model.meshes[meshIdx];
+			for (const auto& prim : srcMesh.primitives)
 			{
-				return true;
-			}
-
-			const auto& acc = model.accessors[posIt->second];
-			mesh.vertices.resize(acc.count);
-
-			// Initialize all weights and joints to default values
-			for (size_t i = 0; i < acc.count; ++i)
-			{
-				mesh.vertices[i].joints[0] = 0;
-				mesh.vertices[i].joints[1] = 0;
-				mesh.vertices[i].joints[2] = 0;
-				mesh.vertices[i].joints[3] = 0;
-				mesh.vertices[i].weights[0] = 1.0f; // First weight = 1.0
-				mesh.vertices[i].weights[1] = 0.0f;
-				mesh.vertices[i].weights[2] = 0.0f;
-				mesh.vertices[i].weights[3] = 0.0f;
-			}
-
-			if (acc.bufferView >= 0 &&
-				static_cast<size_t>(acc.bufferView) < model.bufferViews.size())
-			{
-				const auto& bv = model.bufferViews[acc.bufferView];
-				if (static_cast<size_t>(bv.buffer) < model.buffers.size())
+				auto posIt = prim.attributes.find("POSITION");
+				if (posIt == prim.attributes.end() ||
+					posIt->second < 0 ||
+					static_cast<size_t>(posIt->second) >= model.accessors.size())
 				{
-					const auto& b = model.buffers[bv.buffer];
+					continue;
+				}
 
-					const unsigned char* base =
-						b.data.data() + bv.byteOffset + acc.byteOffset;
-					int stride = acc.ByteStride(bv);
-					if (stride <= 0)
+				const auto& posAcc = model.accessors[posIt->second];
+				const size_t vertexBase = mesh.vertices.size();
+				mesh.vertices.resize(vertexBase + posAcc.count);
+
+				for (size_t i = 0; i < posAcc.count; ++i)
+				{
+					mesh.vertices[vertexBase + i].joints[0] = 0;
+					mesh.vertices[vertexBase + i].joints[1] = 0;
+					mesh.vertices[vertexBase + i].joints[2] = 0;
+					mesh.vertices[vertexBase + i].joints[3] = 0;
+					mesh.vertices[vertexBase + i].weights[0] = 1.0f;
+					mesh.vertices[vertexBase + i].weights[1] = 0.0f;
+					mesh.vertices[vertexBase + i].weights[2] = 0.0f;
+					mesh.vertices[vertexBase + i].weights[3] = 0.0f;
+				}
+
+				if (posAcc.bufferView >= 0 &&
+					static_cast<size_t>(posAcc.bufferView) < model.bufferViews.size())
+				{
+					const auto& bv = model.bufferViews[posAcc.bufferView];
+					if (static_cast<size_t>(bv.buffer) < model.buffers.size())
 					{
-						stride = sizeof(float) * 3; // vec3
-					}
-
-					for (size_t i = 0; i < acc.count; ++i)
-					{
-						auto v = reinterpret_cast<const float*>(base + i * static_cast<size_t>(stride));
-						mesh.vertices[i].position.x = v[0];
-						mesh.vertices[i].position.y = v[1];
-						mesh.vertices[i].position.z = v[2];
-					}
-				}
-			}
-		}
-
-		// Normals (optional)
-		auto nrmIt = prim.attributes.find("NORMAL");
-		if (nrmIt != prim.attributes.end() &&
-			nrmIt->second >= 0 &&
-			static_cast<size_t>(nrmIt->second) < model.accessors.size())
-		{
-			const tinygltf::Accessor* acc = nullptr;
-			const unsigned char* base = nullptr;
-			int stride = 0;
-			if (readPrimitiveAccessorData(nrmIt->second, acc, base, stride))
-			{
-				if (stride <= 0)
-				{
-					stride = sizeof(float) * 3; // vec3
-				}
-
-				for (size_t i = 0; i < acc->count && i < mesh.vertices.size(); ++i)
-				{
-					auto v = reinterpret_cast<const float*>(base + i * static_cast<size_t>(stride));
-					mesh.vertices[i].normal.x = v[0];
-					mesh.vertices[i].normal.y = v[1];
-					mesh.vertices[i].normal.z = v[2];
-				}
-			}
-		}
-
-		// UVs (optional)
-		auto uvIt = prim.attributes.find("TEXCOORD_0");
-		if (uvIt != prim.attributes.end() &&
-			uvIt->second >= 0 &&
-			static_cast<size_t>(uvIt->second) < model.accessors.size())
-		{
-			const tinygltf::Accessor* acc = nullptr;
-			const unsigned char* base = nullptr;
-			int stride = 0;
-			if (readPrimitiveAccessorData(uvIt->second, acc, base, stride))
-			{
-				if (stride <= 0)
-				{
-					stride = sizeof(float) * 2; // vec2
-				}
-
-				for (size_t i = 0; i < acc->count && i < mesh.vertices.size(); ++i)
-				{
-					auto v = reinterpret_cast<const float*>(base + i * static_cast<size_t>(stride));
-					mesh.vertices[i].uv.x = v[0];
-					mesh.vertices[i].uv.y = v[1];
-				}
-			}
-		}
-
-		// Joint indices (optional, VEC4 of unsigned bytes or ushorts)
-		auto jointsIt = prim.attributes.find("JOINTS_0");
-		if (jointsIt != prim.attributes.end() &&
-			jointsIt->second >= 0 &&
-			static_cast<size_t>(jointsIt->second) < model.accessors.size())
-		{
-			const tinygltf::Accessor* acc = nullptr;
-			const unsigned char* base = nullptr;
-			int stride = 0;
-			if (readPrimitiveAccessorData(jointsIt->second, acc, base, stride))
-			{
-				if (stride <= 0)
-				{
-					stride = 4; // 4 x u8 fallback
-				}
-
-				for (size_t i = 0; i < acc->count && i < mesh.vertices.size(); ++i)
-				{
-					const unsigned char* src = base + i * static_cast<size_t>(stride);
-
-					if (acc->componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE)
-					{
-						for (int k = 0; k < 4; ++k)
+						const auto& b = model.buffers[bv.buffer];
+						const unsigned char* base =
+							b.data.data() + bv.byteOffset + posAcc.byteOffset;
+						int stride = posAcc.ByteStride(bv);
+						if (stride <= 0)
 						{
-							uint32_t raw = src[k];
-							if (!skinJointNodeIndex.empty() && raw < skinJointNodeIndex.size())
+							stride = sizeof(float) * 3;
+						}
+
+						for (size_t i = 0; i < posAcc.count; ++i)
+						{
+							auto v = reinterpret_cast<const float*>(base + i * static_cast<size_t>(stride));
+							mesh.vertices[vertexBase + i].position.x = v[0];
+							mesh.vertices[vertexBase + i].position.y = v[1];
+							mesh.vertices[vertexBase + i].position.z = v[2];
+						}
+					}
+				}
+
+				auto nrmIt = prim.attributes.find("NORMAL");
+				if (nrmIt != prim.attributes.end() &&
+					nrmIt->second >= 0 &&
+					static_cast<size_t>(nrmIt->second) < model.accessors.size())
+				{
+					const tinygltf::Accessor* acc = nullptr;
+					const unsigned char* base = nullptr;
+					int stride = 0;
+					if (readPrimitiveAccessorData(nrmIt->second, acc, base, stride))
+					{
+						if (stride <= 0)
+						{
+							stride = sizeof(float) * 3;
+						}
+
+						for (size_t i = 0; i < acc->count && i < posAcc.count; ++i)
+						{
+							auto v = reinterpret_cast<const float*>(base + i * static_cast<size_t>(stride));
+							mesh.vertices[vertexBase + i].normal.x = v[0];
+							mesh.vertices[vertexBase + i].normal.y = v[1];
+							mesh.vertices[vertexBase + i].normal.z = v[2];
+						}
+					}
+				}
+
+				auto uvIt = prim.attributes.find("TEXCOORD_0");
+				if (uvIt != prim.attributes.end() &&
+					uvIt->second >= 0 &&
+					static_cast<size_t>(uvIt->second) < model.accessors.size())
+				{
+					const tinygltf::Accessor* acc = nullptr;
+					const unsigned char* base = nullptr;
+					int stride = 0;
+					if (readPrimitiveAccessorData(uvIt->second, acc, base, stride))
+					{
+						if (stride <= 0)
+						{
+							stride = sizeof(float) * 2;
+						}
+
+						for (size_t i = 0; i < acc->count && i < posAcc.count; ++i)
+						{
+							auto v = reinterpret_cast<const float*>(base + i * static_cast<size_t>(stride));
+							mesh.vertices[vertexBase + i].uv.x = v[0];
+							mesh.vertices[vertexBase + i].uv.y = v[1];
+						}
+					}
+				}
+
+				auto jointsIt = prim.attributes.find("JOINTS_0");
+				if (jointsIt != prim.attributes.end() &&
+					jointsIt->second >= 0 &&
+					static_cast<size_t>(jointsIt->second) < model.accessors.size())
+				{
+					const tinygltf::Accessor* acc = nullptr;
+					const unsigned char* base = nullptr;
+					int stride = 0;
+					if (readPrimitiveAccessorData(jointsIt->second, acc, base, stride))
+					{
+						if (stride <= 0)
+						{
+							stride = 4;
+						}
+
+						for (size_t i = 0; i < acc->count && i < posAcc.count; ++i)
+						{
+							const unsigned char* src = base + i * static_cast<size_t>(stride);
+							if (acc->componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE)
 							{
-								mesh.vertices[i].joints[k] = static_cast<uint32_t>(skinJointNodeIndex[raw]);
+								for (int k = 0; k < 4; ++k)
+								{
+									uint32_t raw = src[k];
+									if (!skinJointNodeIndex.empty() && raw < skinJointNodeIndex.size())
+									{
+										mesh.vertices[vertexBase + i].joints[k] = static_cast<uint32_t>(skinJointNodeIndex[raw]);
+									}
+									else
+									{
+										mesh.vertices[vertexBase + i].joints[k] = raw;
+									}
+								}
+							}
+							else if (acc->componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT)
+							{
+								auto s = reinterpret_cast<const uint16_t*>(src);
+								for (int k = 0; k < 4; ++k)
+								{
+									uint32_t raw = s[k];
+									if (!skinJointNodeIndex.empty() && raw < skinJointNodeIndex.size())
+									{
+										mesh.vertices[vertexBase + i].joints[k] = static_cast<uint32_t>(skinJointNodeIndex[raw]);
+									}
+									else
+									{
+										mesh.vertices[vertexBase + i].joints[k] = raw;
+									}
+								}
+							}
+						}
+					}
+				}
+
+				auto wgtIt = prim.attributes.find("WEIGHTS_0");
+				if (wgtIt != prim.attributes.end() &&
+					wgtIt->second >= 0 &&
+					static_cast<size_t>(wgtIt->second) < model.accessors.size())
+				{
+					const tinygltf::Accessor* acc = nullptr;
+					const unsigned char* base = nullptr;
+					int stride = 0;
+					if (readPrimitiveAccessorData(wgtIt->second, acc, base, stride))
+					{
+						if (stride <= 0)
+						{
+							stride = sizeof(float) * 4;
+						}
+
+						for (size_t i = 0; i < acc->count && i < posAcc.count; ++i)
+						{
+							auto v = reinterpret_cast<const float*>(base + i * static_cast<size_t>(stride));
+							for (int k = 0; k < 4; ++k)
+							{
+								mesh.vertices[vertexBase + i].weights[k] = v[k];
+							}
+						}
+					}
+				}
+
+				for (size_t vi = vertexBase; vi < mesh.vertices.size(); ++vi)
+				{
+					float s = mesh.vertices[vi].weights[0] + mesh.vertices[vi].weights[1]
+						+ mesh.vertices[vi].weights[2] + mesh.vertices[vi].weights[3];
+					if (s > 1e-6f && fabsf(s - 1.0f) > 1e-4f)
+					{
+						mesh.vertices[vi].weights[0] /= s;
+						mesh.vertices[vi].weights[1] /= s;
+						mesh.vertices[vi].weights[2] /= s;
+						mesh.vertices[vi].weights[3] /= s;
+					}
+				}
+
+				if (prim.indices >= 0 &&
+					static_cast<size_t>(prim.indices) < model.accessors.size())
+				{
+					const auto& acc = model.accessors[prim.indices];
+					if (acc.bufferView >= 0 &&
+						static_cast<size_t>(acc.bufferView) < model.bufferViews.size())
+					{
+						const auto& bv = model.bufferViews[acc.bufferView];
+						if (static_cast<size_t>(bv.buffer) < model.buffers.size())
+						{
+							const auto& b = model.buffers[bv.buffer];
+							const unsigned char* base =
+								b.data.data() + bv.byteOffset + acc.byteOffset;
+
+							int componentSize = 0;
+							if (acc.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT)
+							{
+								componentSize = sizeof(uint16_t);
+							}
+							else if (acc.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT)
+							{
+								componentSize = sizeof(uint32_t);
 							}
 							else
 							{
-								mesh.vertices[i].joints[k] = raw;
+								componentSize = sizeof(uint16_t);
 							}
-						}
-					}
-					else if (acc->componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT)
-					{
-						auto s = reinterpret_cast<const uint16_t*>(src);
-						for (int k = 0; k < 4; ++k)
-						{
-							uint32_t raw = s[k];
-							if (!skinJointNodeIndex.empty() && raw < skinJointNodeIndex.size())
+
+							int stride = acc.ByteStride(bv);
+							if (stride <= 0)
 							{
-								mesh.vertices[i].joints[k] = static_cast<uint32_t>(skinJointNodeIndex[raw]);
+								stride = componentSize;
 							}
-							else
+
+							for (size_t i = 0; i < acc.count; ++i)
 							{
-								mesh.vertices[i].joints[k] = raw;
+								const unsigned char* ptr = base + i * static_cast<size_t>(stride);
+								unsigned long indexValue = 0;
+								if (acc.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT)
+								{
+									indexValue = static_cast<unsigned long>(*reinterpret_cast<const uint16_t*>(ptr));
+								}
+								else if (acc.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT)
+								{
+									indexValue = static_cast<unsigned long>(*reinterpret_cast<const uint32_t*>(ptr));
+								}
+								else
+								{
+									indexValue = static_cast<unsigned long>(*reinterpret_cast<const uint16_t*>(ptr));
+								}
+
+								mesh.indices.push_back(static_cast<unsigned long>(vertexBase) + indexValue);
 							}
 						}
 					}
 				}
-			}
-		}
-
-		// Weights (optional, VEC4 of floats)
-		auto wgtIt = prim.attributes.find("WEIGHTS_0");
-		if (wgtIt != prim.attributes.end() &&
-			wgtIt->second >= 0 &&
-			static_cast<size_t>(wgtIt->second) < model.accessors.size())
-		{
-			const tinygltf::Accessor* acc = nullptr;
-			const unsigned char* base = nullptr;
-			int stride = 0;
-			if (readPrimitiveAccessorData(wgtIt->second, acc, base, stride))
-			{
-				if (stride <= 0)
+				else
 				{
-					stride = sizeof(float) * 4; // vec4
-				}
-
-				for (size_t i = 0; i < acc->count && i < mesh.vertices.size(); ++i)
-				{
-					auto v = reinterpret_cast<const float*>(base + i * static_cast<size_t>(stride));
-					for (int k = 0; k < 4; ++k)
-						mesh.vertices[i].weights[k] = v[k];
-				}
-			}
-		}
-
-		// Normalize weights to guard against malformed exporters that don't ensure
-		// weights sum to 1.0. This keeps skinning stable even if sums slightly differ.
-		for (size_t vi = 0; vi < mesh.vertices.size(); ++vi)
-		{
-			float s = mesh.vertices[vi].weights[0] + mesh.vertices[vi].weights[1]
-				+ mesh.vertices[vi].weights[2] + mesh.vertices[vi].weights[3];
-			if (s > 1e-6f && fabsf(s - 1.0f) > 1e-4f)
-			{
-				mesh.vertices[vi].weights[0] /= s;
-				mesh.vertices[vi].weights[1] /= s;
-				mesh.vertices[vi].weights[2] /= s;
-				mesh.vertices[vi].weights[3] /= s;
-			}
-		}
-
-		// Keep vertex positions in original glTF bind-pose space.
-		// Re-centering/re-scaling vertices here breaks skinning unless the same
-		// transform is applied to skeleton bind data and animation.
-
-		// Indices
-		if (prim.indices >= 0 &&
-			static_cast<size_t>(prim.indices) < model.accessors.size())
-		{
-			const auto& acc = model.accessors[prim.indices];
-			if (acc.bufferView >= 0 &&
-				static_cast<size_t>(acc.bufferView) < model.bufferViews.size())
-			{
-				const auto& bv = model.bufferViews[acc.bufferView];
-				if (static_cast<size_t>(bv.buffer) < model.buffers.size())
-				{
-					const auto& b = model.buffers[bv.buffer];
-					mesh.indices.resize(acc.count);
-
-					const unsigned char* base =
-						b.data.data() + bv.byteOffset + acc.byteOffset;
-
-					int componentSize = 0;
-					if (acc.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT)
+					for (size_t i = 0; i < posAcc.count; ++i)
 					{
-						componentSize = sizeof(uint16_t);
-					}
-					else if (acc.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT)
-					{
-						componentSize = sizeof(uint32_t);
-					}
-					else
-					{
-						componentSize = sizeof(uint16_t); // fallback
-					}
-
-					int stride = acc.ByteStride(bv);
-					if (stride <= 0)
-					{
-						stride = componentSize;
-					}
-
-					for (size_t i = 0; i < acc.count; ++i)
-					{
-						const unsigned char* ptr = base + i * static_cast<size_t>(stride);
-						if (acc.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT)
-						{
-							mesh.indices[i] = static_cast<unsigned long>(
-								*reinterpret_cast<const uint16_t*>(ptr));
-						}
-						else if (acc.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT)
-						{
-							mesh.indices[i] = static_cast<unsigned long>(
-								*reinterpret_cast<const uint32_t*>(ptr));
-						}
-						else
-						{
-							mesh.indices[i] = static_cast<unsigned long>(
-								*reinterpret_cast<const uint16_t*>(ptr));
-						}
+						mesh.indices.push_back(static_cast<unsigned long>(vertexBase + i));
 					}
 				}
-			}
-		}
-		else if (!mesh.vertices.empty())
-		{
-			// glTF primitive without indices: create 0..N-1 index buffer
-			// so UploadToGPU can still upload and draw this mesh.
-			mesh.indices.resize(mesh.vertices.size());
-			for (size_t i = 0; i < mesh.vertices.size(); ++i)
-			{
-				mesh.indices[i] = static_cast<unsigned long>(i);
 			}
 		}
 	}

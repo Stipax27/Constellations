@@ -22,7 +22,7 @@
 class SpriteSystem : public System
 {
 public:
-	SpriteSystem(FrustumClass*);
+	SpriteSystem(FrustumClass*, ID3D11Buffer* boneBuf = nullptr);
 	void Initialize();
 	void Shutdown();
 
@@ -30,6 +30,7 @@ public:
 
 private:
 	FrustumClass* frustum;
+	ID3D11Buffer* boneBuffer = nullptr;
 
 private:
 	XMMATRIX GetWorldMatrix(Transform);

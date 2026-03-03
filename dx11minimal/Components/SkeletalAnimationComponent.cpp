@@ -1,5 +1,35 @@
 #include "SkeletalAnimationComponent.h"
 
+void SkeletalAnimationComponent::CaptureBindPose()
+{
+	bindLocalPose.clear();
+	if (!skeleton)
+	{
+		return;
+	}
+
+	bindLocalPose.reserve(skeleton->joints.size());
+	for (const Joint& joint : skeleton->joints)
+	{
+		bindLocalPose.push_back(joint.local);
+	}
+}
+
+void SkeletalAnimationComponent::ResetToBindPose()
+{
+	if (!skeleton || bindLocalPose.size() != skeleton->joints.size())
+	{
+		return;
+	}
+
+	for (size_t i = 0; i < skeleton->joints.size(); ++i)
+	{
+		skeleton->joints[i].local = bindLocalPose[i];
+	}
+
+	skeleton->UpdateGlobalPose();
+}
+
 bool SkeletalAnimationComponent::SetAnimationByIndex(size_t index, bool restart)
 {
 	if (!animationClips || index >= animationClips->size())
@@ -10,6 +40,7 @@ bool SkeletalAnimationComponent::SetAnimationByIndex(size_t index, bool restart)
 	animationClip = &(*animationClips)[index];
 	if (restart)
 	{
+		ResetToBindPose();
 		currentTime = 0.0f;
 	}
 

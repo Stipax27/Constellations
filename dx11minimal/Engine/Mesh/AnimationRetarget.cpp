@@ -1,10 +1,28 @@
 #include "AnimationRetarget.h"
 
 #include <unordered_map>
+#include <cctype>
 
 namespace
 {
-	bool BuildJointNameToIndexMap(
+	std::string CanonicalizeJointName(const std::string& name)
+	{
+		if (name.size() > 4)
+		{
+			const size_t dotPos = name.size() - 4;
+			if (name[dotPos] == '.' &&
+				std::isdigit(static_cast<unsigned char>(name[dotPos + 1])) &&
+				std::isdigit(static_cast<unsigned char>(name[dotPos + 2])) &&
+				std::isdigit(static_cast<unsigned char>(name[dotPos + 3])))
+			{
+				return name.substr(0, dotPos);
+			}
+		}
+
+		return name;
+	}
+
+	bool BuildExactJointNameToIndexMap(
 		const Skeleton& skeleton,
 		std::unordered_map<std::string, int>& outMap)
 	{
@@ -28,6 +46,37 @@ namespace
 
 		return true;
 	}
+
+	bool BuildCanonicalJointNameToIndexMap(
+		const Skeleton& skeleton,
+		std::unordered_map<std::string, int>& outMap)
+	{
+		outMap.clear();
+		outMap.reserve(skeleton.joints.size());
+
+		for (size_t i = 0; i < skeleton.joints.size(); ++i)
+		{
+			const std::string& jointName = skeleton.joints[i].name;
+			if (jointName.empty())
+			{
+				return false;
+			}
+
+			const std::string canonicalName = CanonicalizeJointName(jointName);
+			const auto found = outMap.find(canonicalName);
+			if (found == outMap.end())
+			{
+				outMap.emplace(canonicalName, static_cast<int>(i));
+			}
+			else
+			{
+				// Ambiguous fallback name. Mark as unusable for canonical lookup.
+				found->second = -1;
+			}
+		}
+
+		return true;
+	}
 }
 
 bool AnimationRetarget::CanUseAnimationDirectly(
@@ -43,7 +92,7 @@ bool AnimationRetarget::CanUseAnimationDirectly(
 	{
 		const Joint& sourceJoint = sourceSkeleton.joints[i];
 		const Joint& targetJoint = targetSkeleton.joints[i];
-		if (sourceJoint.name != targetJoint.name)
+		if (CanonicalizeJointName(sourceJoint.name) != CanonicalizeJointName(targetJoint.name))
 		{
 			return false;
 		}
@@ -70,8 +119,14 @@ bool AnimationRetarget::BuildSourceToTargetJointMap(
 		return false;
 	}
 
-	std::unordered_map<std::string, int> targetJointNameToIndex;
-	if (!BuildJointNameToIndexMap(targetSkeleton, targetJointNameToIndex))
+	std::unordered_map<std::string, int> targetExactJointNameToIndex;
+	if (!BuildExactJointNameToIndexMap(targetSkeleton, targetExactJointNameToIndex))
+	{
+		return false;
+	}
+
+	std::unordered_map<std::string, int> targetCanonicalJointNameToIndex;
+	if (!BuildCanonicalJointNameToIndexMap(targetSkeleton, targetCanonicalJointNameToIndex))
 	{
 		return false;
 	}
@@ -84,13 +139,22 @@ bool AnimationRetarget::BuildSourceToTargetJointMap(
 			return false;
 		}
 
-		const auto found = targetJointNameToIndex.find(jointName);
-		if (found == targetJointNameToIndex.end())
+		const auto exactFound = targetExactJointNameToIndex.find(jointName);
+		if (exactFound != targetExactJointNameToIndex.end())
+		{
+			outSourceToTargetJointMap[sourceIdx] = exactFound->second;
+			continue;
+		}
+
+		const std::string canonicalName = CanonicalizeJointName(jointName);
+		const auto canonicalFound = targetCanonicalJointNameToIndex.find(canonicalName);
+		if (canonicalFound == targetCanonicalJointNameToIndex.end() ||
+			canonicalFound->second < 0)
 		{
 			return false;
 		}
 
-		outSourceToTargetJointMap[sourceIdx] = found->second;
+		outSourceToTargetJointMap[sourceIdx] = canonicalFound->second;
 	}
 
 	// Hierarchy compatibility check via mapped parents.

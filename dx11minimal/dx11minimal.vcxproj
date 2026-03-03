@@ -906,6 +906,11 @@
     <Content Include="Resourses\Models\Cube.txt" />
     <Content Include="Resourses\Models\Cube2.txt" />
     <Content Include="Resourses\Models\Fox.glb" />
+    <Content Include="Resourses\Models\TestAnims\1.glb" />
+    <Content Include="Resourses\Models\TestAnims\2.glb" />
+    <Content Include="Resourses\Models\TestAnims\3.glb" />
+    <Content Include="Resourses\Models\TestAnims\4.glb" />
+    <Content Include="Shaders\SkinnedPointCloud_VS.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

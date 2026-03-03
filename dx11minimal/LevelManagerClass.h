@@ -81,11 +81,15 @@ private:
 	CollisionManagerClass* collisionManager;
 	BaseStar* bStar;
 	SmallConstellation* smallConstellation;
+	Entity* m_TestAnimEntity = nullptr;
+	int m_TestAnimCycleIndex = 0;
+	bool m_WasToggleAnimationPressed = false;
 	void LoadModels();
 	Entity* CreatePlayer(Entity*);
 	void CreateUI();
 	void InitSystems();
 	void CreateAries(Entity*);
+	void UpdateTestAnimationToggle();
 	ID3D11Buffer* m_BoneBuffer = nullptr;
 	SkinnedMesh m_FoxMesh;
 	Skeleton    m_FoxSkeleton;
@@ -93,6 +97,9 @@ private:
 	SkinnedMesh m_CesiumMesh;
 	Skeleton    m_CesiumSkeleton;
 	std::vector<AnimationClip> m_CesiumAnimations;
+	SkinnedMesh m_TestAnimMesh;
+	Skeleton    m_TestAnimSkeleton;
+	std::vector<AnimationClip> m_TestAnimAnimations;
 };
 
 #endif

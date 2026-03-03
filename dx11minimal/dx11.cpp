@@ -1367,6 +1367,7 @@ void Shaders::Init()
 	Shaders::CreatePS(22, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SwordBeam_PS.shader"));
 
 	Shaders::CreateVS(23, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SkinnedMesh_VS.shader"));
+	Shaders::CreateVS(24, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SkinnedPointCloud_VS.shader"));
 
 	//-----------------------------------------------
 
@@ -1387,6 +1388,7 @@ void Shaders::Init()
 	ConstBuf::CreateVertexBuffer(15);
 	ConstBuf::CreateVertexBuffer(17);
 	ConstBuf::CreateVertexBuffer(23);
+	ConstBuf::CreateVertexBuffer(24);
 }
 
 void Shaders::CleanupCache()

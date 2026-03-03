@@ -8,6 +8,12 @@
 #include "../Engine/Mesh/Animator.h"
 #include "../Engine/Mesh/Skeleton.h"
 
+enum class RootMotionMode
+{
+	InPlace,
+	Accumulate
+};
+
 struct SkeletalAnimationComponent : Component
 {
 	Skeleton* skeleton = nullptr;
@@ -15,11 +21,15 @@ struct SkeletalAnimationComponent : Component
 	std::vector<AnimationClip>* animationClips = nullptr;
 	Animator animator;
 	std::vector<DirectX::XMMATRIX> bonePalette;
+	std::vector<DirectX::XMFLOAT4X4> bindLocalPose;
 
 	float currentTime = 0.0f;
 	bool isPlaying = false;
 	bool isLooping = true;
+	RootMotionMode rootMotionMode = RootMotionMode::InPlace;
 
+	void CaptureBindPose();
+	void ResetToBindPose();
 	bool SetAnimationByIndex(size_t index, bool restart = true);
 	bool SetAnimationByName(const std::string& clipName, bool restart = true);
 };
