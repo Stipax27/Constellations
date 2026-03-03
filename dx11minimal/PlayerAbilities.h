@@ -52,9 +52,9 @@ enum PlayerWeapons
 #define ATTACK_COST 25.0f
 
 //Константы хука
-#define HOOK_RADIUS 10.0f
-#define HOOK_SPEED_PROJ 10.0f
-#define HOOK_SPEED_ATT 10.0f
+//#define HOOK_RADIUS 10.0f
+//#define HOOK_SPEED_PROJ 10.0f
+//#define HOOK_SPEED_ATT 10.0f
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -88,6 +88,8 @@ public:
 	void BlockStart();
 	void BlockEnd();
 
+	void Hook(Transform, point3d);
+
 private:
 	World* world;
 	CameraClass* camera;
@@ -105,10 +107,10 @@ private:
 	bool block;
 
 	//Переменные хука
-	bool hookActive;
-	Entity* hookEntity;
-	float hookVisualIntensity;
-	double hookStartTime;
+	//bool hookActive;
+	//Entity* hookEntity;
+	//float hookVisualIntensity;
+	//double hookStartTime;
 
 	vector<Entity*> projectiles;
 

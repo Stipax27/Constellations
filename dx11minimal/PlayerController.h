@@ -86,6 +86,7 @@ private:
 
 private:
 	void Dash();
+	void Hook();
 };
 
 #endif

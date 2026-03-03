@@ -135,6 +135,10 @@ void PlayerController::ProcessInput()
 		if (IsKeyPressed(VK_LSHIFT)) {
 			Dash();
 		}
+
+		if (IsKeyPressed(VK_MENU)) {
+			Hook();
+		}
 		
 		float roll = 0.0f;
 
@@ -275,4 +279,9 @@ void PlayerController::Dash()
 
 		abilities->stamina -= DASH_COST;
 	}
+}
+
+void PlayerController::Hook()
+{
+		abilities->Hook(*playerTransform, mouse->GetMouseRay());
 }

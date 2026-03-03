@@ -33,10 +33,10 @@ void PlayerAbilities::Initialize(World* m_World, CameraClass* Camera, Entity* Pl
 	maxCharge = 100;
 
 	// Инициализация переменных хука
-	hookActive = false;
-	hookEntity = nullptr;
-	hookVisualIntensity = 0.0f;
-	hookStartTime = 0.0f;
+	//hookActive = false;
+	//hookEntity = nullptr;
+	//hookVisualIntensity = 0.0f;
+	//hookStartTime = 0.0f;
 }
 
 
@@ -205,11 +205,36 @@ void PlayerAbilities::BlockEnd()
 }
 
 
-void PlayerAbilities::Hook()
+void PlayerAbilities::Hook(Transform startTransform, point3d direction)
 {
+	if (block) {
+		return;
+	}
 
+	charging = false;
+	chargeTimeAchor = timer::currentTime;
+
+	if (!chargeDone) {
+		if (stamina < ATTACK_COST) {
+			return;
+		}
+		stamina -= ATTACK_COST;
+	}
+
+	RayInfo rayInfo = RayInfo(camera->GetPosition(), direction * RAY_DISTANCE, CollisionFilter::Group::PlayerRay);
+	RaycastResult result = collisionManager->Raycast(rayInfo);
+
+	point3d pos = result.hit ? result.position : camera->GetPosition() + direction * RAY_DISTANCE;
+	point3d dir = (pos - startTransform.position).normalized();
+
+	if (chargeDone) {
+		ChargedAttack(startTransform, dir);
+	}
+	else {
+		CommonAttack(startTransform, dir);
+	}
+	chargeDone = false;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
