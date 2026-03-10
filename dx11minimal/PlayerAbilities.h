@@ -7,6 +7,7 @@
 //////////////
 // INCLUDES //
 //////////////
+#include "singleton.h"
 #include "cameraclass.h"
 
 #include "world.h"
@@ -73,7 +74,7 @@ public:
 	PlayerAbilities(const PlayerAbilities&);
 	~PlayerAbilities();
 
-	void Initialize(World*, CameraClass*, Entity*, CollisionManagerClass*);
+	void Initialize(Entity*);
 	void Shutdown();
 	void Update();
 

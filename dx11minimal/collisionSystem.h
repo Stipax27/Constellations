@@ -30,7 +30,7 @@
 class CollisionSystem : public System
 {
 public:
-	CollisionSystem(CollisionManagerClass*);
+	CollisionSystem();
 	void Initialize();
 	void Shutdown();
 

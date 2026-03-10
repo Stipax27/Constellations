@@ -163,7 +163,7 @@ private:
 	{
 		baseToComponents[typeid(T)].push_back(component);
 
-		if (std::is_base_of<Collider, T>::value) {
+		if (is_base_of<Collider, T>::value) {
 			baseToComponents[typeid(Collider)].push_back(component);
 		}
 

@@ -16,10 +16,9 @@ CollisionManagerClass::~CollisionManagerClass()
 }
 
 
-void CollisionManagerClass::Initialize(EntityStorage* _EntityStorage)
+void CollisionManagerClass::Initialize()
 {
-    entityStorage = _EntityStorage;
-	//collisionMap[{typeid(SphereCollider), typeid(SphereCollider)}] = sphere_vs_sphere;
+    entityStorage = Singleton::GetInstance<EntityStorage>();
 }
 
 

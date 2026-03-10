@@ -8,7 +8,9 @@
 #include "utils.h"
 #include "dx11.h"
 #include "Point3d.h"
+#include "singleton.h"
 
+#include "windowclass.h"
 #include "frustumclass.h"
 
 /////////////
@@ -21,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: CameraClass
 ////////////////////////////////////////////////////////////////////////////////
-class CameraClass
+class CameraClass : public ISingleton
 {
 public:
 	FrustumClass* frustum;
@@ -32,7 +34,7 @@ public:
 	CameraClass(const CameraClass&);
 	~CameraClass();
 
-	void Initialize(float);
+	void Initialize();
 
 	void SetPosition(point3d);
 	void SetMatrixRotation(XMMATRIX);
