@@ -26,6 +26,7 @@
 #include "PointCloud.h"
 #include "Health.h"
 #include "Mesh.h"
+#include "Components/Nebula.h"
 
 #include "Transform2D.h"
 
