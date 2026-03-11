@@ -412,7 +412,29 @@ void PlayerAbilities::ChargedAttack(Transform startTransform, point3d direction)
 	projectiles.push_back(projectile);
 }
 
+void PlayerAbilities::BlockStart()
+{
+	if (charging || shieldActive) {
+		return;
+	}
 
+	block = true;
+
+	PointCloud* pointCloud = playerEntity->GetComponent<PointCloud>();
+	if (pointCloud) {
+		pointCloud->color = point3d(1.0f, 1.0f, 0.0f);
+	}
+}
+
+void PlayerAbilities::BlockEnd()
+{
+	block = false;
+
+	PointCloud* pointCloud = playerEntity->GetComponent<PointCloud>();
+	if (pointCloud) {
+		pointCloud->color = point3d(1.0f, 0.6f, 0.9f);
+	}
+}
 
 
 void PlayerAbilities::TimestopStart()
