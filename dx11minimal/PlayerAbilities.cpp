@@ -167,10 +167,12 @@ void PlayerAbilities::Update()
 	if (timeStopped) {
 		timestopProgress = max(timestopProgress - TIMESTOP_STEP * (timer::deltaTime * 0.01), 0);
 		worldFolder->SetTimeScale(timestopProgress);
-		for (Entity* entity : projectiles) {
-
-		}
 	}
+	else if (timestopProgress < 1.0f) {
+		timestopProgress = min(timestopProgress + TIMESTOP_STEP * (timer::deltaTime * 0.01), 1);
+		worldFolder->SetTimeScale(timestopProgress);
+	}
+	UpdateProjectiles();
 }
 
 // Метод для активации щита
