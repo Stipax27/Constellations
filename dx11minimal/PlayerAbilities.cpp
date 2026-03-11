@@ -270,6 +270,34 @@ bool PlayerAbilities::TryBlockDamage(float damage)
 	}
 }
 
+void PlayerAbilities::ParticleVacuumStart() {
+
+	Entity* entity;
+	entity = world->entityStorage->CreateEntity("Particles", playerEntity);
+	Transform* transform = entity->AddComponent<Transform>();
+	ParticleEmitter* particleEmitter = entity->AddComponent<ParticleEmitter>();
+	particleEmitter->rate = 150;
+	particleEmitter->lifetime = 1000;
+	particleEmitter->color = point3d(0.1f, 0.45f, 1.0f);
+	particleEmitter->size = { 0.0f, 4.0f };
+	particleEmitter->opacity = { 1.0f, 0.0f };
+	particleEmitter->emitDirection = EmitDirection::Up;
+	particleEmitter->speed = { 10.0f, 0.0f };
+	particleEmitter->spread = { PI, PI };
+	particleEmitter->isReverse = true;
+
+}
+
+void PlayerAbilities::ParticleVacuumEnd() {
+
+	Entity* entity = playerEntity->GetChildByName("Particles");
+	ParticleEmitter* particleEmitter = entity->GetComponent<ParticleEmitter>();
+	particleEmitter->active = false;
+
+	DelayedDestroy* delayedDestroyentity= entity->AddComponent<DelayedDestroy>();
+	delayedDestroyentity->lifeTime = 1000;
+}
+
 void PlayerAbilities::Attack(Transform startTransform, point3d direction)
 {
 	if (block || shieldActive) {

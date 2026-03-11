@@ -144,7 +144,7 @@ bool LevelManagerClass::Initialize()
 	particleEmitter->color = point3d(0.15f, 0.95f, 0.35f);
 	particleEmitter->size = { 1.0f, 4.0f };
 	particleEmitter->opacity = { 0.75f, 0.0f };
-	particleEmitter->emitDirection = EmitDirection::Up;
+	particleEmitter->emitDirection = EmitDirection::Front;
 	particleEmitter->speed = { 10.0f, 0.0f };
 	particleEmitter->spread = { PI / 8, PI / 8 };
 

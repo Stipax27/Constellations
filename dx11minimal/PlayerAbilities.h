@@ -57,7 +57,6 @@ enum PlayerWeapons
 #define SHIELD_DAMAGE_MULTIPLIER 2.0f  // Множитель стоимости блокировки урона
 #define SHIELD_COST_PER_SECOND 40.0f
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: PlayerAbilities
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,6 +75,10 @@ public:
 	void ShieldEnd();
 	bool TryBlockDamage(float damage);
 	bool IsShieldActive() const { return shieldActive; }
+
+
+	void ParticleVacuumStart();
+	void ParticleVacuumEnd();
 
 public:
 	PlayerAbilities();

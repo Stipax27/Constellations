@@ -169,6 +169,16 @@ void PlayerController::ProcessInput()
 		if (IsKeyPressed('3')) {
 			abilities->weapon = PlayerWeapons::Bow;
 		}
+
+		static bool vKeyPressed = false;
+		if (IsKeyPressed('V')&& !vKeyPressed) {
+			vKeyPressed = true;
+			abilities->ParticleVacuumStart();
+		}
+		else if (!IsKeyPressed('V') && vKeyPressed) {
+			vKeyPressed = false;
+			abilities->ParticleVacuumEnd();
+		}
 	}
 }
 
