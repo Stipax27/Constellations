@@ -2,9 +2,9 @@
 
 
 
-CollisionSystem::CollisionSystem(CollisionManagerClass* CollisionManager)
+CollisionSystem::CollisionSystem()
 {
-	collisionManager = CollisionManager;
+	collisionManager = Singleton::GetInstance<CollisionManagerClass>();
 }
 
 

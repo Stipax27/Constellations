@@ -2,10 +2,10 @@
 
 
 
-MeshSystem::MeshSystem(FrustumClass* Frustum, CameraClass* Camera)
+MeshSystem::MeshSystem()
 {
-	frustum = Frustum;
-	camera = Camera;
+	frustum = Singleton::GetInstance<FrustumClass>();
+	camera = Singleton::GetInstance<CameraClass>();
 }
 
 

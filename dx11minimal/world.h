@@ -14,6 +14,7 @@
 #include "system.h"
 
 #include "cameraclass.h"
+#include "singleton.h"
 
 using namespace std;
 
@@ -29,7 +30,7 @@ using namespace std;
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: World
 ////////////////////////////////////////////////////////////////////////////////
-class World
+class World : public ISingleton
 {
 public:
 	CameraClass* m_Camera;
@@ -73,7 +74,7 @@ public:
 		return raw_ptr;
 	}
 
-	void Initialize(float);
+	void Initialize();
 	void Shutdown();
 
 	void PreCalculations();

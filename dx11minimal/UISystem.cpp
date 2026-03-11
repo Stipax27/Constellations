@@ -2,10 +2,10 @@
 
 
 
-UISystem::UISystem(MouseClass* Mouse, EntityStorage* _EntityStorage)
+UISystem::UISystem()
 {
-	mouse = Mouse;
-	entityStorage = _EntityStorage;
+	mouse = Singleton::GetInstance<MouseClass>();
+	entityStorage = Singleton::GetInstance<EntityStorage>();
 }
 
 

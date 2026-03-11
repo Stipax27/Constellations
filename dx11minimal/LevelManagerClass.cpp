@@ -21,7 +21,7 @@ LevelManagerClass::~LevelManagerClass()
 void LevelManagerClass::InitWindow()
 {
 	if (window == 0) {
-		window = new WindowClass;
+		window = Singleton::GetInstance<WindowClass>();
 	}
 }
 
@@ -30,14 +30,14 @@ bool LevelManagerClass::Initialize()
 {
 	InitWindow();
 
-	m_World = new World;
-	m_World->Initialize(window->iaspect);
+	m_World = Singleton::GetInstance<World>();
+	m_World->Initialize();
 
-	collisionManager = new CollisionManagerClass;
-	collisionManager->Initialize(m_World->entityStorage);
+	collisionManager = Singleton::GetInstance<CollisionManagerClass>();
+	collisionManager->Initialize();
 
-	mouse = new MouseClass;
-	mouse->Initialize(window, m_World->m_Camera);
+	mouse = Singleton::GetInstance<MouseClass>();
+	mouse->Initialize();
 
 	Dx11Init(window->hWnd, window->width, window->height);
 
@@ -231,7 +231,7 @@ bool LevelManagerClass::Initialize()
 	//m_World->PreCalculations();
 
 	playerController = new PlayerController();
-	playerController->Initialize(player, m_World, mouse, window, collisionManager);
+	playerController->Initialize(player);
 
 	return true;
 }
@@ -688,17 +688,17 @@ void LevelManagerClass::InitSystems()
 	m_World->AddComputeSystem<EntityManagerSystem>();
 
 	m_World->AddPhysicSystem<PhysicSystem>();
-	m_World->AddPhysicSystem<CollisionSystem>(collisionManager);
+	m_World->AddPhysicSystem<CollisionSystem>();
 	m_World->AddPhysicSystem<CombatSystem>();
 	//AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
 
-	m_World->AddRenderSystem<MeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera);
+	m_World->AddRenderSystem<MeshSystem>();
 	if (SHOW_COLLIDERS) {
 		m_World->AddRenderSystem<CollisionDrawSystem>();
 	}
-	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum);
-	m_World->AddRenderSystem<NebulaSystem>(m_World->m_Camera->frustum);
-	m_World->AddRenderSystem<UISystem>(mouse, m_World->entityStorage);
+	m_World->AddRenderSystem<SpriteSystem>();
+	m_World->AddRenderSystem<NebulaSystem>();
+	m_World->AddRenderSystem<UISystem>();
 }
 
 

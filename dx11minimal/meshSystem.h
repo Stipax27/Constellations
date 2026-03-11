@@ -18,7 +18,7 @@
 class MeshSystem : public System
 {
 public:
-	MeshSystem(FrustumClass*, CameraClass*);
+	MeshSystem();
 	void Initialize();
 	void Shutdown();
 

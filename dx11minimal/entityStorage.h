@@ -10,6 +10,7 @@
 #include <vector>
 #include "entity.h"
 #include "timer.h"
+#include "isingleton.h"
 
 using namespace std;
 
@@ -17,7 +18,7 @@ using namespace std;
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: EntityStorage
 ////////////////////////////////////////////////////////////////////////////////
-class EntityStorage
+class EntityStorage : public ISingleton
 {
 public:
 	vector<Entity*> entities;

@@ -194,6 +194,7 @@
     <ClInclude Include="frustumclass.h" />
     <ClInclude Include="Health.h" />
     <ClInclude Include="HpIndicator.h" />
+    <ClInclude Include="isingleton.h" />
     <ClInclude Include="LevelManagerClass.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="meshSystem.h" />
@@ -215,6 +216,7 @@
     <ClInclude Include="Rect.h" />
     <ClInclude Include="renderCompress.h" />
     <ClInclude Include="SingleDamager.h" />
+    <ClInclude Include="singleton.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="SpriteCluster.h" />
     <ClInclude Include="spriteSystem.h" />
@@ -717,6 +719,7 @@
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Point3d.cpp" />
     <ClCompile Include="Point4d.cpp" />
+    <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="SplinePath.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />
     <ClCompile Include="SpriteSystem.cpp" />

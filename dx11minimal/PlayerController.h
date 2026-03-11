@@ -8,6 +8,8 @@
 //////////////
 // INCLUDES //
 //////////////
+#include "singleton.h"
+
 #include "cameraclass.h"
 #include "mouseclass.h"
 #include "windowclass.h"
@@ -57,7 +59,7 @@ public:
 	PlayerController(const PlayerController&);
 	~PlayerController();
 
-	void Initialize(Entity*, World*, MouseClass*, WindowClass*, CollisionManagerClass*);
+	void Initialize(Entity*);
 	void Shutdown();
 
 	void ProcessInput();

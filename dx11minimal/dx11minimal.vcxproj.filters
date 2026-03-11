@@ -105,6 +105,9 @@
     <ClCompile Include="NebulaSystem.cpp">
       <Filter>Source Files\Render</Filter>
     </ClCompile>
+    <ClCompile Include="Singleton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enemy_Patern.h">
@@ -301,6 +304,12 @@
     </ClInclude>
     <ClInclude Include="nebulaSystem.h">
       <Filter>Header Files\ECS\Systems\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="singleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isingleton.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

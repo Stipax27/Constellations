@@ -2,9 +2,9 @@
 #include "Components/Orientation.h"
 
 
-SpriteSystem::SpriteSystem(FrustumClass* Frustum)
+SpriteSystem::SpriteSystem()
 {
-	frustum = Frustum;
+	frustum = Singleton::GetInstance<FrustumClass>();
 }
 
 

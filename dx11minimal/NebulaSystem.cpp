@@ -1,9 +1,9 @@
 #include "nebulaSystem.h"
 
 
-NebulaSystem::NebulaSystem(FrustumClass* Frustum)
+NebulaSystem::NebulaSystem()
 {
-	frustum = Frustum;
+	frustum = Singleton::GetInstance<FrustumClass>();
 }
 
 

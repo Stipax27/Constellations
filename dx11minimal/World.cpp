@@ -19,13 +19,13 @@ World::~World()
 }
 
 
-void World::Initialize(float iaspect)
+void World::Initialize()
 {
-	m_Camera = new CameraClass;
-	m_Camera->Initialize(iaspect);
+	m_Camera = Singleton::GetInstance<CameraClass>();
+	m_Camera->Initialize();
 	m_Camera->SetPosition(point3d(0.0f, 0.0f, -10.0f));
 
-	entityStorage = new EntityStorage;
+	entityStorage = Singleton::GetInstance<EntityStorage>();
 	entityStorage->Initialize();
 }
 

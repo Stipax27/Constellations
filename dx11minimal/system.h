@@ -13,7 +13,7 @@
 #include "entityStorage.h"
 
 #include "dx11.h"
-using namespace std;
+#include "singleton.h"
 
 /////////////
 // GLOBALS //

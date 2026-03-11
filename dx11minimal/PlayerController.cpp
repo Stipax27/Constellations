@@ -24,7 +24,7 @@ PlayerController::~PlayerController()
 }
 
 
-void PlayerController::Initialize(Entity* Player, World* m_World, MouseClass* Mouse, WindowClass* Window, CollisionManagerClass* CollisionManager)
+void PlayerController::Initialize(Entity* Player)
 {
 	playerEntity = Player;
 
@@ -33,16 +33,18 @@ void PlayerController::Initialize(Entity* Player, World* m_World, MouseClass* Mo
 	playerPointCloud = Player->GetComponent<PointCloud>();
 	playerHealth = Player->GetComponent<Health>();
 
-	ui = m_World->entityStorage->GetEntityByName("UI");
+	World* world = Singleton::GetInstance<World>();
+
+	ui = world->entityStorage->GetEntityByName("UI");
 	healthBar = ui->GetChildByName("HealthBar", true);
 	staminaBar = ui->GetChildByName("StaminaBar", true);
 
-	camera = m_World->m_Camera;
-	mouse = Mouse;
-	window = Window;
+	camera = world->m_Camera;
+	mouse = Singleton::GetInstance<MouseClass>();
+	window = Singleton::GetInstance<WindowClass>();
 
 	abilities = new PlayerAbilities;
-	abilities->Initialize(m_World, camera, playerEntity, CollisionManager);
+	abilities->Initialize(playerEntity);
 }
 
 

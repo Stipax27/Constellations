@@ -21,7 +21,7 @@
 class SpriteSystem : public System
 {
 public:
-	SpriteSystem(FrustumClass*);
+	SpriteSystem();
 	void Initialize();
 	void Shutdown();
 

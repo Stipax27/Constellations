@@ -15,7 +15,7 @@
 class NebulaSystem : public System
 {
 public:
-	NebulaSystem(FrustumClass*);
+	NebulaSystem();
 	void Initialize();
 	void Shutdown();
 

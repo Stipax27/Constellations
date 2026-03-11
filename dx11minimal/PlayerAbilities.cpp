@@ -13,16 +13,17 @@ PlayerAbilities::~PlayerAbilities()
 {
 }
 
-void PlayerAbilities::Initialize(World* m_World, CameraClass* Camera, Entity* PlayerEntity, CollisionManagerClass* CollisionManager)
+
+void PlayerAbilities::Initialize(Entity* PlayerEntity)
 {
 	weapon = PlayerWeapons::Fists;
 
-	world = m_World;
-	camera = Camera;
-	collisionManager = CollisionManager;
+	world = Singleton::GetInstance<World>();
+	camera = Singleton::GetInstance<CameraClass>();
+	collisionManager = Singleton::GetInstance<CollisionManagerClass>();
 
 	playerEntity = PlayerEntity;
-	worldFolder = m_World->entityStorage->GetEntityByName("World");
+	worldFolder = world->entityStorage->GetEntityByName("World");
 
 	maxStamina = 1000;
 	stamina = maxStamina;
@@ -357,30 +358,6 @@ void PlayerAbilities::Charging()
 		charging = true;
 		chargeAnim = true;
 		chargeTimeAchor = timer::currentTime;
-	}
-}
-
-void PlayerAbilities::BlockStart()
-{
-	if (charging || shieldActive) {
-		return;
-	}
-
-	block = true;
-
-	PointCloud* pointCloud = playerEntity->GetComponent<PointCloud>();
-	if (pointCloud) {
-		pointCloud->color = point3d(1.0f, 1.0f, 0.0f);
-	}
-}
-
-void PlayerAbilities::BlockEnd()
-{
-	block = false;
-
-	PointCloud* pointCloud = playerEntity->GetComponent<PointCloud>();
-	if (pointCloud) {
-		pointCloud->color = point3d(1.0f, 0.6f, 0.9f);
 	}
 }
 
