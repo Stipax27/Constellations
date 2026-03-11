@@ -659,7 +659,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 
 	// Pillars hand | glow
 
-	entity = m_World->entityStorage->CreateEntity("PHP", location);
+	entity = m_World->entityStorage->CreateEntity("PHG", location);
 
 	nebula = entity->AddComponent<Nebula>();
 	nebula->vShader = 24;
@@ -670,7 +670,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 
 	// Inside nebula | glow
 
-	entity = m_World->entityStorage->CreateEntity("INP", location);
+	entity = m_World->entityStorage->CreateEntity("ING", location);
 
 	nebula = entity->AddComponent<Nebula>();
 	nebula->vShader = 23;
