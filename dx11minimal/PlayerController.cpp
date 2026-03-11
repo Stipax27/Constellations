@@ -133,10 +133,6 @@ void PlayerController::ProcessInput()
 		}
 	}
 
-		if (IsKeyPressed(VK_LSHIFT)) {
-			Dash();
-		}
-
 		// Обработка кнопки F для щита
 		static bool fKeyPressed = false;
 		if (IsKeyPressed('F') && !fKeyPressed) {
@@ -153,8 +149,6 @@ void PlayerController::ProcessInput()
 		Dash();
 	}
 		
-	float roll = 0.0f;
-
 	if (IsKeyPressed('E')) {
 		roll = -ROLL_SPEED;
 	}
@@ -182,28 +176,18 @@ void PlayerController::ProcessInput()
 	if (IsKeyPressed('Y')) {
 		abilities->TimestopEnd();
 	}
-}
-		if (IsKeyPressed('1')) {
-			abilities->weapon = PlayerWeapons::Fists;
-		}
-		if (IsKeyPressed('2')) {
-			abilities->weapon = PlayerWeapons::Sword;
-		}
-		if (IsKeyPressed('3')) {
-			abilities->weapon = PlayerWeapons::Bow;
-		}
 
-		static bool vKeyPressed = false;
-		if (IsKeyPressed('V')&& !vKeyPressed) {
-			vKeyPressed = true;
-			abilities->ParticleVacuumStart();
-		}
-		else if (!IsKeyPressed('V') && vKeyPressed) {
-			vKeyPressed = false;
-			abilities->ParticleVacuumEnd();
-		}
+	static bool vKeyPressed = false;
+	if (IsKeyPressed('V') && !vKeyPressed) {
+		vKeyPressed = true;
+		abilities->ParticleVacuumStart();
+	}
+	else if (!IsKeyPressed('V') && vKeyPressed) {
+		vKeyPressed = false;
+		abilities->ParticleVacuumEnd();
 	}
 }
+		
 
 
 void PlayerController::ProcessCamera()

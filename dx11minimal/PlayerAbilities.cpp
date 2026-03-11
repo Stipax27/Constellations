@@ -33,10 +33,6 @@ void PlayerAbilities::Initialize(World* m_World, CameraClass* Camera, Entity* Pl
 	charge = 0;
 	maxCharge = 100;
 
-	timeStopped = false;
-	timestopProgress = 1;
-}
-
 	block = false;
 
 	// Инициализация переменных щита
@@ -44,8 +40,15 @@ void PlayerAbilities::Initialize(World* m_World, CameraClass* Camera, Entity* Pl
 	shieldEntity = nullptr;
 	shieldVisualIntensity = 0.0f;
 	shieldLastDamageTime = 0.0f;
-	shieldStartTime = 0.0; // Добавляем для отслеживания времени
+	shieldStartTime = 0.0;
+
+	// Добавляем для отслеживания времени
+	timeStopped = false;
+	timestopProgress = 1;
 }
+
+	
+
 
 void PlayerAbilities::Shutdown()
 {
@@ -163,8 +166,9 @@ void PlayerAbilities::Update()
 	if (timeStopped) {
 		timestopProgress = max(timestopProgress - TIMESTOP_STEP * (timer::deltaTime * 0.01), 0);
 		worldFolder->SetTimeScale(timestopProgress);
-	for (Entity* entity : projectiles) {
+		for (Entity* entity : projectiles) {
 
+		}
 	}
 }
 
@@ -224,11 +228,10 @@ void PlayerAbilities::ShieldStart()
 	ShieldHp->fraction = Fraction::Player;
 	ShieldHp->immortal = true;
 	UpdateProjectiles();
-}
-
 	shieldVisualIntensity = 0.5f;
 	shieldLastDamageTime = 0.0f;
 }
+
 
 // Метод для деактивации щита
 void PlayerAbilities::ShieldEnd()
