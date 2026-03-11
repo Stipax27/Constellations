@@ -3,7 +3,7 @@ VS_OUTPUT_PARTICLE VS(uint vID : SV_VertexID,uint iID : SV_InstanceID)
 {
     VS_OUTPUT_PARTICLE output;
 
-    float4 grid = getGridInst(vID, iID, lgX, lgY); 
+    float4 grid = getGridInst(vID, iID, ngX, ngY); 
     pos_color p = CalcParticles(iID, grid);
 
     output.pos = p.pos;

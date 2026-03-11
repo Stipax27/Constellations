@@ -66,12 +66,13 @@ cbuffer drawerFloat4x4 : register(b10)
     float4x4 fConst[constCount];
 };
 
-cbuffer locationDesc : register(b11)
+cbuffer nebulaDesc : register(b11)
 {
-    float4x4 lModel;
-    int lgX;
-    int lgY;
-    int lMode;
-    int lSkipper;
-    float4 lBase_color;
+    float4x4 nModel;
+    int ngX;
+    int ngY;
+    int nMode;
+    int nSkipper;
+    float4 nBase_color;
+    float nScale;
 }
