@@ -19,6 +19,7 @@ struct Nebula : Component
 	int skipper = 1;
 	pMode mode = pMode::point;
 	point3d color = point3d(1, 1, 1);
+	float scale = 1;
 
 	float frustumRadius = 10.0f;
 

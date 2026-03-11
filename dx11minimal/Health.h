@@ -11,6 +11,8 @@ struct Health : Component
 
 	Fraction fraction = Fraction::Enemy;
 	bool destroyOnDeath = true;
+
+	bool immortal = false;
 };
 
 #endif

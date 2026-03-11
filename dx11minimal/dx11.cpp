@@ -1455,7 +1455,7 @@ ConstBuf::ParticlesDesc ConstBuf::particlesInfo;
 XMFLOAT4X4 ConstBuf::drawerFloat4x4[constCount];
 
 //b11
-ConstBuf::LocationDesc ConstBuf::locationInfo;
+ConstBuf::NebulaDesc ConstBuf::nebulaInfo;
 
 
 int ConstBuf::roundUp(int n, int r)
@@ -1525,7 +1525,7 @@ void ConstBuf::Init()
 	ConstBuf::Create(ConstBuf::buffer[8], sizeof(drawerMatrix));
 	ConstBuf::Create(ConstBuf::buffer[9], sizeof(particlesInfo));
 	ConstBuf::Create(ConstBuf::buffer[10], sizeof(drawerFloat4x4));
-	ConstBuf::Create(ConstBuf::buffer[11], sizeof(locationInfo));
+	ConstBuf::Create(ConstBuf::buffer[11], sizeof(nebulaInfo));
 }
 
 void ConstBuf::UpdateFrame()
@@ -1553,9 +1553,9 @@ void ConstBuf::UpdateParticlesInfo()
 	context->UpdateSubresource(ConstBuf::buffer[9], 0, NULL, &particlesInfo, 0, 0);
 }
 
-void ConstBuf::UpdateLocationInfo()
+void ConstBuf::UpdateNebulaInfo()
 {
-	context->UpdateSubresource(ConstBuf::buffer[11], 0, NULL, &locationInfo, 0, 0);
+	context->UpdateSubresource(ConstBuf::buffer[11], 0, NULL, &nebulaInfo, 0, 0);
 }
 
 void ConstBuf::ConstToVertex(int i)

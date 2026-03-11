@@ -24,6 +24,7 @@
 #include "ParticleEmitter.h"
 #include "Beam.h"
 #include "PointCloud.h"
+#include "Health.h"
 #include "Mesh.h"
 
 #include "Transform2D.h"
@@ -53,8 +54,12 @@ enum PlayerWeapons
 
 #define ATTACK_COST 25.0f
 
-#define TIMESTOP_STEP 0.15f
+// Константы для щита
+#define SHIELD_ACTIVATION_COST 10.0f
+#define SHIELD_DAMAGE_MULTIPLIER 2.0f  // Множитель стоимости блокировки урона
+#define SHIELD_COST_PER_SECOND 40.0f
 
+#define TIMESTOP_STEP 0.15f
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: PlayerAbilities
@@ -68,6 +73,16 @@ public:
 
 	float stamina;
 	float maxStamina;
+
+	// Новые публичные методы для работы со щитом
+	void ShieldStart();
+	void ShieldEnd();
+	bool TryBlockDamage(float damage);
+	bool IsShieldActive() const { return shieldActive; }
+
+
+	void ParticleVacuumStart();
+	void ParticleVacuumEnd();
 
 public:
 	PlayerAbilities();
@@ -107,6 +122,14 @@ private:
 
 	bool timeStopped;
 	float timestopProgress;
+
+	// Новые переменные для щита
+	bool shieldActive;
+	Entity* shieldEntity;
+	float shieldVisualIntensity;
+	double shieldLastDamageTime;
+	double lastShieldUpdateTime;
+	double shieldStartTime;
 
 	vector<Entity*> projectiles;
 

@@ -635,6 +635,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->vShader = 24;
 	nebula->count = pillars_cnt;
 	nebula->mode = pMode::point;
+	nebula->scale = 1;
 
 	// Inside nebula | point
 
@@ -645,6 +646,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->count = pillars_cnt;
 	nebula->mode = pMode::point;
 	nebula->color = point3d(1, 2, 6);
+	nebula->scale = 1;
 
 	// Outer space | point
 
@@ -664,6 +666,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->count = pillars_cnt;
 	nebula->skipper = 1394 / 2;
 	nebula->mode = pMode::glow;
+	nebula->scale = 1;
 
 	// Inside nebula | glow
 
@@ -675,6 +678,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->skipper = 1394;
 	nebula->mode = pMode::point;
 	nebula->color = point3d(1, 2, 6);
+	nebula->scale = 1;
 }
 
 

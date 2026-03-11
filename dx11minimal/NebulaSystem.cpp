@@ -52,14 +52,15 @@ void NebulaSystem::Update(vector<Entity*>& entities, float deltaTime)
 				int gX = sqrt(nebula->count / nebula->skipper);
 				int gY = sqrt(nebula->count / nebula->skipper);
 
-				ConstBuf::locationInfo.model = XMMatrixTranspose(XMMatrixTranslation(0, 0, 0));
-				ConstBuf::locationInfo.gX = gX;
-				ConstBuf::locationInfo.gY = gY;
-				ConstBuf::locationInfo.mode = (int)nebula->mode;
-				ConstBuf::locationInfo.skipper = nebula->skipper;
-				ConstBuf::locationInfo.base_color = XMFLOAT4(nebula->color.x, nebula->color.y, nebula->color.z, 1);
+				ConstBuf::nebulaInfo.model = XMMatrixTranspose(XMMatrixTranslation(0, 0, 0));
+				ConstBuf::nebulaInfo.gX = gX;
+				ConstBuf::nebulaInfo.gY = gY;
+				ConstBuf::nebulaInfo.mode = (int)nebula->mode;
+				ConstBuf::nebulaInfo.skipper = nebula->skipper;
+				ConstBuf::nebulaInfo.base_color = XMFLOAT4(nebula->color.x, nebula->color.y, nebula->color.z, 1);
+				ConstBuf::nebulaInfo.scale = nebula->scale;
 
-				ConstBuf::UpdateLocationInfo();
+				ConstBuf::UpdateNebulaInfo();
 				ConstBuf::ConstToVertex(11);
 
 				ConstBuf::drawerV[0] = (float)entity->localTime * 0.01f;
