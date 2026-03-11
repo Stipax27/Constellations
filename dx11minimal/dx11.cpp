@@ -1265,6 +1265,8 @@ void Shaders::Init()
 	Shaders::CreateVS(24, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\vs\\pillarsHand.shader"));
 	Shaders::CreateVS(25, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\vs\\space.shader"));
 
+	Shaders::CreateVS(26, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\vs\\NebulaHeal.shader"));
+
 	Shaders::CreatePS(23, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ps\\basic.shader"));
 	Shaders::CreatePS(24, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ps\\basicLow.shader"));
 	

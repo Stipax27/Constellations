@@ -629,23 +629,23 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 
 	// Pillars hand | point
 
-	entity = m_World->entityStorage->CreateEntity("PHP", folder);
+	/*entity = m_World->entityStorage->CreateEntity("PHP", folder);
 
 	nebula = location->AddComponent<Nebula>();
 	nebula->vShader = 24;
 	nebula->count = pillars_cnt;
 	nebula->mode = pMode::point;
-	nebula->scale = 1;
+	nebula->scale = 1;*/
 
 	// Inside nebula | point
 
 	entity = m_World->entityStorage->CreateEntity("INP", location);
 
 	nebula = entity->AddComponent<Nebula>();
-	nebula->vShader = 23;
+	nebula->vShader = 26;
 	nebula->count = pillars_cnt;
 	nebula->mode = pMode::point;
-	nebula->color = point3d(1, 2, 6);
+	nebula->color = point3d(1, 0.8, 1.2);
 	nebula->scale = 1;
 
 	// Outer space | point
@@ -659,25 +659,25 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 
 	// Pillars hand | glow
 
-	entity = m_World->entityStorage->CreateEntity("PHP", location);
+	/*entity = m_World->entityStorage->CreateEntity("PHP", location);
 
 	nebula = entity->AddComponent<Nebula>();
 	nebula->vShader = 24;
 	nebula->count = pillars_cnt;
 	nebula->skipper = 1394 / 2;
 	nebula->mode = pMode::glow;
-	nebula->scale = 1;
+	nebula->scale = 1;*/
 
 	// Inside nebula | glow
 
 	entity = m_World->entityStorage->CreateEntity("INP", location);
 
 	nebula = entity->AddComponent<Nebula>();
-	nebula->vShader = 23;
+	nebula->vShader = 26;
 	nebula->count = pillars_cnt;
 	nebula->skipper = 1394;
-	nebula->mode = pMode::point;
-	nebula->color = point3d(1, 2, 6);
+	nebula->mode = pMode::glow;
+	nebula->color = point3d(1, 0.8, 1.2);
 	nebula->scale = 1;
 }
 

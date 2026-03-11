@@ -588,6 +588,9 @@
     <None Include="Shaders\ps\output.shader">
       <Filter>Shaders\PS</Filter>
     </None>
+    <None Include="NebulaHeal.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">
