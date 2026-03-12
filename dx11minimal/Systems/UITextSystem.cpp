@@ -238,9 +238,9 @@ bool BuildFontAtlas(const FontKey& key, FontAtlas& outAtlas)
 
 	const int fontSizePx = key.fontSizePx > 2 ? key.fontSizePx : 2;
 	const int fontWeight = std::max(1, std::min(1000, key.fontWeight));
-	const wchar_t* fontName = key.fontName.empty() ? L"Arial" : key.fontName.c_str();
+	const wchar_t* fontName = key.fontName.empty() ? DefaultUIFontFamilyW : key.fontName.c_str();
 	if (hasExternalFontFile && !isExternalFontLoaded) {
-		fontName = key.fallbackFontName.empty() ? L"Arial" : key.fallbackFontName.c_str();
+		fontName = key.fallbackFontName.empty() ? DefaultUIFontFamilyW : key.fallbackFontName.c_str();
 	}
 	HFONT font = CreateFontW(
 		-fontSizePx,
