@@ -475,7 +475,7 @@ void SpriteSystem::EmitNewParticles(Entity* entity, const Transform& worldTransf
 
 double SpriteSystem::CalculateEmitDelta(const ParticleEmitter& emitter)
 {
-	double result = emitter.isHeapEmit ? emitter.heapEmitInterval : 1000 / emitter.rate;
+	double result = emitter.isHeapEmit ? emitter.heapEmitInterval : 1000.0f / emitter.rate;
 	return result;
 }
 

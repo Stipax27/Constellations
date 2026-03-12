@@ -90,6 +90,16 @@ vector<Entity*> EntityStorage::GetEntitiesByName(string Name)
 }
 
 
+Entity* EntityStorage::GetEntityById(int id)
+{
+	for (Entity* entity : entities) {
+		if (entity->GetId() == id) {
+			return entity;
+		}
+	}
+}
+
+
 void EntityStorage::CleanMem()
 {
 	int i = 0;

@@ -29,9 +29,11 @@ public:
 	~EntityStorage();
 
 	Entity* CreateEntity(string = "Unnamed", Entity* = nullptr);
+
 	//void RemoveEntityByObject(Entity*);
 	Entity* GetEntityByName(string);
 	vector<Entity*> GetEntitiesByName(string);
+	Entity* GetEntityById(int);
 
 	void Initialize();
 	void Shutdown();

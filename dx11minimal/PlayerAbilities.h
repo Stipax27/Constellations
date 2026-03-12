@@ -104,6 +104,7 @@ public:
 
 private:
 	World* world;
+	EntityStorage* entityStorage;
 	CameraClass* camera;
 	CollisionManagerClass* collisionManager;
 
@@ -146,6 +147,8 @@ private:
 	Entity* FistsCharged(Transform, point3d);
 	Entity* SwordCharged(Transform, point3d);
 	Entity* BowCharged(Transform, point3d);
+
+	CollisionInfo GetProjectileCollisionInfo(Entity*);
 };
 
 #endif

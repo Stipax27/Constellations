@@ -19,11 +19,12 @@ void PlayerAbilities::Initialize(Entity* PlayerEntity)
 	weapon = PlayerWeapons::Fists;
 
 	world = Singleton::GetInstance<World>();
+	entityStorage = Singleton::GetInstance<EntityStorage>();
 	camera = Singleton::GetInstance<CameraClass>();
 	collisionManager = Singleton::GetInstance<CollisionManagerClass>();
 
 	playerEntity = PlayerEntity;
-	worldFolder = world->entityStorage->GetEntityByName("World");
+	worldFolder = entityStorage->GetEntityByName("World");
 
 	maxStamina = 1000;
 	stamina = maxStamina;
@@ -205,7 +206,7 @@ void PlayerAbilities::ShieldStart()
 	}
 
 	// Создаем визуальный эффект щита
-	shieldEntity = world->entityStorage->CreateEntity("PlayerShield");
+	shieldEntity = entityStorage->CreateEntity("PlayerShield");
 
 	// Делаем щит дочерним объектом игрока
 	Transform* playerTransform = playerEntity->GetComponent<Transform>();
@@ -294,7 +295,7 @@ bool PlayerAbilities::TryBlockDamage(float damage)
 void PlayerAbilities::ParticleVacuumStart() {
 
 	Entity* entity;
-	entity = world->entityStorage->CreateEntity("Particles", playerEntity);
+	entity = entityStorage->CreateEntity("Particles", playerEntity);
 	Transform* transform = entity->AddComponent<Transform>();
 	ParticleEmitter* particleEmitter = entity->AddComponent<ParticleEmitter>();
 	particleEmitter->rate = 150;
@@ -459,8 +460,9 @@ void PlayerAbilities::UpdateProjectiles()
 	int i = 0;
 	while (i < projectiles.size())
 	{
-		Entity* entity = projectiles[i];
-		if (entity->IsDeleting())
+		Entity* projectile = projectiles[i];
+
+		if (projectile->IsDeleting())
 		{
 			projectiles.erase(projectiles.begin() + i);
 		}
@@ -469,10 +471,35 @@ void PlayerAbilities::UpdateProjectiles()
 			i++;
 
 			if (timeStopped) {
-				entity->SetTimeScale(max(entity->GetLocalTimeScale() - TIMESTOP_STEP * (timer::deltaTime * 0.01), 0));
+				projectile->SetTimeScale(max(projectile->GetLocalTimeScale() - TIMESTOP_STEP * (timer::deltaTime * 0.01), 0));
 			}
 			else {
-				entity->SetTimeScale(min(entity->GetLocalTimeScale() + TIMESTOP_STEP * (timer::deltaTime * 0.01), 1));
+				projectile->SetTimeScale(min(projectile->GetLocalTimeScale() + TIMESTOP_STEP * (timer::deltaTime * 0.01), 1));
+			}
+
+			if (!projectile->HasComponent<SingleDamager>()) {
+				CollisionInfo info = GetProjectileCollisionInfo(projectile);
+
+				Entity* impact = entityStorage->CreateEntity("Impact", worldFolder);
+
+				Transform* transform = impact->AddComponent<Transform>();
+				transform->position = info.position;
+
+				ParticleEmitter* particleEmitter = impact->AddComponent<ParticleEmitter>();
+				particleEmitter->rate = 150;
+				particleEmitter->lifetime = 500;
+				particleEmitter->color = point3d(1.0f, 0.15f, 0.85f);
+				particleEmitter->size = { 0.0f, 2.5f };
+				particleEmitter->opacity = { 1.0f, 0.0f };
+				particleEmitter->speed = { 10.0f, 0.0f };
+				particleEmitter->spread = { PI, PI };
+				particleEmitter->isHeapEmit = true;
+				particleEmitter->heapEmitRepeats = 1;
+
+				DelayedDestroy* delayedDestroy = impact->AddComponent<DelayedDestroy>();
+				delayedDestroy->lifeTime = 1000;
+
+				projectile->Destroy();
 			}
 		}
 	}
@@ -481,7 +508,7 @@ void PlayerAbilities::UpdateProjectiles()
 
 Entity* PlayerAbilities::FistsCommon(Transform startTransform, point3d direction)
 {
-	Entity* projectile = world->entityStorage->CreateEntity("PlayerProjectile");
+	Entity* projectile = entityStorage->CreateEntity("PlayerProjectile");
 	Transform* transform = projectile->AddComponent<Transform>();
 	transform->position = startTransform.position;
 	transform->mRotation = startTransform.mRotation;
@@ -513,7 +540,7 @@ Entity* PlayerAbilities::FistsCommon(Transform startTransform, point3d direction
 
 Entity* PlayerAbilities::SwordCommon(Transform startTransform, point3d direction)
 {
-	Entity* projectile = world->entityStorage->CreateEntity("PlayerProjectile");
+	Entity* projectile = entityStorage->CreateEntity("PlayerProjectile");
 	Transform* transform = projectile->AddComponent<Transform>();
 	transform->position = startTransform.position;
 	transform->mRotation = startTransform.mRotation;
@@ -536,7 +563,7 @@ Entity* PlayerAbilities::SwordCommon(Transform startTransform, point3d direction
 	for (int i = -5; i < 6; i++) {
 		float offset = (float)i * 0.4f;
 
-		Entity* entity = world->entityStorage->CreateEntity("ProjectileCollider", projectile);
+		Entity* entity = entityStorage->CreateEntity("ProjectileCollider", projectile);
 		Transform* transform = entity->AddComponent<Transform>();
 		transform->position = point3d(offset, offset, 0);
 
@@ -559,7 +586,7 @@ Entity* PlayerAbilities::SwordCommon(Transform startTransform, point3d direction
 
 Entity* PlayerAbilities::BowCommon(Transform startTransform, point3d direction)
 {
-	Entity* projectile = world->entityStorage->CreateEntity("PlayerProjectile");
+	Entity* projectile = entityStorage->CreateEntity("PlayerProjectile");
 	Transform* transform = projectile->AddComponent<Transform>();
 	transform->position = startTransform.position;
 	transform->mRotation = startTransform.mRotation;
@@ -605,7 +632,7 @@ Entity* PlayerAbilities::BowCommon(Transform startTransform, point3d direction)
 
 Entity* PlayerAbilities::FistsCharged(Transform startTransform, point3d direction)
 {
-	Entity* projectile = world->entityStorage->CreateEntity("PlayerProjectile");
+	Entity* projectile = entityStorage->CreateEntity("PlayerProjectile");
 	Transform* transform = projectile->AddComponent<Transform>();
 	transform->position = startTransform.position;
 	transform->mRotation = startTransform.mRotation;
@@ -638,7 +665,7 @@ Entity* PlayerAbilities::FistsCharged(Transform startTransform, point3d directio
 
 Entity* PlayerAbilities::SwordCharged(Transform startTransform, point3d direction)
 {
-	Entity* projectile = world->entityStorage->CreateEntity("PlayerProjectile");
+	Entity* projectile = entityStorage->CreateEntity("PlayerProjectile");
 	Transform* transform = projectile->AddComponent<Transform>();
 	transform->position = startTransform.position;
 	transform->mRotation = startTransform.mRotation;
@@ -661,7 +688,7 @@ Entity* PlayerAbilities::SwordCharged(Transform startTransform, point3d directio
 	for (int i = -5; i < 6; i++) {
 		float offset = (float)i * 0.4f;
 
-		Entity* entity = world->entityStorage->CreateEntity("ProjectileCollider", projectile);
+		Entity* entity = entityStorage->CreateEntity("ProjectileCollider", projectile);
 		Transform* transform = entity->AddComponent<Transform>();
 		transform->position = point3d(offset, offset, 0);
 
@@ -684,7 +711,7 @@ Entity* PlayerAbilities::SwordCharged(Transform startTransform, point3d directio
 
 Entity* PlayerAbilities::BowCharged(Transform startTransform, point3d direction)
 {
-	Entity* projectile = world->entityStorage->CreateEntity("PlayerProjectile");
+	Entity* projectile = entityStorage->CreateEntity("PlayerProjectile");
 	Transform* transform = projectile->AddComponent<Transform>();
 	transform->position = startTransform.position;
 	transform->mRotation = startTransform.mRotation;
@@ -718,4 +745,24 @@ Entity* PlayerAbilities::BowCharged(Transform startTransform, point3d direction)
 	delayedDestroy->lifeTime = 5000;
 
 	return projectile;
+}
+
+
+CollisionInfo PlayerAbilities::GetProjectileCollisionInfo(Entity* projectile)
+{
+	SphereCollider* sphereCollider = projectile->GetComponent<SphereCollider>();
+
+	for (CollisionInfo info : sphereCollider->collisions) {
+		Entity* entity = entityStorage->GetEntityById(info.entityId);
+		if (entity == nullptr) {
+			continue;
+		}
+
+		Health* health = entity->GetComponentInAncestor<Health>();
+		if (health != nullptr && health->active) {
+			return info;
+		}
+	}
+
+	return CollisionInfo();
 }
