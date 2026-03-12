@@ -2,10 +2,10 @@
 
 
 
-MeshSystem::MeshSystem(FrustumClass* Frustum, CameraClass* Camera)
+MeshSystem::MeshSystem()
 {
-	frustum = Frustum;
-	camera = Camera;
+	frustum = Singleton::GetInstance<FrustumClass>();
+	camera = Singleton::GetInstance<CameraClass>();
 }
 
 
@@ -53,19 +53,27 @@ void MeshSystem::Update(vector<Entity*>& entities, float deltaTime)
 
 				Mesh* mesh = entity->GetComponent<Mesh>();
 				if (mesh != nullptr && mesh->active) {
-					if (entity->parent != nullptr && !entity->parent->HasComponent<Transform>()) {
+					/*if (entity->parent != nullptr && !entity->parent->HasComponent<Transform>()) {
 						transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 1, 0, 0), -2 * RAD) * transform->mRotation;
-					}
+					}*/
 
-					if (frustum->CheckSphere(worldTransform.position, worldTransform.scale.magnitude())) {
+					Transform meshTransform = worldTransform;
+
+					meshTransform.position += (meshTransform.GetRightVector() * mesh->position.x +
+						meshTransform.GetUpVector() * mesh->position.y + meshTransform.GetLookVector() *
+						mesh->position.z) * meshTransform.scale;
+					meshTransform.scale *= mesh->scale;
+					meshTransform.mRotation = mesh->mRotation * meshTransform.mRotation;
+
+					if (frustum->CheckSphere(meshTransform.position, meshTransform.scale.magnitude())) {
 						//ConstBuf::CreateVertexBuffer(15);
 
-						UpdateWorldMatrix(worldTransform);
+						UpdateWorldMatrix(meshTransform);
 
 						Rasterizer::Cull(mesh->cullMode);
 
-						Shaders::vShader(15);
-						Shaders::pShader(15);
+						Shaders::vShader(mesh->vShader);
+						Shaders::pShader(mesh->pShader);
 
 						InputAssembler::IA(InputAssembler::topology::triList);
 						InputAssembler::vBuffer(mesh->index);
@@ -125,9 +133,15 @@ void MeshSystem::Update(vector<Entity*>& entities, float deltaTime)
 					int n = GetVertexCount(worldTransform.position, 5, 33);
 					n += 1 - n % 2;
 
-					ConstBuf::drawerV[0] = n;
+					ConstBuf::drawerInt[0] = n;
+					ConstBuf::Update(7, ConstBuf::drawerInt);
+					ConstBuf::ConstToVertex(7);
+					ConstBuf::ConstToPixel(7);
+
+					ConstBuf::drawerV[0] = (float)entity->localTime * 0.01f;
 					ConstBuf::Update(0, ConstBuf::drawerV);
 					ConstBuf::ConstToVertex(0);
+					ConstBuf::ConstToPixel(0);
 
 					int count = 0;
 					for (int a = 0; a < transformedStars.size() && count < constCount; a++) {
@@ -175,7 +189,16 @@ void MeshSystem::Update(vector<Entity*>& entities, float deltaTime)
 						int n = GetVertexCount(worldTransform.position, 5, 255);
 						n += 1 - n % 2;
 
-						ConstBuf::drawerV[0] = n;
+						ConstBuf::drawerInt[0] = n;
+						ConstBuf::Update(7, ConstBuf::drawerInt);
+						ConstBuf::ConstToVertex(7);
+						ConstBuf::ConstToPixel(7);
+
+						ConstBuf::drawerV[0] = (float)entity->localTime * 0.01f;
+						ConstBuf::Update(0, ConstBuf::drawerV);
+						ConstBuf::ConstToVertex(0);
+						ConstBuf::ConstToPixel(0);
+
 						Draw::Drawer(n * n);
 					}
 				}

@@ -1,21 +1,7 @@
+#include <lib/constBuf.shader>
+
 Texture2D<float> DepthTexture : register(t0);
 SamplerState DepthSampler : register(s0);
-
-cbuffer global : register(b5)
-{
-    float4 gConst[1024];
-};
-
-cbuffer frame : register(b4)
-{
-    float4 time;
-    float4 aspect;
-};
-
-cbuffer drawerInt : register(b7)
-{
-    int drawInt[1024];
-}
 
 struct VS_OUTPUT
 {

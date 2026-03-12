@@ -40,6 +40,8 @@ typedef unsigned long uint32;
 typedef long int32;
 
 static inline int32 _log2(float x);
+
+static void EnsureCacheDirectoryExists(LPCWSTR directoryPath);
 static bool GetFileModificationTime(const char* filePath, time_t& modTime);
 static bool GetFileModificationTimeW(LPCWSTR filePath, time_t& modTime);
 
@@ -190,6 +192,7 @@ namespace Models
 
 	// Получение времени модификации файла
 	uint64_t GetFileModTime(const char* filename);
+	std::string GetCacheFileName(const char* modelName);
 
 	void CreateModel(int, VertexType*, unsigned long*);
 	void Create(int, VertexType*, unsigned long*);
@@ -197,9 +200,12 @@ namespace Models
 	void LoadTxtModel(const char* filename, bool = false);
 	void LoadGltfModel(const char* filename);
 	void LoadObjModel(const char* filename, bool = false);
+
+	void Init();
 }
 
 namespace Shaders {
+#define shaderCount 255
 
 	struct VertexShader {
 		ID3D11VertexShader* vShader;
@@ -222,10 +228,10 @@ namespace Shaders {
 		ID3DBlob* pBlob;
 	};
 
-	extern VertexShader VS[255];
-	extern PixelShader PS[255];
-	extern GeometryShader GS[255];
-	extern ComputeShader CS[255];
+	extern VertexShader VS[shaderCount];
+	extern PixelShader PS[shaderCount];
+	extern GeometryShader GS[shaderCount];
+	extern ComputeShader CS[shaderCount];
 
 	extern ID3DBlob* pErrorBlob;
 
@@ -245,7 +251,6 @@ namespace Shaders {
 	bool LoadShaderFromCache(const char*, const char*, void**, ID3DBlob**);
 	bool SaveShaderToCache(const char*, const char*, ID3DBlob*);
 	std::string GetCacheFileName(const char*, const char*);
-	void EnsureCacheDirectoryExists();
 
 	bool IsCacheValid(const char*, const char*);
 
@@ -314,13 +319,23 @@ namespace ConstBuf
 		XMFLOAT3 color;
 		float lifetime;
 		XMFLOAT2 speed;
+		float timescale;
 		float _p1;
-		float _p2;
+	};
+
+	struct NebulaDesc {
+		XMMATRIX model;
+		int gX;
+		int gY;
+		int mode;
+		int skipper;
+		XMFLOAT4 base_color;
+		float scale;
 	};
 
 	//----------------------------------------------------------------
 
-	extern ID3D11Buffer* buffer[11];
+	extern ID3D11Buffer* buffer[12];
 
 	//b0 - use "params" label in shader
 	extern float drawerV[constCount];//update per draw call
@@ -355,6 +370,9 @@ namespace ConstBuf
 	//b10
 	extern XMFLOAT4X4 drawerFloat4x4[constCount];
 
+	//b11
+	extern NebulaDesc nebulaInfo;
+
 	int roundUp(int, int);
 	void Create(ID3D11Buffer*&, int);
 	void CreateVertexBuffer(int);
@@ -371,6 +389,7 @@ namespace ConstBuf
 	void UpdateCamera();
 	void UpdateFactors();
 	void UpdateParticlesInfo();
+	void UpdateNebulaInfo();
 	void ConstToVertex(int);
 	void ConstToGeometry(int);
 	void ConstToPixel(int);
@@ -388,7 +407,8 @@ namespace ConstBuf
 			drawerInt,
 			drawerMatrix,
 			particlesInfo,
-			drawerFloat4x4
+			drawerFloat4x4,
+			nebulaInfo
 		};
 	}
 }

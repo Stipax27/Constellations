@@ -6,12 +6,13 @@
 // INCLUDES //
 //////////////
 #include <d3d11.h>
+#include "isingleton.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: WindowClass
 ////////////////////////////////////////////////////////////////////////////////
-class WindowClass
+class WindowClass : public ISingleton
 {
 public:
 	WindowClass();
@@ -19,6 +20,8 @@ public:
 	~WindowClass();
 
 	void Initialize();
+	bool IsActive();
+	bool IsFocused();
 
 public:
 	HWND hWnd; // window handle

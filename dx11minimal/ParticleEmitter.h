@@ -42,7 +42,7 @@ struct ParticleEmitter : Component
 
 	RenderCompress compress = RenderCompress::none;
 
-	double lastEmitTime = timer::currentTime;
+	double lastEmitTime = timer::currentTime - max(heapEmitInterval, 1000.0f / rate);
 	int heapCount = 0;
 	vector<XMFLOAT4X4> particles;
 };

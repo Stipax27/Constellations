@@ -1,16 +1,4 @@
-cbuffer frame : register(b4)
-{
-    float4 time;
-    float4 aspect;
-};
-
-cbuffer camera : register(b3)
-{
-    float4x4 world;
-    float4x4 view;
-    float4x4 proj;
-    float4 cPos;
-};
+#include <lib/constBuf.shader>
 
 
 int SPIRAL_NOISE_ITER = 6;

@@ -7,6 +7,7 @@
 //////////////
 // INCLUDES //
 //////////////
+#include "singleton.h"
 #include "cameraclass.h"
 
 #include "world.h"
@@ -23,6 +24,8 @@
 #include "ParticleEmitter.h"
 #include "Beam.h"
 #include "PointCloud.h"
+#include "Health.h"
+#include "Mesh.h"
 
 #include "Transform2D.h"
 
@@ -51,6 +54,12 @@ enum PlayerWeapons
 
 #define ATTACK_COST 25.0f
 
+// Константы для щита
+#define SHIELD_ACTIVATION_COST 10.0f
+#define SHIELD_DAMAGE_MULTIPLIER 2.0f  // Множитель стоимости блокировки урона
+#define SHIELD_COST_PER_SECOND 40.0f
+
+#define TIMESTOP_STEP 0.15f
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: PlayerAbilities
@@ -65,12 +74,22 @@ public:
 	float stamina;
 	float maxStamina;
 
+	// Новые публичные методы для работы со щитом
+	void ShieldStart();
+	void ShieldEnd();
+	bool TryBlockDamage(float damage);
+	bool IsShieldActive() const { return shieldActive; }
+
+
+	void ParticleVacuumStart();
+	void ParticleVacuumEnd();
+
 public:
 	PlayerAbilities();
 	PlayerAbilities(const PlayerAbilities&);
 	~PlayerAbilities();
 
-	void Initialize(World*, CameraClass*, Entity*, CollisionManagerClass*);
+	void Initialize(Entity*);
 	void Shutdown();
 	void Update();
 
@@ -80,11 +99,17 @@ public:
 	void BlockStart();
 	void BlockEnd();
 
+	void TimestopStart();
+	void TimestopEnd();
+
 private:
 	World* world;
+	EntityStorage* entityStorage;
 	CameraClass* camera;
 	CollisionManagerClass* collisionManager;
+
 	Entity* playerEntity;
+	Entity* worldFolder;
 
 	bool charging;
 	bool chargeAnim;
@@ -96,19 +121,34 @@ private:
 
 	bool block;
 
+	bool timeStopped;
+	float timestopProgress;
+
+	// Новые переменные для щита
+	bool shieldActive;
+	Entity* shieldEntity;
+	float shieldVisualIntensity;
+	double shieldLastDamageTime;
+	double lastShieldUpdateTime;
+	double shieldStartTime;
+
 	vector<Entity*> projectiles;
 
 private:
+	void UpdateProjectiles();
+
 	void CommonAttack(Transform, point3d);
 	void ChargedAttack(Transform, point3d);
 
-	void FistsCommon(Transform, point3d);
-	void SwordCommon(Transform, point3d);
-	void BowCommon(Transform, point3d);
+	Entity* FistsCommon(Transform, point3d);
+	Entity* SwordCommon(Transform, point3d);
+	Entity* BowCommon(Transform, point3d);
 
-	void FistsCharged(Transform, point3d);
-	void SwordCharged(Transform, point3d);
-	void BowCharged(Transform, point3d);
+	Entity* FistsCharged(Transform, point3d);
+	Entity* SwordCharged(Transform, point3d);
+	Entity* BowCharged(Transform, point3d);
+
+	CollisionInfo GetProjectileCollisionInfo(Entity*);
 };
 
 #endif

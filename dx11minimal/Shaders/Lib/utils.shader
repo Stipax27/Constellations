@@ -1,4 +1,16 @@
-#define PI 3.1415926535897932384626433832795
+#include <../lib/constants.shader>
+
+/////////////////////////////////////////////
+
+struct pos_color
+{
+    float4 pos;
+    float4 wpos;
+    float4 color;
+    float sz;
+};
+
+/////////////////////////////////////////////
 
 float4 getGrid(uint vID, float sep,int2 dim)
 {
@@ -101,13 +113,6 @@ float3 noise3_u(float3 p)
     return float3(noise(p.xyz),noise(p.yzx),noise(p.zxy))+.5;
 }
 
-struct pos_color
-{
-    float4 pos;
-    float4 rgba;
-    float sz;
-};
-
 float hash_s(int qid)
 {
     return hash(qid)-.5;
@@ -123,7 +128,7 @@ float3 hash3(int qid)
     return float3(hash(qid*.27),hash(qid*.28),hash(qid*.29))-.5;
 }
 
-float smooth(float x)
+float smoothf(float x)
 {
     return x + (x - (x * x * (3.0 - 2.0 * x)));
 

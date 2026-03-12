@@ -127,3 +127,23 @@ bool Entity::IsActive() {
 
 	return false;
 }
+
+
+void Entity::SetTimeScale(float TimeScale) {
+	timeScale = TimeScale;
+}
+
+
+float Entity::GetTimeScale() {
+	if (parent != nullptr) {
+		return timeScale * parent->GetTimeScale();
+	}
+	else {
+		return timeScale;
+	}
+}
+
+
+float Entity::GetLocalTimeScale() {
+	return timeScale;
+}

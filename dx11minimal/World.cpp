@@ -19,16 +19,14 @@ World::~World()
 }
 
 
-bool World::Initialize(float iaspect)
+void World::Initialize()
 {
-	m_Camera = new CameraClass;
-	m_Camera->Initialize(iaspect);
+	m_Camera = Singleton::GetInstance<CameraClass>();
+	m_Camera->Initialize();
 	m_Camera->SetPosition(point3d(0.0f, 0.0f, -10.0f));
 
-	entityStorage = new EntityStorage;
+	entityStorage = Singleton::GetInstance<EntityStorage>();
 	entityStorage->Initialize();
-
-	return true;
 }
 
 
@@ -74,6 +72,17 @@ void World::PreCalculations()
 	Textures::CreateMipMap();
 
 	Textures::RenderTarget(1, 0);
+}
+
+
+void World::UpdateCompute()
+{
+	double deltaTime = timer::deltaTime / 1000;
+	size_t size = computeSystems.size();
+	for (int i = 0; i < size; i++)
+	{
+		computeSystems[i]->Update(entityStorage->entities, deltaTime);
+	}
 }
 
 

@@ -109,7 +109,7 @@ const bool SHOW_UI_ANCHOR_POINTS = false;
 class UISystem : public System
 {
 public:
-	UISystem(MouseClass*, EntityStorage*);
+	UISystem();
 	void Initialize();
 	void Shutdown();
 

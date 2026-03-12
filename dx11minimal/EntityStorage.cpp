@@ -42,6 +42,7 @@ Entity* EntityStorage::CreateEntity(string Name, Entity* Parent)
 	Entity* entity = new Entity;
 	entity->name = Name;
 	entity->SetId(entityCount++);
+	entity->localTime = timer::currentTime;
 
 	if (Parent != nullptr) {
 		Parent->AddChild(entity);
@@ -86,6 +87,16 @@ vector<Entity*> EntityStorage::GetEntitiesByName(string Name)
 	}
 
 	return array;
+}
+
+
+Entity* EntityStorage::GetEntityById(int id)
+{
+	for (Entity* entity : entities) {
+		if (entity->GetId() == id) {
+			return entity;
+		}
+	}
 }
 
 

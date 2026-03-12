@@ -2,9 +2,9 @@
 #include "Components/Orientation.h"
 
 
-SpriteSystem::SpriteSystem(FrustumClass* Frustum)
+SpriteSystem::SpriteSystem()
 {
-	frustum = Frustum;
+	frustum = Singleton::GetInstance<FrustumClass>();
 }
 
 
@@ -281,7 +281,7 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 		{
 			if (transform == nullptr || frustum->CheckSphere(transform->position, spriteCluster->frustumRadius))
 			{
-				ConstBuf::drawerV[0] = entity->timeScale;
+				ConstBuf::drawerV[0] = (float)entity->localTime * 0.01f;
 				ConstBuf::Update(0, ConstBuf::drawerV);
 				ConstBuf::ConstToVertex(0);
 				ConstBuf::ConstToPixel(0);
@@ -431,11 +431,11 @@ void SpriteSystem::ProcessParticle(Entity* entity, Transform& worldTransform)
 		EmitNewParticles(entity, worldTransform, particleEmitter);
 	}
 
-	UpdateExistingParticles(particleEmitter);
+	UpdateExistingParticles(entity, particleEmitter);
 
 	if (!particleEmitter->particles.empty())
 	{
-		RenderParticles(particleEmitter);
+		RenderParticles(entity, particleEmitter);
 	}
 }
 
@@ -452,7 +452,7 @@ void SpriteSystem::AddEmitterOrientation(Entity* entity, Transform& transform)
 void SpriteSystem::EmitNewParticles(Entity* entity, const Transform& worldTransform, ParticleEmitter* emitter)
 {
 	double emitDelta = CalculateEmitDelta(*emitter);
-	double elapsedTime = timer::currentTime - emitter->lastEmitTime;
+	double elapsedTime = abs(entity->localTime - emitter->lastEmitTime);
 
 	if (elapsedTime >= emitDelta)
 	{
@@ -464,18 +464,18 @@ void SpriteSystem::EmitNewParticles(Entity* entity, const Transform& worldTransf
 		for (int i = 0; i < particlesToEmit; i++)
 		{
 			Orientation particleOrientation = ApplySpread(emitOrientation, *emitter);
-			double startTime = CalculateParticleStartTime(*emitter, emitDelta, i);
+			double startTime = CalculateParticleStartTime(entity, *emitter, emitDelta, i);
 
-			CreateParticle(worldTransform, emitter, particleOrientation, startTime);
+			CreateParticle(entity, worldTransform, emitter, particleOrientation, startTime);
 		}
 
-		UpdateEmitTiming(emitter, emitDelta, particlesToEmit);
+		UpdateEmitTiming(entity, emitter, emitDelta, particlesToEmit);
 	}
 }
 
 double SpriteSystem::CalculateEmitDelta(const ParticleEmitter& emitter)
 {
-	double result = emitter.isHeapEmit ? emitter.heapEmitInterval : 1000 / emitter.rate;
+	double result = emitter.isHeapEmit ? emitter.heapEmitInterval : 1000.0f / emitter.rate;
 	return result;
 }
 
@@ -518,22 +518,20 @@ float SpriteSystem::GenerateRandomAngle(float spread)
 	return result;
 }
 
-double SpriteSystem::CalculateParticleStartTime(const ParticleEmitter& emitter, double emitDelta,
+double SpriteSystem::CalculateParticleStartTime(Entity* entity, const ParticleEmitter& emitter, double emitDelta,
                                                 int particleIndex)
 {
-	double result = emitter.isHeapEmit ? timer::currentTime : emitter.lastEmitTime + emitDelta * (particleIndex + 1);
+	double result = emitter.isHeapEmit ? entity->localTime : emitter.lastEmitTime + emitDelta * (particleIndex + 1);
 	return result;
 }
 
-void SpriteSystem::CreateParticle(const Transform& worldTransform, ParticleEmitter* emitter,
+void SpriteSystem::CreateParticle(Entity* entity, const Transform& worldTransform, ParticleEmitter* emitter,
                                   const Orientation& direction, double startTime)
 {
-	if (emitter->isReverse)
-	{
+	if (emitter->isReverse || entity->GetTimeScale() < 0) {
 		CreateReversedParticle(worldTransform, emitter, direction, startTime);
 	}
-	else
-	{
+	else {
 		CreateNormalParticle(worldTransform, emitter, direction, startTime);
 	}
 }
@@ -567,11 +565,11 @@ void SpriteSystem::CreateNormalParticle(const Transform& worldTransform, Particl
 	));
 }
 
-void SpriteSystem::UpdateEmitTiming(ParticleEmitter* emitter, double emitDelta, int emittedCount)
+void SpriteSystem::UpdateEmitTiming(Entity* entity, ParticleEmitter* emitter, double emitDelta, int emittedCount)
 {
 	if (emitter->isHeapEmit)
 	{
-		emitter->lastEmitTime = timer::currentTime;
+		emitter->lastEmitTime = entity->localTime;
 		emitter->heapCount++;
 
 		if (emitter->heapEmitRepeats > 0 && emitter->heapCount >= emitter->heapEmitRepeats)
@@ -582,18 +580,23 @@ void SpriteSystem::UpdateEmitTiming(ParticleEmitter* emitter, double emitDelta, 
 	}
 	else
 	{
-		emitter->lastEmitTime += emitDelta * emittedCount;
+		if (entity->GetTimeScale() >= 0) {
+			emitter->lastEmitTime += emitDelta * emittedCount;
+		}
+		else {
+			emitter->lastEmitTime -= emitDelta * emittedCount;
+		}
 	}
 }
 
-void SpriteSystem::UpdateExistingParticles(ParticleEmitter* emitter)
+void SpriteSystem::UpdateExistingParticles(Entity* entity, ParticleEmitter* emitter)
 {
 	int i = 0;
 	while (i < emitter->particles.size())
 	{
 		float startTime = emitter->particles[i]._14;
 
-		if (timer::currentTime - startTime < emitter->lifetime)
+		if (abs(entity->localTime - startTime) < emitter->lifetime)
 		{
 			if (i < constCount)
 			{
@@ -608,11 +611,11 @@ void SpriteSystem::UpdateExistingParticles(ParticleEmitter* emitter)
 	}
 }
 
-void SpriteSystem::RenderParticles(const ParticleEmitter* emitter)
+void SpriteSystem::RenderParticles(Entity* entity, const ParticleEmitter* emitter)
 {
 	SetupShaders(emitter);
-	SetupConstantBuffers();
-	SetupParticleInfo(emitter);
+	SetupConstantBuffers(entity);
+	SetupParticleInfo(entity, emitter);
 	SetupInputAssembler(emitter);
 
 	size_t particleCount = emitter->particles.size();
@@ -626,15 +629,20 @@ void SpriteSystem::SetupShaders(const ParticleEmitter* emitter)
 	Shaders::gShader(emitter->gShader);
 }
 
-void SpriteSystem::SetupConstantBuffers()
+void SpriteSystem::SetupConstantBuffers(Entity* entity)
 {
 	ConstBuf::Update(10, ConstBuf::drawerFloat4x4);
 	ConstBuf::ConstToVertex(10);
 	ConstBuf::ConstToPixel(10);
 	ConstBuf::ConstToGeometry(10);
+
+	ConstBuf::drawerV[0] = (float)entity->localTime;
+	ConstBuf::Update(0, ConstBuf::drawerV);
+	ConstBuf::ConstToVertex(0);
+	ConstBuf::ConstToPixel(0);
 }
 
-void SpriteSystem::SetupParticleInfo(const ParticleEmitter* emitter)
+void SpriteSystem::SetupParticleInfo(Entity* entity, const ParticleEmitter* emitter)
 {
 	ConstBuf::ParticlesDesc& info = ConstBuf::particlesInfo;
 
@@ -653,6 +661,7 @@ void SpriteSystem::SetupParticleInfo(const ParticleEmitter* emitter)
 
 	info.color = XMFLOAT3(emitter->color.x, emitter->color.y, emitter->color.z);
 	info.lifetime = emitter->lifetime;
+	info.timescale = entity->GetTimeScale();
 
 	ConstBuf::UpdateParticlesInfo();
 	ConstBuf::ConstToVertex(9);

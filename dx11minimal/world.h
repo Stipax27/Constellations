@@ -14,6 +14,7 @@
 #include "system.h"
 
 #include "cameraclass.h"
+#include "singleton.h"
 
 using namespace std;
 
@@ -29,7 +30,7 @@ using namespace std;
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: World
 ////////////////////////////////////////////////////////////////////////////////
-class World
+class World : public ISingleton
 {
 public:
 	CameraClass* m_Camera;
@@ -39,6 +40,17 @@ public:
 	World();
 	World(const World&);
 	~World();
+
+	template <typename T, typename... Args>
+	T* AddComputeSystem(Args&&... args)
+	{
+		auto system = make_unique<T>(forward<Args>(args)...);
+		T* raw_ptr = system.get();
+		system->Initialize();
+		computeSystems.push_back(move(system));
+
+		return raw_ptr;
+	}
 
 	template <typename T, typename... Args>
 	T* AddPhysicSystem(Args&&... args)
@@ -62,12 +74,17 @@ public:
 		return raw_ptr;
 	}
 
-	bool Initialize(float);
+	void Initialize();
 	void Shutdown();
+
 	void PreCalculations();
+
+	void UpdateCompute();
 	void UpdatePhysic();
 	void UpdateRender();
+
 private:
+	vector<unique_ptr<System>> computeSystems;
 	vector<unique_ptr<System>> physicSystems;
 	vector<unique_ptr<System>> renderSystems;
 
