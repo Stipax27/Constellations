@@ -182,12 +182,31 @@ void PlayerController::ProcessInput()
 	static bool vKeyPressed = false;
 	if (IsKeyPressed('V') && !vKeyPressed) {
 		vKeyPressed = true;
-		abilities->ParticleVacuumStart();
+		if (abilities) {
+			abilities->ParticleVacuumStart();
+		}
 	}
 	else if (!IsKeyPressed('V') && vKeyPressed) {
 		vKeyPressed = false;
-		abilities->ParticleVacuumEnd();
+		if (abilities) {
+			abilities->ParticleVacuumEnd();  
+		}
 	}
+
+	static bool gKeyPressed = false;
+	if (IsKeyPressed('G') && !gKeyPressed) {
+		gKeyPressed = true;
+		if (abilities) {
+			abilities->BlowGasStart(); 
+		}
+	}
+	else if (!IsKeyPressed('G') && gKeyPressed) {
+		gKeyPressed = false;
+		if (abilities) {
+			abilities->BlowGasEnd();
+		}
+	}
+
 }
 		
 

@@ -119,18 +119,18 @@ bool LevelManagerClass::Initialize()
 	//singleDamager = entity->AddComponent<SingleDamager>();
 	//singleDamager->damage = 1000;
 
-	//entity = m_World->entityStorage->CreateEntity("Particles", folder);
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(-10.0f, 0.0f, -20.0f);
-	//particleEmitter = entity->AddComponent<ParticleEmitter>();
-	//particleEmitter->rate = 100;
-	//particleEmitter->lifetime = 1000;
-	//particleEmitter->color = point3d(0.15f, 0.95f, 0.35f);
-	//particleEmitter->size = { 1.0f, 4.0f };
-	//particleEmitter->opacity = { 0.75f, 0.0f };
-	//particleEmitter->emitDirection = EmitDirection::Up;
-	//particleEmitter->speed = { 10.0f, 0.0f };
-	//particleEmitter->spread = { PI / 8, PI / 8 };
+	/*entity = m_World->entityStorage->CreateEntity("Particles", folder);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(-10.0f, 0.0f, -20.0f);
+	particleEmitter = entity->AddComponent<ParticleEmitter>();
+	particleEmitter->rate = 100;
+	particleEmitter->lifetime = 1000;
+	particleEmitter->color = point3d(0.15f, 0.95f, 0.35f);
+	particleEmitter->size = { 1.0f, 4.0f };
+	particleEmitter->opacity = { 0.75f, 0.0f };
+	particleEmitter->emitDirection = EmitDirection::Up;
+	particleEmitter->speed = { 10.0f, 0.0f };
+	particleEmitter->spread = { PI / 8, PI / 8 };*/
 
 	//entity = m_World->entityStorage->CreateEntity("Particles", folder);
 	//transform = entity->AddComponent<Transform>();
