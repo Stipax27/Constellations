@@ -747,7 +747,7 @@ void PlayerAbilities::UpdateProjectiles()
 			}
 
 			if (!projectile->HasComponent<SingleDamager>()) {
-				CollisionInfo info = GetProjectileCollisionInfo(projectile);
+				/*CollisionInfo info = GetProjectileCollisionInfo(projectile);
 
 				Entity* impact = entityStorage->CreateEntity("Impact", worldFolder);
 
@@ -766,7 +766,7 @@ void PlayerAbilities::UpdateProjectiles()
 				particleEmitter->heapEmitRepeats = 1;
 
 				DelayedDestroy* delayedDestroy = impact->AddComponent<DelayedDestroy>();
-				delayedDestroy->lifeTime = 1000;
+				delayedDestroy->lifeTime = 1000;*/
 
 				projectile->Destroy();
 			}
