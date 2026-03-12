@@ -1368,6 +1368,7 @@ void Shaders::Init()
 
 	Shaders::CreateVS(23, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SkinnedMesh_VS.shader"));
 	Shaders::CreateVS(24, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SkinnedPointCloud_VS.shader"));
+	Shaders::CreatePS(25, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\UIText_PS.shader"));
 
 	//-----------------------------------------------
 

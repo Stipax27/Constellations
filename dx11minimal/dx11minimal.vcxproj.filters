@@ -90,6 +90,9 @@
     <ClCompile Include="UISystem.cpp">
       <Filter>Source Files\Render\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\UITextSystem.cpp">
+      <Filter>Source Files\Render\UI</Filter>
+    </ClCompile>
     <ClCompile Include="EntityManagerSystem.cpp">
       <Filter>Source Files\EntityManagment</Filter>
     </ClCompile>
@@ -227,8 +230,11 @@
     <ClInclude Include="Rect.h">
       <Filter>Header Files\ECS\Components\Render\UI</Filter>
     </ClInclude>
-    <ClInclude Include="TextLabel.h">
+    <ClInclude Include="Components\TextLabel.h">
       <Filter>Header Files\ECS\Components\Render\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\UITextSystem.h">
+      <Filter>Header Files\ECS\Systems\Render</Filter>
     </ClInclude>
     <ClInclude Include="PhysicBody.h">
       <Filter>Header Files\ECS\Components\Physic</Filter>
@@ -444,6 +450,9 @@
     <None Include="Shaders\DotText_PS.shader">
       <Filter>Shaders\Text</Filter>
     </None>
+    <None Include="Shaders\UIText_PS.shader">
+      <Filter>Shaders\Text</Filter>
+    </None>
     <None Include="Shaders\DepthDown.shader">
       <Filter>Shaders\Depth</Filter>
     </None>
@@ -618,5 +627,10 @@
     <ResourceCompile Include="dx11minimal.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resourses\Fonts\Impact.ttf">
+      <Filter>Resource Files</Filter>
+    </Content>
   </ItemGroup>
 </Project>

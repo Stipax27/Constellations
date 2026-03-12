@@ -32,6 +32,7 @@
 #include "spriteSystem.h"
 #include "meshSystem.h"
 #include "uiSystem.h"
+#include "Systems/UITextSystem.h"
 
 #include "physicSystem.h"
 #include "collisionSystem.h"

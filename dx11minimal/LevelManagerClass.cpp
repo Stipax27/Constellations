@@ -677,6 +677,32 @@ void LevelManagerClass::CreateUI()
 	//transform2D->position = point3d(-1, 0, 0);
 	rect = entity->AddComponent<Rect>();
 	rect->color = point3d(0.8f, 0.8f, 1);
+
+	entity = m_World->entityStorage->CreateEntity("HealthLabel", uiFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.9f, -0.64f, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"ЗДОРОВЬЕ";
+	textLabel->fontFamilyW = L"Impact";
+	textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+	textLabel->fontWeight = 900;
+	textLabel->fontSizePx = 44;
+	textLabel->fontScale = 0.40f;
+	textLabel->letterSpacingPx = 1.0f;
+
+	entity = m_World->entityStorage->CreateEntity("StaminaLabel", uiFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.9f, -0.74f, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"ВЫНОСЛИВОСТЬ";
+	textLabel->fontFamilyW = L"Impact";
+	textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+	textLabel->fontWeight = 900;
+	textLabel->fontSizePx = 38;
+	textLabel->fontScale = 0.34f;
+	textLabel->letterSpacingPx = 1.0f;
 }
 
 
@@ -696,6 +722,7 @@ void LevelManagerClass::InitSystems()
 	}
 	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum, m_BoneBuffer);
 	m_World->AddRenderSystem<UISystem>(mouse, m_World->entityStorage);
+	m_World->AddRenderSystem<UITextSystem>();
 }
 
 

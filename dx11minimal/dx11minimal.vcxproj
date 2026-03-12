@@ -79,6 +79,7 @@
       <StructMemberAlignment>16Bytes</StructMemberAlignment>
       <LanguageStandard_C>Default</LanguageStandard_C>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <FloatingPointModel>Fast</FloatingPointModel>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <AdditionalIncludeDirectories>
@@ -107,6 +108,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>Default</LanguageStandard_C>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>
         $(ProjectDir)Vendors\tinygltf;
         %(AdditionalIncludeDirectories)
@@ -135,6 +137,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>Default</LanguageStandard_C>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>
         $(ProjectDir)Vendors\tinygltf;
         %(AdditionalIncludeDirectories)
@@ -161,6 +164,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>Default</LanguageStandard_C>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>
         $(ProjectDir)Vendors\tinygltf;
         %(AdditionalIncludeDirectories)
@@ -242,7 +246,8 @@
     <ClInclude Include="system.h" />
     <ClInclude Include="Systems\SkeletalAnimationSystem.h" />
     <ClInclude Include="Systems\SkinnedMeshSystem.h" />
-    <ClInclude Include="TextLabel.h" />
+    <ClInclude Include="Components\TextLabel.h" />
+    <ClInclude Include="Systems\UITextSystem.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Transform2D.h" />
     <ClInclude Include="uiSystem.h" />
@@ -347,6 +352,12 @@
     <None Include="Shaders\DotText_VS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="Shaders\UIText_PS.shader">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
     <None Include="Shaders\GalaxyFog_PS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -852,6 +863,7 @@
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Transform2D.cpp" />
+    <ClCompile Include="Systems\UITextSystem.cpp" />
     <ClCompile Include="UISystem.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="WindowClass.cpp" />
@@ -893,6 +905,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resourses\Fonts\Impact.ttf" />
     <Content Include="Resourses\Models\Aries.obj" />
     <Content Include="Resourses\Models\AriesArmor.obj" />
     <Content Include="Resourses\Models\AriesBody.obj" />
