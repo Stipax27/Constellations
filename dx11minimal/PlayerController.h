@@ -27,7 +27,7 @@
 /////////////
 // GLOBALS //
 /////////////
-#define SENSIVITY 1.5f
+#define SENSIVITY 3.5f
 
 const float CURSOR_IGNORE_ZONE = 0.05f;
 const float MAX_CURSOR_DEVIATION = 0.45f;
