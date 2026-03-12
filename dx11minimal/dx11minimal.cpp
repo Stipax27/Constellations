@@ -29,6 +29,8 @@ DWORD battleStartTime;
 #include "resource.h"
 #include "LevelManagerClass.h"
 
+static LevelManagerClass* g_LevelManager = nullptr;
+
 #define MAX_LOADSTRING 100
                             // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
@@ -65,6 +67,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MyRegisterClass(hInstance);
 
     LevelManagerClass levelManager = LevelManagerClass();
+    g_LevelManager = &levelManager;
     levelManager.InitWindow();
 
     // Perform application initialization:
@@ -74,6 +77,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
     levelManager.Initialize();
+    if (levelManager.mouse) {
+        const bool isWindowActive = (GetForegroundWindow() == levelManager.window->hWnd) && !IsIconic(levelManager.window->hWnd);
+        levelManager.mouse->SetWindowActive(isWindowActive);
+    }
     
     //InitGame();
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_DX11MINIMAL));
@@ -81,8 +88,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg = { 0 };
 
     timer::StartCounter();
-    ShowCursor(FALSE);
-
     // Main message loop:
     while (msg.message != WM_QUIT)
     {
@@ -115,6 +120,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
     levelManager.Shutdown();
+    g_LevelManager = nullptr;
 
     return (int) msg.wParam;
 }
@@ -202,6 +208,39 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+    case WM_ACTIVATEAPP:
+    {
+        if (g_LevelManager && g_LevelManager->mouse) {
+            g_LevelManager->mouse->SetWindowActive(wParam != 0);
+        }
+        break;
+    }
+    case WM_SETFOCUS:
+    {
+        if (g_LevelManager && g_LevelManager->mouse) {
+            g_LevelManager->mouse->SetWindowActive(true);
+        }
+        break;
+    }
+    case WM_KILLFOCUS:
+    {
+        if (g_LevelManager && g_LevelManager->mouse) {
+            g_LevelManager->mouse->SetWindowActive(false);
+        }
+        break;
+    }
+    case WM_SIZE:
+    {
+        if (g_LevelManager && g_LevelManager->mouse) {
+            if (wParam == SIZE_MINIMIZED) {
+                g_LevelManager->mouse->SetWindowActive(false);
+            }
+            else if (wParam == SIZE_RESTORED || wParam == SIZE_MAXIMIZED) {
+                g_LevelManager->mouse->SetWindowActive(GetForegroundWindow() == hWnd);
+            }
+        }
+        break;
+    }
     case WM_KEYDOWN:
         if (wParam == VK_ESCAPE)
         {

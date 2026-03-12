@@ -179,6 +179,10 @@ void PlayerController::ProcessMouse()
 	{
 	case MouseState::Centered:
 	{
+		if (!mouse->IsWindowActive()) {
+			break;
+		}
+
 		if (playerEntity != nullptr && playerEntity->IsActive()) {
 			float length = mousePos.magnitude();
 
