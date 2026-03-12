@@ -26,6 +26,7 @@
 #include "PointCloud.h"
 #include "Health.h"
 #include "Mesh.h"
+#include "Components/Nebula.h"
 
 #include "Transform2D.h"
 
@@ -83,6 +84,10 @@ public:
 
 	void ParticleVacuumStart();
 	void ParticleVacuumEnd();
+	void CreateBlueStar(float size = 1.0f);
+	void BlowGasStart();
+	void BlowGasEnd();
+
 
 public:
 	PlayerAbilities();
@@ -101,6 +106,8 @@ public:
 
 	void TimestopStart();
 	void TimestopEnd();
+
+	
 
 private:
 	World* world;
@@ -131,6 +138,21 @@ private:
 	double shieldLastDamageTime;
 	double lastShieldUpdateTime;
 	double shieldStartTime;
+
+	Entity* starEntity;
+	Entity* currentParticles;
+	bool burstActive;
+
+	Entity* vacuumCenterEntity;
+	double vacuumStartTime;   
+	float maxStarSize;
+
+	bool canBlowGas;          
+	Entity* gasBurstEntity;
+	float starMinSize;
+	bool isBlowingGas;    
+	double blowGasStartTime;
+	float blowGasRate;
 
 	vector<Entity*> projectiles;
 

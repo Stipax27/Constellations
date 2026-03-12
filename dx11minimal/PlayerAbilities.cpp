@@ -43,6 +43,20 @@ void PlayerAbilities::Initialize(Entity* PlayerEntity)
 	shieldVisualIntensity = 0.0f;
 	shieldLastDamageTime = 0.0f;
 	shieldStartTime = 0.0;
+	// Вакуум и звезда
+	starEntity = nullptr;
+	vacuumCenterEntity = nullptr;  
+	currentParticles = nullptr;
+	burstActive = false;
+	vacuumStartTime = 0;        
+	maxStarSize = 3.0f;
+	// Выдувание и уменьшение звезды 
+	canBlowGas = false;  
+	gasBurstEntity = nullptr;
+	starMinSize = 0.3f;
+	isBlowingGas = false;  
+	blowGasStartTime = 0;
+	blowGasRate = 0.01f;
 
 	// Добавляем для отслеживания времени
 	timeStopped = false;
@@ -77,13 +91,99 @@ void PlayerAbilities::Shutdown()
 
 	// Очистка проектайлов
 	for (Entity* entity : projectiles) {
-		// Проектайлы должны удаляться автоматически через DelayedDestroy
 	}
 	projectiles.clear();
 }
 
 void PlayerAbilities::Update()
 {
+
+	if (vacuumCenterEntity && !vacuumCenterEntity->IsDeleting()) {
+		Star* centerStar = vacuumCenterEntity->GetComponent<Star>();
+		if (centerStar) {
+			// Расчет времени удержания
+			float holdTime = (float)(timer::currentTime - vacuumStartTime) / 1000.0f;
+			holdTime = min(holdTime, 3.0f);
+
+		
+			float baseSize = 0.1f + holdTime * 0.63f;
+
+		
+			float pulse = 1.0f + 0.2f * sin(timer::currentTime * 0.01f);
+
+		
+			centerStar->radius = baseSize * pulse;
+			centerStar->crownRadius = baseSize * 1.5f * pulse;
+		}
+	}
+
+
+	if (starEntity && !starEntity->IsDeleting()) {
+		Star* star = starEntity->GetComponent<Star>();
+		if (star) {
+			
+			if (isBlowingGas) {
+				float blowTime = (float)(timer::currentTime - blowGasStartTime) / 1000.0f;
+				float sizeReduction = blowGasRate * blowTime;
+
+				float newSize = star->baseRadius - sizeReduction;
+
+				// Проверяем минимальный размер
+				if (newSize <= starMinSize) {
+					starEntity->Destroy();
+					starEntity = nullptr;
+					canBlowGas = false;
+					isBlowingGas = false;
+					return;
+				}
+
+				
+				star->baseRadius = newSize;
+				star->baseCrownRadius = newSize * 1.5f;
+			}
+
+			
+			float pulse = 1.0f + 0.2f * sin(timer::currentTime * 0.005f);
+			star->radius = star->baseRadius * pulse;
+			star->crownRadius = star->baseCrownRadius * pulse;
+		}
+
+		
+		Transform* starTransform = starEntity->GetComponent<Transform>();
+		if (starTransform) {
+			starTransform->mRotation = starTransform->mRotation *
+				XMMatrixRotationY(0.01f * timer::deltaTime);
+		}
+
+		
+		canBlowGas = true;
+	}
+	else {
+		canBlowGas = false;
+		isBlowingGas = false;
+	}
+
+
+	if (gasBurstEntity && !gasBurstEntity->IsDeleting()) {
+		Transform* gasTransform = gasBurstEntity->GetComponent<Transform>();
+		Transform* playerTransform = playerEntity->GetComponent<Transform>();
+		if (gasTransform && playerTransform) {
+			
+			gasTransform->position = playerTransform->position +
+				playerTransform->GetLookVector() * 2.0f +
+				playerTransform->GetUpVector() * 1.5f;
+
+			
+			gasTransform->mRotation = playerTransform->mRotation;
+		}
+
+	
+		if (!isBlowingGas) {
+			gasBurstEntity->AddComponent<DelayedDestroy>()->lifeTime = 500;
+			gasBurstEntity = nullptr;
+		}
+	}
+
 	// Восстановление выносливости ТОЛЬКО если щит не активен
 	if (!shieldActive) {
 		stamina = clamp(stamina + STAMINA_RESTORE_STEP, 0.0f, maxStamina);
@@ -293,31 +393,200 @@ bool PlayerAbilities::TryBlockDamage(float damage)
 }
 
 void PlayerAbilities::ParticleVacuumStart() {
+	
+	if (currentParticles && !currentParticles->IsDeleting()) {
+		currentParticles->Destroy();
+	}
 
-	Entity* entity;
-	entity = entityStorage->CreateEntity("Particles", playerEntity);
-	Transform* transform = entity->AddComponent<Transform>();
-	ParticleEmitter* particleEmitter = entity->AddComponent<ParticleEmitter>();
+	// Запоминаем время начала
+	vacuumStartTime = timer::currentTime;
+
+	
+	if (vacuumCenterEntity && !vacuumCenterEntity->IsDeleting()) {
+		vacuumCenterEntity->Destroy();
+		vacuumCenterEntity = nullptr;
+	}
+
+	
+	if (starEntity && !starEntity->IsDeleting()) {
+		starEntity->Destroy();
+		starEntity = nullptr;
+	}
+
+	
+	vacuumCenterEntity = world->entityStorage->CreateEntity("VacuumCenter", playerEntity);
+	if (vacuumCenterEntity) {
+		Transform* centerTransform = vacuumCenterEntity->AddComponent<Transform>();
+		
+		centerTransform->position = point3d(0.0f, 3.0f, 2.0f);
+
+		Star* centerStar = vacuumCenterEntity->AddComponent<Star>();
+		centerStar->radius = 0.1f; 
+		centerStar->crownRadius = 0.25f;
+		centerStar->color1 = point3d(0.0f, 0.5f, 1.0f);
+		centerStar->color2 = point3d(0.0f, 0.2f, 0.8f);
+		centerStar->crownColor = point3d(0.5f, 0.8f, 1.0f);
+	}
+
+
+	currentParticles = world->entityStorage->CreateEntity("Particles", playerEntity);
+	Transform* transform = currentParticles->AddComponent<Transform>();
+	transform->position = point3d(0.0f, 3.0f, 2.0f); 
+
+	ParticleEmitter* particleEmitter = currentParticles->AddComponent<ParticleEmitter>();
 	particleEmitter->rate = 150;
 	particleEmitter->lifetime = 1000;
 	particleEmitter->color = point3d(0.1f, 0.45f, 1.0f);
 	particleEmitter->size = { 0.0f, 4.0f };
 	particleEmitter->opacity = { 1.0f, 0.0f };
-	particleEmitter->emitDirection = EmitDirection::Up;
+	particleEmitter->emitDirection = EmitDirection::Up; 
 	particleEmitter->speed = { 10.0f, 0.0f };
 	particleEmitter->spread = { PI, PI };
 	particleEmitter->isReverse = true;
-
 }
 
 void PlayerAbilities::ParticleVacuumEnd() {
+	
+	if (currentParticles && !currentParticles->IsDeleting()) {
+		ParticleEmitter* particleEmitter = currentParticles->GetComponent<ParticleEmitter>();
+		if (particleEmitter) {
+			particleEmitter->active = false;
+		}
+		currentParticles->AddComponent<DelayedDestroy>()->lifeTime = 1000;
+		currentParticles = nullptr;
+	}
 
-	Entity* entity = playerEntity->GetChildByName("Particles");
-	ParticleEmitter* particleEmitter = entity->GetComponent<ParticleEmitter>();
-	particleEmitter->active = false;
+	
+	float finalSize = 0.5f;
+	if (vacuumCenterEntity && !vacuumCenterEntity->IsDeleting()) {
+		Star* centerStar = vacuumCenterEntity->GetComponent<Star>();
+		if (centerStar) {
+			finalSize = centerStar->radius; 
+		}
+		vacuumCenterEntity->Destroy();
+		vacuumCenterEntity = nullptr;
+	}
 
-	DelayedDestroy* delayedDestroyentity= entity->AddComponent<DelayedDestroy>();
-	delayedDestroyentity->lifeTime = 1000;
+	CreateBlueStar(finalSize);
+}
+
+void PlayerAbilities::CreateBlueStar(float size) {
+	
+	if (!world) {
+		return;
+	}
+
+	
+	if (!playerEntity) {
+		return;
+	}
+
+	Transform* playerTransform = playerEntity->GetComponent<Transform>();
+	if (!playerTransform) {
+		return;
+	}
+
+	
+	if (starEntity && !starEntity->IsDeleting()) {
+		starEntity->Destroy();
+		starEntity = nullptr;
+	}
+
+
+	starEntity = world->entityStorage->CreateEntity("BlueStar", playerEntity);
+	if (!starEntity) {
+		return;
+	}
+
+
+	Transform* starTransform = starEntity->AddComponent<Transform>();
+	if (!starTransform) {
+		return;
+	}
+
+
+	starTransform->position = point3d(0.0f, 3.0f, 2.0f);
+
+
+	Star* star = starEntity->AddComponent<Star>();
+	if (!star) {
+		return;
+	}
+
+
+	star->baseRadius = size;
+	star->baseCrownRadius = size * 1.5f;
+
+	
+	star->radius = size;
+	star->crownRadius = size * 1.5f;
+	star->color1 = point3d(0.0f, 0.5f, 1.0f);
+	star->color2 = point3d(0.0f, 0.2f, 0.8f);
+	star->crownColor = point3d(0.5f, 0.8f, 1.0f);
+
+
+
+	ParticleEmitter* starGlow = starEntity->AddComponent<ParticleEmitter>();
+	starGlow->rate = 20;
+	starGlow->lifetime = 800;
+	starGlow->color = point3d(0.2f, 0.6f, 1.0f);
+	starGlow->size = { 0.5f, 1.5f };
+	starGlow->opacity = { 0.6f, 0.0f };
+	starGlow->emitDirection = EmitDirection::Front;
+	starGlow->speed = { 2.0f, 1.0f };
+	starGlow->spread = { PI, PI };
+
+	
+	DelayedDestroy* delayed = starEntity->AddComponent<DelayedDestroy>();
+	if (delayed) {
+		delayed->lifeTime = 10000;
+	}
+}
+
+void PlayerAbilities::BlowGasStart() {
+
+	if (!canBlowGas || !starEntity || starEntity->IsDeleting()) {
+		return;
+	}
+
+	
+	blowGasStartTime = timer::currentTime;
+	isBlowingGas = true;
+
+	
+	if (gasBurstEntity && !gasBurstEntity->IsDeleting()) {
+		gasBurstEntity->Destroy();
+	}
+
+
+	gasBurstEntity = world->entityStorage->CreateEntity("GasBurst", nullptr);
+
+	Transform* playerTransform = playerEntity->GetComponent<Transform>();
+	Transform* gasTransform = gasBurstEntity->AddComponent<Transform>();
+
+	
+	gasTransform->position = playerTransform->position +
+		playerTransform->GetLookVector() * 2.0f +
+		playerTransform->GetUpVector() * 1.5f;
+
+	// Основа выдувания 
+	ParticleEmitter* jetEmitter = gasBurstEntity->AddComponent<ParticleEmitter>();
+	jetEmitter->rate = 200;                  
+	jetEmitter->lifetime = 1000;                   
+	jetEmitter->color = point3d(0.4f, 0.9f, 0.4f); // Ярко-зеленый
+	jetEmitter->size = { 0.2f, 1.5f };             
+	jetEmitter->opacity = { 0.8f, 0.0f };          
+	jetEmitter->emitDirection = EmitDirection::Front; 
+	jetEmitter->speed = { 30.0f, 5.0f };          
+	jetEmitter->spread = { PI * 0.05f, PI * 0.05f }; 
+
+}
+
+
+void PlayerAbilities::BlowGasEnd() {
+	if (isBlowingGas) {
+		isBlowingGas = false;
+	}
 }
 
 void PlayerAbilities::Attack(Transform startTransform, point3d direction)
@@ -364,7 +633,7 @@ void PlayerAbilities::Charging()
 	}
 }
 
-// Остальные методы атак без изменений...
+
 void PlayerAbilities::CommonAttack(Transform startTransform, point3d direction)
 {
 	Entity* projectile;
