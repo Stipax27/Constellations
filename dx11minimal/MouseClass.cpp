@@ -32,18 +32,11 @@ void MouseClass::Initialize() {
 
 	lbuttonDownPos = point3d();
 	rbuttonDownPos = point3d();
-	systemCursorHidden = false;
-	windowActive = true;
 }
 
 
 void MouseClass::Shutdown()
 {
-	if (systemCursorHidden) {
-		while (ShowCursor(TRUE) < 0) {}
-		systemCursorHidden = false;
-	}
-
 	if (window) {
 		window = 0;
 	}
@@ -54,40 +47,7 @@ void MouseClass::Shutdown()
 }
 
 
-bool MouseClass::IsWindowActive() const
-{
-	return windowActive;
-}
-
-
-void MouseClass::SetWindowActive(bool isActive)
-{
-	windowActive = isActive;
-	UpdateSystemCursorVisibility();
-}
-
-
-void MouseClass::UpdateSystemCursorVisibility()
-{
-	const bool shouldHideSystemCursor = visible && state == MouseState::Centered && windowActive;
-	if (shouldHideSystemCursor == systemCursorHidden) {
-		return;
-	}
-
-	if (shouldHideSystemCursor) {
-		while (ShowCursor(FALSE) >= 0) {}
-	}
-	else {
-		while (ShowCursor(TRUE) < 0) {}
-	}
-
-	systemCursorHidden = shouldHideSystemCursor;
-}
-
-
 void MouseClass::Update() {
-	UpdateSystemCursorVisibility();
-
 	POINT p;
 	GetCursorPos(&p);
 	ScreenToClient(window->hWnd, &p);

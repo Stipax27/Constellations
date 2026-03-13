@@ -54,8 +54,6 @@ public:
 	void Initialize();
 	void Shutdown();
 	void Update();
-	void SetWindowActive(bool isActive);
-	bool IsWindowActive() const;
 
 	bool IsLButtonDown();
 	bool IsRButtonDown();
@@ -87,11 +85,6 @@ private:
 
 	point3d lbuttonDownPos;
 	point3d rbuttonDownPos;
-
-	bool systemCursorHidden = false;
-	bool windowActive = true;
-
-	void UpdateSystemCursorVisibility();
 };
 
 #endif
