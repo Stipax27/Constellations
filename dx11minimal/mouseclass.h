@@ -69,7 +69,7 @@ public:
 
 	point3d GetMouseRay();
 	void RenderCursor();
-	void UpdateSystemCursorVisibility(bool);
+	void UpdateSystemCursorVisibility();
 
 private:
 	WindowClass* window;

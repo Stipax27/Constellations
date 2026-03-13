@@ -215,9 +215,9 @@ void MouseClass::RenderCursor() {
 }
 
 
-void MouseClass::UpdateSystemCursorVisibility(bool mode)
+void MouseClass::UpdateSystemCursorVisibility()
 {
-	const bool shouldHideSystemCursor = visible && mode;
+	const bool shouldHideSystemCursor = visible && window->IsActive();
 	if (shouldHideSystemCursor == systemCursorHidden) {
 		return;
 	}
