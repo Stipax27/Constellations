@@ -1,10 +1,18 @@
 #include "spriteSystem.h"
 #include "Components/Orientation.h"
+#include "Components/SkeletalAnimationComponent.h"
 
 
 SpriteSystem::SpriteSystem()
 {
 	frustum = Singleton::GetInstance<FrustumClass>();
+	boneBuffer = nullptr;
+}
+
+SpriteSystem::SpriteSystem(FrustumClass* Frustum, ID3D11Buffer* boneBuf)
+{
+	frustum = Frustum ? Frustum : Singleton::GetInstance<FrustumClass>();
+	boneBuffer = boneBuf;
 }
 
 
@@ -204,6 +212,22 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 
 						Sampler::SamplerComp(0);
 
+						static std::vector<XMMATRIX> identityPalette(128, XMMatrixIdentity());
+						SkeletalAnimationComponent* animComp = entity->GetComponent<SkeletalAnimationComponent>();
+						if (boneBuffer)
+						{
+							if (animComp && !animComp->bonePalette.empty())
+							{
+								context->UpdateSubresource(boneBuffer, 0, nullptr, animComp->bonePalette.data(), 0, 0);
+							}
+							else
+							{
+								context->UpdateSubresource(boneBuffer, 0, nullptr, identityPalette.data(), 0, 0);
+							}
+
+							context->VSSetConstantBuffers(1, 1, &boneBuffer);
+						}
+
 						Shaders::vShader(pointCloud->vShader);
 						Shaders::gShader(pointCloud->gShader);
 						Shaders::pShader(pointCloud->pShader);
@@ -227,6 +251,22 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 					}
 					else
 					{
+						static std::vector<XMMATRIX> identityPalette(128, XMMatrixIdentity());
+						SkeletalAnimationComponent* animComp = entity->GetComponent<SkeletalAnimationComponent>();
+						if (boneBuffer)
+						{
+							if (animComp && !animComp->bonePalette.empty())
+							{
+								context->UpdateSubresource(boneBuffer, 0, nullptr, animComp->bonePalette.data(), 0, 0);
+							}
+							else
+							{
+								context->UpdateSubresource(boneBuffer, 0, nullptr, identityPalette.data(), 0, 0);
+							}
+
+							context->VSSetConstantBuffers(1, 1, &boneBuffer);
+						}
+
 						Shaders::vShader(pointCloud->vShader);
 						Shaders::gShader(pointCloud->gShader);
 						Shaders::pShader(pointCloud->pShader);

@@ -1,5 +1,13 @@
 ﻿#include "LevelManagerClass.h"
 
+#include "Engine/Mesh/Animation.h"
+#include "Engine/Mesh/Skeleton.h"
+#include "Engine/Mesh/SkinnedMesh.h"
+#include "dx11.h"
+#include "Components/SkeletalAnimationComponent.h"
+#include "Systems/SkinnedMeshSystem.h"
+#include "Systems/SkeletalAnimationSystem.h"
+
 LevelManagerClass::LevelManagerClass()
 {
 	window = 0;
@@ -25,6 +33,11 @@ void LevelManagerClass::InitWindow()
 	}
 }
 
+void LevelManagerClass::ProcessSound(const char* name)
+{
+	//PlaySound(TEXT(name), NULL, SND_FILENAME | SND_ASYNC);
+}
+
 
 bool LevelManagerClass::Initialize()
 {
@@ -40,6 +53,14 @@ bool LevelManagerClass::Initialize()
 	mouse->Initialize();
 
 	Dx11Init(window->hWnd, window->width, window->height);
+	std::thread modelsLoadingThread(&LevelManagerClass::LoadModels, this);
+
+	D3D11_BUFFER_DESC boneDesc = {};
+	boneDesc.Usage = D3D11_USAGE_DEFAULT;
+	boneDesc.ByteWidth = sizeof(XMMATRIX) * 128;
+	boneDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+	device->CreateBuffer(&boneDesc, nullptr, &m_BoneBuffer);
 
 	// window params into const buffer
 	ConstBuf::frame.aspect = XMFLOAT4(window->aspect, window->iaspect, float(window->width), float(window->height));
@@ -48,9 +69,10 @@ bool LevelManagerClass::Initialize()
 	ConstBuf::UpdateFactors();
 
 	//Textures::LoadTexture("..\\dx11minimal\\Resourses\\Textures\\testTexture.tga");
-
-	std::thread thr(&LevelManagerClass::LoadModels, this);
-	thr.detach();
+	if (modelsLoadingThread.joinable())
+	{
+		modelsLoadingThread.join();
+	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING START //
@@ -233,6 +255,77 @@ bool LevelManagerClass::Initialize()
 	playerController = new PlayerController();
 	playerController->Initialize(player);
 
+	/*if (aiSystem)
+	{
+		aiSystem->SetPlayerEntity(player);
+	}*/
+
+	auto spawnSkinned = [this, folder](
+		const char* name,
+		const point3d& pos,
+		const point3d& scale,
+		const SkinnedMesh& srcMesh,
+		Skeleton* skeleton,
+		std::vector<AnimationClip>* animations,
+		const char* preferredClip = nullptr,
+		bool autoPlay = true) -> Entity*
+	{
+		Entity* e = m_World->entityStorage->CreateEntity(name, folder);
+		Transform* t = e->AddComponent<Transform>();
+		t->position = pos;
+		t->scale = scale;
+
+		SkinnedMesh* meshComp = e->AddComponent<SkinnedMesh>();
+		meshComp->vertices = srcMesh.vertices;
+		meshComp->indices = srcMesh.indices;
+		meshComp->gpuModelIndex = srcMesh.gpuModelIndex;
+		meshComp->active = false;
+
+		PointCloud* pointCloud = e->AddComponent<PointCloud>();
+		pointCloud->index = srcMesh.gpuModelIndex;
+		pointCloud->vShader = 28;
+		pointCloud->gShader = 17;
+		pointCloud->pShader = 17;
+		pointCloud->pointSize = 1.0f;
+		pointCloud->brightness = 1.25f;
+		pointCloud->color = point3d(1.0f, 0.95f, 0.85f);
+		pointCloud->compress = RenderCompress::x2;
+		pointCloud->frustumRadius = 12.0f;
+
+		SkeletalAnimationComponent* animComp = e->AddComponent<SkeletalAnimationComponent>();
+		animComp->skeleton = skeleton;
+		animComp->animationClips = animations;
+		animComp->rootMotionMode = RootMotionMode::Accumulate;
+		animComp->CaptureBindPose();
+		if (animations && !animations->empty())
+		{
+			animComp->SetAnimationByIndex(0, true);
+			if (preferredClip && preferredClip[0] != '\0')
+			{
+				animComp->SetAnimationByName(preferredClip, true);
+			}
+		}
+		animComp->isPlaying = autoPlay && animComp->animationClip != nullptr;
+		animComp->isLooping = true;
+		animComp->currentTime = 0.0f;
+		return e;
+	};
+
+	spawnSkinned("Fox", point3d(0.0f, 0.0f, 10.0f), point3d(0.2f, 0.2f, 0.2f), m_FoxMesh, &m_FoxSkeleton, &m_FoxAnimations);
+	spawnSkinned("CesiumMan", point3d(3.0f, 0.0f, 10.0f), point3d(1.0f, 1.0f, 1.0f), m_CesiumMesh, &m_CesiumSkeleton, &m_CesiumAnimations);
+	m_TestAnimEntity = spawnSkinned("TestMannequin", point3d(6.0f, 0.0f, 10.0f), point3d(1.0f, 1.0f, 1.0f), m_TestAnimMesh, &m_TestAnimSkeleton, &m_TestAnimAnimations, nullptr, false);
+	m_TestAnimCycleIndex = 0;
+	if (m_TestAnimEntity)
+	{
+		if (SkeletalAnimationComponent* animComp = m_TestAnimEntity->GetComponent<SkeletalAnimationComponent>())
+		{
+			animComp->ResetToBindPose();
+			animComp->animationClip = nullptr;
+			animComp->isPlaying = false;
+			animComp->currentTime = 0.0f;
+		}
+	}
+
 	return true;
 }
 
@@ -271,6 +364,12 @@ void LevelManagerClass::Shutdown()
 		delete window;
 		window = 0;
 	}
+
+	if (m_BoneBuffer)
+	{
+		m_BoneBuffer->Release();
+		m_BoneBuffer = nullptr;
+	}
 }
 
 void LevelManagerClass::Frame()
@@ -279,10 +378,91 @@ void LevelManagerClass::Frame()
 		return;
 
 	mouse->Update();
+	UpdateTestAnimationToggle();
 	playerController->ProcessInput();
 	playerController->ProcessMouse();
 	playerController->abilities->Update();
 	playerController->ProccessUI();
+
+
+	//// FAST DEBUG CODE (DELETE LATER) ////
+	/*count++;
+	if (count > 30) {
+		count = 0;
+
+		Entity* projectile = m_World->entityStorage->CreateEntity("PlayerProjectile");
+		Transform* transform = projectile->AddComponent<Transform>();
+		transform->position = point3d(0, 23, 55);
+
+		PhysicBody* physicBody = projectile->AddComponent<PhysicBody>();
+		physicBody->airFriction = 0.0f;
+		physicBody->velocity = transform->GetLookVector() * 25.0f;
+
+		Star* star = projectile->AddComponent<Star>();
+		star->radius = 1.0f;
+		star->crownRadius = 1.5f;
+		star->color1 = point3d(0.9f, 1.0f, 0.99f);
+		star->color2 = point3d(0.34f, 0.8f, 0.45f);
+		star->crownColor = point3d(0.27f, 0.63f, 1.0f);
+
+		SingleDamager* singleDamager = projectile->AddComponent<SingleDamager>();
+		singleDamager->target = Fraction::Player;
+		singleDamager->damage = 5.0f;
+
+		SphereCollider* sphereCollider = projectile->AddComponent<SphereCollider>();
+		sphereCollider->isTouchable = false;
+		sphereCollider->radius = 1.0f;
+
+		DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
+		delayedDestroy->lifeTime = 5000;
+	}*/
+	//// FAST DEBUG CODE (DELETE LATER) ////
+
+	// ??????????????????????????? ????????????????????? ????????? ???????????? ??????????????????
+	//DWORD currentTime = timer::currentTime;
+	//srand(time(0));
+	// ??????????????????: ??????????????? ?????????????????? 3 ?????????????????????
+	//if (currentTime - Star->LastTime > 3000) {
+	//	Star->FartingEffect();
+	//	// ??????????????????????????? ??????????????? ???????????????
+	//	int attackType = rand() % 3;
+	//	switch (attackType) {
+	//	case 0:
+	//		Star->Flash();
+	//		break;
+	//	case 1:
+	//		Star->CoronalEjection();
+	//		break;
+	//	case 2:
+	//		Star->SunWind();
+	//		break;
+	//	}
+	//	//Star->LifeTimeParticl();
+	//	Star->LastTime = currentTime;
+	//}
+
+	/*if (currentTime - smallConstellation->LastTime > 5000) {
+
+		smallConstellation->LastTime = currentTime;
+
+		int attackType = rand() % 3;
+
+		switch (attackType) {
+		case 0:
+			smallConstellation->VolleyStart();
+			break;
+		case 1:
+			smallConstellation->LatticeStart();
+			break;
+		case 2:
+			smallConstellation->TransformationStart();
+			break;
+		}
+	}
+	smallConstellation->VolleyUpdate(0.01f);
+	smallConstellation->LatticeUpdate(0.01f);
+	smallConstellation->TransformationUpdate();
+	smallConstellation->RamUpdate();*/
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 
@@ -308,6 +488,69 @@ void LevelManagerClass::LoadModels()
 
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesBody.obj");
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesArmor.obj");
+	Models::LoadSkinnedModel("..\\dx11minimal\\Resourses\\Models\\Fox.glb", m_FoxMesh, m_FoxSkeleton, m_FoxAnimations);
+	Models::LoadSkinnedModel("..\\dx11minimal\\Resourses\\Models\\CesiumMan.glb", m_CesiumMesh, m_CesiumSkeleton, m_CesiumAnimations);
+	if (Models::LoadSkinnedModel("..\\dx11minimal\\Resourses\\Models\\TestAnims\\1.glb", m_TestAnimMesh, m_TestAnimSkeleton, m_TestAnimAnimations))
+	{
+		Models::LoadAndRemapAnimations("..\\dx11minimal\\Resourses\\Models\\TestAnims\\2.glb", m_TestAnimSkeleton, m_TestAnimAnimations, false);
+		Models::LoadAndRemapAnimations("..\\dx11minimal\\Resourses\\Models\\TestAnims\\3.glb", m_TestAnimSkeleton, m_TestAnimAnimations, true);
+		Models::LoadAndRemapAnimations("..\\dx11minimal\\Resourses\\Models\\TestAnims\\4.glb", m_TestAnimSkeleton, m_TestAnimAnimations, true);
+	}
+}
+
+// TODO: Remove, only for test animation change
+void LevelManagerClass::UpdateTestAnimationToggle()
+{
+	const bool isTogglePressed = IsKeyPressed('T');
+	if (!isTogglePressed)
+	{
+		m_WasToggleAnimationPressed = false;
+		return;
+	}
+
+	if (m_WasToggleAnimationPressed)
+	{
+		return;
+	}
+
+	m_WasToggleAnimationPressed = true;
+
+	if (!m_TestAnimEntity)
+	{
+		return;
+	}
+
+	SkeletalAnimationComponent* animComp = m_TestAnimEntity->GetComponent<SkeletalAnimationComponent>();
+	if (!animComp)
+	{
+		return;
+	}
+
+	const int clipCount = animComp->animationClips ? static_cast<int>(animComp->animationClips->size()) : 0;
+	if (clipCount <= 0)
+	{
+		animComp->ResetToBindPose();
+		animComp->animationClip = nullptr;
+		animComp->isPlaying = false;
+		animComp->currentTime = 0.0f;
+		m_TestAnimCycleIndex = 0;
+		return;
+	}
+
+	m_TestAnimCycleIndex = (m_TestAnimCycleIndex + 1) % (clipCount + 1);
+	if (m_TestAnimCycleIndex == 0)
+	{
+		animComp->ResetToBindPose();
+		animComp->animationClip = nullptr;
+		animComp->isPlaying = false;
+		animComp->currentTime = 0.0f;
+		return;
+	}
+
+	animComp->SetAnimationByIndex(static_cast<size_t>(m_TestAnimCycleIndex - 1), true);
+	animComp->isPlaying = animComp->animationClip != nullptr;
+	animComp->isLooping = true;
+	animComp->currentTime = 0.0f;
 }
 
 
@@ -404,6 +647,32 @@ void LevelManagerClass::CreateUI()
 	rect = entity->AddComponent<Rect>();
 	rect->color = point3d(0.8f, 0.8f, 1);
 
+	entity = m_World->entityStorage->CreateEntity("HealthLabel", uiFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.9f, -0.64f, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"ЗДОРОВЬЕ";
+	textLabel->fontFamilyW = L"Impact";
+	textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+	textLabel->fontWeight = 900;
+	textLabel->fontSizePx = 44;
+	textLabel->fontScale = 0.40f;
+	textLabel->letterSpacingPx = 1.0f;
+
+	entity = m_World->entityStorage->CreateEntity("StaminaLabel", uiFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.9f, -0.74f, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"ВЫНОСЛИВОСТЬ";
+	textLabel->fontFamilyW = L"Impact";
+	textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+	textLabel->fontWeight = 900;
+	textLabel->fontSizePx = 38;
+	textLabel->fontScale = 0.34f;
+	textLabel->letterSpacingPx = 1.0f;
+
 
 	// UI Prototypes
 	// Selected weapon - circle
@@ -468,6 +737,28 @@ void LevelManagerClass::CreateUI()
 	transform2D->scale = point3d(0.5f, 0.025f, 0.0f);
 	rect = entity->AddComponent<Rect>();
 	rect->color = point3d(0.75f, 0.0f, 0.0f);
+}
+
+void LevelManagerClass::InitSystems()
+{
+	m_World->AddComputeSystem<TimeSystem>();
+	m_World->AddComputeSystem<EntityManagerSystem>();
+
+	m_World->AddPhysicSystem<PhysicSystem>();
+	m_World->AddPhysicSystem<CollisionSystem>();
+	m_World->AddPhysicSystem<CombatSystem>();
+	//AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
+	m_World->AddPhysicSystem<SkeletalAnimationSystem>(context, m_BoneBuffer);
+
+	m_World->AddRenderSystem<MeshSystem>();
+	m_World->AddRenderSystem<SkinnedMeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera, m_BoneBuffer);
+	if (SHOW_COLLIDERS) {
+		m_World->AddRenderSystem<CollisionDrawSystem>();
+	}
+	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum, m_BoneBuffer);
+	m_World->AddRenderSystem<NebulaSystem>();
+	m_World->AddRenderSystem<UISystem>();
+	m_World->AddRenderSystem<UITextSystem>();
 }
 
 
@@ -679,42 +970,4 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->mode = pMode::glow;
 	nebula->color = point3d(1, 0.3, 0.5);
 	nebula->scale = 1;
-}
-
-
-void LevelManagerClass::InitSystems()
-{
-	m_World->AddComputeSystem<TimeSystem>();
-	m_World->AddComputeSystem<EntityManagerSystem>();
-
-	m_World->AddPhysicSystem<PhysicSystem>();
-	m_World->AddPhysicSystem<CollisionSystem>();
-	m_World->AddPhysicSystem<CombatSystem>();
-	//AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
-
-	m_World->AddRenderSystem<MeshSystem>();
-	if (SHOW_COLLIDERS) {
-		m_World->AddRenderSystem<CollisionDrawSystem>();
-	}
-	m_World->AddRenderSystem<SpriteSystem>();
-	m_World->AddRenderSystem<NebulaSystem>();
-	m_World->AddRenderSystem<UISystem>();
-}
-
-
-void LevelManagerClass::psModeSet(pMode mode)
-{
-	switch (mode)
-	{
-	case pMode::point:
-	{
-		Shaders::pShader(23);
-		break;
-	}
-	case pMode::glow:
-	{
-		Shaders::pShader(24);
-		break;
-	}
-	}
 }

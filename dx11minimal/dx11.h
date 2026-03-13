@@ -1,7 +1,7 @@
 #ifndef DX11_H
 #define DX11_H
 
-#define _XM_SSE_INTRINSICS_ 
+#define _XM_SSE_INTRINSICS_
 #include <d3d11.h>
 #include <d2d1.h>
 #include <d3dcompiler.h>
@@ -10,6 +10,8 @@
 #include <debugapi.h>
 #include <algorithm>
 #include <deque>
+#include <vector>
+#include <utility>
 #include <stdio.h>
 #include <fstream>
 #include <unordered_map>
@@ -38,6 +40,10 @@ using namespace DirectX;
 
 typedef unsigned long uint32;
 typedef long int32;
+
+struct SkinnedMesh;
+struct Skeleton;
+struct AnimationClip;
 
 static inline int32 _log2(float x);
 
@@ -93,7 +99,7 @@ namespace Textures
 		ID3D11Texture2D* pDepth;
 		ID3D11ShaderResourceView* DepthResView;
 		ID3D11DepthStencilView* DepthStencilView[16];
-		
+
 		ID3D11UnorderedAccessView* UnorderedAccessView;
 
 		tType type;
@@ -140,13 +146,13 @@ namespace Models
 
 #define max_models 255
 
-#pragma pack(push, 1)  // выравнивание для бинарной записи
+#pragma pack(push, 1)  // РІС‹СЂР°РІРЅРёРІР°РЅРёРµ РґР»СЏ Р±РёРЅР°СЂРЅРѕР№ Р·Р°РїРёСЃРё
 	struct CacheHeader {
-		uint64_t sourceFileTime;    // время модификации исходного .obj
-		uint32_t vertexCount;       // количество вершин
-		uint32_t indexCount;        // количество индексов
-		uint32_t vertexStride;      // размер VertexType (обычно 32+12+8 = 52 байта)
-		uint32_t version = 1;       // версия формата кэша
+		uint64_t sourceFileTime;    // РІСЂРµРјСЏ РјРѕРґРёС„РёРєР°С†РёРё РёСЃС…РѕРґРЅРѕРіРѕ .obj
+		uint32_t vertexCount;       // РєРѕР»РёС‡РµСЃС‚РІРѕ РІРµСЂС€РёРЅ
+		uint32_t indexCount;        // РєРѕР»РёС‡РµСЃС‚РІРѕ РёРЅРґРµРєСЃРѕРІ
+		uint32_t vertexStride;      // СЂР°Р·РјРµСЂ VertexType (РѕР±С‹С‡РЅРѕ 32+12+8 = 52 Р±Р°Р№С‚Р°)
+		uint32_t version = 1;       // РІРµСЂСЃРёСЏ С„РѕСЂРјР°С‚Р° РєСЌС€Р°
 	};
 #pragma pack(pop)
 
@@ -164,6 +170,9 @@ namespace Models
 		XMFLOAT3 position;
 		XMFLOAT3 normal;
 		XMFLOAT2 texture;
+
+		XMUINT4 joints;
+		XMFLOAT4 weights;
 	};
 
 	struct ModelType
@@ -190,7 +199,7 @@ namespace Models
 	extern modelDesc Model[max_models];
 	extern int modelsCount;
 
-	// Получение времени модификации файла
+	// РџРѕР»СѓС‡РµРЅРёРµ РІСЂРµРјРµРЅРё РјРѕРґРёС„РёРєР°С†РёРё С„Р°Р№Р»Р°
 	uint64_t GetFileModTime(const char* filename);
 	std::string GetCacheFileName(const char* modelName);
 
@@ -200,6 +209,10 @@ namespace Models
 	void LoadTxtModel(const char* filename, bool = false);
 	void LoadGltfModel(const char* filename);
 	void LoadObjModel(const char* filename, bool = false);
+	bool LoadSkinnedAnimations(const char* filename, std::vector<AnimationClip>& outAnimations, Skeleton* outSourceSkeleton = nullptr);
+	bool LoadAndRemapAnimations(const char* filename, const Skeleton& targetSkeleton, std::vector<AnimationClip>& outAnimations, bool append = true);
+	bool LoadSkinnedModel(const char* filename, SkinnedMesh& outMesh, Skeleton& outSkeleton, std::vector<AnimationClip>& outAnimations);
+	bool LoadSkinnedModel(const char* filename, SkinnedMesh& outMesh, Skeleton& outSkeleton, AnimationClip& outAnimation);
 
 	void Init();
 }
@@ -291,7 +304,7 @@ namespace ConstBuf
 #define constCount 1024
 
 	// buffer structures
-	
+
 	struct DrawerMat {
 		XMMATRIX model;
 		float hilight;
@@ -346,7 +359,7 @@ namespace ConstBuf
 	//b2
 	extern DrawerMat drawerMat;
 
-	//b3 
+	//b3
 	extern Camera camera;
 
 	//b4

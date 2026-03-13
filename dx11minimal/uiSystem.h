@@ -9,7 +9,7 @@
 #include "Transform2D.h"
 #include "Rect.h"
 #include "Button.h"
-#include "TextLabel.h"
+#include "Components/TextLabel.h"
 //#include "font.h"
 
 #include "mouseclass.h"
