@@ -2,13 +2,12 @@
 #define _DELAYED_DESTROY_H_
 
 #include "component.h"
-#include "timer.h"
 
 
 struct DelayedDestroy : Component
 {
 	double lifeTime = 1000;
-	double startTime = timer::currentTime;
+	double startTime = -1;
 };
 
 #endif

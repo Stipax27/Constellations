@@ -52,7 +52,7 @@ void SkinnedMeshSystem::Update(std::vector<Entity*>& entities, float deltaTime)
 		UpdateWorldMatrix(worldTransform);
 
 		// Use skinned vertex shader + mesh pixel shader.
-		Shaders::vShader(23);
+		Shaders::vShader(27);
 		Shaders::pShader(15);
 
 		static std::vector<XMMATRIX> identityPalette(128, XMMatrixIdentity());

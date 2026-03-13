@@ -14,14 +14,15 @@ CameraClass::~CameraClass()
 }
 
 
-void CameraClass::Initialize(float iAspect)
+void CameraClass::Initialize()
 {
-	frustum = new FrustumClass;
+	frustum = Singleton::GetInstance<FrustumClass>();
 
 	position = point3d();
 	rotationMatrix = XMMatrixIdentity();
 
-	iaspect = iAspect;
+	WindowClass* window = Singleton::GetInstance<WindowClass>();
+	iaspect = window->iaspect;
 
 	distance = DEFAULT_CAMERA_DISTANCE;
 	SetFov(DEFAULT_FOV);

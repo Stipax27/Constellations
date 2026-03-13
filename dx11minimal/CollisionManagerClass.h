@@ -15,6 +15,7 @@
 #include <memory>
 #include <mutex>
 
+#include "singleton.h"
 #include "utils.h"
 
 #include "Transform.h"
@@ -73,14 +74,14 @@ struct TypePair {
 ////////////////////////////////////////////////////////////////////////////////
 
 
-class CollisionManagerClass
+class CollisionManagerClass : public ISingleton
 {
 public:
 	CollisionManagerClass();
 	~CollisionManagerClass();
 	CollisionManagerClass(const CollisionManagerClass&);
 
-	void Initialize(EntityStorage*);
+	void Initialize();
 	void Shutdown();
 
 	static CollisionResult sphere_vs_sphere(

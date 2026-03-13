@@ -24,7 +24,7 @@ PlayerController::~PlayerController()
 }
 
 
-void PlayerController::Initialize(Entity* Player, World* m_World, MouseClass* Mouse, WindowClass* Window, CollisionManagerClass* CollisionManager)
+void PlayerController::Initialize(Entity* Player)
 {
 	playerEntity = Player;
 
@@ -33,16 +33,18 @@ void PlayerController::Initialize(Entity* Player, World* m_World, MouseClass* Mo
 	playerPointCloud = Player->GetComponent<PointCloud>();
 	playerHealth = Player->GetComponent<Health>();
 
-	ui = m_World->entityStorage->GetEntityByName("UI");
+	World* world = Singleton::GetInstance<World>();
+
+	ui = world->entityStorage->GetEntityByName("UI");
 	healthBar = ui->GetChildByName("HealthBar", true);
 	staminaBar = ui->GetChildByName("StaminaBar", true);
 
-	camera = m_World->m_Camera;
-	mouse = Mouse;
-	window = Window;
+	camera = world->m_Camera;
+	mouse = Singleton::GetInstance<MouseClass>();
+	window = Singleton::GetInstance<WindowClass>();
 
 	abilities = new PlayerAbilities;
-	abilities->Initialize(m_World, camera, playerEntity, CollisionManager);
+	abilities->Initialize(playerEntity);
 }
 
 
@@ -91,75 +93,122 @@ void PlayerController::Shutdown()
 
 void PlayerController::ProcessInput()
 {
-	if (playerEntity != nullptr && playerEntity->IsActive()) {
+	if (playerEntity == nullptr || !playerEntity->IsActive())
+		return;
 
-		if (movementLocked && playerPhysicBody->velocity.magnitude() < PLAYER_MOVE_SPEED) {
-			movementLocked = false;
-			playerPhysicBody->airFriction = 1;
+	if (movementLocked && playerPhysicBody->velocity.magnitude() < PLAYER_MOVE_SPEED) {
+		movementLocked = false;
+		playerPhysicBody->airFriction = 1;
+	}
+
+	if (!movementLocked)
+	{
+		point3d velocity = point3d();
+
+		if (IsKeyPressed('W')) {
+			velocity += playerTransform->GetLookVector();
+		}
+		if (IsKeyPressed('S')) {
+			velocity += playerTransform->GetLookVector() * -1;
+		}
+		if (IsKeyPressed('A')) {
+			velocity += playerTransform->GetRightVector() * -1;
+		}
+		if (IsKeyPressed('D')) {
+			velocity += playerTransform->GetRightVector();
+		}
+		if (IsKeyPressed(VK_SPACE)) {
+			velocity += playerTransform->GetUpVector();
+		}
+		if (IsKeyPressed(VK_CONTROL)) {
+			velocity += playerTransform->GetUpVector() * -1;
 		}
 
-		if (!movementLocked)
-		{
-			point3d velocity = point3d();
-
-			if (IsKeyPressed('W')) {
-				velocity += playerTransform->GetLookVector();
+		if (velocity.magnitude() > 0) {
+			point3d newVelocity = playerPhysicBody->velocity + velocity.normalized();
+			if (newVelocity.magnitude() > PLAYER_MOVE_SPEED) {
+				playerPhysicBody->velocity = newVelocity.normalized() * PLAYER_MOVE_SPEED;
 			}
-			if (IsKeyPressed('S')) {
-				velocity += playerTransform->GetLookVector() * -1;
+			else {
+				playerPhysicBody->velocity = newVelocity;
 			}
-			if (IsKeyPressed('A')) {
-				velocity += playerTransform->GetRightVector() * -1;
-			}
-			if (IsKeyPressed('D')) {
-				velocity += playerTransform->GetRightVector();
-			}
-			if (IsKeyPressed(VK_SPACE)) {
-				velocity += playerTransform->GetUpVector();
-			}
-			if (IsKeyPressed(VK_CONTROL)) {
-				velocity += playerTransform->GetUpVector() * -1;
-			}
-
-			if (velocity.magnitude() > 0) {
-				point3d newVelocity = playerPhysicBody->velocity + velocity.normalized();
-				if (newVelocity.magnitude() > PLAYER_MOVE_SPEED) {
-					playerPhysicBody->velocity = newVelocity.normalized() * PLAYER_MOVE_SPEED;
-				}
-				else {
-					playerPhysicBody->velocity = newVelocity;
-				}
-			}
-		}
-
-		if (IsKeyPressed(VK_LSHIFT)) {
-			Dash();
-		}
-		
-		float roll = 0.0f;
-
-		if (IsKeyPressed('E')) {
-			roll = -ROLL_SPEED;
-		}
-		if (IsKeyPressed('Q')) {
-			roll = ROLL_SPEED;
-		}
-
-		if (roll != 0) {
-			playerPhysicBody->mAngVelocity = XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), roll * RAD);
-		}
-
-		if (IsKeyPressed('1')) {
-			abilities->weapon = PlayerWeapons::Fists;
-		}
-		if (IsKeyPressed('2')) {
-			abilities->weapon = PlayerWeapons::Sword;
-		}
-		if (IsKeyPressed('3')) {
-			abilities->weapon = PlayerWeapons::Bow;
 		}
 	}
+
+		// Обработка кнопки F для щита
+		static bool fKeyPressed = false;
+		if (IsKeyPressed('F') && !fKeyPressed) {
+			fKeyPressed = true;
+			abilities->ShieldStart(); // Активируем щит при нажатии F
+		}
+		else if (!IsKeyPressed('F') && fKeyPressed) {
+			fKeyPressed = false;
+			abilities->ShieldEnd(); // Деактивируем щит при отпускании F
+		}
+
+		float roll = 0.0f;
+	if (IsKeyPressed(VK_LSHIFT)) {
+		Dash();
+	}
+		
+	if (IsKeyPressed('E')) {
+		roll = -ROLL_SPEED;
+	}
+	if (IsKeyPressed('Q')) {
+		roll = ROLL_SPEED;
+	}
+
+	if (roll != 0) {
+		playerPhysicBody->mAngVelocity = XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), roll * RAD);
+	}
+
+	if (IsKeyPressed('1')) {
+		abilities->weapon = PlayerWeapons::Fists;
+	}
+	if (IsKeyPressed('2')) {
+		abilities->weapon = PlayerWeapons::Sword;
+	}
+	if (IsKeyPressed('3')) {
+		abilities->weapon = PlayerWeapons::Bow;
+	}
+
+	if (IsKeyPressed('T')) {
+		abilities->TimestopStart();
+	}
+	if (IsKeyPressed('Y')) {
+		abilities->TimestopEnd();
+	}
+
+	static bool vKeyPressed = false;
+	if (IsKeyPressed('V') && !vKeyPressed) {
+		vKeyPressed = true;
+		if (abilities) {
+			abilities->ParticleVacuumStart();
+		}
+	}
+	else if (!IsKeyPressed('V') && vKeyPressed) {
+		vKeyPressed = false;
+		if (abilities) {
+			abilities->ParticleVacuumEnd();  
+		}
+	}
+
+	static bool gKeyPressed = false;
+	if (IsKeyPressed('G') && !gKeyPressed) {
+		gKeyPressed = true;
+		if (abilities) {
+			abilities->BlowGasStart(); 
+		}
+	}
+	else if (!IsKeyPressed('G') && gKeyPressed) {
+		gKeyPressed = false;
+		if (abilities) {
+			abilities->BlowGasEnd();
+		}
+	}
+
 }
+		
 
 
 void PlayerController::ProcessCamera()
@@ -179,10 +228,6 @@ void PlayerController::ProcessMouse()
 	{
 	case MouseState::Centered:
 	{
-		if (!mouse->IsWindowActive()) {
-			break;
-		}
-
 		if (playerEntity != nullptr && playerEntity->IsActive()) {
 			float length = mousePos.magnitude();
 
@@ -199,27 +244,26 @@ void PlayerController::ProcessMouse()
 				float k = (length - CURSOR_IGNORE_ZONE) / MAX_CURSOR_DEVIATION;
 				mousePos *= SENSIVITY * k;
 
-				//XMVECTOR addRotation = eulerToQuanternion(dPitch, dYaw, 0) * SENSIVITY * k;
 				XMMATRIX additionalRotation = XMMatrixRotationRollPitchYaw(XMConvertToRadians(mousePos.y), XMConvertToRadians(mousePos.x), 0);
 
 				playerPhysicBody->mAngVelocity = playerPhysicBody->mAngVelocity * additionalRotation;
 			}
-			//else {
-				//Camera::state.n = lerp(Camera::state.n, 0, 0.2f);
-			//}
 
-			if (mouse->IsLButtonDown()) {
-				abilities->Charging();
-			}
-			else if (mouse->IsLButtonUnclicked()) {
-				abilities->Attack(*playerTransform, mouse->GetMouseRay());
-			}
+			// Обработка атак мышью - проверяем что щит не активен
+			if (!abilities->IsShieldActive()) {
+				if (mouse->IsLButtonDown()) {
+					abilities->Charging();
+				}
+				else if (mouse->IsLButtonUnclicked()) {
+					abilities->Attack(*playerTransform, mouse->GetMouseRay());
+				}
 
-			if (mouse->IsRButtonClicked()) {
-				abilities->BlockStart();
-			}
-			else if (mouse->IsRButtonUnclicked()) {
-				abilities->BlockEnd();
+				if (mouse->IsRButtonClicked()) {
+					abilities->BlockStart();
+				}
+				else if (mouse->IsRButtonUnclicked()) {
+					abilities->BlockEnd();
+				}
 			}
 		}
 		break;
@@ -228,15 +272,11 @@ void PlayerController::ProcessMouse()
 	{
 		if (mouse->IsLButtonClicked() && mouse->visible)
 		{
-			//ProcessSound("..\\dx11minimal\\Resourses\\Sounds\\Mouse_click1.wav");
-			//point3d mousePos = point3d(mouse.pos.x / width * 2 - 1, -(mouse.pos.y / height * 2 - 1), 0);
-
 			for (int i = 0; i < 20; i++)
 			{
 				MouseParticle particle = MouseParticle();
 				particle.pos = mouse->pos;
 				particle.angle = (float)getRandom(0, 100) / 100.0f * PI * 2.0f;
-				//particle.vel = point3d(getRandom(-100, 100), getRandom(-100, 100), 0).normalized() * point3d(window->aspect, 1, 0) * (float)getRandom(8, 30) / 100.0f * 0.002f;
 				particle.lifetime = getRandom(500, 1500);
 				particle.startTime = timer::currentTime;
 
@@ -246,7 +286,6 @@ void PlayerController::ProcessMouse()
 		break;
 	}
 	}
-
 }
 
 
@@ -278,5 +317,21 @@ void PlayerController::Dash()
 		playerPhysicBody->airFriction = DASH_AIR_FRICTION;
 
 		abilities->stamina -= DASH_COST;
+	}
+}
+
+// Добавьте этот метод в PlayerController для обработки получения урона
+void PlayerController::TakeDamage(float damage)
+{
+	if (!playerEntity->IsActive()) return;
+
+	// Пытаемся заблокировать урон щитом
+	if (!abilities->TryBlockDamage(damage)) {
+		// Если не заблокировали - применяем урон
+		playerHealth->hp -= damage;
+
+		// Визуальный эффект получения урона
+		playerPointCloud->color = point3d(1.0f, 0.0f, 0.0f);
+		// Возвращаем цвет через некоторое время
 	}
 }

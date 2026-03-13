@@ -1,37 +1,11 @@
-cbuffer drawerFloat4x4 : register(b10)
-{
-    float4x4 fConst[1024];
-};
-
-cbuffer frame : register(b4)
-{
-    float4 time;
-    float4 aspect;
-};
-
-cbuffer camera : register(b3)
-{
-    float4x4 world;
-    float4x4 view;
-    float4x4 proj;
-    float4 cPos;
-};
-
-cbuffer particlesDesc : register(b9)
-{
-	float2 pSize;
-	float2 pOpacity;
-	float3 pColor;
-	float pLifetime;
-	float2 pSpeed;
-};
+#include <lib/constBuf.shader>
 
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
     float2 uv : TEXCOORD0;
     uint   iID : COLOR0;
-    float4 worldpos : POSITION1;
+    float4 wpos : POSITION1;
 };
 
 
@@ -44,8 +18,13 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
         float2(-1, 1), float2(1, -1), float2(1, 1),
     };
 
-    float t = time.x * 100 - fConst[iID]._m30;
+    float localTime = drawerV[0];
+    float startTime = fConst[iID]._m30;
+
+    float t = abs(localTime - startTime);
+
     float lifetime = t / pLifetime;
+    lifetime = pTimescale < 0 ? 1 - lifetime : lifetime;
 
     float size = lerp(pSize.x, pSize.y, lifetime);
     float speed = 10;
@@ -66,6 +45,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     output.pos = projPos;
     output.uv = quadPos[vID];
     output.iID = iID;
+    output.wpos = float4(pos, 0);
 
     return output;
 }

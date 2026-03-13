@@ -1,22 +1,4 @@
-cbuffer objParams : register(b0)
-{
-    float drawerV[1024];
-};
-
-cbuffer frame : register(b4)
-{
-    float4 time;
-    float4 aspect;
-};
-
-cbuffer camera : register(b3)
-{
-    float4x4 world;
-    float4x4 view;
-    float4x4 proj;
-    float4 cPos;
-};
-
+#include <lib/constBuf.shader>
 
 bool IsPointInFrustum(float4 pos)
 {
@@ -44,8 +26,6 @@ struct VS_OUTPUT
     float2 uv : TEXCOORD0;
 };
 
-#define PI 3.14159265358979323846
-#define triangles 12
 
 [maxvertexcount(36)]
 void GS( point VS_OUTPUT input[1], inout TriangleStream<VS_OUTPUT> output )
@@ -60,13 +40,13 @@ void GS( point VS_OUTPUT input[1], inout TriangleStream<VS_OUTPUT> output )
         float2(-1, 1), float2(1, -1), float2(1, 1),
     };
 
+    float dist = length(input[0].wpos.xyz - cPos.xyz);
+    float scale = clamp(abs(dot(float3(-1, 0, 0), input[0].vnorm)), 0.75, 1);
+    //float scale = 1 - clamp(abs(dot(float3(-1, 0, 0), input[0].vnorm)), 0, 1);
+
     [unroll]
     for (uint i = 0; i < 6; i++) {
         VS_OUTPUT element = input[0];
-
-        float dist = length(element.wpos.xyz - cPos.xyz);
-        float scale = clamp(abs(dot(float3(-1, 0, 0), element.vnorm)), 0.75, 1);
-        //float scale = 1 - clamp(abs(dot(float3(-1, 0, 0), element.vnorm)), 0, 1);
 
         float2 offset = quadPos[i] * float2(aspect.x, 1) * min(dist, 18) * scale * 0.04 ;
 

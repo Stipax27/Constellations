@@ -12,21 +12,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BaseStar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Explosion.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ExplosionSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Patern_Enemy_Logik.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SmallConstellation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SplinePath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -94,7 +79,7 @@
       <Filter>Source Files\Render\UI</Filter>
     </ClCompile>
     <ClCompile Include="EntityManagerSystem.cpp">
-      <Filter>Source Files\EntityManagment</Filter>
+      <Filter>Source Files\Compute</Filter>
     </ClCompile>
     <ClCompile Include="Transform2D.cpp">
       <Filter>Source Files\ECS</Filter>
@@ -120,11 +105,17 @@
     <ClCompile Include="Engine\Mesh\AnimationRetarget.cpp">
       <Filter>Source Files\ECS</Filter>
     </ClCompile>
+    <ClCompile Include="TimeSystem.cpp">
+      <Filter>Source Files\Compute</Filter>
+    </ClCompile>
+    <ClCompile Include="NebulaSystem.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Singleton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaseStar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Enemy_Patern.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -135,12 +126,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LevelManagerClass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SmallConstellation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StarAttack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="windowclass.h">
@@ -300,7 +285,7 @@
       <Filter>Header Files\ECS\Systems\Combat</Filter>
     </ClInclude>
     <ClInclude Include="entityManagerSystem.h">
-      <Filter>Header Files\ECS\Systems\EntityManagment</Filter>
+      <Filter>Header Files\ECS\Systems\Compute</Filter>
     </ClInclude>
     <ClInclude Include="Beam.h">
       <Filter>Header Files\ECS\Components\Render</Filter>
@@ -322,6 +307,24 @@
     </ClInclude>
     <ClInclude Include="Engine\Mesh\AnimationRetarget.h">
       <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="timeSystem.h">
+      <Filter>Header Files\ECS\Systems\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Nebula.h">
+      <Filter>Header Files\ECS\Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="pmode.h">
+      <Filter>Header Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="nebulaSystem.h">
+      <Filter>Header Files\ECS\Systems\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="singleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isingleton.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -457,7 +460,7 @@
       <Filter>Shaders\Depth</Filter>
     </None>
     <None Include="Shaders\Lib\utils.shader">
-      <Filter>Shaders\utils</Filter>
+      <Filter>Shaders\lib</Filter>
     </None>
     <None Include="Shaders\Mesh_Fit_PS.shader">
       <Filter>Shaders\Mesh</Filter>
@@ -482,6 +485,129 @@
     </None>
     <None Include="Shaders\SwordBeam_PS.shader">
       <Filter>Shaders\Links</Filter>
+    </None>
+    <None Include="Shaders\lib\constBuf.shader">
+      <Filter>Shaders\lib</Filter>
+    </None>
+    <None Include="Shaders\vs\blob.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\capriStar.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\fish.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\galaxy.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\galaxy_2.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\insideNebula.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\islands.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\leo.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\libra_sph.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\Nebula2.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\neitron_star.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\objViewer.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\pearl.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\pillars.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\pillarsHand.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\quad.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\rocks.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\scorpBall.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\simpleCube.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\space.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\Tau.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\transporter.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\tree.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\Virgo.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\vs\waterfall.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\lib\constants.shader">
+      <Filter>Shaders\lib</Filter>
+    </None>
+    <None Include="Shaders\lib\girl_data.shader">
+      <Filter>Shaders\lib</Filter>
+    </None>
+    <None Include="Shaders\lib\hand_data.shader">
+      <Filter>Shaders\lib</Filter>
+    </None>
+    <None Include="Shaders\lib\io.shader">
+      <Filter>Shaders\lib</Filter>
+    </None>
+    <None Include="Shaders\lib\particleVS_main.shader">
+      <Filter>Shaders\lib</Filter>
+    </None>
+    <None Include="Shaders\lib\particleVS_main2.shader">
+      <Filter>Shaders\lib</Filter>
+    </None>
+    <None Include="Shaders\ps\basic.shader">
+      <Filter>Shaders\PS</Filter>
+    </None>
+    <None Include="Shaders\ps\basicLow.shader">
+      <Filter>Shaders\PS</Filter>
+    </None>
+    <None Include="Shaders\ps\cat.shader">
+      <Filter>Shaders\PS</Filter>
+    </None>
+    <None Include="Shaders\ps\cubemapCreator.shader">
+      <Filter>Shaders\PS</Filter>
+    </None>
+    <None Include="Shaders\ps\cubeMapViewer.shader">
+      <Filter>Shaders\PS</Filter>
+    </None>
+    <None Include="Shaders\ps\genNormals.shader">
+      <Filter>Shaders\PS</Filter>
+    </None>
+    <None Include="Shaders\ps\obj1.shader">
+      <Filter>Shaders\PS</Filter>
+    </None>
+    <None Include="Shaders\ps\output.shader">
+      <Filter>Shaders\PS</Filter>
+    </None>
+    <None Include="NebulaHeal.shader">
+      <Filter>Shaders\VS</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -527,9 +653,6 @@
     <Filter Include="Header Files\Utils">
       <UniqueIdentifier>{6140eb2c-475c-46c4-866d-6e7b2564880c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\EntityManagment">
-      <UniqueIdentifier>{7fd2d49d-bf4a-4917-a60a-9681de3f0141}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\AriesNebula">
       <UniqueIdentifier>{c81fbe8a-4aa0-4180-913e-dfafc3e975af}</UniqueIdentifier>
     </Filter>
@@ -562,9 +685,6 @@
     </Filter>
     <Filter Include="Shaders\Depth">
       <UniqueIdentifier>{c3bef4a5-cb1f-457b-b672-2c14fc505922}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\utils">
-      <UniqueIdentifier>{7b14d747-f087-4854-81f6-fb7933caf6e2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Shaders\Mesh">
       <UniqueIdentifier>{990df05e-0fd2-4a9b-b010-a86e911219a3}</UniqueIdentifier>
@@ -608,14 +728,26 @@
     <Filter Include="Header Files\ECS\Systems\Combat">
       <UniqueIdentifier>{944aaf3a-7900-4496-a1e5-8ea0d8ff82e5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\ECS\Systems\EntityManagment">
-      <UniqueIdentifier>{54470321-bad2-4de1-bd7e-a0cf08859864}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Player">
       <UniqueIdentifier>{baa30b6d-12a5-4061-a1e3-de1bb43e0db9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Player">
       <UniqueIdentifier>{83e44a4e-f786-4464-a8cf-5266248ab578}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS\Systems\Compute">
+      <UniqueIdentifier>{54470321-bad2-4de1-bd7e-a0cf08859864}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Compute">
+      <UniqueIdentifier>{7fd2d49d-bf4a-4917-a60a-9681de3f0141}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\lib">
+      <UniqueIdentifier>{7b14d747-f087-4854-81f6-fb7933caf6e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\VS">
+      <UniqueIdentifier>{47cf006f-7880-40a1-932c-ac7c3be2d199}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\PS">
+      <UniqueIdentifier>{904990b9-ae0b-4d38-b43d-7a34e9506127}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

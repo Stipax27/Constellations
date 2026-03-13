@@ -1,7 +1,4 @@
-cbuffer global : register(b5)
-{
-    float4 gConst[1024];
-};
+#include <lib/constBuf.shader>
 
 struct VS_OUTPUT
 {

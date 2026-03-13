@@ -7,6 +7,7 @@
 //////////////
 // INCLUDES //
 //////////////
+#include <vector>
 #include "component.h"
 #include "CollisionGroup.h"
 #include "Point3d.h"
@@ -17,6 +18,13 @@
 
 struct CollisionResult {
 	bool collided = false;
+	point3d normal = point3d(0, 1, 0);
+	point3d position = point3d();
+	float distance = 0;
+};
+
+struct CollisionInfo {
+	int entityId;
 	point3d normal;
 	point3d position;
 	float distance;
@@ -34,7 +42,7 @@ struct Collider : Component
 
 	CollisionFilter::Group collisionGroup = CollisionFilter::Group::Projectile;
 
-	CollisionResult collision = CollisionResult();
+	vector<CollisionInfo> collisions;
 };
 
 #endif

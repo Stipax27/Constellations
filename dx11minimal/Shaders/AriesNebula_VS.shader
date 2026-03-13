@@ -1,46 +1,11 @@
+#include <lib/constBuf.shader>
+#include <lib/constants.shader>
+
 Texture2D perlinTexture : register(t1);
 SamplerState perlinSamplerState : register(s1);
 
 Texture2D voronoiTexture : register(t2);
 SamplerState voronoiSamplerState : register(s2);
-
-cbuffer factors : register(b6)
-{
-    float AriesNebulaLerpFactor;
-};
-
-cbuffer global : register(b5)
-{
-    float4 gConst[1024];
-};
-
-cbuffer frame : register(b4)
-{
-    float4 time;
-    float4 aspect;
-};
-
-cbuffer camera : register(b3)
-{
-    float4x4 world;
-    float4x4 view;
-    float4x4 proj;
-    float4 cPos;
-};
-
-cbuffer drawMat : register(b2)
-{
-    float4x4 model;
-    float hilight;
-};
-
-cbuffer objParams : register(b0)
-{
-    float drawerV[1024];
-};
-
-#define PI 3.1415926535897932384626433832795
-
 
 uint getPointLevel(uint index) {
     if (index < 3) {
@@ -88,7 +53,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 
     float3 pos = gConst[0].xyz;
     float scale = gConst[0].w;
-    float timeScale = drawerV[0];
+    float localTime = drawerV[0];
 
     float range = 65 * scale;
     float size = 1 * scale;
@@ -104,8 +69,8 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     float3 voronoi = voronoiTexture.SampleLevel(voronoiSamplerState, spiralPos.xz / (range * 2) + 0.5, 1);
     starPos.y += voronoi.x * voronoi.y * voronoi.z * lerp(70, 15, AriesNebulaLerpFactor);
 
-    starPos.y += (sin(spiralPos.x * PI / range * 5 + time.x * 0.05 * timeScale) + cos(spiralPos.z * PI / range * 5 + time.x * 0.05 * timeScale)) * lerp(0.4, 0.2, AriesNebulaLerpFactor);
-    starPos.y += cos((spiralPos.x + spiralPos.z) * PI / range * 2 + time.x * -0.05 * timeScale) * lerp(0.8, 0.4, AriesNebulaLerpFactor);
+    starPos.y += (sin(spiralPos.x * PI / range * 5 + localTime * 0.05) + cos(spiralPos.z * PI / range * 5 + localTime * 0.05)) * lerp(0.4, 0.2, AriesNebulaLerpFactor);
+    starPos.y += cos((spiralPos.x + spiralPos.z) * PI / range * 2 + localTime * -0.05) * lerp(0.8, 0.4, AriesNebulaLerpFactor);
 
     starPos.y *= scale;
 

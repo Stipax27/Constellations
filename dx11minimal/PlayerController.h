@@ -8,6 +8,8 @@
 //////////////
 // INCLUDES //
 //////////////
+#include "singleton.h"
+
 #include "cameraclass.h"
 #include "mouseclass.h"
 #include "windowclass.h"
@@ -50,19 +52,23 @@ class PlayerController
 {
 public:
 	PlayerAbilities* abilities;
+	Health* boss;
 
 public:
 	PlayerController();
 	PlayerController(const PlayerController&);
 	~PlayerController();
 
-	void Initialize(Entity*, World*, MouseClass*, WindowClass*, CollisionManagerClass*);
+	void Initialize(Entity*);
 	void Shutdown();
 
 	void ProcessInput();
 	void ProcessCamera();
 	void ProcessMouse();
 	void ProccessUI();
+
+	// Ќовый метод дл€ обработки получени€ урона
+	void TakeDamage(float damage);
 
 private:
 	Entity* playerEntity;

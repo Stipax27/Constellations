@@ -16,9 +16,9 @@ MouseClass::~MouseClass()
 }
 
 
-void MouseClass::Initialize(WindowClass* Window, CameraClass* Camera) {
-	window = Window;
-	camera = Camera;
+void MouseClass::Initialize() {
+	window = Singleton::GetInstance<WindowClass>();
+	camera = Singleton::GetInstance<CameraClass>();
 
 	state = MouseState::Centered;
 	visible = true;

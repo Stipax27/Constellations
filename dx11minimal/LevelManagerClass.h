@@ -20,24 +20,24 @@
 #include "entity.h"
 #include "component.h"
 #include "Enemy_Patern.h"
-#include "BaseStar.h"
-#include "SmallConstellation.h"
 
 #include "CollisionManagerClass.h"
 
 #include "SplinePath.cpp"
-#include "Patern_Enemy_Logik.cpp"
 
 
 #include "spriteSystem.h"
 #include "meshSystem.h"
 #include "uiSystem.h"
 #include "Systems/UITextSystem.h"
+#include "nebulaSystem.h"
 
 #include "physicSystem.h"
 #include "collisionSystem.h"
 #include "combatSystem.h"
+
 #include "entityManagerSystem.h"
+#include "timeSystem.h"
 
 #include "collisionDrawSystem.h"
 #include "Engine/Mesh/Animation.h"
@@ -80,17 +80,20 @@ private:
 	World* m_World;
 	PlayerController* playerController;
 	CollisionManagerClass* collisionManager;
-	BaseStar* bStar;
-	SmallConstellation* smallConstellation;
 	Entity* m_TestAnimEntity = nullptr;
 	int m_TestAnimCycleIndex = 0;
 	bool m_WasToggleAnimationPressed = false;
+
 	void LoadModels();
-	Entity* CreatePlayer(Entity*);
+	Entity* CreatePlayer(Entity* = nullptr);
+
 	void CreateUI();
 	void InitSystems();
+
 	void CreateAries(Entity*);
+	void CreateZenithLocation(Entity*, int);
 	void UpdateTestAnimationToggle();
+
 	ID3D11Buffer* m_BoneBuffer = nullptr;
 	SkinnedMesh m_FoxMesh;
 	Skeleton    m_FoxSkeleton;

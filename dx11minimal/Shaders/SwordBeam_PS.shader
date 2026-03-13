@@ -1,9 +1,3 @@
-cbuffer frame : register(b4)
-{
-    float4 time;
-    float4 aspect;
-};
-
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;

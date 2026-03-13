@@ -1,31 +1,4 @@
-cbuffer global : register(b5)
-{
-    float4 gConst[1024];
-};
-
-cbuffer camera : register(b3)
-{
-    float4x4 world;
-    float4x4 view;
-    float4x4 proj;
-    float4 cPos;
-};
-
-cbuffer frame : register(b4)
-{
-    float4 time;
-    float4 aspect;
-};
-
-cbuffer drawerV : register(b0)
-{
-    float drawConst[1024];
-}
-
-cbuffer drawerMatrix : register(b8)
-{
-    float4x4 model[1024];
-}
+#include <lib/constBuf.shader>
 
 struct VS_OUTPUT
 {
@@ -33,6 +6,7 @@ struct VS_OUTPUT
     float4 vpos : POSITION0;
     float4 wpos : POSITION1;
 	float2 uv : TEXCOORD0;
+	uint iID : COLOR0;
 };
 
 #define Animation float3(-1.3, -1.0, 0.7)
@@ -95,7 +69,7 @@ float snoise(float3 v)
 
 float3 ball(float2 p, float radius, uint iID)
 {
-    float n = (float)drawConst[iID];
+    float n = (float)drawInt[iID];
 
     p.x = -(p.x / n) * 3.141592653589793;
     p.y = (p.y / n) * 3.141592653589793 / 2;
@@ -109,7 +83,9 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 {
     VS_OUTPUT output;
 
-    uint n = drawConst[iID];
+	float localTime = drawerV[iID];
+
+    uint n = drawInt[iID];
     uint instanceID = vID / 6;
 
     float row = instanceID % n;
@@ -133,13 +109,14 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 
     output.vpos = pos;
 
-	float height = abs(snoise(normalize(pos.xyz) * 3 + Animation * time.x * 0.02));
+	float height = abs(snoise(normalize(pos.xyz) * 3 + Animation * localTime * 0.02));
 	pos.xyz += normalize(pos.xyz) * height * 0.075 * sqrt(radius);
 
     pos = mul(pos, model[iID]);
 
     output.pos = mul(pos, mul(view, proj));
     output.wpos = float4(pos.xyz, 0);
+	output.iID = iID;
 
     return output;
 }

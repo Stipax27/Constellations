@@ -9,6 +9,8 @@
 //////////////
 #include <vector>
 #include "entity.h"
+#include "timer.h"
+#include "isingleton.h"
 
 using namespace std;
 
@@ -16,7 +18,7 @@ using namespace std;
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: EntityStorage
 ////////////////////////////////////////////////////////////////////////////////
-class EntityStorage
+class EntityStorage : public ISingleton
 {
 public:
 	vector<Entity*> entities;
@@ -27,9 +29,11 @@ public:
 	~EntityStorage();
 
 	Entity* CreateEntity(string = "Unnamed", Entity* = nullptr);
+
 	//void RemoveEntityByObject(Entity*);
 	Entity* GetEntityByName(string);
 	vector<Entity*> GetEntitiesByName(string);
+	Entity* GetEntityById(int);
 
 	void Initialize();
 	void Shutdown();

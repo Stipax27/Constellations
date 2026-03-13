@@ -1,42 +1,10 @@
+#include <lib/constBuf.shader>
+
 Texture2D<float> DepthTexture : register(t0);
 SamplerState DepthSampler : register(s0);
 
 Texture2D perlinTexture : register(t1);
 SamplerState perlinSamplerState : register(s1);
-
-cbuffer factors : register(b6)
-{
-    float AriesNebulaLerpFactor;
-};
-
-cbuffer global : register(b5)
-{
-    float4 gConst[1024];
-};
-
-cbuffer frame : register(b4)
-{
-    float4 time;
-    float4 aspect;
-};
-
-cbuffer camera : register(b3)
-{
-    float4x4 world;
-    float4x4 view;
-    float4x4 proj;
-    float4 cPos;
-};
-
-cbuffer objParams : register(b0)
-{
-    float drawerV[1024];
-};
-
-cbuffer drawerInt : register(b7)
-{
-    int drawInt[1024];
-}
 
 struct VS_OUTPUT
 {
@@ -74,7 +42,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
 
     float3 pos = gConst[0].xyz;
     float scale = gConst[0].w;
-    float timeScale = drawerV[0];
+    float localTime = drawerV[0];
 
     float range = 65 * scale;
 
@@ -93,7 +61,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
     float sat = max(1 - offset / 20, 0) * min(max(dist - 1, 0) / 16, 1);
     brightness *= sat;
 
-    float shine = 1 + 0.3 * sin(log2(input.starID) * 3 + time.x * -0.25 * timeScale);
+    float shine = 1 + 0.3 * sin(log2(input.starID) * 3 + localTime * -0.25);
 
     return saturate(float4(color, 1) * float4(brightness, brightness, brightness * 1.4, 1) * shine);
 }

@@ -15,13 +15,13 @@
 #include "Beam.h"
 
 #include "frustumclass.h"
-#include "Explosion.cpp"
 #include "Components/Orientation.h"
 
 
 class SpriteSystem : public System
 {
 public:
+	SpriteSystem();
 	SpriteSystem(FrustumClass*, ID3D11Buffer* boneBuf = nullptr);
 	void Initialize();
 	void Shutdown();
@@ -43,16 +43,16 @@ private:
 	int CalculateEmitCount(const ParticleEmitter&, double, double);
 	Orientation ApplySpread(Orientation, const ParticleEmitter&);
 	float GenerateRandomAngle(float spread);
-	double CalculateParticleStartTime(const ParticleEmitter&, double, int);
-	void CreateParticle(const Transform&, ParticleEmitter*, const Orientation&, double);
+	double CalculateParticleStartTime(Entity*, const ParticleEmitter&, double, int);
+	void CreateParticle(Entity*, const Transform&, ParticleEmitter*, const Orientation&, double);
 	void CreateReversedParticle(const Transform&, ParticleEmitter*, const Orientation&, double);
 	void CreateNormalParticle(const Transform&, ParticleEmitter*, const Orientation&, double);
-	void UpdateEmitTiming(ParticleEmitter*, double, int);
-	void UpdateExistingParticles(ParticleEmitter*);
-	void RenderParticles(const ParticleEmitter*);
+	void UpdateEmitTiming(Entity*, ParticleEmitter*, double, int);
+	void UpdateExistingParticles(Entity*, ParticleEmitter*);
+	void RenderParticles(Entity*, const ParticleEmitter*);
 	void SetupShaders(const ParticleEmitter*);
-	void SetupConstantBuffers();
-	void SetupParticleInfo(const ParticleEmitter*);
+	void SetupConstantBuffers(Entity*);
+	void SetupParticleInfo(Entity*, const ParticleEmitter*);
 	void SetupInputAssembler(const ParticleEmitter*);
 	Orientation CalculateEmitOrientation(const Orientation&, EmitDirection);
 };

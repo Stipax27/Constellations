@@ -8,6 +8,7 @@
 #include "Point3d.h"
 #include "cameraclass.h"
 #include "windowclass.h"
+#include "singleton.h"
 #include <vector>
 
 using namespace std;
@@ -34,7 +35,7 @@ struct MouseParticle {
 // Class name: MouseClass
 ////////////////////////////////////////////////////////////////////////////////
 
-class MouseClass
+class MouseClass : public ISingleton
 {
 public:
 	point3d pos;
@@ -50,7 +51,7 @@ public:
 	MouseClass(const MouseClass&);
 	~MouseClass();
 
-	void Initialize(WindowClass*, CameraClass*);
+	void Initialize();
 	void Shutdown();
 	void Update();
 	void SetWindowActive(bool isActive);
