@@ -69,6 +69,7 @@ public:
 
 	point3d GetMouseRay();
 	void RenderCursor();
+	void UpdateSystemCursorVisibility(bool);
 
 private:
 	WindowClass* window;
@@ -85,6 +86,8 @@ private:
 
 	point3d lbuttonDownPos;
 	point3d rbuttonDownPos;
+
+	bool systemCursorHidden;
 };
 
 #endif

@@ -213,3 +213,21 @@ void MouseClass::RenderCursor() {
 		}
 	}
 }
+
+
+void MouseClass::UpdateSystemCursorVisibility(bool mode)
+{
+	const bool shouldHideSystemCursor = visible && mode;
+	if (shouldHideSystemCursor == systemCursorHidden) {
+		return;
+	}
+
+	if (shouldHideSystemCursor) {
+		while (ShowCursor(FALSE) >= 0) {}
+	}
+	else {
+		while (ShowCursor(TRUE) < 0) {}
+	}
+
+	systemCursorHidden = shouldHideSystemCursor;
+}

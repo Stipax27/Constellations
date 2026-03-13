@@ -374,6 +374,7 @@ void LevelManagerClass::Shutdown()
 
 void LevelManagerClass::Frame()
 {
+	mouse->UpdateSystemCursorVisibility(window->IsActive());
 	if (!window->IsActive())
 		return;
 
