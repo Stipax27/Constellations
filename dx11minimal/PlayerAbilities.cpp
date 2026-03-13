@@ -731,6 +731,31 @@ void PlayerAbilities::UpdateProjectiles()
 	{
 		Entity* projectile = projectiles[i];
 
+		if (!projectile->IsDeleting() && !projectile->HasComponent<SingleDamager>()) {
+			CollisionInfo info = GetProjectileCollisionInfo(projectile);
+
+			Entity* impact = entityStorage->CreateEntity("Impact", worldFolder);
+
+			Transform* transform = impact->AddComponent<Transform>();
+			transform->position = info.position;
+
+			ParticleEmitter* particleEmitter = impact->AddComponent<ParticleEmitter>();
+			particleEmitter->rate = 150;
+			particleEmitter->lifetime = 500;
+			particleEmitter->color = point3d(1.0f, 0.15f, 0.85f);
+			particleEmitter->size = { 0.0f, 2.5f };
+			particleEmitter->opacity = { 1.0f, 0.0f };
+			particleEmitter->speed = { 10.0f, 0.0f };
+			particleEmitter->spread = { PI, PI };
+			particleEmitter->isHeapEmit = true;
+			particleEmitter->heapEmitRepeats = 1;
+
+			DelayedDestroy* delayedDestroy = impact->AddComponent<DelayedDestroy>();
+			delayedDestroy->lifeTime = 100;
+
+			projectile->Destroy();
+		}
+
 		if (projectile->IsDeleting())
 		{
 			projectiles.erase(projectiles.begin() + i);
@@ -744,31 +769,6 @@ void PlayerAbilities::UpdateProjectiles()
 			}
 			else {
 				projectile->SetTimeScale(min(projectile->GetLocalTimeScale() + TIMESTOP_STEP * (timer::deltaTime * 0.01), 1));
-			}
-
-			if (!projectile->HasComponent<SingleDamager>()) {
-				/*CollisionInfo info = GetProjectileCollisionInfo(projectile);
-
-				Entity* impact = entityStorage->CreateEntity("Impact", worldFolder);
-
-				Transform* transform = impact->AddComponent<Transform>();
-				transform->position = info.position;
-
-				ParticleEmitter* particleEmitter = impact->AddComponent<ParticleEmitter>();
-				particleEmitter->rate = 150;
-				particleEmitter->lifetime = 500;
-				particleEmitter->color = point3d(1.0f, 0.15f, 0.85f);
-				particleEmitter->size = { 0.0f, 2.5f };
-				particleEmitter->opacity = { 1.0f, 0.0f };
-				particleEmitter->speed = { 10.0f, 0.0f };
-				particleEmitter->spread = { PI, PI };
-				particleEmitter->isHeapEmit = true;
-				particleEmitter->heapEmitRepeats = 1;
-
-				DelayedDestroy* delayedDestroy = impact->AddComponent<DelayedDestroy>();
-				delayedDestroy->lifeTime = 1000;*/
-
-				projectile->Destroy();
 			}
 		}
 	}
@@ -1021,15 +1021,17 @@ CollisionInfo PlayerAbilities::GetProjectileCollisionInfo(Entity* projectile)
 {
 	SphereCollider* sphereCollider = projectile->GetComponent<SphereCollider>();
 
-	for (CollisionInfo info : sphereCollider->collisions) {
-		Entity* entity = entityStorage->GetEntityById(info.entityId);
-		if (entity == nullptr) {
-			continue;
-		}
+	if (sphereCollider != nullptr) {
+		for (CollisionInfo info : sphereCollider->collisions) {
+			Entity* entity = entityStorage->GetEntityById(info.entityId);
+			if (entity == nullptr) {
+				continue;
+			}
 
-		Health* health = entity->GetComponentInAncestor<Health>();
-		if (health != nullptr && health->active) {
-			return info;
+			Health* health = entity->GetComponentInAncestor<Health>();
+			if (health != nullptr && health->active) {
+				return info;
+			}
 		}
 	}
 
