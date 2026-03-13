@@ -21,7 +21,6 @@ class Entity
 {
 public:
 	string name;
-	Entity* parent;
 	double localTime;
 
 public:
@@ -134,6 +133,9 @@ public:
 	void SetId(int);
 	int GetId();
 
+	void SetParent(Entity*);
+	Entity* GetParent();
+
 	void AddChild(Entity*);
 	Entity* GetChildByName(string name, bool recursive = false);
 	vector<Entity*> GetChildrenByName(string name, bool recursive = false);
@@ -152,6 +154,7 @@ private:
 	bool deleted = false;
 
 	float timeScale = 1.0f;
+	Entity* parent;
 
 	unordered_map<type_index, Component*> components;
 	unordered_map<type_index, vector<Component*>> baseToComponents;

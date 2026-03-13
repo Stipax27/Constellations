@@ -43,6 +43,16 @@ int Entity::GetId() {
 }
 
 
+void Entity::SetParent(Entity* newParent) {
+	newParent->AddChild(this);
+}
+
+
+Entity* Entity::GetParent() {
+	return parent;
+}
+
+
 void Entity::AddChild(Entity* Child) {
 	Child->parent = this;
 	children.push_back(Child);

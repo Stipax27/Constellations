@@ -30,7 +30,6 @@ private:
 	CameraClass* camera;
 
 private:
-	XMMATRIX GetWorldMatrix(Transform);
 	void UpdateWorldMatrix(Transform);
 	int GetVertexCount(point3d, int, int);
 };

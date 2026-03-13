@@ -169,10 +169,13 @@ float quantize(float x,float q)
 
 float4 transform(float3 pos,float2 grid, float size)
 {
+    float4 wpos = mul(float4(pos, 1), nModel);
+
     float2 uv = grid-.5;
     float2 scale = float2(proj._m00,proj._m11);
     float4 posT;
-    posT = mul(float4(pos,1), view);
+
+    posT = mul(wpos, view);
         float4 pt = mul(posT, proj);
         float2 sz = uv*.002*(posT.z/posT.w)*size;
         sz = uv*size*.1;
@@ -184,10 +187,13 @@ float4 transform(float3 pos,float2 grid, float size)
 
 float4 transform_unisize(float3 pos,float2 grid,float size)
 {
+    float4 wpos = mul(float4(pos, 1), nModel);
+
     float2 uv = grid-.5;
     float2 scale = float2(proj._m00,proj._m11);
     float4 posT;
-    posT = mul(float4(pos,1), view);
+
+    posT = mul(wpos, view);
         float4 pt = mul(posT, proj);
         float2 sz = uv*.002*(posT.z/posT.w)*size;
 

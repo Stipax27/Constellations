@@ -21,6 +21,5 @@ private:
     FrustumClass* frustum;
     CameraClass* camera;
 
-    XMMATRIX GetWorldMatrix(Transform worldTransform);
     void UpdateWorldMatrix(Transform worldTransform);
 };

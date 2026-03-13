@@ -33,7 +33,6 @@ private:
 	ID3D11Buffer* boneBuffer = nullptr;
 
 private:
-	XMMATRIX GetWorldMatrix(Transform);
 	void UpdateWorldMatrix(Transform);
 
 	void ProcessParticle(Entity*, Transform&);

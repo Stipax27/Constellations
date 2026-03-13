@@ -71,13 +71,13 @@ Transform GetWorldTransform(Entity* entity) {
 
         vector<Transform*> transforms = { originTransform };
 
-        Entity* ancestor = entity->parent;
+        Entity* ancestor = entity->GetParent();
         while (ancestor != nullptr) {
 
             Transform* parentTransform = ancestor->GetComponent<Transform>();
             if (parentTransform != nullptr) {
                 transforms.push_back(parentTransform);
-                ancestor = ancestor->parent;
+                ancestor = ancestor->GetParent();
             }
             else {
                 break;
@@ -100,13 +100,13 @@ Transform2D GetWorldTransform2D(Entity* entity) {
 
         vector<Transform2D*> transforms2d = { originTransform2D };
 
-        Entity* ancestor = entity->parent;
+        Entity* ancestor = entity->GetParent();
         while (ancestor != nullptr) {
 
             Transform2D* parentTransform2D = ancestor->GetComponent<Transform2D>();
             if (parentTransform2D != nullptr) {
                 transforms2d.push_back(parentTransform2D);
-                ancestor = ancestor->parent;
+                ancestor = ancestor->GetParent();
             }
             else {
                 break;

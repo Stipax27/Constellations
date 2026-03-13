@@ -194,6 +194,7 @@
     <ClInclude Include="collisionSystem.h" />
     <ClInclude Include="combatSystem.h" />
     <ClInclude Include="component.h" />
+    <ClInclude Include="componentutils.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="Constellation.h" />
     <ClInclude Include="cornerType.h" />
@@ -750,6 +751,7 @@
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="CombatSystem.cpp" />
     <ClCompile Include="CollisionDrawSystem.cpp" />
+    <ClCompile Include="ComponentUtils.cpp" />
     <ClCompile Include="Engine\GLTFLoader.cpp" />
     <ClCompile Include="Engine\Mesh\Animation.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>

@@ -47,12 +47,21 @@ void NebulaSystem::Update(vector<Entity*>& entities, float deltaTime)
 		if (nebula != nullptr && nebula->active)
 		{
 			Transform* transform = entity->GetComponent<Transform>();
-			if (transform == nullptr || frustum->CheckSphere(transform->position, nebula->frustumRadius))
+			Transform worldTransform = GetWorldTransform(entity);
+
+			if (transform == nullptr || frustum->CheckSphere(worldTransform.position, nebula->frustumRadius))
 			{
 				int gX = sqrt(nebula->count / nebula->skipper);
 				int gY = sqrt(nebula->count / nebula->skipper);
 
-				ConstBuf::nebulaInfo.model = XMMatrixTranspose(XMMatrixTranslation(0, 0, 0));
+				if (transform != nullptr)
+				{
+					ConstBuf::nebulaInfo.model = GetWorldMatrix(worldTransform);
+				}
+				else {
+					ConstBuf::nebulaInfo.model = XMMatrixTranspose(XMMatrixTranslation(0, 0, 0));
+				}
+
 				ConstBuf::nebulaInfo.gX = gX;
 				ConstBuf::nebulaInfo.gY = gY;
 				ConstBuf::nebulaInfo.mode = (int)nebula->mode;
@@ -67,16 +76,6 @@ void NebulaSystem::Update(vector<Entity*>& entities, float deltaTime)
 				ConstBuf::Update(0, ConstBuf::drawerV);
 				ConstBuf::ConstToVertex(0);
 				ConstBuf::ConstToPixel(0);
-
-				if (transform != nullptr)
-				{
-					ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y,
-						transform->position.z, transform->scale.x);
-					ConstBuf::Update(5, ConstBuf::global);
-					ConstBuf::ConstToVertex(5);
-					ConstBuf::ConstToPixel(5);
-					ConstBuf::ConstToGeometry(5);
-				}
 
 				int lastRT = Textures::currentRT;
 

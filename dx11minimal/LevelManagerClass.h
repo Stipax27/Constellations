@@ -90,6 +90,7 @@ private:
 	void CreateUI();
 	void InitSystems();
 
+	void CreateSpaceBackground(Entity*, int);
 	void CreateAries(Entity*);
 	void CreateZenithLocation(Entity*, int);
 	void UpdateTestAnimationToggle();

@@ -14,6 +14,7 @@
 
 #include "dx11.h"
 #include "singleton.h"
+#include "componentutils.h"
 
 /////////////
 // GLOBALS //
