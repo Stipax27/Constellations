@@ -1024,7 +1024,7 @@ CollisionInfo PlayerAbilities::GetProjectileCollisionInfo(Entity* projectile)
 	if (sphereCollider != nullptr) {
 		for (CollisionInfo info : sphereCollider->collisions) {
 			Entity* entity = entityStorage->GetEntityById(info.entityId);
-			if (entity == nullptr) {
+			if (!IsEntityValid(entity)) {
 				continue;
 			}
 
@@ -1043,8 +1043,20 @@ Nebula* PlayerAbilities::FindNearestNebula()
 	if (!playerEntity || !world) return nullptr;
 
 	
-	Transform* playerTransform = playerEntity->GetComponent<Transform>();
-	if (!playerTransform) return nullptr;
+	SphereCollider* sphereCollider = playerEntity->GetComponent<SphereCollider>();
+	if (!sphereCollider) return nullptr;
+
+	for (CollisionInfo info : sphereCollider->collisions) {
+		Entity* entity = entityStorage->GetEntityById(info.entityId);
+		if (!IsEntityValid(entity)) {
+			continue;
+		}
+
+		InteractiveNebula* interactiveNebula = entity->GetComponentInAncestor<InteractiveNebula>();
+		if (interactiveNebula != nullptr && interactiveNebula->active) {
+			return interactiveNebula;
+		}
+	}
 
 	point3d playerPos = playerTransform->position;
 

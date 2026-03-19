@@ -232,6 +232,7 @@ bool LevelManagerClass::Initialize()
 	
 	CreateSpaceBackground(folder, 1);
 	CreateAries(folder);
+	CreateZenithLocation(folder, 2);
 	CreateNebulas(folder, 2);
 
 	/////////////////////////
@@ -917,6 +918,74 @@ void LevelManagerClass::CreateAries(Entity* folder)
 	sphereCollider->softness = 0.7;
 	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
 	sphereCollider->radius = 1.6;
+}
+
+
+void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
+{
+	Entity* entity;
+	Nebula* nebula;
+	Transform* transform;
+
+	int pillars_cnt = 3725470 / 2 / quality;
+	int galaxy_cnt = 182361 / quality;
+
+	Entity* location = m_World->entityStorage->CreateEntity("Zenith location", folder);
+
+	transform = location->AddComponent<Transform>();
+	//transform->position = point3d(0, 50, 0);
+
+	// Pillars hand | point
+
+	entity = m_World->entityStorage->CreateEntity("PHP", folder);
+	transform = entity->AddComponent<Transform>();
+
+	nebula = location->AddComponent<Nebula>();
+	nebula->vShader = 24;
+	nebula->count = pillars_cnt;
+	nebula->mode = pMode::point;
+	nebula->scale = 1;
+	nebula->frustumRadius = 40;
+
+	// Inside nebula | point
+
+	entity = m_World->entityStorage->CreateEntity("INP", location);
+	transform = entity->AddComponent<Transform>();
+
+	nebula = entity->AddComponent<Nebula>();
+	nebula->vShader = 23;
+	nebula->count = pillars_cnt;
+	nebula->mode = pMode::point;
+	nebula->color = point3d(1, 0.3, 0.5);
+	nebula->scale = 1;
+	nebula->frustumRadius = 40;
+
+	// Pillars hand | glow
+
+	entity = m_World->entityStorage->CreateEntity("PHG", location);
+	transform = entity->AddComponent<Transform>();
+
+	nebula = entity->AddComponent<Nebula>();
+	nebula->vShader = 24;
+	nebula->count = pillars_cnt;
+	nebula->skipper = 1394 / 2;
+	nebula->mode = pMode::glow;
+	nebula->scale = 1;
+	nebula->frustumRadius = 40;
+
+	// Inside nebula | glow
+
+	entity = m_World->entityStorage->CreateEntity("ING", location);
+	transform = entity->AddComponent<Transform>();
+
+	nebula = entity->AddComponent<Nebula>();
+	nebula->vShader = 23;
+	nebula->count = pillars_cnt;
+	nebula->skipper = 1394;
+	nebula->mode = pMode::glow;
+	nebula->color = point3d(1, 0.3, 0.5);
+	nebula->scale = 1;
+	nebula->frustumRadius = 40;
 }
 
 
