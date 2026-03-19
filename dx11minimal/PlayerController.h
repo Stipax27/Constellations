@@ -88,6 +88,9 @@ private:
 
 	bool movementLocked = false;
 
+	float currentMaxSpeed;
+	bool isRunning;
+
 	DWORD lastDashTime = 0;
 
 private:

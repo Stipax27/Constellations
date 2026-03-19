@@ -171,6 +171,9 @@ private:
 	Entity* BowCharged(Transform, point3d);
 
 	CollisionInfo GetProjectileCollisionInfo(Entity*);
+
+	Nebula* FindNearestNebula();
+	point3d GetCurrentNebulaColor();
 };
 
 #endif

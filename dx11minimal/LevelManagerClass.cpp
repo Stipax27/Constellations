@@ -949,12 +949,15 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 
 	entity = m_World->entityStorage->CreateEntity("INP", location);
 	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(150, 0, 0);
 
 	nebula = entity->AddComponent<Nebula>();
 	nebula->vShader = 26;
 	nebula->count = pillars_cnt;
 	nebula->mode = pMode::point;
-	nebula->color = point3d(1, 0.3, 0.5);
+	nebula->color = point3d(1, 0.3, 0.5);  // Розоватый
+	nebula->color = point3d(0.2, 0.8, 0.3); // Зеленый
+	nebula->color = point3d(0.3, 0.5, 1.0); // Голубой
 	nebula->scale = 1;
 	nebula->frustumRadius = 40;
 
@@ -974,13 +977,48 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 
 	entity = m_World->entityStorage->CreateEntity("ING", location);
 	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(150, 0, 0);
 
 	nebula = entity->AddComponent<Nebula>();
 	nebula->vShader = 26;
 	nebula->count = pillars_cnt;
 	nebula->skipper = 1394;
 	nebula->mode = pMode::glow;
-	nebula->color = point3d(1, 0.3, 0.5);
+	nebula->color = point3d(1, 0.3, 0.5);  // Розоватый
+	nebula->color = point3d(0.2, 0.8, 0.3); // Зеленый
+	nebula->color = point3d(0.3, 0.5, 1.0); // Голубой
 	nebula->scale = 1;
 	nebula->frustumRadius = 40;
+
+
+	// 2 Nebula
+
+	entity = m_World->entityStorage->CreateEntity("INP1", location);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(-150, 0, 0);
+
+	nebula = entity->AddComponent<Nebula>();
+	nebula->vShader = 26;
+	nebula->count = pillars_cnt;
+	nebula->mode = pMode::point;
+	nebula->color = point3d(0.8, 0.4, 0.2);
+
+	nebula->scale = 1;
+	nebula->frustumRadius = 40;
+
+
+	entity = m_World->entityStorage->CreateEntity("ING1", location);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(-150, 0, 0);
+
+	nebula = entity->AddComponent<Nebula>();
+	nebula->vShader = 26;
+	nebula->count = pillars_cnt;
+	nebula->skipper = 1394;
+	nebula->mode = pMode::glow;
+	nebula->color = point3d(0.8, 0.4, 0.2);
+	
+	nebula->scale = 1;
+	nebula->frustumRadius = 40;
+
 }
