@@ -393,7 +393,7 @@ bool PlayerAbilities::TryBlockDamage(float damage)
 }
 
 void PlayerAbilities::ParticleVacuumStart() {
-	
+
 	if (currentParticles && !currentParticles->IsDeleting()) {
 		currentParticles->Destroy();
 	}
@@ -401,45 +401,48 @@ void PlayerAbilities::ParticleVacuumStart() {
 	// Запоминаем время начала
 	vacuumStartTime = timer::currentTime;
 
-	
 	if (vacuumCenterEntity && !vacuumCenterEntity->IsDeleting()) {
 		vacuumCenterEntity->Destroy();
 		vacuumCenterEntity = nullptr;
 	}
 
-	
 	if (starEntity && !starEntity->IsDeleting()) {
 		starEntity->Destroy();
 		starEntity = nullptr;
 	}
 
-	
+	// Получаем цвет текущей туманности
+	point3d nebulaColor = GetCurrentNebulaColor();
+
 	vacuumCenterEntity = world->entityStorage->CreateEntity("VacuumCenter", playerEntity);
 	if (vacuumCenterEntity) {
 		Transform* centerTransform = vacuumCenterEntity->AddComponent<Transform>();
-		
 		centerTransform->position = point3d(0.0f, 3.0f, 2.0f);
 
 		Star* centerStar = vacuumCenterEntity->AddComponent<Star>();
-		centerStar->radius = 0.1f; 
+		centerStar->radius = 0.1f;
 		centerStar->crownRadius = 0.25f;
-		centerStar->color1 = point3d(0.0f, 0.5f, 1.0f);
-		centerStar->color2 = point3d(0.0f, 0.2f, 0.8f);
-		centerStar->crownColor = point3d(0.5f, 0.8f, 1.0f);
-	}
 
+		// Используем цвет туманности для звезды в центре
+		centerStar->color1 = nebulaColor;
+		centerStar->color2 = nebulaColor * 0.5f; // Более темный оттенок
+		centerStar->crownColor = nebulaColor * 1.5f; // Более яркий оттенок
+	}
 
 	currentParticles = world->entityStorage->CreateEntity("Particles", playerEntity);
 	Transform* transform = currentParticles->AddComponent<Transform>();
-	transform->position = point3d(0.0f, 3.0f, 2.0f); 
+	transform->position = point3d(0.0f, 3.0f, 2.0f);
 
 	ParticleEmitter* particleEmitter = currentParticles->AddComponent<ParticleEmitter>();
 	particleEmitter->rate = 150;
 	particleEmitter->lifetime = 1000;
-	particleEmitter->color = point3d(0.1f, 0.45f, 1.0f);
+
+	// Используем цвет туманности для частиц
+	particleEmitter->color = nebulaColor;
+
 	particleEmitter->size = { 0.0f, 4.0f };
 	particleEmitter->opacity = { 1.0f, 0.0f };
-	particleEmitter->emitDirection = EmitDirection::Up; 
+	particleEmitter->emitDirection = EmitDirection::Up;
 	particleEmitter->speed = { 10.0f, 0.0f };
 	particleEmitter->spread = { PI, PI };
 	particleEmitter->isReverse = true;
@@ -471,12 +474,11 @@ void PlayerAbilities::ParticleVacuumEnd() {
 }
 
 void PlayerAbilities::CreateBlueStar(float size) {
-	
+
 	if (!world) {
 		return;
 	}
 
-	
 	if (!playerEntity) {
 		return;
 	}
@@ -486,57 +488,55 @@ void PlayerAbilities::CreateBlueStar(float size) {
 		return;
 	}
 
-	
 	if (starEntity && !starEntity->IsDeleting()) {
 		starEntity->Destroy();
 		starEntity = nullptr;
 	}
 
+	// Получаем цвет текущей туманности
+	point3d nebulaColor = GetCurrentNebulaColor();
 
 	starEntity = world->entityStorage->CreateEntity("BlueStar", playerEntity);
 	if (!starEntity) {
 		return;
 	}
 
-
 	Transform* starTransform = starEntity->AddComponent<Transform>();
 	if (!starTransform) {
 		return;
 	}
 
-
 	starTransform->position = point3d(0.0f, 3.0f, 2.0f);
-
 
 	Star* star = starEntity->AddComponent<Star>();
 	if (!star) {
 		return;
 	}
 
-
 	star->baseRadius = size;
 	star->baseCrownRadius = size * 1.5f;
 
-	
 	star->radius = size;
 	star->crownRadius = size * 1.5f;
-	star->color1 = point3d(0.0f, 0.5f, 1.0f);
-	star->color2 = point3d(0.0f, 0.2f, 0.8f);
-	star->crownColor = point3d(0.5f, 0.8f, 1.0f);
 
-
+	// Используем цвет туманности для звезды
+	star->color1 = nebulaColor;
+	star->color2 = nebulaColor * 0.4f; // Темнее для внутренней части
+	star->crownColor = nebulaColor * 1.2f; // Ярче для короны
 
 	ParticleEmitter* starGlow = starEntity->AddComponent<ParticleEmitter>();
 	starGlow->rate = 20;
 	starGlow->lifetime = 800;
-	starGlow->color = point3d(0.2f, 0.6f, 1.0f);
+
+	// Используем тот же цвет для частиц свечения
+	starGlow->color = nebulaColor * 0.8f;
+
 	starGlow->size = { 0.5f, 1.5f };
 	starGlow->opacity = { 0.6f, 0.0f };
 	starGlow->emitDirection = EmitDirection::Front;
 	starGlow->speed = { 2.0f, 1.0f };
 	starGlow->spread = { PI, PI };
 
-	
 	DelayedDestroy* delayed = starEntity->AddComponent<DelayedDestroy>();
 	if (delayed) {
 		delayed->lifeTime = 10000;
@@ -549,39 +549,39 @@ void PlayerAbilities::BlowGasStart() {
 		return;
 	}
 
-	
 	blowGasStartTime = timer::currentTime;
 	isBlowingGas = true;
 
-	
 	if (gasBurstEntity && !gasBurstEntity->IsDeleting()) {
 		gasBurstEntity->Destroy();
 	}
 
+	// Получаем цвет текущей туманности
+	point3d nebulaColor = GetCurrentNebulaColor();
 
 	gasBurstEntity = world->entityStorage->CreateEntity("GasBurst", nullptr);
 
 	Transform* playerTransform = playerEntity->GetComponent<Transform>();
 	Transform* gasTransform = gasBurstEntity->AddComponent<Transform>();
 
-	
 	gasTransform->position = playerTransform->position +
 		playerTransform->GetLookVector() * 2.0f +
 		playerTransform->GetUpVector() * 1.5f;
 
-	// Основа выдувания 
+	// Основа выдувания с цветом туманности
 	ParticleEmitter* jetEmitter = gasBurstEntity->AddComponent<ParticleEmitter>();
-	jetEmitter->rate = 200;                  
-	jetEmitter->lifetime = 1000;                   
-	jetEmitter->color = point3d(0.4f, 0.9f, 0.4f); // Ярко-зеленый
-	jetEmitter->size = { 0.2f, 1.5f };             
-	jetEmitter->opacity = { 0.8f, 0.0f };          
-	jetEmitter->emitDirection = EmitDirection::Front; 
-	jetEmitter->speed = { 30.0f, 5.0f };          
-	jetEmitter->spread = { PI * 0.05f, PI * 0.05f }; 
+	jetEmitter->rate = 200;
+	jetEmitter->lifetime = 1000;
 
+	// Используем цвет туманности для газа
+	jetEmitter->color = nebulaColor;
+
+	jetEmitter->size = { 0.2f, 1.5f };
+	jetEmitter->opacity = { 0.8f, 0.0f };
+	jetEmitter->emitDirection = EmitDirection::Front;
+	jetEmitter->speed = { 30.0f, 5.0f };
+	jetEmitter->spread = { PI * 0.05f, PI * 0.05f };
 }
-
 
 void PlayerAbilities::BlowGasEnd() {
 	if (isBlowingGas) {
@@ -1036,4 +1036,119 @@ CollisionInfo PlayerAbilities::GetProjectileCollisionInfo(Entity* projectile)
 	}
 
 	return CollisionInfo();
+}
+
+Nebula* PlayerAbilities::FindNearestNebula()
+{
+	if (!playerEntity || !world) return nullptr;
+
+	
+	Transform* playerTransform = playerEntity->GetComponent<Transform>();
+	if (!playerTransform) return nullptr;
+
+	point3d playerPos = playerTransform->position;
+
+	
+	Entity* worldFolder = world->entityStorage->GetEntityByName("World");
+	if (!worldFolder) return nullptr;
+
+
+	vector<Entity*> locations = worldFolder->GetChildren(true);
+
+	Nebula* nearestNebula = nullptr;
+	float minDistance = FLT_MAX;
+
+	for (Entity* location : locations) {
+		if (!location || !location->IsActive()) continue;
+
+		
+		vector<Nebula*> nebulae = location->GetAllComponentsOfBase<Nebula>();
+
+		for (Nebula* nebula : nebulae) {
+			if (!nebula) continue;
+
+			
+			Entity* nebulaEntity = nullptr; 
+		
+
+			Transform* nebulaTransform = nullptr; // Получить трансформ
+
+		
+			float distance = 50.0f; // Заглушка
+
+			if (distance < minDistance) {
+				minDistance = distance;
+				nearestNebula = nebula;
+			}
+		}
+	}
+
+	return nearestNebula;
+}
+
+point3d PlayerAbilities::GetCurrentNebulaColor()
+{
+	// Цвет по умолчанию (Белый)
+	point3d defaultColor = point3d(1.0f, 1.0f, 1.0f);
+
+	if (!playerEntity || !world) {
+		return defaultColor;
+	}
+
+	// Получаем позицию игрока
+	Transform* playerTransform = playerEntity->GetComponent<Transform>();
+	if (!playerTransform) {
+		return defaultColor;
+	}
+
+	point3d playerPos = playerTransform->position;
+
+	// Получаем корневой элемент мира
+	Entity* worldFolder = world->entityStorage->GetEntityByName("World");
+	if (!worldFolder) return defaultColor;
+
+	// Получаем все дочерние элементы мира (локации)
+	vector<Entity*> locations = worldFolder->GetChildren(true);
+
+	point3d resultColor = defaultColor;
+	float totalWeight = 0.0f;
+	const float INFLUENCE_RADIUS = 100.0f;
+
+	for (Entity* location : locations) {
+		if (!location || !location->IsActive()) continue;
+
+		// Получаем трансформ локации
+		Transform* locationTransform = location->GetComponent<Transform>();
+		if (!locationTransform) continue;
+
+		// Получаем все компоненты Nebula в этой локации
+		vector<Nebula*> nebulae = location->GetAllComponentsOfBase<Nebula>();
+
+		for (Nebula* nebula : nebulae) {
+			if (!nebula) continue;
+
+			// Расстояние до локации (приблизительно)
+			float distance = (playerPos - locationTransform->position).magnitude();
+
+			if (distance < INFLUENCE_RADIUS) {
+				// Вес влияния обратно пропорционален расстоянию
+				float weight = 1.0f - (distance / INFLUENCE_RADIUS);
+				weight = max(0.0f, weight);
+
+				// Используем цвет туманности, если он задан
+				point3d nebulaColor = nebula->color;
+				if (nebulaColor.magnitude() > 0.01f) {
+					resultColor = resultColor + nebulaColor * weight;
+					totalWeight += weight;
+				}
+			}
+		}
+	}
+
+	// Нормализуем результат
+	if (totalWeight > 0) {
+		resultColor = resultColor / totalWeight;
+	}
+
+	return resultColor;
 }

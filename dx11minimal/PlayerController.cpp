@@ -43,6 +43,9 @@ void PlayerController::Initialize(Entity* Player)
 	mouse = Singleton::GetInstance<MouseClass>();
 	window = Singleton::GetInstance<WindowClass>();
 
+	currentMaxSpeed = PLAYER_MOVE_SPEED;
+	isRunning = false;
+
 	abilities = new PlayerAbilities;
 	abilities->Initialize(playerEntity);
 }
@@ -96,6 +99,29 @@ void PlayerController::ProcessInput()
 	if (playerEntity == nullptr || !playerEntity->IsActive())
 		return;
 
+	isRunning = false;
+
+	// Проверяем Shift и наличие выносливости
+	if (IsKeyPressed(VK_SHIFT) && abilities->stamina > 0) {
+		isRunning = true;
+		currentMaxSpeed = PLAYER_MOVE_SPEED * 5.0f;
+
+		// Тратим выносливость только если двигаемся
+		if (IsKeyPressed('W') || IsKeyPressed('S') || IsKeyPressed('A') || IsKeyPressed('D')) {
+			abilities->stamina = max(0.0f, abilities->stamina - 0.5f); 
+		}
+	}
+	else {
+	// Если Shift не нажат - возвращаем обычную скорость
+	currentMaxSpeed = PLAYER_MOVE_SPEED;
+	}
+
+	// Восстанавливаем выносливость, если не бежим
+	if (!isRunning && abilities->stamina < abilities->maxStamina) {
+		abilities->stamina = min(abilities->maxStamina, abilities->stamina + 0.2f);
+	}
+
+
 	if (movementLocked && playerPhysicBody->velocity.magnitude() < PLAYER_MOVE_SPEED) {
 		movementLocked = false;
 		playerPhysicBody->airFriction = 1;
@@ -117,7 +143,7 @@ void PlayerController::ProcessInput()
 		if (IsKeyPressed('D')) {
 			velocity += playerTransform->GetRightVector();
 		}
-		if (IsKeyPressed(VK_SPACE)) {
+		if (IsKeyPressed(VK_LMENU)) {
 			velocity += playerTransform->GetUpVector();
 		}
 		if (IsKeyPressed(VK_CONTROL)) {
@@ -126,8 +152,8 @@ void PlayerController::ProcessInput()
 
 		if (velocity.magnitude() > 0) {
 			point3d newVelocity = playerPhysicBody->velocity + velocity.normalized();
-			if (newVelocity.magnitude() > PLAYER_MOVE_SPEED) {
-				playerPhysicBody->velocity = newVelocity.normalized() * PLAYER_MOVE_SPEED;
+			if (newVelocity.magnitude() > currentMaxSpeed) {
+				playerPhysicBody->velocity = newVelocity.normalized() * currentMaxSpeed;
 			}
 			else {
 				playerPhysicBody->velocity = newVelocity;
@@ -136,18 +162,19 @@ void PlayerController::ProcessInput()
 	}
 
 		// Обработка кнопки F для щита
-		static bool fKeyPressed = false;
-		if (IsKeyPressed('F') && !fKeyPressed) {
-			fKeyPressed = true;
-			abilities->ShieldStart(); // Активируем щит при нажатии F
-		}
-		else if (!IsKeyPressed('F') && fKeyPressed) {
-			fKeyPressed = false;
-			abilities->ShieldEnd(); // Деактивируем щит при отпускании F
-		}
+	static bool fKeyPressed = false;
+	if (IsKeyPressed('F') && !fKeyPressed) {
+		fKeyPressed = true;
+		abilities->ShieldStart(); // Активируем щит при нажатии F
+	}
+	else if (!IsKeyPressed('F') && fKeyPressed) {
+		fKeyPressed = false;
+		abilities->ShieldEnd(); // Деактивируем щит при отпускании F
+	}
 
+	
 		float roll = 0.0f;
-	if (IsKeyPressed(VK_LSHIFT)) {
+	if (IsKeyPressed(VK_SPACE)) {
 		Dash();
 	}
 		
