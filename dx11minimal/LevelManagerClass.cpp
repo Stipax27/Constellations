@@ -925,6 +925,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	Entity* entity;
 	Nebula* nebula;
 	Transform* transform;
+	SphereCollider* sphereCollider;
 
 	int pillars_cnt = 3725470 / 2 / quality;
 	int galaxy_cnt = 182361 / quality;
@@ -961,6 +962,10 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->scale = 1;
 	nebula->frustumRadius = 40;
 
+	sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider->radius = 40;
+	sphereCollider->isTouchable = false;
+
 	// Pillars hand | glow
 
 	/*entity = m_World->entityStorage->CreateEntity("PHG", location);
@@ -990,7 +995,6 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->scale = 1;
 	nebula->frustumRadius = 40;
 
-
 	// 2 Nebula
 
 	entity = m_World->entityStorage->CreateEntity("INP1", location);
@@ -1005,6 +1009,10 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 
 	nebula->scale = 1;
 	nebula->frustumRadius = 40;
+
+	sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider->radius = 40;
+	sphereCollider->isTouchable = false;
 
 
 	entity = m_World->entityStorage->CreateEntity("ING1", location);
