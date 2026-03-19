@@ -93,6 +93,8 @@ private:
 	void CreateSpaceBackground(Entity*, int);
 	void CreateAries(Entity*);
 	void CreateZenithLocation(Entity*, int);
+	void CreateNebulas(Entity*, int);
+
 	void UpdateTestAnimationToggle();
 
 	ID3D11Buffer* m_BoneBuffer = nullptr;

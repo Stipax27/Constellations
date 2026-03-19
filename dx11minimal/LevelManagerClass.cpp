@@ -232,7 +232,7 @@ bool LevelManagerClass::Initialize()
 	
 	CreateSpaceBackground(folder, 1);
 	CreateAries(folder);
-	CreateZenithLocation(folder, 2);
+	CreateNebulas(folder, 2);
 
 	/////////////////////////
 
@@ -920,7 +920,7 @@ void LevelManagerClass::CreateAries(Entity* folder)
 }
 
 
-void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
+void LevelManagerClass::CreateNebulas(Entity* folder, int quality)
 {
 	Entity* entity;
 	Nebula* nebula;
@@ -935,18 +935,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	transform = location->AddComponent<Transform>();
 	transform->position = point3d(0, 50, 0);
 
-	// Pillars hand | point
-
-	/*entity = m_World->entityStorage->CreateEntity("PHP", folder);
-	transform = entity->AddComponent<Transform>();
-
-	nebula = location->AddComponent<Nebula>();
-	nebula->vShader = 24;
-	nebula->count = pillars_cnt;
-	nebula->mode = pMode::point;
-	nebula->scale = 1;*/
-
-	// Inside nebula | point
+	// 1 Nebula
 
 	entity = m_World->entityStorage->CreateEntity("INP", location);
 	transform = entity->AddComponent<Transform>();
@@ -965,20 +954,6 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	sphereCollider = entity->AddComponent<SphereCollider>();
 	sphereCollider->radius = 40;
 	sphereCollider->isTouchable = false;
-
-	// Pillars hand | glow
-
-	/*entity = m_World->entityStorage->CreateEntity("PHG", location);
-	transform = entity->AddComponent<Transform>();
-
-	nebula = entity->AddComponent<Nebula>();
-	nebula->vShader = 24;
-	nebula->count = pillars_cnt;
-	nebula->skipper = 1394 / 2;
-	nebula->mode = pMode::glow;
-	nebula->scale = 1;*/
-
-	// Inside nebula | glow
 
 	entity = m_World->entityStorage->CreateEntity("ING", location);
 	transform = entity->AddComponent<Transform>();
