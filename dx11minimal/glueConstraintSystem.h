@@ -11,6 +11,8 @@
 #include "PhysicBody.h"
 #include "Components/GlueConstraint.h"
 
+#include "componentutils.h"
+
 
 class GlueConstraintSystem : public System
 {

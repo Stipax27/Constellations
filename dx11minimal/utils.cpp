@@ -1,8 +1,10 @@
 #include "utils.h"
 
+
 float clamp(float x, float a, float b) {
     return fmax(fmin(x, b), a);
 }
+
 
 float smoothstep(float edge0, float edge1, float x) {
     // Scale, bias and saturate x to 0..1 range
@@ -11,17 +13,21 @@ float smoothstep(float edge0, float edge1, float x) {
     return x * x * (3 - 2 * x);
 }
 
+
 float fract(float a) {
     return a - floor(a);
 }
+
 
 float lerp(float x1, float x2, float a) {
     return x1 * (1 - a) + x2 * a;
 }
 
+
 float degreesToRadians(float degrees) {
     return degrees * PI / 180.0f;
 }
+
 
 point3d quaternionToEuler(float x, float y, float z, float w) {
     float magintude = sqrt(x * x + y * y + z * z);
@@ -36,12 +42,14 @@ point3d quaternionToEuler(float x, float y, float z, float w) {
     return point3d(pitch, yaw, roll);
 }
 
+
 DirectX::XMVECTOR eulerToQuanternion(float x, float y, float z) {
     DirectX::XMVECTOR qRotation = DirectX::XMQuaternionRotationRollPitchYaw(x, y, z);
     qRotation = DirectX::XMQuaternionNormalize(qRotation);
 
     return qRotation;
 }
+
 
 int getRandom(int min, int max) {
     if (max > min)
@@ -54,6 +62,7 @@ int getRandom(int min, int max) {
     }
 }
 
+
 point3d rotatePoint(point3d pos, float angle)
 {
     float radius = pos.magnitude();
@@ -62,6 +71,7 @@ point3d rotatePoint(point3d pos, float angle)
 
     return point3d(cos(angle0), sin(angle0), 0) * radius;
 }
+
 
 Transform GetWorldTransform(Entity* entity) {
     Transform worldTransform = Transform();
@@ -91,6 +101,7 @@ Transform GetWorldTransform(Entity* entity) {
 
     return worldTransform;
 }
+
 
 Transform2D GetWorldTransform2D(Entity* entity) {
     Transform2D worldTransform2D = Transform2D();
@@ -150,13 +161,16 @@ Transform2D GetWorldTransform2D(Entity* entity) {
     return worldTransform2D;
 }
 
+
 bool IsEntityValid(Entity* entity) {
     return entity != nullptr && entity->IsActive();
 }
 
+
 bool IsKeyPressed(const int Key) {
     return GetAsyncKeyState(Key) & 0x8000;
 }
+
 
 vector<string> split(string s, string temp) {
     vector<string> tokens;
@@ -173,6 +187,7 @@ vector<string> split(string s, string temp) {
     return tokens;
 }
 
+
 void SetLookVector(Transform* transform, point3d direction){
     point3d currentLookVector = transform->GetLookVector();
     point3d rotationAxis = currentLookVector.cross(direction).normalized();
@@ -183,6 +198,7 @@ void SetLookVector(Transform* transform, point3d direction){
 
     transform->mRotation = matrixRotation * transform->mRotation;
 }
+
 
 vector<point3d> smoothCornersPath(const vector<point3d>& pointsBefore, int numberIterations) {
 
@@ -227,6 +243,7 @@ vector<point3d> smoothCornersPath(const vector<point3d>& pointsBefore, int numbe
     else return smoothCornersPath(pointsAfter, numberIterations-1);
 }
 
+
 float hueToRgb(float p, float q, float t) {
     if (t < 0.0f) t += 1.0f;
     if (t > 1.0f) t -= 1.0f;
@@ -236,6 +253,7 @@ float hueToRgb(float p, float q, float t) {
     if (t < 2.0f / 3.0f) return p + (q - p) * (2.0f / 3.0f - t) * 6.0f;
     return p;
 }
+
 
 point3d hslToRgb(const point3d& hsl) {
     float h = hsl.x;
@@ -258,6 +276,7 @@ point3d hslToRgb(const point3d& hsl) {
 
     return point3d(r, g, b);
 }
+
 
 point3d rgbToHsl(const point3d& rgb) {
     float r = rgb.x;
@@ -287,6 +306,7 @@ point3d rgbToHsl(const point3d& rgb) {
 
     return point3d(h, s, l);
 }
+
 
 point3d rotateInPlane(const point3d& a, const point3d& b, float theta) {
     point3d u1 = a.normalized();

@@ -858,7 +858,7 @@ Entity* PlayerAbilities::BowCommon(Transform startTransform, point3d direction)
 	Entity* projectile = entityStorage->CreateEntity("PlayerProjectile");
 	Transform* transform = projectile->AddComponent<Transform>();
 	transform->position = startTransform.position;
-	transform->mRotation = startTransform.mRotation;
+	SetLookVector(transform, direction);
 
 	PhysicBody* physicBody = projectile->AddComponent<PhysicBody>();
 	physicBody->airFriction = 0.0f;
@@ -872,7 +872,6 @@ Entity* PlayerAbilities::BowCommon(Transform startTransform, point3d direction)
 
 	Mesh* mesh = projectile->AddComponent<Mesh>();
 	mesh->index = 1;
-	//mesh->mRotation = XMMatrixRotationAxis(XMVectorSet(1, 0, 0, 0), 90 * RAD) * transform->mRotation;
 
 	ParticleEmitter* particleEmitter = projectile->AddComponent<ParticleEmitter>();
 	particleEmitter->rate = 100;
@@ -983,7 +982,7 @@ Entity* PlayerAbilities::BowCharged(Transform startTransform, point3d direction)
 	Entity* projectile = entityStorage->CreateEntity("PlayerProjectile");
 	Transform* transform = projectile->AddComponent<Transform>();
 	transform->position = startTransform.position;
-	transform->mRotation = startTransform.mRotation;
+	SetLookVector(transform, direction);
 
 	PhysicBody* physicBody = projectile->AddComponent<PhysicBody>();
 	physicBody->airFriction = 0.0f;
