@@ -194,7 +194,6 @@
     <ClInclude Include="collisionSystem.h" />
     <ClInclude Include="combatSystem.h" />
     <ClInclude Include="component.h" />
-    <ClInclude Include="Components\InteractiveNebula.h" />
     <ClInclude Include="componentutils.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="Constellation.h" />

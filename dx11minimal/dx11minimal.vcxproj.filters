@@ -114,6 +114,14 @@
     <ClCompile Include="Singleton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentUtils.cpp" />
+    <ClCompile Include="Engine\GLTFLoader.cpp" />
+    <ClCompile Include="Engine\Mesh\Animation.cpp" />
+    <ClCompile Include="Engine\Mesh\Animator.cpp" />
+    <ClCompile Include="Engine\Mesh\Skeleton.cpp" />
+    <ClCompile Include="Engine\Mesh\SkinnedMesh.cpp" />
+    <ClCompile Include="Systems\SkeletalAnimationSystem.cpp" />
+    <ClCompile Include="Systems\SkinnedMeshSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enemy_Patern.h">
@@ -326,6 +334,18 @@
     <ClInclude Include="isingleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="componentutils.h" />
+    <ClInclude Include="Engine\GLTFLoader.h" />
+    <ClInclude Include="Engine\Mesh\Animation.h" />
+    <ClInclude Include="Engine\Mesh\Animator.h" />
+    <ClInclude Include="Engine\Mesh\Skeleton.h" />
+    <ClInclude Include="Engine\Mesh\SkinnedMesh.h" />
+    <ClInclude Include="Systems\SkeletalAnimationSystem.h" />
+    <ClInclude Include="Systems\SkinnedMeshSystem.h" />
+    <ClInclude Include="Vendors\tinyGLTF\json.hpp" />
+    <ClInclude Include="Vendors\tinyGLTF\stb_image.h" />
+    <ClInclude Include="Vendors\tinyGLTF\stb_image_write.h" />
+    <ClInclude Include="Vendors\tinyGLTF\tiny_gltf.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">
@@ -606,9 +626,8 @@
     <None Include="Shaders\ps\output.shader">
       <Filter>Shaders\PS</Filter>
     </None>
-    <None Include="NebulaHeal.shader">
-      <Filter>Shaders\VS</Filter>
-    </None>
+    <None Include="Shaders\SkinnedMesh_VS.shader" />
+    <None Include="Shaders\vs\NebulaHeal.shader" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">
