@@ -925,6 +925,9 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	Entity* entity;
 	Nebula* nebula;
 	Transform* transform;
+	SphereCollider* sphereCollider;
+	MultiDamager* multiDamager;
+	
 
 	int pillars_cnt = 3725470 / 2 / quality;
 	int galaxy_cnt = 182361 / quality;
@@ -950,6 +953,11 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	entity = m_World->entityStorage->CreateEntity("INP", location);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(150, 0, 0);
+
+	sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider->radius = 40.f;
+	sphereCollider->isTouchable = false;
+	
 
 	nebula = entity->AddComponent<Nebula>();
 	nebula->vShader = 26;
@@ -978,6 +986,8 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	entity = m_World->entityStorage->CreateEntity("ING", location);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(150, 0, 0);
+
+	
 
 	nebula = entity->AddComponent<Nebula>();
 	nebula->vShader = 26;
