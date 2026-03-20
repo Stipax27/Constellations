@@ -6,6 +6,7 @@
 //////////////
 #include<cmath>
 #include "system.h"
+
 #include "Transform.h"
 #include "PhysicBody.h"
 #include "Components/GlueConstraint.h"
@@ -19,6 +20,9 @@ public:
 	void Shutdown();
 
 	void Update(vector<Entity*>&, float);
+
+private:
+	EntityStorage* entityStorage;
 };
 
 #endif
