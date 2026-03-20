@@ -1052,50 +1052,11 @@ Nebula* PlayerAbilities::FindNearestNebula()
 			continue;
 		}
 
-		InteractiveNebula* interactiveNebula = entity->GetComponentInAncestor<InteractiveNebula>();
-		if (interactiveNebula != nullptr && interactiveNebula->active) {
-			return interactiveNebula;
+		Nebula* nebula = entity->GetComponentInAncestor<Nebula>();
+		if (nebula != nullptr && nebula->active && nebula->isInteractive) {
+			return nebula;
 		}
 	}
-
-	point3d playerPos = playerTransform->position;
-
-	
-	Entity* worldFolder = world->entityStorage->GetEntityByName("World");
-	if (!worldFolder) return nullptr;
-
-
-	vector<Entity*> locations = worldFolder->GetChildren(true);
-
-	Nebula* nearestNebula = nullptr;
-	float minDistance = FLT_MAX;
-
-	for (Entity* location : locations) {
-		if (!location || !location->IsActive()) continue;
-
-		
-		vector<Nebula*> nebulae = location->GetAllComponentsOfBase<Nebula>();
-
-		for (Nebula* nebula : nebulae) {
-			if (!nebula) continue;
-
-			
-			Entity* nebulaEntity = nullptr; 
-		
-
-			Transform* nebulaTransform = nullptr; // Получить трансформ
-
-		
-			float distance = 50.0f; // Заглушка
-
-			if (distance < minDistance) {
-				minDistance = distance;
-				nearestNebula = nebula;
-			}
-		}
-	}
-
-	return nearestNebula;
 }
 
 point3d PlayerAbilities::GetCurrentNebulaColor()

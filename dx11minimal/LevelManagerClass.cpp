@@ -232,7 +232,7 @@ bool LevelManagerClass::Initialize()
 	
 	CreateSpaceBackground(folder, 1);
 	CreateAries(folder);
-	CreateZenithLocation(folder, 2);
+	//CreateZenithLocation(folder, 2);
 	CreateNebulas(folder, 2);
 
 	/////////////////////////
@@ -1019,6 +1019,7 @@ void LevelManagerClass::CreateNebulas(Entity* folder, int quality)
 	nebula->color = point3d(0.3, 0.5, 1.0); // Голубой
 	nebula->scale = 1;
 	nebula->frustumRadius = 40;
+	nebula->isInteractive = true;
 
 	sphereCollider = entity->AddComponent<SphereCollider>();
 	sphereCollider->radius = 40;
@@ -1050,9 +1051,9 @@ void LevelManagerClass::CreateNebulas(Entity* folder, int quality)
 	nebula->count = pillars_cnt;
 	nebula->mode = pMode::point;
 	nebula->color = point3d(0.8, 0.4, 0.2);
-
 	nebula->scale = 1;
 	nebula->frustumRadius = 40;
+	nebula->isInteractive = true;
 
 	sphereCollider = entity->AddComponent<SphereCollider>();
 	sphereCollider->radius = 40;
@@ -1069,7 +1070,6 @@ void LevelManagerClass::CreateNebulas(Entity* folder, int quality)
 	nebula->skipper = 1394;
 	nebula->mode = pMode::glow;
 	nebula->color = point3d(0.8, 0.4, 0.2);
-	
 	nebula->scale = 1;
 	nebula->frustumRadius = 40;
 

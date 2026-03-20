@@ -24,6 +24,8 @@ struct Nebula : Component
 	float frustumRadius = 10.0f;
 
 	RenderCompress compress = RenderCompress::none;
+
+	bool isInteractive = false;
 };
 
 #endif
