@@ -122,6 +122,9 @@
     <ClCompile Include="Engine\Mesh\SkinnedMesh.cpp" />
     <ClCompile Include="Systems\SkeletalAnimationSystem.cpp" />
     <ClCompile Include="Systems\SkinnedMeshSystem.cpp" />
+    <ClCompile Include="GlueConstraintSystem.cpp">
+      <Filter>Source Files\Physic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enemy_Patern.h">
@@ -334,7 +337,6 @@
     <ClInclude Include="isingleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Components\InteractiveNebula.h" />
     <ClInclude Include="componentutils.h" />
     <ClInclude Include="Engine\GLTFLoader.h" />
     <ClInclude Include="Engine\Mesh\Animation.h" />
@@ -347,6 +349,12 @@
     <ClInclude Include="Vendors\tinyGLTF\stb_image.h" />
     <ClInclude Include="Vendors\tinyGLTF\stb_image_write.h" />
     <ClInclude Include="Vendors\tinyGLTF\tiny_gltf.h" />
+    <ClInclude Include="Components\GlueConstraint.h">
+      <Filter>Header Files\ECS\Components\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="glueConstraintSystem.h">
+      <Filter>Header Files\ECS\Systems\Physic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">

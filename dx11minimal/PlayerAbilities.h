@@ -27,7 +27,6 @@
 #include "Health.h"
 #include "Mesh.h"
 #include "Components/Nebula.h"
-#include "Components/InteractiveNebula.h"
 
 #include "Transform2D.h"
 
