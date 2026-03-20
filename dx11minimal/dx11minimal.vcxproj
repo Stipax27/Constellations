@@ -215,6 +215,8 @@
     <ClInclude Include="FpsCounter.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="frustumclass.h" />
+    <ClInclude Include="Components\GlueConstraint.h" />
+    <ClInclude Include="glueConstraintSystem.h" />
     <ClInclude Include="Health.h" />
     <ClInclude Include="HpIndicator.h" />
     <ClInclude Include="isingleton.h" />
@@ -1087,6 +1089,7 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="EntityStorage.cpp" />
+    <ClCompile Include="GlueConstraintSystem.cpp" />
     <ClCompile Include="NebulaSystem.cpp" />
     <ClCompile Include="PlayerAbilities.cpp" />
     <ClCompile Include="dx11.cpp" />

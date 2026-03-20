@@ -997,7 +997,6 @@ void LevelManagerClass::CreateNebulas(Entity* folder, int quality)
 	SphereCollider* sphereCollider;
 
 	int pillars_cnt = 3725470 / 2 / quality;
-	int galaxy_cnt = 182361 / quality;
 
 	Entity* location = m_World->entityStorage->CreateEntity("Zenith location", folder);
 
