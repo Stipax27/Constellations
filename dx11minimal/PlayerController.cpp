@@ -102,12 +102,12 @@ void PlayerController::ProcessInput()
 	isRunning = false;
 
 	// Проверяем Shift и наличие выносливости
-	if (IsKeyPressed(VK_SHIFT) && abilities->stamina > 0) {
+	if (input::IsKeyDown(VK_SHIFT) && abilities->stamina > 0) {
 		isRunning = true;
 		currentMaxSpeed = PLAYER_MOVE_SPEED * 5.0f;
 
 		// Тратим выносливость только если двигаемся
-		if (IsKeyPressed('W') || IsKeyPressed('S') || IsKeyPressed('A') || IsKeyPressed('D')) {
+		if (input::IsKeyDown('W') || input::IsKeyDown('S') || input::IsKeyDown('A') || input::IsKeyDown('D')) {
 			abilities->stamina = max(0.0f, abilities->stamina - 0.5f); 
 		}
 	}
@@ -131,22 +131,22 @@ void PlayerController::ProcessInput()
 	{
 		point3d velocity = point3d();
 
-		if (IsKeyPressed('W')) {
+		if (input::IsKeyDown('W')) {
 			velocity += playerTransform->GetLookVector();
 		}
-		if (IsKeyPressed('S')) {
+		if (input::IsKeyDown('S')) {
 			velocity += playerTransform->GetLookVector() * -1;
 		}
-		if (IsKeyPressed('A')) {
+		if (input::IsKeyDown('A')) {
 			velocity += playerTransform->GetRightVector() * -1;
 		}
-		if (IsKeyPressed('D')) {
+		if (input::IsKeyDown('D')) {
 			velocity += playerTransform->GetRightVector();
 		}
-		if (IsKeyPressed(VK_LMENU)) {
+		if (input::IsKeyDown(VK_LMENU)) {
 			velocity += playerTransform->GetUpVector();
 		}
-		if (IsKeyPressed(VK_CONTROL)) {
+		if (input::IsKeyDown(VK_CONTROL)) {
 			velocity += playerTransform->GetUpVector() * -1;
 		}
 
@@ -163,25 +163,25 @@ void PlayerController::ProcessInput()
 
 		// Обработка кнопки F для щита
 	static bool fKeyPressed = false;
-	if (IsKeyPressed('F') && !fKeyPressed) {
+	if (input::IsKeyDown('F') && !fKeyPressed) {
 		fKeyPressed = true;
 		abilities->ShieldStart(); // Активируем щит при нажатии F
 	}
-	else if (!IsKeyPressed('F') && fKeyPressed) {
+	else if (!input::IsKeyDown('F') && fKeyPressed) {
 		fKeyPressed = false;
 		abilities->ShieldEnd(); // Деактивируем щит при отпускании F
 	}
 
 	
-		float roll = 0.0f;
-	if (IsKeyPressed(VK_SPACE)) {
+	float roll = 0.0f;
+	if (input::IsKeyDown(VK_SPACE)) {
 		Dash();
 	}
 		
-	if (IsKeyPressed('E')) {
+	if (input::IsKeyDown('E')) {
 		roll = -ROLL_SPEED;
 	}
-	if (IsKeyPressed('Q')) {
+	if (input::IsKeyDown('Q')) {
 		roll = ROLL_SPEED;
 	}
 
@@ -189,31 +189,28 @@ void PlayerController::ProcessInput()
 		playerPhysicBody->mAngVelocity = XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), roll * RAD);
 	}
 
-	if (IsKeyPressed('1')) {
+	if (input::IsKeyPressed('1')) {
 		abilities->weapon = PlayerWeapons::Fists;
 	}
-	if (IsKeyPressed('2')) {
+	if (input::IsKeyPressed('2')) {
 		abilities->weapon = PlayerWeapons::Sword;
 	}
-	if (IsKeyPressed('3')) {
+	if (input::IsKeyPressed('3')) {
 		abilities->weapon = PlayerWeapons::Bow;
 	}
 
-	if (IsKeyPressed('T')) {
-		abilities->TimestopStart();
-	}
-	if (IsKeyPressed('Y')) {
-		abilities->TimestopEnd();
+	if (input::IsKeyPressed('T')) {
+		abilities->Timestop();
 	}
 
 	static bool vKeyPressed = false;
-	if (IsKeyPressed('V') && !vKeyPressed) {
+	if (input::IsKeyDown('V') && !vKeyPressed) {
 		vKeyPressed = true;
 		if (abilities) {
 			abilities->ParticleVacuumStart();
 		}
 	}
-	else if (!IsKeyPressed('V') && vKeyPressed) {
+	else if (!input::IsKeyDown('V') && vKeyPressed) {
 		vKeyPressed = false;
 		if (abilities) {
 			abilities->ParticleVacuumEnd();  
@@ -221,13 +218,13 @@ void PlayerController::ProcessInput()
 	}
 
 	static bool gKeyPressed = false;
-	if (IsKeyPressed('G') && !gKeyPressed) {
+	if (input::IsKeyDown('G') && !gKeyPressed) {
 		gKeyPressed = true;
 		if (abilities) {
 			abilities->BlowGasStart(); 
 		}
 	}
-	else if (!IsKeyPressed('G') && gKeyPressed) {
+	else if (!input::IsKeyDown('G') && gKeyPressed) {
 		gKeyPressed = false;
 		if (abilities) {
 			abilities->BlowGasEnd();

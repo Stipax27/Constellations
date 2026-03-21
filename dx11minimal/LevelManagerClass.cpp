@@ -502,7 +502,7 @@ void LevelManagerClass::LoadModels()
 // TODO: Remove, only for test animation change
 void LevelManagerClass::UpdateTestAnimationToggle()
 {
-	const bool isTogglePressed = IsKeyPressed('T');
+	const bool isTogglePressed = input::IsKeyDown('T');
 	if (!isTogglePressed)
 	{
 		m_WasToggleAnimationPressed = false;

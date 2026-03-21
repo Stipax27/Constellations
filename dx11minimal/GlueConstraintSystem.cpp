@@ -52,6 +52,7 @@ void GlueConstraintSystem::Update(vector<Entity*>& entities, float deltaTime)
 				}
 
 				Transform* upperTransform = gluedEntity->GetUpperComponent<Transform>();
+				//Transform delta = GetTransformDelta(upperTransform, upperTransform);
 
 				gluedTransform->position = worldTrasform.position;
 				gluedTransform->mRotation = worldTrasform.mRotation;

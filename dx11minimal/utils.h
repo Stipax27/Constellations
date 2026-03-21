@@ -35,8 +35,6 @@ Transform GetWorldTransform(Entity*);
 Transform2D GetWorldTransform2D(Entity*);
 bool IsEntityValid(Entity*);
 
-bool IsKeyPressed(const int);
-
 vector<string> split(string, string);
 
 float hueToRgb(float, float, float);

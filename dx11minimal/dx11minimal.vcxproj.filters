@@ -111,9 +111,6 @@
     <ClCompile Include="NebulaSystem.cpp">
       <Filter>Source Files\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Singleton.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ComponentUtils.cpp" />
     <ClCompile Include="Engine\GLTFLoader.cpp" />
     <ClCompile Include="Engine\Mesh\Animation.cpp" />
@@ -124,6 +121,12 @@
     <ClCompile Include="Systems\SkinnedMeshSystem.cpp" />
     <ClCompile Include="GlueConstraintSystem.cpp">
       <Filter>Source Files\Physic</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Singleton.cpp">
+      <Filter>Source Files\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -331,9 +334,6 @@
     <ClInclude Include="nebulaSystem.h">
       <Filter>Header Files\ECS\Systems\Render</Filter>
     </ClInclude>
-    <ClInclude Include="singleton.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="isingleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -345,7 +345,6 @@
     <ClInclude Include="Engine\Mesh\SkinnedMesh.h" />
     <ClInclude Include="Systems\SkeletalAnimationSystem.h" />
     <ClInclude Include="Systems\SkinnedMeshSystem.h" />
-    <ClInclude Include="Vendors\tinyGLTF\json.hpp" />
     <ClInclude Include="Vendors\tinyGLTF\stb_image.h" />
     <ClInclude Include="Vendors\tinyGLTF\stb_image_write.h" />
     <ClInclude Include="Vendors\tinyGLTF\tiny_gltf.h" />
@@ -354,6 +353,15 @@
     </ClInclude>
     <ClInclude Include="glueConstraintSystem.h">
       <Filter>Header Files\ECS\Systems\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Vendors\tinyGLTF\json.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="singleton.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>Header Files\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -635,8 +643,12 @@
     <None Include="Shaders\ps\output.shader">
       <Filter>Shaders\PS</Filter>
     </None>
-    <None Include="Shaders\SkinnedMesh_VS.shader" />
-    <None Include="Shaders\vs\NebulaHeal.shader" />
+    <None Include="Shaders\vs\NebulaHeal.shader">
+      <Filter>Shaders\VS</Filter>
+    </None>
+    <None Include="Shaders\SkinnedMesh_VS.shader">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">

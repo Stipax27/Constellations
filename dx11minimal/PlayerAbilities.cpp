@@ -709,15 +709,9 @@ void PlayerAbilities::BlockEnd()
 }
 
 
-void PlayerAbilities::TimestopStart()
+void PlayerAbilities::Timestop()
 {
-	timeStopped = true;
-}
-
-
-void PlayerAbilities::TimestopEnd()
-{
-	timeStopped = false;
+	timeStopped = not timeStopped;
 }
 
 

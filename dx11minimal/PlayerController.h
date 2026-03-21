@@ -9,6 +9,7 @@
 // INCLUDES //
 //////////////
 #include "singleton.h"
+#include "input.h"
 
 #include "cameraclass.h"
 #include "mouseclass.h"

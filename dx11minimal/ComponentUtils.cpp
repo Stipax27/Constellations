@@ -11,3 +11,14 @@ XMMATRIX GetWorldMatrix(Transform worldTransform) {
 
 	return XMMatrixTranspose(worldMatrix);
 }
+
+
+Transform GetTransformDelta(Transform worldTransform1, Transform worldTransform2) {
+	Transform delta = Transform();
+
+	delta.position = worldTransform1.position - worldTransform2.position;
+	delta.scale = worldTransform1.scale / worldTransform2.scale;
+	delta.mRotation = worldTransform1.mRotation * worldTransform1.mRotation;
+
+	return delta;
+}

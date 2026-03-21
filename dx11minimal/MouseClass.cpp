@@ -55,7 +55,7 @@ void MouseClass::Update() {
 	absolutePos = { (float)p.x, (float)p.y, 0.f };
 	pos = { absolutePos.x / window->width * 2 - 1, -(absolutePos.y / window->height * 2 - 1), 0.0f };
 
-	if (IsKeyPressed(VK_LBUTTON))
+	if (input::IsKeyDown(VK_LBUTTON))
 	{
 		lbuttonUnclicked = false;
 		if (!lbuttonDown)
@@ -80,7 +80,7 @@ void MouseClass::Update() {
 		}
 	}
 
-	if (IsKeyPressed(VK_RBUTTON))
+	if (input::IsKeyDown(VK_RBUTTON))
 	{
 		rbuttonUnclicked = false;
 		if (!rbuttonDown)

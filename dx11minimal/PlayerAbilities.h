@@ -104,8 +104,7 @@ public:
 	void BlockStart();
 	void BlockEnd();
 
-	void TimestopStart();
-	void TimestopEnd();
+	void Timestop();
 
 	
 

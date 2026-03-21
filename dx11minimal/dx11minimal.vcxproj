@@ -219,6 +219,7 @@
     <ClInclude Include="glueConstraintSystem.h" />
     <ClInclude Include="Health.h" />
     <ClInclude Include="HpIndicator.h" />
+    <ClInclude Include="input.h" />
     <ClInclude Include="isingleton.h" />
     <ClInclude Include="LevelManagerClass.h" />
     <ClInclude Include="Mesh.h" />
@@ -1090,6 +1091,7 @@
     </ClCompile>
     <ClCompile Include="EntityStorage.cpp" />
     <ClCompile Include="GlueConstraintSystem.cpp" />
+    <ClCompile Include="input.cpp" />
     <ClCompile Include="NebulaSystem.cpp" />
     <ClCompile Include="PlayerAbilities.cpp" />
     <ClCompile Include="dx11.cpp" />

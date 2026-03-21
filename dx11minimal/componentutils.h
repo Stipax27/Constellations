@@ -5,7 +5,7 @@
 #include "Transform.h"
 
 XMMATRIX GetWorldMatrix(Transform);
-
+Transform GetTransformDelta(Transform, Transform);
 
 
 #endif

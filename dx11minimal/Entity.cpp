@@ -102,16 +102,19 @@ vector<Entity*> Entity::GetChildrenByName(string Name, bool Recursive) {
 
 vector<Entity*> Entity::GetChildren(bool Recursive) {
 	vector<Entity*> array;
-	for (int i = 0; i < children.size(); i++) {
-		Entity* child = children[i];
-		array.push_back(child);
 
-		if (Recursive) {
-			vector<Entity*> descendants = child->GetChildren(Recursive);
-			if (descendants.size() > 0)
-			{
-				for (int i = 0; i < descendants.size(); i++) {
-					array.push_back(descendants[i]);
+	if (children.size() > 0) {
+		for (int i = 0; i < children.size(); i++) {
+			Entity* child = children[i];
+			array.push_back(child);
+
+			if (Recursive) {
+				vector<Entity*> descendants = child->GetChildren(Recursive);
+				if (descendants.size() > 0)
+				{
+					for (int i = 0; i < descendants.size(); i++) {
+						array.push_back(descendants[i]);
+					}
 				}
 			}
 		}

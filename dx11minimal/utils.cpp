@@ -167,11 +167,6 @@ bool IsEntityValid(Entity* entity) {
 }
 
 
-bool IsKeyPressed(const int Key) {
-    return GetAsyncKeyState(Key) & 0x8000;
-}
-
-
 vector<string> split(string s, string temp) {
     vector<string> tokens;
     size_t pos = 0;
