@@ -8,7 +8,7 @@ using namespace std;
 
 namespace input
 {
-	extern vector<int> _pressedKeys;
+	//extern vector<int> _pressedKeys;
 
 	bool IsKeyDown(const int key);
 	bool IsKeyPressed(const int key);

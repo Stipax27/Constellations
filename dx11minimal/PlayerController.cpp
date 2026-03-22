@@ -231,6 +231,13 @@ void PlayerController::ProcessInput()
 		}
 	}
 
+	if (input::IsKeyPressed('H')) {
+		Entity* test = Singleton::GetInstance<EntityStorage>()->GetEntityByName("TestStar");
+		if (test != nullptr) {
+			test->SetParent(playerEntity);
+		}
+	}
+
 }
 		
 

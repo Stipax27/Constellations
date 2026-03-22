@@ -212,9 +212,9 @@ bool LevelManagerClass::Initialize()
 	//	health->maxHp = 10;
 	//}
 
-	entity = m_World->entityStorage->CreateEntity("Star", folder);
+	entity = m_World->entityStorage->CreateEntity("TestStar", folder);
 	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(50, 0.0f, -35.0f);
+	//transform->position = point3d(50, 0.0f, -35.0f);
 	star = entity->AddComponent<Star>();
 	star->radius = 8.0f;
 	star->crownRadius = 12.0f;

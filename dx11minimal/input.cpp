@@ -1,7 +1,7 @@
 #include "input.h"
 
 
-vector<int> input::_pressedKeys;
+//vector<int> input::_pressedKeys;
 
 
 bool input::IsKeyDown(const int key) {
@@ -10,6 +10,8 @@ bool input::IsKeyDown(const int key) {
 
 
 bool input::IsKeyPressed(const int key) {
+    static vector<int> _pressedKeys;
+
     bool isDown = IsKeyDown(key);
 
     if (isDown) {
@@ -38,6 +40,8 @@ bool input::IsKeyPressed(const int key) {
 
 
 bool input::IsKeyReleased(const int key) {
+    static vector<int> _pressedKeys;
+
     bool isUp = !IsKeyDown(key);
 
     if (isUp) {
