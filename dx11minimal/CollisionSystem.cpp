@@ -94,16 +94,31 @@ void CollisionSystem::Update(vector<Entity*>& entities, float deltaTime)
 									pair<Entity*, Health*> hres = entity1->GetAncestorWithComponent<Health>();
 									if (hres.first != nullptr && hres.second->active) {
 
-										pair<Entity*, SingleDamager*> dres = entity2->GetAncestorWithComponent<SingleDamager>();
-										if (dres.first != nullptr && dres.second->active && dres.second->target == hres.second->fraction && find(dres.second->entityFilter.begin(), dres.second->entityFilter.end(), hres.first->GetId()) == dres.second->entityFilter.end()) {
-											hres.second->hp -= dres.second->damage;
+										pair<Entity*, SingleDamager*> sdres = entity2->GetAncestorWithComponent<SingleDamager>();
+										if (sdres.first != nullptr && sdres.second->active && sdres.second->target == hres.second->fraction && find(sdres.second->entityFilter.begin(), sdres.second->entityFilter.end(), hres.first->GetId()) == sdres.second->entityFilter.end()) {
+											hres.second->hp -= sdres.second->damage;
 
-											dres.second->entityFilter.push_back(hres.first->GetId());
-											if (dres.second->entityFilter.size() >= dres.second->maxHitCount) {
-												if (dres.second->destroyable) {
-													dres.first->Destroy();
+											sdres.second->entityFilter.push_back(hres.first->GetId());
+											if (sdres.second->entityFilter.size() >= sdres.second->maxHitCount) {
+												if (sdres.second->destroyable) {
+													sdres.first->Destroy();
 												}
-												dres.first->RemoveComponent<SingleDamager>();
+												sdres.first->RemoveComponent<SingleDamager>();
+											}
+										}
+
+										pair<Entity*, MultiDamager*> mdres = entity2->GetAncestorWithComponent<MultiDamager>();
+										if (mdres.first != nullptr && mdres.second->active && mdres.second->target == hres.second->fraction && timer::currentTime - mdres.second->lastDamageTime >= mdres.second->inverval) {
+											hres.second->hp -= mdres.second->damage;
+
+											mdres.second->lastDamageTime = timer::currentTime;
+											mdres.second->repeatCount++;
+
+											if (mdres.second->repeats >= 0 && mdres.second->repeatCount >= mdres.second->repeats) {
+												if (mdres.second->destroyable) {
+													mdres.first->Destroy();
+												}
+												mdres.first->RemoveComponent<MultiDamager>();
 											}
 										}
 

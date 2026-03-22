@@ -9,6 +9,7 @@ struct SingleDamager : Component
 {
 	Fraction target = Fraction::Player;
 	bool destroyable = false;
+
 	float damage = 10.0f;
 	int maxHitCount = 1;
 
