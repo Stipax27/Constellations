@@ -955,9 +955,13 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	transform->position = point3d(150, 0, 0);
 
 	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->radius = 40.f;
+	sphereCollider->radius = 30.f;
 	sphereCollider->isTouchable = false;
 	
+	multiDamager = entity->AddComponent<MultiDamager>();
+	multiDamager->damage = 5;
+	multiDamager->repeats = -1;
+	multiDamager->inverval = 1000;
 
 	nebula = entity->AddComponent<Nebula>();
 	nebula->vShader = 26;
@@ -1006,6 +1010,15 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	entity = m_World->entityStorage->CreateEntity("INP1", location);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(-150, 0, 0);
+
+	sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider->radius = 30.f;
+	sphereCollider->isTouchable = false;
+
+	multiDamager = entity->AddComponent<MultiDamager>();
+	multiDamager->damage = 5;
+	multiDamager->repeats = -1;
+	multiDamager->inverval = 1000;
 
 	nebula = entity->AddComponent<Nebula>();
 	nebula->vShader = 26;
