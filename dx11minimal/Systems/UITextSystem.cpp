@@ -569,8 +569,9 @@ void UITextSystem::Shutdown()
 }
 
 
-void UITextSystem::Update(vector<Entity*>& entities, float)
+void UITextSystem::Update(EntityStorage& entityStorage, float)
 {
+	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<TextLabel>();
 	Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
 	Rasterizer::Cull(Rasterizer::cullmode::off);
 	Depth::Depth(Depth::depthmode::off);

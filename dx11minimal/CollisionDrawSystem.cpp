@@ -17,8 +17,9 @@ void CollisionDrawSystem::Shutdown()
 }
 
 
-void CollisionDrawSystem::Update(vector<Entity*>& entities, float deltaTime)
+void CollisionDrawSystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
+	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<SphereCollider>();
 	Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
 	Rasterizer::Cull(Rasterizer::cullmode::wireframe);
 

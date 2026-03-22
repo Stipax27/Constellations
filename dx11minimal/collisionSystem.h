@@ -36,7 +36,7 @@ public:
 
 	//float f(float x);
 
-	void Update(vector<Entity*>&, float);
+	void Update(EntityStorage&, float);
 
 private:
 	CollisionManagerClass* collisionManager;

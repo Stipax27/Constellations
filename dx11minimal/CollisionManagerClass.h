@@ -81,7 +81,7 @@ public:
 	~CollisionManagerClass();
 	CollisionManagerClass(const CollisionManagerClass&);
 
-	void Initialize();
+	void Initialize(EntityStorage& entityStorage);
 	void Shutdown();
 
 	static CollisionResult sphere_vs_sphere(
@@ -89,12 +89,10 @@ public:
 		const Transform t2, const SphereCollider* c2);
 
 	RaycastResult Raycast(const RayInfo& ray);
-
-private:
-	EntityStorage* entityStorage;
 	static std::map<TypePair, CollisionFn> collisionMap;
 
 private:
+	EntityStorage* entityStorage = nullptr;
 	bool raycast_sphere(const RayInfo&, const Transform, const SphereCollider*, RaycastResult&);
 };
 

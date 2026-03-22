@@ -18,7 +18,7 @@ public:
 	void Initialize();
 	void Shutdown();
 
-	void Update(vector<Entity*>&, float);
+	void Update(EntityStorage&, float);
 };
 
 #endif

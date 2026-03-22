@@ -24,7 +24,7 @@ PlayerController::~PlayerController()
 }
 
 
-void PlayerController::Initialize(Entity* Player)
+void PlayerController::Initialize(Entity* Player, EntityStorage* entityStorage)
 {
 	playerEntity = Player;
 
@@ -44,7 +44,7 @@ void PlayerController::Initialize(Entity* Player)
 	window = Singleton::GetInstance<WindowClass>();
 
 	abilities = new PlayerAbilities;
-	abilities->Initialize(playerEntity);
+	abilities->Initialize(playerEntity, entityStorage);
 }
 
 

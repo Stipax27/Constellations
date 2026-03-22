@@ -17,8 +17,9 @@ void TimeSystem::Shutdown()
 }
 
 
-void TimeSystem::Update(vector<Entity*>& entities, float deltaTime)
+void TimeSystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
+	vector<Entity*>& entities = entityStorage.entities;
 	for (Entity* entity : entities) {
 		entity->localTime += timer::deltaTime * (double)entity->GetTimeScale();
 	}

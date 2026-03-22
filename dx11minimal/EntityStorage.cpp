@@ -2,6 +2,7 @@
 // Filename: EntityStorage.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "entityStorage.h"
+#include <algorithm>
 
 
 EntityStorage::EntityStorage()
@@ -26,6 +27,7 @@ void EntityStorage::Initialize()
 
 void EntityStorage::Shutdown()
 {
+	componentEntityCaches.clear();
 	if (entities.size() > 0) {
 		for (int i = 0; i < entities.size(); i++)
 		{
@@ -43,6 +45,7 @@ Entity* EntityStorage::CreateEntity(string Name, Entity* Parent)
 	entity->name = Name;
 	entity->SetId(entityCount++);
 	entity->localTime = timer::currentTime;
+	entity->SetOwnerStorage(this);
 
 	if (Parent != nullptr) {
 		Parent->AddChild(entity);
@@ -100,6 +103,29 @@ Entity* EntityStorage::GetEntityById(int id)
 }
 
 
+const vector<Entity*>& EntityStorage::GetEntitiesWithComponent(const type_index& componentType)
+{
+	auto cacheIt = componentEntityCaches.find(componentType);
+	if (cacheIt == componentEntityCaches.end()) {
+		cacheIt = componentEntityCaches.emplace(componentType, ComponentEntityCache{}).first;
+	}
+
+	ComponentEntityCache& cache = cacheIt->second;
+	if (!cache.isBuilt) {
+		cache.entities.clear();
+
+		for (Entity* entity : entities) {
+			if (entity != nullptr && !entity->IsDeleting() && entity->HasComponent(componentType)) {
+				cache.entities.push_back(entity);
+			}
+		}
+
+		cache.isBuilt = true;
+	}
+
+	return cache.entities;
+}
+
 void EntityStorage::CleanMem()
 {
 	int i = 0;
@@ -108,12 +134,42 @@ void EntityStorage::CleanMem()
 		Entity* entity = entities[i];
 		if (entity->IsDeleting())
 		{
+			OnEntityDestroyed(entity);
 			delete entity;
 			entities.erase(entities.begin() + i);
 		}
 		else
 		{
 			i++;
+		}
+	}
+}
+
+void EntityStorage::OnEntityComponentAdded(Entity* entity, const type_index& componentType)
+{
+	auto cacheIt = componentEntityCaches.find(componentType);
+	if (cacheIt == componentEntityCaches.end() || !cacheIt->second.isBuilt) {
+		return;
+	}
+
+	cacheIt->second.isBuilt = false;
+}
+
+void EntityStorage::OnEntityComponentRemoved(Entity* entity, const type_index& componentType)
+{
+	auto cacheIt = componentEntityCaches.find(componentType);
+	if (cacheIt == componentEntityCaches.end() || !cacheIt->second.isBuilt) {
+		return;
+	}
+
+	cacheIt->second.isBuilt = false;
+}
+
+void EntityStorage::OnEntityDestroyed(Entity* entity)
+{
+	for (auto& cachePair : componentEntityCaches) {
+		if (cachePair.second.isBuilt) {
+			cachePair.second.isBuilt = false;
 		}
 	}
 }

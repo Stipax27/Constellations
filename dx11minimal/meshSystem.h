@@ -23,7 +23,7 @@ public:
 	void Shutdown();
 
 
-	void Update(vector<Entity*>&, float);
+	void Update(EntityStorage&, float);
 
 private:
 	FrustumClass* frustum;

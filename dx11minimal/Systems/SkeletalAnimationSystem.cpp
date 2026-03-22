@@ -213,8 +213,9 @@ void SkeletalAnimationSystem::Shutdown()
 {
 }
 
-void SkeletalAnimationSystem::Update(std::vector<Entity*>& entities, float deltaTime)
+void SkeletalAnimationSystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
+	const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<SkeletalAnimationComponent>();
 	for (Entity* entity : entities)
 	{
 		if (!entity)

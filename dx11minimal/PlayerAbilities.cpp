@@ -14,12 +14,12 @@ PlayerAbilities::~PlayerAbilities()
 }
 
 
-void PlayerAbilities::Initialize(Entity* PlayerEntity)
+void PlayerAbilities::Initialize(Entity* PlayerEntity, EntityStorage* storage)
 {
 	weapon = PlayerWeapons::Fists;
 
 	world = Singleton::GetInstance<World>();
-	entityStorage = Singleton::GetInstance<EntityStorage>();
+	entityStorage = storage;
 	camera = Singleton::GetInstance<CameraClass>();
 	collisionManager = Singleton::GetInstance<CollisionManagerClass>();
 

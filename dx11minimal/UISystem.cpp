@@ -5,7 +5,6 @@
 UISystem::UISystem()
 {
 	mouse = Singleton::GetInstance<MouseClass>();
-	entityStorage = Singleton::GetInstance<EntityStorage>();
 }
 
 
@@ -19,15 +18,12 @@ void UISystem::Shutdown()
 	if (mouse) {
 		mouse = 0;
 	}
-
-	if (entityStorage) {
-		entityStorage = 0;
-	}
 }
 
 
-void UISystem::Update(vector<Entity*>& entities, float deltaTime)
+void UISystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
+	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<Transform2D>();
 	Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
 	Rasterizer::Cull(Rasterizer::cullmode::off);
 	Depth::Depth(Depth::depthmode::off);

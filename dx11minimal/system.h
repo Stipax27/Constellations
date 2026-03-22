@@ -34,7 +34,7 @@ class System
 public:
 	virtual void Initialize() = 0;
 	virtual void Shutdown() = 0;
-	virtual void Update(vector<Entity*>& entities, float deltaTime) = 0;
+	virtual void Update(EntityStorage& entityStorage, float deltaTime) = 0;
 };
 
 #endif

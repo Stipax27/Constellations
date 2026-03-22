@@ -14,6 +14,12 @@
 #include "component.h"
 #include "collider.h"
 
+class Entity;
+class EntityStorage;
+void NotifyEntityComponentAdded(Entity* entity, const type_index& componentType);
+void NotifyEntityComponentRemoved(Entity* entity, const type_index& componentType);
+void NotifyEntityDestroyed(Entity* entity);
+
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: Entity
 ////////////////////////////////////////////////////////////////////////////////
@@ -37,6 +43,7 @@ public:
 		components[typeid(T)] = component;
 
 		RegisterInHierarchy<T>(component);
+		NotifyEntityComponentAdded(this, typeid(T));
 
 		return component;
 	}
@@ -47,6 +54,7 @@ public:
 		T* component = GetComponent<T>();
 		if (component != nullptr)
 		{
+			NotifyEntityComponentRemoved(this, typeid(T));
 			delete component;
 			components.erase(typeid(T));
 		}
@@ -68,6 +76,11 @@ public:
 			return true;
 		}
 		return false;
+	}
+
+	bool HasComponent(const type_index& componentType) const
+	{
+		return components.find(componentType) != components.end();
 	}
 
 	template <typename T>
@@ -148,6 +161,9 @@ public:
 	float GetTimeScale();
 	float GetLocalTimeScale();
 
+	void SetOwnerStorage(EntityStorage* storage);
+	EntityStorage* GetOwnerStorage();
+
 private:
 	int id = -1;
 	bool active = true;
@@ -155,6 +171,7 @@ private:
 
 	float timeScale = 1.0f;
 	Entity* parent;
+	EntityStorage* ownerStorage = nullptr;
 
 	unordered_map<type_index, Component*> components;
 	unordered_map<type_index, vector<Component*>> baseToComponents;

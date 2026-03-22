@@ -26,7 +26,7 @@ void MeshSystem::Shutdown()
 }
 
 
-void MeshSystem::Update(vector<Entity*>& entities, float deltaTime)
+void MeshSystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
 	// Clear the buffers to begin the scene.
 	/*Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
@@ -36,6 +36,7 @@ void MeshSystem::Update(vector<Entity*>& entities, float deltaTime)
 	//Rasterizer::Cull(Rasterizer::cullmode::off);
 	Depth::Depth(Depth::depthmode::on);
 
+	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<Transform>();
 	size_t size = entities.size();
 	for (int i = 0; i < size; i++)
 	{

@@ -94,7 +94,7 @@ public:
 	PlayerAbilities(const PlayerAbilities&);
 	~PlayerAbilities();
 
-	void Initialize(Entity*);
+	void Initialize(Entity*, EntityStorage*);
 	void Shutdown();
 	void Update();
 
