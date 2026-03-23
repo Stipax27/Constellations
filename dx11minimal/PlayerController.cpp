@@ -204,7 +204,7 @@ void PlayerController::ProcessInput()
 		abilities->Timestop();
 	}
 
-	static bool vKeyPressed = false;
+	/*static bool vKeyPressed = false;
 	if (input::IsKeyDown('V') && !vKeyPressed) {
 		vKeyPressed = true;
 		if (abilities) {
@@ -230,9 +230,9 @@ void PlayerController::ProcessInput()
 		if (abilities) {
 			abilities->BlowGasEnd();
 		}
-	}
+	}*/
 
-	if (input::IsKeyPressed('H')) {
+	if (input::IsKeyPressed('G')) {
 		abilities->Grab();
 	}
 

@@ -216,13 +216,13 @@ bool LevelManagerClass::Initialize()
 	transform = entity->AddComponent<Transform>();
 	//transform->position = point3d(50, 0.0f, -35.0f);
 	star = entity->AddComponent<Star>();
-	star->radius = 8.0f;
-	star->crownRadius = 12.0f;
+	star->radius = 2.0f;
+	star->crownRadius = 3.0f;
 	star->color1 = point3d(0.87f, 0.24f, 0.13f);
 	star->color2 = point3d(0.35f, 0.0f, 0.07f);
 	star->crownColor = point3d(0.87f, 0.25f, 0.15f);
 	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->radius = 8.0f;
+	sphereCollider->radius = 2.0f;
 	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
 	health = entity->AddComponent<Health>();
 	health->hp = 100;

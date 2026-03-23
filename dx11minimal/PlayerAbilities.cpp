@@ -726,19 +726,33 @@ void PlayerAbilities::Grab()
 		if (result.entityId >= 0) {
 			grabbedObject = entityStorage->GetEntityById(result.entityId);
 			if (grabbedObject != nullptr) {
+				Transform* grabbedTransform = grabbedObject->GetComponent<Transform>();
+
 				Entity* infoReserve = entityStorage->CreateEntity("infoReserve", grabbedObject);
 				infoReserve->SetActive(false);
 				Transform* transformInfo = infoReserve->AddComponent<Transform>();
-				transformInfo = grabbedObject->GetComponent<Transform>();
+				transformInfo = grabbedTransform;
 
+				Transform relative = GetRelativeTransform(GetWorldTransform(playerEntity), GetWorldTransform(grabbedObject));
 				grabbedObject->SetParent(playerEntity);
+
+				grabbedTransform->position = relative.position;
+				grabbedTransform->mRotation = relative.mRotation;
+				grabbedTransform->scale = relative.scale;
 			}
 		}
 
 	}
 	else {
 
+		Transform wt = GetWorldTransform(grabbedObject);
 		grabbedObject->SetParent(worldFolder);
+
+		Transform* grabbedTransform = grabbedObject->GetComponent<Transform>();
+		grabbedTransform->position = wt.position;
+		grabbedTransform->mRotation = wt.mRotation;
+		grabbedTransform->scale = wt.scale;
+
 		grabbedObject->GetChildByName("infoReserve")->Destroy();
 		grabbedObject = 0;
 

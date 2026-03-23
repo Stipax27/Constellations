@@ -11,8 +11,14 @@
 #include "SphereCollider.h"
 
 
+inline XMFLOAT3 Point3DToXMFLOAT3(const point3d& p);
+inline point3d XMFLOAT3ToPoint3D(const XMFLOAT3& v);
+inline XMVECTOR LoadPoint3D(const point3d& p);
+inline point3d StorePoint3D(FXMVECTOR v);
+
 XMMATRIX GetWorldMatrix(Transform);
-Transform GetTransformDelta(Transform, Transform);
+
+Transform GetRelativeTransform(const Transform& parentWorldTransform, const Transform& childWorldTransform);
 
 template <typename T>
 CollisionInfo GetCollisionWithComponent(SphereCollider* sphereCollider) {
