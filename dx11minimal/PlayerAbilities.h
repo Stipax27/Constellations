@@ -14,6 +14,7 @@
 #include "entity.h"
 
 #include "Point3d.h"
+#include "componentutils.h"
 
 #include "Transform.h"
 #include "PhysicBody.h"
@@ -26,7 +27,10 @@
 #include "PointCloud.h"
 #include "Health.h"
 #include "Mesh.h"
+
 #include "Components/Nebula.h"
+#include "Components/Grabbable.h"
+
 
 #include "Transform2D.h"
 

@@ -722,20 +722,24 @@ void PlayerAbilities::Grab()
 		Entity* grabHitbox = playerEntity->GetChildByName("GrabHitbox");
 		SphereCollider* grabCollider = grabHitbox->GetComponent<SphereCollider>();
 
-		grabbedObject = entityStorage->GetEntityByName("TestStar");
-		if (grabbedObject != nullptr) {
-			Entity* infoReserve = entityStorage->CreateEntity("infoReserve", grabbedObject);
-			infoReserve->SetActive(false);
-			Transform* transformInfo = infoReserve->AddComponent<Transform>();
-			transformInfo = grabbedObject->GetComponent<Transform>();
+		CollisionInfo result = GetCollisionWithComponent<Grabbable>(grabCollider);
+		if (result.entityId >= 0) {
+			grabbedObject = entityStorage->GetEntityById(result.entityId);
+			if (grabbedObject != nullptr) {
+				Entity* infoReserve = entityStorage->CreateEntity("infoReserve", grabbedObject);
+				infoReserve->SetActive(false);
+				Transform* transformInfo = infoReserve->AddComponent<Transform>();
+				transformInfo = grabbedObject->GetComponent<Transform>();
 
-			grabbedObject->SetParent(playerEntity);
+				grabbedObject->SetParent(playerEntity);
+			}
 		}
 
 	}
 	else {
 
 		grabbedObject->SetParent(worldFolder);
+		grabbedObject->GetChildByName("infoReserve")->Destroy();
 		grabbedObject = 0;
 
 	}

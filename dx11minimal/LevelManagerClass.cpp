@@ -227,6 +227,7 @@ bool LevelManagerClass::Initialize()
 	health = entity->AddComponent<Health>();
 	health->hp = 100;
 	health->maxHp = 100;
+	entity->AddComponent<Grabbable>();
 
 	/////////////////////////
 	
