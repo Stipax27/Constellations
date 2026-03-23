@@ -217,6 +217,7 @@
     <ClInclude Include="frustumclass.h" />
     <ClInclude Include="Components\GlueConstraint.h" />
     <ClInclude Include="glueConstraintSystem.h" />
+    <ClInclude Include="Grabbable.h" />
     <ClInclude Include="Health.h" />
     <ClInclude Include="HpIndicator.h" />
     <ClInclude Include="input.h" />

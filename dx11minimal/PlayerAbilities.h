@@ -106,6 +106,8 @@ public:
 
 	void Timestop();
 
+	void Grab();
+
 	
 
 private:
@@ -116,6 +118,8 @@ private:
 
 	Entity* playerEntity;
 	Entity* worldFolder;
+
+	Entity* grabbedObject;
 
 	bool charging;
 	bool chargeAnim;

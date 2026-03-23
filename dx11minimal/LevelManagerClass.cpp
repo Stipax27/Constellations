@@ -597,6 +597,13 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 	pointCloud->color = point3d(1, 0.6f, 0.9f);
 	pointCloud->compress = RenderCompress::x2;
 
+	Entity* grabHitbox = m_World->entityStorage->CreateEntity("GrabHitbox", player);
+	transform = grabHitbox->AddComponent<Transform>();
+	transform->position = point3d(0, 0, 4);
+	sphereCollider = grabHitbox->AddComponent<SphereCollider>();
+	sphereCollider->radius = 4;
+	sphereCollider->isTouchable = false;
+
 	return player;
 }
 

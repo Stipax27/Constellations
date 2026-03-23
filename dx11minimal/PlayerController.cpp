@@ -42,6 +42,7 @@ void PlayerController::Initialize(Entity* Player)
 	camera = world->m_Camera;
 	mouse = Singleton::GetInstance<MouseClass>();
 	window = Singleton::GetInstance<WindowClass>();
+	entityStorage = Singleton::GetInstance<EntityStorage>();
 
 	currentMaxSpeed = PLAYER_MOVE_SPEED;
 	isRunning = false;
@@ -232,10 +233,7 @@ void PlayerController::ProcessInput()
 	}
 
 	if (input::IsKeyPressed('H')) {
-		Entity* test = Singleton::GetInstance<EntityStorage>()->GetEntityByName("TestStar");
-		if (test != nullptr) {
-			test->SetParent(playerEntity);
-		}
+		abilities->Grab();
 	}
 
 }

@@ -715,6 +715,33 @@ void PlayerAbilities::Timestop()
 }
 
 
+void PlayerAbilities::Grab()
+{
+	if (grabbedObject == nullptr) {
+
+		Entity* grabHitbox = playerEntity->GetChildByName("GrabHitbox");
+		SphereCollider* grabCollider = grabHitbox->GetComponent<SphereCollider>();
+
+		grabbedObject = entityStorage->GetEntityByName("TestStar");
+		if (grabbedObject != nullptr) {
+			Entity* infoReserve = entityStorage->CreateEntity("infoReserve", grabbedObject);
+			infoReserve->SetActive(false);
+			Transform* transformInfo = infoReserve->AddComponent<Transform>();
+			transformInfo = grabbedObject->GetComponent<Transform>();
+
+			grabbedObject->SetParent(playerEntity);
+		}
+
+	}
+	else {
+
+		grabbedObject->SetParent(worldFolder);
+		grabbedObject = 0;
+
+	}
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 

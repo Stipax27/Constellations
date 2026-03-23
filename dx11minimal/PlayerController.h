@@ -72,6 +72,8 @@ public:
 	void TakeDamage(float damage);
 
 private:
+	EntityStorage* entityStorage;
+
 	Entity* playerEntity;
 	Entity* ui;
 
