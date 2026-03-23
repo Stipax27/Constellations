@@ -94,6 +94,7 @@ private:
 	void CreateAries(Entity*);
 	void CreateZenithLocation(Entity*, int);
 	void CreateNebula(Entity*, int);
+	void CreateStarQuestLoc(Entity*, int);
 	void UpdateTestAnimationToggle();
 
 	ID3D11Buffer* m_BoneBuffer = nullptr;

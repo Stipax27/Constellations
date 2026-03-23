@@ -232,9 +232,9 @@ bool LevelManagerClass::Initialize()
 	
 	CreateSpaceBackground(folder, 1);
 	CreateAries(folder);
-	CreateZenithLocation(folder, 2);
+	//CreateZenithLocation(folder, 2);
 	CreateNebula(folder,2);
-
+	CreateStarQuestLoc(folder, 2);
 	/////////////////////////
 
 	/*Entity* holder = m_World->entityStorage->CreateEntity("Holder", folder);
@@ -947,7 +947,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->vShader = 24;
 	nebula->count = pillars_cnt;
 	nebula->mode = pMode::point;
-	nebula->scale = 1;
+	nebula->scale = 10;
 
 	// Inside nebula | point
 
@@ -961,7 +961,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->count = pillars_cnt;
 	nebula->mode = pMode::point;
 	nebula->color = point3d(0.3, 0.5, 1.0); // Голубой
-	nebula->scale = 1;
+	nebula->scale = 10;
 	nebula->frustumRadius = 40;
 
 	// Pillars hand | glow
@@ -974,7 +974,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->count = pillars_cnt;
 	nebula->skipper = 1394 / 2;
 	nebula->mode = pMode::glow;
-	nebula->scale = 1;
+	nebula->scale = 10;
 
 	// Inside nebula | glow
 
@@ -989,7 +989,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->skipper = 1394;
 	nebula->mode = pMode::glow;
 	nebula->color = point3d(0.3, 0.5, 1.0); // Голубой
-	nebula->scale = 1;
+	nebula->scale = 10;
 	nebula->frustumRadius = 40;
 
 
@@ -1006,7 +1006,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->mode = pMode::point;
 	nebula->color = point3d(0.8, 0.4, 0.2);
 
-	nebula->scale = 1;
+	nebula->scale = 10;
 	nebula->frustumRadius = 40;
 
 
@@ -1021,7 +1021,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->mode = pMode::glow;
 	nebula->color = point3d(0.8, 0.4, 0.2);
 	
-	nebula->scale = 1;
+	nebula->scale = 10;
 	nebula->frustumRadius = 40;
 
 }
@@ -1045,7 +1045,7 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 	// first nebula Heal
 	entity = m_World->entityStorage->CreateEntity("INP", location);
 	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(150, 0, 0);
+	transform->position = point3d(-150, 50, 0);
 
 	sphereCollider = entity->AddComponent<SphereCollider>();
 	sphereCollider->radius = 30.f;
@@ -1069,7 +1069,7 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 	// first nebula Heal Glow
 	entity = m_World->entityStorage->CreateEntity("ING", location);
 	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(150, 0, 0);
+	transform->position = point3d(-150, 50, 0);
 
 
 	nebula = entity->AddComponent<Nebula>();
@@ -1088,7 +1088,7 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 
 	entity = m_World->entityStorage->CreateEntity("INP1", location);
 	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-150, 0, 0);
+	transform->position = point3d(-450, 50, 0);
 
 	sphereCollider = entity->AddComponent<SphereCollider>();
 	sphereCollider->radius = 30.f;
@@ -1111,7 +1111,7 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 	// First Nebula DMG Glow
 	entity = m_World->entityStorage->CreateEntity("ING1", location);
 	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-150, 0, 0);
+	transform->position = point3d(-450, 50, 0);
 
 	nebula = entity->AddComponent<Nebula>();
 	nebula->vShader = 26;
@@ -1124,4 +1124,278 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 	nebula->frustumRadius = 40;
 
 
+}
+
+
+void LevelManagerClass::CreateStarQuestLoc(Entity * folder, int quality)
+{
+	// ============================================
+	// КВЕСТ: "Затерянное созвездие"
+	// Задание: Найти Золотую звезду, спрятанную в сердце туманности
+	// ============================================
+
+	Entity* entity;
+	Transform* transform;
+	Star* star;
+	SphereCollider* sphereCollider;
+	Health* health;
+	PointCloud* pointCloud;
+	ParticleEmitter* particleEmitter;
+	Nebula* nebula;
+	Constellation* constellation;
+
+	// Основная локация
+	Entity* questLocation = m_World->entityStorage->CreateEntity("StarQuestLocation", folder);
+	transform = questLocation->AddComponent<Transform>();
+	transform->position = point3d(200.0f, 0.0f, 0.0f);
+
+	// ============================================
+	// ЗОНА 1: Вход в туманность (Приветственная зона)
+	// ============================================
+	Entity* entranceZone = m_World->entityStorage->CreateEntity("EntranceZone", questLocation);
+	transform = entranceZone->AddComponent<Transform>();
+	transform->position = point3d(180.0f, 0.0f, 0.0f);
+
+	// Красивая розовая туманность на входе
+	entity = m_World->entityStorage->CreateEntity("WelcomeNebula", entranceZone);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(180.0f, 0.0f, 0.0f);
+
+	nebula = entity->AddComponent<Nebula>();
+	nebula->vShader = 26;
+	nebula->count = 3725470 / 2 / quality;
+	nebula->mode = pMode::point;
+	nebula->color = point3d(1.0f, 0.5f, 0.8f); // Розовая
+	nebula->scale = 2.0f;
+	nebula->frustumRadius = 50;
+
+	// Звезда-указатель (подсказка)
+	entity = m_World->entityStorage->CreateEntity("GuideStar", entranceZone);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(185.0f, 5.0f, 0.0f);
+
+	star = entity->AddComponent<Star>();
+	star->radius = 1.5f;
+	star->crownRadius = 2.5f;
+	star->color1 = point3d(1.0f, 0.8f, 0.4f);
+	star->color2 = point3d(0.8f, 0.5f, 0.2f);
+	star->crownColor = point3d(1.0f, 0.9f, 0.5f);
+
+	// Добавляем вращающуюся анимацию (через ParticleEmitter)
+	particleEmitter = entity->AddComponent<ParticleEmitter>();
+	particleEmitter->rate = 30;
+	particleEmitter->lifetime = 1000;
+	particleEmitter->color = point3d(1.0f, 0.8f, 0.3f);
+	particleEmitter->size = { 0.2f, 0.8f };
+	particleEmitter->opacity = { 0.8f, 0.0f };
+	particleEmitter->emitDirection = EmitDirection::Up;
+	particleEmitter->speed = { 3.0f, 1.0f };
+
+	// ============================================
+	// ЗОНА 2: Поле обычных звезд (враги-охранники)
+	// ============================================
+	Entity* starField = m_World->entityStorage->CreateEntity("StarField", questLocation);
+	transform = starField->AddComponent<Transform>();
+	transform->position = point3d(210.0f, 0.0f, 0.0f);
+
+	// Создаем 8 звезд-охранников в форме круга
+	for (int i = 0; i < 8; i++) {
+		float angle = (float)i * PI * 2.0f / 8.0f;
+		float radius = 15.0f;
+		point3d pos = point3d(210.0f + cos(angle) * radius,
+			sin(angle) * radius,
+			cos(angle * 2.0f) * 8.0f);
+
+		entity = m_World->entityStorage->CreateEntity("GuardianStar", starField);
+		transform = entity->AddComponent<Transform>();
+		transform->position = pos;
+
+		star = entity->AddComponent<Star>();
+		star->radius = 1.2f;
+		star->crownRadius = 2.0f;
+		star->color1 = point3d(0.9f, 0.3f, 0.3f); // Красные - враждебные
+		star->color2 = point3d(0.7f, 0.2f, 0.2f);
+		star->crownColor = point3d(1.0f, 0.4f, 0.4f);
+
+		sphereCollider = entity->AddComponent<SphereCollider>();
+		sphereCollider->radius = 1.2f;
+		sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+
+		health = entity->AddComponent<Health>();
+		health->hp = 30;
+		health->maxHp = 30;
+		health->fraction = Fraction::Enemy;
+
+		// Добавляем частицы вокруг врагов
+		particleEmitter = entity->AddComponent<ParticleEmitter>();
+		particleEmitter->rate = 20;
+		particleEmitter->lifetime = 800;
+		particleEmitter->color = point3d(1.0f, 0.3f, 0.3f);
+		particleEmitter->size = { 0.1f, 0.4f };
+		particleEmitter->opacity = { 0.6f, 0.0f };
+		particleEmitter->emitDirection = EmitDirection::Front;
+		particleEmitter->speed = { 2.0f, 1.0f };
+	}
+
+	// ============================================
+	// ЗОНА 3: Туманность-лабиринт (с препятствиями)
+	// ============================================
+	Entity* labyrinthZone = m_World->entityStorage->CreateEntity("LabyrinthZone", questLocation);
+	transform = labyrinthZone->AddComponent<Transform>();
+	transform->position = point3d(250.0f, 0.0f, 0.0f);
+
+	// Создаем плотную туманность
+	entity = m_World->entityStorage->CreateEntity("LabyrinthNebula", labyrinthZone);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(250.0f, 0.0f, 0.0f);
+
+	nebula = entity->AddComponent<Nebula>();
+	nebula->vShader = 26;
+	nebula->count = 3725470 / quality;
+	nebula->mode = pMode::point;
+	nebula->color = point3d(0.4f, 0.2f, 0.6f); // Фиолетовая
+	nebula->scale = 7.f;
+	nebula->frustumRadius = 60;
+
+	// Создаем препятствия-астероиды (звезды с коллайдерами)
+	vector<point3d> obstaclePositions = {
+		point3d(240.0f, 8.0f, 5.0f),
+		point3d(245.0f, -5.0f, -3.0f),
+		point3d(248.0f, 3.0f, -6.0f),
+		point3d(252.0f, -7.0f, 4.0f),
+		point3d(255.0f, 6.0f, 2.0f),
+		point3d(258.0f, -4.0f, -5.0f),
+		point3d(262.0f, 2.0f, 7.0f),
+		point3d(265.0f, -6.0f, -2.0f)
+	};
+
+	for (const auto& pos : obstaclePositions) {
+		entity = m_World->entityStorage->CreateEntity("Obstacle", labyrinthZone);
+		transform = entity->AddComponent<Transform>();
+		transform->position = pos;
+
+		star = entity->AddComponent<Star>();
+		star->radius = 1.8f;
+		star->crownRadius = 2.2f;
+		star->color1 = point3d(0.5f, 0.3f, 0.7f);
+		star->color2 = point3d(0.3f, 0.2f, 0.5f);
+
+		sphereCollider = entity->AddComponent<SphereCollider>();
+		sphereCollider->radius = 1.8f;
+		sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+
+		health = entity->AddComponent<Health>();
+		health->hp = 50;
+		health->maxHp = 50;
+	}
+
+	// ============================================
+	// ЗОНА 4: Святилище с Золотой звездой (цель квеста)
+	// ============================================
+	Entity* sanctuary = m_World->entityStorage->CreateEntity("Sanctuary", questLocation);
+	transform = sanctuary->AddComponent<Transform>();
+	transform->position = point3d(300.0f, 0.0f, 0.0f);
+
+	// Величественная туманность вокруг святилища
+	entity = m_World->entityStorage->CreateEntity("SanctuaryNebula", sanctuary);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(300.0f, 0.0f, 0.0f);
+
+	nebula = entity->AddComponent<Nebula>();
+	nebula->vShader = 26;
+	nebula->count = 3725470 / quality;
+	nebula->mode = pMode::point;
+	nebula->color = point3d(1.0f, 0.85f, 0.3f); // Золотистая
+	nebula->scale = 10.f;
+	nebula->frustumRadius = 80;
+
+	// ГЛАВНАЯ ЗОЛОТАЯ ЗВЕЗДА (цель квеста)
+	Entity* goldenStar = m_World->entityStorage->CreateEntity("GoldenStar", sanctuary);
+	transform = goldenStar->AddComponent<Transform>();
+	transform->position = point3d(300.0f, 0.0f, 0.0f);
+
+	star = goldenStar->AddComponent<Star>();
+	star->radius = 3.0f;
+	star->crownRadius = 5.0f;
+	star->color1 = point3d(1.0f, 0.9f, 0.2f); // Золотой
+	star->color2 = point3d(0.9f, 0.7f, 0.1f);
+	star->crownColor = point3d(1.0f, 1.0f, 0.5f);
+
+	// Добавляем здоровье звезде (её нужно "собрать")
+	health = goldenStar->AddComponent<Health>();
+	health->hp = 100;
+	health->maxHp = 100;
+	health->fraction = Fraction::Player;
+
+	// Коллайдер для взаимодействия
+	sphereCollider = goldenStar->AddComponent<SphereCollider>();
+	sphereCollider->radius = 3.5f;
+	sphereCollider->collisionGroup = CollisionFilter::Group::Player;
+	sphereCollider->isTouchable = true;
+
+	// Эффект сияния (много частиц)
+	particleEmitter = goldenStar->AddComponent<ParticleEmitter>();
+	particleEmitter->rate = 100;
+	particleEmitter->lifetime = 1500;
+	particleEmitter->color = point3d(1.0f, 0.85f, 0.3f);
+	particleEmitter->size = { 0.3f, 1.2f };
+	particleEmitter->opacity = { 0.9f, 0.0f };
+	particleEmitter->emitDirection = EmitDirection::Front;
+	particleEmitter->speed = { 5.0f, 3.0f };
+	particleEmitter->spread = { PI, PI };
+
+	// Создаем созвездие вокруг золотой звезды
+	constellation = goldenStar->AddComponent<Constellation>();
+	constellation->starSize = 0.08f;
+	constellation->stars = {
+		point3d(0, 4, 0),
+		point3d(2.5, 2.5, 0),
+		point3d(3.5, 0, 0),
+		point3d(2.5, -2.5, 0),
+		point3d(0, -4, 0),
+		point3d(-2.5, -2.5, 0),
+		point3d(-3.5, 0, 0),
+		point3d(-2.5, 2.5, 0)
+	};
+	constellation->links = {
+		{0,1}, {1,2}, {2,3}, {3,4},
+		{4,5}, {5,6}, {6,7}, {7,0}
+	};
+
+	// ============================================
+	// ДОПОЛНИТЕЛЬНО: Создаем "след" из звезд к цели
+	// ============================================
+	Entity* trail = m_World->entityStorage->CreateEntity("StarTrail", questLocation);
+
+	for (int i = 0; i < 12; i++) {
+		float t = (float)i / 11.0f; // 0 to 1
+		point3d pos = point3d(180.0f + t * 120.0f,
+			sin(t * PI) * 3.0f,
+			cos(t * PI * 2.0f) * 4.0f);
+
+		entity = m_World->entityStorage->CreateEntity("TrailStar", trail);
+		transform = entity->AddComponent<Transform>();
+		transform->position = pos;
+
+		star = entity->AddComponent<Star>();
+		star->radius = 0.5f;
+		star->crownRadius = 0.8f;
+
+		// Градиент цвета от розового к золотому
+		float r = 1.0f - t * 0.3f;
+		float g = 0.5f + t * 0.5f;
+		float b = 0.8f - t * 0.7f;
+		star->color1 = point3d(r, g, b);
+		star->color2 = point3d(r * 0.7f, g * 0.5f, b * 0.5f);
+
+		particleEmitter = entity->AddComponent<ParticleEmitter>();
+		particleEmitter->rate = 10;
+		particleEmitter->lifetime = 500;
+		particleEmitter->color = star->color1;
+		particleEmitter->size = { 0.1f, 0.3f };
+		particleEmitter->opacity = { 0.5f, 0.0f };
+		particleEmitter->emitDirection = EmitDirection::Up;
+	}
+
+	
 }
