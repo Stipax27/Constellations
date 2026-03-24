@@ -1162,7 +1162,7 @@ void LevelManagerClass::CreateStarQuestLoc(Entity * folder, int quality)
 	transform->position = point3d(180.0f, 0.0f, 0.0f);
 
 	nebula = entity->AddComponent<Nebula>();
-	nebula->vShader = 26;
+	nebula->vShader = 29;
 	nebula->count = 3725470 / 2 / quality;
 	nebula->mode = pMode::point;
 	nebula->color = point3d(1.0f, 0.5f, 0.8f); // Розовая
@@ -1250,7 +1250,7 @@ void LevelManagerClass::CreateStarQuestLoc(Entity * folder, int quality)
 	transform->position = point3d(250.0f, 0.0f, 0.0f);
 
 	nebula = entity->AddComponent<Nebula>();
-	nebula->vShader = 26;
+	nebula->vShader = 29;
 	nebula->count = 3725470 / quality;
 	nebula->mode = pMode::point;
 	nebula->color = point3d(0.4f, 0.2f, 0.6f); // Фиолетовая
@@ -1302,7 +1302,7 @@ void LevelManagerClass::CreateStarQuestLoc(Entity * folder, int quality)
 	transform->position = point3d(300.0f, 0.0f, 0.0f);
 
 	nebula = entity->AddComponent<Nebula>();
-	nebula->vShader = 26;
+	nebula->vShader = 29;
 	nebula->count = 3725470 / quality;
 	nebula->mode = pMode::point;
 	nebula->color = point3d(1.0f, 0.85f, 0.3f); // Золотистая
