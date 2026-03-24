@@ -204,18 +204,11 @@ void PlayerController::ProcessInput()
 		abilities->Timestop();
 	}
 
-	static bool vKeyPressed = false;
-	if (input::IsKeyDown('V') && !vKeyPressed) {
-		vKeyPressed = true;
-		if (abilities) {
-			abilities->ParticleVacuumStart();
-		}
+	if (input::IsKeyPressed('V')) {
+		abilities->ParticleVacuumStart();
 	}
-	else if (!input::IsKeyDown('V') && vKeyPressed) {
-		vKeyPressed = false;
-		if (abilities) {
-			abilities->ParticleVacuumEnd();  
-		}
+	if (!input::IsKeyReleased('V')) {
+		abilities->ParticleVacuumEnd();
 	}
 
 	/*static bool gKeyPressed = false;
