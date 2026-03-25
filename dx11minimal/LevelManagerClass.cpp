@@ -1140,10 +1140,10 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 	multiDamager->inverval = 1000;
 
 	nebula = entity->AddComponent<Nebula>();
-	nebula->vShader = 26;
+	nebula->vShader = 29;
 	nebula->count = pillars_cnt;
 	nebula->mode = pMode::point;
-	nebula->color = point3d(0.8, 0.4, 0.2);
+	nebula->color = point3d(0.6, 0.3, 0.1);
 
 	nebula->scale = 1;
 	nebula->frustumRadius = 40;
