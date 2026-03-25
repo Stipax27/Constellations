@@ -234,7 +234,7 @@ bool LevelManagerClass::Initialize()
 	CreateAries(folder);
 	//CreateZenithLocation(folder, 2);
 	CreateNebula(folder,2);
-	CreateStarQuestLoc(folder, 2);
+	//CreateStarQuestLoc(folder, 2);
 	/////////////////////////
 
 	/*Entity* holder = m_World->entityStorage->CreateEntity("Holder", folder);
