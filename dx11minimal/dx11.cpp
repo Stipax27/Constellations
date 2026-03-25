@@ -1397,7 +1397,7 @@ void Shaders::Init()
 	Shaders::CreateVS(26, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\vs\\NebulaHeal.shader"));
 	Shaders::CreateVS(27, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SkinnedMesh_VS.shader"));
 	Shaders::CreateVS(28, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\SkinnedPointCloud_VS.shader"));
-	Shaders::CreateVS(29, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\OptimazeNebula.shader"));
+	Shaders::CreateVS(29, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\vs\\OptimazeNebula.shader"));
 
 	Shaders::CreatePS(23, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ps\\basic.shader"));
 	Shaders::CreatePS(24, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ps\\basicLow.shader"));
