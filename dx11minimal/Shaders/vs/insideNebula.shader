@@ -26,7 +26,7 @@ float3 pillar(uint qid,uint iid,float2 grid,float a, float t, float h)
     //pos+=noise3(a*351*float3(4,25,67))*1.7;
 
     pos = rot3(pos,noise3(pos*.8+float3(0,t,0))/6);
-    pos+= noise3(pos)*.8;
+    //pos+= noise3(pos)*.8;
     pos = rot3(pos,noise3(pos.zyx*1.6+float3(0,-t,0))/12);
     float3 pos3=pos;
     pos=(frac(pos/7)-.5)*14;

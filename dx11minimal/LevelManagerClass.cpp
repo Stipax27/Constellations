@@ -234,7 +234,7 @@ bool LevelManagerClass::Initialize()
 	CreateAries(folder);
 	//CreateZenithLocation(folder, 2);
 	CreateNebula(folder,2);
-	CreateStarQuestLoc(folder, 2);
+	//CreateStarQuestLoc(folder, 2);
 	/////////////////////////
 
 	/*Entity* holder = m_World->entityStorage->CreateEntity("Holder", folder);
@@ -1124,6 +1124,30 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 	nebula->frustumRadius = 40;
 
 
+	// Test Nebula
+
+	entity = m_World->entityStorage->CreateEntity("INP1", location);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(0, 50, 0);
+
+	sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider->radius = 30.f;
+	sphereCollider->isTouchable = false;
+
+	multiDamager = entity->AddComponent<MultiDamager>();
+	multiDamager->damage = 5;
+	multiDamager->repeats = -1;
+	multiDamager->inverval = 1000;
+
+	nebula = entity->AddComponent<Nebula>();
+	nebula->vShader = 26;
+	nebula->count = pillars_cnt;
+	nebula->mode = pMode::point;
+	nebula->color = point3d(0.8, 0.4, 0.2);
+
+	nebula->scale = 1;
+	nebula->frustumRadius = 40;
+
 }
 
 
@@ -1162,8 +1186,8 @@ void LevelManagerClass::CreateStarQuestLoc(Entity * folder, int quality)
 	transform->position = point3d(180.0f, 0.0f, 0.0f);
 
 	nebula = entity->AddComponent<Nebula>();
-	nebula->vShader = 29;
-	nebula->count = 3725470 / 2 / quality;
+	nebula->vShader = 26;
+	nebula->count = 3725470 / quality / 10;
 	nebula->mode = pMode::point;
 	nebula->color = point3d(1.0f, 0.5f, 0.8f); // Розовая
 	nebula->scale = 2.0f;
@@ -1250,8 +1274,8 @@ void LevelManagerClass::CreateStarQuestLoc(Entity * folder, int quality)
 	transform->position = point3d(250.0f, 0.0f, 0.0f);
 
 	nebula = entity->AddComponent<Nebula>();
-	nebula->vShader = 29;
-	nebula->count = 3725470 / quality;
+	nebula->vShader = 26;
+	nebula->count = 3725470 / quality / 10;
 	nebula->mode = pMode::point;
 	nebula->color = point3d(0.4f, 0.2f, 0.6f); // Фиолетовая
 	nebula->scale = 7.f;
@@ -1302,8 +1326,8 @@ void LevelManagerClass::CreateStarQuestLoc(Entity * folder, int quality)
 	transform->position = point3d(300.0f, 0.0f, 0.0f);
 
 	nebula = entity->AddComponent<Nebula>();
-	nebula->vShader = 29;
-	nebula->count = 3725470 / quality;
+	nebula->vShader = 26;
+	nebula->count = 3725470 / quality / 10;
 	nebula->mode = pMode::point;
 	nebula->color = point3d(1.0f, 0.85f, 0.3f); // Золотистая
 	nebula->scale = 10.f;
