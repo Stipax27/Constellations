@@ -48,7 +48,7 @@ public:
 			});
 
 		if (it != activeQuests.end()) {
-			(*it)->Complete();
+			(*it)->Stop();
 			activeQuests.erase(it);
 		}
 	}
@@ -60,6 +60,9 @@ public:
 
 private:
 	vector<unique_ptr<QuestClass>> activeQuests;
+
+private:
+	void ClearCompletedQuests();
 };
 
 #endif

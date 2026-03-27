@@ -20,9 +20,12 @@ class QuestClass {
 public:
 	string name;
 	string description;
+	
+	bool completed = false;
 
 public:
 	virtual void Start() = 0;
+	virtual void Stop() = 0;
 	virtual void Complete() = 0;
 	virtual void Update() = 0;
 };
