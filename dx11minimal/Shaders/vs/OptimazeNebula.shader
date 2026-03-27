@@ -89,12 +89,9 @@ pos_color CalcParticles(uint qid, uint iid, float4 grid)
     
     pos_color p;
     p.wpos = float4(pos, 1);
-    
-    
-    float3 baseColor = nBase_color;
-    
+  
    
-    p.color = float4(baseColor, 0.6);
+    p.color = float4(nBase_color.xyz, 0.6);
     
    
     p.pos = transform_unisize(pos, grid.zw, 1.5 * lowerScale);
