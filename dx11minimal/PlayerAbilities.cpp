@@ -394,6 +394,18 @@ bool PlayerAbilities::TryBlockDamage(float damage)
 
 void PlayerAbilities::ParticleVacuumStart() {
 
+	if (!isVacuum) {
+		isVacuum = true;
+	}
+	else {
+		return;
+	}
+
+	interactiveNebula = FindNearestNebula();
+	if (interactiveNebula == nullptr)
+		return;
+
+
 	if (currentParticles && !currentParticles->IsDeleting()) {
 		currentParticles->Destroy();
 	}
@@ -412,7 +424,7 @@ void PlayerAbilities::ParticleVacuumStart() {
 	}
 
 	// Получаем цвет текущей туманности
-	point3d nebulaColor = GetCurrentNebulaColor();
+	point3d nebulaColor = interactiveNebula->color;
 
 	vacuumCenterEntity = world->entityStorage->CreateEntity("VacuumCenter", playerEntity);
 	if (vacuumCenterEntity) {
@@ -450,6 +462,16 @@ void PlayerAbilities::ParticleVacuumStart() {
 
 void PlayerAbilities::ParticleVacuumEnd() {
 	
+	if (isVacuum) {
+		isVacuum = false;
+	}
+	else {
+		return;
+	}
+
+	if (interactiveNebula == nullptr)
+		return;
+
 	if (currentParticles && !currentParticles->IsDeleting()) {
 		ParticleEmitter* particleEmitter = currentParticles->GetComponent<ParticleEmitter>();
 		if (particleEmitter) {
@@ -471,6 +493,7 @@ void PlayerAbilities::ParticleVacuumEnd() {
 	}
 
 	CreateBlueStar(finalSize);
+	interactiveNebula = 0;
 }
 
 void PlayerAbilities::CreateBlueStar(float size) {
@@ -494,7 +517,7 @@ void PlayerAbilities::CreateBlueStar(float size) {
 	}
 
 	// Получаем цвет текущей туманности
-	point3d nebulaColor = GetCurrentNebulaColor();
+	point3d nebulaColor = interactiveNebula->color;
 
 	starEntity = world->entityStorage->CreateEntity("BlueStar", playerEntity);
 	if (!starEntity) {
@@ -557,7 +580,7 @@ void PlayerAbilities::BlowGasStart() {
 	}
 
 	// Получаем цвет текущей туманности
-	point3d nebulaColor = GetCurrentNebulaColor();
+	point3d nebulaColor = interactiveNebula->color;
 
 	gasBurstEntity = world->entityStorage->CreateEntity("GasBurst", nullptr);
 
@@ -709,15 +732,54 @@ void PlayerAbilities::BlockEnd()
 }
 
 
-void PlayerAbilities::TimestopStart()
+void PlayerAbilities::Timestop()
 {
-	timeStopped = true;
+	timeStopped = not timeStopped;
 }
 
 
-void PlayerAbilities::TimestopEnd()
+void PlayerAbilities::Grab()
 {
-	timeStopped = false;
+	if (grabbedObject == nullptr) {
+
+		Entity* grabHitbox = playerEntity->GetChildByName("GrabHitbox");
+		SphereCollider* grabCollider = grabHitbox->GetComponent<SphereCollider>();
+
+		CollisionInfo result = GetCollisionWithComponent<Grabbable>(grabCollider);
+		if (result.entityId >= 0) {
+			grabbedObject = entityStorage->GetEntityById(result.entityId);
+			if (grabbedObject != nullptr) {
+				Transform* grabbedTransform = grabbedObject->GetComponent<Transform>();
+
+				Entity* infoReserve = entityStorage->CreateEntity("infoReserve", grabbedObject);
+				infoReserve->SetActive(false);
+				Transform* transformInfo = infoReserve->AddComponent<Transform>();
+				transformInfo = grabbedTransform;
+
+				Transform relative = GetRelativeTransform(GetWorldTransform(playerEntity), GetWorldTransform(grabbedObject));
+				grabbedObject->SetParent(playerEntity);
+
+				grabbedTransform->position = relative.position;
+				grabbedTransform->mRotation = relative.mRotation;
+				grabbedTransform->scale = relative.scale;
+			}
+		}
+
+	}
+	else {
+
+		Transform wt = GetWorldTransform(grabbedObject);
+		grabbedObject->SetParent(worldFolder);
+
+		Transform* grabbedTransform = grabbedObject->GetComponent<Transform>();
+		grabbedTransform->position = wt.position;
+		grabbedTransform->mRotation = wt.mRotation;
+		grabbedTransform->scale = wt.scale;
+
+		grabbedObject->GetChildByName("infoReserve")->Destroy();
+		grabbedObject = 0;
+
+	}
 }
 
 
@@ -730,6 +792,31 @@ void PlayerAbilities::UpdateProjectiles()
 	while (i < projectiles.size())
 	{
 		Entity* projectile = projectiles[i];
+
+		if (!projectile->IsDeleting() && !projectile->HasComponent<SingleDamager>()) {
+			CollisionInfo info = GetProjectileCollisionInfo(projectile);
+
+			Entity* impact = entityStorage->CreateEntity("Impact", worldFolder);
+
+			Transform* transform = impact->AddComponent<Transform>();
+			transform->position = info.position;
+
+			ParticleEmitter* particleEmitter = impact->AddComponent<ParticleEmitter>();
+			particleEmitter->rate = 150;
+			particleEmitter->lifetime = 500;
+			particleEmitter->color = point3d(1.0f, 0.15f, 0.85f);
+			particleEmitter->size = { 2.0f, 0.0f };
+			particleEmitter->opacity = { 1.0f, 0.0f };
+			particleEmitter->speed = { 20.0f, 0.0f };
+			particleEmitter->spread = { PI, PI };
+			particleEmitter->isHeapEmit = true;
+			particleEmitter->heapEmitRepeats = 1;
+
+			DelayedDestroy* delayedDestroy = impact->AddComponent<DelayedDestroy>();
+			delayedDestroy->lifeTime = 1000;
+
+			projectile->Destroy();
+		}
 
 		if (projectile->IsDeleting())
 		{
@@ -744,31 +831,6 @@ void PlayerAbilities::UpdateProjectiles()
 			}
 			else {
 				projectile->SetTimeScale(min(projectile->GetLocalTimeScale() + TIMESTOP_STEP * (timer::deltaTime * 0.01), 1));
-			}
-
-			if (!projectile->HasComponent<SingleDamager>()) {
-				/*CollisionInfo info = GetProjectileCollisionInfo(projectile);
-
-				Entity* impact = entityStorage->CreateEntity("Impact", worldFolder);
-
-				Transform* transform = impact->AddComponent<Transform>();
-				transform->position = info.position;
-
-				ParticleEmitter* particleEmitter = impact->AddComponent<ParticleEmitter>();
-				particleEmitter->rate = 150;
-				particleEmitter->lifetime = 500;
-				particleEmitter->color = point3d(1.0f, 0.15f, 0.85f);
-				particleEmitter->size = { 0.0f, 2.5f };
-				particleEmitter->opacity = { 1.0f, 0.0f };
-				particleEmitter->speed = { 10.0f, 0.0f };
-				particleEmitter->spread = { PI, PI };
-				particleEmitter->isHeapEmit = true;
-				particleEmitter->heapEmitRepeats = 1;
-
-				DelayedDestroy* delayedDestroy = impact->AddComponent<DelayedDestroy>();
-				delayedDestroy->lifeTime = 1000;*/
-
-				projectile->Destroy();
 			}
 		}
 	}
@@ -858,7 +920,7 @@ Entity* PlayerAbilities::BowCommon(Transform startTransform, point3d direction)
 	Entity* projectile = entityStorage->CreateEntity("PlayerProjectile");
 	Transform* transform = projectile->AddComponent<Transform>();
 	transform->position = startTransform.position;
-	transform->mRotation = startTransform.mRotation;
+	SetLookVector(transform, direction);
 
 	PhysicBody* physicBody = projectile->AddComponent<PhysicBody>();
 	physicBody->airFriction = 0.0f;
@@ -872,7 +934,6 @@ Entity* PlayerAbilities::BowCommon(Transform startTransform, point3d direction)
 
 	Mesh* mesh = projectile->AddComponent<Mesh>();
 	mesh->index = 1;
-	//mesh->mRotation = XMMatrixRotationAxis(XMVectorSet(1, 0, 0, 0), 90 * RAD) * transform->mRotation;
 
 	ParticleEmitter* particleEmitter = projectile->AddComponent<ParticleEmitter>();
 	particleEmitter->rate = 100;
@@ -983,7 +1044,7 @@ Entity* PlayerAbilities::BowCharged(Transform startTransform, point3d direction)
 	Entity* projectile = entityStorage->CreateEntity("PlayerProjectile");
 	Transform* transform = projectile->AddComponent<Transform>();
 	transform->position = startTransform.position;
-	transform->mRotation = startTransform.mRotation;
+	SetLookVector(transform, direction);
 
 	PhysicBody* physicBody = projectile->AddComponent<PhysicBody>();
 	physicBody->airFriction = 0.0f;
@@ -1021,15 +1082,17 @@ CollisionInfo PlayerAbilities::GetProjectileCollisionInfo(Entity* projectile)
 {
 	SphereCollider* sphereCollider = projectile->GetComponent<SphereCollider>();
 
-	for (CollisionInfo info : sphereCollider->collisions) {
-		Entity* entity = entityStorage->GetEntityById(info.entityId);
-		if (entity == nullptr) {
-			continue;
-		}
+	if (sphereCollider != nullptr) {
+		for (CollisionInfo info : sphereCollider->collisions) {
+			Entity* entity = entityStorage->GetEntityById(info.entityId);
+			if (!IsEntityValid(entity)) {
+				continue;
+			}
 
-		Health* health = entity->GetComponentInAncestor<Health>();
-		if (health != nullptr && health->active) {
-			return info;
+			Health* health = entity->GetComponentInAncestor<Health>();
+			if (health != nullptr && health->active) {
+				return info;
+			}
 		}
 	}
 
@@ -1041,112 +1104,20 @@ Nebula* PlayerAbilities::FindNearestNebula()
 	if (!playerEntity || !world) return nullptr;
 
 	
-	Transform* playerTransform = playerEntity->GetComponent<Transform>();
-	if (!playerTransform) return nullptr;
+	SphereCollider* sphereCollider = playerEntity->GetComponent<SphereCollider>();
+	if (!sphereCollider) return nullptr;
 
-	point3d playerPos = playerTransform->position;
+	for (CollisionInfo info : sphereCollider->collisions) {
+		Entity* entity = entityStorage->GetEntityById(info.entityId);
+		if (!IsEntityValid(entity)) {
+			continue;
+		}
 
-	
-	Entity* worldFolder = world->entityStorage->GetEntityByName("World");
-	if (!worldFolder) return nullptr;
-
-
-	vector<Entity*> locations = worldFolder->GetChildren(true);
-
-	Nebula* nearestNebula = nullptr;
-	float minDistance = FLT_MAX;
-
-	for (Entity* location : locations) {
-		if (!location || !location->IsActive()) continue;
-
-		
-		vector<Nebula*> nebulae = location->GetAllComponentsOfBase<Nebula>();
-
-		for (Nebula* nebula : nebulae) {
-			if (!nebula) continue;
-
-			
-			Entity* nebulaEntity = nullptr; 
-		
-
-			Transform* nebulaTransform = nullptr; // Получить трансформ
-
-		
-			float distance = 50.0f; // Заглушка
-
-			if (distance < minDistance) {
-				minDistance = distance;
-				nearestNebula = nebula;
-			}
+		Nebula* nebula = entity->GetComponentInAncestor<Nebula>();
+		if (nebula != nullptr && nebula->active && nebula->isInteractive) {
+			return nebula;
 		}
 	}
 
-	return nearestNebula;
-}
-
-point3d PlayerAbilities::GetCurrentNebulaColor()
-{
-	// Цвет по умолчанию (Белый)
-	point3d defaultColor = point3d(1.0f, 1.0f, 1.0f);
-
-	if (!playerEntity || !world) {
-		return defaultColor;
-	}
-
-	// Получаем позицию игрока
-	Transform* playerTransform = playerEntity->GetComponent<Transform>();
-	if (!playerTransform) {
-		return defaultColor;
-	}
-
-	point3d playerPos = playerTransform->position;
-
-	// Получаем корневой элемент мира
-	Entity* worldFolder = world->entityStorage->GetEntityByName("World");
-	if (!worldFolder) return defaultColor;
-
-	// Получаем все дочерние элементы мира (локации)
-	vector<Entity*> locations = worldFolder->GetChildren(true);
-
-	point3d resultColor = defaultColor;
-	float totalWeight = 0.0f;
-	const float INFLUENCE_RADIUS = 100.0f;
-
-	for (Entity* location : locations) {
-		if (!location || !location->IsActive()) continue;
-
-		// Получаем трансформ локации
-		Transform* locationTransform = location->GetComponent<Transform>();
-		if (!locationTransform) continue;
-
-		// Получаем все компоненты Nebula в этой локации
-		vector<Nebula*> nebulae = location->GetAllComponentsOfBase<Nebula>();
-
-		for (Nebula* nebula : nebulae) {
-			if (!nebula) continue;
-
-			// Расстояние до локации (приблизительно)
-			float distance = (playerPos - locationTransform->position).magnitude();
-
-			if (distance < INFLUENCE_RADIUS) {
-				// Вес влияния обратно пропорционален расстоянию
-				float weight = 1.0f - (distance / INFLUENCE_RADIUS);
-				weight = max(0.0f, weight);
-
-				// Используем цвет туманности, если он задан
-				point3d nebulaColor = nebula->color;
-				if (nebulaColor.magnitude() > 0.01f) {
-					resultColor = resultColor + nebulaColor * weight;
-					totalWeight += weight;
-				}
-			}
-		}
-	}
-
-	// Нормализуем результат
-	if (totalWeight > 0) {
-		resultColor = resultColor / totalWeight;
-	}
-
-	return resultColor;
+	return nullptr;
 }

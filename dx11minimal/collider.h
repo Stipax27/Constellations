@@ -24,10 +24,10 @@ struct CollisionResult {
 };
 
 struct CollisionInfo {
-	int entityId;
-	point3d normal;
-	point3d position;
-	float distance;
+	int entityId = -1;
+	point3d normal = point3d(0, 1, 0);
+	point3d position = point3d();
+	float distance = 0;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

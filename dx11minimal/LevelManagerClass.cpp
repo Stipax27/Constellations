@@ -212,21 +212,22 @@ bool LevelManagerClass::Initialize()
 	//	health->maxHp = 10;
 	//}
 
-	//entity = m_World->entityStorage->CreateEntity("Star", folder);
-	//transform = entity->AddComponent<Transform>();
+	entity = m_World->entityStorage->CreateEntity("TestStar", folder);
+	transform = entity->AddComponent<Transform>();
 	//transform->position = point3d(50, 0.0f, -35.0f);
-	//star = entity->AddComponent<Star>();
-	//star->radius = 8.0f;
-	//star->crownRadius = 12.0f;
-	//star->color1 = point3d(0.87f, 0.24f, 0.13f);
-	//star->color2 = point3d(0.35f, 0.0f, 0.07f);
-	//star->crownColor = point3d(0.87f, 0.25f, 0.15f);
-	//sphereCollider = entity->AddComponent<SphereCollider>();
-	//sphereCollider->radius = 8.0f;
-	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	//health = entity->AddComponent<Health>();
-	//health->hp = 100;
-	//health->maxHp = 100;
+	star = entity->AddComponent<Star>();
+	star->radius = 2.0f;
+	star->crownRadius = 3.0f;
+	star->color1 = point3d(0.87f, 0.24f, 0.13f);
+	star->color2 = point3d(0.35f, 0.0f, 0.07f);
+	star->crownColor = point3d(0.87f, 0.25f, 0.15f);
+	sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider->radius = 2.0f;
+	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	health = entity->AddComponent<Health>();
+	health->hp = 100;
+	health->maxHp = 100;
+	entity->AddComponent<Grabbable>();
 
 	/////////////////////////
 	
@@ -502,7 +503,7 @@ void LevelManagerClass::LoadModels()
 // TODO: Remove, only for test animation change
 void LevelManagerClass::UpdateTestAnimationToggle()
 {
-	const bool isTogglePressed = IsKeyPressed('T');
+	const bool isTogglePressed = input::IsKeyDown('T');
 	if (!isTogglePressed)
 	{
 		m_WasToggleAnimationPressed = false;
@@ -596,6 +597,13 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 	pointCloud->brightness = 0.1f;
 	pointCloud->color = point3d(1, 0.6f, 0.9f);
 	pointCloud->compress = RenderCompress::x2;
+
+	Entity* grabHitbox = m_World->entityStorage->CreateEntity("GrabHitbox", player);
+	transform = grabHitbox->AddComponent<Transform>();
+	transform->position = point3d(0, 0, 4);
+	sphereCollider = grabHitbox->AddComponent<SphereCollider>();
+	sphereCollider->radius = 4;
+	sphereCollider->isTouchable = false;
 
 	return player;
 }
@@ -936,7 +944,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	Entity* location = m_World->entityStorage->CreateEntity("Zenith location", folder);
 
 	transform = location->AddComponent<Transform>();
-	transform->position = point3d(0, 50, 0);
+	//transform->position = point3d(0, 50, 0);
 
 	// Pillars hand | point
 
@@ -947,13 +955,14 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->vShader = 24;
 	nebula->count = pillars_cnt;
 	nebula->mode = pMode::point;
-	nebula->scale = 10;
+	nebula->scale = 1;
+	nebula->frustumRadius = 40;
 
 	// Inside nebula | point
 
 	entity = m_World->entityStorage->CreateEntity("INP", location);
 	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0, 0, 0);
+	transform->position = point3d(150, 0, 0);
 
 	
 	nebula = entity->AddComponent<Nebula>();
@@ -974,13 +983,14 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->count = pillars_cnt;
 	nebula->skipper = 1394 / 2;
 	nebula->mode = pMode::glow;
-	nebula->scale = 10;
+	nebula->scale = 1;
+	nebula->frustumRadius = 40;
 
 	// Inside nebula | glow
 
 	entity = m_World->entityStorage->CreateEntity("ING", location);
 	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0, 0, 0);
+	transform->position = point3d(150, 0, 0);
 
 
 	nebula = entity->AddComponent<Nebula>();
@@ -1104,9 +1114,13 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 	nebula->count = pillars_cnt;
 	nebula->mode = pMode::point;
 	nebula->color = point3d(0.8, 0.4, 0.2);
-
 	nebula->scale = 1;
 	nebula->frustumRadius = 40;
+	nebula->isInteractive = true;
+
+	sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider->radius = 40;
+	sphereCollider->isTouchable = false;
 
 	// First Nebula DMG Glow
 	entity = m_World->entityStorage->CreateEntity("ING1", location);
@@ -1119,7 +1133,6 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 	nebula->skipper = 1394;
 	nebula->mode = pMode::glow;
 	nebula->color = point3d(0.8, 0.4, 0.2);
-
 	nebula->scale = 1;
 	nebula->frustumRadius = 40;
 

@@ -9,6 +9,7 @@
 // INCLUDES //
 //////////////
 #include "singleton.h"
+#include "input.h"
 
 #include "cameraclass.h"
 #include "mouseclass.h"
@@ -71,6 +72,8 @@ public:
 	void TakeDamage(float damage);
 
 private:
+	EntityStorage* entityStorage;
+
 	Entity* playerEntity;
 	Entity* ui;
 

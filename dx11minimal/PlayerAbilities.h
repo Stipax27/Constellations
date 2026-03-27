@@ -14,6 +14,7 @@
 #include "entity.h"
 
 #include "Point3d.h"
+#include "componentutils.h"
 
 #include "Transform.h"
 #include "PhysicBody.h"
@@ -26,7 +27,10 @@
 #include "PointCloud.h"
 #include "Health.h"
 #include "Mesh.h"
+
 #include "Components/Nebula.h"
+#include "Components/Grabbable.h"
+
 
 #include "Transform2D.h"
 
@@ -104,8 +108,9 @@ public:
 	void BlockStart();
 	void BlockEnd();
 
-	void TimestopStart();
-	void TimestopEnd();
+	void Timestop();
+
+	void Grab();
 
 	
 
@@ -117,6 +122,8 @@ private:
 
 	Entity* playerEntity;
 	Entity* worldFolder;
+
+	Entity* grabbedObject;
 
 	bool charging;
 	bool chargeAnim;
@@ -146,6 +153,8 @@ private:
 	Entity* vacuumCenterEntity;
 	double vacuumStartTime;   
 	float maxStarSize;
+	bool isVacuum;
+	Nebula* interactiveNebula;
 
 	bool canBlowGas;          
 	Entity* gasBurstEntity;
@@ -173,7 +182,6 @@ private:
 	CollisionInfo GetProjectileCollisionInfo(Entity*);
 
 	Nebula* FindNearestNebula();
-	point3d GetCurrentNebulaColor();
 };
 
 #endif

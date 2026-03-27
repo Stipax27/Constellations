@@ -97,6 +97,19 @@ public:
 	}
 
 	template <typename T>
+	T* GetUpperComponent()
+	{
+		T* it = GetComponent<T>();
+		if (it != nullptr && parent != nullptr) {
+			T* upperIt = parent->GetUpperComponent<T>();
+			if (upperIt != nullptr) {
+				return upperIt;
+			}
+		}
+		return it;
+	}
+
+	template <typename T>
 	T* GetComponents()
 	{
 		//components.

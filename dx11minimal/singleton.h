@@ -8,11 +8,13 @@ using namespace std;
 
 namespace Singleton
 {
-	extern unordered_map<type_index, ISingleton*> _instances;
+	//extern unordered_map<type_index, ISingleton*> _instances;
 
 	template <typename T>
 	T* GetInstance()
 	{
+		static unordered_map<type_index, ISingleton*> _instances;
+
 		if (!is_base_of<ISingleton, T>::value) {
 			return nullptr;
 		}
