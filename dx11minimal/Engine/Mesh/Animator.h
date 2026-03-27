@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _ANIMATOR_H_
+#define _ANIMATOR_H_
+
 #include "Skeleton.h"
 #include "Animation.h"
 
@@ -11,3 +13,5 @@ public:
 		float time
 	);
 };
+
+#endif

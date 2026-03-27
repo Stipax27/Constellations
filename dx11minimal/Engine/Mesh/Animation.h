@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _ANIMATION_H_
+#define _ANIMATION_H_
+
 #include <vector>
 #include <string>
 #include <DirectXMath.h>
@@ -17,3 +19,5 @@ struct AnimationClip
 	float duration = 0.0f;
 	std::vector<AnimationChannel> channels;
 };
+
+#endif

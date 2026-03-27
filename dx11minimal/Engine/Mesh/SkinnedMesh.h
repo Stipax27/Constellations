@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _SKINNED_MESH_H_
+#define _SKINNED_MESH_H_
+
 #include <vector>
 #include <cstdint>
 #include <DirectXMath.h>
@@ -25,3 +27,5 @@ struct SkinnedMesh : Component
 
 	void UploadToGPU();
 };
+
+#endif

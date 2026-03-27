@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _SKELETON_H_
+#define _SKELETON_H_
+
 #include <vector>
 #include <string>
 #include <DirectXMath.h>
@@ -22,3 +24,5 @@ public:
 	void UpdateGlobalPose();
 	void SetBindPose();
 };
+
+#endif
