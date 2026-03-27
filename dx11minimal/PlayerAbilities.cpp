@@ -401,6 +401,11 @@ void PlayerAbilities::ParticleVacuumStart() {
 		return;
 	}
 
+	interactiveNebula = FindNearestNebula();
+	if (interactiveNebula == nullptr)
+		return;
+
+
 	if (currentParticles && !currentParticles->IsDeleting()) {
 		currentParticles->Destroy();
 	}
@@ -419,7 +424,7 @@ void PlayerAbilities::ParticleVacuumStart() {
 	}
 
 	// Получаем цвет текущей туманности
-	point3d nebulaColor = GetCurrentNebulaColor();
+	point3d nebulaColor = interactiveNebula->color;
 
 	vacuumCenterEntity = world->entityStorage->CreateEntity("VacuumCenter", playerEntity);
 	if (vacuumCenterEntity) {
@@ -464,6 +469,9 @@ void PlayerAbilities::ParticleVacuumEnd() {
 		return;
 	}
 
+	if (interactiveNebula == nullptr)
+		return;
+
 	if (currentParticles && !currentParticles->IsDeleting()) {
 		ParticleEmitter* particleEmitter = currentParticles->GetComponent<ParticleEmitter>();
 		if (particleEmitter) {
@@ -485,6 +493,7 @@ void PlayerAbilities::ParticleVacuumEnd() {
 	}
 
 	CreateBlueStar(finalSize);
+	interactiveNebula = 0;
 }
 
 void PlayerAbilities::CreateBlueStar(float size) {
@@ -508,7 +517,7 @@ void PlayerAbilities::CreateBlueStar(float size) {
 	}
 
 	// Получаем цвет текущей туманности
-	point3d nebulaColor = GetCurrentNebulaColor();
+	point3d nebulaColor = interactiveNebula->color;
 
 	starEntity = world->entityStorage->CreateEntity("BlueStar", playerEntity);
 	if (!starEntity) {
@@ -571,7 +580,7 @@ void PlayerAbilities::BlowGasStart() {
 	}
 
 	// Получаем цвет текущей туманности
-	point3d nebulaColor = GetCurrentNebulaColor();
+	point3d nebulaColor = interactiveNebula->color;
 
 	gasBurstEntity = world->entityStorage->CreateEntity("GasBurst", nullptr);
 
@@ -1109,71 +1118,6 @@ Nebula* PlayerAbilities::FindNearestNebula()
 			return nebula;
 		}
 	}
-}
 
-point3d PlayerAbilities::GetCurrentNebulaColor()
-{
-	// Цвет по умолчанию (Белый)
-	point3d defaultColor = point3d(1.0f, 1.0f, 1.0f);
-
-	if (!playerEntity || !world) {
-		return defaultColor;
-	}
-
-	// Получаем позицию игрока
-	Transform* playerTransform = playerEntity->GetComponent<Transform>();
-	if (!playerTransform) {
-		return defaultColor;
-	}
-
-	point3d playerPos = playerTransform->position;
-
-	// Получаем корневой элемент мира
-	Entity* worldFolder = world->entityStorage->GetEntityByName("World");
-	if (!worldFolder) return defaultColor;
-
-	// Получаем все дочерние элементы мира (локации)
-	vector<Entity*> locations = worldFolder->GetChildren(true);
-
-	point3d resultColor = defaultColor;
-	float totalWeight = 0.0f;
-	const float INFLUENCE_RADIUS = 100.0f;
-
-	for (Entity* location : locations) {
-		if (!location || !location->IsActive()) continue;
-
-		// Получаем трансформ локации
-		Transform* locationTransform = location->GetComponent<Transform>();
-		if (!locationTransform) continue;
-
-		// Получаем все компоненты Nebula в этой локации
-		vector<Nebula*> nebulae = location->GetAllComponentsOfBase<Nebula>();
-
-		for (Nebula* nebula : nebulae) {
-			if (!nebula) continue;
-
-			// Расстояние до локации (приблизительно)
-			float distance = (playerPos - locationTransform->position).magnitude();
-
-			if (distance < INFLUENCE_RADIUS) {
-				// Вес влияния обратно пропорционален расстоянию
-				float weight = 1.0f - (distance / INFLUENCE_RADIUS);
-				weight = max(0.0f, weight);
-
-				// Используем цвет туманности, если он задан
-				point3d nebulaColor = nebula->color;
-				if (nebulaColor.magnitude() > 0.01f) {
-					resultColor = resultColor + nebulaColor * weight;
-					totalWeight += weight;
-				}
-			}
-		}
-	}
-
-	// Нормализуем результат
-	if (totalWeight > 0) {
-		resultColor = resultColor / totalWeight;
-	}
-
-	return resultColor;
+	return nullptr;
 }

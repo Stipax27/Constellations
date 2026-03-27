@@ -207,7 +207,7 @@ void PlayerController::ProcessInput()
 	if (input::IsKeyPressed('V')) {
 		abilities->ParticleVacuumStart();
 	}
-	if (!input::IsKeyReleased('V')) {
+	if (input::IsKeyReleased('V')) {
 		abilities->ParticleVacuumEnd();
 	}
 

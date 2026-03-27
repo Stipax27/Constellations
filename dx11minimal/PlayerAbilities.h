@@ -154,6 +154,7 @@ private:
 	double vacuumStartTime;   
 	float maxStarSize;
 	bool isVacuum;
+	Nebula* interactiveNebula;
 
 	bool canBlowGas;          
 	Entity* gasBurstEntity;
@@ -181,7 +182,6 @@ private:
 	CollisionInfo GetProjectileCollisionInfo(Entity*);
 
 	Nebula* FindNearestNebula();
-	point3d GetCurrentNebulaColor();
 };
 
 #endif
