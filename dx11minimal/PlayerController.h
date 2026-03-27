@@ -96,6 +96,8 @@ private:
 
 	DWORD lastDashTime = 0;
 
+	Transform* cameraTarget;
+
 private:
 	void Dash();
 };

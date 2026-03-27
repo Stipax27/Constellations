@@ -27,6 +27,8 @@ void SetLookVector(Transform* transform, point3d direction);
 point3d quaternionToEuler(float x, float y, float z, float w);
 DirectX::XMVECTOR eulerToQuanternion(float x, float y, float z);
 
+DirectX::XMMATRIX GetMatrixFromLookVector(point3d direction);
+
 int getRandom(int min = 1, int max = 0);
 
 point3d rotatePoint(point3d, float);

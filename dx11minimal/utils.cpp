@@ -183,7 +183,19 @@ vector<string> split(string s, string temp) {
 }
 
 
-void SetLookVector(Transform* transform, point3d direction){
+void SetLookVector(Transform* transform, point3d direction) {
+    point3d currentLookVector = transform->GetLookVector();
+    point3d rotationAxis = currentLookVector.cross(direction).normalized();
+    DirectX::XMVECTOR rotationAxisVector = DirectX::XMVectorSet(rotationAxis.x, rotationAxis.y, rotationAxis.z, 0.0f);
+    float angleBetweenVectors = acosf(currentLookVector.dot(direction));
+    DirectX::XMVECTOR quaternionRotation = DirectX::XMQuaternionRotationAxis(rotationAxisVector, angleBetweenVectors);
+    DirectX::XMMATRIX matrixRotation = DirectX::XMMatrixRotationQuaternion(quaternionRotation);
+
+    transform->mRotation = matrixRotation * transform->mRotation;
+}
+
+
+DirectX::XMMATRIX GetMatrixFromLookDirection(point3d direction) {
     point3d currentLookVector = transform->GetLookVector();
     point3d rotationAxis = currentLookVector.cross(direction).normalized();
     DirectX::XMVECTOR rotationAxisVector = DirectX::XMVectorSet(rotationAxis.x, rotationAxis.y, rotationAxis.z, 0.0f);

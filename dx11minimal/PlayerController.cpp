@@ -47,6 +47,8 @@ void PlayerController::Initialize(Entity* Player)
 	currentMaxSpeed = PLAYER_MOVE_SPEED;
 	isRunning = false;
 
+	cameraTarget = nullptr;
+
 	abilities = new PlayerAbilities;
 	abilities->Initialize(playerEntity);
 }
@@ -236,7 +238,13 @@ void PlayerController::ProcessInput()
 void PlayerController::ProcessCamera()
 {
 	camera->SetPosition(camera->GetPosition().lerp(playerTransform->position - playerTransform->GetLookVector() * camera->distance + playerTransform->GetUpVector() * 2, 0.2f));
-	camera->SetMatrixRotation(playerTransform->mRotation);
+
+	if (cameraTarget == nullptr) {
+		camera->SetMatrixRotation(playerTransform->mRotation);
+	}
+	else {
+		SetLookVector();
+	}
 }
 
 
