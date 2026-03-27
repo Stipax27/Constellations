@@ -52,6 +52,9 @@ bool LevelManagerClass::Initialize()
 	mouse = Singleton::GetInstance<MouseClass>();
 	mouse->Initialize();
 
+	questManager = Singleton::GetInstance<QuestManager>();
+	questManager->Initialize();
+
 	Dx11Init(window->hWnd, window->width, window->height);
 	std::thread modelsLoadingThread(&LevelManagerClass::LoadModels, this);
 
@@ -354,6 +357,13 @@ void LevelManagerClass::Shutdown()
 		collisionManager = 0;
 	}
 
+	if (questManager)
+	{
+		questManager->Shutdown();
+		delete questManager;
+		questManager = 0;
+	}
+
 	if (mouse)
 	{
 		delete mouse;
@@ -386,85 +396,7 @@ void LevelManagerClass::Frame()
 	playerController->abilities->Update();
 	playerController->ProccessUI();
 
-
-	//// FAST DEBUG CODE (DELETE LATER) ////
-	/*count++;
-	if (count > 30) {
-		count = 0;
-
-		Entity* projectile = m_World->entityStorage->CreateEntity("PlayerProjectile");
-		Transform* transform = projectile->AddComponent<Transform>();
-		transform->position = point3d(0, 23, 55);
-
-		PhysicBody* physicBody = projectile->AddComponent<PhysicBody>();
-		physicBody->airFriction = 0.0f;
-		physicBody->velocity = transform->GetLookVector() * 25.0f;
-
-		Star* star = projectile->AddComponent<Star>();
-		star->radius = 1.0f;
-		star->crownRadius = 1.5f;
-		star->color1 = point3d(0.9f, 1.0f, 0.99f);
-		star->color2 = point3d(0.34f, 0.8f, 0.45f);
-		star->crownColor = point3d(0.27f, 0.63f, 1.0f);
-
-		SingleDamager* singleDamager = projectile->AddComponent<SingleDamager>();
-		singleDamager->target = Fraction::Player;
-		singleDamager->damage = 5.0f;
-
-		SphereCollider* sphereCollider = projectile->AddComponent<SphereCollider>();
-		sphereCollider->isTouchable = false;
-		sphereCollider->radius = 1.0f;
-
-		DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
-		delayedDestroy->lifeTime = 5000;
-	}*/
-	//// FAST DEBUG CODE (DELETE LATER) ////
-
-	// ??????????????????????????? ????????????????????? ????????? ???????????? ??????????????????
-	//DWORD currentTime = timer::currentTime;
-	//srand(time(0));
-	// ??????????????????: ??????????????? ?????????????????? 3 ?????????????????????
-	//if (currentTime - Star->LastTime > 3000) {
-	//	Star->FartingEffect();
-	//	// ??????????????????????????? ??????????????? ???????????????
-	//	int attackType = rand() % 3;
-	//	switch (attackType) {
-	//	case 0:
-	//		Star->Flash();
-	//		break;
-	//	case 1:
-	//		Star->CoronalEjection();
-	//		break;
-	//	case 2:
-	//		Star->SunWind();
-	//		break;
-	//	}
-	//	//Star->LifeTimeParticl();
-	//	Star->LastTime = currentTime;
-	//}
-
-	/*if (currentTime - smallConstellation->LastTime > 5000) {
-
-		smallConstellation->LastTime = currentTime;
-
-		int attackType = rand() % 3;
-
-		switch (attackType) {
-		case 0:
-			smallConstellation->VolleyStart();
-			break;
-		case 1:
-			smallConstellation->LatticeStart();
-			break;
-		case 2:
-			smallConstellation->TransformationStart();
-			break;
-		}
-	}
-	smallConstellation->VolleyUpdate(0.01f);
-	smallConstellation->LatticeUpdate(0.01f);
-	smallConstellation->TransformationUpdate();
-	smallConstellation->RamUpdate();*/
+	questManager->UpdateQuests();
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 
@@ -1208,7 +1140,7 @@ void LevelManagerClass::CreateStarQuestLoc(Entity* folder, int quality)
 	health->fraction = Fraction::Player;
 	entity->AddComponent<Grabbable>();
 
-	Entity* entity = m_World->entityStorage->CreateEntity("StarQuest", entity);
+	entity = m_World->entityStorage->CreateEntity("StarQuest", entity);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0, 0, 0);
 	sphereCollider = entity->AddComponent<SphereCollider>();
@@ -1256,9 +1188,6 @@ void LevelManagerClass::CreateStarQuestLoc(Entity* folder, int quality)
 
 	}
 
-	if (transform->position = StarPos[i]) {
-	
-	}
 	//Final Star
 	/*entity = m_World->entityStorage->CreateEntity("StarQuest", location);
 	transform = entity->AddComponent<Transform>();

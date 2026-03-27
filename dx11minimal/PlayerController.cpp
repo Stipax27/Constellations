@@ -243,7 +243,7 @@ void PlayerController::ProcessCamera()
 		camera->SetMatrixRotation(playerTransform->mRotation);
 	}
 	else {
-		SetLookVector();
+		//SetLookVector();
 	}
 }
 

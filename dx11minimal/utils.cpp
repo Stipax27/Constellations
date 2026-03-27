@@ -195,7 +195,7 @@ void SetLookVector(Transform* transform, point3d direction) {
 }
 
 
-DirectX::XMMATRIX GetMatrixFromLookDirection(point3d direction) {
+DirectX::XMMATRIX GetMatrixFromLookVector(Transform* transform, point3d direction) {
     point3d currentLookVector = transform->GetLookVector();
     point3d rotationAxis = currentLookVector.cross(direction).normalized();
     DirectX::XMVECTOR rotationAxisVector = DirectX::XMVectorSet(rotationAxis.x, rotationAxis.y, rotationAxis.z, 0.0f);
@@ -204,6 +204,8 @@ DirectX::XMMATRIX GetMatrixFromLookDirection(point3d direction) {
     DirectX::XMMATRIX matrixRotation = DirectX::XMMatrixRotationQuaternion(quaternionRotation);
 
     transform->mRotation = matrixRotation * transform->mRotation;
+
+    return DirectX::XMMatrixIdentity();
 }
 
 

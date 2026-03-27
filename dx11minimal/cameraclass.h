@@ -13,8 +13,6 @@
 #include "windowclass.h"
 #include "frustumclass.h"
 
-#include "Transform.h"
-
 /////////////
 // GLOBALS //
 /////////////

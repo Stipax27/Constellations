@@ -32,6 +32,12 @@ void World::Initialize()
 
 void World::Shutdown()
 {
+	size_t size = computeSystems.size();
+	for (int i = 0; i < size; i++)
+	{
+		computeSystems[i]->Shutdown();
+	}
+
 	size_t size = physicSystems.size();
 	for (int i = 0; i < size; i++)
 	{

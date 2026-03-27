@@ -14,6 +14,7 @@
 #include "mouseclass.h"
 
 #include "PlayerController.h"
+#include "questmanager.h"
 
 #include "world.h"
 #include "system.h"
@@ -80,6 +81,8 @@ private:
 	World* m_World;
 	PlayerController* playerController;
 	CollisionManagerClass* collisionManager;
+	QuestManager* questManager;
+
 	Entity* m_TestAnimEntity = nullptr;
 	int m_TestAnimCycleIndex = 0;
 	bool m_WasToggleAnimationPressed = false;
