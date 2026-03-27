@@ -43,11 +43,13 @@ void PlayerController::Initialize(Entity* Player)
 	mouse = Singleton::GetInstance<MouseClass>();
 	window = Singleton::GetInstance<WindowClass>();
 	entityStorage = Singleton::GetInstance<EntityStorage>();
+	collisionManager = Singleton::GetInstance<CollisionManagerClass>();
 
 	currentMaxSpeed = PLAYER_MOVE_SPEED;
 	isRunning = false;
 
 	cameraTarget = nullptr;
+	lockMovementOnTarget = false;
 
 	abilities = new PlayerAbilities;
 	abilities->Initialize(playerEntity);
@@ -130,6 +132,14 @@ void PlayerController::ProcessInput()
 		playerPhysicBody->airFriction = 1;
 	}
 
+	if (lockMovementOnTarget && cameraTarget != nullptr) {
+		point3d targetPos = GetWorldTransform(cameraTarget).position;
+		point3d playerPos = GetWorldTransform(playerEntity).position;
+
+		point3d direction = targetPos - playerPos;
+		playerTransform->mRotation = LerpMatrix(playerTransform->mRotation, GetMatrixFromDirection(direction), 0.25f);
+	}
+
 	if (!movementLocked)
 	{
 		point3d velocity = point3d();
@@ -189,7 +199,7 @@ void PlayerController::ProcessInput()
 	}
 
 	if (roll != 0) {
-		playerPhysicBody->mAngVelocity = XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), roll * RAD);
+		playerPhysicBody->mAngVelocity = playerPhysicBody->mAngVelocity * XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), roll * RAD);
 	}
 
 	if (input::IsKeyPressed('1')) {
@@ -231,20 +241,28 @@ void PlayerController::ProcessInput()
 		abilities->Grab();
 	}
 
+	if (input::IsKeyPressed(VK_MBUTTON)) {
+		LockOnTarget();
+	}
+
 }
 		
 
 
 void PlayerController::ProcessCamera()
 {
-	camera->SetPosition(camera->GetPosition().lerp(playerTransform->position - playerTransform->GetLookVector() * camera->distance + playerTransform->GetUpVector() * 2, 0.2f));
+	camera->position = camera->position.lerp(playerTransform->position - playerTransform->GetLookVector() * camera->distance + playerTransform->GetUpVector() * 2, 0.2f);
 
+	XMMATRIX matrixRotation;
 	if (cameraTarget == nullptr) {
-		camera->SetMatrixRotation(playerTransform->mRotation);
+		matrixRotation = playerTransform->mRotation;
 	}
 	else {
-		//SetLookVector();
+		point3d direction = GetWorldTransform(cameraTarget).position - camera->position;
+		matrixRotation = GetMatrixFromDirection(direction);
 	}
+
+	camera->SetMatrixRotation(LerpMatrix(camera->GetMatrixRotation(), matrixRotation, 0.15f));
 }
 
 
@@ -271,12 +289,14 @@ void PlayerController::ProcessMouse()
 					SetCursorPos(mouse->absolutePos.x, mouse->absolutePos.y);
 				}
 
-				float k = (length - CURSOR_IGNORE_ZONE) / MAX_CURSOR_DEVIATION;
-				mousePos *= SENSIVITY * k;
+				if (!lockMovementOnTarget || cameraTarget == nullptr) {
+					float k = (length - CURSOR_IGNORE_ZONE) / MAX_CURSOR_DEVIATION;
+					mousePos *= SENSIVITY * k;
 
-				XMMATRIX additionalRotation = XMMatrixRotationRollPitchYaw(XMConvertToRadians(mousePos.y), XMConvertToRadians(mousePos.x), 0);
+					XMMATRIX additionalRotation = XMMatrixRotationRollPitchYaw(XMConvertToRadians(mousePos.y), XMConvertToRadians(mousePos.x), 0);
 
-				playerPhysicBody->mAngVelocity = playerPhysicBody->mAngVelocity * additionalRotation;
+					playerPhysicBody->mAngVelocity = playerPhysicBody->mAngVelocity * additionalRotation;
+				}
 			}
 
 			// Обработка атак мышью - проверяем что щит не активен
@@ -285,7 +305,7 @@ void PlayerController::ProcessMouse()
 					abilities->Charging();
 				}
 				else if (mouse->IsLButtonUnclicked()) {
-					abilities->Attack(*playerTransform, mouse->GetMouseRay());
+					abilities->Attack(*playerTransform, mouse->GetMouseDirection());
 				}
 
 				if (mouse->IsRButtonClicked()) {
@@ -363,5 +383,27 @@ void PlayerController::TakeDamage(float damage)
 		// Визуальный эффект получения урона
 		playerPointCloud->color = point3d(1.0f, 0.0f, 0.0f);
 		// Возвращаем цвет через некоторое время
+	}
+}
+
+
+void PlayerController::LockOnTarget()
+{
+	if (!lockMovementOnTarget) {
+		point3d mouseDirection = mouse->GetMouseDirection();
+		RayInfo rayInfo = RayInfo(camera->position, mouseDirection * RAY_DISTANCE, CollisionFilter::Group::PlayerRay);
+		RaycastResult result = collisionManager->Raycast(rayInfo);
+
+		if (result.hit) {
+			pair<Entity*, Health*> hres = result.entity->GetAncestorWithComponent<Health>();
+			if (hres.first != nullptr) {
+				cameraTarget = hres.first;
+				lockMovementOnTarget = true;
+			}
+		}
+	}
+	else {
+		lockMovementOnTarget = false;
+		cameraTarget = nullptr;
 	}
 }

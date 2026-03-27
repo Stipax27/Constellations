@@ -19,6 +19,8 @@
 
 #define DEFAULT_CAMERA_DISTANCE 7
 #define DEFAULT_FOV 70
+#define SCREEN_NEAR 0.1f
+#define SCREEN_DEPTH 10000.0f
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: CameraClass
@@ -29,6 +31,8 @@ public:
 	FrustumClass* frustum;
 	float distance;
 
+	point3d position;
+
 public:
 	CameraClass();
 	CameraClass(const CameraClass&);
@@ -36,15 +40,12 @@ public:
 
 	void Initialize();
 
-	void SetPosition(point3d);
 	void SetMatrixRotation(XMMATRIX);
 	void SetFov(float);
 
-	void AddPosition(float, float, float);
 	void AddMatrixRotation(XMMATRIX);
 	void AddVectorRotation(point3d, float);
 
-	point3d GetPosition();
 	XMMATRIX GetMatrixRotation();
 	float GetFov();
 
@@ -53,7 +54,6 @@ public:
 	XMMATRIX GetProjectionMatrix();
 
 private:
-	point3d position;
 	XMMATRIX rotationMatrix;
 	float fov;
 	float iaspect;

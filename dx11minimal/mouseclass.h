@@ -69,7 +69,7 @@ public:
 	point3d GetLButtonDownPosition();
 	point3d GetRButtonDownPosition();
 
-	point3d GetMouseRay();
+	point3d GetMouseDirection();
 	void RenderCursor();
 	void UpdateSystemCursorVisibility();
 

@@ -65,6 +65,7 @@ RaycastResult CollisionManagerClass::Raycast(const RayInfo& ray)
                 closestHit.position = hit.position;
                 closestHit.normal = hit.normal;
                 closestHit.collider = sphereCollider;
+                closestHit.entity = entity;
             }
         }
 	}

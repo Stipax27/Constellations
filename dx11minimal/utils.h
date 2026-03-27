@@ -23,8 +23,12 @@ float lerp(float x1, float x2, float a);
 
 float degreesToRadians(float);
 vector<point3d> smoothCornersPath(const vector<point3d>& points, int numberIterations);
-void SetLookVector(Transform* transform, point3d direction);
-DirectX::XMMATRIX GetMatrixFromLookVector(Transform* transform, point3d direction);
+
+DirectX::XMMATRIX GetMatrixFromLookVector(Transform& transform, point3d direction);
+DirectX::XMMATRIX GetMatrixFromDirection(point3d direction);
+DirectX::XMMATRIX GetMatrixLookAt(DirectX::XMMATRIX originMatrix, point3d direction);
+DirectX::XMMATRIX GetMatrixFromDirectionForPlayer(point3d direction);
+
 point3d quaternionToEuler(float x, float y, float z, float w);
 DirectX::XMVECTOR eulerToQuanternion(float x, float y, float z);
 
@@ -44,5 +48,7 @@ point3d hslToRgb(const point3d&);
 point3d rgbToHsl(const point3d&);
 
 point3d rotateInPlane(const point3d&, const point3d&, float);
+
+DirectX::XMMATRIX LerpMatrix(const DirectX::XMMATRIX& from, const DirectX::XMMATRIX& to, float t);
 
 #endif

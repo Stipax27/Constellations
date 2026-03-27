@@ -23,7 +23,7 @@ void World::Initialize()
 {
 	m_Camera = Singleton::GetInstance<CameraClass>();
 	m_Camera->Initialize();
-	m_Camera->SetPosition(point3d(0.0f, 0.0f, -10.0f));
+	m_Camera->position = point3d(0.0f, 0.0f, -10.0f);
 
 	entityStorage = Singleton::GetInstance<EntityStorage>();
 	entityStorage->Initialize();

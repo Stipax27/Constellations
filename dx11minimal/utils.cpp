@@ -183,29 +183,76 @@ vector<string> split(string s, string temp) {
 }
 
 
-void SetLookVector(Transform* transform, point3d direction) {
-    point3d currentLookVector = transform->GetLookVector();
+DirectX::XMMATRIX GetMatrixFromLookVector(Transform& transform, point3d direction) {
+    point3d currentLookVector = transform.GetLookVector();
     point3d rotationAxis = currentLookVector.cross(direction).normalized();
     DirectX::XMVECTOR rotationAxisVector = DirectX::XMVectorSet(rotationAxis.x, rotationAxis.y, rotationAxis.z, 0.0f);
     float angleBetweenVectors = acosf(currentLookVector.dot(direction));
     DirectX::XMVECTOR quaternionRotation = DirectX::XMQuaternionRotationAxis(rotationAxisVector, angleBetweenVectors);
     DirectX::XMMATRIX matrixRotation = DirectX::XMMatrixRotationQuaternion(quaternionRotation);
 
-    transform->mRotation = matrixRotation * transform->mRotation;
+    return matrixRotation * transform.mRotation;
 }
 
+DirectX::XMMATRIX GetMatrixFromDirection(point3d direction) {
+    float length = direction.magnitude();
+    if (length < 0.001f) {
+        return DirectX::XMMatrixIdentity();
+    }
 
-DirectX::XMMATRIX GetMatrixFromLookVector(Transform* transform, point3d direction) {
-    point3d currentLookVector = transform->GetLookVector();
+    point3d lookDirection = direction.normalized();
+
+    point3d worldUp = point3d(0.0f, 1.0f, 0.0f);
+    point3d right = worldUp.cross(lookDirection).normalized();
+    if (right.magnitude() < 0.001f) {
+        worldUp = point3d(0.0f, 0.0f, 1.0f);
+        right = worldUp.cross(lookDirection).normalized();
+
+        if (right.magnitude() < 0.001f) {
+            return DirectX::XMMatrixIdentity();
+        }
+    }
+
+    right = right.normalized();
+    point3d up = lookDirection.cross(right).normalized();
+
+    DirectX::XMMATRIX matrixRotation = DirectX::XMMatrixSet(
+        right.x, right.y, right.z, 0.0f,
+        up.x, up.y, up.z, 0.0f,
+        lookDirection.x, lookDirection.y, lookDirection.z, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    );
+
+    return matrixRotation;
+}
+
+DirectX::XMMATRIX GetMatrixLookAt(DirectX::XMMATRIX originMatrix, point3d direction) {
+    point3d currentLookVector = point3d(originMatrix.r[2].m128_f32[0], originMatrix.r[2].m128_f32[1], originMatrix.r[2].m128_f32[2]).normalized();
     point3d rotationAxis = currentLookVector.cross(direction).normalized();
     DirectX::XMVECTOR rotationAxisVector = DirectX::XMVectorSet(rotationAxis.x, rotationAxis.y, rotationAxis.z, 0.0f);
+
     float angleBetweenVectors = acosf(currentLookVector.dot(direction));
     DirectX::XMVECTOR quaternionRotation = DirectX::XMQuaternionRotationAxis(rotationAxisVector, angleBetweenVectors);
     DirectX::XMMATRIX matrixRotation = DirectX::XMMatrixRotationQuaternion(quaternionRotation);
 
-    transform->mRotation = matrixRotation * transform->mRotation;
+    return matrixRotation;
+}
 
-    return DirectX::XMMatrixIdentity();
+DirectX::XMMATRIX GetMatrixFromDirectionForPlayer(point3d direction) {
+    point3d lookDirection = direction.normalized();
+
+    point3d worldUp = point3d(0.0f, 1.0f, 0.0f);
+    point3d right = worldUp.cross(lookDirection).normalized();
+    point3d up = lookDirection.cross(right).normalized();
+
+    DirectX::XMMATRIX matrixRotation = DirectX::XMMatrixSet(
+        right.x, right.y, right.z, 0.0f,
+        up.x, up.y, up.z, 0.0f,
+        lookDirection.x, lookDirection.y, lookDirection.z, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    );
+
+    return matrixRotation;
 }
 
 
@@ -322,4 +369,15 @@ point3d rotateInPlane(const point3d& a, const point3d& b, float theta) {
     point3d u2 = b.normalized();
 
     return (u1 * cos(theta) + u2 * sin(theta));
+}
+
+
+DirectX::XMMATRIX LerpMatrix(const DirectX::XMMATRIX& from, const DirectX::XMMATRIX& to, float t)
+{
+    DirectX::XMVECTOR fromQuat = XMQuaternionRotationMatrix(from);
+    DirectX::XMVECTOR toQuat = XMQuaternionRotationMatrix(to);
+
+    DirectX::XMVECTOR resultQuat = XMQuaternionSlerp(fromQuat, toQuat, t);
+
+    return XMMatrixRotationQuaternion(resultQuat);
 }

@@ -628,10 +628,10 @@ void PlayerAbilities::Attack(Transform startTransform, point3d direction)
 		stamina -= ATTACK_COST;
 	}
 
-	RayInfo rayInfo = RayInfo(camera->GetPosition(), direction * RAY_DISTANCE, CollisionFilter::Group::PlayerRay);
+	RayInfo rayInfo = RayInfo(camera->position, direction * RAY_DISTANCE, CollisionFilter::Group::PlayerRay);
 	RaycastResult result = collisionManager->Raycast(rayInfo);
 
-	point3d pos = result.hit ? result.position : camera->GetPosition() + direction * RAY_DISTANCE;
+	point3d pos = result.hit ? result.position : camera->position + direction * RAY_DISTANCE;
 	point3d dir = (pos - startTransform.position).normalized();
 
 	if (chargeDone) {
@@ -920,7 +920,7 @@ Entity* PlayerAbilities::BowCommon(Transform startTransform, point3d direction)
 	Entity* projectile = entityStorage->CreateEntity("PlayerProjectile");
 	Transform* transform = projectile->AddComponent<Transform>();
 	transform->position = startTransform.position;
-	SetLookVector(transform, direction);
+	transform->mRotation = GetMatrixFromLookVector(*transform, direction) * transform->mRotation;
 
 	PhysicBody* physicBody = projectile->AddComponent<PhysicBody>();
 	physicBody->airFriction = 0.0f;
@@ -1044,7 +1044,7 @@ Entity* PlayerAbilities::BowCharged(Transform startTransform, point3d direction)
 	Entity* projectile = entityStorage->CreateEntity("PlayerProjectile");
 	Transform* transform = projectile->AddComponent<Transform>();
 	transform->position = startTransform.position;
-	SetLookVector(transform, direction);
+	transform->mRotation = GetMatrixFromLookVector(*transform, direction) * transform->mRotation;
 
 	PhysicBody* physicBody = projectile->AddComponent<PhysicBody>();
 	physicBody->airFriction = 0.0f;

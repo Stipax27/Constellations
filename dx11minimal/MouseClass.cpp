@@ -143,7 +143,7 @@ point3d MouseClass::GetRButtonDownPosition() {
 }
 
 
-point3d MouseClass::GetMouseRay() {
+point3d MouseClass::GetMouseDirection() {
 	XMMATRIX view = camera->GetViewMatrix();
 	XMMATRIX proj = camera->GetProjectionMatrix();
 	//XMMATRIX proj = XMMatrixPerspectiveFovLH(DegreesToRadians(Camera::state.fovAngle), iaspect, 0.01f, 10000.0f);
@@ -156,11 +156,11 @@ point3d MouseClass::GetMouseRay() {
 	XMVECTOR rayEye = XMVector4Transform(rayClip, XMMatrixInverse(nullptr, proj));
 	rayEye = XMVectorSet(XMVectorGetX(rayEye), XMVectorGetY(rayEye), 1.0f, 0.0f);
 
-	XMVECTOR ray = XMVector4Transform(rayEye, XMMatrixInverse(nullptr, view));
-	point3d rayWorld = point3d(XMVectorGetX(ray), XMVectorGetY(ray), XMVectorGetZ(ray));
-	rayWorld = rayWorld.normalized();
+	XMVECTOR direction = XMVector4Transform(rayEye, XMMatrixInverse(nullptr, view));
+	point3d directionWorld = point3d(XMVectorGetX(direction), XMVectorGetY(direction), XMVectorGetZ(direction));
+	directionWorld = directionWorld.normalized();
 
-	return rayWorld;
+	return directionWorld;
 }
 
 

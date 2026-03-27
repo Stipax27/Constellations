@@ -73,6 +73,7 @@ public:
 
 private:
 	EntityStorage* entityStorage;
+	CollisionManagerClass* collisionManager;
 
 	Entity* playerEntity;
 	Entity* ui;
@@ -96,10 +97,12 @@ private:
 
 	DWORD lastDashTime = 0;
 
-	Transform* cameraTarget;
+	Entity* cameraTarget;
+	bool lockMovementOnTarget;
 
 private:
 	void Dash();
+	void LockOnTarget();
 };
 
 #endif

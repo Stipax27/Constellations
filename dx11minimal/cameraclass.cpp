@@ -29,21 +29,9 @@ void CameraClass::Initialize()
 }
 
 
-void CameraClass::SetPosition(point3d Position)
-{
-	position = Position;
-}
-
-
 void CameraClass::SetMatrixRotation(XMMATRIX Matrix)
 {
 	rotationMatrix = Matrix;
-}
-
-
-void CameraClass::AddPosition(float x = 0.0f, float y = 0.0f, float z = 0.0f)
-{
-	position += point3d(x, y, z);
 }
 
 
@@ -65,12 +53,6 @@ void CameraClass::SetFov(float FoV)
 {
 	fov = FoV;
 	UpdateProjectionMatrix();
-}
-
-
-point3d CameraClass::GetPosition()
-{
-	return position;
 }
 
 
@@ -135,7 +117,7 @@ void CameraClass::Render()
 	ConstBuf::ConstToGeometry(3);
 	ConstBuf::ConstToPixel(3);
 
-	frustum->ConstructFrustum(viewMatrix, projectionMatrix, 10000.0f);
+	frustum->ConstructFrustum(viewMatrix, projectionMatrix, SCREEN_DEPTH);
 }
 
 
@@ -162,8 +144,8 @@ void CameraClass::UpdateProjectionMatrix()
 	projectionMatrix = XMMatrixPerspectiveFovLH(
 		degreesToRadians(fov),
 		iaspect,
-		0.1f,
-		10000.0f
+		SCREEN_NEAR,
+		SCREEN_DEPTH
 	);
 
 	ConstBuf::camera.proj = XMMatrixTranspose(projectionMatrix);

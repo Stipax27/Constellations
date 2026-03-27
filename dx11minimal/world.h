@@ -23,8 +23,6 @@ using namespace std;
 /////////////
 #define PHYSICS_DT 1000.0f / 60.0f // 60 FPS
 #define RENDER_DT 1000.0f / (float)FRAMES_PER_SECOND // 144 FPS
-#define SCREEN_DEPTH 1000.0f
-#define SCREEN_NEAR 0.1f
 
 
 ////////////////////////////////////////////////////////////////////////////////

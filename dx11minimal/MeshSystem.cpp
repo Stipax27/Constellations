@@ -217,7 +217,7 @@ void MeshSystem::UpdateWorldMatrix(Transform worldTransform) {
 }
 
 int MeshSystem::GetVertexCount(point3d position, int min, int max) {
-	float dist = (camera->GetPosition() - position).magnitude();
+	float dist = (camera->position - position).magnitude();
 	float a = dist - HIGH_RENDER_DISTANCE;
 	a /= RENDER_DISTANCE_DELTA;
 	a = clamp(a, 0, 1);
