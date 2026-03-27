@@ -38,7 +38,7 @@ void World::Shutdown()
 		computeSystems[i]->Shutdown();
 	}
 
-	size_t size = physicSystems.size();
+	size = physicSystems.size();
 	for (int i = 0; i < size; i++)
 	{
 		physicSystems[i]->Shutdown();
