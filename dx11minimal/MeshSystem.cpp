@@ -130,7 +130,7 @@ void MeshSystem::Update(vector<Entity*>& entities, float deltaTime)
 					Shaders::vShader(19);
 					Shaders::pShader(19);
 
-					int n = GetVertexCount(worldTransform.position, 5, 33);
+					int n = GetVertexCount(worldTransform.position, 5 * constellation->starSize, 33 * constellation->starSize);
 					n += 1 - n % 2;
 
 					ConstBuf::drawerInt[0] = n;
@@ -186,7 +186,7 @@ void MeshSystem::Update(vector<Entity*>& entities, float deltaTime)
 						Shaders::vShader(19);
 						Shaders::pShader(19);
 
-						int n = GetVertexCount(worldTransform.position, 5, 255);
+						int n = GetVertexCount(worldTransform.position, 5 * star->radius, 255 * star->radius);
 						n += 1 - n % 2;
 
 						ConstBuf::drawerInt[0] = n;

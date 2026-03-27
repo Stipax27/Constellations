@@ -105,7 +105,7 @@ void PlayerController::ProcessInput()
 	// ѕровер€ем Shift и наличие выносливости
 	if (input::IsKeyDown(VK_SHIFT) && abilities->stamina > 0) {
 		isRunning = true;
-		currentMaxSpeed = PLAYER_MOVE_SPEED * 5.0f;
+		currentMaxSpeed = PLAYER_MOVE_SPEED * 100.0f;
 
 		// “ратим выносливость только если двигаемс€
 		if (input::IsKeyDown('W') || input::IsKeyDown('S') || input::IsKeyDown('A') || input::IsKeyDown('D')) {
