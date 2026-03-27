@@ -153,6 +153,7 @@ private:
 	Entity* vacuumCenterEntity;
 	double vacuumStartTime;   
 	float maxStarSize;
+	bool isVacuum;
 
 	bool canBlowGas;          
 	Entity* gasBurstEntity;

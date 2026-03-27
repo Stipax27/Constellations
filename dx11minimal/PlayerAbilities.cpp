@@ -394,6 +394,13 @@ bool PlayerAbilities::TryBlockDamage(float damage)
 
 void PlayerAbilities::ParticleVacuumStart() {
 
+	if (!isVacuum) {
+		isVacuum = true;
+	}
+	else {
+		return;
+	}
+
 	if (currentParticles && !currentParticles->IsDeleting()) {
 		currentParticles->Destroy();
 	}
@@ -450,6 +457,13 @@ void PlayerAbilities::ParticleVacuumStart() {
 
 void PlayerAbilities::ParticleVacuumEnd() {
 	
+	if (isVacuum) {
+		isVacuum = false;
+	}
+	else {
+		return;
+	}
+
 	if (currentParticles && !currentParticles->IsDeleting()) {
 		ParticleEmitter* particleEmitter = currentParticles->GetComponent<ParticleEmitter>();
 		if (particleEmitter) {
