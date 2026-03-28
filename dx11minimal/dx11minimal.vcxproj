@@ -243,6 +243,7 @@
     <ClInclude Include="Components\SkeletalAnimationComponent.h" />
     <ClInclude Include="questclass.h" />
     <ClInclude Include="questmanager.h" />
+    <ClInclude Include="Queststarcollection.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="renderCompress.h" />
     <ClInclude Include="SingleDamager.h" />
@@ -1122,6 +1123,7 @@
     <ClCompile Include="Point3d.cpp" />
     <ClCompile Include="Point4d.cpp" />
     <ClCompile Include="QuestManager.cpp" />
+    <ClCompile Include="Queststarcollection.cpp" />
     <ClCompile Include="SplinePath.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />
     <ClCompile Include="SpriteSystem.cpp" />

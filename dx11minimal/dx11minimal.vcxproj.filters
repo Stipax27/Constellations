@@ -125,6 +125,10 @@
     <ClCompile Include="input.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="QuestManager.cpp" />
+    <ClCompile Include="Queststarcollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enemy_Patern.h">
@@ -361,6 +365,11 @@
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Components\Grabbable.h" />
+    <ClInclude Include="questclass.h" />
+    <ClInclude Include="questmanager.h" />
+    <ClInclude Include="Queststarcollection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">
@@ -647,6 +656,8 @@
     <None Include="Shaders\SkinnedMesh_VS.shader">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Shaders\ps\OptimazeNebulaPS.shader" />
+    <None Include="Shaders\vs\OptimazeNebula.shader" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">
