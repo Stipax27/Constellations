@@ -3,18 +3,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "queststarcollection.h"
-#include "World.h"
-#include "LevelManagerClass.h"
-#include "EntityStorage.h"
-#include <cmath>
-#include <iostream>
-#include <algorithm>
-
-using namespace std;
-
-// Инициализация статических переменных
-World* QuestStarCollection::s_World = nullptr;
-LevelManagerClass* QuestStarCollection::s_LevelManager = nullptr;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Конструктор
@@ -49,11 +37,7 @@ QuestStarCollection::~QuestStarCollection()
 ////////////////////////////////////////////////////////////////////////////////
 // Инициализация глобальных ссылок
 ////////////////////////////////////////////////////////////////////////////////
-void QuestStarCollection::InitializeGlobalReferences(World* world, LevelManagerClass* levelManager)
-{
-    s_World = world;
-    s_LevelManager = levelManager;
-}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Создание центральной звезды
@@ -153,8 +137,7 @@ void QuestStarCollection::CreateSmallStars()
 ////////////////////////////////////////////////////////////////////////////////
 void QuestStarCollection::CreateSupernovaEffect()
 {
-    if (!s_World || !s_World->entityStorage || !m_QuestRoot) return;
-
+   
     m_SupernovaEffect = s_World->entityStorage->CreateEntity("SupernovaEffect", m_QuestRoot);
     Transform* transform = m_SupernovaEffect->AddComponent<Transform>();
     transform->position = point3d(0, 0, 0);
@@ -222,26 +205,24 @@ void QuestStarCollection::CreateCollectEffect(const point3d& position)
 ////////////////////////////////////////////////////////////////////////////////
 void QuestStarCollection::Start()
 {
-    if (m_QuestActive) return;
+    s_World = Singleton::GetInstance<World>();
 
-   
     m_QuestActive = true;
     m_StarsCollected = 0;
     m_SupernovaTriggered = false;
     completed = false;
 
     // Создаём корневую сущность для квеста
-    if (s_World && s_World->entityStorage)
+  
+    Entity* worldFolder = s_World->entityStorage->GetEntityByName("World");
+    if (!worldFolder)
     {
-        Entity* worldFolder = s_World->entityStorage->GetEntityByName("World");
-        if (!worldFolder)
-        {
-            worldFolder = s_World->entityStorage->CreateEntity("World");
-        }
-        m_QuestRoot = s_World->entityStorage->CreateEntity("QuestStarCollection", worldFolder);
-        Transform* rootTransform = m_QuestRoot->AddComponent<Transform>();
-        rootTransform->position = point3d(0, 0, 150);
+        worldFolder = s_World->entityStorage->CreateEntity("World");
     }
+    m_QuestRoot = s_World->entityStorage->CreateEntity("QuestStarCollection", worldFolder);
+    Transform* rootTransform = m_QuestRoot->AddComponent<Transform>();
+    rootTransform->position = point3d(0, 0, 150);
+    
 
     // Создаём звёзды
     CreateCentralStar();
@@ -255,8 +236,6 @@ void QuestStarCollection::Start()
 ////////////////////////////////////////////////////////////////////////////////
 void QuestStarCollection::Stop()
 {
-    if (!m_QuestActive) return;
-
     cout << "Quest Stopped: " << name << endl;
     m_QuestActive = false;
     CleanupQuest();
@@ -267,9 +246,6 @@ void QuestStarCollection::Stop()
 ////////////////////////////////////////////////////////////////////////////////
 void QuestStarCollection::Complete()
 {
-    if (completed) return;
-
-    
     completed = true;
     m_QuestActive = false;
 
@@ -286,6 +262,10 @@ void QuestStarCollection::Update()
 {
     if (!m_QuestActive || completed) return;
 
+    for (int i = 0; i < m_StarEntities.size();i++) {
+    
+        CheckStarCollision(m_StarEntities[i], m_CentralStar);
+    }
     CheckStarCollection();
 
     if (m_SupernovaTriggered)
@@ -402,22 +382,19 @@ void QuestStarCollection::CheckStarCollision(Entity* star, Entity* centralStar)
     auto it = find(m_StarEntities.begin(), m_StarEntities.end(), star);
     if (it == m_StarEntities.end()) return;
 
-    Transform* starTransform = star->GetComponent<Transform>();
-    Transform* centralTransform = centralStar->GetComponent<Transform>();
+    Transform starTransform = GetWorldTransform(star);
+    Transform centralTransform = GetWorldTransform(centralStar);
 
-    if (starTransform && centralTransform)
+    point3d starPos = starTransform.position;
+    point3d centralPos = centralTransform.position;
+
+    float distance = sqrt(pow(starPos.x - centralPos.x, 2) +
+        pow(starPos.y - centralPos.y, 2) +
+        pow(starPos.z - centralPos.z, 2));
+
+    if (distance <= m_CollectionRadius && star->GetParent()->name == "World")
     {
-        point3d starPos = starTransform->position;
-        point3d centralPos = centralTransform->position;
-
-        float distance = sqrt(pow(starPos.x - centralPos.x, 2) +
-            pow(starPos.y - centralPos.y, 2) +
-            pow(starPos.z - centralPos.z, 2));
-
-        if (distance <= m_CollectionRadius)
-        {
-            OnStarCollected(star);
-        }
+        OnStarCollected(star);
     }
 }
 
@@ -426,9 +403,7 @@ void QuestStarCollection::CheckStarCollision(Entity* star, Entity* centralStar)
 ////////////////////////////////////////////////////////////////////////////////
 void QuestStarCollection::TriggerSupernova()
 {
-    if (m_SupernovaTriggered) return;
-
-
+  
     m_SupernovaTriggered = true;
     m_SupernovaTimer = 0.0f;
 
@@ -481,7 +456,7 @@ void QuestStarCollection::DestroyAllStars()
 ////////////////////////////////////////////////////////////////////////////////
 void QuestStarCollection::CleanupQuest()
 {
-    if (m_SupernovaEffect && s_World && s_World->entityStorage)
+    if (m_SupernovaEffect)
     {
         m_SupernovaEffect->Destroy();
         m_SupernovaEffect = nullptr;

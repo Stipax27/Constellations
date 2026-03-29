@@ -17,13 +17,17 @@
 #include "SphereCollider.h"
 #include "Health.h"
 #include "ParticleEmitter.h"
+#include "Components/Grabbable.h"
 
+#include "World.h"
+#include "EntityStorage.h"
+#include <cmath>
+#include <iostream>
+#include <algorithm>
+
+#include "singleton.h"
 
 using namespace std;
-
-// Forward declarations
-class World;
-class LevelManagerClass;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: QuestStarCollection
@@ -33,8 +37,7 @@ class LevelManagerClass;
 class QuestStarCollection : public QuestClass {
 private:
     // Статические ссылки на глобальные системы
-    static World* s_World;
-    static LevelManagerClass* s_LevelManager;
+    World* s_World;
 
     // Корневая сущность квеста
     Entity* m_QuestRoot;
@@ -76,9 +79,6 @@ public:
     QuestStarCollection();
     virtual ~QuestStarCollection();
 
-    // Статический метод для инициализации глобальных ссылок
-    static void InitializeGlobalReferences(World* world, LevelManagerClass* levelManager);
-
     // Реализация виртуальных методов QuestClass
     virtual void Start() override;
     virtual void Stop() override;
@@ -97,10 +97,6 @@ public:
     // Геттеры для системы коллизий
     Entity* GetCentralStar() const { return m_CentralStar; }
     const vector<Entity*>& GetStarEntities() const { return m_StarEntities; }
-
-    // Статические геттеры
-    static World* GetWorld() { return s_World; }
-    static LevelManagerClass* GetLevelManager() { return s_LevelManager; }
 };
 
 #endif // _QUESTSTARCOLLECTION_H_

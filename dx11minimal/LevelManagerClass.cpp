@@ -242,7 +242,7 @@ bool LevelManagerClass::Initialize()
 	CreateNebula(folder,2);
 	CreateStarQuestLoc(folder, 2);
 	// КАААК РУЛИТЬ
-	//questManager->AddQuest<"QuestStarCollection">();
+	questManager->AddQuest<QuestStarCollection>();
 	/////////////////////////
 
 	/*Entity* holder = m_World->entityStorage->CreateEntity("Holder", folder);
