@@ -1,19 +1,13 @@
-
 #ifndef _AI_COMPONENT_
 #define _AI_COMPONENT_
 
 //////////////
 // INCLUDES //
 //////////////
-#include <vector>
 #include "component.h"
+#include <vector>
 #include "Point3d.h"
 #include <DirectXMath.h>
-#include "SplinePath.cpp"
-#include "entity.h"
-#include "Transform.h"
-#include "Constellation.h"
-#include "timer.h"
 
 enum class AIBehaviorType
 {

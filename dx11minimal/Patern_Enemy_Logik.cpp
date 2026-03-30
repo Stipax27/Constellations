@@ -4,7 +4,7 @@
 #include<cmath>               // Подключаем математические функции (sqrt, sin, cos и т.д.)
 #include "system.h"           // Подключаем базовый абстрактный класс System
 #include "Transform.h"        // Подключаем компонент Transform (позиция, поворот, масштаб)
-#include "Enemy_Patern.h"     // Подключаем компонент AIComponent (данные ИИ)
+#include "AIComponent.h"     // Подключаем компонент AIComponent (данные ИИ)
 #include "PhysicBody.h"       // Подключаем компонент PhysicBody (скорость, физика)
 #include "Star.h"             // Подключаем компонент Star (визуальное представление звезды)
 #include "Health.h"           // Подключаем компонент Health (здоровье сущности)

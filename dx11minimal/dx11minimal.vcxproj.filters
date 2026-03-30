@@ -149,7 +149,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Enemy_Patern.h">
+    <ClInclude Include="AIComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Font_OLD.h">
