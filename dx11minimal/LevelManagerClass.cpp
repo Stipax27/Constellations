@@ -811,6 +811,7 @@ void LevelManagerClass::CreateAries(Entity* folder)
 	PointCloud* pointCloud;
 	DelayedDestroy* delayedDestroy;
 	Health* health;
+	CameraTarget* cameraTarget;
 
 	Entity* aries = m_World->entityStorage->CreateEntity("Aries", folder);
 	transform = aries->AddComponent<Transform>();
@@ -827,6 +828,7 @@ void LevelManagerClass::CreateAries(Entity* folder)
 	health = aries->AddComponent<Health>();
 	health->hp = 1000;
 	health->maxHp = 1000;
+	cameraTarget = aries->AddComponent<CameraTarget>();
 
 	constellation = aries->AddComponent<Constellation>();
 	constellation->starSize = 0.04f;

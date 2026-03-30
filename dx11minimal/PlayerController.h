@@ -23,6 +23,7 @@
 #include "PhysicBody.h"
 #include "PointCloud.h"
 #include "Health.h"
+#include "Components/CameraTarget.h"
 
 #include "PlayerAbilities.h"
 

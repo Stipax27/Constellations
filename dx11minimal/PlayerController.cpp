@@ -395,9 +395,9 @@ void PlayerController::LockOnTarget()
 		RaycastResult result = collisionManager->Raycast(rayInfo);
 
 		if (result.hit) {
-			pair<Entity*, Health*> hres = result.entity->GetAncestorWithComponent<Health>();
-			if (hres.first != nullptr) {
-				cameraTarget = hres.first;
+			pair<Entity*, CameraTarget*> targetRes = result.entity->GetAncestorWithComponent<CameraTarget>();
+			if (targetRes.first != nullptr) {
+				cameraTarget = targetRes.first;
 				lockMovementOnTarget = true;
 			}
 		}

@@ -111,19 +111,41 @@
     <ClCompile Include="NebulaSystem.cpp">
       <Filter>Source Files\Render</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentUtils.cpp" />
-    <ClCompile Include="Engine\GLTFLoader.cpp" />
-    <ClCompile Include="Engine\Mesh\Animation.cpp" />
-    <ClCompile Include="Engine\Mesh\Animator.cpp" />
-    <ClCompile Include="Engine\Mesh\Skeleton.cpp" />
-    <ClCompile Include="Engine\Mesh\SkinnedMesh.cpp" />
-    <ClCompile Include="Systems\SkeletalAnimationSystem.cpp" />
-    <ClCompile Include="Systems\SkinnedMeshSystem.cpp" />
     <ClCompile Include="GlueConstraintSystem.cpp">
       <Filter>Source Files\Physic</Filter>
     </ClCompile>
     <ClCompile Include="input.cpp">
       <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Mesh\Animation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Mesh\Animator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\GLTFLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Patern_Enemy_Logik.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QuestManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\SkeletalAnimationSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Mesh\Skeleton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Mesh\SkinnedMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\SkinnedMeshSystem.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -334,17 +356,6 @@
     <ClInclude Include="isingleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="componentutils.h" />
-    <ClInclude Include="Engine\GLTFLoader.h" />
-    <ClInclude Include="Engine\Mesh\Animation.h" />
-    <ClInclude Include="Engine\Mesh\Animator.h" />
-    <ClInclude Include="Engine\Mesh\Skeleton.h" />
-    <ClInclude Include="Engine\Mesh\SkinnedMesh.h" />
-    <ClInclude Include="Systems\SkeletalAnimationSystem.h" />
-    <ClInclude Include="Systems\SkinnedMeshSystem.h" />
-    <ClInclude Include="Vendors\tinyGLTF\stb_image.h" />
-    <ClInclude Include="Vendors\tinyGLTF\stb_image_write.h" />
-    <ClInclude Include="Vendors\tinyGLTF\tiny_gltf.h" />
     <ClInclude Include="Components\GlueConstraint.h">
       <Filter>Header Files\ECS\Components\Physic</Filter>
     </ClInclude>
@@ -360,7 +371,51 @@
     <ClInclude Include="input.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Components\Grabbable.h" />
+    <ClInclude Include="Vendors\tinyGLTF\tiny_gltf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\SkinnedMeshSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vendors\tinyGLTF\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vendors\tinyGLTF\stb_image_write.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Mesh\SkinnedMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Mesh\Skeleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\SkeletalAnimationSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="questmanager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="questclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GLTFLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="componentutils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Mesh\Animator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Mesh\Animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Grabbable.h">
+      <Filter>Header Files\ECS\Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\CameraTarget.h">
+      <Filter>Header Files\ECS\Components\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">
@@ -647,6 +702,12 @@
     <None Include="Shaders\SkinnedMesh_VS.shader">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Shaders\vs\OptimazeNebula.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\ps\OptimazeNebulaPS.shader">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">
@@ -786,6 +847,9 @@
     </Filter>
     <Filter Include="Shaders\PS">
       <UniqueIdentifier>{904990b9-ae0b-4d38-b43d-7a34e9506127}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS\Components\Gameplay">
+      <UniqueIdentifier>{c1244b35-a7f1-45b5-81d6-c551e3032135}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
