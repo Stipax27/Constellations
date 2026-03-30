@@ -25,7 +25,7 @@ float degreesToRadians(float);
 vector<point3d> smoothCornersPath(const vector<point3d>& points, int numberIterations);
 
 DirectX::XMMATRIX GetMatrixFromLookVector(Transform& transform, point3d direction);
-DirectX::XMMATRIX GetMatrixFromDirection(point3d direction);
+DirectX::XMMATRIX GetMatrixFromDirection(point3d direction, point3d upVector = point3d(0.0f, 1.0f, 0.0f));
 DirectX::XMMATRIX GetMatrixLookAt(DirectX::XMMATRIX originMatrix, point3d direction);
 DirectX::XMMATRIX GetMatrixFromDirectionForPlayer(point3d direction);
 

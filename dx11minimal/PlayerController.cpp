@@ -137,7 +137,7 @@ void PlayerController::ProcessInput()
 		point3d playerPos = GetWorldTransform(playerEntity).position;
 
 		point3d direction = targetPos - playerPos;
-		playerTransform->mRotation = LerpMatrix(playerTransform->mRotation, GetMatrixFromDirection(direction), 0.25f);
+		playerTransform->mRotation = LerpMatrix(playerTransform->mRotation, GetMatrixFromDirection(direction, playerTransform->GetUpVector()), 0.25f);
 	}
 
 	if (!movementLocked)
@@ -259,7 +259,7 @@ void PlayerController::ProcessCamera()
 	}
 	else {
 		point3d direction = GetWorldTransform(cameraTarget).position - camera->position;
-		matrixRotation = GetMatrixFromDirection(direction);
+		matrixRotation = GetMatrixFromDirection(direction, playerTransform->GetUpVector());
 	}
 
 	camera->SetMatrixRotation(LerpMatrix(camera->GetMatrixRotation(), matrixRotation, 0.15f));

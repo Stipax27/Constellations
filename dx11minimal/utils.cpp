@@ -194,7 +194,7 @@ DirectX::XMMATRIX GetMatrixFromLookVector(Transform& transform, point3d directio
     return matrixRotation * transform.mRotation;
 }
 
-DirectX::XMMATRIX GetMatrixFromDirection(point3d direction) {
+DirectX::XMMATRIX GetMatrixFromDirection(point3d direction, point3d upVector) {
     float length = direction.magnitude();
     if (length < 0.001f) {
         return DirectX::XMMatrixIdentity();
@@ -202,14 +202,28 @@ DirectX::XMMATRIX GetMatrixFromDirection(point3d direction) {
 
     point3d lookDirection = direction.normalized();
 
-    point3d worldUp = point3d(0.0f, 1.0f, 0.0f);
-    point3d right = worldUp.cross(lookDirection).normalized();
+    point3d right = upVector.cross(lookDirection).normalized();
     if (right.magnitude() < 0.001f) {
-        worldUp = point3d(0.0f, 0.0f, 1.0f);
-        right = worldUp.cross(lookDirection).normalized();
+        if (upVector != point3d(0.0f, 1.0f, 0.0f)) {
+            upVector = point3d(0.0f, 1.0f, 0.0f);
+            right = upVector.cross(lookDirection).normalized();
 
-        if (right.magnitude() < 0.001f) {
-            return DirectX::XMMatrixIdentity();
+            if (right.magnitude() < 0.001f) {
+                upVector = point3d(0.0f, 0.0f, 1.0f);
+                right = upVector.cross(lookDirection).normalized();
+
+                if (right.magnitude() < 0.001f) {
+                    return DirectX::XMMatrixIdentity();
+                }
+            }
+        }
+        else {
+            upVector = point3d(0.0f, 0.0f, 1.0f);
+            right = upVector.cross(lookDirection).normalized();
+
+            if (right.magnitude() < 0.001f) {
+                return DirectX::XMMatrixIdentity();
+            }
         }
     }
 
