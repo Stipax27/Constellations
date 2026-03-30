@@ -9,6 +9,7 @@ struct PhysicBody : Component
 {
 	float airFriction = 1.0f;
 	point3d velocity = point3d();
+	point3d acceleration = point3d();
 
 	DirectX::XMMATRIX mAngVelocity = DirectX::XMMATRIX{
 		1, 0, 0, 0,

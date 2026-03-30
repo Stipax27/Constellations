@@ -259,10 +259,68 @@ bool LevelManagerClass::Initialize()
 	playerController = new PlayerController();
 	playerController->Initialize(player);
 
-	/*if (aiSystem)
+	
+
+	// Тестовый враг для ИИ amogus
+	testEnemy = m_World->entityStorage->CreateEntity("TestEnemy", folder);
+	Transform* testTransform = testEnemy->AddComponent<Transform>();
+	point3d CentralPatrolPoint = point3d(10.0f, 5.0f, 15.0f);
+	testTransform->position = CentralPatrolPoint + point3d(5.0f, 0.0f, 0.0f); // Стартовая позиция
+
+	// Кодовое слово: amogus
+	AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
+
+	PhysicBody* testPhysic = testEnemy->AddComponent<PhysicBody>();
+	testPhysic->airFriction = 0.01f; // Обычное трение
+
+	testPhysic->velocity = point3d(0.0f, 10.0f, 0.0f);
+
+	// Визуальная составляющая (можно использовать Star или любой другой компонент)
+	Star* testStar = testEnemy->AddComponent<Star>();
+	testStar->radius = 1.0f;
+	star->color1 = point3d(0.5f, 0.5f, 0.5f); // Цвет (бесполезен)
+
+	// Компонент ИИ
+	AIComponent* ai = testEnemy->AddComponent<AIComponent>();
+	ai->enabled = true;
+	ai->behaviorType = AIBehaviorType::PATROL; // Начинаем с патруля
+
+	// Точки патрулирования (локальные координаты относительно врага? 
+	// В текущей реализации patrolPoints задаются в мировых координатах, 
+	// поэтому зададим абсолютные позиции)
+	
+	ai->patrolPoints = {
+		CentralPatrolPoint + point3d(-2.0f, 2.0f, 0.0f),
+		CentralPatrolPoint + point3d(2.0f, 2.0f, 0.0f),
+		CentralPatrolPoint + point3d(2.0f, -2.0f, 0.0f),
+		CentralPatrolPoint + point3d(-2.0f, -2.0f, 0.0f)
+	};
+	//ai->patrolPoints = { CentralPatrolPoint };
+
+	ai->movementSpeed = 3.0f;
+	ai->arrivalDistance = 1.0f;
+
+	// Параметры обнаружения
+	ai->detectionRange = 12.0f;  // Радиус, в котором замечает игрока
+	ai->chaseRange = 18.0f;      // Радиус преследования
+	ai->attackRange = 3.0f;      // Радиус атаки
+
+	// Параметры атаки (пока атака не реализована, но можно оставить)
+	ai->attackCooldown = 1.5f;
+	ai->attackDamage = 5.0f;
+
+	// Таймеры состояний
+	ai->idleDuration = 2.0f;
+	ai->fleeDuration = 4.0f;
+
+	//Параметры ускорения
+	ai->accelerationStrength = 10;
+	ai->maxAcceleration = 100;
+
+	if (aiSystem)
 	{
 		aiSystem->SetPlayerEntity(player);
-	}*/
+	}
 
 	auto spawnSkinned = [this, folder](
 		const char* name,
@@ -402,6 +460,31 @@ void LevelManagerClass::Frame()
 
 	m_World->UpdateCompute();
 	m_World->UpdatePhysic();
+
+	// Изменение цвета testStar в зависимости от состояния ИИ
+	if (testEnemy && testEnemy->IsActive()) {
+		AIComponent* ai = testEnemy->GetComponent<AIComponent>();
+		Star* star = testEnemy->GetComponent<Star>();
+		if (ai && star) {
+			switch (ai->behaviorType) {
+			case AIBehaviorType::PATROL:
+				star->color1 = point3d(0.2f, 0.8f, 0.2f); // зелёный
+				break;
+			case AIBehaviorType::CHASE:
+				star->color1 = point3d(1.0f, 0.5f, 0.0f); // оранжевый
+				break;
+			case AIBehaviorType::ATTACK:
+				star->color1 = point3d(1.0f, 0.0f, 0.0f); // красный
+				break;
+			case AIBehaviorType::FLEE:
+				star->color1 = point3d(0.0f, 0.0f, 1.0f); // синий
+				break;
+			case AIBehaviorType::IDLE:
+				star->color1 = point3d(0.5f, 0.5f, 0.5f); // серый
+				break;
+			}
+		}
+	}
 
 	playerController->ProcessCamera();
 

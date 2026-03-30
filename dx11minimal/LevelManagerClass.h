@@ -110,6 +110,10 @@ private:
 	SkinnedMesh m_TestAnimMesh;
 	Skeleton    m_TestAnimSkeleton;
 	std::vector<AnimationClip> m_TestAnimAnimations;
+private: // AI amogus
+	Entity* testEnemy;
+	AISystem* aiSystem;
+
 };
 
 #endif
