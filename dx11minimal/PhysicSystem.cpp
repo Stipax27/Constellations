@@ -27,7 +27,7 @@ void PhysicSystem::Update(vector<Entity*>& entities, float deltaTime)
 			PhysicBody* physicBody = entity->GetComponent<PhysicBody>();
 			if (transform != nullptr && physicBody != nullptr && physicBody->active) {
 
-				float dTime = physicBody->preciseMovement ? 0.01f : deltaTime;
+				float dTime = physicBody->preciseMovement ? 0.01f : timer::deltaTime * 0.001f;
 
 
 				// Новое торможение

@@ -811,6 +811,7 @@ void PlayerAbilities::UpdateProjectiles()
 			particleEmitter->spread = { PI, PI };
 			particleEmitter->isHeapEmit = true;
 			particleEmitter->heapEmitRepeats = 1;
+			particleEmitter->lastEmitTime = timer::currentTime - particleEmitter->heapEmitInterval;
 
 			DelayedDestroy* delayedDestroy = impact->AddComponent<DelayedDestroy>();
 			delayedDestroy->lifeTime = 1000;

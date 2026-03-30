@@ -164,13 +164,15 @@ void PlayerController::ProcessInput()
 		}
 
 		if (velocity.magnitude() > 0) {
-			point3d newVelocity = playerPhysicBody->velocity + velocity.normalized();
+			/*point3d newVelocity = playerPhysicBody->velocity + velocity.normalized();
 			if (newVelocity.magnitude() > currentMaxSpeed) {
 				playerPhysicBody->velocity = newVelocity.normalized() * currentMaxSpeed;
 			}
 			else {
 				playerPhysicBody->velocity = newVelocity;
-			}
+			}*/
+
+			playerPhysicBody->acceleration = velocity.normalized() * currentMaxSpeed;
 		}
 	}
 
