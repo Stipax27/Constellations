@@ -1108,6 +1108,7 @@
     <ClCompile Include="GlueConstraintSystem.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="NebulaSystem.cpp" />
+    <ClCompile Include="Patern_Enemy_Logik.cpp" />
     <ClCompile Include="PlayerAbilities.cpp" />
     <ClCompile Include="dx11.cpp" />
     <ClCompile Include="dx11minimal.cpp" />

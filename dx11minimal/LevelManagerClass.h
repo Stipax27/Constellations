@@ -46,6 +46,8 @@
 #include "Engine/Mesh/Skeleton.h"
 #include "Engine/Mesh/SkinnedMesh.h"
 
+#include "Patern_Enemy_Logik.cpp"
+
 /////////////
 // GLOBALS //
 /////////////
