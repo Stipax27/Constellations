@@ -14,6 +14,11 @@
 #include "frustumclass.h"
 #include "cameraclass.h"
 
+/////////////
+// GLOBALS //
+/////////////
+const bool SHOW_GRID = false;
+
 
 class MeshSystem : public System
 {
@@ -31,7 +36,7 @@ private:
 
 private:
 	void UpdateWorldMatrix(Transform);
-	int GetVertexCount(point3d, int, int);
+	int GetVertexCount(point3d, int, int, float);
 };
 
 #endif

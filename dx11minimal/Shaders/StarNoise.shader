@@ -56,19 +56,31 @@ float snoise(float3 v)
 	return 42.0 * dot( m*m, float4( dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
 }
 
+float3 uvToSphereDirection(float2 uv)
+{
+    float theta = uv.x * 2.0 * 3.14159265359; // azimut angle
+    float phi = uv.y * 3.14159265359; // polar angle
+    
+    float3 direction;
+    direction.x = sin(phi) * cos(theta);
+    direction.y = cos(phi);
+    direction.z = sin(phi) * sin(theta);
+    
+    return normalize(direction);
+}
+
 
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
-    float4 vpos : POSITION0;
-    float4 wpos : POSITION1;
-	float2 uv : TEXCOORD0;
-	uint iID : COLOR0;
+    float2 uv : TEXCOORD0;
 };
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-	float n = abs(snoise(normalize(input.vpos.xyz) * 3 + Animation * 0.02));
+	float3 sphereDir = uvToSphereDirection(input.uv);
+	float3 noiseInput = sphereDir * 3 + Animation * 0.02;
+	float n = abs(snoise(noiseInput));
 
-	return lerp(float4(0, 0, 0, 1), float4(1, 1, 1, 1), n);
+	return float4(n, n, n, 1);
 }

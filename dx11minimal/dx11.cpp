@@ -1403,9 +1403,10 @@ void Shaders::Init()
 	Shaders::CreatePS(24, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ps\\basicLow.shader"));
 	Shaders::CreatePS(25, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\UIText_PS.shader"));
 
-	Shaders::CreatePS(26, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarSphere_Simple_PS.shader"));
-
 	Shaders::CreatePS(29, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ps\\OptimazeNebulaPS.shader"));
+
+	Shaders::CreateVS(30, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarSphere_Simple_VS.shader"));
+	Shaders::CreatePS(30, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarSphere_Simple_PS.shader"));
 
 	//-----------------------------------------------
 

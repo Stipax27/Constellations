@@ -1,7 +1,7 @@
 #include <lib/constBuf.shader>
 
-Texture2D starTexture : register(t1);
-SamplerState starSamplerState : register(s1);
+Texture2D starTexture : register(t3);
+SamplerState starSamplerState : register(s3);
 
 struct VS_OUTPUT
 {

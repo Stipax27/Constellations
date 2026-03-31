@@ -70,7 +70,7 @@ void MeshSystem::Update(vector<Entity*>& entities, float deltaTime)
 
 						UpdateWorldMatrix(meshTransform);
 
-						Rasterizer::Cull(mesh->cullMode);
+						Rasterizer::Cull(SHOW_GRID ? Rasterizer::cullmode::wireframe : mesh->cullMode);
 
 						Shaders::vShader(mesh->vShader);
 						Shaders::pShader(mesh->pShader);
@@ -125,13 +125,14 @@ void MeshSystem::Update(vector<Entity*>& entities, float deltaTime)
 						context->DrawInstanced(n * n * 6, min(count, constCount - 1), 0, 0);
 					}*/
 
-					Rasterizer::Cull(Rasterizer::cullmode::front);
+					Rasterizer::Cull(SHOW_GRID ? Rasterizer::cullmode::wireframe : Rasterizer::cullmode::front);
 
-					Shaders::vShader(19);
-					Shaders::pShader(19);
-
-					int n = GetVertexCount(worldTransform.position, 5 * constellation->starSize, 33 * constellation->starSize);
+					int n = GetVertexCount(worldTransform.position, 5, 33, constellation->starSize);
 					n += 1 - n % 2;
+
+					float shaderId = n > 8 ? 19 : 30;
+					Shaders::vShader(shaderId);
+					Shaders::pShader(shaderId);
 
 					ConstBuf::drawerInt[0] = n;
 					ConstBuf::Update(7, ConstBuf::drawerInt);
@@ -181,13 +182,14 @@ void MeshSystem::Update(vector<Entity*>& entities, float deltaTime)
 						ConstBuf::Update(5, ConstBuf::global);
 						ConstBuf::ConstToVertex(5);
 
-						Rasterizer::Cull(Rasterizer::cullmode::front);
+						Rasterizer::Cull(SHOW_GRID ? Rasterizer::cullmode::wireframe : Rasterizer::cullmode::front);
 
-						Shaders::vShader(19);
-						Shaders::pShader(26);
-
-						int n = GetVertexCount(worldTransform.position, 5 * star->radius, 255 * star->radius);
+						int n = GetVertexCount(worldTransform.position, 5, 255, star->radius);
 						n += 1 - n % 2;
+
+						float shaderId = n > 20 ? 19 : 30;
+						Shaders::vShader(shaderId);
+						Shaders::pShader(shaderId);
 
 						ConstBuf::drawerInt[0] = n;
 						ConstBuf::Update(7, ConstBuf::drawerInt);
@@ -216,10 +218,12 @@ void MeshSystem::UpdateWorldMatrix(Transform worldTransform) {
 	ConstBuf::ConstToPixel(3);
 }
 
-int MeshSystem::GetVertexCount(point3d position, int min, int max) {
+int MeshSystem::GetVertexCount(point3d position, int min, int max, float size) {
+	size = max(size, 1);
 	float dist = (camera->position - position).magnitude();
-	float a = dist - HIGH_RENDER_DISTANCE;
-	a /= RENDER_DISTANCE_DELTA;
+
+	float a = dist - HIGH_RENDER_DISTANCE * size;
+	a /= RENDER_DISTANCE_DELTA * size;
 	a = clamp(a, 0, 1);
 
 	return (int)lerp((float)max, (float)min, a);

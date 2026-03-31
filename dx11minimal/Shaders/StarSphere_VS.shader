@@ -67,6 +67,19 @@ float snoise(float3 v)
 	return 42.0 * dot( m*m, float4( dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
 }
 
+float2 calculateUV(float3 pos)
+{
+    float3 dir = normalize(pos);
+    
+    float theta = atan2(dir.z, dir.x);  // azimut angle (-PI .. PI)
+    float phi = acos(dir.y);             // polar angle (0 .. PI)
+    
+    float u = (theta + 3.14159265359) / (2.0 * 3.14159265359);
+    float v = phi / 3.14159265359;
+    
+    return float2(u, v);
+}
+
 float3 ball(float2 p, float radius, uint iID)
 {
     float n = (float)drawInt[iID];
@@ -102,12 +115,13 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     pos.x += row * 2;
     pos.xy -= (float)n - 1;
 
-    output.uv = float2(1, -1) * pos.xy / 2. + .5;
+    //output.uv = float2(1, -1) * pos.xy / 2. + .5;
 
 	float radius = gConst[iID].w;
     pos.xyz = ball(pos.xy, radius, iID);
 
     output.vpos = pos;
+	output.uv = calculateUV(pos);
 
 	float height = abs(snoise(normalize(pos.xyz) * 3 + Animation * localTime * 0.02));
 	pos.xyz += normalize(pos.xyz) * height * 0.075 * sqrt(radius);

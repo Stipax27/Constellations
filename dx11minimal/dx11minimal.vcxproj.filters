@@ -726,6 +726,9 @@
     <None Include="Shaders\lib\depthTest.shader">
       <Filter>Shaders\lib</Filter>
     </None>
+    <None Include="Shaders\StarSphere_Simple_VS.shader">
+      <Filter>Shaders\Star</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">
