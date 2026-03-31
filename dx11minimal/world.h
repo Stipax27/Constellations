@@ -87,6 +87,11 @@ private:
 	vector<unique_ptr<System>> renderSystems;
 
 	bool firstFrame = true;
+
+private:
+	void RenderPerlinNoise();
+	void RenderVoronoiNoise();
+	void RenderStarNoise();
 };
 
 #endif

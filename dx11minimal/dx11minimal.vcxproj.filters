@@ -717,6 +717,15 @@
     <None Include="Shaders\ps\OptimazeNebulaPS.shader">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Shaders\StarNoise.shader">
+      <Filter>Shaders\Noises</Filter>
+    </None>
+    <None Include="Shaders\StarSphere_Simple_PS.shader">
+      <Filter>Shaders\Star</Filter>
+    </None>
+    <None Include="Shaders\lib\depthTest.shader">
+      <Filter>Shaders\lib</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">

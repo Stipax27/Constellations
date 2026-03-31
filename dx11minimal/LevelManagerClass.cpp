@@ -72,9 +72,11 @@ bool LevelManagerClass::Initialize()
 	ConstBuf::UpdateFactors();
 
 	//Textures::LoadTexture("..\\dx11minimal\\Resourses\\Textures\\testTexture.tga");
-	if (modelsLoadingThread.joinable())
-	{
+	if (modelsLoadingThread.joinable()) {
 		modelsLoadingThread.join();
+	}
+	else {
+		modelsLoadingThread.detach();
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////

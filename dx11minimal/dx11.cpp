@@ -1402,6 +1402,9 @@ void Shaders::Init()
 	Shaders::CreatePS(23, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ps\\basic.shader"));
 	Shaders::CreatePS(24, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ps\\basicLow.shader"));
 	Shaders::CreatePS(25, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\UIText_PS.shader"));
+
+	Shaders::CreatePS(26, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarSphere_Simple_PS.shader"));
+
 	Shaders::CreatePS(29, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ps\\OptimazeNebulaPS.shader"));
 
 	//-----------------------------------------------
@@ -1412,6 +1415,7 @@ void Shaders::Init()
 
 	Shaders::CreatePS(200, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\PerlinNoise.shader"));
 	Shaders::CreatePS(201, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\VoronoiNoise.shader"));
+	Shaders::CreatePS(202, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarNoise.shader"));
 
 	//-----------------------------------------------
 
@@ -1965,6 +1969,8 @@ void Dx11Init(HWND hwnd, int width, int height)
 	Textures::Create(11, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
 	// voronoi noise rt
 	Textures::Create(12, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
+	// star noise rt
+	Textures::Create(13, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(1024, 1024), true, false);
 }
 
 //////////////////////////////////////////////////////////////////////////////////

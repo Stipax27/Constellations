@@ -184,7 +184,7 @@ void MeshSystem::Update(vector<Entity*>& entities, float deltaTime)
 						Rasterizer::Cull(Rasterizer::cullmode::front);
 
 						Shaders::vShader(19);
-						Shaders::pShader(19);
+						Shaders::pShader(26);
 
 						int n = GetVertexCount(worldTransform.position, 5 * star->radius, 255 * star->radius);
 						n += 1 - n % 2;
