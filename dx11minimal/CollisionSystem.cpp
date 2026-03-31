@@ -38,7 +38,7 @@ void CollisionSystem::Update(vector<Entity*>& entities, float deltaTime)
 				for (int i = 0; i < size; i++)
 				{
 					Entity* entity2 = entities[i];
-					if (entity2 != entity1 && IsEntityValid(entity1)) {
+					if (entity2 != entity1 && IsEntityValid(entity2)) {
 						SphereCollider* collider2 = entity2->GetFirstComponentOfBase<SphereCollider>();
 						if (collider2 != nullptr && collider2->active && CollisionFilter::collisionTable[(int)collider1->collisionGroup][(int)collider2->collisionGroup]) {
 

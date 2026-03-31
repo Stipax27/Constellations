@@ -147,6 +147,9 @@
     <ClCompile Include="Systems\SkinnedMeshSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\GravitySystem.cpp">
+      <Filter>Source Files\Physic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AIComponent.h">
@@ -415,6 +418,12 @@
     </ClInclude>
     <ClInclude Include="Components\CameraTarget.h">
       <Filter>Header Files\ECS\Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\GravityPoint.h">
+      <Filter>Header Files\ECS\Components\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\GravitySystem.h">
+      <Filter>Header Files\ECS\Systems\Physic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

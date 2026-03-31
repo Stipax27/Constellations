@@ -33,6 +33,7 @@
 #include "nebulaSystem.h"
 
 #include "physicSystem.h"
+#include "Systems/GravitySystem.h"
 #include "collisionSystem.h"
 #include "combatSystem.h"
 

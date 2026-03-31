@@ -144,77 +144,6 @@ bool LevelManagerClass::Initialize()
 	//singleDamager = entity->AddComponent<SingleDamager>();
 	//singleDamager->damage = 1000;
 
-	/*entity = m_World->entityStorage->CreateEntity("Particles", folder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-10.0f, 0.0f, -20.0f);
-	particleEmitter = entity->AddComponent<ParticleEmitter>();
-	particleEmitter->rate = 100;
-	particleEmitter->lifetime = 1000;
-	particleEmitter->color = point3d(0.15f, 0.95f, 0.35f);
-	particleEmitter->size = { 1.0f, 4.0f };
-	particleEmitter->opacity = { 0.75f, 0.0f };
-	particleEmitter->emitDirection = EmitDirection::Up;
-	particleEmitter->speed = { 10.0f, 0.0f };
-	particleEmitter->spread = { PI / 8, PI / 8 };*/
-
-	//entity = m_World->entityStorage->CreateEntity("Particles", folder);
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(-20.0f, 0.0f, -20.0f);
-	//particleEmitter = entity->AddComponent<ParticleEmitter>();
-	//particleEmitter->rate = 150;
-	//particleEmitter->lifetime = 1000;
-	//particleEmitter->color = point3d(1.0f, 0.15f, 0.1f);
-	//particleEmitter->size = { 0.0f, 4.0f };
-	//particleEmitter->opacity = { 1.0f, 0.0f };
-	//particleEmitter->emitDirection = EmitDirection::Up;
-	//particleEmitter->speed = { 10.0f, 0.0f };
-	//particleEmitter->spread = { PI, PI };
-	//particleEmitter->isReverse = true;
-
-	//entity = m_World->entityStorage->CreateEntity("Particles", folder);
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(-30.0f, 0.0f, -20.0f);
-	//particleEmitter = entity->AddComponent<ParticleEmitter>();
-	//particleEmitter->rate = 100;
-	//particleEmitter->lifetime = 750;
-	//particleEmitter->color = point3d(1, 1, 1);
-	//particleEmitter->size = { 0.0f, 6.0f };
-	//particleEmitter->opacity = { 0.75f, 0.0f };
-	//particleEmitter->emitDirection = EmitDirection::Front;
-	//particleEmitter->speed = { 15.0f, 0.0f };
-	//particleEmitter->spread = { 0, PI };
-	//particleEmitter->isHeapEmit = true;
-
-	//entity = m_World->entityStorage->CreateEntity("Particles", folder);
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(-40.0f, 0.0f, -20.0f);
-	//particleEmitter = entity->AddComponent<ParticleEmitter>();
-	//particleEmitter->rate = 100;
-	//particleEmitter->lifetime = 1000;
-	//particleEmitter->color = point3d(0.95f, 0.65f, 0.25f);
-	//particleEmitter->size = { 3.0f, 0.0f };
-	//particleEmitter->opacity = { 1.0f, 0.0f };
-	//particleEmitter->emitDirection = EmitDirection::Up;
-	//particleEmitter->speed = { 10.0f, 0.0f };
-
-	//for (int i = 0; i < 5; i++) {
-	//	entity = m_World->entityStorage->CreateEntity("Star", folder);
-	//	transform = entity->AddComponent<Transform>();
-	//	transform->position = point3d(10.0f + 5.0f * i, 0.0f, -35.0f);
-	//	star = entity->AddComponent<Star>();
-	//	star->radius = 2.0f;
-	//	star->crownRadius = 3.5f;
-	//	star->color1 = point3d(0.87f, 0.79f, 1.0f);
-	//	star->color2 = point3d(0.7f, 0.0f, 0.47f);
-	//	star->crownColor = point3d(0.47f, 0.65f, 1.0f);
-	//	sphereCollider = entity->AddComponent<SphereCollider>();
-	//	sphereCollider->radius = 2.0f;
-	//	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	//	health = entity->AddComponent<Health>();
-	//	health->hp = 10;
-	//	health->maxHp = 10;
-	//}
-
 	entity = m_World->entityStorage->CreateEntity("TestStar", folder);
 	transform = entity->AddComponent<Transform>();
 	//transform->position = point3d(50, 0.0f, -35.0f);
@@ -268,6 +197,7 @@ bool LevelManagerClass::Initialize()
 	testTransform->position = CentralPatrolPoint + point3d(5.0f, 0.0f, 0.0f); // Стартовая позиция
 
 	sphereCollider = testEnemy->AddComponent<SphereCollider>();
+	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
 	testEnemy->AddComponent<CameraTarget>();
 
 	// Кодовое слово: amogus
@@ -774,6 +704,7 @@ void LevelManagerClass::InitSystems()
 	m_World->AddComputeSystem<EntityManagerSystem>();
 
 	m_World->AddPhysicSystem<PhysicSystem>();
+	m_World->AddPhysicSystem<GravitySystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
 	m_World->AddPhysicSystem<CombatSystem>();
 	//AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();

@@ -8,15 +8,12 @@
 struct PhysicBody : Component
 {
 	float airFriction = 1.0f;
+	float mass = 1.0f;
+
 	point3d velocity = point3d();
 	point3d acceleration = point3d();
 
-	DirectX::XMMATRIX mAngVelocity = DirectX::XMMATRIX{
-		1, 0, 0, 0,
-		0, 1, 0, 0,
-		0, 0, 1, 0,
-		0, 0, 0, 1
-	};
+	DirectX::XMMATRIX mAngVelocity = DirectX::XMMatrixIdentity();
 
 	bool useGravity = true;
 	bool preciseMovement = false;
