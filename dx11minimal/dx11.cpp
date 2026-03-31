@@ -1971,7 +1971,7 @@ void Dx11Init(HWND hwnd, int width, int height)
 	// voronoi noise rt
 	Textures::Create(12, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
 	// star noise rt
-	Textures::Create(13, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(1024, 1024), true, false);
+	Textures::Create(13, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
