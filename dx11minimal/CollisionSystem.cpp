@@ -75,21 +75,22 @@ void CollisionSystem::Update(vector<Entity*>& entities, float deltaTime)
 											physicBody1->velocity = (nVel + result.normal * result.normal.dot(-nVel)) * physicBody1->velocity.magnitude();
 										}
 										else {
-											physicBody1->velocity += result.normal * pow(SPACE_DENSITY, 2) * (result.distance / (collider1->radius + collider2->radius)) * timer::deltaTime / 1000;
+											float softnessTotal = max(0.01f, collider1->softness + collider2->softness);
+											float penetrationRatio = result.distance / (collider1->radius + collider2->radius);
+
+											float pushStrength = 5.0f / softnessTotal; // Настройте этот коэффициент
+											float velocityPush = pushStrength * penetrationRatio;
+
+											// Ограничиваем максимальное изменение скорости
+											//velocityPush = min(velocityPush, 10.0f);
+
+											physicBody1->velocity += result.normal * velocityPush;
+
+											// Дополнительно: небольшое позиционное выталкивание для мягкости
+											//float positionPush = 0.3f * penetrationRatio / softnessTotal;
+											//transform1->position += result.normal * positionPush;
 										}
 									}
-
-									/*float sideVelocity = (physicBody1->velocity - res.normal * res.distance).magnitude();
-									if (sideVelocity > 0.0f)
-									{
-										physicBody1->velocity = (physicBody1->velocity.normalized() + res.normal) * (physicBody1->velocity.magnitude() - ((sideVelocity * collider1->friction + collider1->friction) * deltaTime));
-									}*/
-
-									/*PhysicBody* physicBody2 = entity2->GetComponent<PhysicBody>();
-									if (physicBody2 != nullptr)
-									{
-										transform2->position -= planeCollider->normal * (sphereCollider->radius - distance);
-									}*/
 
 									pair<Entity*, Health*> hres = entity1->GetAncestorWithComponent<Health>();
 									if (hres.first != nullptr && hres.second->active) {
@@ -121,11 +122,6 @@ void CollisionSystem::Update(vector<Entity*>& entities, float deltaTime)
 												mdres.first->RemoveComponent<MultiDamager>();
 											}
 										}
-
-										/*MultiDamager* multiDamager = entity2->GetComponent<MultiDamager>();
-										if (multiDamager != nullptr) {
-											health->hp -= multiDamager->damage;
-										}*/
 
 									}
 								}

@@ -29,9 +29,6 @@ void PhysicSystem::Update(vector<Entity*>& entities, float deltaTime)
 
 				float dTime = physicBody->preciseMovement ? 0.01f : timer::deltaTime * 0.001f;
 
-
-
-
 				physicBody->velocity += physicBody->acceleration * dTime * entity->GetTimeScale();
 
 				float velMag = physicBody->velocity.magnitude();
@@ -40,8 +37,9 @@ void PhysicSystem::Update(vector<Entity*>& entities, float deltaTime)
 					// Или квадрату скорости (турбулентное трение) - раскомментируйте нужное
 					
 					//float frictionForce = SPACE_DENSITY * physicBody->airFriction * velMag; // линейное
-					float frictionForce = SPACE_DENSITY * velMag * physicBody->airFriction;
-					//float frictionForce = SPACE_DENSITY * physicBody->airFriction * velMag * velMag; // квадратичное
+					//float frictionForce = SPACE_DENSITY * velMag * physicBody->airFriction;
+
+					float frictionForce = SPACE_DENSITY * physicBody->airFriction * pow(velMag, 1.5f); // квадратичное
 
 					float deltaV = frictionForce * dTime;
 					if (deltaV >= velMag) {

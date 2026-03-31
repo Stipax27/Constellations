@@ -267,6 +267,9 @@ bool LevelManagerClass::Initialize()
 	point3d CentralPatrolPoint = point3d(10.0f, 5.0f, 15.0f);
 	testTransform->position = CentralPatrolPoint + point3d(5.0f, 0.0f, 0.0f); // Стартовая позиция
 
+	sphereCollider = testEnemy->AddComponent<SphereCollider>();
+	testEnemy->AddComponent<CameraTarget>();
+
 	// Кодовое слово: amogus
 	AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
 
