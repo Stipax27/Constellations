@@ -202,6 +202,10 @@ bool LevelManagerClass::Initialize()
 	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
 	testEnemy->AddComponent<CameraTarget>();
 
+	health = testEnemy->AddComponent<Health>();
+	health->fraction = Fraction::Enemy;
+	health->maxHp = 50;
+
 	// Кодовое слово: amogus
 	AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
 

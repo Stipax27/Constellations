@@ -104,6 +104,7 @@ private:
 private:
 	void Dash();
 	void LockOnTarget();
+	void CheckTargetValid();
 };
 
 #endif

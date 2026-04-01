@@ -132,6 +132,7 @@ void PlayerController::ProcessInput()
 		playerPhysicBody->airFriction = 1;
 	}
 
+	CheckTargetValid();
 	if (lockMovementOnTarget && cameraTarget != nullptr) {
 		point3d targetPos = GetWorldTransform(cameraTarget).position;
 		point3d playerPos = GetWorldTransform(playerEntity).position;
@@ -256,6 +257,7 @@ void PlayerController::ProcessCamera()
 	camera->position = camera->position.lerp(playerTransform->position - playerTransform->GetLookVector() * camera->distance + playerTransform->GetUpVector() * 2, 0.2f);
 
 	XMMATRIX matrixRotation;
+	CheckTargetValid();
 	if (cameraTarget == nullptr) {
 		matrixRotation = playerTransform->mRotation;
 	}
@@ -291,6 +293,7 @@ void PlayerController::ProcessMouse()
 					SetCursorPos(mouse->absolutePos.x, mouse->absolutePos.y);
 				}
 
+				CheckTargetValid();
 				if (!lockMovementOnTarget || cameraTarget == nullptr) {
 					float k = (length - CURSOR_IGNORE_ZONE) / MAX_CURSOR_DEVIATION;
 					mousePos *= SENSIVITY * k;
@@ -405,6 +408,18 @@ void PlayerController::LockOnTarget()
 		}
 	}
 	else {
+		lockMovementOnTarget = false;
+		cameraTarget = nullptr;
+	}
+}
+
+
+void PlayerController::CheckTargetValid()
+{
+	if (cameraTarget == nullptr)
+		return;
+
+	if (!IsEntityValid(cameraTarget)) {
 		lockMovementOnTarget = false;
 		cameraTarget = nullptr;
 	}
