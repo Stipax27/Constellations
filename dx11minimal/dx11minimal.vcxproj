@@ -184,6 +184,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Systems\AISystem.h" />
     <ClInclude Include="Beam.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="cameraclass.h" />
@@ -210,7 +211,7 @@
     <ClInclude Include="entityStorage.h" />
     <ClInclude Include="fraction.h" />
     <ClInclude Include="dx11.h" />
-    <ClInclude Include="AIComponent.h" />
+    <ClInclude Include="Components\AIComponent.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="Font_OLD.h" />
     <ClInclude Include="FpsCounter.h" />
@@ -1135,7 +1136,7 @@
     <ClCompile Include="GlueConstraintSystem.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="NebulaSystem.cpp" />
-    <ClCompile Include="Patern_Enemy_Logik.cpp" />
+    <ClCompile Include="Systems\AISystem.cpp" />
     <ClCompile Include="PlayerAbilities.cpp" />
     <ClCompile Include="dx11.cpp" />
     <ClCompile Include="dx11minimal.cpp" />

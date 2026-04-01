@@ -4,9 +4,9 @@
 //////////////
 // INCLUDES //
 //////////////
-#include "component.h"
+#include "../component.h"
 #include <vector>
-#include "Point3d.h"
+#include "../Point3d.h"
 #include <DirectXMath.h>
 
 enum class AIBehaviorType
