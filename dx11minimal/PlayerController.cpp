@@ -172,7 +172,7 @@ void PlayerController::ProcessInput()
 				playerPhysicBody->velocity = newVelocity;
 			}*/
 
-			playerPhysicBody->acceleration = velocity.normalized() * currentMaxSpeed;
+			playerPhysicBody->acceleration += velocity.normalized() * currentMaxSpeed;
 		}
 	}
 

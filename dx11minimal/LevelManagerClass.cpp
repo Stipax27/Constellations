@@ -705,8 +705,8 @@ void LevelManagerClass::InitSystems()
 	m_World->AddComputeSystem<TimeSystem>();
 	m_World->AddComputeSystem<EntityManagerSystem>();
 
-	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<GravitySystem>();
+	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
 	m_World->AddPhysicSystem<CombatSystem>();
 	//AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();

@@ -19,7 +19,7 @@ void GravitySystem::Shutdown()
 
 void GravitySystem::Update(vector<Entity*>& entities, float deltaTime)
 {
-	// First cycle
+	// First cycle, gravityPoint searching
 	for (Entity* entity1 : entities) {
 		if (!IsEntityValid(entity1))
 			continue;
@@ -32,7 +32,7 @@ void GravitySystem::Update(vector<Entity*>& entities, float deltaTime)
 		if (gravityPoint == nullptr || !gravityPoint->active)
 			continue;
 
-		// Second cycle
+		// Second cycle, physicBody searching
 		for (Entity* entity2 : entities) {
 			if (entity2 == entity1 || !IsEntityValid(entity2))
 				continue;
@@ -46,6 +46,9 @@ void GravitySystem::Update(vector<Entity*>& entities, float deltaTime)
 				continue;
 
 			// Main processing
+			point3d gravityVector = GetWorldTransform(entity1).position - GetWorldTransform(entity2).position);
+			float radius = (GetWorldTransform(entity1).position - GetWorldTransform(entity2).position).magnitude();
+			float gravityForce = GRAVITY_CONSTANT * (gravityPoint->mass * physicBody->mass) / pow(radius, 2);
 
 		}
 	}

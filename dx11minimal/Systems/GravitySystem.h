@@ -11,6 +11,11 @@
 #include "../PhysicBody.h"
 #include "../Components/GravityPoint.h"
 
+/////////////
+// GLOBALS //
+/////////////
+#define GRAVITY_CONSTANT 6.67f
+
 
 class GravitySystem : public System
 {
