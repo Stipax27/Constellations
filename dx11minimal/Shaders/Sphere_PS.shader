@@ -8,5 +8,5 @@ struct VS_OUTPUT
 
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-    return float4(gConst[1].xyz, 1);
+    return gConst[1];
 }

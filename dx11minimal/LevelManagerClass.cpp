@@ -161,7 +161,9 @@ bool LevelManagerClass::Initialize()
 	health = entity->AddComponent<Health>();
 	health->hp = 100;
 	health->maxHp = 100;
-	entity->AddComponent<Grabbable>();
+
+	GravityPoint* gravityPoint = entity->AddComponent<GravityPoint>();
+	gravityPoint->mass = 100;
 
 	/////////////////////////
 	
@@ -718,9 +720,14 @@ void LevelManagerClass::InitSystems()
 
 	m_World->AddRenderSystem<MeshSystem>();
 	m_World->AddRenderSystem<SkinnedMeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera, m_BoneBuffer);
+
 	if (SHOW_COLLIDERS) {
 		m_World->AddRenderSystem<CollisionDrawSystem>();
 	}
+	if (SHOW_GRAVITY) {
+		m_World->AddRenderSystem<GravityDrawSystem>();
+	}
+
 	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum, m_BoneBuffer);
 	m_World->AddRenderSystem<NebulaSystem>();
 	m_World->AddRenderSystem<UISystem>();

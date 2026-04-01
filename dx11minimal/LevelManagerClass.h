@@ -41,6 +41,8 @@
 #include "timeSystem.h"
 
 #include "collisionDrawSystem.h"
+#include "Systems/GravityDrawSystem.h"
+
 #include "Engine/Mesh/Animation.h"
 #include "Engine/Mesh/Animator.h"
 #include "Engine/Mesh/Skeleton.h"
@@ -52,7 +54,8 @@
 // GLOBALS //
 /////////////
 //const bool VSYNC_ENABLED = true;
-const bool SHOW_COLLIDERS = false;
+#define SHOW_COLLIDERS false
+#define SHOW_GRAVITY true
 
 
 ////////////////////////////////////////////////////////////////////////////////

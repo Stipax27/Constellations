@@ -1,33 +1,29 @@
-#ifndef _GRAVITY_SYSTEM_H_
-#define _GRAVITY_SYSTEM_H_
+#ifndef _DEBUG_GRAVITY_DRAW_SYSTEM_H_
+#define _DEBUG_GRAVITY_DRAW_SYSTEM_H_
 
 //////////////
 // INCLUDES //
 //////////////
 #include<cmath>
 #include "../system.h"
-
 #include "../Transform.h"
-#include "../PhysicBody.h"
+
 #include "../Components/GravityPoint.h"
 
 /////////////
 // GLOBALS //
 /////////////
-#define GRAVITY_CONSTANT 6.67f
+//const bool DEPTH_OFF = true;
 
 
-class GravitySystem : public System
+class GravityDrawSystem : public System
 {
 public:
-	GravitySystem();
+	GravityDrawSystem();
 	void Initialize();
 	void Shutdown();
 
 	void Update(vector<Entity*>&, float);
-
-private:
-	float CalcFalloff(float radius, float maxRadius);
 };
 
 #endif
