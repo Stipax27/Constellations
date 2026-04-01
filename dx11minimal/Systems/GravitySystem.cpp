@@ -54,6 +54,9 @@ void GravitySystem::Update(vector<Entity*>& entities, float deltaTime)
 				float gravityForce = GRAVITY_CONSTANT * (gravityPoint->mass * physicBody->mass) / pow(radius, 1.5f) * falloff;
 
 				physicBody->acceleration += gravityVector.normalized() * gravityForce;
+
+				XMMATRIX newMatrix = TransformMatrixToUpVector(transform2->mRotation, -gravityVector);
+				transform2->mRotation = LerpMatrix(transform2->mRotation, newMatrix, 0.05f * falloff);
 			}
 		}
 	}

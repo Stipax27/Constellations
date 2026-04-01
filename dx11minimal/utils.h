@@ -27,7 +27,7 @@ vector<point3d> smoothCornersPath(const vector<point3d>& points, int numberItera
 DirectX::XMMATRIX GetMatrixFromLookVector(Transform& transform, point3d direction);
 DirectX::XMMATRIX GetMatrixFromDirection(point3d direction, point3d upVector = point3d(0.0f, 1.0f, 0.0f));
 DirectX::XMMATRIX GetMatrixLookAt(DirectX::XMMATRIX originMatrix, point3d direction);
-DirectX::XMMATRIX GetMatrixFromDirectionForPlayer(point3d direction);
+DirectX::XMMATRIX TransformMatrixToUpVector(DirectX::XMMATRIX sourceMatrix, point3d targetUpVector);
 
 point3d quaternionToEuler(float x, float y, float z, float w);
 DirectX::XMVECTOR eulerToQuanternion(float x, float y, float z);

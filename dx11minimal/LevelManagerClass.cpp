@@ -163,7 +163,7 @@ bool LevelManagerClass::Initialize()
 	health->maxHp = 100;
 
 	GravityPoint* gravityPoint = entity->AddComponent<GravityPoint>();
-	gravityPoint->mass = 100;
+	gravityPoint->mass = 25;
 	gravityPoint->radius = 25;
 
 	/////////////////////////

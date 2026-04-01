@@ -252,21 +252,65 @@ DirectX::XMMATRIX GetMatrixLookAt(DirectX::XMMATRIX originMatrix, point3d direct
     return matrixRotation;
 }
 
-DirectX::XMMATRIX GetMatrixFromDirectionForPlayer(point3d direction) {
-    point3d lookDirection = direction.normalized();
+DirectX::XMMATRIX TransformMatrixToUpVector(DirectX::XMMATRIX sourceMatrix, point3d targetUpVector) {
+    point3d currentRight = point3d(
+        sourceMatrix.r[0].m128_f32[0],
+        sourceMatrix.r[0].m128_f32[1],
+        sourceMatrix.r[0].m128_f32[2]
+    ).normalized();
 
-    point3d worldUp = point3d(0.0f, 1.0f, 0.0f);
-    point3d right = worldUp.cross(lookDirection).normalized();
-    point3d up = lookDirection.cross(right).normalized();
+    point3d currentUp = point3d(
+        sourceMatrix.r[1].m128_f32[0],
+        sourceMatrix.r[1].m128_f32[1],
+        sourceMatrix.r[1].m128_f32[2]
+    ).normalized();
 
-    DirectX::XMMATRIX matrixRotation = DirectX::XMMatrixSet(
-        right.x, right.y, right.z, 0.0f,
-        up.x, up.y, up.z, 0.0f,
-        lookDirection.x, lookDirection.y, lookDirection.z, 0.0f,
-        0.0f, 0.0f, 0.0f, 1.0f
+    point3d currentLook = point3d(
+        sourceMatrix.r[2].m128_f32[0],
+        sourceMatrix.r[2].m128_f32[1],
+        sourceMatrix.r[2].m128_f32[2]
+    ).normalized();
+
+    point3d targetUp = targetUpVector.normalized();
+
+    float dotWithLook = targetUp.dot(currentLook);
+    if (fabsf(dotWithLook) > 0.999f) {
+        point3d alternativeUp = point3d(0.0f, 1.0f, 0.0f);
+        if (fabsf(alternativeUp.dot(currentLook)) > 0.999f) {
+            alternativeUp = point3d(1.0f, 0.0f, 0.0f);
+        }
+
+        point3d newRight = alternativeUp.cross(currentLook).normalized();
+        point3d newUp = currentLook.cross(newRight).normalized();
+
+        return DirectX::XMMatrixSet(
+            newRight.x, newRight.y, newRight.z, sourceMatrix.r[0].m128_f32[3],
+            newUp.x, newUp.y, newUp.z, sourceMatrix.r[1].m128_f32[3],
+            currentLook.x, currentLook.y, currentLook.z, sourceMatrix.r[2].m128_f32[3],
+            sourceMatrix.r[3].m128_f32[0], sourceMatrix.r[3].m128_f32[1],
+            sourceMatrix.r[3].m128_f32[2], sourceMatrix.r[3].m128_f32[3]
+        );
+    }
+
+    point3d newRight = targetUp.cross(currentLook).normalized();
+
+    if (newRight.magnitude() < 0.001f) {
+        newRight = currentRight;
+    }
+    else {
+        newRight = newRight.normalized();
+    }
+    point3d newUp = currentLook.cross(newRight).normalized();
+
+    DirectX::XMMATRIX resultMatrix = DirectX::XMMatrixSet(
+        newRight.x, newRight.y, newRight.z, sourceMatrix.r[0].m128_f32[3],
+        newUp.x, newUp.y, newUp.z, sourceMatrix.r[1].m128_f32[3],
+        currentLook.x, currentLook.y, currentLook.z, sourceMatrix.r[2].m128_f32[3],
+        sourceMatrix.r[3].m128_f32[0], sourceMatrix.r[3].m128_f32[1],
+        sourceMatrix.r[3].m128_f32[2], sourceMatrix.r[3].m128_f32[3]
     );
 
-    return matrixRotation;
+    return resultMatrix;
 }
 
 
