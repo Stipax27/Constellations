@@ -14,7 +14,7 @@
 /////////////
 // GLOBALS //
 /////////////
-#define GRAVITY_CONSTANT 6.67f
+#define GRAVITY_CONSTANT 100
 
 
 class GravitySystem : public System

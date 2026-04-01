@@ -61,6 +61,5 @@ void GravitySystem::Update(vector<Entity*>& entities, float deltaTime)
 
 
 float GravitySystem::CalcFalloff(float radius, float maxRadius) {
-	float delta = min(radius / maxRadius, 1);
-	return 1 - 3 * pow(delta, 2) + 2 * pow(delta, 3);
+	return 1 - min(radius / maxRadius, 1);
 }

@@ -50,10 +50,10 @@ void CollisionDrawSystem::Update(vector<Entity*>& entities, float deltaTime)
 					ConstBuf::global[0].w = sphereCollider->radius;
 
 					if (sphereCollider->active) {
-						ConstBuf::global[1] = XMFLOAT4(1, 0, 0, 0);
+						ConstBuf::global[1] = XMFLOAT4(1, 0, 0, 1);
 					}
 					else {
-						ConstBuf::global[1] = XMFLOAT4(0.5f, 0.5f, 0.5f, 0);
+						ConstBuf::global[1] = XMFLOAT4(0.5f, 0.5f, 0.5f, 1);
 					}
 
 					ConstBuf::Update(5, ConstBuf::global);
