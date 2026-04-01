@@ -49,9 +49,9 @@ void GravitySystem::Update(vector<Entity*>& entities, float deltaTime)
 			point3d gravityVector = GetWorldTransform(entity1).position - GetWorldTransform(entity2).position;
 			float radius = gravityVector.magnitude();
 
-			if (radius <= gravityPoint->radius) {
+			if (radius <= gravityPoint->radius && radius > 0) {
 				float falloff = CalcFalloff(radius, gravityPoint->radius);
-				float gravityForce = GRAVITY_CONSTANT * (gravityPoint->mass * physicBody->mass) / pow(radius, 2) * falloff;
+				float gravityForce = GRAVITY_CONSTANT * (gravityPoint->mass * physicBody->mass) / pow(radius, 1.5f) * falloff;
 
 				physicBody->acceleration += gravityVector.normalized() * gravityForce;
 			}
@@ -61,5 +61,13 @@ void GravitySystem::Update(vector<Entity*>& entities, float deltaTime)
 
 
 float GravitySystem::CalcFalloff(float radius, float maxRadius) {
-	return 1 - min(radius / maxRadius, 1);
+	float fadeStart = maxRadius * GRAVITATION_FADE_START;
+
+	if (radius < fadeStart) {
+		return 1;
+	}
+	else {
+		float t = (radius - fadeStart) / (maxRadius - fadeStart);
+		return 1 - (3 * pow(t, 2) - 2 * pow(t, 3));
+	}
 }

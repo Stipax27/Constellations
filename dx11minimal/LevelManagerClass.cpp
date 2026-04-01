@@ -164,7 +164,7 @@ bool LevelManagerClass::Initialize()
 
 	GravityPoint* gravityPoint = entity->AddComponent<GravityPoint>();
 	gravityPoint->mass = 100;
-	gravityPoint->radius = 100;
+	gravityPoint->radius = 25;
 
 	/////////////////////////
 	
