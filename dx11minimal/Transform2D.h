@@ -4,7 +4,7 @@
 #include "component.h"
 #include "point3d.h"
 
-enum ScreenAspectRatio {
+enum class ScreenAspectRatio {
 	XY,
 	YX,
 	XX,
