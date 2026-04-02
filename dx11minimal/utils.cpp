@@ -163,7 +163,7 @@ Transform2D GetWorldTransform2D(Entity* entity) {
 
 
 bool IsEntityValid(Entity* entity) {
-    return entity != nullptr && entity->IsActive();
+    return entity && entity->IsActive();
 }
 
 

@@ -793,7 +793,7 @@ void PlayerAbilities::UpdateProjectiles()
 	{
 		Entity* projectile = projectiles[i];
 
-		if (!projectile->IsDeleting() && !projectile->HasComponent<SingleDamager>()) {
+		if (IsEntityValid(projectile) && !projectile->IsDeleting() && !projectile->HasComponent<SingleDamager>()) {
 			CollisionInfo info = GetProjectileCollisionInfo(projectile);
 
 			Entity* impact = entityStorage->CreateEntity("Impact", worldFolder);
@@ -819,7 +819,7 @@ void PlayerAbilities::UpdateProjectiles()
 			projectile->Destroy();
 		}
 
-		if (projectile->IsDeleting())
+		if (!IsEntityValid(projectile))
 		{
 			projectiles.erase(projectiles.begin() + i);
 		}

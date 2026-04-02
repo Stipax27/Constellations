@@ -21,7 +21,7 @@ void CombatSystem::Update(vector<Entity*>& entities, float deltaTime)
 {
 	size_t size = entities.size();
 	for (Entity* entity : entities) {
-		if (!IsEntityValid(entity))
+		if (!IsEntityValid(entity) || entity->GetTimeScale() == 0.0f)
 			continue;
 				
 		Health* health = entity->GetComponent<Health>();

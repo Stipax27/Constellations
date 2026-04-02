@@ -100,7 +100,6 @@ void CollisionSystem::Update(vector<Entity*>& entities, float deltaTime)
 
 											DamageUnit unit = DamageUnit(sdres.second->damageType, sdres.second->damage);
 											hres.second->damageQueue.push_back(unit);
-											//hres.second->hp -= sdres.second->damage;
 
 											sdres.second->entityFilter.push_back(hres.first->GetId());
 											if (sdres.second->entityFilter.size() >= sdres.second->maxHitCount) {
@@ -113,7 +112,9 @@ void CollisionSystem::Update(vector<Entity*>& entities, float deltaTime)
 
 										pair<Entity*, MultiDamager*> mdres = entity2->GetAncestorWithComponent<MultiDamager>();
 										if (mdres.first != nullptr && mdres.second->active && mdres.second->target == hres.second->fraction && timer::currentTime - mdres.second->lastDamageTime >= mdres.second->inverval) {
-											hres.second->hp -= mdres.second->damage;
+											
+											DamageUnit unit = DamageUnit(mdres.second->damageType, mdres.second->damage);
+											hres.second->damageQueue.push_back(unit);
 
 											mdres.second->lastDamageTime = timer::currentTime;
 											mdres.second->repeatCount++;
