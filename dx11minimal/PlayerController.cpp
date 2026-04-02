@@ -157,7 +157,7 @@ void PlayerController::ProcessInput()
 		if (input::IsKeyDown('D')) {
 			velocity += playerTransform->GetRightVector();
 		}
-		if (input::IsKeyDown(VK_LMENU)) {
+		if (input::IsKeyDown(VK_SPACE)) {
 			velocity += playerTransform->GetUpVector();
 		}
 		if (input::IsKeyDown(VK_CONTROL)) {
@@ -190,7 +190,7 @@ void PlayerController::ProcessInput()
 
 	
 	float roll = 0.0f;
-	if (input::IsKeyDown(VK_SPACE)) {
+	if (input::IsKeyDown('C')) {
 		Dash();
 	}
 		
