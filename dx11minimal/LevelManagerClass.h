@@ -47,6 +47,9 @@
 #include "Engine/Mesh/SkinnedMesh.h"
 
 #include "Quests/Queststarcollection.h"
+
+#include "QuestSystem.h"
+
 /////////////
 // GLOBALS //
 /////////////

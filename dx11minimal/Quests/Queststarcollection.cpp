@@ -46,38 +46,8 @@ void QuestStarCollection::CreateCentralStar()
 {
     if (!s_World || !s_World->entityStorage || !m_QuestRoot) return;
 
-    m_CentralStar = s_World->entityStorage->CreateEntity("CentralStar", m_QuestRoot);
-    Transform* transform = m_CentralStar->AddComponent<Transform>();
-    transform->position = point3d(0, 0, 0);
-
-    Star* star = m_CentralStar->AddComponent<Star>();
-    star->radius = 20.0f;
-    star->crownRadius = 25.0f;
-    star->color1 = point3d(0.99, 1, 0.51);
-    star->color2 = point3d(0.75f, 0.2f, 0.37f);
-    star->crownColor = point3d(0.87f, 0.25f, 0.15f);
-
-    SphereCollider* sphereCollider = m_CentralStar->AddComponent<SphereCollider>();
-    sphereCollider->radius = 20.0f;
-    sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-    sphereCollider->isTouchable = true;
-
-    Health* health = m_CentralStar->AddComponent<Health>();
-    health->hp = 100;
-    health->maxHp = 100;
-    health->fraction = Fraction::Player;
-
-    m_CentralStar->AddComponent<Grabbable>();
-
-    
-    Entity* collectionTrigger = s_World->entityStorage->CreateEntity("CollectionTrigger", m_CentralStar);
-    Transform* triggerTransform = collectionTrigger->AddComponent<Transform>();
-    triggerTransform->position = point3d(0, 0, 0);
-
-    SphereCollider* triggerCollider = collectionTrigger->AddComponent<SphereCollider>();
-    triggerCollider->radius = m_CollectionRadius;
-    triggerCollider->collisionGroup = CollisionFilter::Group::Projectile;
-    triggerCollider->isTouchable = false;
+    m_CentralStar = s_World->entityStorage->GetEntityByName("CentralStar");
+  
 }
 
 ////////////////////////////////////////////////////////////////////////////////

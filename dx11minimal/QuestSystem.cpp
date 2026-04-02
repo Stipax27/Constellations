@@ -33,9 +33,10 @@ void QuestSystem::Update(vector<Entity*>& entities, float deltaTime)
 				Transform pos2 = GetWorldTransform(entity);
 				float dist = (pos2.position - pos1.position).magnitude();
 
-				if (dist<= questGiver->radius) {
+				if (dist <= questGiver->radius && input::IsKeyPressed('R')) {
 				
 					questManager->CreateQuest(questGiver->questType);
+					entity->RemoveComponent<QuestGiver>();
 
 				}
 

@@ -243,7 +243,7 @@ bool LevelManagerClass::Initialize()
 	CreateStarQuestLoc(folder, 2);
 
 	// КАААК РУЛИТЬ
-	questManager->CreateQuest("QuestStarCollection");
+	//questManager->CreateQuest("QuestStarCollection");
 
 	/////////////////////////
 
@@ -692,6 +692,7 @@ void LevelManagerClass::InitSystems()
 {
 	m_World->AddComputeSystem<TimeSystem>();
 	m_World->AddComputeSystem<EntityManagerSystem>();
+	m_World->AddComputeSystem<QuestSystem>();
 
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
@@ -1110,4 +1111,42 @@ void LevelManagerClass::CreateStarQuestLoc(Entity* folder, int quality)
 	Entity* location = m_World->entityStorage->CreateEntity("StarQuestLocation", folder);
 	Transform* transform = location->AddComponent<Transform>();
 	transform->position = point3d(0, 0, 150);
+
+	
+	Entity* m_CentralStar = m_World->entityStorage->CreateEntity("CentralStar", location);
+	transform = m_CentralStar->AddComponent<Transform>();
+	transform->position = point3d(0, 0, 0);
+
+	QuestGiver* questGiver = m_CentralStar->AddComponent<QuestGiver>();
+	questGiver->radius = 40;
+	questGiver->questType = "QuestStarCollection";
+
+	Star* star = m_CentralStar->AddComponent<Star>();
+	star->radius = 20.0f;
+	star->crownRadius = 25.0f;
+	star->color1 = point3d(0.99, 1, 0.51);
+	star->color2 = point3d(0.75f, 0.2f, 0.37f);
+	star->crownColor = point3d(0.87f, 0.25f, 0.15f);
+
+	SphereCollider* sphereCollider = m_CentralStar->AddComponent<SphereCollider>();
+	sphereCollider->radius = 20.0f;
+	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	sphereCollider->isTouchable = true;
+
+	Health* health = m_CentralStar->AddComponent<Health>();
+	health->hp = 100;
+	health->maxHp = 100;
+	health->fraction = Fraction::Player;
+
+	m_CentralStar->AddComponent<Grabbable>();
+
+
+	Entity* collectionTrigger = m_World->entityStorage->CreateEntity("CollectionTrigger", m_CentralStar);
+	Transform* triggerTransform = collectionTrigger->AddComponent<Transform>();
+	triggerTransform->position = point3d(0, 0, 0);
+
+	SphereCollider* triggerCollider = collectionTrigger->AddComponent<SphereCollider>();
+	triggerCollider->radius = 40;
+	triggerCollider->collisionGroup = CollisionFilter::Group::Projectile;
+	triggerCollider->isTouchable = false;
 }
