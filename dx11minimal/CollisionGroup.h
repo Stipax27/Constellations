@@ -6,7 +6,7 @@
 
 namespace CollisionFilter
 {
-	enum Group
+	enum class Group
 	{
 		Projectile,
 		Player,

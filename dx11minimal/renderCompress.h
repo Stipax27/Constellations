@@ -1,7 +1,7 @@
 #ifndef _RENDER_COMPRESS_H_
 #define _RENDER_COMPRESS_H_
 
-enum RenderCompress
+enum class RenderCompress
 {
 	none,
 	x2,

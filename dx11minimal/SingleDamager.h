@@ -3,11 +3,13 @@
 
 #include "component.h"
 #include "fraction.h"
+#include "damageType.h"
 #include <vector>
 
 struct SingleDamager : Component
 {
 	Fraction target = Fraction::Player;
+	DamageType damageType = DamageType::Kinetic;
 	bool destroyable = false;
 
 	float damage = 10.0f;

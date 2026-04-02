@@ -3,6 +3,17 @@
 
 #include "component.h"
 #include "fraction.h"
+#include "damageType.h"
+#include <vector>
+
+struct DamageUnit {
+	DamageType damageType;
+	float damage;
+
+	DamageUnit(DamageType onDamageType, float onDamage)
+		: damageType(onDamageType), damage(onDamage)
+	{}
+};
 
 struct Health : Component
 {
@@ -13,6 +24,8 @@ struct Health : Component
 	bool destroyOnDeath = true;
 
 	bool immortal = false;
+
+	vector<DamageUnit> damageQueue;
 };
 
 #endif

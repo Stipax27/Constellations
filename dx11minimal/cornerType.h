@@ -1,7 +1,7 @@
 #ifndef _CORNER_TYPE_H_
 #define _CORNER_TYPE_H_
 
-enum CornerType {
+enum class CornerType {
 	Strict,
 	Smooth
 };

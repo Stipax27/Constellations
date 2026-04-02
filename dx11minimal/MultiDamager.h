@@ -2,11 +2,13 @@
 #define _MULTI_DAMAGER_H_
 
 #include "component.h"
-#include "timer.h"
+#include "fraction.h"
+#include "damageType.h"
 
 struct MultiDamager : Component
 {
 	Fraction target = Fraction::Player;
+	DamageType damageType = DamageType::Kinetic;
 	bool destroyable = false;
 
 	float damage = 1.0f;

@@ -97,7 +97,10 @@ void CollisionSystem::Update(vector<Entity*>& entities, float deltaTime)
 
 										pair<Entity*, SingleDamager*> sdres = entity2->GetAncestorWithComponent<SingleDamager>();
 										if (sdres.first != nullptr && sdres.second->active && sdres.second->target == hres.second->fraction && find(sdres.second->entityFilter.begin(), sdres.second->entityFilter.end(), hres.first->GetId()) == sdres.second->entityFilter.end()) {
-											hres.second->hp -= sdres.second->damage;
+
+											DamageUnit unit = DamageUnit(sdres.second->damageType, sdres.second->damage);
+											hres.second->damageQueue.push_back(unit);
+											//hres.second->hp -= sdres.second->damage;
 
 											sdres.second->entityFilter.push_back(hres.first->GetId());
 											if (sdres.second->entityFilter.size() >= sdres.second->maxHitCount) {
