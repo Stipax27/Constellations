@@ -231,6 +231,12 @@ void PlayerController::ProcessInput()
 		abilities->Grab();
 	}
 
+	if (input::IsKeyDown('K'))
+	{
+		abilities->StartRadar();
+	}
+
+
 }
 		
 

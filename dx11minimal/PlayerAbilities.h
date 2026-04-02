@@ -66,6 +66,9 @@ enum PlayerWeapons
 
 #define TIMESTOP_STEP 0.15f
 
+#define RADAR_START_RADIUS 1.f
+#define RADAR_FINAL_RADIUS 150.f
+
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: PlayerAbilities
 ////////////////////////////////////////////////////////////////////////////////
@@ -91,6 +94,9 @@ public:
 	void CreateBlueStar(float size = 1.0f);
 	void BlowGasStart();
 	void BlowGasEnd();
+
+	void StartRadar();
+	
 
 
 public:
@@ -162,6 +168,12 @@ private:
 	bool isBlowingGas;    
 	double blowGasStartTime;
 	float blowGasRate;
+
+	Entity* radarEntity;
+	float radarStartTime;
+	float speedRadius;
+	float radiusRad;
+	bool isRadaring;
 
 	vector<Entity*> projectiles;
 
