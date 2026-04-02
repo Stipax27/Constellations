@@ -241,10 +241,10 @@
     <ClInclude Include="PointCloud.h" />
     <ClInclude Include="Components\Orientation.h" />
     <ClInclude Include="Components\SkeletalAnimationComponent.h" />
-    <ClInclude Include="questclass.h" />
+    <ClInclude Include="Quests\questclass.h" />
     <ClInclude Include="QuestGiver.h" />
-    <ClInclude Include="questmanager.h" />
-    <ClInclude Include="Queststarcollection.h" />
+    <ClInclude Include="Quests\questmanager.h" />
+    <ClInclude Include="Quests\Queststarcollection.h" />
     <ClInclude Include="QuestSystem.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="renderCompress.h" />
@@ -1124,8 +1124,8 @@
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Point3d.cpp" />
     <ClCompile Include="Point4d.cpp" />
-    <ClCompile Include="QuestManager.cpp" />
-    <ClCompile Include="Queststarcollection.cpp" />
+    <ClCompile Include="Quests\QuestManager.cpp" />
+    <ClCompile Include="Quests\Queststarcollection.cpp" />
     <ClCompile Include="QuestSystem.cpp" />
     <ClCompile Include="SplinePath.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />

@@ -8,7 +8,7 @@
 #include "system.h"
 #include "QuestGiver.h"
 #include "Transform.h"
-#include "questmanager.h"
+#include "Quests/questmanager.h"
 
 
 class QuestSystem : public System

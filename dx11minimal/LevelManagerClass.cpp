@@ -241,8 +241,10 @@ bool LevelManagerClass::Initialize()
 	//CreateZenithLocation(folder, 2);
 	CreateNebula(folder,2);
 	CreateStarQuestLoc(folder, 2);
+
 	// КАААК РУЛИТЬ
-	questManager->AddQuest<QuestStarCollection>();
+	questManager->CreateQuest("QuestStarCollection");
+
 	/////////////////////////
 
 	/*Entity* holder = m_World->entityStorage->CreateEntity("Holder", folder);

@@ -11,21 +11,21 @@
 #include <string>
 #include <vector>
 #include "questclass.h"
-#include "Entity.h"
-#include "Transform.h"
-#include "Star.h"
-#include "SphereCollider.h"
-#include "Health.h"
-#include "ParticleEmitter.h"
-#include "Components/Grabbable.h"
+#include "../entity.h"
+#include "../Transform.h"
+#include "../Star.h"
+#include "../SphereCollider.h"
+#include "../Health.h"
+#include "../ParticleEmitter.h"
+#include "../Components/Grabbable.h"
 
-#include "World.h"
-#include "EntityStorage.h"
+#include "../World.h"
+#include "../EntityStorage.h"
 #include <cmath>
 #include <iostream>
 #include <algorithm>
 
-#include "singleton.h"
+#include "../singleton.h"
 
 using namespace std;
 

@@ -14,7 +14,7 @@
 #include "mouseclass.h"
 
 #include "PlayerController.h"
-#include "questmanager.h"
+#include "Quests/questmanager.h"
 
 #include "world.h"
 #include "system.h"
@@ -46,7 +46,7 @@
 #include "Engine/Mesh/Skeleton.h"
 #include "Engine/Mesh/SkinnedMesh.h"
 
-#include "Queststarcollection.h"
+#include "Quests/Queststarcollection.h"
 /////////////
 // GLOBALS //
 /////////////

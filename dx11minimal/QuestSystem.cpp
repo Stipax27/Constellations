@@ -35,7 +35,7 @@ void QuestSystem::Update(vector<Entity*>& entities, float deltaTime)
 
 				if (dist<= questGiver->radius) {
 				
-					questManager->AddQuest<>();
+					questManager->CreateQuest(questGiver->questType);
 
 				}
 
