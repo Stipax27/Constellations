@@ -47,7 +47,7 @@ private:
 	void CreateReversedParticle(const Transform&, ParticleEmitter*, const Orientation&, double);
 	void CreateNormalParticle(const Transform&, ParticleEmitter*, const Orientation&, double);
 	void UpdateEmitTiming(Entity*, ParticleEmitter*, double, int);
-	void UpdateExistingParticles(Entity*, ParticleEmitter*);
+	void UpdateExistingParticles(Entity*, ParticleEmitter*, Transform&);
 	void RenderParticles(Entity*, const ParticleEmitter*);
 	void SetupShaders(const ParticleEmitter*);
 	void SetupConstantBuffers(Entity*);

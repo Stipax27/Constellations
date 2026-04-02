@@ -457,7 +457,7 @@ void SpriteSystem::ProcessParticle(Entity* entity, Transform& worldTransform)
 		EmitNewParticles(entity, worldTransform, particleEmitter);
 	}
 
-	UpdateExistingParticles(entity, particleEmitter);
+	UpdateExistingParticles(entity, particleEmitter, worldTransform);
 
 	if (!particleEmitter->particles.empty())
 	{
@@ -574,7 +574,7 @@ void SpriteSystem::CreateReversedParticle(const Transform& worldTransform, Parti
 	emitter->particles.push_back(XMFLOAT4X4(
 		position.x, position.y, position.z, static_cast<float>(startTime),
 		-direction.forward.x, -direction.forward.y, -direction.forward.z, 0,
-		0, 0, 0, 0,
+		worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, 0,
 		0, 0, 0, 0
 	));
 }
@@ -615,7 +615,7 @@ void SpriteSystem::UpdateEmitTiming(Entity* entity, ParticleEmitter* emitter, do
 	}
 }
 
-void SpriteSystem::UpdateExistingParticles(Entity* entity, ParticleEmitter* emitter)
+void SpriteSystem::UpdateExistingParticles(Entity* entity, ParticleEmitter* emitter, Transform& worldTransform)
 {
 	int i = 0;
 	while (i < emitter->particles.size())
@@ -624,6 +624,30 @@ void SpriteSystem::UpdateExistingParticles(Entity* entity, ParticleEmitter* emit
 
 		if (abs(entity->localTime - startTime) < emitter->lifetime)
 		{
+			if (!emitter->useWorldSpace) {
+				if (emitter->isReverse) {
+					point3d direction = point3d(
+						emitter->particles[i]._11 - emitter->particles[i]._31,
+						emitter->particles[i]._12 - emitter->particles[i]._32,
+						emitter->particles[i]._13 - emitter->particles[i]._33
+					);
+					point3d newPos = worldTransform.position + direction;
+
+					emitter->particles[i]._11 = newPos.x;
+					emitter->particles[i]._12 = newPos.y;
+					emitter->particles[i]._13 = newPos.z;
+				}
+				else {
+					emitter->particles[i]._11 = worldTransform.position.x;
+					emitter->particles[i]._12 = worldTransform.position.y;
+					emitter->particles[i]._13 = worldTransform.position.z;
+				}
+
+				emitter->particles[i]._31 = worldTransform.position.x;
+				emitter->particles[i]._32 = worldTransform.position.y;
+				emitter->particles[i]._33 = worldTransform.position.z;
+			}
+
 			if (i < constCount)
 			{
 				ConstBuf::drawerFloat4x4[i] = emitter->particles[i];

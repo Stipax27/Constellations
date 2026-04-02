@@ -39,6 +39,7 @@ struct ParticleEmitter : Component
 	DWORD heapEmitInterval = 1000;
 
 	bool isReverse = false;
+	bool useWorldSpace = true;
 
 	RenderCompress compress = RenderCompress::none;
 
