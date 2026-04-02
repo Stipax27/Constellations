@@ -163,6 +163,9 @@ bool LevelManagerClass::Initialize()
 	gravityPoint->mass = 500;
 	gravityPoint->radius = 150;
 
+	interp::Animate(star->radius, 5.0f, 10, interp::Curve::EaseInOutQuad);
+	interp::Animate(sphereCollider->radius, 5.0f, 10, interp::Curve::EaseInOutQuad);
+
 	/////////////////////////
 	
 	CreateSpaceBackground(folder, 1);
@@ -387,7 +390,11 @@ void LevelManagerClass::Frame()
 		return;
 
 	mouse->Update();
+
 	UpdateTestAnimationToggle();
+
+	interp::UpdateTweens();
+
 	playerController->ProcessInput();
 	playerController->ProcessMouse();
 	playerController->abilities->Update();

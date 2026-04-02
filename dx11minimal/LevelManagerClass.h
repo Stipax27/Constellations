@@ -10,6 +10,8 @@
 #include <thread>
 #include <vector>
 
+#include "Utils/interp.h"
+
 #include "windowclass.h"
 #include "mouseclass.h"
 
