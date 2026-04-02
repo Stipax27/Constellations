@@ -66,6 +66,7 @@ namespace interp {
         virtual ~ITween() = default;
         virtual void Update() = 0;
         virtual bool IsPlaying() const = 0;
+        virtual bool IsPaused() const = 0;
         virtual void Start() = 0;
         virtual void Stop() = 0;
         virtual void Pause() = 0;
@@ -179,7 +180,7 @@ namespace interp {
 
         activeTweens.erase(
             std::remove_if(activeTweens.begin(), activeTweens.end(),
-                [](const auto& tween) { return !tween->IsPlaying(); }),
+                [](const auto& tween) { return !tween->IsPlaying() && !tween->IsPaused(); }),
             activeTweens.end()
         );
     }
