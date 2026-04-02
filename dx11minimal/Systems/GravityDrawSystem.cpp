@@ -41,10 +41,10 @@ void GravityDrawSystem::Update(vector<Entity*>& entities, float deltaTime)
 		ConstBuf::global[0].w = gravityPoint->radius;
 
 		if (gravityPoint->active) {
-			ConstBuf::global[1] = XMFLOAT4(0, 1, 0, 0.25f);
+			ConstBuf::global[1] = XMFLOAT4(0.471f, 0.922f, 1.0f, 0.25f);
 		}
 		else {
-			ConstBuf::global[1] = XMFLOAT4(0, 0.25f, 0, 0.25f);
+			ConstBuf::global[1] = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.25f);
 		}
 
 		ConstBuf::Update(5, ConstBuf::global);
