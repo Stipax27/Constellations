@@ -266,6 +266,7 @@
     <ClInclude Include="timeSystem.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Transform2D.h" />
+    <ClInclude Include="Utils\interp.h" />
     <ClInclude Include="uiSystem.h" />
     <ClInclude Include="Vendors\tinyGLTF\json.hpp" />
     <ClInclude Include="Vendors\tinyGLTF\stb_image.h" />
@@ -1136,6 +1137,7 @@
     </ClCompile>
     <ClCompile Include="EntityStorage.cpp" />
     <ClCompile Include="GlueConstraintSystem.cpp" />
+    <ClCompile Include="Utils\interp.cpp" />
     <ClCompile Include="Systems\GravityDrawSystem.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="NebulaSystem.cpp" />
