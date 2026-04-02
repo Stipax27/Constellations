@@ -158,16 +158,16 @@ namespace interp {
     static std::vector<std::unique_ptr<ITween>> activeTweens;
 
 
-    template<typename T>
-    Tween<T>& CreateTween(T& target, const T& endValue, double duration, Curve curve = Curve::Linear) {
-        auto tween = std::make_unique<Tween<T>>(&target, endValue, duration, curve);
+    template<typename T, typename U>
+    Tween<T>& CreateTween(T& target, const U& endValue, double duration, Curve curve = Curve::Linear) {
+        auto tween = std::make_unique<Tween<T>>(&target, static_cast<T>(endValue), duration, curve);
         Tween<T>& ref = *tween;
         activeTweens.push_back(std::move(tween));
         return ref;
     }
 
-    template<typename T>
-    Tween<T>& Animate(T& target, const T& endValue, double duration, Curve curve = Curve::Linear) {
+    template<typename T, typename U>
+    Tween<T>& Animate(T& target, const U& endValue, double duration, Curve curve = Curve::Linear) {
         auto& tween = CreateTween(target, endValue, duration, curve);
         tween.Start();
         return tween;
