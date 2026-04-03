@@ -9,8 +9,6 @@
 #include "Engine/BasicComponents/Transform2D.h"
 #include "Rect.h"
 #include "Button.h"
-#include "Components/TextLabel.h"
-//#include "font.h"
 
 #include "Engine/Mouse/mouseclass.h"
 

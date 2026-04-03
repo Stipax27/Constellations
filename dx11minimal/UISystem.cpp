@@ -122,62 +122,6 @@ void UISystem::Update(EntityStorage& entityStorage, float deltaTime)
 				DrawUiObject(transform2D, button->vShader);
 			}
 
-			//TextLabel* textLabel = entity->GetComponent<TextLabel>();
-			//if (textLabel != nullptr) {
-			//	point3d pos = transform.position;
-			//	const char* str = textLabel->text.c_str();
-
-			//	Shaders::vShader(0);
-			//	Shaders::pShader(0);
-
-			//	ConstBuf::global[0] = XMFLOAT4(pos.x, pos.y, pos.z, textLabel->fontSize);
-
-			//	preprocessFont();
-			//	//scale = scale * window.width / 2560.;
-
-			//	float tracking = 10;
-			//	float interline = 40 * textLabel->fontSize;
-
-			//	int letters_count = strlen(str);
-			//	float base_x = pos.x;
-			//	float base_y = pos.y;
-			//	int i = 0;
-			//	float maxStringWidth = 0;
-			//	float stringWidth = 0;
-
-			//	while (i < letters_count)
-			//	{
-			//		float offset = 0;
-
-			//		/*if (centered)
-			//		{
-			//			int j = i;
-			//			while (j < letters_count && str[j] != '\n')
-			//			{
-			//				offset += letter_width[str[j] - 32] * textLabel->fontSize + tracking;
-			//				j++;
-			//			}
-			//			offset /= 2.;
-			//		}*/
-
-			//		while (i < letters_count && str[i] != '\n')
-			//		{
-			//			float sz = drawLetter(str[i] - 32, pos.x - offset, pos.y, textLabel->fontSize, textLabel->fontSize) + tracking;
-			//			pos.x += sz;
-			//			stringWidth += sz;
-			//			i++;
-			//		}
-
-			//		maxStringWidth = max(maxStringWidth, stringWidth);
-
-			//		i++;
-			//		pos.x = base_x;
-			//		pos.y += interline;
-			//	}
-
-			//	//return { maxStringWidth ,y - base_y,0 };
-			//}
-
 			// DEBUG //
 
 			if (SHOW_UI_ANCHOR_POINTS) {

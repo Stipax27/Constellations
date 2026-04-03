@@ -262,8 +262,8 @@
     <ClInclude Include="Engine\Physic\Gravitation\GravitySystem.h" />
     <ClInclude Include="Systems\SkeletalAnimationSystem.h" />
     <ClInclude Include="Systems\SkinnedMeshSystem.h" />
-    <ClInclude Include="Components\TextLabel.h" />
-    <ClInclude Include="Systems\UITextSystem.h" />
+    <ClInclude Include="Engine\UI\Text\TextLabel.h" />
+    <ClInclude Include="Engine\UI\Text\UITextSystem.h" />
     <ClInclude Include="timeSystem.h" />
     <ClInclude Include="Engine\BasicComponents\Transform.h" />
     <ClInclude Include="Engine\BasicComponents\Transform2D.h" />
@@ -913,7 +913,7 @@
     <ClCompile Include="TimeSystem.cpp" />
     <ClCompile Include="Engine\BasicComponents\Transform.cpp" />
     <ClCompile Include="Engine\BasicComponents\Transform2D.cpp" />
-    <ClCompile Include="Systems\UITextSystem.cpp" />
+    <ClCompile Include="Engine\UI\Text\UITextSystem.cpp" />
     <ClCompile Include="UISystem.cpp" />
     <ClCompile Include="Utils\utils.cpp" />
     <ClCompile Include="WindowClass.cpp" />

@@ -1,9 +1,9 @@
 #ifndef _UI_TEXT_SYSTEM_H_
 #define _UI_TEXT_SYSTEM_H_
 
-#include "../system.h"
-#include "../Engine/BasicComponents/Transform2D.h"
-#include "../Components/TextLabel.h"
+#include "../../../system.h"
+#include "../../BasicComponents/Transform2D.h"
+#include "TextLabel.h"
 
 class UITextSystem : public System
 {

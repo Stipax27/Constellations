@@ -31,7 +31,7 @@
 #include "spriteSystem.h"
 #include "Engine/Render/Mesh/meshSystem.h"
 #include "uiSystem.h"
-#include "Systems/UITextSystem.h"
+#include "Engine/UI/Text/UITextSystem.h"
 #include "Engine/Render/Nebula/nebulaSystem.h"
 
 #include "physicSystem.h"
