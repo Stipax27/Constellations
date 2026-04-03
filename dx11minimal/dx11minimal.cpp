@@ -10,7 +10,8 @@
 #include <algorithm>
 #include <deque>
 #include "timer.h"
-#include <mmsystem.h> 
+#include <mmsystem.h>
+#include "lua.h"
 
 HINSTANCE hInst;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -82,6 +83,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     timer::StartCounter();
     ShowCursor(FALSE);
+
+    create_console();
+    lua_test();
 
     // Main message loop:
     while (msg.message != WM_QUIT)
