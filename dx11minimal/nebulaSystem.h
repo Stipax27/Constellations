@@ -19,12 +19,13 @@ public:
 	void Initialize();
 	void Shutdown();
 
-	void Update(vector<Entity*>&, float);
+	void Update(EntityStorage&, float);
 
 private:
 	FrustumClass* frustum;
 
 private:
+	void RenderNebulas(EntityStorage& entityStorage);
 	void PSModeSet(pMode);
 };
 

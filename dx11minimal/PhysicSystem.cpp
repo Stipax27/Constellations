@@ -17,8 +17,9 @@ void PhysicSystem::Shutdown()
 }
 
 
-void PhysicSystem::Update(vector<Entity*>& entities, float deltaTime)
+void PhysicSystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
+	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<PhysicBody>();
 	size_t size = entities.size();
 	for (int i = 0; i < size; i++) {
 		Entity* entity = entities[i];

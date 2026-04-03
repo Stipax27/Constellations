@@ -21,16 +21,19 @@ void NebulaSystem::Shutdown()
 }
 
 
-void NebulaSystem::Update(vector<Entity*>& entities, float deltaTime)
+void NebulaSystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
-	// Clear the buffers to begin the scene.
-	/*Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
-	Draw::ClearDepth();*/
+	(void)deltaTime;
+	RenderNebulas(entityStorage);
+}
 
+void NebulaSystem::RenderNebulas(EntityStorage& entityStorage)
+{
 	Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 	Rasterizer::Cull(Rasterizer::cullmode::off);
 	Depth::Depth(Depth::depthmode::readonly);
 
+	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<Nebula>();
 	size_t size = entities.size();
 	for (int i = 0; i < size; i++)
 	{

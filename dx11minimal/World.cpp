@@ -78,7 +78,7 @@ void World::UpdateCompute()
 	size_t size = computeSystems.size();
 	for (int i = 0; i < size; i++)
 	{
-		computeSystems[i]->Update(entityStorage->entities, deltaTime);
+		computeSystems[i]->Update(*entityStorage, deltaTime);
 	}
 }
 
@@ -89,7 +89,7 @@ void World::UpdatePhysic()
 	size_t size = physicSystems.size();
 	for (int i = 0; i < size; i++)
 	{
-		physicSystems[i]->Update(entityStorage->entities, deltaTime);
+		physicSystems[i]->Update(*entityStorage, deltaTime);
 	}
 	entityStorage->CleanMem();
 }
@@ -128,7 +128,7 @@ void World::UpdateRender()
 	size_t size = renderSystems.size();
 	for (int i = 0; i < size; i++)
 	{
-		renderSystems[i]->Update(entityStorage->entities, deltaTime);
+		renderSystems[i]->Update(*entityStorage, deltaTime);
 	}
 
 	Textures::CreateMipMap();

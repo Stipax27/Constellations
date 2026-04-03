@@ -20,8 +20,9 @@ void CollisionSystem::Shutdown()
 	}
 }
 
-void CollisionSystem::Update(vector<Entity*>& entities, float deltaTime)
+void CollisionSystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
+	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<SphereCollider>();
 	size_t size = entities.size();
 	for (int i = 0; i < size; i++) {
 		Entity* entity1 = entities[i];

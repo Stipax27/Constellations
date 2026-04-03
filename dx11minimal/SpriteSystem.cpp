@@ -30,7 +30,7 @@ void SpriteSystem::Shutdown()
 }
 
 
-void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
+void SpriteSystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
 	// Clear the buffers to begin the scene.
 	/*Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
@@ -40,6 +40,84 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 	Rasterizer::Cull(Rasterizer::cullmode::off);
 	Depth::Depth(Depth::depthmode::readonly);
 
+	auto renderSpriteCluster = [&](Entity* entity, Transform* transform)
+	{
+		SpriteCluster* spriteCluster = entity->GetComponent<SpriteCluster>();
+		if (spriteCluster != nullptr && spriteCluster->active)
+		{
+			if (transform == nullptr || frustum->CheckSphere(transform->position, spriteCluster->frustumRadius))
+			{
+				ConstBuf::drawerV[0] = (float)entity->localTime * 0.01f;
+				ConstBuf::Update(0, ConstBuf::drawerV);
+				ConstBuf::ConstToVertex(0);
+				ConstBuf::ConstToPixel(0);
+
+				if (transform != nullptr)
+				{
+					ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y,
+					                               transform->position.z, transform->scale.x);
+					ConstBuf::Update(5, ConstBuf::global);
+					ConstBuf::ConstToVertex(5);
+					ConstBuf::ConstToPixel(5);
+					ConstBuf::ConstToGeometry(5);
+				}
+
+				int lastRT = Textures::currentRT;
+
+				ConstBuf::drawerInt[0] = pow(2, (int)spriteCluster->compress);
+				ConstBuf::Update(7, ConstBuf::drawerInt);
+				ConstBuf::ConstToPixel(7);
+
+				if (spriteCluster->compress != RenderCompress::none)
+				{
+					int uavIndex = (int)spriteCluster->compress * 2 + 1;
+					int rtIndex = (int)spriteCluster->compress * 2 + 2;
+
+					Textures::RenderTarget(rtIndex, 0);
+					Draw::Clear({0.0f, 0.0f, 0.0f, 0.0f});
+					Draw::ClearDepth();
+
+					ConstBuf::ConstToCompute(7);
+
+					Compute::Dispatch(0, lastRT, uavIndex);
+					Textures::TextureToShader(uavIndex, 0);
+
+					Sampler::SamplerComp(0);
+
+					Shaders::vShader(spriteCluster->vShader);
+					Shaders::gShader(spriteCluster->gShader);
+					Shaders::pShader(spriteCluster->pShader);
+
+					InputAssembler::IA(spriteCluster->topology);
+					context->DrawInstanced(spriteCluster->vertexNum, spriteCluster->pointsNum, 0, 0);
+
+					Textures::CreateMipMap();
+
+					Textures::RenderTarget(lastRT, 0);
+
+					Textures::TextureToShader(rtIndex, 0, targetshader::pixel);
+
+					Shaders::vShader(10);
+					Shaders::gShader(0);
+					Shaders::pShader(100);
+
+					InputAssembler::IA(InputAssembler::topology::triList);
+					context->Draw(6, 0);
+				}
+				else
+				{
+					Shaders::vShader(spriteCluster->vShader);
+					Shaders::gShader(spriteCluster->gShader);
+					Shaders::pShader(spriteCluster->pShader);
+
+					InputAssembler::IA(spriteCluster->topology);
+					context->DrawInstanced(spriteCluster->vertexNum, spriteCluster->pointsNum, 0, 0);
+				}
+			}
+		}
+	};
+
+	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<Transform>();
 	size_t size = entities.size();
 	for (int i = 0; i < size; i++)
 	{
@@ -316,96 +394,7 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 			}
 		}
 
-		SpriteCluster* spriteCluster = entity->GetComponent<SpriteCluster>();
-		if (spriteCluster != nullptr && spriteCluster->active)
-		{
-			if (transform == nullptr || frustum->CheckSphere(transform->position, spriteCluster->frustumRadius))
-			{
-				ConstBuf::drawerV[0] = (float)entity->localTime * 0.01f;
-				ConstBuf::Update(0, ConstBuf::drawerV);
-				ConstBuf::ConstToVertex(0);
-				ConstBuf::ConstToPixel(0);
-
-				if (transform != nullptr)
-				{
-					ConstBuf::global[0] = XMFLOAT4(transform->position.x, transform->position.y,
-					                               transform->position.z, transform->scale.x);
-					ConstBuf::Update(5, ConstBuf::global);
-					ConstBuf::ConstToVertex(5);
-					ConstBuf::ConstToPixel(5);
-					ConstBuf::ConstToGeometry(5);
-				}
-
-				int lastRT = Textures::currentRT;
-
-				ConstBuf::drawerInt[0] = pow(2, (int)spriteCluster->compress);
-				ConstBuf::Update(7, ConstBuf::drawerInt);
-				ConstBuf::ConstToPixel(7);
-
-				if (spriteCluster->compress != RenderCompress::none)
-				{
-					int uavIndex = (int)spriteCluster->compress * 2 + 1;
-					int rtIndex = (int)spriteCluster->compress * 2 + 2;
-
-					Textures::RenderTarget(rtIndex, 0);
-					Draw::Clear({0.0f, 0.0f, 0.0f, 0.0f});
-					Draw::ClearDepth();
-
-					//Depth::Depth(Depth::depthmode::on);
-
-					ConstBuf::ConstToCompute(7);
-
-					Compute::Dispatch(0, lastRT, uavIndex);
-					Textures::TextureToShader(uavIndex, 0);
-
-					//Depth::Depth(Depth::depthmode::off);
-
-
-					//Textures::DepthTarget(lastRT, 0);
-
-					/*Shaders::vShader(10);
-					Shaders::pShader(101);
-					context->PSSetShaderResources(0, 1, &Textures::Texture[lastRT].DepthResView);
-					context->Draw(6, 0);*/
-
-					//Depth::Depth(Depth::depthmode::readonly);
-
-					Sampler::SamplerComp(0);
-
-					Shaders::vShader(spriteCluster->vShader);
-					Shaders::gShader(spriteCluster->gShader);
-					Shaders::pShader(spriteCluster->pShader);
-
-					InputAssembler::IA(spriteCluster->topology);
-					context->DrawInstanced(spriteCluster->vertexNum, spriteCluster->pointsNum, 0, 0);
-
-					//Sampler::SamplerComp(0);
-					Textures::CreateMipMap();
-
-					Textures::RenderTarget(lastRT, 0);
-
-					Textures::TextureToShader(rtIndex, 0, targetshader::pixel);
-
-					Shaders::vShader(10);
-					Shaders::gShader(0);
-					Shaders::pShader(100);
-
-					InputAssembler::IA(InputAssembler::topology::triList);
-					context->Draw(6, 0);
-
-					//Depth::Depth(Depth::depthmode::readonly);
-				}
-				else
-				{
-					Shaders::vShader(spriteCluster->vShader);
-					Shaders::gShader(spriteCluster->gShader);
-					Shaders::pShader(spriteCluster->pShader);
-
-					InputAssembler::IA(spriteCluster->topology);
-					context->DrawInstanced(spriteCluster->vertexNum, spriteCluster->pointsNum, 0, 0);
-				}
-			}
-		}
+		renderSpriteCluster(entity, transform);
 
 		//Explosion* explosion = entity->GetComponent<Explosion>();
 
@@ -429,6 +418,19 @@ void SpriteSystem::Update(vector<Entity*>& entities, float deltaTime)
 		//		entity->SetActive(false);
 		//	}
 		//}
+	}
+
+	const vector<Entity*>& spriteClusterEntities = entityStorage.GetEntitiesWithComponent<SpriteCluster>();
+	size = spriteClusterEntities.size();
+	for (int i = 0; i < size; i++)
+	{
+		Entity* entity = spriteClusterEntities[i];
+		if (!IsEntityValid(entity) || entity->HasComponent<Transform>())
+		{
+			continue;
+		}
+
+		renderSpriteCluster(entity, nullptr);
 	}
 }
 

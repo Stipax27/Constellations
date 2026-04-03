@@ -47,7 +47,7 @@ bool LevelManagerClass::Initialize()
 	m_World->Initialize();
 
 	collisionManager = Singleton::GetInstance<CollisionManagerClass>();
-	collisionManager->Initialize();
+	collisionManager->Initialize(*m_World->entityStorage);
 
 	mouse = Singleton::GetInstance<MouseClass>();
 	mouse->Initialize();
@@ -191,7 +191,7 @@ bool LevelManagerClass::Initialize()
 	InitSystems();
 
 	playerController = new PlayerController();
-	playerController->Initialize(player);
+	playerController->Initialize(player, m_World->entityStorage);
 
 	
 

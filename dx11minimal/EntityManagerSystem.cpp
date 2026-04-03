@@ -17,8 +17,9 @@ void EntityManagerSystem::Shutdown()
 }
 
 
-void EntityManagerSystem::Update(vector<Entity*>& entities, float deltaTime)
+void EntityManagerSystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
+	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<DelayedDestroy>();
 	size_t size = entities.size();
 	for (int i = 0; i < size; i++) {
 		Entity* entity = entities[i];

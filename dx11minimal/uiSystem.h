@@ -27,11 +27,10 @@ public:
 	void Initialize();
 	void Shutdown();
 
-	void Update(vector<Entity*>&, float);
+	void Update(EntityStorage&, float);
 
 private:
 	MouseClass* mouse;
-	EntityStorage* entityStorage;
 
 private:
 	void DrawUiObject(Transform2D, int);

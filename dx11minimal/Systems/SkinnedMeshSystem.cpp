@@ -14,8 +14,9 @@ SkinnedMeshSystem::SkinnedMeshSystem(
 void SkinnedMeshSystem::Initialize() {}
 void SkinnedMeshSystem::Shutdown() {}
 
-void SkinnedMeshSystem::Update(std::vector<Entity*>& entities, float deltaTime)
+void SkinnedMeshSystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
+	const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<SkinnedMesh>();
 	Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
 	Depth::Depth(Depth::depthmode::on);
 	Rasterizer::Cull(Rasterizer::cullmode::off);

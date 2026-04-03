@@ -2,6 +2,31 @@
 // Filename: Entity.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "Entity.h"
+#include "entityStorage.h"
+
+void NotifyEntityComponentAdded(Entity* entity, const type_index& componentType)
+{
+	EntityStorage* ownerStorage = entity != nullptr ? entity->GetOwnerStorage() : nullptr;
+	if (ownerStorage != nullptr) {
+		ownerStorage->OnEntityComponentAdded(entity, componentType);
+	}
+}
+
+void NotifyEntityComponentRemoved(Entity* entity, const type_index& componentType)
+{
+	EntityStorage* ownerStorage = entity != nullptr ? entity->GetOwnerStorage() : nullptr;
+	if (ownerStorage != nullptr) {
+		ownerStorage->OnEntityComponentRemoved(entity, componentType);
+	}
+}
+
+void NotifyEntityDestroyed(Entity* entity)
+{
+	EntityStorage* ownerStorage = entity != nullptr ? entity->GetOwnerStorage() : nullptr;
+	if (ownerStorage != nullptr) {
+		ownerStorage->OnEntityDestroyed(entity);
+	}
+}
 
 Entity::Entity()
 {
@@ -23,6 +48,7 @@ void Entity::Destroy() {
 		children[i]->Destroy();
 	}
 	deleted = true;
+	NotifyEntityDestroyed(this);
 }
 
 
@@ -159,4 +185,12 @@ float Entity::GetTimeScale() {
 
 float Entity::GetLocalTimeScale() {
 	return timeScale;
+}
+
+void Entity::SetOwnerStorage(EntityStorage* storage) {
+	ownerStorage = storage;
+}
+
+EntityStorage* Entity::GetOwnerStorage() {
+	return ownerStorage;
 }

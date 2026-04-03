@@ -16,9 +16,9 @@ CollisionManagerClass::~CollisionManagerClass()
 }
 
 
-void CollisionManagerClass::Initialize()
+void CollisionManagerClass::Initialize(EntityStorage& entityStorage)
 {
-    entityStorage = Singleton::GetInstance<EntityStorage>();
+    this->entityStorage = &entityStorage;
 }
 
 
@@ -53,8 +53,9 @@ CollisionResult CollisionManagerClass::sphere_vs_sphere(
 RaycastResult CollisionManagerClass::Raycast(const RayInfo& ray)
 {
 	RaycastResult closestHit;
+	const vector<Entity*>& entities = entityStorage->GetEntitiesWithComponent<SphereCollider>();
 
-	for (Entity* entity : entityStorage->entities) {
+	for (Entity* entity : entities) {
 		RaycastResult hit;
 
         SphereCollider* sphereCollider = entity->GetComponent<SphereCollider>();

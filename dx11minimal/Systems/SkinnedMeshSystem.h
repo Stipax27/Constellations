@@ -16,7 +16,7 @@ public:
 
     void Initialize() override;
     void Shutdown() override;
-    void Update(std::vector<Entity*>& entities, float deltaTime) override;
+    void Update(EntityStorage& entityStorage, float deltaTime) override;
 
 private:
     ID3D11Buffer* boneBuffer;
