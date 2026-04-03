@@ -8,7 +8,7 @@
 //////////////
 // INCLUDES //
 //////////////
-#include "singleton.h"
+#include "Utils/singleton.h"
 #include "input.h"
 
 #include "cameraclass.h"

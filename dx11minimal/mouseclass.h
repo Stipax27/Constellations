@@ -8,7 +8,7 @@
 #include "Point3d.h"
 #include "cameraclass.h"
 #include "windowclass.h"
-#include "singleton.h"
+#include "Utils/singleton.h"
 #include "input.h"
 
 #include <vector>

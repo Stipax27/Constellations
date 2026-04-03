@@ -2,7 +2,7 @@
 #define _COMPONENT_UTILS_H_
 
 #include "dx11.h"
-#include "singleton.h"
+#include "Utils/singleton.h"
 
 #include "entityStorage.h"
 #include "entity.h"

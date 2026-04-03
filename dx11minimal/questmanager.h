@@ -11,7 +11,7 @@
 #include <memory>
 #include "questclass.h"
 
-#include "singleton.h"
+#include "Utils/singleton.h"
 
 /////////////
 // GLOBALS //

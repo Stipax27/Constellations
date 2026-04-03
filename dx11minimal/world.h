@@ -14,7 +14,7 @@
 #include "system.h"
 
 #include "cameraclass.h"
-#include "singleton.h"
+#include "Utils/singleton.h"
 
 using namespace std;
 

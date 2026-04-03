@@ -8,7 +8,7 @@
 #include "utils.h"
 #include "dx11.h"
 #include "Point3d.h"
-#include "singleton.h"
+#include "Utils/singleton.h"
 
 #include "windowclass.h"
 #include "frustumclass.h"

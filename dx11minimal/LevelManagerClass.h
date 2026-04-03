@@ -29,7 +29,7 @@
 
 
 #include "spriteSystem.h"
-#include "meshSystem.h"
+#include "Engine/Render/Mesh/meshSystem.h"
 #include "uiSystem.h"
 #include "Systems/UITextSystem.h"
 #include "Engine/Render/Nebula/nebulaSystem.h"

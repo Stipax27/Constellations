@@ -229,8 +229,8 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="isingleton.h" />
     <ClInclude Include="LevelManagerClass.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="meshSystem.h" />
+    <ClInclude Include="Engine\Render\Mesh\Mesh.h" />
+    <ClInclude Include="Engine\Render\Mesh\meshSystem.h" />
     <ClInclude Include="MethodOfClosest.h" />
     <ClInclude Include="mouseclass.h" />
     <ClInclude Include="MultiDamager.h" />
@@ -252,7 +252,7 @@
     <ClInclude Include="Rect.h" />
     <ClInclude Include="renderCompress.h" />
     <ClInclude Include="SingleDamager.h" />
-    <ClInclude Include="singleton.h" />
+    <ClInclude Include="Utils\singleton.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="SpriteCluster.h" />
     <ClInclude Include="spriteSystem.h" />
@@ -895,7 +895,7 @@
     <ClCompile Include="EntityManagerSystem.cpp" />
     <ClCompile Include="FrustumClass.cpp" />
     <ClCompile Include="LevelManagerClass.cpp" />
-    <ClCompile Include="MeshSystem.cpp" />
+    <ClCompile Include="Engine\Render\Mesh\MeshSystem.cpp" />
     <ClCompile Include="MethodOfClosest.cpp" />
     <ClCompile Include="MouseClass.cpp" />
     <ClCompile Include="PlayerController.cpp" />

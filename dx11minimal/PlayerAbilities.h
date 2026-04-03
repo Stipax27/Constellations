@@ -7,7 +7,7 @@
 //////////////
 // INCLUDES //
 //////////////
-#include "singleton.h"
+#include "Utils/singleton.h"
 #include "cameraclass.h"
 
 #include "world.h"
@@ -26,7 +26,7 @@
 #include "Beam.h"
 #include "PointCloud.h"
 #include "Health.h"
-#include "Mesh.h"
+#include "Engine/Render/Mesh/Mesh.h"
 
 #include "Engine/Render/Nebula/Nebula.h"
 #include "Components/Grabbable.h"

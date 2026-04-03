@@ -5,14 +5,14 @@
 // INCLUDES //
 //////////////
 #include<cmath>
-#include "system.h"
-#include "Engine/BasicComponents/Transform.h"
+#include "../../../system.h"
+#include "../../BasicComponents/Transform.h"
 #include "Mesh.h"
-#include "Constellation.h"
-#include "Star.h"
+#include "../../../Constellation.h"
+#include "../../../Star.h"
 
-#include "frustumclass.h"
-#include "cameraclass.h"
+#include "../../../frustumclass.h"
+#include "../../../cameraclass.h"
 
 /////////////
 // GLOBALS //
