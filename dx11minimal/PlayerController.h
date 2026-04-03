@@ -11,7 +11,7 @@
 #include "Utils/singleton.h"
 #include "input.h"
 
-#include "cameraclass.h"
+#include "Engine/Camera/cameraclass.h"
 #include "mouseclass.h"
 #include "windowclass.h"
 

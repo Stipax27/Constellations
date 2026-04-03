@@ -6,7 +6,7 @@
 // INCLUDES //
 //////////////
 #include "Point3d.h"
-#include "cameraclass.h"
+#include "Engine/Camera/cameraclass.h"
 #include "windowclass.h"
 #include "Utils/singleton.h"
 #include "input.h"

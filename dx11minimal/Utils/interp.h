@@ -6,7 +6,7 @@
 #include <vector>
 #include <memory>
 #include "../timer.h"
-#include "../constants.h"
+#include "constants.h"
 
 namespace interp {
 

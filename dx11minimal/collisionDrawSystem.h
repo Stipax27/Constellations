@@ -12,7 +12,7 @@
 #include "PlaneCollider.h"
 #include "SurfaceCollider.h"
 
-#include "cameraclass.h"
+#include "Engine/Camera/cameraclass.h"
 
 /////////////
 // GLOBALS //

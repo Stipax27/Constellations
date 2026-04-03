@@ -190,7 +190,7 @@
     <ClInclude Include="Systems\AISystem.h" />
     <ClInclude Include="Beam.h" />
     <ClInclude Include="Button.h" />
-    <ClInclude Include="cameraclass.h" />
+    <ClInclude Include="Engine\Camera\cameraclass.h" />
     <ClInclude Include="Engine\BasicComponents\collider.h" />
     <ClInclude Include="collisionDrawSystem.h" />
     <ClInclude Include="CollisionGroup.h" />
@@ -870,7 +870,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cameraclass.cpp" />
+    <ClCompile Include="Engine\Camera\cameraclass.cpp" />
     <ClCompile Include="CollisionManagerClass.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="CombatSystem.cpp" />

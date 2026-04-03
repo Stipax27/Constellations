@@ -13,7 +13,7 @@
 #include "entityStorage.h"
 #include "system.h"
 
-#include "cameraclass.h"
+#include "Engine/Camera/cameraclass.h"
 #include "Utils/singleton.h"
 
 using namespace std;

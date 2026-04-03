@@ -12,7 +12,7 @@
 #include "../../../Star.h"
 
 #include "../../../frustumclass.h"
-#include "../../../cameraclass.h"
+#include "../../Camera/cameraclass.h"
 
 /////////////
 // GLOBALS //

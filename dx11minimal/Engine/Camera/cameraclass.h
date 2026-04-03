@@ -5,13 +5,13 @@
 //////////////
 // INCLUDES //
 //////////////
-#include "Utils/utils.h"
-#include "dx11.h"
-#include "Point3d.h"
-#include "Utils/singleton.h"
+#include "../../Utils/utils.h"
+#include "../../dx11.h"
+#include "../../Point3d.h"
+#include "../../Utils/singleton.h"
 
-#include "windowclass.h"
-#include "frustumclass.h"
+#include "../../windowclass.h"
+#include "../../frustumclass.h"
 
 /////////////
 // GLOBALS //

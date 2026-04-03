@@ -4,7 +4,7 @@
 #include "../system.h"
 #include "../Engine/Mesh/SkinnedMesh.h"
 #include "../frustumclass.h"
-#include "../cameraclass.h"
+#include "../Engine/Camera/cameraclass.h"
 
 class SkinnedMeshSystem : public System
 {
