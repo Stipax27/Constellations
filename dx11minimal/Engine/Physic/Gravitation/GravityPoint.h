@@ -1,7 +1,7 @@
 #ifndef _GRAVITY_POINT_H_
 #define _GRAVITY_POINT_H_
 
-#include "../../BasicComponents/component.h"
+#include "../../ECS_Base/component.h"
 
 struct GravityPoint : Component
 {

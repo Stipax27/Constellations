@@ -1,7 +1,7 @@
 #ifndef _PARTICLE_EMITTER_H_
 #define _PARTICLE_EMITTER_H_
 
-#include "Engine/BasicComponents/component.h"
+#include "Engine/ECS_Base/component.h"
 #include "renderCompress.h"
 #include "Engine/dx11.h"
 

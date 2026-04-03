@@ -1,7 +1,7 @@
 #ifndef _TEXTLABEL_H_
 #define _TEXTLABEL_H_
 
-#include "../../BasicComponents/component.h"
+#include "../../ECS_Base/component.h"
 #include "../../../point3d.h"
 
 constexpr wchar_t DefaultUIFontFamilyW[] = L"Arial";

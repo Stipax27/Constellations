@@ -1,7 +1,7 @@
 #ifndef _NEBULA_H_
 #define _NEBULA_H_
 
-#include "../../BasicComponents/component.h"
+#include "../../ECS_Base/component.h"
 #include "../../renderCompress.h"
 #include "../../dx11.h"
 #include "../../pmode.h"

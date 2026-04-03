@@ -1,7 +1,7 @@
 #ifndef _PHYSICBODY_H_
 #define _PHYSICBODY_H_
 
-#include "Engine/BasicComponents/component.h"
+#include "Engine/ECS_Base/component.h"
 #include "point3d.h"
 #include <DirectXMath.h>
 

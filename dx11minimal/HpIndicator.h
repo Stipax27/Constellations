@@ -1,7 +1,7 @@
 #ifndef _HPINDICATOR_H_
 #define _HPINDICATOR_H_
 
-#include "Engine/BasicComponents/component.h"
+#include "Engine/ECS_Base/component.h"
 #include "cornerType.h"
 
 struct HpIndicator : Component

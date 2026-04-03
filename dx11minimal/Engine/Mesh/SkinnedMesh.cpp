@@ -1,5 +1,5 @@
 #include "SkinnedMesh.h"
-#include "../../dx11.h"
+#include "../dx11.h"
 
 void SkinnedMesh::UploadToGPU()
 {

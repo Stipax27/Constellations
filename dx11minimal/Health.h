@@ -1,7 +1,7 @@
 #ifndef _HEALTH_H_
 #define _HEALTH_H_
 
-#include "Engine/BasicComponents/component.h"
+#include "Engine/ECS_Base/component.h"
 #include "fraction.h"
 #include "damageType.h"
 #include <vector>

@@ -1,7 +1,7 @@
 #ifndef _TRANSFORM_2D_H_
 #define _TRANSFORM_2D_H_
 
-#include "component.h"
+#include "../ECS_Base/component.h"
 #include "../../Point3d.h"
 
 enum class ScreenAspectRatio {

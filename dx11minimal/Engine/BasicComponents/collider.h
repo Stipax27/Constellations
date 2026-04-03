@@ -8,7 +8,7 @@
 // INCLUDES //
 //////////////
 #include <vector>
-#include "component.h"
+#include "../ECS_Base/component.h"
 #include "../../CollisionGroup.h"
 #include "../../Point3d.h"
 

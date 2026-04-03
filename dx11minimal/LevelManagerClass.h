@@ -21,7 +21,7 @@
 #include "Engine/ECS_Base/world.h"
 #include "Engine/ECS_Base/system.h"
 #include "Engine/ECS_Base/entity.h"
-#include "Engine/BasicComponents/component.h"
+#include "Engine/ECS_Base/component.h"
 
 #include "CollisionManagerClass.h"
 

@@ -1,7 +1,7 @@
 #ifndef _POINT_CLOUD_H_
 #define _POINT_CLOUD_H_
 
-#include "Engine/BasicComponents/component.h"
+#include "Engine/ECS_Base/component.h"
 #include "renderCompress.h"
 #include "Engine/dx11.h"
 
