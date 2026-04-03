@@ -1,24 +1,134 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
+#include <string>
+#include <deque>
+#include <thread>
+#include <mutex>
 #include <windows.h>
 
 #include <lua.hpp>
 #pragma comment(lib,"lua51")
 #pragma comment(lib,"luajit")
+//#include <LuaBridge/LuaBridge.h>
 
 #include "lua.h"
+#include "singleton.h"
+#include "entityStorage.h"
+#include "Transform.h"
+#include "Star.h"
 
-void create_console()
+namespace 
 {
-	AllocConsole();
-	freopen("CONOUT$", "w", stdout);
-	freopen("CONOUT$", "w", stderr);
-	freopen("CONIN$", "r", stdin);
+	EntityStorage* storage=Singleton::GetInstance<EntityStorage>();
+	lua_State* LUA=0;
+	std::deque<std::string> scripts;
+	std::mutex busy;
+
+	void create_console()
+	{
+		AllocConsole();
+		freopen("CONOUT$","w",stdout);
+		freopen("CONOUT$","w",stderr);
+		freopen("CONIN$","r",stdin);
+	}
+
+	void inter()
+	{
+		std::string script;
+		while(true)
+		{
+			std::getline(std::cin,script);
+			busy.lock();
+				scripts.push_back(script);
+			busy.unlock();
+		}
+	}
+
+	int cls(lua_State* lua)
+	{
+		std::system("cls");
+		return 0;
+	}
+
+	int create_entity(lua_State* lua)
+	{
+		Entity* e=storage->CreateEntity();
+		lua_pushlightuserdata(lua,e);
+
+		return 1;
+	}
+
+	int make_star(lua_State* lua)
+	{
+		Entity* e=(Entity*)lua_touserdata(lua,1);
+
+		e->AddComponent<Transform>();
+		e->AddComponent<Star>();
+
+		return 0;
+	}
+
+	int set_pos(lua_State* lua)
+	{
+		Entity* e=(Entity*)lua_touserdata(lua,1);
+		Transform* t=e->GetComponent<Transform>();
+		if(!t)return 0;
+		t->position.x=lua_tonumber(lua,2);
+		t->position.y=lua_tonumber(lua,3);
+		t->position.z=lua_tonumber(lua,4);
+
+		return 0;
+	}
+
+	int get_pos(lua_State* lua)
+	{
+		Entity* e=(Entity*)lua_touserdata(lua,1);
+		Transform* t=e->GetComponent<Transform>();
+		if(!t)return 0;
+		
+		lua_pushnumber(lua,t->position.x);
+		lua_pushnumber(lua,t->position.y);
+		lua_pushnumber(lua,t->position.z);
+
+		return 3;
+	}
+
+	class initializer
+	{
+	public:
+		initializer()
+		{
+			create_console();
+			LUA=luaL_newstate();
+			luaL_openlibs(LUA);
+			lua_register(LUA,"cls",cls);
+			lua_register(LUA,"create_entity",create_entity);
+			lua_register(LUA,"make_star",make_star);
+			lua_register(LUA,"set_pos",set_pos);
+			lua_register(LUA,"get_pos",get_pos);
+			std::thread(inter).detach();
+		}
+		~initializer()
+		{
+			FreeConsole();
+			lua_close(LUA);
+		}
+	}
+	do_initialize;
 }
 
-void lua_test()
+void lua()
 {
-	lua_State* lua=luaL_newstate();
-	luaL_openlibs(lua);
-	luaL_dostring(lua,"print(1+2)");
+	if(scripts.empty())return;
+	if(!busy.try_lock())return;
+
+	if(luaL_dostring(LUA,scripts.front().c_str()))
+	{
+		std::cout<<lua_tostring(LUA,-1)<<std::endl;
+		lua_pop(LUA,1);
+	}
+
+	scripts.pop_front();
+
+	busy.unlock();
 }

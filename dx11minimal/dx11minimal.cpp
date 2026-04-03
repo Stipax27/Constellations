@@ -84,9 +84,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     timer::StartCounter();
     ShowCursor(FALSE);
 
-    create_console();
-    lua_test();
-
     // Main message loop:
     while (msg.message != WM_QUIT)
     {
@@ -109,6 +106,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             timer::frameBeginTime = timer::GetCounter();
 
             levelManager.Frame();
+            lua();
 
             timer::frameEndTime = timer::GetCounter();
             timer::frameRenderingDuration = timer::frameEndTime - timer::frameBeginTime;
