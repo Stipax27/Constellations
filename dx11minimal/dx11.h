@@ -31,7 +31,7 @@
 #pragma comment(lib, "xaudio2.lib")
 #pragma comment(lib, "d2d1.lib")
 
-#include "utils.h"
+#include "Utils/utils.h"
 #include "timer.h"
 
 using namespace DirectX;

@@ -200,7 +200,7 @@
     <ClInclude Include="Engine\BasicComponents\component.h" />
     <ClInclude Include="Components\CameraTarget.h" />
     <ClInclude Include="componentutils.h" />
-    <ClInclude Include="constants.h" />
+    <ClInclude Include="Utils\constants.h" />
     <ClInclude Include="Constellation.h" />
     <ClInclude Include="cornerType.h" />
     <ClInclude Include="DelayedDestroy.h" />
@@ -625,7 +625,7 @@
     </None>
     <ClInclude Include="Point4d.h" />
     <ClInclude Include="timer.h" />
-    <ClInclude Include="utils.h" />
+    <ClInclude Include="Utils\utils.h" />
     <None Include="Shaders\VSS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -915,7 +915,7 @@
     <ClCompile Include="Engine\BasicComponents\Transform2D.cpp" />
     <ClCompile Include="Systems\UITextSystem.cpp" />
     <ClCompile Include="UISystem.cpp" />
-    <ClCompile Include="utils.cpp" />
+    <ClCompile Include="Utils\utils.cpp" />
     <ClCompile Include="WindowClass.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
