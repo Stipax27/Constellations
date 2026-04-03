@@ -223,7 +223,7 @@
     <ClInclude Include="Components\GlueConstraint.h" />
     <ClInclude Include="glueConstraintSystem.h" />
     <ClInclude Include="Components\Grabbable.h" />
-    <ClInclude Include="Components\GravityPoint.h" />
+    <ClInclude Include="Engine\Physic\Gravitation\GravityPoint.h" />
     <ClInclude Include="Health.h" />
     <ClInclude Include="HpIndicator.h" />
     <ClInclude Include="input.h" />
@@ -259,7 +259,7 @@
     <ClInclude Include="Star.h" />
     <ClInclude Include="SurfaceCollider.h" />
     <ClInclude Include="system.h" />
-    <ClInclude Include="Systems\GravitySystem.h" />
+    <ClInclude Include="Engine\Physic\Gravitation\GravitySystem.h" />
     <ClInclude Include="Systems\SkeletalAnimationSystem.h" />
     <ClInclude Include="Systems\SkinnedMeshSystem.h" />
     <ClInclude Include="Components\TextLabel.h" />
@@ -905,7 +905,7 @@
     <ClCompile Include="SplinePath.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />
     <ClCompile Include="SpriteSystem.cpp" />
-    <ClCompile Include="Systems\GravitySystem.cpp" />
+    <ClCompile Include="Engine\Physic\Gravitation\GravitySystem.cpp" />
     <ClCompile Include="Systems\SkeletalAnimationSystem.cpp" />
     <ClCompile Include="Systems\SkinnedMeshSystem.cpp" />
     <ClCompile Include="Components\SkeletalAnimationComponent.cpp" />

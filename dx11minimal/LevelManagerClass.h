@@ -35,7 +35,7 @@
 #include "Engine/Render/Nebula/nebulaSystem.h"
 
 #include "physicSystem.h"
-#include "Systems/GravitySystem.h"
+#include "Engine/Physic//Gravitation/GravitySystem.h"
 #include "collisionSystem.h"
 #include "combatSystem.h"
 

@@ -5,11 +5,11 @@
 // INCLUDES //
 //////////////
 #include<cmath>
-#include "../system.h"
+#include "../../../system.h"
 
-#include "../Engine/BasicComponents/Transform.h"
-#include "../PhysicBody.h"
-#include "../Components/GravityPoint.h"
+#include "../../BasicComponents/Transform.h"
+#include "../../../PhysicBody.h"
+#include "GravityPoint.h"
 
 /////////////
 // GLOBALS //

@@ -8,7 +8,7 @@
 #include "../system.h"
 #include "../Engine/BasicComponents/Transform.h"
 
-#include "../Components/GravityPoint.h"
+#include "../Engine/Physic/Gravitation/GravityPoint.h"
 
 /////////////
 // GLOBALS //
