@@ -4,12 +4,16 @@
 #include <deque>
 #include <thread>
 #include <mutex>
+
+#pragma push_macro("byte")
+#undef byte
 #include <windows.h>
+#pragma pop_macro("byte")
 
 #include <lua.hpp>
 #pragma comment(lib,"lua51")
 #pragma comment(lib,"luajit")
-//#include <LuaBridge/LuaBridge.h>
+#include <LuaBridge/LuaBridge.h>
 
 #include "lua.h"
 #include "singleton.h"
