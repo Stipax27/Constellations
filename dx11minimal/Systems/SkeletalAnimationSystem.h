@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "../system.h"
+#include "../Engine/ECS_Base/system.h"
 #include <d3d11.h>
 
 class Entity;

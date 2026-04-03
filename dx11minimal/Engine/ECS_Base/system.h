@@ -8,13 +8,13 @@
 // INCLUDES //
 //////////////
 #include <vector>
-#include "Engine/BasicComponents/component.h"
+#include "component.h"
 #include "entity.h"
 #include "entityStorage.h"
 
-#include "Engine/dx11.h"
-#include "Engine/Lib/isingleton.h"
-#include "Utils/componentutils.h"
+#include "../dx11.h"
+#include "../Lib/isingleton.h"
+#include "../../Utils/componentutils.h"
 
 /////////////
 // GLOBALS //

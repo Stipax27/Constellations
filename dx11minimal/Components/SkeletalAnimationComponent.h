@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "../Engine/BasicComponents/component.h"
+#include "../Engine/ECS_Base/component.h"
 #include "../Engine/Mesh/Animation.h"
 #include "../Engine/Mesh/Animator.h"
 #include "../Engine/Mesh/Skeleton.h"

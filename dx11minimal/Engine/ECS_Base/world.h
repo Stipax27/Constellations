@@ -9,12 +9,11 @@
 //////////////
 #include <vector>
 #include <memory>
-#include "Engine/BasicComponents/component.h"
 #include "entityStorage.h"
 #include "system.h"
 
-#include "Engine/Camera/cameraclass.h"
-#include "Engine/Lib/isingleton.h"
+#include "../Camera/cameraclass.h"
+#include "../Lib/isingleton.h"
 
 using namespace std;
 

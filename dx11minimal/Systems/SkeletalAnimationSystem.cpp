@@ -1,6 +1,6 @@
 #include "SkeletalAnimationSystem.h"
 #include "../Components/SkeletalAnimationComponent.h"
-#include "../Entity.h"
+#include "../Engine/ECS_Base/entity.h"
 #include "../Engine/BasicComponents/Transform.h"
 #include <d3d11.h>
 #include <DirectXMath.h>

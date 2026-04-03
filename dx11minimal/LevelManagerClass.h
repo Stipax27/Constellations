@@ -18,9 +18,9 @@
 #include "PlayerController.h"
 #include "questmanager.h"
 
-#include "world.h"
-#include "system.h"
-#include "entity.h"
+#include "Engine/ECS_Base/world.h"
+#include "Engine/ECS_Base/system.h"
+#include "Engine/ECS_Base/entity.h"
 #include "Engine/BasicComponents/component.h"
 
 #include "CollisionManagerClass.h"

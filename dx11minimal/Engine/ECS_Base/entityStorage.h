@@ -11,8 +11,8 @@
 #include <unordered_map>
 #include <vector>
 #include "entity.h"
-#include "Engine/Lib/timer.h"
-#include "Engine/Lib/isingleton.h"
+#include "../Lib/timer.h"
+#include "../Lib/isingleton.h"
 
 using namespace std;
 

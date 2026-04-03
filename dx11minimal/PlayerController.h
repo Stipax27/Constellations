@@ -16,8 +16,8 @@
 #include "windowclass.h"
 
 #include "Engine/Lib/timer.h"
-#include "world.h"
-#include "entity.h"
+#include "Engine/ECS_Base/world.h"
+#include "Engine/ECS_Base/entity.h"
 
 #include "Engine/BasicComponents/Transform.h"
 #include "PhysicBody.h"

@@ -10,7 +10,7 @@
 #include "constants.h"
 #include "../Point3d.h"
 
-#include "../entity.h"
+#include "../Engine/ECS_Base/entity.h"
 #include "../Engine/BasicComponents/Transform.h"
 #include "../Engine/BasicComponents/Transform2D.h"
 

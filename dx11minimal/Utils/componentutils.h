@@ -4,8 +4,8 @@
 #include "../Engine/dx11.h"
 #include "../Engine/Lib/singleton.h"
 
-#include "../entityStorage.h"
-#include "../entity.h"
+#include "../Engine/ECS_Base/entityStorage.h"
+#include "../Engine/ECS_Base/entity.h"
 
 #include "../Engine/BasicComponents/Transform.h"
 #include "../SphereCollider.h"

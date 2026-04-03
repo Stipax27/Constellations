@@ -1,7 +1,7 @@
 #ifndef _UI_TEXT_SYSTEM_H_
 #define _UI_TEXT_SYSTEM_H_
 
-#include "../../../system.h"
+#include "../../ECS_Base/system.h"
 #include "../../BasicComponents/Transform2D.h"
 #include "TextLabel.h"
 

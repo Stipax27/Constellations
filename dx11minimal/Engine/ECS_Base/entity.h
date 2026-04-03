@@ -11,8 +11,8 @@
 //////////////
 #include <typeindex>
 #include <unordered_map>
-#include "Engine/BasicComponents/component.h"
-#include "Engine/BasicComponents/collider.h"
+#include "component.h"
+#include "../BasicComponents/collider.h"
 
 class Entity;
 class EntityStorage;

@@ -10,8 +10,8 @@
 #include "Engine/Lib/isingleton.h"
 #include "Engine/Camera/cameraclass.h"
 
-#include "world.h"
-#include "entity.h"
+#include "Engine/ECS_Base/world.h"
+#include "Engine/ECS_Base/entity.h"
 
 #include "Point3d.h"
 #include "Utils/componentutils.h"

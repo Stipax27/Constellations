@@ -2,7 +2,7 @@
 #define _AI_SYSTEM_H_
 
 #include<cmath>               // Подключаем математические функции (sqrt, sin, cos и т.д.)
-#include "../system.h"           // Подключаем базовый абстрактный класс System
+#include "../Engine/ECS_Base//system.h"           // Подключаем базовый абстрактный класс System
 #include "../Engine/BasicComponents/Transform.h"        // Подключаем компонент Transform (позиция, поворот, масштаб)
 #include "../Components/AIComponent.h"     // Подключаем компонент AIComponent (данные ИИ)
 #include "../PhysicBody.h"       // Подключаем компонент PhysicBody (скорость, физика)

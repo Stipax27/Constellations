@@ -4,7 +4,7 @@
 //////////////
 // INCLUDES //
 //////////////
-#include "../Engine/BasicComponents/component.h"
+#include "../Engine/ECS_Base/component.h"
 #include <vector>
 #include "../Point3d.h"
 #include <DirectXMath.h>

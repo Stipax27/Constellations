@@ -1,7 +1,7 @@
 #ifndef _SKINNED_MESH_SYSTEM_H_
 #define _SKINNED_MESH_SYSTEM_H_
 
-#include "../system.h"
+#include "../Engine/ECS_Base/system.h"
 #include "../Engine/Mesh/SkinnedMesh.h"
 #include "../frustumclass.h"
 #include "../Engine/Camera/cameraclass.h"
