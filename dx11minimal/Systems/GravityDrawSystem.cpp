@@ -17,12 +17,13 @@ void GravityDrawSystem::Shutdown()
 }
 
 
-void GravityDrawSystem::Update(vector<Entity*>& entities, float deltaTime)
+void GravityDrawSystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
 	Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
 	Rasterizer::Cull(Rasterizer::cullmode::front);
 	Depth::Depth(Depth::depthmode::readonly);
 
+	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<GravityPoint>();
 	for (Entity* entity : entities)
 	{
 		if (!IsEntityValid(entity))

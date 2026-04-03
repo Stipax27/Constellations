@@ -18,13 +18,14 @@ void AISystem::Shutdown() { playerEntity = nullptr; }
 void AISystem::SetPlayerEntity(Entity* player) { playerEntity = player; }
 
 // Основной метод обновления, вызываемый каждый кадр
-void AISystem::Update(vector<Entity*>& entities, float deltaTime)
+void AISystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
     lastUpdateTime += deltaTime;               // Накопляем прошедшее время
     if (lastUpdateTime < AI_UPDATE_INTERVAL)   // Если не прошло достаточно времени
         return;                                 // Пропускаем обновление (экономия ресурсов)
 
     // Проходим по всем сущностям
+    const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<AIComponent>();
     for (Entity* entity : entities)
     {
         if (!entity->IsActive()) continue;      // Пропускаем неактивные сущности

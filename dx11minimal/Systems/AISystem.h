@@ -22,7 +22,7 @@ public:
 
     void SetPlayerEntity(Entity* player);
 
-    void Update(vector<Entity*>& entities, float deltaTime) override;
+    void Update(EntityStorage&, float deltaTime) override;
 
 private:
     Entity* playerEntity;

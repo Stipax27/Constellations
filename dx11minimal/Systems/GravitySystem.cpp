@@ -17,10 +17,11 @@ void GravitySystem::Shutdown()
 }
 
 
-void GravitySystem::Update(vector<Entity*>& entities, float deltaTime)
+void GravitySystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
 	// First cycle, gravityPoint searching
-	for (Entity* entity1 : entities) {
+	const vector<Entity*>& entities1 = entityStorage.GetEntitiesWithComponent<GravityPoint>();
+	for (Entity* entity1 : entities1) {
 		if (!IsEntityValid(entity1))
 			continue;
 
@@ -33,7 +34,8 @@ void GravitySystem::Update(vector<Entity*>& entities, float deltaTime)
 			continue;
 
 		// Second cycle, physicBody searching
-		for (Entity* entity2 : entities) {
+		const vector<Entity*>& entities2 = entityStorage.GetEntitiesWithComponent<PhysicBody>();
+		for (Entity* entity2 : entities2) {
 			if (entity2 == entity1 || !IsEntityValid(entity2))
 				continue;
 
@@ -51,7 +53,7 @@ void GravitySystem::Update(vector<Entity*>& entities, float deltaTime)
 
 			if (radius <= gravityPoint->radius && radius > 0) {
 				float falloff = CalcFalloff(radius, gravityPoint->radius);
-				float gravityForce = GRAVITY_CONSTANT * (gravityPoint->mass * physicBody->mass) / pow(radius, 1.5f) * falloff;
+				float gravityForce = GRAVITY_CONSTANT * (gravityPoint->mass * physicBody->mass) / max(pow(radius, 1.5f), 1) * falloff;
 
 				physicBody->acceleration += gravityVector.normalized() * gravityForce;
 
