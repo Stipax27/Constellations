@@ -11,8 +11,8 @@
 #include "Point3d.h"
 
 #include "entity.h"
-#include "Transform.h"
-#include "Transform2D.h"
+#include "Engine/BasicComponents/Transform.h"
+#include "Engine/BasicComponents/Transform2D.h"
 
 
 

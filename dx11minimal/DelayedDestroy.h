@@ -1,7 +1,7 @@
 #ifndef _DELAYED_DESTROY_H_
 #define _DELAYED_DESTROY_H_
 
-#include "component.h"
+#include "Engine/BasicComponents/component.h"
 
 
 struct DelayedDestroy : Component

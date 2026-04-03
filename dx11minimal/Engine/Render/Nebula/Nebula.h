@@ -1,11 +1,11 @@
 #ifndef _NEBULA_H_
 #define _NEBULA_H_
 
-#include "../component.h"
-#include "../renderCompress.h"
-#include "../dx11.h"
-#include "../pmode.h"
-#include "../Point3d.h"
+#include "../../BasicComponents/component.h"
+#include "../../renderCompress.h"
+#include "../../dx11.h"
+#include "../../pmode.h"
+#include "../../Point3d.h"
 
 
 struct Nebula : Component

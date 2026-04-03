@@ -1,7 +1,7 @@
 #ifndef _BEAM_H_
 #define _BEAM_H_
 
-#include "component.h"
+#include "Engine/BasicComponents/component.h"
 #include "point3d.h"
 #include <vector>
 #include <utility>

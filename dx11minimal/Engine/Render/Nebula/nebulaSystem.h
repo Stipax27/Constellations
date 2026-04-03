@@ -5,11 +5,11 @@
 // INCLUDES //
 //////////////
 #include<cmath>
-#include "system.h"
-#include "Transform.h"
-#include "Components/Nebula.h"
+#include "../../system.h"
+#include "../../BasicComponents/Transform.h"
+#include "Nebula.h"
 
-#include "frustumclass.h"
+#include "../../frustumclass.h"
 
 
 class NebulaSystem : public System

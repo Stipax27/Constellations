@@ -8,7 +8,7 @@
 // INCLUDES //
 //////////////
 #include <vector>
-#include "component.h"
+#include "Engine/BasicComponents/component.h"
 #include "entity.h"
 #include "entityStorage.h"
 

@@ -1,7 +1,7 @@
 #ifndef _SPRITECLUSTER_H_
 #define _SPRITECLUSTER_H_
 
-#include "component.h"
+#include "Engine/BasicComponents/component.h"
 #include "renderCompress.h"
 #include "dx11.h"
 

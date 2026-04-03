@@ -2,7 +2,7 @@
 #define _TRANSFORM_2D_H_
 
 #include "component.h"
-#include "point3d.h"
+#include "../../Point3d.h"
 
 enum class ScreenAspectRatio {
 	XY,

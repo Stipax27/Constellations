@@ -1,7 +1,7 @@
 #include "SkeletalAnimationSystem.h"
 #include "../Components/SkeletalAnimationComponent.h"
 #include "../Entity.h"
-#include "../Transform.h"
+#include "../Engine/BasicComponents/Transform.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <algorithm>

@@ -16,7 +16,7 @@
 #include "Point3d.h"
 #include "componentutils.h"
 
-#include "Transform.h"
+#include "Engine/BasicComponents/Transform.h"
 #include "PhysicBody.h"
 #include "SphereCollider.h"
 #include "Star.h"
@@ -28,11 +28,11 @@
 #include "Health.h"
 #include "Mesh.h"
 
-#include "Components/Nebula.h"
+#include "Engine/Render/Nebula/Nebula.h"
 #include "Components/Grabbable.h"
 
 
-#include "Transform2D.h"
+#include "Engine/BasicComponents/Transform2D.h"
 
 #include "CollisionManagerClass.h"
 

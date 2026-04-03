@@ -19,7 +19,7 @@
 #include "world.h"
 #include "entity.h"
 
-#include "Transform.h"
+#include "Engine/BasicComponents/Transform.h"
 #include "PhysicBody.h"
 #include "PointCloud.h"
 #include "Health.h"

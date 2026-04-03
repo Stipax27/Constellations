@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <DirectXMath.h>
 
-#include "../../component.h"
+#include "../BasicComponents/component.h"
 
 struct SkinnedVertex
 {

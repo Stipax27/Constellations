@@ -1,7 +1,7 @@
 #ifndef _STAR_H_
 #define _STAR_H_
 
-#include "component.h"
+#include "Engine/BasicComponents/component.h"
 #include "Point3d.h"
 
 

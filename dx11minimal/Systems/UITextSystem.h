@@ -2,7 +2,7 @@
 #define _UI_TEXT_SYSTEM_H_
 
 #include "../system.h"
-#include "../Transform2D.h"
+#include "../Engine/BasicComponents/Transform2D.h"
 #include "../Components/TextLabel.h"
 
 class UITextSystem : public System

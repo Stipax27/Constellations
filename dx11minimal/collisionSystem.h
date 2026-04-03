@@ -11,10 +11,10 @@
 
 #include<cmath>
 #include "system.h"
-#include "Transform.h"
+#include "Engine/BasicComponents/Transform.h"
 #include "PhysicBody.h"
 
-#include "collider.h"
+#include "Engine/BasicComponents/collider.h"
 #include "SphereCollider.h"
 #include "PlaneCollider.h"
 #include "SurfaceCollider.h"

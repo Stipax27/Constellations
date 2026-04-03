@@ -1,7 +1,7 @@
 #pragma once
 #include "../Point3d.h"
-#include "../component.h"
-#include "../Transform.h"
+#include "../Engine/BasicComponents/component.h"
+#include "../Engine/BasicComponents/Transform.h"
 
 class Orientation : public Component {
 public:

@@ -1,7 +1,7 @@
 #ifndef _MULTI_DAMAGER_H_
 #define _MULTI_DAMAGER_H_
 
-#include "component.h"
+#include "Engine/BasicComponents/component.h"
 #include "fraction.h"
 #include "damageType.h"
 

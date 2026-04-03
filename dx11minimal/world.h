@@ -9,7 +9,7 @@
 //////////////
 #include <vector>
 #include <memory>
-#include "component.h"
+#include "Engine/BasicComponents/component.h"
 #include "entityStorage.h"
 #include "system.h"
 

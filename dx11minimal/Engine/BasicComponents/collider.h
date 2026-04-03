@@ -8,9 +8,9 @@
 // INCLUDES //
 //////////////
 #include <vector>
-#include "component.h"
-#include "CollisionGroup.h"
-#include "Point3d.h"
+#include "Engine/BasicComponents/component.h"
+#include "../../CollisionGroup.h"
+#include "../../Point3d.h"
 
 /////////////
 // STRUCTS //

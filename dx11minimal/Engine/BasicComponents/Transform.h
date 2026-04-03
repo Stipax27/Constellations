@@ -2,7 +2,7 @@
 #define _TRANSFORM_H_
 
 #include "component.h"
-#include "Point3d.h"
+#include "../../Point3d.h"
 #include <DirectXMath.h>
 
 

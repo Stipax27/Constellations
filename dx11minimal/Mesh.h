@@ -1,7 +1,7 @@
 #ifndef _MESH_H_
 #define _MESH_H_
 
-#include "component.h"
+#include "Engine/BasicComponents/component.h"
 #include "dx11.h"
 
 

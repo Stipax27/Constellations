@@ -1,7 +1,7 @@
 #ifndef _SINGLE_DAMAGER_H_
 #define _SINGLE_DAMAGER_H_
 
-#include "component.h"
+#include "Engine/BasicComponents/component.h"
 #include "fraction.h"
 #include "damageType.h"
 #include <vector>

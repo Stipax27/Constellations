@@ -21,7 +21,7 @@
 #include "world.h"
 #include "system.h"
 #include "entity.h"
-#include "component.h"
+#include "Engine/BasicComponents/component.h"
 
 #include "CollisionManagerClass.h"
 
@@ -32,7 +32,7 @@
 #include "meshSystem.h"
 #include "uiSystem.h"
 #include "Systems/UITextSystem.h"
-#include "nebulaSystem.h"
+#include "Engine/Render/Nebula/nebulaSystem.h"
 
 #include "physicSystem.h"
 #include "Systems/GravitySystem.h"

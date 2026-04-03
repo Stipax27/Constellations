@@ -1,7 +1,7 @@
 #ifndef _DAMAGE_BLOCKER_H_
 #define _DAMAGE_BLOCKER_H_
 
-#include "component.h"
+#include "Engine/BasicComponents/component.h"
 #include "damageType.h"
 
 struct DamageBlocker : Component
