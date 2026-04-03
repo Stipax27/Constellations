@@ -1,7 +1,7 @@
 #ifndef _COMPONENT_UTILS_H_
 #define _COMPONENT_UTILS_H_
 
-#include "../dx11.h"
+#include "../Engine/dx11.h"
 #include "../Engine/Lib/singleton.h"
 
 #include "../entityStorage.h"

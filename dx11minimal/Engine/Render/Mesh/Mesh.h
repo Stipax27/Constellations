@@ -2,7 +2,7 @@
 #define _MESH_H_
 
 #include "../../BasicComponents/component.h"
-#include "../../../dx11.h"
+#include "../../dx11.h"
 
 
 struct Mesh : Component

@@ -213,7 +213,7 @@
     <ClInclude Include="entityManagerSystem.h" />
     <ClInclude Include="entityStorage.h" />
     <ClInclude Include="fraction.h" />
-    <ClInclude Include="dx11.h" />
+    <ClInclude Include="Engine\dx11.h" />
     <ClInclude Include="Components\AIComponent.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="Font_OLD.h" />
@@ -889,7 +889,7 @@
     <ClCompile Include="Engine\Render\Nebula\NebulaSystem.cpp" />
     <ClCompile Include="Systems\AISystem.cpp" />
     <ClCompile Include="PlayerAbilities.cpp" />
-    <ClCompile Include="dx11.cpp" />
+    <ClCompile Include="Engine\dx11.cpp" />
     <ClCompile Include="dx11minimal.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityManagerSystem.cpp" />

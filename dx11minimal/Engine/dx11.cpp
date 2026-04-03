@@ -1,6 +1,8 @@
 #include "dx11.h"
-#include "Engine/GLTFLoader.h"
-#include "Engine/Mesh/AnimationRetarget.h"
+#include "GLTFLoader.h"
+#include "Mesh/AnimationRetarget.h"
+
+
 static inline int32 _log2(float x)
 {
 	uint32 ix = (uint32&)x;

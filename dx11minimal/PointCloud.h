@@ -3,7 +3,7 @@
 
 #include "Engine/BasicComponents/component.h"
 #include "renderCompress.h"
-#include "dx11.h"
+#include "Engine/dx11.h"
 
 
 struct PointCloud : Component
