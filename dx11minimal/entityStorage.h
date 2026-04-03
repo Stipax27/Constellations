@@ -12,7 +12,7 @@
 #include <vector>
 #include "entity.h"
 #include "timer.h"
-#include "isingleton.h"
+#include "Utils/isingleton.h"
 
 using namespace std;
 

@@ -14,7 +14,7 @@
 #include "entity.h"
 
 #include "Point3d.h"
-#include "componentutils.h"
+#include "Utils/componentutils.h"
 
 #include "Engine/BasicComponents/Transform.h"
 #include "PhysicBody.h"

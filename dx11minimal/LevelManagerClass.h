@@ -13,7 +13,7 @@
 #include "Utils/interp.h"
 
 #include "windowclass.h"
-#include "mouseclass.h"
+#include "Engine/Mouse/mouseclass.h"
 
 #include "PlayerController.h"
 #include "questmanager.h"

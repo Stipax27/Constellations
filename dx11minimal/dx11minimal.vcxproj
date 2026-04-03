@@ -199,7 +199,7 @@
     <ClInclude Include="combatSystem.h" />
     <ClInclude Include="Engine\BasicComponents\component.h" />
     <ClInclude Include="Components\CameraTarget.h" />
-    <ClInclude Include="componentutils.h" />
+    <ClInclude Include="Utils\componentutils.h" />
     <ClInclude Include="Utils\constants.h" />
     <ClInclude Include="Constellation.h" />
     <ClInclude Include="cornerType.h" />
@@ -226,13 +226,13 @@
     <ClInclude Include="Engine\Physic\Gravitation\GravityPoint.h" />
     <ClInclude Include="Health.h" />
     <ClInclude Include="HpIndicator.h" />
-    <ClInclude Include="input.h" />
-    <ClInclude Include="isingleton.h" />
+    <ClInclude Include="Utils\input.h" />
+    <ClInclude Include="Utils\isingleton.h" />
     <ClInclude Include="LevelManagerClass.h" />
     <ClInclude Include="Engine\Render\Mesh\Mesh.h" />
     <ClInclude Include="Engine\Render\Mesh\meshSystem.h" />
     <ClInclude Include="MethodOfClosest.h" />
-    <ClInclude Include="mouseclass.h" />
+    <ClInclude Include="Engine\Mouse\mouseclass.h" />
     <ClInclude Include="MultiDamager.h" />
     <ClInclude Include="Engine\Render\Nebula\Nebula.h" />
     <ClInclude Include="Engine\Render\Nebula\nebulaSystem.h" />
@@ -875,7 +875,7 @@
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="CombatSystem.cpp" />
     <ClCompile Include="CollisionDrawSystem.cpp" />
-    <ClCompile Include="ComponentUtils.cpp" />
+    <ClCompile Include="Utils\ComponentUtils.cpp" />
     <ClCompile Include="Engine\GLTFLoader.cpp" />
     <ClCompile Include="Engine\Mesh\Animation.cpp" />
     <ClCompile Include="Engine\Mesh\Animator.cpp" />
@@ -885,7 +885,7 @@
     <ClCompile Include="EntityStorage.cpp" />
     <ClCompile Include="GlueConstraintSystem.cpp" />
     <ClCompile Include="Systems\GravityDrawSystem.cpp" />
-    <ClCompile Include="input.cpp" />
+    <ClCompile Include="Utils\input.cpp" />
     <ClCompile Include="Engine\Render\Nebula\NebulaSystem.cpp" />
     <ClCompile Include="Systems\AISystem.cpp" />
     <ClCompile Include="PlayerAbilities.cpp" />
@@ -897,7 +897,7 @@
     <ClCompile Include="LevelManagerClass.cpp" />
     <ClCompile Include="Engine\Render\Mesh\MeshSystem.cpp" />
     <ClCompile Include="MethodOfClosest.cpp" />
-    <ClCompile Include="MouseClass.cpp" />
+    <ClCompile Include="Engine\Mouse\MouseClass.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Point3d.cpp" />
     <ClCompile Include="Point4d.cpp" />

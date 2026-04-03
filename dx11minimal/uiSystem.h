@@ -12,7 +12,7 @@
 #include "Components/TextLabel.h"
 //#include "font.h"
 
-#include "mouseclass.h"
+#include "Engine/Mouse/mouseclass.h"
 
 /////////////
 // GLOBALS //

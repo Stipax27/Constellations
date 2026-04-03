@@ -9,10 +9,10 @@
 // INCLUDES //
 //////////////
 #include "Utils/singleton.h"
-#include "input.h"
+#include "Utils/input.h"
 
 #include "Engine/Camera/cameraclass.h"
-#include "mouseclass.h"
+#include "Engine/Mouse/mouseclass.h"
 #include "windowclass.h"
 
 #include "timer.h"

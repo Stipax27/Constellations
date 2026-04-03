@@ -5,11 +5,11 @@
 //////////////
 // INCLUDES //
 //////////////
-#include "Point3d.h"
-#include "Engine/Camera/cameraclass.h"
-#include "windowclass.h"
-#include "Utils/singleton.h"
-#include "input.h"
+#include "../../Point3d.h"
+#include "../Camera/cameraclass.h"
+#include "../../windowclass.h"
+#include "../../Utils/singleton.h"
+#include "../../Utils/input.h"
 
 #include <vector>
 
