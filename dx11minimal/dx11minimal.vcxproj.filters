@@ -4,12 +4,6 @@
     <FxCompile Include="Shaders\SpaceStars_VS.shader">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\BlackHole_Body_VS.shader">
-      <Filter>Shaders\BlackHole</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\StarLink_PS.shader">
-      <Filter>Shaders\Links</Filter>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SplinePath.cpp">
@@ -129,9 +123,6 @@
     <ClCompile Include="Engine\GLTFLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Patern_Enemy_Logik.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="QuestManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -150,11 +141,10 @@
     <ClCompile Include="Systems\GravitySystem.cpp">
       <Filter>Source Files\Physic</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\GravityDrawSystem.cpp" />
+    <ClCompile Include="Systems\AISystem.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AIComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Font_OLD.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -424,6 +414,14 @@
     </ClInclude>
     <ClInclude Include="Systems\GravitySystem.h">
       <Filter>Header Files\ECS\Systems\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="damageType.h" />
+    <ClInclude Include="Systems\GravityDrawSystem.h" />
+    <ClInclude Include="Systems\AISystem.h" />
+    <ClInclude Include="Components\AIComponent.h" />
+    <ClInclude Include="Utils\interp.h" />
+    <ClInclude Include="DamageBlocker.h">
+      <Filter>Header Files\ECS\Components\Combat</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -729,6 +727,8 @@
     <None Include="Shaders\StarSphere_Simple_VS.shader">
       <Filter>Shaders\Star</Filter>
     </None>
+    <None Include="Shaders\BlackHole_Body_VS.shader" />
+    <None Include="Shaders\StarLink_PS.shader" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">

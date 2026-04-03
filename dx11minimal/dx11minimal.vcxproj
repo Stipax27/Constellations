@@ -184,6 +184,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DamageBlocker.h" />
     <ClInclude Include="damageType.h" />
     <ClInclude Include="Systems\GravityDrawSystem.h" />
     <ClInclude Include="Systems\AISystem.h" />
