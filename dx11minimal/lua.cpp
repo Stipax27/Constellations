@@ -2,6 +2,10 @@
 #include <iostream>
 #include <windows.h>
 
+#include <lua.hpp>
+#pragma comment(lib,"lua51")
+#pragma comment(lib,"luajit")
+
 #include "lua.h"
 
 void create_console()
@@ -14,5 +18,7 @@ void create_console()
 
 void lua_test()
 {
-	std::cout<<"test"<<std::endl;
+	lua_State* lua=luaL_newstate();
+	luaL_openlibs(lua);
+	luaL_dostring(lua,"print(1+2)");
 }
