@@ -13,7 +13,7 @@
 #include "entityStorage.h"
 
 #include "dx11.h"
-#include "Utils/singleton.h"
+#include "Engine/Lib/isingleton.h"
 #include "Utils/componentutils.h"
 
 /////////////

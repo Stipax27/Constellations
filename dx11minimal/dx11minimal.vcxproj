@@ -186,13 +186,13 @@
   <ItemGroup>
     <ClInclude Include="DamageBlocker.h" />
     <ClInclude Include="damageType.h" />
-    <ClInclude Include="Systems\GravityDrawSystem.h" />
+    <ClInclude Include="Engine\Debug\GravityDrawSystem.h" />
     <ClInclude Include="Systems\AISystem.h" />
     <ClInclude Include="Beam.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Engine\Camera\cameraclass.h" />
     <ClInclude Include="Engine\BasicComponents\collider.h" />
-    <ClInclude Include="collisionDrawSystem.h" />
+    <ClInclude Include="Engine\Debug\collisionDrawSystem.h" />
     <ClInclude Include="CollisionGroup.h" />
     <ClInclude Include="CollisionManagerClass.h" />
     <ClInclude Include="collisionSystem.h" />
@@ -226,8 +226,8 @@
     <ClInclude Include="Engine\Physic\Gravitation\GravityPoint.h" />
     <ClInclude Include="Health.h" />
     <ClInclude Include="HpIndicator.h" />
-    <ClInclude Include="Utils\input.h" />
-    <ClInclude Include="Utils\isingleton.h" />
+    <ClInclude Include="Engine\Lib\input.h" />
+    <ClInclude Include="Engine\Lib\isingleton.h" />
     <ClInclude Include="LevelManagerClass.h" />
     <ClInclude Include="Engine\Render\Mesh\Mesh.h" />
     <ClInclude Include="Engine\Render\Mesh\meshSystem.h" />
@@ -252,7 +252,7 @@
     <ClInclude Include="Rect.h" />
     <ClInclude Include="renderCompress.h" />
     <ClInclude Include="SingleDamager.h" />
-    <ClInclude Include="Utils\singleton.h" />
+    <ClInclude Include="Engine\Lib\singleton.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="SpriteCluster.h" />
     <ClInclude Include="spriteSystem.h" />
@@ -267,7 +267,7 @@
     <ClInclude Include="timeSystem.h" />
     <ClInclude Include="Engine\BasicComponents\Transform.h" />
     <ClInclude Include="Engine\BasicComponents\Transform2D.h" />
-    <ClInclude Include="Utils\interp.h" />
+    <ClInclude Include="Engine\Lib\interp.h" />
     <ClInclude Include="uiSystem.h" />
     <ClInclude Include="Vendors\tinyGLTF\json.hpp" />
     <ClInclude Include="Vendors\tinyGLTF\stb_image.h" />
@@ -624,7 +624,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
     <ClInclude Include="Point4d.h" />
-    <ClInclude Include="timer.h" />
+    <ClInclude Include="Engine\Lib\timer.h" />
     <ClInclude Include="Utils\utils.h" />
     <None Include="Shaders\VSS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -874,7 +874,7 @@
     <ClCompile Include="CollisionManagerClass.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="CombatSystem.cpp" />
-    <ClCompile Include="CollisionDrawSystem.cpp" />
+    <ClCompile Include="Engine\Debug\CollisionDrawSystem.cpp" />
     <ClCompile Include="Utils\ComponentUtils.cpp" />
     <ClCompile Include="Engine\GLTFLoader.cpp" />
     <ClCompile Include="Engine\Mesh\Animation.cpp" />
@@ -884,8 +884,8 @@
     <ClCompile Include="Engine\Mesh\SkinnedMesh.cpp" />
     <ClCompile Include="EntityStorage.cpp" />
     <ClCompile Include="GlueConstraintSystem.cpp" />
-    <ClCompile Include="Systems\GravityDrawSystem.cpp" />
-    <ClCompile Include="Utils\input.cpp" />
+    <ClCompile Include="Engine\Debug\GravityDrawSystem.cpp" />
+    <ClCompile Include="Engine\Lib\input.cpp" />
     <ClCompile Include="Engine\Render\Nebula\NebulaSystem.cpp" />
     <ClCompile Include="Systems\AISystem.cpp" />
     <ClCompile Include="PlayerAbilities.cpp" />
@@ -909,7 +909,7 @@
     <ClCompile Include="Systems\SkeletalAnimationSystem.cpp" />
     <ClCompile Include="Systems\SkinnedMeshSystem.cpp" />
     <ClCompile Include="Components\SkeletalAnimationComponent.cpp" />
-    <ClCompile Include="timer.cpp" />
+    <ClCompile Include="Engine\Lib\timer.cpp" />
     <ClCompile Include="TimeSystem.cpp" />
     <ClCompile Include="Engine\BasicComponents\Transform.cpp" />
     <ClCompile Include="Engine\BasicComponents\Transform2D.cpp" />

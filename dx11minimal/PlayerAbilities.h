@@ -7,7 +7,7 @@
 //////////////
 // INCLUDES //
 //////////////
-#include "Utils/singleton.h"
+#include "Engine/Lib/isingleton.h"
 #include "Engine/Camera/cameraclass.h"
 
 #include "world.h"

@@ -10,7 +10,7 @@
 #include <thread>
 #include <vector>
 
-#include "Utils/interp.h"
+#include "Engine/Lib/interp.h"
 
 #include "windowclass.h"
 #include "Engine/Mouse/mouseclass.h"
@@ -42,8 +42,8 @@
 #include "entityManagerSystem.h"
 #include "timeSystem.h"
 
-#include "collisionDrawSystem.h"
-#include "Systems/GravityDrawSystem.h"
+#include "Engine/Debug/collisionDrawSystem.h"
+#include "Engine/Debug/GravityDrawSystem.h"
 
 #include "Engine/Mesh/Animation.h"
 #include "Engine/Mesh/Animator.h"

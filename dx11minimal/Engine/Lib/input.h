@@ -1,7 +1,7 @@
 #ifndef _INPUT_H_
 #define _INPUT_H_
 
-#include "../dx11.h"
+#include "../../dx11.h"
 #include <vector>
 
 using namespace std;

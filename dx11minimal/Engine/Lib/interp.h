@@ -5,8 +5,8 @@
 #include <cmath>
 #include <vector>
 #include <memory>
-#include "../timer.h"
-#include "constants.h"
+#include "timer.h"
+#include "../../Utils/constants.h"
 
 namespace interp {
 

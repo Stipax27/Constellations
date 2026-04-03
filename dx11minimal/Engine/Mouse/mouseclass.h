@@ -8,8 +8,8 @@
 #include "../../Point3d.h"
 #include "../Camera/cameraclass.h"
 #include "../../windowclass.h"
-#include "../../Utils/singleton.h"
-#include "../../Utils/input.h"
+#include "../Lib/singleton.h"
+#include "../Lib/input.h"
 
 #include <vector>
 

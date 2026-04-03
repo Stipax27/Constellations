@@ -8,14 +8,14 @@
 //////////////
 // INCLUDES //
 //////////////
-#include "Utils/singleton.h"
-#include "Utils/input.h"
+#include "Engine/Lib/isingleton.h"
+#include "Engine/Lib/input.h"
 
 #include "Engine/Camera/cameraclass.h"
 #include "Engine/Mouse/mouseclass.h"
 #include "windowclass.h"
 
-#include "timer.h"
+#include "Engine/Lib/timer.h"
 #include "world.h"
 #include "entity.h"
 
