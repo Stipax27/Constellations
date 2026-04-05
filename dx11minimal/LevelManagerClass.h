@@ -42,8 +42,8 @@
 #include "entityManagerSystem.h"
 #include "timeSystem.h"
 
-#include "Engine/Debug/collisionDrawSystem.h"
-#include "Engine/Debug/GravityDrawSystem.h"
+#include "Engine/DebugTools/collisionDrawSystem.h"
+#include "Engine/DebugTools/GravityDrawSystem.h"
 
 #include "Engine/Mesh/Animation.h"
 #include "Engine/Mesh/Animator.h"

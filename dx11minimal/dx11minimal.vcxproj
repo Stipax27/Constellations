@@ -186,13 +186,13 @@
   <ItemGroup>
     <ClInclude Include="DamageBlocker.h" />
     <ClInclude Include="damageType.h" />
-    <ClInclude Include="Engine\Debug\GravityDrawSystem.h" />
+    <ClInclude Include="Engine\DebugTools\GravityDrawSystem.h" />
     <ClInclude Include="Systems\AISystem.h" />
     <ClInclude Include="Beam.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Engine\Camera\cameraclass.h" />
     <ClInclude Include="Engine\BasicComponents\collider.h" />
-    <ClInclude Include="Engine\Debug\collisionDrawSystem.h" />
+    <ClInclude Include="Engine\DebugTools\collisionDrawSystem.h" />
     <ClInclude Include="CollisionGroup.h" />
     <ClInclude Include="CollisionManagerClass.h" />
     <ClInclude Include="collisionSystem.h" />
@@ -874,7 +874,7 @@
     <ClCompile Include="CollisionManagerClass.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="CombatSystem.cpp" />
-    <ClCompile Include="Engine\Debug\CollisionDrawSystem.cpp" />
+    <ClCompile Include="Engine\DebugTools\CollisionDrawSystem.cpp" />
     <ClCompile Include="Utils\ComponentUtils.cpp" />
     <ClCompile Include="Engine\GLTFLoader.cpp" />
     <ClCompile Include="Engine\Mesh\Animation.cpp" />
@@ -884,7 +884,7 @@
     <ClCompile Include="Engine\Mesh\SkinnedMesh.cpp" />
     <ClCompile Include="Engine\ECS_Base\EntityStorage.cpp" />
     <ClCompile Include="GlueConstraintSystem.cpp" />
-    <ClCompile Include="Engine\Debug\GravityDrawSystem.cpp" />
+    <ClCompile Include="Engine\DebugTools\GravityDrawSystem.cpp" />
     <ClCompile Include="Engine\Lib\input.cpp" />
     <ClCompile Include="Engine\Render\Nebula\NebulaSystem.cpp" />
     <ClCompile Include="Systems\AISystem.cpp" />

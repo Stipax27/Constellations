@@ -9,13 +9,7 @@
     <ClCompile Include="SplinePath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MeshSystem.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
     <ClCompile Include="SpriteSystem.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="CollisionDrawSystem.cpp">
       <Filter>Source Files\Render</Filter>
     </ClCompile>
     <ClCompile Include="CollisionSystem.cpp">
@@ -24,13 +18,7 @@
     <ClCompile Include="PhysicSystem.cpp">
       <Filter>Source Files\Physic</Filter>
     </ClCompile>
-    <ClCompile Include="dx11.cpp">
-      <Filter>Source Files\System</Filter>
-    </ClCompile>
     <ClCompile Include="dx11minimal.cpp">
-      <Filter>Source Files\System</Filter>
-    </ClCompile>
-    <ClCompile Include="cameraclass.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
     <ClCompile Include="WindowClass.cpp">
@@ -39,17 +27,8 @@
     <ClCompile Include="CombatSystem.cpp">
       <Filter>Source Files\Combat</Filter>
     </ClCompile>
-    <ClCompile Include="timer.cpp">
-      <Filter>Source Files\System</Filter>
-    </ClCompile>
-    <ClCompile Include="MouseClass.cpp">
-      <Filter>Source Files\System</Filter>
-    </ClCompile>
     <ClCompile Include="LevelManagerClass.cpp">
       <Filter>Source Files\System</Filter>
-    </ClCompile>
-    <ClCompile Include="utils.cpp">
-      <Filter>Source Files\Utils</Filter>
     </ClCompile>
     <ClCompile Include="Point4d.cpp">
       <Filter>Source Files\Utils</Filter>
@@ -57,29 +36,11 @@
     <ClCompile Include="Point3d.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="World.cpp">
-      <Filter>Source Files\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity.cpp">
-      <Filter>Source Files\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>Source Files\ECS</Filter>
-    </ClCompile>
     <ClCompile Include="UISystem.cpp">
-      <Filter>Source Files\Render\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Systems\UITextSystem.cpp">
       <Filter>Source Files\Render\UI</Filter>
     </ClCompile>
     <ClCompile Include="EntityManagerSystem.cpp">
       <Filter>Source Files\Compute</Filter>
-    </ClCompile>
-    <ClCompile Include="Transform2D.cpp">
-      <Filter>Source Files\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="EntityStorage.cpp">
-      <Filter>Source Files\ECS</Filter>
     </ClCompile>
     <ClCompile Include="FrustumClass.cpp">
       <Filter>Source Files\Utils</Filter>
@@ -102,22 +63,13 @@
     <ClCompile Include="TimeSystem.cpp">
       <Filter>Source Files\Compute</Filter>
     </ClCompile>
-    <ClCompile Include="NebulaSystem.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
     <ClCompile Include="GlueConstraintSystem.cpp">
       <Filter>Source Files\Physic</Filter>
-    </ClCompile>
-    <ClCompile Include="input.cpp">
-      <Filter>Source Files\Utils</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Mesh\Animation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Mesh\Animator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\GLTFLoader.cpp">
@@ -138,11 +90,25 @@
     <ClCompile Include="Systems\SkinnedMeshSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Systems\GravitySystem.cpp">
-      <Filter>Source Files\Physic</Filter>
-    </ClCompile>
-    <ClCompile Include="Systems\GravityDrawSystem.cpp" />
     <ClCompile Include="Systems\AISystem.cpp" />
+    <ClCompile Include="Engine\Camera\cameraclass.cpp" />
+    <ClCompile Include="Engine\DebugTools\CollisionDrawSystem.cpp" />
+    <ClCompile Include="Utils\ComponentUtils.cpp" />
+    <ClCompile Include="Engine\ECS_Base\EntityStorage.cpp" />
+    <ClCompile Include="Engine\DebugTools\GravityDrawSystem.cpp" />
+    <ClCompile Include="Engine\Lib\input.cpp" />
+    <ClCompile Include="Engine\Render\Nebula\NebulaSystem.cpp" />
+    <ClCompile Include="Engine\dx11.cpp" />
+    <ClCompile Include="Engine\ECS_Base\Entity.cpp" />
+    <ClCompile Include="Engine\Render\Mesh\MeshSystem.cpp" />
+    <ClCompile Include="Engine\Mouse\MouseClass.cpp" />
+    <ClCompile Include="Engine\Physic\Gravitation\GravitySystem.cpp" />
+    <ClCompile Include="Engine\Lib\timer.cpp" />
+    <ClCompile Include="Engine\BasicComponents\Transform.cpp" />
+    <ClCompile Include="Engine\BasicComponents\Transform2D.cpp" />
+    <ClCompile Include="Engine\UI\Text\UITextSystem.cpp" />
+    <ClCompile Include="Utils\utils.cpp" />
+    <ClCompile Include="Engine\ECS_Base\World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Font_OLD.h">
@@ -157,27 +123,6 @@
     <ClInclude Include="windowclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="system.h">
-      <Filter>Header Files\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="world.h">
-      <Filter>Header Files\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="entity.h">
-      <Filter>Header Files\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="dx11.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="component.h">
-      <Filter>Header Files\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="cameraclass.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="mouseclass.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>Header Files\System</Filter>
     </ClInclude>
@@ -190,9 +135,6 @@
     <ClInclude Include="Point3d.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="utils.h">
-      <Filter>Header Files\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Point4d.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
@@ -201,9 +143,6 @@
     </ClInclude>
     <ClInclude Include="fraction.h">
       <Filter>Header Files\Enums</Filter>
-    </ClInclude>
-    <ClInclude Include="timer.h">
-      <Filter>Header Files\System</Filter>
     </ClInclude>
     <ClInclude Include="ParticleEmitter.h">
       <Filter>Header Files\ECS\Components\Render</Filter>
@@ -217,14 +156,8 @@
     <ClInclude Include="Constellation.h">
       <Filter>Header Files\ECS\Components\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Header Files\ECS\Components\Render</Filter>
-    </ClInclude>
     <ClInclude Include="Star.h">
       <Filter>Header Files\ECS\Components\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="Health.h">
       <Filter>Header Files\ECS\Components\Combat</Filter>
@@ -240,12 +173,6 @@
     </ClInclude>
     <ClInclude Include="Rect.h">
       <Filter>Header Files\ECS\Components\Render\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Components\TextLabel.h">
-      <Filter>Header Files\ECS\Components\Render\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Systems\UITextSystem.h">
-      <Filter>Header Files\ECS\Systems\Render</Filter>
     </ClInclude>
     <ClInclude Include="PhysicBody.h">
       <Filter>Header Files\ECS\Components\Physic</Filter>
@@ -268,32 +195,14 @@
     <ClInclude Include="cornerType.h">
       <Filter>Header Files\Enums</Filter>
     </ClInclude>
-    <ClInclude Include="collider.h">
-      <Filter>Header Files\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform2D.h">
-      <Filter>Header Files\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="entityStorage.h">
-      <Filter>Header Files\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="constants.h">
-      <Filter>Header Files\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="uiSystem.h">
       <Filter>Header Files\ECS\Systems\Render</Filter>
     </ClInclude>
     <ClInclude Include="spriteSystem.h">
       <Filter>Header Files\ECS\Systems\Render</Filter>
     </ClInclude>
-    <ClInclude Include="meshSystem.h">
-      <Filter>Header Files\ECS\Systems\Render</Filter>
-    </ClInclude>
     <ClInclude Include="frustumclass.h">
       <Filter>Header Files\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="collisionDrawSystem.h">
-      <Filter>Header Files\ECS\Systems\Render</Filter>
     </ClInclude>
     <ClInclude Include="CollisionManagerClass.h">
       <Filter>Header Files\Utils</Filter>
@@ -337,17 +246,8 @@
     <ClInclude Include="timeSystem.h">
       <Filter>Header Files\ECS\Systems\Compute</Filter>
     </ClInclude>
-    <ClInclude Include="Components\Nebula.h">
-      <Filter>Header Files\ECS\Components\Render</Filter>
-    </ClInclude>
     <ClInclude Include="pmode.h">
       <Filter>Header Files\Enums</Filter>
-    </ClInclude>
-    <ClInclude Include="nebulaSystem.h">
-      <Filter>Header Files\ECS\Systems\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="isingleton.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Components\GlueConstraint.h">
       <Filter>Header Files\ECS\Components\Physic</Filter>
@@ -357,12 +257,6 @@
     </ClInclude>
     <ClInclude Include="Vendors\tinyGLTF\json.hpp">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="singleton.h">
-      <Filter>Header Files\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="input.h">
-      <Filter>Header Files\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Vendors\tinyGLTF\tiny_gltf.h">
       <Filter>Header Files</Filter>
@@ -394,9 +288,6 @@
     <ClInclude Include="Engine\GLTFLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="componentutils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Mesh\Animator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -409,20 +300,41 @@
     <ClInclude Include="Components\CameraTarget.h">
       <Filter>Header Files\ECS\Components\Gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="Components\GravityPoint.h">
-      <Filter>Header Files\ECS\Components\Physic</Filter>
-    </ClInclude>
-    <ClInclude Include="Systems\GravitySystem.h">
-      <Filter>Header Files\ECS\Systems\Physic</Filter>
-    </ClInclude>
     <ClInclude Include="damageType.h" />
-    <ClInclude Include="Systems\GravityDrawSystem.h" />
     <ClInclude Include="Systems\AISystem.h" />
     <ClInclude Include="Components\AIComponent.h" />
-    <ClInclude Include="Utils\interp.h" />
     <ClInclude Include="DamageBlocker.h">
       <Filter>Header Files\ECS\Components\Combat</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\DebugTools\GravityDrawSystem.h" />
+    <ClInclude Include="Engine\Camera\cameraclass.h" />
+    <ClInclude Include="Engine\BasicComponents\collider.h" />
+    <ClInclude Include="Engine\DebugTools\collisionDrawSystem.h" />
+    <ClInclude Include="Engine\ECS_Base\component.h" />
+    <ClInclude Include="Utils\componentutils.h" />
+    <ClInclude Include="Utils\constants.h" />
+    <ClInclude Include="Engine\ECS_Base\entityStorage.h" />
+    <ClInclude Include="Engine\dx11.h" />
+    <ClInclude Include="Engine\ECS_Base\entity.h" />
+    <ClInclude Include="Engine\Physic\Gravitation\GravityPoint.h" />
+    <ClInclude Include="Engine\Lib\input.h" />
+    <ClInclude Include="Engine\Lib\isingleton.h" />
+    <ClInclude Include="Engine\Render\Mesh\Mesh.h" />
+    <ClInclude Include="Engine\Render\Mesh\meshSystem.h" />
+    <ClInclude Include="Engine\Mouse\mouseclass.h" />
+    <ClInclude Include="Engine\Render\Nebula\Nebula.h" />
+    <ClInclude Include="Engine\Render\Nebula\nebulaSystem.h" />
+    <ClInclude Include="Engine\Lib\singleton.h" />
+    <ClInclude Include="Engine\ECS_Base\system.h" />
+    <ClInclude Include="Engine\Physic\Gravitation\GravitySystem.h" />
+    <ClInclude Include="Engine\UI\Text\TextLabel.h" />
+    <ClInclude Include="Engine\UI\Text\UITextSystem.h" />
+    <ClInclude Include="Engine\BasicComponents\Transform.h" />
+    <ClInclude Include="Engine\BasicComponents\Transform2D.h" />
+    <ClInclude Include="Engine\Lib\interp.h" />
+    <ClInclude Include="Engine\ECS_Base\world.h" />
+    <ClInclude Include="Engine\Lib\timer.h" />
+    <ClInclude Include="Utils\utils.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">
