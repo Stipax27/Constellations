@@ -70,12 +70,7 @@ public:
 	template <typename T>
 	bool HasComponent()
 	{
-		T* component = GetComponent<T>();
-		if (component != nullptr)
-		{
-			return true;
-		}
-		return false;
+		return GetComponent<T>() != nullptr;
 	}
 
 	bool HasComponent(const type_index& componentType) const

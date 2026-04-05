@@ -152,6 +152,7 @@ namespace interp {
         bool IsPaused() const { return isPaused; }
 
         T GetCurrentValue() const { return target ? *target : T{}; }
+        T* GetTarget() const { return target; }
     };
 
 
@@ -160,6 +161,21 @@ namespace interp {
 
     template<typename T, typename U>
     Tween<T>& CreateTween(T& target, const U& endValue, double duration, Curve curve = Curve::Linear) {
+
+        // Searching for existing tween with this target
+        auto it = std::find_if(activeTweens.begin(), activeTweens.end(),
+            [&target](const std::unique_ptr<ITween>& tween) {
+                auto* specificTween = dynamic_cast<Tween<T>*>(tween.get());
+                if (specificTween && specificTween->GetTarget() == &target) {
+                    return true;
+                }
+                return false;
+            });
+
+        if (it != activeTweens.end()) {
+            activeTweens.erase(it);
+        }
+
         auto tween = std::make_unique<Tween<T>>(&target, static_cast<T>(endValue), duration, curve);
         Tween<T>& ref = *tween;
         activeTweens.push_back(std::move(tween));
