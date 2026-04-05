@@ -5,8 +5,8 @@
 // INCLUDES //
 //////////////
 #include<cmath>
-#include "Engine/ECS_Base/system.h"
-#include "Engine/Lib/timer.h"
+#include "../../ECS_Base/system.h"
+#include "../../Lib/timer.h"
 
 
 class TimeSystem : public System

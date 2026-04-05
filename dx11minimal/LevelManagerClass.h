@@ -40,7 +40,7 @@
 #include "combatSystem.h"
 
 #include "entityManagerSystem.h"
-#include "timeSystem.h"
+#include "Engine/Compute/Time/timeSystem.h"
 
 #include "Engine/DebugTools/collisionDrawSystem.h"
 #include "Engine/DebugTools/GravityDrawSystem.h"

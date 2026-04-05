@@ -264,7 +264,7 @@
     <ClInclude Include="Systems\SkinnedMeshSystem.h" />
     <ClInclude Include="Engine\UI\Text\TextLabel.h" />
     <ClInclude Include="Engine\UI\Text\UITextSystem.h" />
-    <ClInclude Include="timeSystem.h" />
+    <ClInclude Include="Engine\Compute\Time\timeSystem.h" />
     <ClInclude Include="Engine\BasicComponents\Transform.h" />
     <ClInclude Include="Engine\BasicComponents\Transform2D.h" />
     <ClInclude Include="Engine\Lib\interp.h" />
@@ -910,7 +910,7 @@
     <ClCompile Include="Systems\SkinnedMeshSystem.cpp" />
     <ClCompile Include="Components\SkeletalAnimationComponent.cpp" />
     <ClCompile Include="Engine\Lib\timer.cpp" />
-    <ClCompile Include="TimeSystem.cpp" />
+    <ClCompile Include="Engine\Compute\Time\TimeSystem.cpp" />
     <ClCompile Include="Engine\BasicComponents\Transform.cpp" />
     <ClCompile Include="Engine\BasicComponents\Transform2D.cpp" />
     <ClCompile Include="Engine\UI\Text\UITextSystem.cpp" />
