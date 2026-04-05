@@ -17,7 +17,7 @@
 #include "Engine/Utils/componentutils.h"
 
 #include "Engine/BasicComponents/Transform.h"
-#include "PhysicBody.h"
+#include "Engine/Physic/Movement/PhysicBody.h"
 #include "Engine/Physic/Collision/SphereCollider.h"
 #include "Star.h"
 #include "DelayedDestroy.h"

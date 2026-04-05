@@ -12,7 +12,7 @@
 #include<cmath>
 #include "../../ECS_Base/system.h"
 #include "../../BasicComponents/Transform.h"
-#include "../../../PhysicBody.h"
+#include "../Movement/PhysicBody.h"
 
 #include "../../BasicComponents/collider.h"
 #include "SphereCollider.h"

@@ -5,7 +5,7 @@
 #include "../Engine/ECS_Base//system.h"           // Подключаем базовый абстрактный класс System
 #include "../Engine/BasicComponents/Transform.h"        // Подключаем компонент Transform (позиция, поворот, масштаб)
 #include "../Components/AIComponent.h"     // Подключаем компонент AIComponent (данные ИИ)
-#include "../PhysicBody.h"       // Подключаем компонент PhysicBody (скорость, физика)
+#include "../Engine/Physic/Movement/PhysicBody.h"       // Подключаем компонент PhysicBody (скорость, физика)
 #include "../Star.h"             // Подключаем компонент Star (визуальное представление звезды)
 #include "../Health.h"           // Подключаем компонент Health (здоровье сущности)
 

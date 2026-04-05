@@ -237,8 +237,8 @@
     <ClInclude Include="Engine\Render\Nebula\Nebula.h" />
     <ClInclude Include="Engine\Render\Nebula\nebulaSystem.h" />
     <ClInclude Include="ParticleEmitter.h" />
-    <ClInclude Include="PhysicBody.h" />
-    <ClInclude Include="physicSystem.h" />
+    <ClInclude Include="Engine\Physic\Movement\PhysicBody.h" />
+    <ClInclude Include="Engine\Physic\Movement\physicSystem.h" />
     <ClInclude Include="Engine\Physic\Collision\PlaneCollider.h" />
     <ClInclude Include="PlayerAbilities.h" />
     <ClInclude Include="PlayerController.h" />
@@ -903,7 +903,7 @@
     <ClCompile Include="Engine\Types\Point4d.cpp" />
     <ClCompile Include="QuestManager.cpp" />
     <ClCompile Include="SplinePath.cpp" />
-    <ClCompile Include="PhysicSystem.cpp" />
+    <ClCompile Include="Engine\Physic\Movement\PhysicSystem.cpp" />
     <ClCompile Include="SpriteSystem.cpp" />
     <ClCompile Include="Engine\Physic\Gravitation\GravitySystem.cpp" />
     <ClCompile Include="Systems\SkeletalAnimationSystem.cpp" />

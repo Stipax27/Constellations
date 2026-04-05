@@ -5,8 +5,8 @@
 // INCLUDES //
 //////////////
 #include<cmath>
-#include "Engine/ECS_Base/system.h"
-#include "Engine/BasicComponents/Transform.h"
+#include "../../ECS_Base/system.h"
+#include "../../BasicComponents/Transform.h"
 #include "PhysicBody.h"
 
 

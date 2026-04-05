@@ -34,8 +34,8 @@
 #include "Engine/UI/Text/UITextSystem.h"
 #include "Engine/Render/Nebula/nebulaSystem.h"
 
-#include "physicSystem.h"
-#include "Engine/Physic//Gravitation/GravitySystem.h"
+#include "Engine/Physic/Movement/physicSystem.h"
+#include "Engine/Physic/Gravitation/GravitySystem.h"
 #include "Engine/Physic/Collision/collisionSystem.h"
 #include "combatSystem.h"
 

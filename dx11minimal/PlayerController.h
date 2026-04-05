@@ -20,7 +20,7 @@
 #include "Engine/ECS_Base/entity.h"
 
 #include "Engine/BasicComponents/Transform.h"
-#include "PhysicBody.h"
+#include "Engine/Physic/Movement/PhysicBody.h"
 #include "PointCloud.h"
 #include "Health.h"
 #include "Components/CameraTarget.h"

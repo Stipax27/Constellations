@@ -8,7 +8,7 @@
 #include "../../ECS_Base/system.h"
 
 #include "../../BasicComponents/Transform.h"
-#include "../../../PhysicBody.h"
+#include "../Movement/PhysicBody.h"
 #include "GravityPoint.h"
 
 /////////////
