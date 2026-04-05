@@ -4,8 +4,8 @@
 #include "../../ECS_Base/component.h"
 #include "../../renderCompress.h"
 #include "../../dx11.h"
-#include "../../pmode.h"
 #include "../../Types/Point3d.h"
+#include "pmode.h"
 
 
 struct Nebula : Component
