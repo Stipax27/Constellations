@@ -21,7 +21,8 @@ void CombatSystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
 	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<Health>();
 	size_t size = entities.size();
-	for (Entity* entity : entities) {
+	for (Entity* entity : entities)
+	{
 		if (!IsEntityValid(entity) || entity->GetTimeScale() == 0.0f)
 			continue;
 				
