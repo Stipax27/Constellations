@@ -187,7 +187,7 @@
     <ClInclude Include="DamageBlocker.h" />
     <ClInclude Include="damageType.h" />
     <ClInclude Include="Engine\DebugTools\GravityDrawSystem.h" />
-    <ClInclude Include="Systems\AISystem.h" />
+    <ClInclude Include="Engine\Compute\AI\AISystem.h" />
     <ClInclude Include="Beam.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Engine\Camera\cameraclass.h" />
@@ -214,14 +214,12 @@
     <ClInclude Include="Engine\ECS_Base\entityStorage.h" />
     <ClInclude Include="fraction.h" />
     <ClInclude Include="Engine\dx11.h" />
-    <ClInclude Include="Components\AIComponent.h" />
+    <ClInclude Include="Engine\Compute\AI\AIComponent.h" />
     <ClInclude Include="Engine\ECS_Base\entity.h" />
     <ClInclude Include="Font_OLD.h" />
     <ClInclude Include="FpsCounter.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Engine\Camera\frustumclass.h" />
-    <ClInclude Include="Components\GlueConstraint.h" />
-    <ClInclude Include="glueConstraintSystem.h" />
     <ClInclude Include="Components\Grabbable.h" />
     <ClInclude Include="Engine\Physic\Gravitation\GravityPoint.h" />
     <ClInclude Include="Health.h" />
@@ -246,7 +244,7 @@
     <ClInclude Include="Engine\Types\Point3d.h" />
     <ClInclude Include="PointCloud.h" />
     <ClInclude Include="Components\Orientation.h" />
-    <ClInclude Include="Components\SkeletalAnimationComponent.h" />
+    <ClInclude Include="Engine\Render\BoneAnimation\SkeletalAnimationComponent.h" />
     <ClInclude Include="questclass.h" />
     <ClInclude Include="questmanager.h" />
     <ClInclude Include="Rect.h" />
@@ -260,7 +258,7 @@
     <ClInclude Include="Engine\Physic\Collision\SurfaceCollider.h" />
     <ClInclude Include="Engine\ECS_Base\system.h" />
     <ClInclude Include="Engine\Physic\Gravitation\GravitySystem.h" />
-    <ClInclude Include="Systems\SkeletalAnimationSystem.h" />
+    <ClInclude Include="Engine\Render\BoneAnimation\SkeletalAnimationSystem.h" />
     <ClInclude Include="Systems\SkinnedMeshSystem.h" />
     <ClInclude Include="Engine\UI\Text\TextLabel.h" />
     <ClInclude Include="Engine\UI\Text\UITextSystem.h" />
@@ -883,11 +881,10 @@
     <ClCompile Include="Engine\Mesh\Skeleton.cpp" />
     <ClCompile Include="Engine\Mesh\SkinnedMesh.cpp" />
     <ClCompile Include="Engine\ECS_Base\EntityStorage.cpp" />
-    <ClCompile Include="GlueConstraintSystem.cpp" />
     <ClCompile Include="Engine\DebugTools\GravityDrawSystem.cpp" />
     <ClCompile Include="Engine\Lib\input.cpp" />
     <ClCompile Include="Engine\Render\Nebula\NebulaSystem.cpp" />
-    <ClCompile Include="Systems\AISystem.cpp" />
+    <ClCompile Include="Engine\Compute\AI\AISystem.cpp" />
     <ClCompile Include="PlayerAbilities.cpp" />
     <ClCompile Include="Engine\dx11.cpp" />
     <ClCompile Include="dx11minimal.cpp" />
@@ -906,9 +903,9 @@
     <ClCompile Include="Engine\Physic\Movement\PhysicSystem.cpp" />
     <ClCompile Include="SpriteSystem.cpp" />
     <ClCompile Include="Engine\Physic\Gravitation\GravitySystem.cpp" />
-    <ClCompile Include="Systems\SkeletalAnimationSystem.cpp" />
+    <ClCompile Include="Engine\Render\BoneAnimation\SkeletalAnimationSystem.cpp" />
     <ClCompile Include="Systems\SkinnedMeshSystem.cpp" />
-    <ClCompile Include="Components\SkeletalAnimationComponent.cpp" />
+    <ClCompile Include="Engine\Render\BoneAnimation\SkeletalAnimationComponent.cpp" />
     <ClCompile Include="Engine\Lib\timer.cpp" />
     <ClCompile Include="Engine\Compute\Time\TimeSystem.cpp" />
     <ClCompile Include="Engine\BasicComponents\Transform.cpp" />

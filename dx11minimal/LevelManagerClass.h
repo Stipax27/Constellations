@@ -50,7 +50,11 @@
 #include "Engine/Mesh/Skeleton.h"
 #include "Engine/Mesh/SkinnedMesh.h"
 
-#include "Systems/AISystem.h"
+#include "Engine/Compute/AI/AISystem.h"
+
+#include "Engine/Render/BoneAnimation/SkeletalAnimationComponent.h"
+#include "Engine/Render/BoneAnimation/SkeletalAnimationSystem.h"
+#include "Systems/SkinnedMeshSystem.h"
 
 /////////////
 // GLOBALS //

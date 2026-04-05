@@ -3,10 +3,10 @@
 #include <string>
 #include <vector>
 
-#include "../Engine/ECS_Base/component.h"
-#include "../Engine/Mesh/Animation.h"
-#include "../Engine/Mesh/Animator.h"
-#include "../Engine/Mesh/Skeleton.h"
+#include "../../ECS_Base/component.h"
+#include "../../Mesh/Animation.h"
+#include "../../Mesh/Animator.h"
+#include "../../Mesh/Skeleton.h"
 
 enum class RootMotionMode
 {

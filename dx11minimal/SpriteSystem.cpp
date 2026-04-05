@@ -1,6 +1,4 @@
 #include "spriteSystem.h"
-#include "Components/Orientation.h"
-#include "Components/SkeletalAnimationComponent.h"
 
 
 SpriteSystem::SpriteSystem()

@@ -2,12 +2,13 @@
 #define _AI_SYSTEM_H_
 
 #include<cmath>               // Подключаем математические функции (sqrt, sin, cos и т.д.)
-#include "../Engine/ECS_Base//system.h"           // Подключаем базовый абстрактный класс System
-#include "../Engine/BasicComponents/Transform.h"        // Подключаем компонент Transform (позиция, поворот, масштаб)
-#include "../Components/AIComponent.h"     // Подключаем компонент AIComponent (данные ИИ)
-#include "../Engine/Physic/Movement/PhysicBody.h"       // Подключаем компонент PhysicBody (скорость, физика)
-#include "../Star.h"             // Подключаем компонент Star (визуальное представление звезды)
-#include "../Health.h"           // Подключаем компонент Health (здоровье сущности)
+#include "../../ECS_Base/system.h"           // Подключаем базовый абстрактный класс System
+#include "../../BasicComponents/Transform.h"        // Подключаем компонент Transform (позиция, поворот, масштаб)
+#include "../../Physic/Movement/PhysicBody.h"       // Подключаем компонент PhysicBody (скорость, физика)
+#include "AIComponent.h"     // Подключаем компонент AIComponent (данные ИИ)
+
+#include "../../../Star.h"             // Подключаем компонент Star (визуальное представление звезды)
+#include "../../../Health.h"           // Подключаем компонент Health (здоровье сущности)
 
 #define AI_UPDATE_INTERVAL 0.01f  // Интервал обновления ИИ (0.01 сек = 100 раз в секунду)
 

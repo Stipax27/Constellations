@@ -6,6 +6,8 @@
 #include "../Engine/Camera/frustumclass.h"
 #include "../Engine/Camera/cameraclass.h"
 
+#include "../Engine/Render//BoneAnimation/SkeletalAnimationComponent.h"
+
 class SkinnedMeshSystem : public System
 {
 public:

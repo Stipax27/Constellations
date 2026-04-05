@@ -1,12 +1,6 @@
 ﻿#include "LevelManagerClass.h"
 
-#include "Engine/Mesh/Animation.h"
-#include "Engine/Mesh/Skeleton.h"
-#include "Engine/Mesh/SkinnedMesh.h"
-#include "Engine/dx11.h"
-#include "Components/SkeletalAnimationComponent.h"
-#include "Systems/SkinnedMeshSystem.h"
-#include "Systems/SkeletalAnimationSystem.h"
+
 
 LevelManagerClass::LevelManagerClass()
 {

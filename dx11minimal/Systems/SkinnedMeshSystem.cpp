@@ -1,5 +1,4 @@
 #include "SkinnedMeshSystem.h"
-#include "../Components/SkeletalAnimationComponent.h"
 
 SkinnedMeshSystem::SkinnedMeshSystem(
 	FrustumClass* f,

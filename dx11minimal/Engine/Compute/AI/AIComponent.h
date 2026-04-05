@@ -4,10 +4,10 @@
 //////////////
 // INCLUDES //
 //////////////
-#include "../Engine/ECS_Base/component.h"
-#include <vector>
-#include "../Engine/Types/Point3d.h"
+#include "../../ECS_Base/component.h"
+#include "../../Types/Point3d.h"
 #include <DirectXMath.h>
+#include <vector>
 
 enum class AIBehaviorType
 {
