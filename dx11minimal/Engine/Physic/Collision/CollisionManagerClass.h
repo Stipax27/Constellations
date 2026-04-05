@@ -15,13 +15,13 @@
 #include <memory>
 #include <mutex>
 
-#include "Engine/Lib/isingleton.h"
-#include "Utils/utils.h"
+#include "../../Lib/isingleton.h"
+#include "../../Utils/utils.h"
 
-#include "Engine/BasicComponents/Transform.h"
+#include "../../BasicComponents/Transform.h"
 
-#include "Engine/ECS_Base/entityStorage.h"
-#include "Engine/BasicComponents/collider.h"
+#include "../../ECS_Base/entityStorage.h"
+#include "../../BasicComponents/collider.h"
 #include "SphereCollider.h"
 #include "PlaneCollider.h"
 #include "SurfaceCollider.h"

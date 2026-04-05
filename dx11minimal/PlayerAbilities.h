@@ -14,11 +14,11 @@
 #include "Engine/ECS_Base/entity.h"
 
 #include "Point3d.h"
-#include "Utils/componentutils.h"
+#include "Engine/Utils/componentutils.h"
 
 #include "Engine/BasicComponents/Transform.h"
 #include "PhysicBody.h"
-#include "SphereCollider.h"
+#include "Engine/Physic/Collision/SphereCollider.h"
 #include "Star.h"
 #include "DelayedDestroy.h"
 #include "SingleDamager.h"
@@ -34,7 +34,7 @@
 
 #include "Engine/BasicComponents/Transform2D.h"
 
-#include "CollisionManagerClass.h"
+#include "Engine/Physic/Collision/CollisionManagerClass.h"
 
 
 /////////////

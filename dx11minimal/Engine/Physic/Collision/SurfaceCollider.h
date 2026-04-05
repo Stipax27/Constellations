@@ -1,8 +1,8 @@
 #ifndef _SURFACE_COLLIDER_H_
 #define _SURFACE_COLLIDER_H_
 
-#include "Engine/BasicComponents/collider.h"
-#include "point3d.h"
+#include "../../BasicComponents/collider.h"
+#include "../../../point3d.h"
 #include <cmath>
 
 #ifndef PI

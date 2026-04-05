@@ -1,8 +1,8 @@
 #ifndef _PLANECOLLIDER_H_
 #define _PLANECOLLIDER_H_
 
-#include "Engine/BasicComponents/collider.h"
-#include "point3d.h"
+#include "../../BasicComponents/collider.h"
+#include "../../../point3d.h"
 
 struct PlaneCollider : Collider
 {

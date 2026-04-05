@@ -14,7 +14,7 @@
 
 #include "../dx11.h"
 #include "../Lib/isingleton.h"
-#include "../../Utils/componentutils.h"
+#include "../Utils/componentutils.h"
 
 /////////////
 // GLOBALS //

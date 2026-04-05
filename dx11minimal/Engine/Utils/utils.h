@@ -6,13 +6,13 @@
 // INCLUDES //
 //////////////
 #include <corecrt_math.h>
-#include "../Engine/dx11.h"
+#include "../dx11.h"
 #include "constants.h"
-#include "../Point3d.h"
+#include "../../Point3d.h"
 
-#include "../Engine/ECS_Base/entity.h"
-#include "../Engine/BasicComponents/Transform.h"
-#include "../Engine/BasicComponents/Transform2D.h"
+#include "../ECS_Base/entity.h"
+#include "../BasicComponents/Transform.h"
+#include "../BasicComponents/Transform2D.h"
 
 
 

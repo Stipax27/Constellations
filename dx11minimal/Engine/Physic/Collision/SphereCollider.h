@@ -1,7 +1,7 @@
 #ifndef _SPHERECOLLIDER_H_
 #define _SPHERECOLLIDER_H_
 
-#include "Engine/BasicComponents/collider.h"
+#include "../../BasicComponents/collider.h"
 
 struct SphereCollider : Collider
 {

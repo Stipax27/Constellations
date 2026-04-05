@@ -10,18 +10,18 @@
 #include <functional>
 
 #include<cmath>
-#include "Engine/ECS_Base/system.h"
-#include "Engine/BasicComponents/Transform.h"
-#include "PhysicBody.h"
+#include "../../ECS_Base/system.h"
+#include "../../BasicComponents/Transform.h"
+#include "../../../PhysicBody.h"
 
-#include "Engine/BasicComponents/collider.h"
+#include "../../BasicComponents/collider.h"
 #include "SphereCollider.h"
 #include "PlaneCollider.h"
 #include "SurfaceCollider.h"
 
-#include "Health.h"
-#include "SingleDamager.h"
-#include "MultiDamager.h"
+#include "../../../Health.h"
+#include "../../../SingleDamager.h"
+#include "../../../MultiDamager.h"
 
 #include "MethodOfClosest.h"
 #include "CollisionManagerClass.h"

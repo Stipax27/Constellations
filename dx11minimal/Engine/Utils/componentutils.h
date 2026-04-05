@@ -1,14 +1,14 @@
 #ifndef _COMPONENT_UTILS_H_
 #define _COMPONENT_UTILS_H_
 
-#include "../Engine/dx11.h"
-#include "../Engine/Lib/singleton.h"
+#include "../dx11.h"
+#include "../Lib/singleton.h"
 
-#include "../Engine/ECS_Base/entityStorage.h"
-#include "../Engine/ECS_Base/entity.h"
+#include "../ECS_Base/entityStorage.h"
+#include "../ECS_Base/entity.h"
 
-#include "../Engine/BasicComponents/Transform.h"
-#include "../SphereCollider.h"
+#include "../BasicComponents/Transform.h"
+#include "../Physic/Collision/SphereCollider.h"
 
 
 inline XMFLOAT3 Point3DToXMFLOAT3(const point3d& p);

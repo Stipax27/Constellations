@@ -23,7 +23,7 @@
 #include "Engine/ECS_Base/entity.h"
 #include "Engine/ECS_Base/component.h"
 
-#include "CollisionManagerClass.h"
+#include "Engine/Physic/Collision/CollisionManagerClass.h"
 
 #include "SplinePath.cpp"
 
@@ -36,7 +36,7 @@
 
 #include "physicSystem.h"
 #include "Engine/Physic//Gravitation/GravitySystem.h"
-#include "collisionSystem.h"
+#include "Engine/Physic/Collision/collisionSystem.h"
 #include "combatSystem.h"
 
 #include "entityManagerSystem.h"

@@ -1,7 +1,7 @@
 #ifndef SURFACECOLLISION_H
 #define SURFACECOLLISION_H
 
-#include "point3d.h"
+#include "../../../point3d.h"
 
 // Forward declaration
 struct SurfaceCollider;

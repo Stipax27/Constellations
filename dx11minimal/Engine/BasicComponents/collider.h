@@ -9,7 +9,7 @@
 //////////////
 #include <vector>
 #include "../ECS_Base/component.h"
-#include "../../CollisionGroup.h"
+#include "../Physic/Collision/CollisionGroup.h"
 #include "../../Point3d.h"
 
 /////////////

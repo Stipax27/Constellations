@@ -8,9 +8,9 @@
 #include "../ECS_Base/system.h"
 #include "../BasicComponents/Transform.h"
 
-#include "../../SphereCollider.h"
-#include "../../PlaneCollider.h"
-#include "../../SurfaceCollider.h"
+#include "../Physic/Collision/SphereCollider.h"
+#include "../Physic/Collision/PlaneCollider.h"
+#include "../Physic/Collision/SurfaceCollider.h"
 
 #include "../Camera/cameraclass.h"
 
