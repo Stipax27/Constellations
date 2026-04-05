@@ -5,7 +5,7 @@
 #include "../../renderCompress.h"
 #include "../../dx11.h"
 #include "../../pmode.h"
-#include "../../Point3d.h"
+#include "../../Types/Point3d.h"
 
 
 struct Nebula : Component

@@ -6,7 +6,7 @@
 //////////////
 #include "../Engine/ECS_Base/component.h"
 #include <vector>
-#include "../Point3d.h"
+#include "../Engine/Types/Point3d.h"
 #include <DirectXMath.h>
 
 enum class AIBehaviorType

@@ -2,7 +2,7 @@
 #define _STAR_H_
 
 #include "Engine/ECS_Base/component.h"
-#include "Point3d.h"
+#include "Engine/Types/Point3d.h"
 
 
 struct Star : Component

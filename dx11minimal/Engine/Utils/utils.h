@@ -8,7 +8,7 @@
 #include <corecrt_math.h>
 #include "../dx11.h"
 #include "constants.h"
-#include "../../Point3d.h"
+#include "../Types/Point3d.h"
 
 #include "../ECS_Base/entity.h"
 #include "../BasicComponents/Transform.h"

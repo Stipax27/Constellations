@@ -2,7 +2,7 @@
 #define _SURFACE_COLLIDER_H_
 
 #include "../../BasicComponents/collider.h"
-#include "../../../point3d.h"
+#include "../../Types/point3d.h"
 #include <cmath>
 
 #ifndef PI

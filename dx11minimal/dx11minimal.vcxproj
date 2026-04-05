@@ -243,7 +243,7 @@
     <ClInclude Include="PlayerAbilities.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="pmode.h" />
-    <ClInclude Include="Point3d.h" />
+    <ClInclude Include="Engine\Types\Point3d.h" />
     <ClInclude Include="PointCloud.h" />
     <ClInclude Include="Components\Orientation.h" />
     <ClInclude Include="Components\SkeletalAnimationComponent.h" />
@@ -623,7 +623,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
-    <ClInclude Include="Point4d.h" />
+    <ClInclude Include="Engine\Types\Point4d.h" />
     <ClInclude Include="Engine\Lib\timer.h" />
     <ClInclude Include="Engine\Utils\utils.h" />
     <None Include="Shaders\VSS.shader">
@@ -899,8 +899,8 @@
     <ClCompile Include="Engine\Physic\Collision\MethodOfClosest.cpp" />
     <ClCompile Include="Engine\Mouse\MouseClass.cpp" />
     <ClCompile Include="PlayerController.cpp" />
-    <ClCompile Include="Point3d.cpp" />
-    <ClCompile Include="Point4d.cpp" />
+    <ClCompile Include="Engine\Types\Point3d.cpp" />
+    <ClCompile Include="Engine\Types\Point4d.cpp" />
     <ClCompile Include="QuestManager.cpp" />
     <ClCompile Include="SplinePath.cpp" />
     <ClCompile Include="PhysicSystem.cpp" />

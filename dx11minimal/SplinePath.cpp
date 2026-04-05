@@ -1,6 +1,6 @@
 // SplinePath.h
 #pragma once
-#include "Point3d.h"
+#include "Engine/Types/Point3d.h"
 #include <vector>
 
 class SplinePath {

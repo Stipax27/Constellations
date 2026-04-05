@@ -2,7 +2,7 @@
 #define _BEAM_H_
 
 #include "Engine/ECS_Base/component.h"
-#include "point3d.h"
+#include "Engine/Types/Point3d.h"
 #include <vector>
 #include <utility>
 

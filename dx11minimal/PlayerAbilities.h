@@ -13,7 +13,7 @@
 #include "Engine/ECS_Base/world.h"
 #include "Engine/ECS_Base/entity.h"
 
-#include "Point3d.h"
+#include "Engine/Types/Point3d.h"
 #include "Engine/Utils/componentutils.h"
 
 #include "Engine/BasicComponents/Transform.h"

@@ -2,7 +2,7 @@
 #define _POINT4D_H
 
 #include <sstream>
-#include "Engine/dx11.h"
+#include "../dx11.h"
 
 struct point4d {
     float x = 0.0f;

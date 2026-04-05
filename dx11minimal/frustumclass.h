@@ -9,7 +9,7 @@
 // INCLUDES //
 //////////////
 #include "Engine/dx11.h"
-#include "Point3d.h"
+#include "Engine/Types/Point3d.h"
 #include "Engine/Lib/isingleton.h"
 
 
