@@ -10,7 +10,7 @@
 #include "../Types/Point3d.h"
 #include "../Lib/singleton.h"
 
-#include "../../windowclass.h"
+#include "../Window/windowclass.h"
 #include "../../frustumclass.h"
 
 /////////////

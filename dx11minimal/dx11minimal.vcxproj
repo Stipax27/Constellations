@@ -273,7 +273,7 @@
     <ClInclude Include="Vendors\tinyGLTF\stb_image.h" />
     <ClInclude Include="Vendors\tinyGLTF\stb_image_write.h" />
     <ClInclude Include="Vendors\tinyGLTF\tiny_gltf.h" />
-    <ClInclude Include="windowclass.h" />
+    <ClInclude Include="Engine\Window\windowclass.h" />
     <ClInclude Include="Engine\ECS_Base\world.h" />
     <None Include="Shaders\lib\depthTest.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -916,7 +916,7 @@
     <ClCompile Include="Engine\UI\Text\UITextSystem.cpp" />
     <ClCompile Include="UISystem.cpp" />
     <ClCompile Include="Engine\Utils\utils.cpp" />
-    <ClCompile Include="WindowClass.cpp" />
+    <ClCompile Include="Engine\Window\WindowClass.cpp" />
     <ClCompile Include="Engine\ECS_Base\World.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -7,7 +7,7 @@
 //////////////
 #include "../Types/Point3d.h"
 #include "../Camera/cameraclass.h"
-#include "../../windowclass.h"
+#include "../Window/windowclass.h"
 #include "../Lib/singleton.h"
 #include "../Lib/input.h"
 
