@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <string>
+#include <vector>
 #include <deque>
 #include <thread>
 #include <mutex>
@@ -13,7 +14,7 @@
 #include <lua.hpp>
 #pragma comment(lib,"lua51")
 #pragma comment(lib,"luajit")
-#include <LuaBridge/LuaBridge.h>
+//#include <LuaBridge/LuaBridge.h>
 
 #include "lua.h"
 #include "singleton.h"
@@ -25,7 +26,8 @@ namespace
 {
 	EntityStorage* storage=Singleton::GetInstance<EntityStorage>();
 	lua_State* LUA=0;
-	std::deque<std::string> scripts;
+
+	std::deque<std::vector<char>> scripts;
 	std::mutex busy;
 
 	void create_console()
@@ -38,15 +40,49 @@ namespace
 
 	void inter()
 	{
+		lua_Writer writer=
+		[](lua_State*,const void* from,size_t size,void* dest)
+		{
+			std::vector<char>* d=(std::vector<char>*)dest;
+			d->insert(d->end(),(const char*)from,(const char*)from+size);
+			return 0;
+		};
+
 		std::string script;
 		while(true)
 		{
 			std::getline(std::cin,script);
 			busy.lock();
-				scripts.push_back(script);
+				if(luaL_loadstring(LUA,script.c_str()))
+				{
+					std::cout<<lua_tostring(LUA,-1)<<std::endl;
+					lua_pop(LUA,1);
+				}
+				else
+				{
+					scripts.push_back(std::vector<char>());
+					lua_dump(LUA,writer,&scripts.back());
+					lua_pop(LUA,1);
+				}
 			busy.unlock();
 		}
 	}
+
+	/*
+	void register_entity(lua_State* lua)
+	{
+		luabridge::getGlobalNamespace(lua)
+		.beginClass<Transform>("Transform")
+			.addConstructor<void(*)()>()
+		.endClass();
+
+		luabridge::getGlobalNamespace(lua)
+		.beginClass<Entity>("Entity")
+			.addConstructor<void(*)()>()
+			.addFunction("getTransform",&Entity::GetComponent<Transform>)
+		.endClass();
+	}
+	*/
 
 	int cls(lua_State* lua)
 	{
@@ -126,12 +162,8 @@ void lua()
 	if(scripts.empty())return;
 	if(!busy.try_lock())return;
 
-	if(luaL_dostring(LUA,scripts.front().c_str()))
-	{
-		std::cout<<lua_tostring(LUA,-1)<<std::endl;
-		lua_pop(LUA,1);
-	}
-
+	luaL_loadbuffer(LUA,scripts.front().data(),scripts.front().size(),"test");
+	lua_call(LUA,0,0);
 	scripts.pop_front();
 
 	busy.unlock();
