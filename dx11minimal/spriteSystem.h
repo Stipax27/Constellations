@@ -14,7 +14,7 @@
 #include "ParticleEmitter.h"
 #include "Beam.h"
 
-#include "frustumclass.h"
+#include "Engine/Camera/frustumclass.h"
 #include "Components/Orientation.h"
 
 

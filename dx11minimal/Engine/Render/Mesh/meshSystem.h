@@ -11,7 +11,7 @@
 #include "../../../Constellation.h"
 #include "../../../Star.h"
 
-#include "../../../frustumclass.h"
+#include "../../Camera/frustumclass.h"
 #include "../../Camera/cameraclass.h"
 
 /////////////

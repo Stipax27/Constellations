@@ -3,7 +3,7 @@
 
 #include "../Engine/ECS_Base/system.h"
 #include "../Engine/Mesh/SkinnedMesh.h"
-#include "../frustumclass.h"
+#include "../Engine/Camera/frustumclass.h"
 #include "../Engine/Camera/cameraclass.h"
 
 class SkinnedMeshSystem : public System

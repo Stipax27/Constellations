@@ -11,7 +11,7 @@
 #include "../Lib/singleton.h"
 
 #include "../Window/windowclass.h"
-#include "../../frustumclass.h"
+#include "frustumclass.h"
 
 /////////////
 // GLOBALS //

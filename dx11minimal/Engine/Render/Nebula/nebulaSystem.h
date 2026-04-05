@@ -9,7 +9,7 @@
 #include "../../BasicComponents/Transform.h"
 #include "Nebula.h"
 
-#include "../../frustumclass.h"
+#include "../../Camera/frustumclass.h"
 
 
 class NebulaSystem : public System

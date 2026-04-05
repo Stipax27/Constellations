@@ -12,16 +12,7 @@
     <ClCompile Include="SpriteSystem.cpp">
       <Filter>Source Files\Render</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionSystem.cpp">
-      <Filter>Source Files\Physic</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicSystem.cpp">
-      <Filter>Source Files\Physic</Filter>
-    </ClCompile>
     <ClCompile Include="dx11minimal.cpp">
-      <Filter>Source Files\System</Filter>
-    </ClCompile>
-    <ClCompile Include="WindowClass.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
     <ClCompile Include="CombatSystem.cpp">
@@ -30,25 +21,13 @@
     <ClCompile Include="LevelManagerClass.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
-    <ClCompile Include="Point4d.cpp">
-      <Filter>Source Files\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="Point3d.cpp">
-      <Filter>Source Files\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="UISystem.cpp">
       <Filter>Source Files\Render\UI</Filter>
     </ClCompile>
     <ClCompile Include="EntityManagerSystem.cpp">
       <Filter>Source Files\Compute</Filter>
     </ClCompile>
-    <ClCompile Include="FrustumClass.cpp">
-      <Filter>Source Files\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="CollisionManagerClass.cpp">
-      <Filter>Source Files\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="MethodOfClosest.cpp">
+    <ClCompile Include="Engine\Camera\FrustumClass.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
     <ClCompile Include="PlayerAbilities.cpp">
@@ -93,7 +72,6 @@
     <ClCompile Include="Systems\AISystem.cpp" />
     <ClCompile Include="Engine\Camera\cameraclass.cpp" />
     <ClCompile Include="Engine\DebugTools\CollisionDrawSystem.cpp" />
-    <ClCompile Include="Utils\ComponentUtils.cpp" />
     <ClCompile Include="Engine\ECS_Base\EntityStorage.cpp" />
     <ClCompile Include="Engine\DebugTools\GravityDrawSystem.cpp" />
     <ClCompile Include="Engine\Lib\input.cpp" />
@@ -107,8 +85,16 @@
     <ClCompile Include="Engine\BasicComponents\Transform.cpp" />
     <ClCompile Include="Engine\BasicComponents\Transform2D.cpp" />
     <ClCompile Include="Engine\UI\Text\UITextSystem.cpp" />
-    <ClCompile Include="Utils\utils.cpp" />
     <ClCompile Include="Engine\ECS_Base\World.cpp" />
+    <ClCompile Include="Engine\Physic\Collision\CollisionManagerClass.cpp" />
+    <ClCompile Include="Engine\Physic\Collision\CollisionSystem.cpp" />
+    <ClCompile Include="Engine\Utils\ComponentUtils.cpp" />
+    <ClCompile Include="Engine\Physic\Collision\MethodOfClosest.cpp" />
+    <ClCompile Include="Engine\Types\Point3d.cpp" />
+    <ClCompile Include="Engine\Types\Point4d.cpp" />
+    <ClCompile Include="Engine\Physic\Movement\PhysicSystem.cpp" />
+    <ClCompile Include="Engine\Utils\utils.cpp" />
+    <ClCompile Include="Engine\Window\WindowClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Font_OLD.h">
@@ -120,9 +106,6 @@
     <ClInclude Include="LevelManagerClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="windowclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>Header Files\System</Filter>
     </ClInclude>
@@ -131,12 +114,6 @@
     </ClInclude>
     <ClInclude Include="framework.h">
       <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Point3d.h">
-      <Filter>Header Files\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Point4d.h">
-      <Filter>Header Files\Utils</Filter>
     </ClInclude>
     <ClInclude Include="renderCompress.h">
       <Filter>Header Files\Enums</Filter>
@@ -174,23 +151,8 @@
     <ClInclude Include="Rect.h">
       <Filter>Header Files\ECS\Components\Render\UI</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicBody.h">
-      <Filter>Header Files\ECS\Components\Physic</Filter>
-    </ClInclude>
-    <ClInclude Include="PlaneCollider.h">
-      <Filter>Header Files\ECS\Components\Physic</Filter>
-    </ClInclude>
-    <ClInclude Include="SphereCollider.h">
-      <Filter>Header Files\ECS\Components\Physic</Filter>
-    </ClInclude>
-    <ClInclude Include="SurfaceCollider.h">
-      <Filter>Header Files\ECS\Components\Physic</Filter>
-    </ClInclude>
     <ClInclude Include="DelayedDestroy.h">
       <Filter>Header Files\ECS\Components\EntityManagment</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionGroup.h">
-      <Filter>Header Files\Enums</Filter>
     </ClInclude>
     <ClInclude Include="cornerType.h">
       <Filter>Header Files\Enums</Filter>
@@ -201,20 +163,8 @@
     <ClInclude Include="spriteSystem.h">
       <Filter>Header Files\ECS\Systems\Render</Filter>
     </ClInclude>
-    <ClInclude Include="frustumclass.h">
+    <ClInclude Include="Engine\Camera\frustumclass.h">
       <Filter>Header Files\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionManagerClass.h">
-      <Filter>Header Files\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="MethodOfClosest.h">
-      <Filter>Header Files\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="collisionSystem.h">
-      <Filter>Header Files\ECS\Systems\Physic</Filter>
-    </ClInclude>
-    <ClInclude Include="physicSystem.h">
-      <Filter>Header Files\ECS\Systems\Physic</Filter>
     </ClInclude>
     <ClInclude Include="combatSystem.h">
       <Filter>Header Files\ECS\Systems\Combat</Filter>
@@ -245,9 +195,6 @@
     </ClInclude>
     <ClInclude Include="timeSystem.h">
       <Filter>Header Files\ECS\Systems\Compute</Filter>
-    </ClInclude>
-    <ClInclude Include="pmode.h">
-      <Filter>Header Files\Enums</Filter>
     </ClInclude>
     <ClInclude Include="Components\GlueConstraint.h">
       <Filter>Header Files\ECS\Components\Physic</Filter>
@@ -311,8 +258,6 @@
     <ClInclude Include="Engine\BasicComponents\collider.h" />
     <ClInclude Include="Engine\DebugTools\collisionDrawSystem.h" />
     <ClInclude Include="Engine\ECS_Base\component.h" />
-    <ClInclude Include="Utils\componentutils.h" />
-    <ClInclude Include="Utils\constants.h" />
     <ClInclude Include="Engine\ECS_Base\entityStorage.h" />
     <ClInclude Include="Engine\dx11.h" />
     <ClInclude Include="Engine\ECS_Base\entity.h" />
@@ -334,7 +279,22 @@
     <ClInclude Include="Engine\Lib\interp.h" />
     <ClInclude Include="Engine\ECS_Base\world.h" />
     <ClInclude Include="Engine\Lib\timer.h" />
-    <ClInclude Include="Utils\utils.h" />
+    <ClInclude Include="Engine\Physic\Collision\CollisionGroup.h" />
+    <ClInclude Include="Engine\Physic\Collision\CollisionManagerClass.h" />
+    <ClInclude Include="Engine\Physic\Collision\collisionSystem.h" />
+    <ClInclude Include="Engine\Utils\componentutils.h" />
+    <ClInclude Include="Engine\Utils\constants.h" />
+    <ClInclude Include="Engine\Physic\Collision\MethodOfClosest.h" />
+    <ClInclude Include="Engine\Physic\Movement\PhysicBody.h" />
+    <ClInclude Include="Engine\Physic\Movement\physicSystem.h" />
+    <ClInclude Include="Engine\Physic\Collision\PlaneCollider.h" />
+    <ClInclude Include="Engine\Render\Nebula\pmode.h" />
+    <ClInclude Include="Engine\Types\Point3d.h" />
+    <ClInclude Include="Engine\Physic\Collision\SphereCollider.h" />
+    <ClInclude Include="Engine\Physic\Collision\SurfaceCollider.h" />
+    <ClInclude Include="Engine\Window\windowclass.h" />
+    <ClInclude Include="Engine\Types\Point4d.h" />
+    <ClInclude Include="Engine\Utils\utils.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">

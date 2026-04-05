@@ -8,9 +8,9 @@
 //////////////
 // INCLUDES //
 //////////////
-#include "Engine/dx11.h"
-#include "Engine/Types/Point3d.h"
-#include "Engine/Lib/isingleton.h"
+#include "../dx11.h"
+#include "../Types/Point3d.h"
+#include "../Lib/isingleton.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////

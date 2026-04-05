@@ -219,7 +219,7 @@
     <ClInclude Include="Font_OLD.h" />
     <ClInclude Include="FpsCounter.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="frustumclass.h" />
+    <ClInclude Include="Engine\Camera\frustumclass.h" />
     <ClInclude Include="Components\GlueConstraint.h" />
     <ClInclude Include="glueConstraintSystem.h" />
     <ClInclude Include="Components\Grabbable.h" />
@@ -893,7 +893,7 @@
     <ClCompile Include="dx11minimal.cpp" />
     <ClCompile Include="Engine\ECS_Base\Entity.cpp" />
     <ClCompile Include="EntityManagerSystem.cpp" />
-    <ClCompile Include="FrustumClass.cpp" />
+    <ClCompile Include="Engine\Camera\FrustumClass.cpp" />
     <ClCompile Include="LevelManagerClass.cpp" />
     <ClCompile Include="Engine\Render\Mesh\MeshSystem.cpp" />
     <ClCompile Include="Engine\Physic\Collision\MethodOfClosest.cpp" />
