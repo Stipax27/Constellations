@@ -6,8 +6,8 @@
 
 struct DamageBlocker : Component
 {
-	float resistFactor = 1.0f;
-	DamageType damageType;
+	float physicResistFactor = 1.0f;
+	float magicResistFactor = 1.0f;
 };
 
 #endif
