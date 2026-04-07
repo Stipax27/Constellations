@@ -13,6 +13,8 @@
 #include <windows.h>
 #pragma pop_macro("byte")
 
+#pragma comment(lib,"Ws2_32.lib")//network
+
 #include <lua.hpp>
 #pragma comment(lib,"lua51")
 #pragma comment(lib,"luajit")
@@ -66,6 +68,51 @@ namespace
 					lua_dump(LUA,writer,&scripts.back());
 					lua_pop(LUA,1);
 				}
+			busy.unlock();
+		}
+	}
+
+	void inter_remote(unsigned short port)
+	{
+		WSADATA wsaData;
+		WSAStartup(MAKEWORD(2,2),&wsaData);
+
+		SOCKET l=socket(AF_INET,SOCK_STREAM,0);
+		sockaddr_in addr={AF_INET,htons(port),INADDR_ANY};
+		bind(l,(sockaddr*)&addr,sizeof(addr));
+		listen(l,1);
+		
+		SOCKET s=accept(l,(struct sockaddr*)0,0);
+
+		char script[1024];
+
+		while(true)
+		{
+			int size=recv(s,script,sizeof(script),0);
+
+			lua_Writer writer=
+			[](lua_State*,const void* from,size_t size,void* dest)
+			{
+				std::vector<char>* d=(std::vector<char>*)dest;
+				d->insert(d->end(),(const char*)from,(const char*)from+size);
+				return 0;
+			};
+
+			busy.lock();
+
+			if(luaL_loadstring(LUA,std::string(script,size).c_str()))
+			{
+				const std::string error=lua_tostring(LUA,-1);
+				send(s,error.c_str(),error.size()+1,0);
+				lua_pop(LUA,1);
+			}
+			else
+			{
+				scripts.push_back(std::vector<char>());
+				lua_dump(LUA,writer,&scripts.back());
+				lua_pop(LUA,1);
+			}
+
 			busy.unlock();
 		}
 	}
@@ -134,6 +181,12 @@ namespace
 
 		return 3;
 	}
+	
+	int remote(lua_State* lua)
+	{
+		std::thread(inter_remote,lua_tolstring(lua,)).detach();
+		return 0;
+	}
 
 	class initializer
 	{
@@ -148,7 +201,9 @@ namespace
 			lua_register(LUA,"make_star",make_star);
 			lua_register(LUA,"set_pos",set_pos);
 			lua_register(LUA,"get_pos",get_pos);
+			lua_register(LUA,"remote",remote);
 			std::thread(inter).detach();
+			//std::thread(inter_remote,11111).detach();
 		}
 		~initializer()
 		{
@@ -173,6 +228,6 @@ void lua()
 
 #else
 
-void lua() {}
+void lua(){}
 
 #endif
