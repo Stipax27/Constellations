@@ -202,7 +202,7 @@
     <ClInclude Include="Engine\Utils\componentutils.h" />
     <ClInclude Include="Engine\Utils\constants.h" />
     <ClInclude Include="Constellation.h" />
-    <ClInclude Include="cornerType.h" />
+    <ClInclude Include="Engine\UI\cornerType.h" />
     <ClInclude Include="DelayedDestroy.h" />
     <ClInclude Include="Engine\GLTFLoader.h" />
     <ClInclude Include="Engine\Mesh\Animation.h" />
@@ -248,7 +248,7 @@
     <ClInclude Include="questclass.h" />
     <ClInclude Include="questmanager.h" />
     <ClInclude Include="Rect.h" />
-    <ClInclude Include="renderCompress.h" />
+    <ClInclude Include="Engine\Render\renderCompress.h" />
     <ClInclude Include="SingleDamager.h" />
     <ClInclude Include="Engine\Lib\singleton.h" />
     <ClInclude Include="Engine\Physic\Collision\SphereCollider.h" />

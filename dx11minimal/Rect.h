@@ -2,7 +2,7 @@
 #define _RECT_H_
 
 #include "Engine/ECS_Base/component.h"
-#include "cornerType.h"
+#include "Engine/UI/cornerType.h"
 
 
 struct Rect : Component

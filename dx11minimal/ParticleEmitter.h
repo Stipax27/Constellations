@@ -2,7 +2,7 @@
 #define _PARTICLE_EMITTER_H_
 
 #include "Engine/ECS_Base/component.h"
-#include "renderCompress.h"
+#include "Engine/Render/renderCompress.h"
 #include "Engine/dx11.h"
 
 

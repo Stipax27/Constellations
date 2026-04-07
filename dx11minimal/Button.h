@@ -2,7 +2,7 @@
 #define _BUTTON_H_
 
 #include "Engine/ECS_Base/component.h"
-#include "cornerType.h"
+#include "Engine/UI/cornerType.h"
 
 struct Button : Component
 {
