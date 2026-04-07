@@ -218,7 +218,7 @@
     <ClInclude Include="Engine\ECS_Base\entity.h" />
     <ClInclude Include="Font_OLD.h" />
     <ClInclude Include="FpsCounter.h" />
-    <ClInclude Include="framework.h" />
+    <ClInclude Include="Framework\framework.h" />
     <ClInclude Include="Engine\Camera\frustumclass.h" />
     <ClInclude Include="Components\Grabbable.h" />
     <ClInclude Include="Engine\Physic\Gravitation\GravityPoint.h" />
@@ -636,8 +636,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="targetver.h" />
+    <ClInclude Include="Framework\Resource.h" />
+    <ClInclude Include="Framework\targetver.h" />
     <None Include="Shaders\VS.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

@@ -1,6 +1,6 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 
-#include "framework.h"
+#include "Framework/framework.h"
 #include <stdexcept>
 //#include "math.h"
 #include <stdlib.h>
@@ -26,7 +26,7 @@ float camDist = 100;//we have this in camera state
 bool isBattleActive = false;
 DWORD battleStartTime;
 
-#include "resource.h"
+#include "Framework/resource.h"
 #include "LevelManagerClass.h"
 
 #define MAX_LOADSTRING 100
