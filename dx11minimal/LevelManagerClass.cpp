@@ -157,8 +157,8 @@ bool LevelManagerClass::Initialize()
 	gravityPoint->mass = 500;
 	gravityPoint->radius = 150;
 
-	interp::Animate(star->radius, 5, 10, interp::Curve::EaseInOutQuad);
-	interp::Animate(sphereCollider->radius, 5, 10, interp::Curve::EaseInOutQuad);
+	interp::Animate(star->radius, 5, 10, interp::Curve::EaseInOutQuad, entity);
+	interp::Animate(sphereCollider->radius, 5, 10, interp::Curve::EaseInOutQuad, entity);
 
 	/////////////////////////
 	

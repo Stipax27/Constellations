@@ -5,8 +5,12 @@
 #include <cmath>
 #include <vector>
 #include <memory>
+
 #include "timer.h"
 #include "../Utils/constants.h"
+#include "../Utils/utils.h"
+#include "../ECS_Base/entity.h"
+
 
 namespace interp {
 
@@ -76,25 +80,9 @@ namespace interp {
     template<typename T>
     class Tween : public ITween
     {
-    private:
-        T* target;
-        T startValue;
-        T endValue;
-        double duration;  // в секундах
-        double startTime;
-        Curve curve;
-        bool isPlaying = false;
-        bool isPaused = false;
-        double pausedTime = 0.0;
-
-        T interpolate(float t) const {
-            float easedT = EaseCurve(curve, t);
-            return startValue + (endValue - startValue) * easedT;
-        }
-
     public:
-        Tween(T* target, const T& endValue, double duration, Curve curve = Curve::Linear)
-            : target(target), endValue(endValue), duration(duration * 1000), curve(curve) { // Домножаем duration на 1000, чтобы перевести в милисекунды
+        Tween(T* target, const T& endValue, double duration, Curve curve = Curve::Linear, Entity* targetEntity = nullptr)
+            : target(target), endValue(endValue), duration(duration * 1000), curve(curve), targetEntity(targetEntity) { // Multiply duration by 1000 to convert to milliseconds
             if (target) {
                 startValue = *target;
             }
@@ -104,7 +92,6 @@ namespace interp {
             if (!target) return;
 
             startValue = *target;
-            startTime = timer::currentTime;
             isPlaying = true;
             isPaused = false;
         }
@@ -122,14 +109,11 @@ namespace interp {
 
             isPaused = true;
             isPlaying = false;
-            pausedTime = timer::currentTime;
         }
 
         void Resume() {
             if (!isPaused) return;
 
-            double elapsed = pausedTime - startTime;
-            startTime = timer::currentTime - elapsed;
             isPlaying = true;
             isPaused = false;
         }
@@ -137,9 +121,14 @@ namespace interp {
         void Update() {
             if (!isPlaying || !target) return;
 
-            double elapsed = timer::currentTime - startTime;
-            float t = min(1.0f, elapsed / duration);
+            if (IsEntityValid(targetEntity)) {
+                passedTime += timer::deltaTime * (double)targetEntity->GetTimeScale();
+            }
+            else {
+                passedTime += timer::deltaTime;
+            }
 
+            float t = min(1.0f, passedTime / duration);
             *target = interpolate(t);
 
             if (t >= 1.0f) {
@@ -153,6 +142,27 @@ namespace interp {
 
         T GetCurrentValue() const { return target ? *target : T{}; }
         T* GetTarget() const { return target; }
+
+    private:
+        T* target;
+        T startValue;
+        T endValue;
+
+        double duration;  // в секундах
+        double passedTime;
+
+        Curve curve;
+
+        bool isPlaying = false;
+        bool isPaused = false;
+
+        Entity* targetEntity;
+
+    private:
+        T interpolate(float t) const {
+            float easedT = EaseCurve(curve, t);
+            return startValue + (endValue - startValue) * easedT;
+        }
     };
 
 
@@ -160,7 +170,7 @@ namespace interp {
 
 
     template<typename T, typename U>
-    Tween<T>& CreateTween(T& target, const U& endValue, double duration, Curve curve = Curve::Linear) {
+    Tween<T>& CreateTween(T& target, const U& endValue, double duration, Curve curve = Curve::Linear, Entity* targetEntity = nullptr) {
 
         // Searching for existing tween with this target
         auto it = std::find_if(activeTweens.begin(), activeTweens.end(),
@@ -176,15 +186,15 @@ namespace interp {
             activeTweens.erase(it);
         }
 
-        auto tween = std::make_unique<Tween<T>>(&target, static_cast<T>(endValue), duration, curve);
+        auto tween = std::make_unique<Tween<T>>(&target, static_cast<T>(endValue), duration, curve, targetEntity);
         Tween<T>& ref = *tween;
         activeTweens.push_back(std::move(tween));
         return ref;
     }
 
     template<typename T, typename U>
-    Tween<T>& Animate(T& target, const U& endValue, double duration, Curve curve = Curve::Linear) {
-        auto& tween = CreateTween(target, endValue, duration, curve);
+    Tween<T>& Animate(T& target, const U& endValue, double duration, Curve curve = Curve::Linear, Entity* targetEntity = nullptr) {
+        auto& tween = CreateTween(target, endValue, duration, curve, targetEntity);
         tween.Start();
         return tween;
     }
