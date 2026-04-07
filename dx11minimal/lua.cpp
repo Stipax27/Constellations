@@ -1,3 +1,5 @@
+#ifndef NDEBUG
+
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <string>
@@ -168,3 +170,9 @@ void lua()
 
 	busy.unlock();
 }
+
+#else
+
+void lua() {}
+
+#endif
