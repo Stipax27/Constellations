@@ -8,7 +8,7 @@
 struct MultiDamager : Component
 {
 	Fraction target = Fraction::Player;
-	DamageType damageType = DamageType::Kinetic;
+	DamageType damageType = DamageType::Physic;
 	bool destroyable = false;
 
 	float damage = 1.0f;
