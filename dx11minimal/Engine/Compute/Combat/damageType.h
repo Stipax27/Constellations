@@ -3,9 +3,9 @@
 
 enum class DamageType
 {
-	Kinetic,
+	Physic,
 	Magic,
-	Beam
+	Pure
 };
 
 #endif

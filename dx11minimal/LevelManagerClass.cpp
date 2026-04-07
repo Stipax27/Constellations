@@ -152,13 +152,25 @@ bool LevelManagerClass::Initialize()
 	sphereCollider = entity->AddComponent<SphereCollider>();
 	sphereCollider->radius = 75;
 	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-
 	GravityPoint* gravityPoint = entity->AddComponent<GravityPoint>();
 	gravityPoint->mass = 500;
 	gravityPoint->radius = 150;
 
 	interp::Animate(star->radius, 5, 10, interp::Curve::EaseInOutQuad, entity);
 	interp::Animate(sphereCollider->radius, 5, 10, interp::Curve::EaseInOutQuad, entity);
+
+
+	entity = m_World->entityStorage->CreateEntity("Snake", folder);
+	entity->AddComponent<Transform>();
+
+	pointCloud = entity->AddComponent<PointCloud>();
+	pointCloud->index = 7;
+	//pointCloud->scale = point3d(0.3f, 0.3f, 0.3f);
+	pointCloud->pointSize = 1.0f;
+	pointCloud->brightness = 2.0f;
+	pointCloud->color = point3d(1, 0.6f, 0.9f);
+	pointCloud->frustumRadius = 40;
+
 
 	/////////////////////////
 	
@@ -447,12 +459,15 @@ void LevelManagerClass::LoadModels()
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesArmor.obj");
 	Models::LoadSkinnedModel("..\\dx11minimal\\Resourses\\Models\\Fox.glb", m_FoxMesh, m_FoxSkeleton, m_FoxAnimations);
 	Models::LoadSkinnedModel("..\\dx11minimal\\Resourses\\Models\\CesiumMan.glb", m_CesiumMesh, m_CesiumSkeleton, m_CesiumAnimations);
+
 	if (Models::LoadSkinnedModel("..\\dx11minimal\\Resourses\\Models\\TestAnims\\1.glb", m_TestAnimMesh, m_TestAnimSkeleton, m_TestAnimAnimations))
 	{
 		Models::LoadAndRemapAnimations("..\\dx11minimal\\Resourses\\Models\\TestAnims\\2.glb", m_TestAnimSkeleton, m_TestAnimAnimations, false);
 		Models::LoadAndRemapAnimations("..\\dx11minimal\\Resourses\\Models\\TestAnims\\3.glb", m_TestAnimSkeleton, m_TestAnimAnimations, true);
 		Models::LoadAndRemapAnimations("..\\dx11minimal\\Resourses\\Models\\TestAnims\\4.glb", m_TestAnimSkeleton, m_TestAnimAnimations, true);
 	}
+
+	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\SnakeModel.obj");
 }
 
 // TODO: Remove, only for test animation change

@@ -6,26 +6,11 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SplinePath.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteSystem.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
     <ClCompile Include="dx11minimal.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
-    <ClCompile Include="CombatSystem.cpp">
-      <Filter>Source Files\Combat</Filter>
-    </ClCompile>
     <ClCompile Include="LevelManagerClass.cpp">
       <Filter>Source Files\System</Filter>
-    </ClCompile>
-    <ClCompile Include="UISystem.cpp">
-      <Filter>Source Files\Render\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="EntityManagerSystem.cpp">
-      <Filter>Source Files\Compute</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Camera\FrustumClass.cpp">
       <Filter>Source Files\Utils</Filter>
@@ -42,9 +27,6 @@
     <ClCompile Include="Engine\Compute\Time\TimeSystem.cpp">
       <Filter>Source Files\Compute</Filter>
     </ClCompile>
-    <ClCompile Include="GlueConstraintSystem.cpp">
-      <Filter>Source Files\Physic</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Mesh\Animation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -57,19 +39,9 @@
     <ClCompile Include="QuestManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Systems\SkeletalAnimationSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Mesh\Skeleton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Mesh\SkinnedMesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Systems\SkinnedMeshSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Systems\AISystem.cpp" />
     <ClCompile Include="Engine\Camera\cameraclass.cpp" />
     <ClCompile Include="Engine\DebugTools\CollisionDrawSystem.cpp" />
     <ClCompile Include="Engine\ECS_Base\EntityStorage.cpp" />
@@ -95,94 +67,25 @@
     <ClCompile Include="Engine\Physic\Movement\PhysicSystem.cpp" />
     <ClCompile Include="Engine\Utils\utils.cpp" />
     <ClCompile Include="Engine\Window\WindowClass.cpp" />
+    <ClCompile Include="Engine\Compute\Combat\CombatSystem.cpp" />
+    <ClCompile Include="Engine\Render\SkinnedMesh\SkinnedMesh.cpp" />
+    <ClCompile Include="Engine\Compute\AI\AISystem.cpp" />
+    <ClCompile Include="Engine\Compute\DelayedDestroy\DelayedDestroySystem.cpp" />
+    <ClCompile Include="Engine\Render\SpriteSystem.cpp" />
+    <ClCompile Include="Engine\Render\BoneAnimation\SkeletalAnimationSystem.cpp" />
+    <ClCompile Include="Engine\Render\SkinnedMesh\SkinnedMeshSystem.cpp" />
+    <ClCompile Include="Engine\Render\BoneAnimation\SkeletalAnimationComponent.cpp" />
+    <ClCompile Include="Engine\UI\UISystem.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Font_OLD.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FpsCounter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="LevelManagerClass.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="framework.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="renderCompress.h">
-      <Filter>Header Files\Enums</Filter>
-    </ClInclude>
-    <ClInclude Include="fraction.h">
-      <Filter>Header Files\Enums</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticleEmitter.h">
-      <Filter>Header Files\ECS\Components\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="PointCloud.h">
-      <Filter>Header Files\ECS\Components\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="SpriteCluster.h">
-      <Filter>Header Files\ECS\Components\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Constellation.h">
-      <Filter>Header Files\ECS\Components\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Star.h">
-      <Filter>Header Files\ECS\Components\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Health.h">
-      <Filter>Header Files\ECS\Components\Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="SingleDamager.h">
-      <Filter>Header Files\ECS\Components\Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="MultiDamager.h">
-      <Filter>Header Files\ECS\Components\Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="Button.h">
-      <Filter>Header Files\ECS\Components\Render\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Rect.h">
-      <Filter>Header Files\ECS\Components\Render\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="DelayedDestroy.h">
-      <Filter>Header Files\ECS\Components\EntityManagment</Filter>
-    </ClInclude>
-    <ClInclude Include="cornerType.h">
-      <Filter>Header Files\Enums</Filter>
-    </ClInclude>
-    <ClInclude Include="uiSystem.h">
-      <Filter>Header Files\ECS\Systems\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="spriteSystem.h">
-      <Filter>Header Files\ECS\Systems\Render</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Camera\frustumclass.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="combatSystem.h">
-      <Filter>Header Files\ECS\Systems\Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="entityManagerSystem.h">
-      <Filter>Header Files\ECS\Systems\Compute</Filter>
-    </ClInclude>
-    <ClInclude Include="Beam.h">
-      <Filter>Header Files\ECS\Components\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="HpIndicator.h">
-      <Filter>Header Files\ECS\Components\Render\UI</Filter>
-    </ClInclude>
     <ClInclude Include="Components\Orientation.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Components\SkeletalAnimationComponent.h">
-      <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="PlayerAbilities.h">
       <Filter>Header Files\Player</Filter>
@@ -196,19 +99,10 @@
     <ClInclude Include="Engine\Compute\Time\timeSystem.h">
       <Filter>Header Files\ECS\Systems\Compute</Filter>
     </ClInclude>
-    <ClInclude Include="Components\GlueConstraint.h">
-      <Filter>Header Files\ECS\Components\Physic</Filter>
-    </ClInclude>
-    <ClInclude Include="glueConstraintSystem.h">
-      <Filter>Header Files\ECS\Systems\Physic</Filter>
-    </ClInclude>
     <ClInclude Include="Vendors\tinyGLTF\json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Vendors\tinyGLTF\tiny_gltf.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Systems\SkinnedMeshSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Vendors\tinyGLTF\stb_image.h">
@@ -217,13 +111,7 @@
     <ClInclude Include="Vendors\tinyGLTF\stb_image_write.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Mesh\SkinnedMesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Mesh\Skeleton.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Systems\SkeletalAnimationSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="questmanager.h">
@@ -246,12 +134,6 @@
     </ClInclude>
     <ClInclude Include="Components\CameraTarget.h">
       <Filter>Header Files\ECS\Components\Gameplay</Filter>
-    </ClInclude>
-    <ClInclude Include="damageType.h" />
-    <ClInclude Include="Systems\AISystem.h" />
-    <ClInclude Include="Components\AIComponent.h" />
-    <ClInclude Include="DamageBlocker.h">
-      <Filter>Header Files\ECS\Components\Combat</Filter>
     </ClInclude>
     <ClInclude Include="Engine\DebugTools\GravityDrawSystem.h" />
     <ClInclude Include="Engine\Camera\cameraclass.h" />
@@ -295,6 +177,38 @@
     <ClInclude Include="Engine\Window\windowclass.h" />
     <ClInclude Include="Engine\Types\Point4d.h" />
     <ClInclude Include="Engine\Utils\utils.h" />
+    <ClInclude Include="Engine\Compute\Combat\DamageBlocker.h" />
+    <ClInclude Include="Engine\Compute\Combat\damageType.h" />
+    <ClInclude Include="Engine\Compute\AI\AISystem.h" />
+    <ClInclude Include="Engine\Render\Beam.h" />
+    <ClInclude Include="Engine\UI\Button.h" />
+    <ClInclude Include="Engine\Compute\Combat\combatSystem.h" />
+    <ClInclude Include="Engine\Render\Constellation.h" />
+    <ClInclude Include="Engine\UI\cornerType.h" />
+    <ClInclude Include="Engine\Compute\DelayedDestroy\DelayedDestroy.h" />
+    <ClInclude Include="Engine\Render\SkinnedMesh\SkinnedMesh.h" />
+    <ClInclude Include="Engine\Compute\DelayedDestroy\DelayedDestroySystem.h" />
+    <ClInclude Include="Engine\Compute\Combat\fraction.h" />
+    <ClInclude Include="Engine\Compute\AI\AIComponent.h" />
+    <ClInclude Include="Unused\Font_OLD.h" />
+    <ClInclude Include="Framework\framework.h" />
+    <ClInclude Include="Engine\Compute\Combat\Health.h" />
+    <ClInclude Include="Unused\HpIndicator.h" />
+    <ClInclude Include="Engine\Compute\Combat\MultiDamager.h" />
+    <ClInclude Include="Engine\Render\ParticleEmitter.h" />
+    <ClInclude Include="Engine\Render\PointCloud.h" />
+    <ClInclude Include="Engine\Render\BoneAnimation\SkeletalAnimationComponent.h" />
+    <ClInclude Include="Engine\UI\Rect.h" />
+    <ClInclude Include="Engine\Render\renderCompress.h" />
+    <ClInclude Include="Engine\Compute\Combat\SingleDamager.h" />
+    <ClInclude Include="Engine\Render\SpriteCluster.h" />
+    <ClInclude Include="Engine\Render\spriteSystem.h" />
+    <ClInclude Include="Engine\Render\Star.h" />
+    <ClInclude Include="Engine\Render\BoneAnimation\SkeletalAnimationSystem.h" />
+    <ClInclude Include="Engine\Render\SkinnedMesh\SkinnedMeshSystem.h" />
+    <ClInclude Include="Engine\UI\uiSystem.h" />
+    <ClInclude Include="Framework\Resource.h" />
+    <ClInclude Include="Framework\targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">
@@ -744,11 +658,6 @@
     <Filter Include="Header Files\ECS\Components\Gameplay">
       <UniqueIdentifier>{c1244b35-a7f1-45b5-81d6-c551e3032135}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Components\SkeletalAnimationComponent.cpp">
-      <Filter>Source Files\ECS</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="dx11minimal.rc">
