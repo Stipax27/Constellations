@@ -1,12 +1,12 @@
 #ifndef _SKINNED_MESH_SYSTEM_H_
 #define _SKINNED_MESH_SYSTEM_H_
 
-#include "../Engine/ECS_Base/system.h"
-#include "../Engine/Mesh/SkinnedMesh.h"
-#include "../Engine/Camera/frustumclass.h"
-#include "../Engine/Camera/cameraclass.h"
+#include "../../ECS_Base/system.h"
+#include "../../Camera/frustumclass.h"
+#include "../../Camera/cameraclass.h"
 
-#include "../Engine/Render//BoneAnimation/SkeletalAnimationComponent.h"
+#include "../../Render//BoneAnimation/SkeletalAnimationComponent.h"
+#include "SkinnedMesh.h"
 
 class SkinnedMeshSystem : public System
 {

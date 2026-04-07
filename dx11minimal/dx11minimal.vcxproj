@@ -209,7 +209,7 @@
     <ClInclude Include="Engine\Mesh\AnimationRetarget.h" />
     <ClInclude Include="Engine\Mesh\Animator.h" />
     <ClInclude Include="Engine\Mesh\Skeleton.h" />
-    <ClInclude Include="Engine\Mesh\SkinnedMesh.h" />
+    <ClInclude Include="Engine\Render\SkinnedMesh\SkinnedMesh.h" />
     <ClInclude Include="entityManagerSystem.h" />
     <ClInclude Include="Engine\ECS_Base\entityStorage.h" />
     <ClInclude Include="Engine\Compute\Combat\fraction.h" />
@@ -258,7 +258,7 @@
     <ClInclude Include="Engine\ECS_Base\system.h" />
     <ClInclude Include="Engine\Physic\Gravitation\GravitySystem.h" />
     <ClInclude Include="Engine\Render\BoneAnimation\SkeletalAnimationSystem.h" />
-    <ClInclude Include="Systems\SkinnedMeshSystem.h" />
+    <ClInclude Include="Engine\Render\SkinnedMesh\SkinnedMeshSystem.h" />
     <ClInclude Include="Engine\UI\Text\TextLabel.h" />
     <ClInclude Include="Engine\UI\Text\UITextSystem.h" />
     <ClInclude Include="Engine\Compute\Time\timeSystem.h" />
@@ -878,7 +878,7 @@
     <ClCompile Include="Engine\Mesh\Animator.cpp" />
     <ClCompile Include="Engine\Mesh\AnimationRetarget.cpp" />
     <ClCompile Include="Engine\Mesh\Skeleton.cpp" />
-    <ClCompile Include="Engine\Mesh\SkinnedMesh.cpp" />
+    <ClCompile Include="Engine\Render\SkinnedMesh\SkinnedMesh.cpp" />
     <ClCompile Include="Engine\ECS_Base\EntityStorage.cpp" />
     <ClCompile Include="Engine\DebugTools\GravityDrawSystem.cpp" />
     <ClCompile Include="Engine\Lib\input.cpp" />
@@ -903,7 +903,7 @@
     <ClCompile Include="SpriteSystem.cpp" />
     <ClCompile Include="Engine\Physic\Gravitation\GravitySystem.cpp" />
     <ClCompile Include="Engine\Render\BoneAnimation\SkeletalAnimationSystem.cpp" />
-    <ClCompile Include="Systems\SkinnedMeshSystem.cpp" />
+    <ClCompile Include="Engine\Render\SkinnedMesh\SkinnedMeshSystem.cpp" />
     <ClCompile Include="Engine\Render\BoneAnimation\SkeletalAnimationComponent.cpp" />
     <ClCompile Include="Engine\Lib\timer.cpp" />
     <ClCompile Include="Engine\Compute\Time\TimeSystem.cpp" />

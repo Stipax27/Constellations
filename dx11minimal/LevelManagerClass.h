@@ -48,13 +48,13 @@
 #include "Engine/Mesh/Animation.h"
 #include "Engine/Mesh/Animator.h"
 #include "Engine/Mesh/Skeleton.h"
-#include "Engine/Mesh/SkinnedMesh.h"
+#include "Engine/Render/SkinnedMesh/SkinnedMesh.h"
 
 #include "Engine/Compute/AI/AISystem.h"
 
 #include "Engine/Render/BoneAnimation/SkeletalAnimationComponent.h"
 #include "Engine/Render/BoneAnimation/SkeletalAnimationSystem.h"
-#include "Systems/SkinnedMeshSystem.h"
+#include "Engine/Render/SkinnedMesh/SkinnedMeshSystem.h"
 
 /////////////
 // GLOBALS //
