@@ -21,11 +21,11 @@
 #include "Engine/Physic/Collision/SphereCollider.h"
 #include "Star.h"
 #include "DelayedDestroy.h"
-#include "SingleDamager.h"
+#include "Engine/Compute/Combat/SingleDamager.h"
 #include "ParticleEmitter.h"
 #include "Beam.h"
 #include "PointCloud.h"
-#include "Health.h"
+#include "Engine/Compute/Combat/Health.h"
 #include "Engine/Render/Mesh/Mesh.h"
 
 #include "Engine/Render/Nebula/Nebula.h"

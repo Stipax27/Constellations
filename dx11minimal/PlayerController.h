@@ -22,7 +22,7 @@
 #include "Engine/BasicComponents/Transform.h"
 #include "Engine/Physic/Movement/PhysicBody.h"
 #include "PointCloud.h"
-#include "Health.h"
+#include "Engine/Compute/Combat/Health.h"
 #include "Components/CameraTarget.h"
 
 #include "PlayerAbilities.h"

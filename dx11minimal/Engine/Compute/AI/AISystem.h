@@ -8,7 +8,7 @@
 #include "AIComponent.h"     // Подключаем компонент AIComponent (данные ИИ)
 
 #include "../../../Star.h"             // Подключаем компонент Star (визуальное представление звезды)
-#include "../../../Health.h"           // Подключаем компонент Health (здоровье сущности)
+#include "../../Compute/Combat/Health.h"           // Подключаем компонент Health (здоровье сущности)
 
 #define AI_UPDATE_INTERVAL 0.01f  // Интервал обновления ИИ (0.01 сек = 100 раз в секунду)
 

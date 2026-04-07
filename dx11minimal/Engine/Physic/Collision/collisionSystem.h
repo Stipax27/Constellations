@@ -19,9 +19,9 @@
 #include "PlaneCollider.h"
 #include "SurfaceCollider.h"
 
-#include "../../../Health.h"
-#include "../../../SingleDamager.h"
-#include "../../../MultiDamager.h"
+#include "../../Compute/Combat/Health.h"
+#include "../../Compute/Combat/SingleDamager.h"
+#include "../../Compute/Combat/MultiDamager.h"
 
 #include "MethodOfClosest.h"
 #include "CollisionManagerClass.h"

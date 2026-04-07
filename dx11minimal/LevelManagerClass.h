@@ -37,7 +37,7 @@
 #include "Engine/Physic/Movement/physicSystem.h"
 #include "Engine/Physic/Gravitation/GravitySystem.h"
 #include "Engine/Physic/Collision/collisionSystem.h"
-#include "combatSystem.h"
+#include "Engine/Compute/Combat/combatSystem.h"
 
 #include "entityManagerSystem.h"
 #include "Engine/Compute/Time/timeSystem.h"

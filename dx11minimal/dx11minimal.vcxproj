@@ -184,8 +184,8 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="DamageBlocker.h" />
-    <ClInclude Include="damageType.h" />
+    <ClInclude Include="Engine\Compute\Combat\DamageBlocker.h" />
+    <ClInclude Include="Engine\Compute\Combat\damageType.h" />
     <ClInclude Include="Engine\DebugTools\GravityDrawSystem.h" />
     <ClInclude Include="Engine\Compute\AI\AISystem.h" />
     <ClInclude Include="Beam.h" />
@@ -196,7 +196,7 @@
     <ClInclude Include="Engine\Physic\Collision\CollisionGroup.h" />
     <ClInclude Include="Engine\Physic\Collision\CollisionManagerClass.h" />
     <ClInclude Include="Engine\Physic\Collision\collisionSystem.h" />
-    <ClInclude Include="combatSystem.h" />
+    <ClInclude Include="Engine\Compute\Combat\combatSystem.h" />
     <ClInclude Include="Engine\ECS_Base\component.h" />
     <ClInclude Include="Components\CameraTarget.h" />
     <ClInclude Include="Engine\Utils\componentutils.h" />
@@ -212,17 +212,16 @@
     <ClInclude Include="Engine\Mesh\SkinnedMesh.h" />
     <ClInclude Include="entityManagerSystem.h" />
     <ClInclude Include="Engine\ECS_Base\entityStorage.h" />
-    <ClInclude Include="fraction.h" />
+    <ClInclude Include="Engine\Compute\Combat\fraction.h" />
     <ClInclude Include="Engine\dx11.h" />
     <ClInclude Include="Engine\Compute\AI\AIComponent.h" />
     <ClInclude Include="Engine\ECS_Base\entity.h" />
     <ClInclude Include="Font_OLD.h" />
-    <ClInclude Include="FpsCounter.h" />
     <ClInclude Include="Framework\framework.h" />
     <ClInclude Include="Engine\Camera\frustumclass.h" />
     <ClInclude Include="Components\Grabbable.h" />
     <ClInclude Include="Engine\Physic\Gravitation\GravityPoint.h" />
-    <ClInclude Include="Health.h" />
+    <ClInclude Include="Engine\Compute\Combat\Health.h" />
     <ClInclude Include="HpIndicator.h" />
     <ClInclude Include="Engine\Lib\input.h" />
     <ClInclude Include="Engine\Lib\isingleton.h" />
@@ -231,7 +230,7 @@
     <ClInclude Include="Engine\Render\Mesh\meshSystem.h" />
     <ClInclude Include="Engine\Physic\Collision\MethodOfClosest.h" />
     <ClInclude Include="Engine\Mouse\mouseclass.h" />
-    <ClInclude Include="MultiDamager.h" />
+    <ClInclude Include="Engine\Compute\Combat\MultiDamager.h" />
     <ClInclude Include="Engine\Render\Nebula\Nebula.h" />
     <ClInclude Include="Engine\Render\Nebula\nebulaSystem.h" />
     <ClInclude Include="ParticleEmitter.h" />
@@ -249,7 +248,7 @@
     <ClInclude Include="questmanager.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Engine\Render\renderCompress.h" />
-    <ClInclude Include="SingleDamager.h" />
+    <ClInclude Include="Engine\Compute\Combat\SingleDamager.h" />
     <ClInclude Include="Engine\Lib\singleton.h" />
     <ClInclude Include="Engine\Physic\Collision\SphereCollider.h" />
     <ClInclude Include="SpriteCluster.h" />
@@ -871,7 +870,7 @@
     <ClCompile Include="Engine\Camera\cameraclass.cpp" />
     <ClCompile Include="Engine\Physic\Collision\CollisionManagerClass.cpp" />
     <ClCompile Include="Engine\Physic\Collision\CollisionSystem.cpp" />
-    <ClCompile Include="CombatSystem.cpp" />
+    <ClCompile Include="Engine\Compute\Combat\CombatSystem.cpp" />
     <ClCompile Include="Engine\DebugTools\CollisionDrawSystem.cpp" />
     <ClCompile Include="Engine\Utils\ComponentUtils.cpp" />
     <ClCompile Include="Engine\GLTFLoader.cpp" />
