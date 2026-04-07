@@ -1,23 +1,23 @@
-#include "entityManagerSystem.h"
+#include "DelayedDestroySystem.h"
 
 
 
-EntityManagerSystem::EntityManagerSystem()
+DelayedDestroySystem::DelayedDestroySystem()
 {
 }
 
 
-void EntityManagerSystem::Initialize()
+void DelayedDestroySystem::Initialize()
 {
 }
 
 
-void EntityManagerSystem::Shutdown()
+void DelayedDestroySystem::Shutdown()
 {
 }
 
 
-void EntityManagerSystem::Update(EntityStorage& entityStorage, float deltaTime)
+void DelayedDestroySystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
 	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<DelayedDestroy>();
 	size_t size = entities.size();

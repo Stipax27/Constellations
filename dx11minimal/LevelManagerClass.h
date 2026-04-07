@@ -39,7 +39,7 @@
 #include "Engine/Physic/Collision/collisionSystem.h"
 #include "Engine/Compute/Combat/combatSystem.h"
 
-#include "entityManagerSystem.h"
+#include "Engine/Compute/DelayedDestroy/DelayedDestroySystem.h"
 #include "Engine/Compute/Time/timeSystem.h"
 
 #include "Engine/DebugTools/collisionDrawSystem.h"

@@ -708,7 +708,7 @@ void LevelManagerClass::CreateUI()
 void LevelManagerClass::InitSystems()
 {
 	m_World->AddComputeSystem<TimeSystem>();
-	m_World->AddComputeSystem<EntityManagerSystem>();
+	m_World->AddComputeSystem<DelayedDestroySystem>();
 
 	m_World->AddPhysicSystem<GravitySystem>();
 	m_World->AddPhysicSystem<PhysicSystem>();

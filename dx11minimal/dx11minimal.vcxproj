@@ -203,14 +203,14 @@
     <ClInclude Include="Engine\Utils\constants.h" />
     <ClInclude Include="Constellation.h" />
     <ClInclude Include="Engine\UI\cornerType.h" />
-    <ClInclude Include="DelayedDestroy.h" />
+    <ClInclude Include="Engine\Compute\DelayedDestroy\DelayedDestroy.h" />
     <ClInclude Include="Engine\GLTFLoader.h" />
     <ClInclude Include="Engine\Mesh\Animation.h" />
     <ClInclude Include="Engine\Mesh\AnimationRetarget.h" />
     <ClInclude Include="Engine\Mesh\Animator.h" />
     <ClInclude Include="Engine\Mesh\Skeleton.h" />
     <ClInclude Include="Engine\Render\SkinnedMesh\SkinnedMesh.h" />
-    <ClInclude Include="entityManagerSystem.h" />
+    <ClInclude Include="Engine\Compute\DelayedDestroy\DelayedDestroySystem.h" />
     <ClInclude Include="Engine\ECS_Base\entityStorage.h" />
     <ClInclude Include="Engine\Compute\Combat\fraction.h" />
     <ClInclude Include="Engine\dx11.h" />
@@ -888,7 +888,7 @@
     <ClCompile Include="Engine\dx11.cpp" />
     <ClCompile Include="dx11minimal.cpp" />
     <ClCompile Include="Engine\ECS_Base\Entity.cpp" />
-    <ClCompile Include="EntityManagerSystem.cpp" />
+    <ClCompile Include="Engine\Compute\DelayedDestroy\DelayedDestroySystem.cpp" />
     <ClCompile Include="Engine\Camera\FrustumClass.cpp" />
     <ClCompile Include="LevelManagerClass.cpp" />
     <ClCompile Include="Engine\Render\Mesh\MeshSystem.cpp" />

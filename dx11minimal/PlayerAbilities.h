@@ -20,7 +20,7 @@
 #include "Engine/Physic/Movement/PhysicBody.h"
 #include "Engine/Physic/Collision/SphereCollider.h"
 #include "Star.h"
-#include "DelayedDestroy.h"
+#include "Engine/Compute/DelayedDestroy/DelayedDestroy.h"
 #include "Engine/Compute/Combat/SingleDamager.h"
 #include "ParticleEmitter.h"
 #include "Beam.h"
