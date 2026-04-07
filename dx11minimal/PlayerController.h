@@ -21,7 +21,7 @@
 
 #include "Engine/BasicComponents/Transform.h"
 #include "Engine/Physic/Movement/PhysicBody.h"
-#include "PointCloud.h"
+#include "Engine/Render/PointCloud.h"
 #include "Engine/Compute/Combat/Health.h"
 #include "Components/CameraTarget.h"
 

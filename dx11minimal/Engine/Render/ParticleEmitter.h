@@ -1,9 +1,9 @@
 #ifndef _PARTICLE_EMITTER_H_
 #define _PARTICLE_EMITTER_H_
 
-#include "Engine/ECS_Base/component.h"
-#include "Engine/Render/renderCompress.h"
-#include "Engine/dx11.h"
+#include "../ECS_Base/component.h"
+#include "../Render/renderCompress.h"
+#include "../dx11.h"
 
 
 enum EmitDirection

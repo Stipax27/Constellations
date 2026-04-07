@@ -1,8 +1,8 @@
 #ifndef _BEAM_H_
 #define _BEAM_H_
 
-#include "Engine/ECS_Base/component.h"
-#include "Engine/Types/Point3d.h"
+#include "../ECS_Base/component.h"
+#include "../Types/Point3d.h"
 #include <vector>
 #include <utility>
 

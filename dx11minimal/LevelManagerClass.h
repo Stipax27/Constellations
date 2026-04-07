@@ -25,12 +25,10 @@
 
 #include "Engine/Physic/Collision/CollisionManagerClass.h"
 
-#include "SplinePath.cpp"
 
-
-#include "spriteSystem.h"
+#include "Engine/Render/spriteSystem.h"
 #include "Engine/Render/Mesh/meshSystem.h"
-#include "uiSystem.h"
+#include "Engine/UI/uiSystem.h"
 #include "Engine/UI/Text/UITextSystem.h"
 #include "Engine/Render/Nebula/nebulaSystem.h"
 

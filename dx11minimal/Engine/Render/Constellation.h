@@ -1,8 +1,8 @@
 #ifndef _CONSTELLATION_H_
 #define _CONSTELLATION_H_
 
-#include "Engine/ECS_Base/component.h"
-#include "Engine/Types/point3d.h"
+#include "../ECS_Base/component.h"
+#include "../Types/point3d.h"
 #include <vector>
 #include <utility>
 

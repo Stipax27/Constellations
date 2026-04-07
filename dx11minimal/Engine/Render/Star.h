@@ -1,8 +1,8 @@
 #ifndef _STAR_H_
 #define _STAR_H_
 
-#include "Engine/ECS_Base/component.h"
-#include "Engine/Types/Point3d.h"
+#include "../ECS_Base/component.h"
+#include "../Types/Point3d.h"
 
 
 struct Star : Component

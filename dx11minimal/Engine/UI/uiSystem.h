@@ -5,12 +5,12 @@
 // INCLUDES //
 //////////////
 #include<cmath>
-#include "Engine/ECS_Base/system.h"
-#include "Engine/BasicComponents/Transform2D.h"
+#include "../ECS_Base/system.h"
+#include "../BasicComponents/Transform2D.h"
 #include "Rect.h"
 #include "Button.h"
 
-#include "Engine/Mouse/mouseclass.h"
+#include "../Mouse/mouseclass.h"
 
 /////////////
 // GLOBALS //

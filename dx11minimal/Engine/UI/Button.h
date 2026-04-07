@@ -1,8 +1,8 @@
 #ifndef _BUTTON_H_
 #define _BUTTON_H_
 
-#include "Engine/ECS_Base/component.h"
-#include "Engine/UI/cornerType.h"
+#include "../ECS_Base/component.h"
+#include "cornerType.h"
 
 struct Button : Component
 {

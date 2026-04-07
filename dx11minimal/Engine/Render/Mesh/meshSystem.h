@@ -8,8 +8,8 @@
 #include "../../ECS_Base/system.h"
 #include "../../BasicComponents/Transform.h"
 #include "Mesh.h"
-#include "../../../Constellation.h"
-#include "../../../Star.h"
+#include "../Constellation.h"
+#include "../Star.h"
 
 #include "../../Camera/frustumclass.h"
 #include "../../Camera/cameraclass.h"

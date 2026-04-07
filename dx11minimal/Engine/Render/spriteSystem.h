@@ -5,18 +5,18 @@
 // INCLUDES //
 //////////////
 #include<cmath>
-#include "Engine/ECS_Base/system.h"
-#include "Engine/BasicComponents/Transform.h"
+#include "../ECS_Base/system.h"
+#include "../BasicComponents/Transform.h"
 #include "SpriteCluster.h"
 #include "Constellation.h"
 #include "Star.h"
 #include "PointCloud.h"
 #include "ParticleEmitter.h"
 #include "Beam.h"
-#include "Engine/Render//BoneAnimation/SkeletalAnimationComponent.h"
-#include "Components/Orientation.h"
+#include "../Render/BoneAnimation/SkeletalAnimationComponent.h"
+#include "../../Components/Orientation.h"
 
-#include "Engine/Camera/frustumclass.h"
+#include "../Camera/frustumclass.h"
 
 
 class SpriteSystem : public System
