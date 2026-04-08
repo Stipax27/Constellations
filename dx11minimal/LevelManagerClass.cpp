@@ -710,7 +710,7 @@ void LevelManagerClass::CreateUI()
 	rect->color = point3d(0.75f, 0.0f, 0.0f);
 
 	// Enemy HP bar - rectangle
-	entity = m_World->entityStorage->CreateEntity("Rect", uiFolder);
+	entity = m_World->entityStorage->CreateEntity("BossHealth", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(0, 0, 0);
 	transform2D->ratio = ScreenAspectRatio::XY;

@@ -39,6 +39,8 @@ void PlayerController::Initialize(Entity* Player, EntityStorage* entityStorage)
 	healthBar = ui->GetChildByName("HealthBar", true);
 	staminaBar = ui->GetChildByName("StaminaBar", true);
 
+	bossHealth = ui->GetChildByName("BossHealth", true)->GetComponent<Health>();
+
 	camera = world->m_Camera;
 	mouse = Singleton::GetInstance<MouseClass>();
 	window = Singleton::GetInstance<WindowClass>();
@@ -351,6 +353,10 @@ void PlayerController::ProccessUI()
 
 	Transform2D* staminaTransform = staminaBar->GetComponent<Transform2D>();
 	staminaTransform->scale = point3d(abilities->stamina / abilities->maxStamina, 1, 0);
+
+	if (bossHealth != nullptr) {
+
+	}
 }
 
 
