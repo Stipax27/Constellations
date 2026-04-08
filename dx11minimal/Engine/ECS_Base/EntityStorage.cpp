@@ -128,15 +128,16 @@ const vector<Entity*>& EntityStorage::GetEntitiesWithComponent(const type_index&
 
 void EntityStorage::CleanMem()
 {
-	int i = 0;
-	while (i < entities.size())
+	for (size_t i = 0; i < entities.size(); )
 	{
 		Entity* entity = entities[i];
 		if (entity->IsDeleting())
 		{
 			OnEntityDestroyed(entity);
 			delete entity;
-			entities.erase(entities.begin() + i);
+
+			entities[i] = entities.back();
+			entities.pop_back();
 		}
 		else
 		{
