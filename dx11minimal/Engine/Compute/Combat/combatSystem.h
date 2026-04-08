@@ -7,6 +7,7 @@
 #include<cmath>
 #include "../../ECS_Base/system.h"
 #include "Health.h"
+#include "DamageBlocker.h"
 
 
 class CombatSystem : public System

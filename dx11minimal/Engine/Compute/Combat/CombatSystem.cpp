@@ -31,9 +31,19 @@ void CombatSystem::Update(EntityStorage& entityStorage, float deltaTime)
 			continue;
 
 		if (!health->immortal) {
-			for (DamageUnit damageUnit : health->damageQueue) {
-				health->hp -= damageUnit.damage;
+			DamageBlocker* damageBlocker = entity->GetComponent<DamageBlocker>();
+
+			if (damageBlocker != nullptr) {
+				for (DamageUnit damageUnit : health->damageQueue) {
+					health->hp -= damageBlocker->CalcDamage(damageUnit);
+				}
 			}
+			else {
+				for (DamageUnit damageUnit : health->damageQueue) {
+					health->hp -= damageUnit.damage;
+				}
+			}
+
 		}
 		health->damageQueue.clear();
 

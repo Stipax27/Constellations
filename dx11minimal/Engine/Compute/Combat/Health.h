@@ -3,17 +3,9 @@
 
 #include "../../ECS_Base/component.h"
 #include "fraction.h"
-#include "damageType.h"
+#include "damageUnit.h"
 #include <vector>
 
-struct DamageUnit {
-	DamageType damageType;
-	float damage;
-
-	DamageUnit(DamageType onDamageType, float onDamage)
-		: damageType(onDamageType), damage(onDamage)
-	{}
-};
 
 struct Health : Component
 {
