@@ -1,11 +1,13 @@
 #ifndef _DAMAGE_TYPE_H_
 #define _DAMAGE_TYPE_H_
 
-enum class DamageType
+enum class DamageType : size_t
 {
 	Physic,
 	Magic,
-	Pure
+	Pure,
+
+	Count // for getting enum count
 };
 
 #endif
