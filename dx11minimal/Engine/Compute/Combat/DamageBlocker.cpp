@@ -10,5 +10,5 @@ float DamageBlocker::GetBlockFactor(DamageType type) const {
 }
 
 float DamageBlocker::CalcDamage(const DamageUnit& damageUnit) const {
-    return damageUnit.damage * GetBlockFactor(damageUnit.damageType);
+    return damageUnit.damage * (1.0f - GetBlockFactor(damageUnit.damageType));
 }
