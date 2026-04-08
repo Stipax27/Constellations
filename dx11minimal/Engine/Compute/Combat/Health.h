@@ -18,6 +18,8 @@ struct Health : Component
 	bool immortal = false;
 
 	vector<DamageUnit> damageQueue;
+
+	float GetHealthRatio();
 };
 
 #endif

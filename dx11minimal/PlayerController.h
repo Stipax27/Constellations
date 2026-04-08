@@ -86,6 +86,7 @@ private:
 
 	Entity* healthBar;
 	Entity* staminaBar;
+	Entity* bossHealthBar;
 
 	CameraClass* camera;
 	MouseClass* mouse;

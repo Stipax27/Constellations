@@ -38,8 +38,9 @@ void PlayerController::Initialize(Entity* Player, EntityStorage* entityStorage)
 	ui = world->entityStorage->GetEntityByName("UI");
 	healthBar = ui->GetChildByName("HealthBar", true);
 	staminaBar = ui->GetChildByName("StaminaBar", true);
+	bossHealthBar = ui->GetChildByName("BossHealth", true);
 
-	bossHealth = ui->GetChildByName("BossHealth", true)->GetComponent<Health>();
+	bossHealth = world->entityStorage->GetEntityByName("Aries")->GetComponent<Health>();
 
 	camera = world->m_Camera;
 	mouse = Singleton::GetInstance<MouseClass>();
@@ -349,13 +350,14 @@ void PlayerController::ProcessMouse()
 void PlayerController::ProccessUI()
 {
 	Transform2D* healthTransform = healthBar->GetComponent<Transform2D>();
-	healthTransform->scale = point3d(playerHealth->hp / playerHealth->maxHp, 1, 0);
+	healthTransform->scale = point3d(playerHealth->GetHealthRatio(), 1, 0);
 
 	Transform2D* staminaTransform = staminaBar->GetComponent<Transform2D>();
 	staminaTransform->scale = point3d(abilities->stamina / abilities->maxStamina, 1, 0);
 
 	if (bossHealth != nullptr) {
-
+		Transform2D* bossHealthBarTransform = bossHealthBar->GetComponent<Transform2D>();
+		bossHealthBarTransform->scale = point3d(bossHealth->GetHealthRatio() * 0.5f, bossHealthBarTransform->scale.y, 0);
 	}
 }
 
