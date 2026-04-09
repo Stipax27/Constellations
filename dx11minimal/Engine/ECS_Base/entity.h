@@ -164,6 +164,7 @@ public:
 
 	void SetActive(bool);
 	bool IsActive();
+	bool IsLocalActive();
 
 	void SetTimeScale(float);
 	float GetTimeScale();

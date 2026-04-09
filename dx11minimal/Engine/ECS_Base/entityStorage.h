@@ -51,9 +51,13 @@ public:
 		return GetEntitiesWithComponent(typeid(T));
 	}
 
+	void SaveEntityToFile(Entity* entity, const string& filename);
+	Entity* LoadEntityFromFile(const string& filename);
+
 	void Initialize();
 	void Shutdown();
 	void CleanMem();
+
 	void OnEntityComponentAdded(Entity* entity, const type_index& componentType);
 	void OnEntityComponentRemoved(Entity* entity, const type_index& componentType);
 	void OnEntityDestroyed(Entity* entity);
@@ -61,6 +65,9 @@ public:
 private:
 	int entityCount = 0;
 	unordered_map<type_index, ComponentEntityCache> componentEntityCaches;
+
+	const string SAVE_DIRECTORY = "..\\dx11minimal\\Resourses\\EntitySaves\\";
+	const string EXTENSION = ".json";
 };
 
 #endif

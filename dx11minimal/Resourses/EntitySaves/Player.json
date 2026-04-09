@@ -1,0 +1,13 @@
+{
+    "name": "Player",
+    "active": true,
+    "timeScale": 1.0,
+    "children": [
+        {
+            "name": "GrabHitbox",
+            "active": true,
+            "timeScale": 1.0,
+            "children": []
+        }
+    ]
+}

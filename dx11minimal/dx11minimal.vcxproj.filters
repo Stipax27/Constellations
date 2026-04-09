@@ -78,7 +78,6 @@
     <ClCompile Include="Engine\UI\UISystem.cpp" />
     <ClCompile Include="Engine\Compute\Combat\DamageBlocker.cpp" />
     <ClCompile Include="Engine\Compute\Combat\Health.cpp" />
-    <ClCompile Include="Engine\Lib\entBuild.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LevelManagerClass.h">
@@ -213,7 +212,6 @@
     <ClInclude Include="Framework\Resource.h" />
     <ClInclude Include="Framework\targetver.h" />
     <ClInclude Include="Engine\Compute\Combat\damageUnit.h" />
-    <ClInclude Include="Engine\Lib\entBuild.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">

@@ -11,7 +11,6 @@
 #include <vector>
 
 #include "Engine/Lib/interp.h"
-#include "Engine/Lib/entBuild.h"
 
 #include "Engine/Window/windowclass.h"
 #include "Engine/Mouse/mouseclass.h"

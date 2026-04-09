@@ -2,7 +2,121 @@
 // Filename: EntityStorage.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "entityStorage.h"
+
 #include <algorithm>
+#include <fstream>
+#include <sstream>
+
+#include "../../Vendors/rapidjson-1.1.0/include/rapidjson/document.h"
+#include "../../Vendors/rapidjson-1.1.0/include/rapidjson/writer.h"
+#include "../../Vendors/rapidjson-1.1.0/include/rapidjson/stringbuffer.h"
+#include "../../Vendors/rapidjson-1.1.0/include/rapidjson/prettywriter.h"
+
+using namespace rapidjson;
+
+/////////////////////////////////////////////////////////////////
+
+static string ReadFileToString(const string& filepath) {
+    ifstream file(filepath);
+    if (!file.is_open()) return "";
+
+    stringstream buffer;
+    buffer << file.rdbuf();
+    return buffer.str();
+}
+
+static void WriteStringToFile(const string& filepath, const string& content) {
+    ofstream file(filepath);
+    if (file.is_open()) {
+        file << content;
+        file.close();
+    }
+}
+
+static Value Serialize(Entity* entity, Document::AllocatorType& allocator) {
+    Value obj(kObjectType);
+
+    obj.AddMember("name", Value(entity->name.c_str(), allocator), allocator);
+    obj.AddMember("active", entity->IsLocalActive(), allocator);
+    obj.AddMember("timeScale", entity->GetLocalTimeScale(), allocator);
+
+    // Сериализуем компоненты
+    //Value componentsArray(kArrayType);
+
+    //for (const auto& pair : components) {
+    //    Component* component = pair.second;
+
+    //    Value componentObj(kObjectType);
+    //    componentObj.AddMember("type", Value(component->GetTypeName().c_str(), allocator), allocator);
+
+    //    // Получаем данные компонента в виде JSON
+    //    Value componentData = component->Serialize(allocator);
+    //    componentObj.AddMember("data", componentData, allocator);
+
+    //    componentsArray.PushBack(componentObj, allocator);
+    //}
+
+    //obj.AddMember("components", componentsArray, allocator);
+
+    // Рекурсивно сериализуем дочерние Entity
+    Value childrenArray(kArrayType);
+    for (Entity* child : entity->GetChildren()) {
+        childrenArray.PushBack(Serialize(child, allocator), allocator);
+    }
+    obj.AddMember("children", childrenArray, allocator);
+
+    return obj;
+}
+
+static void Deserialize(Entity* entity, const Value& jsonObj) {
+    if (!jsonObj.IsObject()) return;
+
+    if (jsonObj.HasMember("name") && jsonObj["name"].IsString()) {
+        entity->name = jsonObj["name"].GetString();
+    }
+
+    if (jsonObj.HasMember("active") && jsonObj["active"].IsBool()) {
+        entity->SetActive(jsonObj["active"].GetBool());
+    }
+
+    if (jsonObj.HasMember("timeScale") && jsonObj["timeScale"].IsDouble()) {
+        entity->SetTimeScale(jsonObj["timeScale"].GetFloat());
+    }
+
+    // Загружаем компоненты
+    if (jsonObj.HasMember("components") && jsonObj["components"].IsArray()) {
+        const Value& componentsArray = jsonObj["components"];
+
+        for (SizeType i = 0; i < componentsArray.Size(); i++) {
+            const Value& compObj = componentsArray[i];
+
+            if (compObj.HasMember("type") && compObj["type"].IsString()) {
+                string componentType = compObj["type"].GetString();
+
+                // Здесь нужно создать компонент нужного типа через фабрику
+                // Component* newComponent = ComponentFactory::Create(componentType);
+                // if (newComponent != nullptr) {
+                //     newComponent->Deserialize(compObj["data"]);
+                //     components[type_index(typeid(*newComponent))] = newComponent;
+                // }
+            }
+        }
+    }
+
+    // Загружаем дочерние Entity
+    if (jsonObj.HasMember("children") && jsonObj["children"].IsArray()) {
+        const Value& childrenArray = jsonObj["children"];
+
+        for (SizeType i = 0; i < childrenArray.Size(); i++) {
+            Entity* child = new Entity();
+            Deserialize(child, childrenArray[i]);
+            child->SetParent(entity);
+        }
+    }
+}
+
+
+/////////////////////////////////////////////////////////////////
 
 
 EntityStorage::EntityStorage()
@@ -125,6 +239,40 @@ const vector<Entity*>& EntityStorage::GetEntitiesWithComponent(const type_index&
 
 	return cache.entities;
 }
+
+
+void EntityStorage::SaveEntityToFile(Entity* entity, const string& filename) {
+    Document doc;
+    doc.SetObject();
+    Document::AllocatorType& allocator = doc.GetAllocator();
+
+    Value serialized = Serialize(entity, allocator);
+
+    StringBuffer buffer;
+    PrettyWriter<StringBuffer> writer(buffer);
+    serialized.Accept(writer);
+
+    string fullPath = SAVE_DIRECTORY + filename + EXTENSION;
+    WriteStringToFile(fullPath, buffer.GetString());
+}
+
+Entity* EntityStorage::LoadEntityFromFile(const string& filename) {
+    Entity* entity = CreateEntity();
+
+    string fullPath = SAVE_DIRECTORY + filename + EXTENSION;
+    string jsonStr = ReadFileToString(fullPath);
+    if (jsonStr.empty()) return nullptr;
+
+    Document doc;
+    doc.Parse(jsonStr.c_str());
+
+    if (!doc.HasParseError() && doc.IsObject()) {
+        Deserialize(entity, doc);
+    }
+
+    return entity;
+}
+
 
 void EntityStorage::CleanMem()
 {

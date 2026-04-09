@@ -190,8 +190,6 @@ bool LevelManagerClass::Initialize()
 
 	CreateUI();
 
-	entBuild::Create("{\"project\":\"rapidjson\",\"stars\":10}");
-
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING END //
 	//////////////////////////////////////////////////////////////////////////////////////////////
@@ -578,6 +576,8 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 	sphereCollider = grabHitbox->AddComponent<SphereCollider>();
 	sphereCollider->radius = 4;
 	sphereCollider->isTouchable = false;
+
+	m_World->entityStorage->SaveEntityToFile(player, "Player");
 
 	return player;
 }

@@ -167,6 +167,10 @@ bool Entity::IsActive() {
 	return false;
 }
 
+bool Entity::IsLocalActive() {
+	return active;
+}
+
 
 void Entity::SetTimeScale(float TimeScale) {
 	timeScale = TimeScale;
