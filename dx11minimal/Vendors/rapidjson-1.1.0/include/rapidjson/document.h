@@ -52,8 +52,14 @@ RAPIDJSON_DIAG_OFF(terminate) // ignore throwing RAPIDJSON_ASSERT in RAPIDJSON_N
 #include <utility> // std::move
 #endif
 
-#undef max
+
+// Undefining min and max macros
+
+#pragma push_macro("min")
+#pragma push_macro("max")
 #undef min
+#undef max
+
 
 RAPIDJSON_NAMESPACE_BEGIN
 
@@ -2580,5 +2586,8 @@ private:
 
 RAPIDJSON_NAMESPACE_END
 RAPIDJSON_DIAG_POP
+
+#pragma pop_macro("min")
+#pragma pop_macro("max")
 
 #endif // RAPIDJSON_DOCUMENT_H_
