@@ -21,9 +21,9 @@ float fract(float a) {
 }
 
 
-float lerp(float x1, float x2, float a) {
-    return x1 * (1 - a) + x2 * a;
-}
+//float lerp(float x1, float x2, float a) {
+//    return x1 * (1 - a) + x2 * a;
+//}
 
 
 float degreesToRadians(float degrees) {

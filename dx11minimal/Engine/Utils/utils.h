@@ -22,7 +22,7 @@
 float clamp(float x, float a, float b);
 float smoothstep(float edge0, float edge1, float x);
 float fract(float);
-float lerp(float x1, float x2, float a);
+//float lerp(float x1, float x2, float a);
 
 float degreesToRadians(float);
 std::vector<point3d> smoothCornersPath(const std::vector<point3d>& points, int numberIterations);
