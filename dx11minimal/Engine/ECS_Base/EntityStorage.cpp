@@ -14,6 +14,7 @@
 #include "../../Vendors/rapidjson-1.1.0/include/rapidjson/prettywriter.h"
 
 #include "../Lib/class_name.h"
+#include "../Lib/logging.h"
 
 using namespace std;
 using namespace rapidjson;
@@ -173,19 +174,6 @@ Entity* EntityStorage::CreateEntity(string Name, Entity* Parent)
 }
 
 
-//void EntityStorage::RemoveEntityByObject(Entity* object)
-//{
-//	for (int i = 0; i < entities.size(); i++) {
-//		Entity* entity = entities[i];
-//		if (entity == object) {
-//			entity->Destroy();
-//			entities.erase(entities.begin() + i);
-//			break;
-//		}
-//	}
-//}
-
-
 Entity* EntityStorage::GetEntityByName(string Name)
 {
 	for (Entity* entity : entities) {
@@ -263,7 +251,14 @@ Entity* EntityStorage::LoadEntityFromFile(const string& filename) {
 
     string fullPath = SAVE_DIRECTORY + filename + EXTENSION;
     string jsonStr = ReadFileToString(fullPath);
-    if (jsonStr.empty()) return nullptr;
+
+    if (jsonStr.empty()) {
+        Log("Attempt to read an empty file. Filename: ");
+        Log(fullPath.c_str());
+        Log("\n");
+
+        return nullptr;
+    }
 
     Document doc;
     doc.Parse(jsonStr.c_str());

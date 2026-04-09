@@ -37,7 +37,6 @@ public:
 
 	Entity* CreateEntity(std::string = "Unnamed", Entity* = nullptr);
 
-	//void RemoveEntityByObject(Entity*);
 	Entity* GetEntityByName(std::string);
 	std::vector<Entity*> GetEntitiesByName(std::string);
 	Entity* GetEntityById(int);
