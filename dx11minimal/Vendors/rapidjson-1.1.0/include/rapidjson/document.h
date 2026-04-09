@@ -52,6 +52,9 @@ RAPIDJSON_DIAG_OFF(terminate) // ignore throwing RAPIDJSON_ASSERT in RAPIDJSON_N
 #include <utility> // std::move
 #endif
 
+#undef max
+#undef min
+
 RAPIDJSON_NAMESPACE_BEGIN
 
 // Forward declaration.

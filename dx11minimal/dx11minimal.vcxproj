@@ -189,7 +189,7 @@
     <ClInclude Include="Engine\Compute\Combat\damageUnit.h" />
     <ClInclude Include="Engine\DebugTools\GravityDrawSystem.h" />
     <ClInclude Include="Engine\Compute\AI\AISystem.h" />
-    <ClInclude Include="Engine\Lib\entityBuilder.h" />
+    <ClInclude Include="Engine\Lib\entBuild.h" />
     <ClInclude Include="Engine\Render\Beam.h" />
     <ClInclude Include="Engine\UI\Button.h" />
     <ClInclude Include="Engine\Camera\cameraclass.h" />
@@ -872,6 +872,7 @@
     <ClCompile Include="Engine\Camera\cameraclass.cpp" />
     <ClCompile Include="Engine\Compute\Combat\DamageBlocker.cpp" />
     <ClCompile Include="Engine\Compute\Combat\Health.cpp" />
+    <ClCompile Include="Engine\Lib\entBuild.cpp" />
     <ClCompile Include="Engine\Physic\Collision\CollisionManagerClass.cpp" />
     <ClCompile Include="Engine\Physic\Collision\CollisionSystem.cpp" />
     <ClCompile Include="Engine\Compute\Combat\CombatSystem.cpp" />
