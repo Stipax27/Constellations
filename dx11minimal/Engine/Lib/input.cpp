@@ -1,5 +1,7 @@
 #include "input.h"
 
+using namespace std;
+
 
 //vector<int> input::_pressedKeys;
 

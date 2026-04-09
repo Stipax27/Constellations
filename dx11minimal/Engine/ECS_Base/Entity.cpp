@@ -4,7 +4,9 @@
 #include "Entity.h"
 #include "entityStorage.h"
 
-void NotifyEntityComponentAdded(Entity* entity, const type_index& componentType)
+using namespace std;
+
+void NotifyEntityComponentAdded(Entity* entity, const std::type_index& componentType)
 {
 	EntityStorage* ownerStorage = entity != nullptr ? entity->GetOwnerStorage() : nullptr;
 	if (ownerStorage != nullptr) {
@@ -12,7 +14,7 @@ void NotifyEntityComponentAdded(Entity* entity, const type_index& componentType)
 	}
 }
 
-void NotifyEntityComponentRemoved(Entity* entity, const type_index& componentType)
+void NotifyEntityComponentRemoved(Entity* entity, const std::type_index& componentType)
 {
 	EntityStorage* ownerStorage = entity != nullptr ? entity->GetOwnerStorage() : nullptr;
 	if (ownerStorage != nullptr) {

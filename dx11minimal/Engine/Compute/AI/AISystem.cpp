@@ -1,5 +1,7 @@
 #include "AISystem.h"
 
+using namespace std;
+
 
 // Конструктор: инициализирует указатель на игрока и время последнего обновления
 AISystem::AISystem()
@@ -25,7 +27,7 @@ void AISystem::Update(EntityStorage& entityStorage, float deltaTime)
         return;                                 // Пропускаем обновление (экономия ресурсов)
 
     // Проходим по всем сущностям
-    const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<AIComponent>();
+    const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<AIComponent>();
     for (Entity* entity : entities)
     {
         if (!entity->IsActive()) continue;      // Пропускаем неактивные сущности

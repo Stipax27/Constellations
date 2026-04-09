@@ -1,5 +1,7 @@
 #include "meshSystem.h"
 
+using namespace std;
+
 
 
 MeshSystem::MeshSystem()
@@ -36,7 +38,7 @@ void MeshSystem::Update(EntityStorage& entityStorage, float deltaTime)
 	//Rasterizer::Cull(Rasterizer::cullmode::off);
 	Depth::Depth(Depth::depthmode::on);
 
-	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<Transform>();
+	const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<Transform>();
 	size_t size = entities.size();
 	for (int i = 0; i < size; i++)
 	{

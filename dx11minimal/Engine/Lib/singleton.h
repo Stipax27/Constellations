@@ -4,18 +4,15 @@
 #include "isingleton.h"
 #include <typeindex>
 #include <unordered_map>
-using namespace std;
 
 namespace Singleton
 {
-	//extern unordered_map<type_index, ISingleton*> _instances;
-
 	template <typename T>
 	T* GetInstance()
 	{
-		static unordered_map<type_index, ISingleton*> _instances;
+		static std::unordered_map<std::type_index, ISingleton*> _instances;
 
-		if (!is_base_of<ISingleton, T>::value) {
+		if (!std::is_base_of<ISingleton, T>::value) {
 			return nullptr;
 		}
 

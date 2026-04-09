@@ -23,13 +23,13 @@ struct ParticleEmitter : Component
 	int gShader = 0;
 	int pShader = 21;
 
-	pair<float, float> size = {1.0f, 1.0f};
+	std::pair<float, float> size = {1.0f, 1.0f};
 	point3d color = point3d(1.0f, 1.0f, 1.0f);
-	pair<float, float> opacity = {1.0f, 0.0f};
+	std::pair<float, float> opacity = {1.0f, 0.0f};
 
 	EmitDirection emitDirection = EmitDirection::Front;
-	pair<float, float> spread = { 0.0f, 0.0f };
-	pair<float, float> speed = { 10.0f, 0.0f };
+	std::pair<float, float> spread = { 0.0f, 0.0f };
+	std::pair<float, float> speed = { 10.0f, 0.0f };
 
 	float rate = 10.0f;
 	DWORD lifetime = 1000;
@@ -45,7 +45,7 @@ struct ParticleEmitter : Component
 
 	double lastEmitTime = timer::currentTime;
 	int heapCount = 0;
-	vector<XMFLOAT4X4> particles;
+	std::vector<XMFLOAT4X4> particles;
 };
 
 #endif

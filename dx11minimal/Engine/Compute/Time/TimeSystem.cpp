@@ -1,5 +1,7 @@
 #include "timeSystem.h"
 
+using namespace std;
+
 
 
 TimeSystem::TimeSystem()
@@ -19,7 +21,7 @@ void TimeSystem::Shutdown()
 
 void TimeSystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
-	vector<Entity*>& entities = entityStorage.entities;
+	const std::vector<Entity*>& entities = entityStorage.entities;
 	for (Entity* entity : entities) {
 		entity->localTime += timer::deltaTime * (double)entity->GetTimeScale();
 	}

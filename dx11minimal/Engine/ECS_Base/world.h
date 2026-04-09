@@ -15,8 +15,6 @@
 #include "../Camera/cameraclass.h"
 #include "../Lib/isingleton.h"
 
-using namespace std;
-
 /////////////
 // GLOBALS //
 /////////////
@@ -41,7 +39,7 @@ public:
 	template <typename T, typename... Args>
 	T* AddComputeSystem(Args&&... args)
 	{
-		auto system = make_unique<T>(forward<Args>(args)...);
+		auto system = std::make_unique<T>(std::forward<Args>(args)...);
 		T* raw_ptr = system.get();
 		system->Initialize();
 		computeSystems.push_back(move(system));
@@ -52,7 +50,7 @@ public:
 	template <typename T, typename... Args>
 	T* AddPhysicSystem(Args&&... args)
 	{
-		auto system = make_unique<T>(forward<Args>(args)...);
+		auto system = std::make_unique<T>(std::forward<Args>(args)...);
 		T* raw_ptr = system.get();
 		system->Initialize();
 		physicSystems.push_back(move(system));
@@ -63,7 +61,7 @@ public:
 	template <typename T, typename... Args>
 	T* AddRenderSystem(Args&&... args)
 	{
-		auto system = make_unique<T>(forward<Args>(args)...);
+		auto system = std::make_unique<T>(std::forward<Args>(args)...);
 		T* raw_ptr = system.get();
 		system->Initialize();
 		renderSystems.push_back(move(system));
@@ -81,9 +79,9 @@ public:
 	void UpdateRender();
 
 private:
-	vector<unique_ptr<System>> computeSystems;
-	vector<unique_ptr<System>> physicSystems;
-	vector<unique_ptr<System>> renderSystems;
+	std::vector<std::unique_ptr<System>> computeSystems;
+	std::vector<std::unique_ptr<System>> physicSystems;
+	std::vector<std::unique_ptr<System>> renderSystems;
 
 	bool firstFrame = true;
 

@@ -1,5 +1,7 @@
 #include "nebulaSystem.h"
 
+using namespace std;
+
 
 NebulaSystem::NebulaSystem()
 {
@@ -33,7 +35,7 @@ void NebulaSystem::RenderNebulas(EntityStorage& entityStorage)
 	Rasterizer::Cull(Rasterizer::cullmode::off);
 	Depth::Depth(Depth::depthmode::readonly);
 
-	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<Nebula>();
+	const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<Nebula>();
 	size_t size = entities.size();
 	for (int i = 0; i < size; i++)
 	{

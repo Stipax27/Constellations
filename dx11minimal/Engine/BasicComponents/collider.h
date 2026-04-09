@@ -42,7 +42,7 @@ struct Collider : Component
 
 	CollisionFilter::Group collisionGroup = CollisionFilter::Group::Projectile;
 
-	vector<CollisionInfo> collisions;
+	std::vector<CollisionInfo> collisions;
 };
 
 #endif

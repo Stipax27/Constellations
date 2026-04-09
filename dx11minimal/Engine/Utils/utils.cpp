@@ -1,5 +1,7 @@
 #include "utils.h"
 
+using namespace std;
+
 
 float clamp(float x, float a, float b) {
     return fmax(fmin(x, b), a);

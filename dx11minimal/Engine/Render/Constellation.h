@@ -17,8 +17,8 @@ struct Constellation : Component
 	point3d starColor2 = point3d(0.55, 0.4, 0.85);
 	point3d crownColor = point3d(0.95, 0.9, 1);
 
-	vector<point3d> stars = vector<point3d>();
-	vector<pair<int, int>> links = vector<pair<int, int>>();
+	std::vector<point3d> stars = std::vector<point3d>();
+	std::vector<std::pair<int, int>> links = std::vector<std::pair<int, int>>();
 };
 
 #endif

@@ -1,5 +1,7 @@
 #include "collisionDrawSystem.h"
 
+using namespace std;
+
 
 
 CollisionDrawSystem::CollisionDrawSystem()
@@ -19,7 +21,7 @@ void CollisionDrawSystem::Shutdown()
 
 void CollisionDrawSystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
-	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<SphereCollider>();
+	const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<SphereCollider>();
 	Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
 	Rasterizer::Cull(Rasterizer::cullmode::wireframe);
 

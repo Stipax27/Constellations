@@ -12,6 +12,7 @@
 #include "../../Vendors/rapidjson-1.1.0/include/rapidjson/stringbuffer.h"
 #include "../../Vendors/rapidjson-1.1.0/include/rapidjson/prettywriter.h"
 
+using namespace std;
 using namespace rapidjson;
 
 /////////////////////////////////////////////////////////////////

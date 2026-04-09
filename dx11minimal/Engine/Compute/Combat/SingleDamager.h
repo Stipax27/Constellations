@@ -15,7 +15,7 @@ struct SingleDamager : Component
 	float damage = 10.0f;
 	int maxHitCount = 1;
 
-	vector<int> entityFilter;
+	std::vector<int> entityFilter;
 };
 
 #endif

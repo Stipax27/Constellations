@@ -11,6 +11,8 @@
 #include <unordered_set>
 #include <utility>
 
+using namespace std;
+
 using namespace DirectX;
 
 namespace

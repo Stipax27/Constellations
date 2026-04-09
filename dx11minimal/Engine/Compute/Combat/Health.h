@@ -17,7 +17,7 @@ struct Health : Component
 
 	bool immortal = false;
 
-	vector<DamageUnit> damageQueue;
+	std::vector<DamageUnit> damageQueue;
 
 	float GetHealthRatio();
 };

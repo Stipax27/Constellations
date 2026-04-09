@@ -1,5 +1,7 @@
 #include "DelayedDestroySystem.h"
 
+using namespace std;
+
 
 
 DelayedDestroySystem::DelayedDestroySystem()
@@ -19,7 +21,7 @@ void DelayedDestroySystem::Shutdown()
 
 void DelayedDestroySystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
-	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<DelayedDestroy>();
+	const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<DelayedDestroy>();
 	size_t size = entities.size();
 	for (int i = 0; i < size; i++) {
 		Entity* entity = entities[i];

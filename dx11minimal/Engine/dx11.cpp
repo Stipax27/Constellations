@@ -716,7 +716,7 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 	}
 
 	// If cash doesn't exist or expired then reading .obj file
-	ifstream fin(filename);
+	std::ifstream fin(filename);
 	if (!fin) {
 		Shaders::Log("Failed to read the obj model file\n");
 		return;
@@ -726,7 +726,7 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 	std::vector<XMFLOAT2> texcoords;   // vt
 	std::vector<XMFLOAT3> normals;     // vn
 
-	string prefix;
+	std::string prefix;
 	while (fin >> prefix) {
 		if (prefix == "v") {
 			XMFLOAT3 p;
@@ -750,7 +750,7 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 
 	std::vector<VertexType> uniqueVertices;   // final vertex buffer data
 	std::vector<unsigned long> indices;       // final index buffer
-	unordered_map<tuple<int, int, int>, unsigned int, VertexKeyHash> vertexMap;
+	std::unordered_map<std::tuple<int, int, int>, unsigned int, VertexKeyHash> vertexMap;
 
 	// Helper to convert OBJ index (1-based, may be negative) to 0-based vector index
 	auto resolveIndex = [](int idx, size_t size) -> int {
@@ -758,7 +758,7 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 		if (idx < 0) return (int)size + idx;   // negative means relative to end
 		return -1;                             // missing index (0 or empty)
 		};
-	string line;
+	std::string line;
 	do {
 		if (prefix != "f") {
 			// Not a face line - read next line and continue
@@ -769,12 +769,12 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 
 		// Read the whole face line
 		getline(fin, line);
-		istringstream iss(line);
-		string vertexSpec;
+		std::istringstream iss(line);
+		std::string vertexSpec;
 
 		while (iss >> vertexSpec) {
 			// Split vertex specification (e.g., "1/2/3" or "1//2")
-			std::vector<string> parts = split(vertexSpec, "/");
+			std::vector<std::string> parts = split(vertexSpec, "/");
 			// parts[0] = v, parts[1] = vt, parts[2] = vn  (some may be empty)
 
 			int vIdx = -1, vtIdx = -1, vnIdx = -1;
@@ -812,7 +812,7 @@ void Models::LoadObjModel(const char* filename, bool vertexOnly)
 
 			// Create unique key: (position index, texcoord index, normal index)
 			// Use -1 for missing attributes.
-			auto key = make_tuple(posIndex, texIndex, normIndex);
+			auto key = std::make_tuple(posIndex, texIndex, normIndex);
 
 			auto it = vertexMap.find(key);
 			if (it == vertexMap.end()) {

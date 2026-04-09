@@ -31,7 +31,7 @@ public:
 	template <typename T, typename... Args>
 	T* AddQuest(Args&&... args)
 	{
-		auto quest = make_unique<T>(forward<Args>(args)...);
+		auto quest = std::make_unique<T>(std::forward<Args>(args)...);
 		T* raw_ptr = quest.get();
 		quest->Start();
 		activeQuests.push_back(move(quest));
@@ -59,7 +59,7 @@ public:
 	void UpdateQuests();
 
 private:
-	vector<unique_ptr<QuestClass>> activeQuests;
+	std::vector<std::unique_ptr<QuestClass>> activeQuests;
 
 private:
 	void ClearCompletedQuests();

@@ -1,5 +1,7 @@
 #include "SkinnedMeshSystem.h"
 
+using namespace std;
+
 SkinnedMeshSystem::SkinnedMeshSystem(
 	FrustumClass* f,
 	CameraClass* c,

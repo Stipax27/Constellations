@@ -14,8 +14,6 @@
 #include "../Lib/timer.h"
 #include "../Lib/isingleton.h"
 
-using namespace std;
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: EntityStorage
@@ -23,12 +21,12 @@ using namespace std;
 class EntityStorage : public ISingleton
 {
 public:
-	vector<Entity*> entities;
+	std::vector<Entity*> entities;
 
 private:
 	struct ComponentEntityCache
 	{
-		vector<Entity*> entities;
+		std::vector<Entity*> entities;
 		bool isBuilt = false;
 	};
 
@@ -37,37 +35,37 @@ public:
 	EntityStorage(const EntityStorage&);
 	~EntityStorage();
 
-	Entity* CreateEntity(string = "Unnamed", Entity* = nullptr);
+	Entity* CreateEntity(std::string = "Unnamed", Entity* = nullptr);
 
 	//void RemoveEntityByObject(Entity*);
-	Entity* GetEntityByName(string);
-	vector<Entity*> GetEntitiesByName(string);
+	Entity* GetEntityByName(std::string);
+	std::vector<Entity*> GetEntitiesByName(std::string);
 	Entity* GetEntityById(int);
-	const vector<Entity*>& GetEntitiesWithComponent(const type_index& componentType);
+	const std::vector<Entity*>& GetEntitiesWithComponent(const std::type_index& componentType);
 
 	template <typename T>
-	const vector<Entity*>& GetEntitiesWithComponent()
+	const std::vector<Entity*>& GetEntitiesWithComponent()
 	{
 		return GetEntitiesWithComponent(typeid(T));
 	}
 
-	void SaveEntityToFile(Entity* entity, const string& filename);
-	Entity* LoadEntityFromFile(const string& filename);
+	void SaveEntityToFile(Entity* entity, const std::string& filename);
+	Entity* LoadEntityFromFile(const std::string& filename);
 
 	void Initialize();
 	void Shutdown();
 	void CleanMem();
 
-	void OnEntityComponentAdded(Entity* entity, const type_index& componentType);
-	void OnEntityComponentRemoved(Entity* entity, const type_index& componentType);
+	void OnEntityComponentAdded(Entity* entity, const std::type_index& componentType);
+	void OnEntityComponentRemoved(Entity* entity, const std::type_index& componentType);
 	void OnEntityDestroyed(Entity* entity);
 
 private:
 	int entityCount = 0;
-	unordered_map<type_index, ComponentEntityCache> componentEntityCaches;
+	std::unordered_map<std::type_index, ComponentEntityCache> componentEntityCaches;
 
-	const string SAVE_DIRECTORY = "..\\dx11minimal\\Resourses\\EntitySaves\\";
-	const string EXTENSION = ".json";
+	const std::string SAVE_DIRECTORY = "..\\dx11minimal\\Resourses\\EntitySaves\\";
+	const std::string EXTENSION = ".json";
 };
 
 #endif

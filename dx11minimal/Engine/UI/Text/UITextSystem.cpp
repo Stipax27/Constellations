@@ -17,6 +17,8 @@
 
 #include "../../Utils/utils.h"
 
+using namespace std;
+
 namespace {
 
 constexpr int kUITextVertexShader = 13;

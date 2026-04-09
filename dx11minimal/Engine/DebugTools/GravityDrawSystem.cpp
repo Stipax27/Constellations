@@ -1,5 +1,7 @@
 #include "GravityDrawSystem.h"
 
+using namespace std;
+
 
 
 GravityDrawSystem::GravityDrawSystem()
@@ -23,7 +25,7 @@ void GravityDrawSystem::Update(EntityStorage& entityStorage, float deltaTime)
 	Rasterizer::Cull(Rasterizer::cullmode::front);
 	Depth::Depth(Depth::depthmode::readonly);
 
-	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<GravityPoint>();
+	const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<GravityPoint>();
 	for (Entity* entity : entities)
 	{
 		if (!IsEntityValid(entity))

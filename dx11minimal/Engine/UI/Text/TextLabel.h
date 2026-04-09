@@ -8,12 +8,12 @@ constexpr wchar_t DefaultUIFontFamilyW[] = L"Arial";
 
 struct TextLabel : Component
 {
-	wstring textW = L"TextLabel";
+	std::wstring textW = L"TextLabel";
 
-	wstring fontFamilyW;
-	wstring fallbackFontFamilyW = DefaultUIFontFamilyW;
+	std::wstring fontFamilyW;
+	std::wstring fallbackFontFamilyW = DefaultUIFontFamilyW;
 
-	wstring fontFilePathW;
+	std::wstring fontFilePathW;
 
 	int fontSizePx = 32;
 	int fontWeight = 400;

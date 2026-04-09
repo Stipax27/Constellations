@@ -1,5 +1,7 @@
 #include "spriteSystem.h"
 
+using namespace std;
+
 
 SpriteSystem::SpriteSystem()
 {
@@ -115,7 +117,7 @@ void SpriteSystem::Update(EntityStorage& entityStorage, float deltaTime)
 		}
 	};
 
-	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<Transform>();
+	const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<Transform>();
 	size_t size = entities.size();
 	for (int i = 0; i < size; i++)
 	{
@@ -418,7 +420,7 @@ void SpriteSystem::Update(EntityStorage& entityStorage, float deltaTime)
 		//}
 	}
 
-	const vector<Entity*>& spriteClusterEntities = entityStorage.GetEntitiesWithComponent<SpriteCluster>();
+	const std::vector<Entity*>& spriteClusterEntities = entityStorage.GetEntitiesWithComponent<SpriteCluster>();
 	size = spriteClusterEntities.size();
 	for (int i = 0; i < size; i++)
 	{

@@ -1,5 +1,7 @@
 #include "mouseclass.h"
 
+using namespace std;
+
 MouseClass::MouseClass()
 {
 	window = 0;

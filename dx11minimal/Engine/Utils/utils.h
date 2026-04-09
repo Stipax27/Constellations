@@ -6,6 +6,9 @@
 // INCLUDES //
 //////////////
 #include <corecrt_math.h>
+#include <vector>
+#include <string>
+
 #include "../dx11.h"
 #include "constants.h"
 #include "../Types/Point3d.h"
@@ -22,7 +25,7 @@ float fract(float);
 float lerp(float x1, float x2, float a);
 
 float degreesToRadians(float);
-vector<point3d> smoothCornersPath(const vector<point3d>& points, int numberIterations);
+std::vector<point3d> smoothCornersPath(const std::vector<point3d>& points, int numberIterations);
 
 DirectX::XMMATRIX GetMatrixFromLookVector(Transform& transform, point3d direction);
 DirectX::XMMATRIX GetMatrixFromDirection(point3d direction, point3d upVector = point3d(0.0f, 1.0f, 0.0f));
@@ -41,7 +44,7 @@ Transform GetWorldTransform(Entity*);
 Transform2D GetWorldTransform2D(Entity*);
 bool IsEntityValid(Entity*);
 
-vector<string> split(string, string);
+std::vector<std::string> split(std::string, std::string);
 
 float hueToRgb(float, float, float);
 point3d hslToRgb(const point3d&);

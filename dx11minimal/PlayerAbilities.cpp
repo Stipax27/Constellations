@@ -1,6 +1,8 @@
 #include "PlayerAbilities.h"
 #include "Engine/Lib/timer.h"
 
+using namespace std;
+
 PlayerAbilities::PlayerAbilities()
 {
 }

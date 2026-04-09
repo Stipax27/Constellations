@@ -1,5 +1,7 @@
 #include "physicSystem.h"
 
+using namespace std;
+
 
 
 PhysicSystem::PhysicSystem()
@@ -19,7 +21,7 @@ void PhysicSystem::Shutdown()
 
 void PhysicSystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
-	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<PhysicBody>();
+	const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<PhysicBody>();
 
 	for (Entity* entity : entities)
 	{

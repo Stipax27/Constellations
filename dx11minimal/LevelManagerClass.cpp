@@ -1,5 +1,7 @@
 ﻿#include "LevelManagerClass.h"
 
+using namespace std;
+
 
 
 LevelManagerClass::LevelManagerClass()

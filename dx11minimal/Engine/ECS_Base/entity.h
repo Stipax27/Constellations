@@ -16,8 +16,8 @@
 
 class Entity;
 class EntityStorage;
-void NotifyEntityComponentAdded(Entity* entity, const type_index& componentType);
-void NotifyEntityComponentRemoved(Entity* entity, const type_index& componentType);
+void NotifyEntityComponentAdded(Entity* entity, const std::type_index& componentType);
+void NotifyEntityComponentRemoved(Entity* entity, const std::type_index& componentType);
 void NotifyEntityDestroyed(Entity* entity);
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -26,7 +26,7 @@ void NotifyEntityDestroyed(Entity* entity);
 class Entity
 {
 public:
-	string name;
+	std::string name;
 	double localTime;
 
 public:
@@ -37,7 +37,7 @@ public:
 	template <typename T>
 	T* AddComponent()
 	{
-		static_assert(is_base_of<Component, T>::value, "T must inherit from Component");
+		static_assert(std::is_base_of<Component, T>::value, "T must inherit from Component");
 
 		T* component = new T;
 		components[typeid(T)] = component;
@@ -73,7 +73,7 @@ public:
 		return GetComponent<T>() != nullptr;
 	}
 
-	bool HasComponent(const type_index& componentType) const
+	bool HasComponent(const std::type_index& componentType) const
 	{
 		return components.find(componentType) != components.end();
 	}
@@ -89,7 +89,7 @@ public:
 	}
 
 	template <typename T>
-	pair<Entity*, T*> GetAncestorWithComponent()
+	std::pair<Entity*, T*> GetAncestorWithComponent()
 	{
 		T* it = GetComponent<T>();
 		if (it == nullptr && parent != nullptr) {
@@ -134,9 +134,9 @@ public:
 	}
 
 	template <typename Base>
-	vector<Base*> GetAllComponentsOfBase()
+	std::vector<Base*> GetAllComponentsOfBase()
 	{
-		vector<Base*> result;
+		std::vector<Base*> result;
 		auto it = baseToComponents.find(typeid(Base));
 
 		if (it != baseToComponents.end()) {
@@ -158,9 +158,9 @@ public:
 	Entity* GetParent();
 
 	void AddChild(Entity*);
-	Entity* GetChildByName(string name, bool recursive = false);
-	vector<Entity*> GetChildrenByName(string name, bool recursive = false);
-	vector<Entity*> GetChildren(bool recursive = false);
+	Entity* GetChildByName(std::string name, bool recursive = false);
+	std::vector<Entity*> GetChildrenByName(std::string name, bool recursive = false);
+	std::vector<Entity*> GetChildren(bool recursive = false);
 
 	void SetActive(bool);
 	bool IsActive();
@@ -182,9 +182,9 @@ private:
 	Entity* parent;
 	EntityStorage* ownerStorage = nullptr;
 
-	unordered_map<type_index, Component*> components;
-	unordered_map<type_index, vector<Component*>> baseToComponents;
-	vector<Entity*> children;
+	std::unordered_map<std::type_index, Component*> components;
+	std::unordered_map<std::type_index, std::vector<Component*>> baseToComponents;
+	std::vector<Entity*> children;
 
 private:
 	template <typename T>
@@ -192,7 +192,7 @@ private:
 	{
 		baseToComponents[typeid(T)].push_back(component);
 
-		if (is_base_of<Collider, T>::value) {
+		if (std::is_base_of<Collider, T>::value) {
 			baseToComponents[typeid(Collider)].push_back(component);
 		}
 

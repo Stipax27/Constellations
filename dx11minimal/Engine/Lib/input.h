@@ -4,8 +4,6 @@
 #include "../dx11.h"
 #include <vector>
 
-using namespace std;
-
 namespace input
 {
 	//extern vector<int> _pressedKeys;

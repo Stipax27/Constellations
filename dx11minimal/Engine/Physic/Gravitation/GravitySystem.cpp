@@ -1,5 +1,7 @@
 #include "GravitySystem.h"
 
+using namespace std;
+
 
 
 GravitySystem::GravitySystem()
@@ -20,7 +22,7 @@ void GravitySystem::Shutdown()
 void GravitySystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
 	// First cycle, gravityPoint searching
-	const vector<Entity*>& entities1 = entityStorage.GetEntitiesWithComponent<GravityPoint>();
+	const std::vector<Entity*>& entities1 = entityStorage.GetEntitiesWithComponent<GravityPoint>();
 	for (Entity* entity1 : entities1) {
 		if (!IsEntityValid(entity1))
 			continue;

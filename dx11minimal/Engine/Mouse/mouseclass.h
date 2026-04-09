@@ -13,7 +13,6 @@
 
 #include <vector>
 
-using namespace std;
 
 ///////////
 // ENUMS //
@@ -46,7 +45,7 @@ public:
 	MouseState state;
 	bool visible;
 
-	vector<MouseParticle> particles;
+	std::vector<MouseParticle> particles;
 
 public:
 	MouseClass();

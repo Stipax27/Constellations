@@ -163,7 +163,7 @@ private:
 	double blowGasStartTime;
 	float blowGasRate;
 
-	vector<Entity*> projectiles;
+	std::vector<Entity*> projectiles;
 
 private:
 	void UpdateProjectiles();

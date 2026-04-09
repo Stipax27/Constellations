@@ -101,31 +101,37 @@ struct GenericMember {
     \see GenericMember, GenericValue::MemberIterator, GenericValue::ConstMemberIterator
  */
 template <bool Const, typename Encoding, typename Allocator>
-class GenericMemberIterator
-    : public std::iterator<std::random_access_iterator_tag
-        , typename internal::MaybeAddConst<Const,GenericMember<Encoding,Allocator> >::Type> {
+class GenericMemberIterator {
 
-    friend class GenericValue<Encoding,Allocator>;
+    friend class GenericValue<Encoding, Allocator>;
     template <bool, typename, typename> friend class GenericMemberIterator;
 
-    typedef GenericMember<Encoding,Allocator> PlainType;
-    typedef typename internal::MaybeAddConst<Const,PlainType>::Type ValueType;
-    typedef std::iterator<std::random_access_iterator_tag,ValueType> BaseType;
+    typedef GenericMember<Encoding, Allocator> PlainType;
+    typedef typename internal::MaybeAddConst<Const, PlainType>::Type ValueType;
+
+public:
+    typedef std::random_access_iterator_tag iterator_category;
+    typedef ValueType                         value_type;
+    typedef std::ptrdiff_t                    difference_type;
+    typedef ValueType* pointer;
+    typedef ValueType& reference;
+
+    // -------------------------------------------------------------
 
 public:
     //! Iterator type itself
     typedef GenericMemberIterator Iterator;
     //! Constant iterator type
-    typedef GenericMemberIterator<true,Encoding,Allocator>  ConstIterator;
+    typedef GenericMemberIterator<true, Encoding, Allocator>  ConstIterator;
     //! Non-constant iterator type
-    typedef GenericMemberIterator<false,Encoding,Allocator> NonConstIterator;
+    typedef GenericMemberIterator<false, Encoding, Allocator> NonConstIterator;
 
     //! Pointer to (const) GenericMember
-    typedef typename BaseType::pointer         Pointer;
+    typedef pointer    Pointer;
     //! Reference to (const) GenericMember
-    typedef typename BaseType::reference       Reference;
+    typedef reference  Reference;
     //! Signed integer type (e.g. \c ptrdiff_t)
-    typedef typename BaseType::difference_type DifferenceType;
+    typedef difference_type DifferenceType;
 
     //! Default constructor (singular value)
     /*! Creates an iterator pointing to no element.
@@ -149,24 +155,24 @@ public:
             constructor effectively defines a regular copy-constructor.
             Otherwise, the copy constructor is implicitly defined.
     */
-    GenericMemberIterator(const NonConstIterator & it) : ptr_(it.ptr_) {}
-    Iterator& operator=(const NonConstIterator & it) { ptr_ = it.ptr_; return *this; }
+    GenericMemberIterator(const NonConstIterator& it) : ptr_(it.ptr_) {}
+    Iterator& operator=(const NonConstIterator& it) { ptr_ = it.ptr_; return *this; }
 
     //! @name stepping
     //@{
-    Iterator& operator++(){ ++ptr_; return *this; }
-    Iterator& operator--(){ --ptr_; return *this; }
-    Iterator  operator++(int){ Iterator old(*this); ++ptr_; return old; }
-    Iterator  operator--(int){ Iterator old(*this); --ptr_; return old; }
+    Iterator& operator++() { ++ptr_; return *this; }
+    Iterator& operator--() { --ptr_; return *this; }
+    Iterator  operator++(int) { Iterator old(*this); ++ptr_; return old; }
+    Iterator  operator--(int) { Iterator old(*this); --ptr_; return old; }
     //@}
 
     //! @name increment/decrement
     //@{
-    Iterator operator+(DifferenceType n) const { return Iterator(ptr_+n); }
-    Iterator operator-(DifferenceType n) const { return Iterator(ptr_-n); }
+    Iterator operator+(DifferenceType n) const { return Iterator(ptr_ + n); }
+    Iterator operator-(DifferenceType n) const { return Iterator(ptr_ - n); }
 
-    Iterator& operator+=(DifferenceType n) { ptr_+=n; return *this; }
-    Iterator& operator-=(DifferenceType n) { ptr_-=n; return *this; }
+    Iterator& operator+=(DifferenceType n) { ptr_ += n; return *this; }
+    Iterator& operator-=(DifferenceType n) { ptr_ -= n; return *this; }
     //@}
 
     //! @name relations
@@ -187,7 +193,7 @@ public:
     //@}
 
     //! Distance
-    DifferenceType operator-(ConstIterator that) const { return ptr_-that.ptr_; }
+    DifferenceType operator-(ConstIterator that) const { return ptr_ - that.ptr_; }
 
 private:
     //! Internal constructor from plain pointer
@@ -205,15 +211,15 @@ struct GenericMemberIterator;
 
 //! non-const GenericMemberIterator
 template <typename Encoding, typename Allocator>
-struct GenericMemberIterator<false,Encoding,Allocator> {
+struct GenericMemberIterator<false, Encoding, Allocator> {
     //! use plain pointer as iterator type
-    typedef GenericMember<Encoding,Allocator>* Iterator;
+    typedef GenericMember<Encoding, Allocator>* Iterator;
 };
 //! const GenericMemberIterator
 template <typename Encoding, typename Allocator>
-struct GenericMemberIterator<true,Encoding,Allocator> {
+struct GenericMemberIterator<true, Encoding, Allocator> {
     //! use plain const pointer as iterator type
-    typedef const GenericMember<Encoding,Allocator>* Iterator;
+    typedef const GenericMember<Encoding, Allocator>* Iterator;
 };
 
 #endif // RAPIDJSON_NOMEMBERITERATORCLASS

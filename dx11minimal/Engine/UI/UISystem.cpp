@@ -23,7 +23,7 @@ void UISystem::Shutdown()
 
 void UISystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
-	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<Transform2D>();
+	const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<Transform2D>();
 	Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
 	Rasterizer::Cull(Rasterizer::cullmode::off);
 	Depth::Depth(Depth::depthmode::off);

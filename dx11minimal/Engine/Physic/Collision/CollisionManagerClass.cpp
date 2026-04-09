@@ -1,5 +1,7 @@
 #include "CollisionManagerClass.h"
 
+using namespace std;
+
 
 CollisionManagerClass::CollisionManagerClass(const CollisionManagerClass& other)
 {

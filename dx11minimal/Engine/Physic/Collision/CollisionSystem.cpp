@@ -1,5 +1,7 @@
 #include "collisionSystem.h"
 
+using namespace std;
+
 
 
 CollisionSystem::CollisionSystem()
@@ -22,7 +24,7 @@ void CollisionSystem::Shutdown()
 
 void CollisionSystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
-	const vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<SphereCollider>();
+	const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<SphereCollider>();
 
 	for (Entity* entity1 : entities)
 	{
