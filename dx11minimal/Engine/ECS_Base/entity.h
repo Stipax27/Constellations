@@ -117,10 +117,9 @@ public:
 		return it;
 	}
 
-	template <typename T>
-	T* GetComponents()
+	const std::unordered_map<std::type_index, Component*>& GetComponents()
 	{
-		//components.
+		return components;
 	}
 
 	template <typename Base>

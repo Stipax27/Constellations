@@ -2,11 +2,39 @@
     "name": "Player",
     "active": true,
     "timeScale": 1.0,
+    "components": [
+        {
+            "type": "Component * __ptr64"
+        },
+        {
+            "type": "Component * __ptr64"
+        },
+        {
+            "type": "Component * __ptr64"
+        },
+        {
+            "type": "Component * __ptr64"
+        },
+        {
+            "type": "Component * __ptr64"
+        },
+        {
+            "type": "Component * __ptr64"
+        }
+    ],
     "children": [
         {
             "name": "GrabHitbox",
             "active": true,
             "timeScale": 1.0,
+            "components": [
+                {
+                    "type": "Component * __ptr64"
+                },
+                {
+                    "type": "Component * __ptr64"
+                }
+            ],
             "children": []
         }
     ]

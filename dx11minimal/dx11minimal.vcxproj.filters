@@ -214,6 +214,7 @@
     <ClInclude Include="Framework\targetver.h" />
     <ClInclude Include="Engine\Compute\Combat\damageUnit.h" />
     <ClInclude Include="Engine\Lib\SerializationMacros.h" />
+    <ClInclude Include="Engine\Lib\class_name.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">

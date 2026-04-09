@@ -6,11 +6,14 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
+#include <typeinfo>
 
 #include "../../Vendors/rapidjson-1.1.0/include/rapidjson/document.h"
 #include "../../Vendors/rapidjson-1.1.0/include/rapidjson/writer.h"
 #include "../../Vendors/rapidjson-1.1.0/include/rapidjson/stringbuffer.h"
 #include "../../Vendors/rapidjson-1.1.0/include/rapidjson/prettywriter.h"
+
+#include "../Lib/class_name.h"
 
 using namespace std;
 using namespace rapidjson;
@@ -41,25 +44,23 @@ static Value Serialize(Entity* entity, Document::AllocatorType& allocator) {
     obj.AddMember("active", entity->IsLocalActive(), allocator);
     obj.AddMember("timeScale", entity->GetLocalTimeScale(), allocator);
 
-    // Сериализуем компоненты
-    //Value componentsArray(kArrayType);
+    Value componentsArray(kArrayType);
 
-    //for (const auto& pair : components) {
-    //    Component* component = pair.second;
+    for (const auto& pair : entity->GetComponents()) {
+        auto* component = pair.second;
 
-    //    Value componentObj(kObjectType);
-    //    componentObj.AddMember("type", Value(component->GetTypeName().c_str(), allocator), allocator);
+        Value componentObj(kObjectType);
+        componentObj.AddMember("type", Value(class_name<decltype(component)>().c_str(), allocator), allocator);
 
-    //    // Получаем данные компонента в виде JSON
-    //    Value componentData = component->Serialize(allocator);
-    //    componentObj.AddMember("data", componentData, allocator);
+        //// Получаем данные компонента в виде JSON
+        //Value componentData = component->Serialize(allocator);
+        //componentObj.AddMember("data", componentData, allocator);
 
-    //    componentsArray.PushBack(componentObj, allocator);
-    //}
+        componentsArray.PushBack(componentObj, allocator);
+    }
 
-    //obj.AddMember("components", componentsArray, allocator);
+    obj.AddMember("components", componentsArray, allocator);
 
-    // Рекурсивно сериализуем дочерние Entity
     Value childrenArray(kArrayType);
     for (Entity* child : entity->GetChildren()) {
         childrenArray.PushBack(Serialize(child, allocator), allocator);
