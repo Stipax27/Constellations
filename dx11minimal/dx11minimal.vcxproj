@@ -189,6 +189,7 @@
     <ClInclude Include="Engine\Compute\Combat\damageUnit.h" />
     <ClInclude Include="Engine\DebugTools\GravityDrawSystem.h" />
     <ClInclude Include="Engine\Compute\AI\AISystem.h" />
+    <ClInclude Include="Engine\Lib\entityBuilder.h" />
     <ClInclude Include="Engine\Render\Beam.h" />
     <ClInclude Include="Engine\UI\Button.h" />
     <ClInclude Include="Engine\Camera\cameraclass.h" />
