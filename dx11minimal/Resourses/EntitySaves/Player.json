@@ -4,22 +4,22 @@
     "timeScale": 1.0,
     "components": [
         {
-            "type": "Component * __ptr64"
+            "type": "Component"
         },
         {
-            "type": "Component * __ptr64"
+            "type": "Component"
         },
         {
-            "type": "Component * __ptr64"
+            "type": "Component"
         },
         {
-            "type": "Component * __ptr64"
+            "type": "Component"
         },
         {
-            "type": "Component * __ptr64"
+            "type": "Component"
         },
         {
-            "type": "Component * __ptr64"
+            "type": "Component"
         }
     ],
     "children": [
@@ -29,10 +29,10 @@
             "timeScale": 1.0,
             "components": [
                 {
-                    "type": "Component * __ptr64"
+                    "type": "Component"
                 },
                 {
-                    "type": "Component * __ptr64"
+                    "type": "Component"
                 }
             ],
             "children": []

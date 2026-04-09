@@ -21,8 +21,16 @@ std::string class_name() {
 template<typename T>
 std::string class_name() {
     std::string name = typeid(T).name();
-    size_t space = name.find(' ');
-    return (space != std::string::npos) ? name.substr(space + 1) : name;
+
+    size_t space1 = name.find(' ');
+    if (space1 != std::string::npos) {
+        size_t space2 = name.find(' ', space1 + 1);
+        return space2 != std::string::npos ? name.substr(space1 + 1, space2 - space1 - 1) : name.substr(space1 + 1);
+    }
+    else {
+        return name;
+    }
+
 }
 #endif
 
