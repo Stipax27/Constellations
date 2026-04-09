@@ -5,8 +5,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include <Windows.h>
-#include <wingdi.h>
+//#include <Windows.h>
+//#include <wingdi.h>
 
 #ifdef max
 #undef max
