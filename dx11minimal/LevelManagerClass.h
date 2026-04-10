@@ -54,6 +54,10 @@
 #include "Engine/Render/BoneAnimation/SkeletalAnimationSystem.h"
 #include "Engine/Render/SkinnedMesh/SkinnedMeshSystem.h"
 
+#include "Quests/Queststarcollection.h"
+
+#include "QuestSystem.h"
+
 /////////////
 // GLOBALS //
 /////////////

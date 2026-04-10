@@ -249,6 +249,11 @@ void PlayerController::ProcessInput()
 		abilities->Grab();
 	}
 
+	if (input::IsKeyDown('K'))
+	{
+		abilities->StartRadar();
+	}
+
 	if (input::IsKeyPressed(VK_MBUTTON)) {
 		LockOnTarget();
 	}

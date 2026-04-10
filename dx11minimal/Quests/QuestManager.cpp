@@ -23,11 +23,25 @@ QuestManager::~QuestManager()
 
 void QuestManager::Initialize()
 {
+	RegisterQuest<QuestStarCollection>("QuestStarCollection");
 }
 
 
 void QuestManager::Shutdown()
 {
+}
+
+
+void QuestManager::CreateQuest(const string& questType) {
+    auto it = factory.find(questType);
+    if (it == factory.end()) {
+        // Логируем ошибку
+        return;
+    }
+
+    QuestClass* rawQuest = it->second();
+    rawQuest->Start();
+    activeQuests.push_back(unique_ptr<QuestClass>(rawQuest));
 }
 
 

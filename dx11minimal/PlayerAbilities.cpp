@@ -60,6 +60,11 @@ void PlayerAbilities::Initialize(Entity* PlayerEntity, EntityStorage* storage)
 	blowGasStartTime = 0;
 	blowGasRate = 0.01f;
 
+	radarEntity = nullptr;
+	radarStartTime = 0;
+	speedRadius = 0.5f;
+	isRadaring = false;
+
 	// Добавляем для отслеживания времени
 	timeStopped = false;
 	timestopProgress = 1;
@@ -99,6 +104,16 @@ void PlayerAbilities::Shutdown()
 
 void PlayerAbilities::Update()
 {
+
+	if (IsEntityValid(radarEntity)) {
+		SphereCollider* rad = radarEntity->GetComponent<SphereCollider>();
+
+		if (rad) 
+		{
+			rad->radius = lerp(rad->radius, RADAR_FINAL_RADIUS,0.005f);
+		}
+
+	}
 
 	if (vacuumCenterEntity && !vacuumCenterEntity->IsDeleting()) {
 		Star* centerStar = vacuumCenterEntity->GetComponent<Star>();
@@ -427,7 +442,7 @@ void PlayerAbilities::ParticleVacuumStart() {
 
 	// Получаем цвет текущей туманности
 	point3d nebulaColor = interactiveNebula->color;
-
+	//
 	vacuumCenterEntity = world->entityStorage->CreateEntity("VacuumCenter", playerEntity);
 	if (vacuumCenterEntity) {
 		Transform* centerTransform = vacuumCenterEntity->AddComponent<Transform>();
@@ -614,6 +629,27 @@ void PlayerAbilities::BlowGasEnd() {
 		isBlowingGas = false;
 	}
 }
+
+void PlayerAbilities::StartRadar() {
+
+
+	radarStartTime = timer::currentTime;
+
+	radarEntity = entityStorage->CreateEntity("Radar", playerEntity);
+
+	Transform* transform = radarEntity->AddComponent<Transform>();
+	transform->position = point3d(0.0f, 0.0f, 0.0f);
+
+	SphereCollider* sphereCollider = radarEntity->AddComponent<SphereCollider>();
+	sphereCollider->isTouchable = false;
+	sphereCollider->radius = radiusRad;
+
+	isRadaring = true;
+
+	DelayedDestroy* delayedDestroy = radarEntity->AddComponent<DelayedDestroy>();
+	delayedDestroy->lifeTime = 5000;
+}
+
 
 void PlayerAbilities::Attack(Transform startTransform, point3d direction)
 {

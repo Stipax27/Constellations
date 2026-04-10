@@ -104,6 +104,8 @@ bool LevelManagerClass::Initialize()
 
 	Entity* player = CreatePlayer();
 
+
+	
 	/*entity = m_World->entityStorage->CreateEntity("AriesNebulaLocation", folder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, 50.0f);
@@ -181,6 +183,10 @@ bool LevelManagerClass::Initialize()
 	//CreateZenithLocation(folder, 2);
 	CreateNebula(folder,2);
 	CreateStarQuestLoc(folder, 2);
+
+	// КАААК РУЛИТЬ
+	//questManager->CreateQuest("QuestStarCollection");
+
 	/////////////////////////
 
 	/*Entity* holder = m_World->entityStorage->CreateEntity("Holder", folder);
@@ -331,6 +337,8 @@ bool LevelManagerClass::Initialize()
 			animComp->currentTime = 0.0f;
 		}
 	}
+	
+
 
 	return true;
 }
@@ -723,6 +731,7 @@ void LevelManagerClass::InitSystems()
 	m_World->AddComputeSystem<TimeSystem>();
 	m_World->AddComputeSystem<DelayedDestroySystem>();
 	m_World->AddComputeSystem<AISystem>();
+	m_World->AddComputeSystem<QuestSystem>();
 
 	m_World->AddPhysicSystem<GravitySystem>();
 	m_World->AddPhysicSystem<PhysicSystem>();
@@ -1145,115 +1154,45 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 
 void LevelManagerClass::CreateStarQuestLoc(Entity* folder, int quality)
 {
-	// ============================================
-	// КВЕСТ: "Принеси Звёзды Мнеее"
-	// Задание: Перетащить 10 звёзд к Одной большой
-	// ============================================
-
-	Entity* entity;
-	Transform* transform;
-	Star* star;
-	SphereCollider* sphereCollider;
-	Health* health;
-	PointCloud* pointCloud;
-	ParticleEmitter* particleEmitter;
-	Nebula* nebula;
-	Constellation* constellation;
-
-	Entity* location = m_World->entityStorage->CreateEntity("Quest STARS", folder);
-	transform = location->AddComponent<Transform>();
+	Entity* location = m_World->entityStorage->CreateEntity("StarQuestLocation", folder);
+	Transform* transform = location->AddComponent<Transform>();
 	transform->position = point3d(0, 0, 150);
 
-	// Hero star quest
-
-	entity = m_World->entityStorage->CreateEntity("StarQuest", location);
-	transform = entity->AddComponent<Transform>();
+	
+	Entity* m_CentralStar = m_World->entityStorage->CreateEntity("CentralStar", location);
+	transform = m_CentralStar->AddComponent<Transform>();
 	transform->position = point3d(0, 0, 0);
 
-	star = entity->AddComponent<Star>();
+	QuestGiver* questGiver = m_CentralStar->AddComponent<QuestGiver>();
+	questGiver->radius = 40;
+	questGiver->questType = "QuestStarCollection";
+
+	Star* star = m_CentralStar->AddComponent<Star>();
 	star->radius = 20.0f;
 	star->crownRadius = 25.0f;
 	star->color1 = point3d(0.99, 1, 0.51);
 	star->color2 = point3d(0.75f, 0.2f, 0.37f);
 	star->crownColor = point3d(0.87f, 0.25f, 0.15f);
-	sphereCollider = entity->AddComponent<SphereCollider>();
+
+	SphereCollider* sphereCollider = m_CentralStar->AddComponent<SphereCollider>();
 	sphereCollider->radius = 20.0f;
 	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	sphereCollider->isTouchable = true;
 
-	health = entity->AddComponent<Health>();
+	Health* health = m_CentralStar->AddComponent<Health>();
 	health->hp = 100;
 	health->maxHp = 100;
 	health->fraction = Fraction::Player;
-	entity->AddComponent<Grabbable>();
 
-	entity = m_World->entityStorage->CreateEntity("StarQuest", entity);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0, 0, 0);
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->radius = 40.0f;
-	sphereCollider->collisionGroup = CollisionFilter::Group::Projectile;
-	sphereCollider->isTouchable = false;
-
-	// star 
-	vector<point3d>StarPos = {
-		point3d(200,200,0),
-		point3d(0,400,400),
-		point3d(-200,0,200),
-		point3d(200,0,-200),
-		point3d(-300,-400,100),
-		point3d(400,300,0),
-		point3d(-400,-500,0),
-		point3d(0,600,0),
-		point3d(600,-600,200),
-		point3d(-600,0,500),
-		point3d(0,-100,300)
-	};
-	
-
-	for (int i = 0; i < 10;i++) {
-
-		entity = m_World->entityStorage->CreateEntity("StarQuest", location);
-		transform = entity->AddComponent<Transform>();
-		transform->position = StarPos[i];
-
-		star = entity->AddComponent<Star>();
-		star->radius = 10.0f;
-		star->crownRadius = 15.0f;
-		star->color1 = point3d(0.79, 0.23, 1);
-		star->color2 = point3d(1, 0.91, 0.46);
-		star->crownColor = point3d(1, 0.91, 0.46);
-		sphereCollider = entity->AddComponent<SphereCollider>();
-		sphereCollider->radius = 10.0f;
-		sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-
-		health = entity->AddComponent<Health>();
-		health->hp = 100;
-		health->maxHp = 100;
-		health->fraction = Fraction::Player;
-		entity->AddComponent<Grabbable>();
-
-	}
-
-	//Final Star
-	/*entity = m_World->entityStorage->CreateEntity("StarQuest", location);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0, 0, 0);
-
-	star = entity->AddComponent<Star>();
-	star->radius = 100.0f;
-	star->crownRadius = 120.0f;
-	star->color1 = point3d(0.99, 1, 0.51);
-	star->color2 = point3d(0.75f, 0.2f, 0.37f);
-	star->crownColor = point3d(0.87f, 0.25f, 0.15f);
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->radius = 100.0f;
-	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-
-	health = entity->AddComponent<Health>();
-	health->hp = 100;
-	health->maxHp = 100;
-	health->fraction = Fraction::Player;
-	entity->AddComponent<Grabbable>();*/
+	m_CentralStar->AddComponent<Grabbable>();
 
 
+	Entity* collectionTrigger = m_World->entityStorage->CreateEntity("CollectionTrigger", m_CentralStar);
+	Transform* triggerTransform = collectionTrigger->AddComponent<Transform>();
+	triggerTransform->position = point3d(0, 0, 0);
+
+	SphereCollider* triggerCollider = collectionTrigger->AddComponent<SphereCollider>();
+	triggerCollider->radius = 40;
+	triggerCollider->collisionGroup = CollisionFilter::Group::Projectile;
+	triggerCollider->isTouchable = false;
 }

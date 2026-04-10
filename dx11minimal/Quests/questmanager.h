@@ -9,9 +9,17 @@
 //////////////
 #include <vector>
 #include <memory>
+#include <map>
+#include <functional>
+
+#include "../singleton.h"
+
 #include "questclass.h"
 
-#include "Engine/Lib/isingleton.h"
+// QUEST TYPES //
+#include "Queststarcollection.h"
+
+using QuestCreator = function<QuestClass* ()>;
 
 /////////////
 // GLOBALS //
@@ -28,30 +36,12 @@ public:
 	QuestManager(const QuestManager&);
 	~QuestManager();
 
-	template <typename T, typename... Args>
-	T* AddQuest(Args&&... args)
-	{
-		auto quest = std::make_unique<T>(std::forward<Args>(args)...);
-		T* raw_ptr = quest.get();
-		quest->Start();
-		activeQuests.push_back(move(quest));
-
-		return raw_ptr;
+	template<typename T>
+	void RegisterQuest(const string& name) {
+		factory[name] = []() { return new T(); };
 	}
 
-	template <typename T>
-	void RemoveQuest()
-	{
-		auto it = std::find_if(activeQuests.begin(), activeQuests.end(),
-			[](const auto& questPtr) {
-				return dynamic_cast<T*>(questPtr.get()) != nullptr;
-			});
-
-		if (it != activeQuests.end()) {
-			(*it)->Stop();
-			activeQuests.erase(it);
-		}
-	}
+	void CreateQuest(const string& questType);
 
 	void Initialize();
 	void Shutdown();
@@ -59,7 +49,8 @@ public:
 	void UpdateQuests();
 
 private:
-	std::vector<std::unique_ptr<QuestClass>> activeQuests;
+	vector<unique_ptr<QuestClass>> activeQuests;
+	map<string, QuestCreator> factory;
 
 private:
 	void ClearCompletedQuests();
