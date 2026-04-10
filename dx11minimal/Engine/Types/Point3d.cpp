@@ -6,6 +6,7 @@ point3d::point3d() {
     z = 0;
 }
 point3d::point3d(float X, float Y, float Z) : x(X), y(Y), z(Z) {}
+point3d::point3d(float A) : x(A), y(A), z(A) {}
 
 float point3d::magnitude() const {
 

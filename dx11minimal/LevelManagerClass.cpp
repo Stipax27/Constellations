@@ -563,6 +563,8 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 	};*/
 
 	StarClay* starClay = player->AddComponent<StarClay>();
+	starClay->blobs.push_back(Blob(point3d(0, 0.25, 0.5), 0.2f));
+	starClay->blobs.push_back(Blob(point3d(0.2, -0.1, -0.2), 0.3f));
 
 	PointCloud* pointCloud = player->AddComponent<PointCloud>();
 	pointCloud->index = 0;

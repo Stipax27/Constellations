@@ -12,6 +12,7 @@ struct point3d {
 
     point3d();
     point3d(float X, float Y, float Z);
+    point3d(float A);
 
     float magnitude() const;
     float volume() const;

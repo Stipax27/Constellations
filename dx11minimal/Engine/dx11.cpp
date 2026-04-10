@@ -1410,6 +1410,9 @@ void Shaders::Init()
 	Shaders::CreateVS(30, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarSphere_Simple_VS.shader"));
 	Shaders::CreatePS(30, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarSphere_Simple_PS.shader"));
 
+	Shaders::CreateVS(31, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarClay\\StarClay_VS.shader"));
+	Shaders::CreatePS(31, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarClay\\StarClay_PS.shader"));
+
 	//-----------------------------------------------
 
 	Shaders::CreatePS(100, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ColorCorrection_PS.shader"));

@@ -40,21 +40,24 @@ void StarClaySystem::Update(EntityStorage& entityStorage, float deltaTime)
 	{
 		Entity* entity = entities[i];
 		if (!IsEntityValid(entity))
-		{
 			continue;
-		}
 
 		StarClay* starClay = entity->GetComponent<StarClay>();
 		if (starClay != nullptr && starClay->active)
 		{
 			Transform worldTransform = GetWorldTransform(entity);
 
-			if (frustum->CheckSphere(worldTransform.position, worldTransform.scale.magnitude())) {
-				//ConstBuf::CreateVertexBuffer(15);
+			if (!frustum->CheckSphere(worldTransform.position, worldTransform.scale.magnitude()))
+				continue;
 
-				UpdateWorldMatrix(worldTransform);
-				ConstBuf::global[0] = XMFLOAT4(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, 0);
-				ConstBuf::global[0].w = 1;
+			for (Blob& blob : starClay->blobs) {
+				Transform blobTransform = worldTransform;
+				blobTransform.position += worldTransform.GetRightVector() * blob.pos.x + worldTransform.GetUpVector() * blob.pos.y + worldTransform.GetLookVector() * blob.pos.z;
+				blobTransform.scale = point3d(blob.radius);
+
+				ConstBuf::drawerMatrix[0] = GetWorldMatrix(blobTransform);
+				ConstBuf::Update(8, ConstBuf::drawerMatrix);
+				ConstBuf::ConstToVertex(8);
 
 				ConstBuf::global[1] = XMFLOAT4(0.04f, 0.0f, 0.19f, 1.0f);
 				ConstBuf::Update(5, ConstBuf::global);
@@ -63,7 +66,7 @@ void StarClaySystem::Update(EntityStorage& entityStorage, float deltaTime)
 				Shaders::vShader(starClay->vShader);
 				Shaders::pShader(starClay->pShader);
 
-				int n = GetVertexCount(worldTransform.position, 5, 100, 1);
+				int n = GetVertexCount(blobTransform.position, 3, 15, 1);
 
 				ConstBuf::drawerV[0] = n;
 				ConstBuf::Update(0, ConstBuf::drawerV);

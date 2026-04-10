@@ -526,6 +526,8 @@
     </None>
     <None Include="Shaders\BlackHole_Body_VS.shader" />
     <None Include="Shaders\StarLink_PS.shader" />
+    <None Include="Shaders\StarClay\StarClay_VS.shader" />
+    <None Include="Shaders\StarClay\StarClay_PS.shader" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">
