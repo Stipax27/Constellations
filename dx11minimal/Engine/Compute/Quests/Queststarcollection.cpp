@@ -3,6 +3,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "queststarcollection.h"
+#include "../../Lib/interp.h"
+
+using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Конструктор
@@ -330,13 +333,15 @@ void QuestStarCollection::OnStarCollected(Entity* star)
         {
             float progress = m_StarsCollected / (float)m_StarsToCollect;
             float newRadius = 20.0f + progress * 30.0f;
-            centralStarComp->radius = newRadius;
-            centralStarComp->crownRadius = newRadius + 5.0f;
-            centralStarComp->color1 = point3d(
+            point3d newColor = point3d(
                 0.99f - progress * 0.5f,
                 1.0f - progress * 0.8f,
                 0.51f + progress * 0.49f
             );
+
+            interp::Animate(centralStarComp->radius, newRadius, 0.5, interp::Curve::EaseInOutQuad);
+            interp::Animate(centralStarComp->crownRadius, newRadius + 5.0f, 0.5, interp::Curve::EaseInOutQuad);
+            interp::Animate(centralStarComp->color1, newColor, 0.5, interp::Curve::EaseInOutQuad);
         }
     }
 }

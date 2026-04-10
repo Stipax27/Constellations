@@ -17,9 +17,9 @@ struct point3d {
     float volume() const;
     point3d normalized() const;
     point3d cross(const point3d& other) const;
-    point3d lerp(const point3d& other, float a);
-    point3d floor3();
-    point3d fract();
+    point3d lerp(const point3d& other, float a) const;
+    point3d floor3() const;
+    point3d fract() const;
     float dot(const point3d& other) const;
     DirectX::XMVECTOR toXMVector() const;
 
@@ -48,5 +48,9 @@ struct point3d {
     point3d& operator/=(const point3d& other);
     point3d& operator/=(float scalar);
 };
+
+inline point3d operator*(float scalar, const point3d& p) {
+    return p * scalar;
+}
 
 #endif

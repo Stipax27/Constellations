@@ -175,7 +175,7 @@ private:
 	float radiusRad;
 	bool isRadaring;
 
-	vector<Entity*> projectiles;
+	std::vector<Entity*> projectiles;
 
 private:
 	void UpdateProjectiles();

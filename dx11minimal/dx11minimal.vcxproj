@@ -220,6 +220,11 @@
     <ClInclude Include="Engine\dx11.h" />
     <ClInclude Include="Engine\Compute\AI\AIComponent.h" />
     <ClInclude Include="Engine\ECS_Base\entity.h" />
+    <ClInclude Include="Engine\Compute\Quests\QuestGiver.h" />
+    <ClInclude Include="Engine\Compute\Quests\QuestSystem.h" />
+    <ClInclude Include="Engine\Compute\Quests\questclass.h" />
+    <ClInclude Include="Engine\Compute\Quests\questmanager.h" />
+    <ClInclude Include="Engine\Compute\Quests\Queststarcollection.h" />
     <ClInclude Include="Unused\Font_OLD.h" />
     <ClInclude Include="Framework\framework.h" />
     <ClInclude Include="Engine\Camera\frustumclass.h" />
@@ -248,8 +253,6 @@
     <ClInclude Include="Engine\Render\PointCloud.h" />
     <ClInclude Include="Components\Orientation.h" />
     <ClInclude Include="Engine\Render\BoneAnimation\SkeletalAnimationComponent.h" />
-    <ClInclude Include="questclass.h" />
-    <ClInclude Include="questmanager.h" />
     <ClInclude Include="Engine\UI\Rect.h" />
     <ClInclude Include="Engine\Render\renderCompress.h" />
     <ClInclude Include="Engine\Compute\Combat\SingleDamager.h" />
@@ -874,6 +877,7 @@
     <ClCompile Include="Engine\Camera\cameraclass.cpp" />
     <ClCompile Include="Engine\Compute\Combat\DamageBlocker.cpp" />
     <ClCompile Include="Engine\Compute\Combat\Health.cpp" />
+    <ClCompile Include="Engine\Lib\interp.cpp" />
     <ClCompile Include="Engine\Lib\logging.cpp" />
     <ClCompile Include="Engine\Lib\SerializationHelpers.cpp" />
     <ClCompile Include="Engine\Physic\Collision\CollisionManagerClass.cpp" />
@@ -905,7 +909,6 @@
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Engine\Types\Point3d.cpp" />
     <ClCompile Include="Engine\Types\Point4d.cpp" />
-    <ClCompile Include="QuestManager.cpp" />
     <ClCompile Include="Engine\Physic\Movement\PhysicSystem.cpp" />
     <ClCompile Include="Engine\Render\SpriteSystem.cpp" />
     <ClCompile Include="Engine\Physic\Gravitation\GravitySystem.cpp" />
@@ -921,6 +924,9 @@
     <ClCompile Include="Engine\Utils\utils.cpp" />
     <ClCompile Include="Engine\Window\WindowClass.cpp" />
     <ClCompile Include="Engine\ECS_Base\World.cpp" />
+    <ClCompile Include="Engine\Compute\Quests\QuestSystem.cpp" />
+    <ClCompile Include="Engine\Compute\Quests\QuestManager.cpp" />
+    <ClCompile Include="Engine\Compute\Quests\Queststarcollection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="dx11minimal.rc" />

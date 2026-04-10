@@ -160,9 +160,6 @@ bool LevelManagerClass::Initialize()
 	gravityPoint->mass = 500;
 	gravityPoint->radius = 150;
 
-	/*interp::Animate(star->radius, 5, 10, interp::Curve::EaseInOutQuad, entity);
-	interp::Animate(sphereCollider->radius, 5, 10, interp::Curve::EaseInOutQuad, entity);*/
-
 
 	entity = m_World->entityStorage->CreateEntity("Snake", folder);
 	entity->AddComponent<Transform>();
@@ -396,8 +393,8 @@ void LevelManagerClass::Shutdown()
 void LevelManagerClass::Frame()
 {
 	mouse->UpdateSystemCursorVisibility();
-	if (!window->IsActive())
-		return;
+	/*if (!window->IsActive())
+		return;*/
 
 	mouse->Update();
 

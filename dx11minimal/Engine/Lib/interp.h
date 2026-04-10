@@ -166,14 +166,14 @@ namespace interp {
     };
 
 
-    static std::vector<std::unique_ptr<ITween>> activeTweens;
+    extern std::vector<std::unique_ptr<ITween>> _activeTweens;
 
 
     template<typename T, typename U>
     Tween<T>& CreateTween(T& target, const U& endValue, double duration, Curve curve = Curve::Linear, Entity* targetEntity = nullptr) {
 
         // Searching for existing tween with this target
-        auto it = std::find_if(activeTweens.begin(), activeTweens.end(),
+        auto it = std::find_if(_activeTweens.begin(), _activeTweens.end(),
             [&target](const std::unique_ptr<ITween>& tween) {
                 auto* specificTween = dynamic_cast<Tween<T>*>(tween.get());
                 if (specificTween && specificTween->GetTarget() == &target) {
@@ -182,13 +182,13 @@ namespace interp {
                 return false;
             });
 
-        if (it != activeTweens.end()) {
-            activeTweens.erase(it);
+        if (it != _activeTweens.end()) {
+            _activeTweens.erase(it);
         }
 
         auto tween = std::make_unique<Tween<T>>(&target, static_cast<T>(endValue), duration, curve, targetEntity);
         Tween<T>& ref = *tween;
-        activeTweens.push_back(std::move(tween));
+        _activeTweens.push_back(std::move(tween));
         return ref;
     }
 
@@ -200,19 +200,19 @@ namespace interp {
     }
 
     inline void UpdateTweens() {
-        for (auto& tween : activeTweens) {
+        for (auto& tween : _activeTweens) {
             tween->Update();
         }
 
-        activeTweens.erase(
-            std::remove_if(activeTweens.begin(), activeTweens.end(),
+        _activeTweens.erase(
+            std::remove_if(_activeTweens.begin(), _activeTweens.end(),
                 [](const auto& tween) { return !tween->IsPlaying() && !tween->IsPaused(); }),
-            activeTweens.end()
+            _activeTweens.end()
         );
     }
 
     inline void ClearAllTweens() {
-        activeTweens.clear();
+        _activeTweens.clear();
     }
 }
 

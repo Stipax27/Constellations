@@ -16,7 +16,6 @@
 #include "Engine/Mouse/mouseclass.h"
 
 #include "PlayerController.h"
-#include "questmanager.h"
 
 #include "Engine/ECS_Base/world.h"
 #include "Engine/ECS_Base/system.h"
@@ -54,9 +53,8 @@
 #include "Engine/Render/BoneAnimation/SkeletalAnimationSystem.h"
 #include "Engine/Render/SkinnedMesh/SkinnedMeshSystem.h"
 
-#include "Quests/Queststarcollection.h"
-
-#include "QuestSystem.h"
+#include "Engine/Compute/Quests/questmanager.h"
+#include "Engine/Compute/Quests/QuestSystem.h"
 
 /////////////
 // GLOBALS //

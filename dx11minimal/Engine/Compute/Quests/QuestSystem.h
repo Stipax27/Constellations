@@ -5,11 +5,12 @@
 // INCLUDES //
 //////////////
 #include<cmath>
-#include "system.h"
+
+#include "../../ECS_Base/system.h"
+#include "../../BasicComponents/Transform.h"
+
 #include "QuestGiver.h"
-#include "Transform.h"
-#include "Quests/questmanager.h"
-#include "input.h"
+#include "questmanager.h"
 
 
 class QuestSystem : public System
@@ -19,7 +20,7 @@ public:
 	void Initialize();
 	void Shutdown();
 
-	void Update(vector<Entity*>&, float);
+	void Update(EntityStorage&, float);
 private:
 	Entity* player;
 	Transform* playerTransform;

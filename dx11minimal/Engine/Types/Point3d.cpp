@@ -28,7 +28,8 @@ point3d point3d::normalized() const {
     return *this / mag;
 }
 
-point3d point3d::cross(const point3d& other) const {
+point3d point3d::cross(const point3d& other) const
+{
     return point3d{
         y * other.z - z * other.y,
         z * other.x - x * other.z,
@@ -36,19 +37,17 @@ point3d point3d::cross(const point3d& other) const {
     };
 }
 
-point3d point3d::lerp(const point3d& other, float a)
+point3d point3d::lerp(const point3d& other, float a) const
 {
-    return point3d{ x * (1 - a) + other.x * a,
-        y * (1 - a) + other.y * a,
-        z * (1 - a) + other.z * a };
+    return *this + (other - *this) * a;
 }
 
-point3d point3d::floor3()
+point3d point3d::floor3() const
 {
     return { floor(x), floor(y), floor(z) };
 }
 
-point3d point3d::fract()
+point3d point3d::fract() const
 {
     return { x - floor(x), y - floor(y), z - floor(z) };
 }

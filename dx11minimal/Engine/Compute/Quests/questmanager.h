@@ -12,14 +12,14 @@
 #include <map>
 #include <functional>
 
-#include "../singleton.h"
-
 #include "questclass.h"
+
+#include "../../Lib/singleton.h"
 
 // QUEST TYPES //
 #include "Queststarcollection.h"
 
-using QuestCreator = function<QuestClass* ()>;
+using QuestCreator = std::function<QuestClass* ()>;
 
 /////////////
 // GLOBALS //
@@ -37,11 +37,11 @@ public:
 	~QuestManager();
 
 	template<typename T>
-	void RegisterQuest(const string& name) {
+	void RegisterQuest(const std::string& name) {
 		factory[name] = []() { return new T(); };
 	}
 
-	void CreateQuest(const string& questType);
+	void CreateQuest(const std::string& questType);
 
 	void Initialize();
 	void Shutdown();
@@ -49,8 +49,8 @@ public:
 	void UpdateQuests();
 
 private:
-	vector<unique_ptr<QuestClass>> activeQuests;
-	map<string, QuestCreator> factory;
+	std::vector<std::unique_ptr<QuestClass>> activeQuests;
+	std::map<std::string, QuestCreator> factory;
 
 private:
 	void ClearCompletedQuests();
