@@ -314,7 +314,7 @@ Entity* AISystem::DetectTarget(EntityStorage& entityStorage, Entity* entity, Tra
             continue;
 
         Health* health = target->GetComponent<Health>();
-        if (!health || health->fraction == Fraction::Player)
+        if (!health || health->fraction != Fraction::Player)
             continue;
 
         if ((targetTransform->position - transform->position).magnitude() <= ai->detectionRange) {
