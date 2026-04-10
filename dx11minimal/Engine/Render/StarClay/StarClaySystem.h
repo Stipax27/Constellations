@@ -1,5 +1,5 @@
-#ifndef _NEBULA_SYSTEM_H_
-#define _NEBULA_SYSTEM_H_
+#ifndef _STARCLAY_SYSTEM_H_
+#define _STARCLAY_SYSTEM_H_
 
 //////////////
 // INCLUDES //
@@ -7,15 +7,16 @@
 #include<cmath>
 #include "../../ECS_Base/system.h"
 #include "../../BasicComponents/Transform.h"
-#include "Nebula.h"
+#include "StarClay.h"
 
 #include "../../Camera/frustumclass.h"
+#include "../../Camera/cameraclass.h"
 
 
-class NebulaSystem : public System
+class StarClaySystem : public System
 {
 public:
-	NebulaSystem();
+	StarClaySystem();
 	void Initialize();
 	void Shutdown();
 
@@ -23,9 +24,11 @@ public:
 
 private:
 	FrustumClass* frustum;
+	CameraClass* camera;
 
 private:
-	void PSModeSet(pMode);
+	void UpdateWorldMatrix(Transform worldTransform);
+	int GetVertexCount(point3d position, int min, int max, float size);
 };
 
 #endif

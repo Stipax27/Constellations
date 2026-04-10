@@ -25,12 +25,6 @@ void NebulaSystem::Shutdown()
 
 void NebulaSystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
-	(void)deltaTime;
-	RenderNebulas(entityStorage);
-}
-
-void NebulaSystem::RenderNebulas(EntityStorage& entityStorage)
-{
 	Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
 	Rasterizer::Cull(Rasterizer::cullmode::off);
 	Depth::Depth(Depth::depthmode::readonly);

@@ -546,7 +546,7 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 	Health* health = player->AddComponent<Health>();
 	health->fraction = Fraction::Player;
 
-	Constellation* constellation = player->AddComponent<Constellation>();
+	/*Constellation* constellation = player->AddComponent<Constellation>();
 	constellation->stars = {
 		point3d(-0.09, -0.7, 0),
 		point3d(-0.05, -0.15, 0),
@@ -560,7 +560,9 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 		{1,2},
 		{2,3},
 		{2,5}
-	};
+	};*/
+
+	StarClay* starClay = player->AddComponent<StarClay>();
 
 	PointCloud* pointCloud = player->AddComponent<PointCloud>();
 	pointCloud->index = 0;
@@ -737,6 +739,7 @@ void LevelManagerClass::InitSystems()
 	m_World->AddPhysicSystem<SkeletalAnimationSystem>(context, m_BoneBuffer);
 
 	m_World->AddRenderSystem<MeshSystem>();
+	m_World->AddRenderSystem<StarClaySystem>();
 	m_World->AddRenderSystem<SkinnedMeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera, m_BoneBuffer);
 
 	if (SHOW_COLLIDERS) {

@@ -36,9 +36,6 @@
     <ClCompile Include="Engine\GLTFLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="QuestManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Mesh\Skeleton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -79,6 +76,12 @@
     <ClCompile Include="Engine\Compute\Combat\DamageBlocker.cpp" />
     <ClCompile Include="Engine\Compute\Combat\Health.cpp" />
     <ClCompile Include="Engine\Lib\SerializationHelpers.cpp" />
+    <ClCompile Include="Engine\Lib\interp.cpp" />
+    <ClCompile Include="Engine\Lib\logging.cpp" />
+    <ClCompile Include="Engine\Compute\Quests\QuestSystem.cpp" />
+    <ClCompile Include="Engine\Compute\Quests\QuestManager.cpp" />
+    <ClCompile Include="Engine\Compute\Quests\Queststarcollection.cpp" />
+    <ClCompile Include="Engine\Render\StarClay\StarClaySystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LevelManagerClass.h">
@@ -115,12 +118,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Mesh\Skeleton.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="questmanager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="questclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\GLTFLoader.h">
@@ -215,6 +212,14 @@
     <ClInclude Include="Engine\Compute\Combat\damageUnit.h" />
     <ClInclude Include="Engine\Lib\SerializationMacros.h" />
     <ClInclude Include="Engine\Lib\class_name.h" />
+    <ClInclude Include="Engine\Lib\logging.h" />
+    <ClInclude Include="Engine\Compute\Quests\QuestGiver.h" />
+    <ClInclude Include="Engine\Compute\Quests\QuestSystem.h" />
+    <ClInclude Include="Engine\Compute\Quests\questclass.h" />
+    <ClInclude Include="Engine\Compute\Quests\questmanager.h" />
+    <ClInclude Include="Engine\Compute\Quests\Queststarcollection.h" />
+    <ClInclude Include="Engine\Render\StarClay\StarClay.h" />
+    <ClInclude Include="Engine\Render\StarClay\StarClaySystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">

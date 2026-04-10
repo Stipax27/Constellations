@@ -193,6 +193,8 @@
     <ClInclude Include="Engine\Lib\logging.h" />
     <ClInclude Include="Engine\Lib\SerializationMacros.h" />
     <ClInclude Include="Engine\Render\Beam.h" />
+    <ClInclude Include="Engine\Render\StarClay\StarClay.h" />
+    <ClInclude Include="Engine\Render\StarClay\StarClaySystem.h" />
     <ClInclude Include="Engine\UI\Button.h" />
     <ClInclude Include="Engine\Camera\cameraclass.h" />
     <ClInclude Include="Engine\BasicComponents\collider.h" />
@@ -884,6 +886,7 @@
     <ClCompile Include="Engine\Physic\Collision\CollisionSystem.cpp" />
     <ClCompile Include="Engine\Compute\Combat\CombatSystem.cpp" />
     <ClCompile Include="Engine\DebugTools\CollisionDrawSystem.cpp" />
+    <ClCompile Include="Engine\Render\StarClay\StarClaySystem.cpp" />
     <ClCompile Include="Engine\Utils\ComponentUtils.cpp" />
     <ClCompile Include="Engine\GLTFLoader.cpp" />
     <ClCompile Include="Engine\Mesh\Animation.cpp" />

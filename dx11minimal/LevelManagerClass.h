@@ -27,9 +27,11 @@
 
 #include "Engine/Render/spriteSystem.h"
 #include "Engine/Render/Mesh/meshSystem.h"
+#include "Engine/Render/Nebula/nebulaSystem.h"
+#include "Engine/Render/StarClay/StarClaySystem.h"
+
 #include "Engine/UI/uiSystem.h"
 #include "Engine/UI/Text/UITextSystem.h"
-#include "Engine/Render/Nebula/nebulaSystem.h"
 
 #include "Engine/Physic/Movement/physicSystem.h"
 #include "Engine/Physic/Gravitation/GravitySystem.h"

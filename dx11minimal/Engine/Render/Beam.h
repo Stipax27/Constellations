@@ -4,7 +4,6 @@
 #include "../ECS_Base/component.h"
 #include "../Types/Point3d.h"
 #include <vector>
-#include <utility>
 
 
 struct Beam : Component

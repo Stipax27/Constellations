@@ -99,10 +99,10 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 	float localTime = drawerV[iID];
 
     uint n = drawInt[iID];
-    uint instanceID = vID / 6;
+    uint quadId = vID / 6;
 
-    float row = instanceID % n;
-    float col = instanceID / n;
+    float row = quadId % n;
+    float col = quadId / n;
 
     float2 quadUV[6] = {
         float2(-1, -1), float2(1, -1), float2(-1, 1),
