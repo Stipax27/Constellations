@@ -116,9 +116,7 @@ void AISystem::UpdatePatrolBehavior(EntityStorage& entityStorage, Entity* entity
     Entity* target = DetectTarget(entityStorage, entity, transform, ai);
     if (target)
     {
-        Transform* targetTransform = target->GetComponent<Transform>();
-
-        ai->lastKnownPlayerPosition = targetTransform->position;
+        ai->lastKnownPlayerPosition = GetWorldTransform(target).position;
         ai->hasLastKnownPosition = true;
         ai->behaviorType = AIBehaviorType::CHASE;
         ai->stateTimer = 0.0f;
@@ -136,16 +134,15 @@ void AISystem::UpdateChaseBehavior(EntityStorage& entityStorage, Entity* entity,
         return;
     }
 
-    Transform* targetTransform = target->GetComponent<Transform>();
-    if (!targetTransform) return;
+    point3d targetWorldPos = GetWorldTransform(target).position;
 
-    point3d direction = targetTransform->position - transform->position;
+    point3d direction = targetWorldPos - GetWorldTransform(entity).position;
     float distance = direction.magnitude();     // Расстояние до игрока
 
     if (distance > ai->chaseRange)               // Если игрок слишком далеко
     {
         // Потеряли игрока – запоминаем его последнюю позицию и переходим в поиск
-        ai->lastKnownPlayerPosition = targetTransform->position;
+        ai->lastKnownPlayerPosition = targetWorldPos;
         ai->hasLastKnownPosition = true;
         ai->behaviorType = AIBehaviorType::SEARCH;
         ai->stateTimer = 0.0f;
@@ -201,9 +198,7 @@ void AISystem::UpdateSearchBehavior(EntityStorage& entityStorage, Entity* entity
     Entity* target = DetectTarget(entityStorage, entity, transform, ai);
     if (target)
     {
-        Transform* targetTransform = target->GetComponent<Transform>();
-
-        ai->lastKnownPlayerPosition = targetTransform->position;
+        ai->lastKnownPlayerPosition = GetWorldTransform(target).position;
         ai->behaviorType = AIBehaviorType::CHASE;
         ai->stateTimer = 0.0f;
     }
@@ -220,10 +215,7 @@ void AISystem::UpdateAttackBehavior(EntityStorage& entityStorage, Entity* entity
         return;
     }
 
-    Transform* targetTransform = target->GetComponent<Transform>();
-    if (!targetTransform) return;
-
-    float distance = (targetTransform->position - transform->position).magnitude();
+    float distance = (GetWorldTransform(target).position - GetWorldTransform(entity).position).magnitude();
 
     if (distance > ai->attackRange)               // Если игрок вышел из радиуса атаки
     {
@@ -317,7 +309,7 @@ Entity* AISystem::DetectTarget(EntityStorage& entityStorage, Entity* entity, Tra
         if (!health || health->fraction != Fraction::Player)
             continue;
 
-        if ((targetTransform->position - transform->position).magnitude() <= ai->detectionRange) {
+        if ((GetWorldTransform(target).position - GetWorldTransform(entity).position).magnitude() <= ai->detectionRange) {
             ai->targetId = target->GetId();
             return target;
         }
