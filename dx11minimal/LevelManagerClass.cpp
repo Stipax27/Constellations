@@ -218,8 +218,6 @@ bool LevelManagerClass::Initialize()
 	health->maxHp = 50;
 
 	// Кодовое слово: amogus
-	AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
-
 	PhysicBody* testPhysic = testEnemy->AddComponent<PhysicBody>();
 	testPhysic->airFriction = 0.01f; // Обычное трение
 
@@ -267,10 +265,6 @@ bool LevelManagerClass::Initialize()
 	ai->accelerationStrength = 10;
 	ai->maxAcceleration = 100;
 
-	if (aiSystem)
-	{
-		aiSystem->SetPlayerEntity(player);
-	}
 
 	auto spawnSkinned = [this, folder](
 		const char* name,
@@ -728,12 +722,12 @@ void LevelManagerClass::InitSystems()
 {
 	m_World->AddComputeSystem<TimeSystem>();
 	m_World->AddComputeSystem<DelayedDestroySystem>();
+	m_World->AddComputeSystem<AISystem>();
 
 	m_World->AddPhysicSystem<GravitySystem>();
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
 	m_World->AddPhysicSystem<CombatSystem>();
-	//AISystem* aiSystem = m_World->AddPhysicSystem<AISystem>();
 	m_World->AddPhysicSystem<SkeletalAnimationSystem>(context, m_BoneBuffer);
 
 	m_World->AddRenderSystem<MeshSystem>();

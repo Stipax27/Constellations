@@ -174,6 +174,18 @@ Entity* EntityStorage::CreateEntity(string Name, Entity* Parent)
 }
 
 
+Entity* EntityStorage::CloneEntity(Entity* entity)
+{
+    Entity* clone = CreateEntity(entity->name, entity->GetParent());
+
+    /*for (const auto& pair : entity->GetComponents()) {
+        auto* component = pair.second;
+    }*/
+
+    return clone;
+}
+
+
 Entity* EntityStorage::GetEntityByName(string Name)
 {
 	for (Entity* entity : entities) {
@@ -204,6 +216,7 @@ Entity* EntityStorage::GetEntityById(int id)
 			return entity;
 		}
 	}
+    return nullptr;
 }
 
 

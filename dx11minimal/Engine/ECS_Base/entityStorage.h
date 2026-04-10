@@ -36,6 +36,7 @@ public:
 	~EntityStorage();
 
 	Entity* CreateEntity(std::string = "Unnamed", Entity* = nullptr);
+	Entity* CloneEntity(Entity* entity);
 
 	Entity* GetEntityByName(std::string);
 	std::vector<Entity*> GetEntitiesByName(std::string);

@@ -60,6 +60,7 @@ public:
     float accelerationStrength = 0.25f;   // коэффициент пропорциональности (чем выше, тем быстрее разгон)
     float maxAcceleration = 10.0f;       // ограничение, чтобы избежать рывков
 
+    int targetId = -1;
 };
 
 #endif

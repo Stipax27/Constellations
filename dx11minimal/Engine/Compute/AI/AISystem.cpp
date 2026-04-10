@@ -3,34 +3,20 @@
 using namespace std;
 
 
-// Конструктор: инициализирует указатель на игрока и время последнего обновления
-AISystem::AISystem()
-{
-    playerEntity = nullptr;   // Пока игрок не задан
-    lastUpdateTime = 0.0f;    // Время с последнего обновления = 0
-}
+AISystem::AISystem() {}
 
-// Метод инициализации (пустой, но требуется базовым классом)
 void AISystem::Initialize() {}
 
-// Метод завершения работы: обнуляем указатель на игрока
-void AISystem::Shutdown() { playerEntity = nullptr; }
+void AISystem::Shutdown() {}
 
-// Устанавливает сущность игрока, за которым будут следить враги
-void AISystem::SetPlayerEntity(Entity* player) { playerEntity = player; }
 
-// Основной метод обновления, вызываемый каждый кадр
 void AISystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
-    lastUpdateTime += deltaTime;               // Накопляем прошедшее время
-    if (lastUpdateTime < AI_UPDATE_INTERVAL)   // Если не прошло достаточно времени
-        return;                                 // Пропускаем обновление (экономия ресурсов)
-
-    // Проходим по всем сущностям
     const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<AIComponent>();
     for (Entity* entity : entities)
     {
-        if (!entity->IsActive()) continue;      // Пропускаем неактивные сущности
+        if (!IsEntityValid(entity) || entity->GetTimeScale() == 0.0f)
+            continue;
 
         // Получаем необходимые компоненты
         Transform* transform = entity->GetComponent<Transform>();
@@ -40,15 +26,14 @@ void AISystem::Update(EntityStorage& entityStorage, float deltaTime)
         // Если все компоненты есть и ИИ включён – обрабатываем поведение
         if (transform && ai && physicBody && ai->enabled)
         {
-            ProcessAIBehavior(entity, transform, ai, physicBody, deltaTime);
+            ProcessAIBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime);
         }
     }
-    lastUpdateTime = 0.0f;   // Сбрасываем накопленное время (ждём следующий интервал)
 }
 
 
 // Метод, который в зависимости от текущего состояния ИИ вызывает соответствующую функцию
-void AISystem::ProcessAIBehavior(Entity* entity, Transform* transform, AIComponent* ai,
+void AISystem::ProcessAIBehavior(EntityStorage& entityStorage, Entity* entity, Transform* transform, AIComponent* ai,
     PhysicBody* physicBody, float deltaTime)
 {
     // Для отладки меняем цвет звезды в зависимости от состояния (необязательно)
@@ -70,27 +55,27 @@ void AISystem::ProcessAIBehavior(Entity* entity, Transform* transform, AICompone
     switch (ai->behaviorType)          // Проверяем текущее состояние (тип поведения)
     {
     case AIBehaviorType::PATROL:       // Если патрулирование
-        UpdatePatrolBehavior(entity, transform, ai, physicBody, deltaTime); // Вызываем метод патрулирования
+        UpdatePatrolBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime); // Вызываем метод патрулирования
         break;
 
     case AIBehaviorType::CHASE:        // Если преследование
-        UpdateChaseBehavior(entity, transform, ai, physicBody, deltaTime); // Вызываем метод преследования
+        UpdateChaseBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime); // Вызываем метод преследования
         break;
 
     case AIBehaviorType::ATTACK:       // Если атака
-        UpdateAttackBehavior(entity, transform, ai, physicBody, deltaTime); // Вызываем метод атаки
+        UpdateAttackBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime); // Вызываем метод атаки
         break;
 
     case AIBehaviorType::FLEE:         // Если бегство
-        UpdateFleeBehavior(entity, transform, ai, physicBody, deltaTime); // Вызываем метод бегства
+        UpdateFleeBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime); // Вызываем метод бегства
         break;
 
     case AIBehaviorType::IDLE:         // Если бездействие
-        UpdateIdleBehavior(entity, transform, ai, physicBody, deltaTime); // Вызываем метод бездействия
+        UpdateIdleBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime); // Вызываем метод бездействия
         break;
 
     case AIBehaviorType::SEARCH:       // Если поиск (после потери игрока)
-        UpdateSearchBehavior(entity, transform, ai, physicBody, deltaTime); // Вызываем метод поиска
+        UpdateSearchBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime); // Вызываем метод поиска
         break;
     }
 
@@ -98,7 +83,7 @@ void AISystem::ProcessAIBehavior(Entity* entity, Transform* transform, AICompone
 }
 
 // ---------- Патрулирование ----------
-void AISystem::UpdatePatrolBehavior(Entity* entity, Transform* transform, AIComponent* ai,
+void AISystem::UpdatePatrolBehavior(EntityStorage& entityStorage, Entity* entity, Transform* transform, AIComponent* ai,
     PhysicBody* physicBody, float deltaTime)
 {
     if (ai->patrolPoints.empty()) return;   // Если нет точек патруля – ничего не делаем
@@ -128,37 +113,39 @@ void AISystem::UpdatePatrolBehavior(Entity* entity, Transform* transform, AIComp
     }
 
     // Если заметили игрока во время патруля – переключаемся на преследование
-    if (playerEntity && DetectPlayer(transform, ai))
+    Entity* target = DetectTarget(entityStorage, entity, transform, ai);
+    if (target)
     {
-        Transform* playerTransform = playerEntity->GetComponent<Transform>();
-        if (playerTransform)
-            ai->lastKnownPlayerPosition = playerTransform->position; // Запоминаем его позицию
-        ai->hasLastKnownPosition = true;        // Отмечаем, что позиция запомнена
+        Transform* targetTransform = target->GetComponent<Transform>();
+
+        ai->lastKnownPlayerPosition = targetTransform->position;
+        ai->hasLastKnownPosition = true;
         ai->behaviorType = AIBehaviorType::CHASE;
         ai->stateTimer = 0.0f;
     }
 }
 
 // ---------- Преследование ----------
-void AISystem::UpdateChaseBehavior(Entity* entity, Transform* transform, AIComponent* ai,
+void AISystem::UpdateChaseBehavior(EntityStorage& entityStorage, Entity* entity, Transform* transform, AIComponent* ai,
     PhysicBody* physicBody, float deltaTime)
 {
-    if (!playerEntity)                         // Если игрока нет – возвращаемся к патрулю
+    Entity* target = entityStorage.GetEntityById(ai->targetId);
+    if (!IsEntityValid(target))
     {
         ai->behaviorType = AIBehaviorType::PATROL;
         return;
     }
 
-    Transform* playerTransform = playerEntity->GetComponent<Transform>();
-    if (!playerTransform) return;               // Если у игрока нет трансформа – выходим
+    Transform* targetTransform = target->GetComponent<Transform>();
+    if (!targetTransform) return;
 
-    point3d direction = playerTransform->position - transform->position;
+    point3d direction = targetTransform->position - transform->position;
     float distance = direction.magnitude();     // Расстояние до игрока
 
     if (distance > ai->chaseRange)               // Если игрок слишком далеко
     {
         // Потеряли игрока – запоминаем его последнюю позицию и переходим в поиск
-        ai->lastKnownPlayerPosition = playerTransform->position;
+        ai->lastKnownPlayerPosition = targetTransform->position;
         ai->hasLastKnownPosition = true;
         ai->behaviorType = AIBehaviorType::SEARCH;
         ai->stateTimer = 0.0f;
@@ -183,7 +170,7 @@ void AISystem::UpdateChaseBehavior(Entity* entity, Transform* transform, AICompo
 }
 
 // ---------- Поиск (после потери игрока) ----------
-void AISystem::UpdateSearchBehavior(Entity* entity, Transform* transform, AIComponent* ai,
+void AISystem::UpdateSearchBehavior(EntityStorage& entityStorage, Entity* entity, Transform* transform, AIComponent* ai,
     PhysicBody* physicBody, float deltaTime)
 {
     // Если нет сохранённой позиции или истекло время поиска – переходим к патрулю вокруг последней позиции
@@ -204,40 +191,39 @@ void AISystem::UpdateSearchBehavior(Entity* entity, Transform* transform, AIComp
     }
 
     direction = direction.normalized();
-    //physicBody->velocity = direction * ai->movementSpeed * 2; // Двигаемся чуть быстрее (коэф. 2)
     point3d targetVelocity = direction * ai->movementSpeed;
-    //point3d desiredAccel = (targetVelocity - physicBody->velocity) * ai->accelerationStrength;
     point3d desiredAccel = targetVelocity * ai->accelerationStrength;
     float accelMag = desiredAccel.magnitude();
     if (accelMag > ai->maxAcceleration)
         desiredAccel = desiredAccel.normalized() * ai->maxAcceleration;
     physicBody->acceleration = desiredAccel;
 
-    // Во время движения проверяем, не появился ли игрок снова
-    if (playerEntity && DetectPlayer(transform, ai))
+    Entity* target = DetectTarget(entityStorage, entity, transform, ai);
+    if (target)
     {
-        Transform* playerTransform = playerEntity->GetComponent<Transform>();
-        if (playerTransform)
-            ai->lastKnownPlayerPosition = playerTransform->position;
-        ai->behaviorType = AIBehaviorType::CHASE; // Снова преследуем
+        Transform* targetTransform = target->GetComponent<Transform>();
+
+        ai->lastKnownPlayerPosition = targetTransform->position;
+        ai->behaviorType = AIBehaviorType::CHASE;
         ai->stateTimer = 0.0f;
     }
 }
 
 // ---------- Атака ----------
-void AISystem::UpdateAttackBehavior(Entity* entity, Transform* transform, AIComponent* ai,
+void AISystem::UpdateAttackBehavior(EntityStorage& entityStorage, Entity* entity, Transform* transform, AIComponent* ai,
     PhysicBody* physicBody, float deltaTime)
 {
-    if (!playerEntity)                           // Если игрока нет – возврат к патрулю
+    Entity* target = entityStorage.GetEntityById(ai->targetId);
+    if (!IsEntityValid(target))
     {
         ai->behaviorType = AIBehaviorType::PATROL;
         return;
     }
 
-    Transform* playerTransform = playerEntity->GetComponent<Transform>();
-    if (!playerTransform) return;
+    Transform* targetTransform = target->GetComponent<Transform>();
+    if (!targetTransform) return;
 
-    float distance = (playerTransform->position - transform->position).magnitude();
+    float distance = (targetTransform->position - transform->position).magnitude();
 
     if (distance > ai->attackRange)               // Если игрок вышел из радиуса атаки
     {
@@ -253,7 +239,7 @@ void AISystem::UpdateAttackBehavior(Entity* entity, Transform* transform, AIComp
         //if (ai->stateTimer >= ai->attackCooldown)
         //{
             // Получаем компонент здоровья игрока
-            Health* playerHealth = playerEntity->GetComponent<Health>();
+            Health* playerHealth = target->GetComponent<Health>();
             if (playerHealth)
             {
                 playerHealth->hp -= ai->attackDamage; // Наносим урон
@@ -265,64 +251,81 @@ void AISystem::UpdateAttackBehavior(Entity* entity, Transform* transform, AIComp
 }
 
 // ---------- Бегство ----------
-void AISystem::UpdateFleeBehavior(Entity* entity, Transform* transform, AIComponent* ai,
+void AISystem::UpdateFleeBehavior(EntityStorage& entityStorage, Entity* entity, Transform* transform, AIComponent* ai,
     PhysicBody* physicBody, float deltaTime)
 {
-    if (!playerEntity)                           // Если игрока нет – возврат к патрулю
+    Entity* target = entityStorage.GetEntityById(ai->targetId);
+    if (!IsEntityValid(target))
     {
         ai->behaviorType = AIBehaviorType::PATROL;
         return;
     }
 
-    Transform* playerTransform = playerEntity->GetComponent<Transform>();
-    if (!playerTransform) return;
+    Transform* targetTransform = target->GetComponent<Transform>();
+    if (!targetTransform) return;
 
-    point3d direction = transform->position - playerTransform->position; // Вектор от игрока
+    point3d direction = transform->position - targetTransform->position; // Вектор от игрока
     direction = direction.normalized();
-    //physicBody->velocity = direction * ai->movementSpeed; // Убегаем
     point3d targetVelocity = direction * ai->movementSpeed;
-    //point3d desiredAccel = (targetVelocity - physicBody->velocity) * ai->accelerationStrength;
     point3d desiredAccel = targetVelocity * ai->accelerationStrength;
     float accelMag = desiredAccel.magnitude();
     if (accelMag > ai->maxAcceleration)
         desiredAccel = desiredAccel.normalized() * ai->maxAcceleration;
     physicBody->acceleration = desiredAccel;
 
-    if (ai->stateTimer >= ai->fleeDuration)      // Если время бегства истекло
+    if (ai->stateTimer >= ai->fleeDuration)
     {
-        ai->behaviorType = AIBehaviorType::PATROL; // Возвращаемся к патрулю
+        ai->behaviorType = AIBehaviorType::PATROL;
         ai->stateTimer = 0.0f;
     }
 }
 
 // ---------- Бездействие ----------
-void AISystem::UpdateIdleBehavior(Entity* entity, Transform* transform, AIComponent* ai,
+void AISystem::UpdateIdleBehavior(EntityStorage& entityStorage, Entity* entity, Transform* transform, AIComponent* ai,
     PhysicBody* physicBody, float deltaTime)
 {
     physicBody->velocity = point3d();            // Стоим на месте
 
-    if (playerEntity && DetectPlayer(transform, ai)) // Если заметили игрока
+    if (DetectTarget(entityStorage, entity, transform, ai))
     {
-        ai->behaviorType = AIBehaviorType::CHASE;    // Начинаем преследование
+        ai->behaviorType = AIBehaviorType::CHASE;
         ai->stateTimer = 0.0f;
     }
 
-    if (ai->stateTimer >= ai->idleDuration)      // Если время бездействия вышло
+    if (ai->stateTimer >= ai->idleDuration)
     {
-        ai->behaviorType = AIBehaviorType::PATROL; // Переходим к патрулю
+        ai->behaviorType = AIBehaviorType::PATROL;
         ai->stateTimer = 0.0f;
     }
 }
 
-// ---------- Обнаружение игрока ----------
-bool AISystem::DetectPlayer(Transform* transform, AIComponent* ai)
+
+Entity* AISystem::DetectTarget(EntityStorage& entityStorage, Entity* entity, Transform* transform, AIComponent* ai)
 {
-    if (!playerEntity) return false;              // Нет игрока – не обнаружен
-    Transform* playerTransform = playerEntity->GetComponent<Transform>();
-    if (!playerTransform) return false;           // У игрока нет трансформа – не обнаружен
-    float distance = (playerTransform->position - transform->position).magnitude();
-    return distance <= ai->detectionRange;        // Обнаружен, если дистанция меньше радиуса обнаружения
+    const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<Health>();
+
+    for (Entity* target : entities)
+    {
+        if (target == entity || !IsEntityValid(target))
+            continue;
+
+        Transform* targetTransform = target->GetComponent<Transform>();
+        if (!targetTransform)
+            continue;
+
+        Health* health = target->GetComponent<Health>();
+        if (!health || health->fraction == Fraction::Player)
+            continue;
+
+        if ((targetTransform->position - transform->position).magnitude() <= ai->detectionRange) {
+            ai->targetId = target->GetId();
+            return target;
+        }
+    }
+
+    return nullptr;
 }
+
 
 // ---------- Вспомогательная функция: переход к патрулю вокруг последней позиции ----------
 void AISystem::GoToPatrolAroundLastPosition(AIComponent* ai)
