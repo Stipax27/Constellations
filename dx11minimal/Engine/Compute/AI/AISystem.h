@@ -1,17 +1,17 @@
 #ifndef _AI_SYSTEM_H_
 #define _AI_SYSTEM_H_
 
-#include<cmath>               // Подключаем математические функции (sqrt, sin, cos и т.д.)
-#include "../../ECS_Base/system.h"           // Подключаем базовый абстрактный класс System
-#include "../../BasicComponents/Transform.h"        // Подключаем компонент Transform (позиция, поворот, масштаб)
-#include "../../Physic/Movement/PhysicBody.h"       // Подключаем компонент PhysicBody (скорость, физика)
-#include "AIComponent.h"     // Подключаем компонент AIComponent (данные ИИ)
+#include<cmath>
+#include "../../ECS_Base/system.h"
+#include "../../BasicComponents/Transform.h"
+#include "../../Physic/Movement/PhysicBody.h"
+#include "AIComponent.h"
 
-#include "../../Render/Star.h"             // Подключаем компонент Star (визуальное представление звезды)
-#include "../../Compute/Combat/Health.h"           // Подключаем компонент Health (здоровье сущности)
+#include "../../Render/Star.h"
+#include "../../Compute/Combat/Health.h"
 
 
-// Класс AISystem, наследующий от System, реализует логику ИИ для врагов
+
 class AISystem : public System
 {
 public:
