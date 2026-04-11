@@ -166,7 +166,7 @@ void StarClaySystem::RenderStarBackground()
 	Shaders::vShader(2);
 	Shaders::pShader(2);
 
-	context->DrawInstanced(6, 50000, 0, 0);
+	context->DrawInstanced(6, 20000, 0, 0);
 
 	Textures::CreateMipMap();
 	Textures::RenderTarget(lastRT, 0);
