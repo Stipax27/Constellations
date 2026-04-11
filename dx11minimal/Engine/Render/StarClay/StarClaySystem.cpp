@@ -27,20 +27,22 @@ void StarClaySystem::Shutdown()
 
 void StarClaySystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
+	InputAssembler::IA(InputAssembler::topology::triList);
+	InputAssembler::vBufferNull();
+	Shaders::gShader(0);
+
+	const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<StarClay>();
+	if (entities.size() == 0)
+		return;
+
+	RenderStarBackground();
+
 	Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
 	Rasterizer::Cull(Rasterizer::cullmode::back);
 	Depth::Depth(Depth::depthmode::on);
 
-	Shaders::gShader(0);
-
-	InputAssembler::IA(InputAssembler::topology::triList);
-	InputAssembler::vBufferNull();
-
-	const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<StarClay>();
-	size_t size = entities.size();
-	for (int i = 0; i < size; i++)
+	for (Entity* entity : entities)
 	{
-		Entity* entity = entities[i];
 		if (!IsEntityValid(entity))
 			continue;
 
@@ -137,6 +139,38 @@ void StarClaySystem::RenderBlobs(StarClay* starClay, Transform& worldTransform, 
 	Shaders::pShader(starClay->pShader);
 
 	context->DrawInstanced(n * n * 6, blobsSize, 0, 0);
+}
+
+//// Star background render ////
+
+void StarClaySystem::RenderStarBackground()
+{
+	Blend::Blending(Blend::blendmode::on, Blend::blendop::add);
+	Rasterizer::Cull(Rasterizer::cullmode::off);
+	Depth::Depth(Depth::depthmode::off);
+
+	int lastRT = Textures::currentRT;
+
+	Textures::RenderTarget(16, 0);
+	Draw::Clear({ 0.04f, 0.0f, 0.19f, 1.0f });
+
+	ConstBuf::drawerV[0] = (float)timer::currentTime * 0.01f;
+	ConstBuf::Update(0, ConstBuf::drawerV);
+	ConstBuf::ConstToVertex(0);
+	ConstBuf::ConstToPixel(0);
+
+	ConstBuf::drawerInt[0] = 0;
+	ConstBuf::Update(7, ConstBuf::drawerInt);
+	ConstBuf::ConstToPixel(7);
+
+	Shaders::vShader(2);
+	Shaders::pShader(2);
+
+	context->DrawInstanced(6, 50000, 0, 0);
+
+	Textures::CreateMipMap();
+	Textures::RenderTarget(lastRT, 0);
+	Textures::TextureToShader(16, 4, targetshader::pixel);
 }
 
 //// Other functions ////

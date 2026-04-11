@@ -1989,6 +1989,9 @@ void Dx11Init(HWND hwnd, int width, int height)
 	Textures::Create(14, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
 	// star noise rt
 	Textures::Create(15, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
+
+	// space background rt
+	Textures::Create(16, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), true, false);
 }
 
 //////////////////////////////////////////////////////////////////////////////////

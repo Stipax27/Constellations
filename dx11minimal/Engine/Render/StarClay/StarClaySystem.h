@@ -31,6 +31,8 @@ private:
 	void EmitNewBlobs(Entity* entity, StarClay* starClay);
 	void RenderBlobs(StarClay* starClay, Transform& worldTransform, const double& localTime);
 
+	void RenderStarBackground();
+
 	void UpdateWorldMatrix(Transform worldTransform);
 	int GetVertexCount(point3d position, int min, int max, float size);
 };

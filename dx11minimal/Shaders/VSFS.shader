@@ -36,17 +36,17 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 
     //calc star position
 
-    float size = 5.0f;
-    float range = 1000.0f;
+    float size = 3;
+    float range = 250;
     float3 starPos = normalize(randomPosition(iID) * range * 2 - range) * range;
 
     float4x4 v = view;
-    v._m30_m31_m32 = 0.0f;
+    v._m30_m31_m32 = 0;
 
-    //starPos = lerp(normalize(starPos)* 1400.0f, starPos,.5);
+    //starPos = lerp(normalize(starPos)* 1400, starPos,.5);
 
     //-----
-    float4 viewPos = mul(float4(starPos, 1.0f), v);
+    float4 viewPos = mul(float4(starPos, 1), v);
     float4 projPos = mul(viewPos, proj);
     projPos.xy += quadPos[vertexInQuad] * float2(aspect.x, 1) * size;
 

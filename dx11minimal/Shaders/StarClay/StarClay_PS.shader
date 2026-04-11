@@ -1,7 +1,7 @@
 #include <../lib/constBuf.shader>
 
-Texture2D inputTexture : register(t2);
-SamplerState samplerState : register(s2);
+Texture2D inputTexture : register(t4);
+SamplerState samplerState : register(s4);
 
 struct VS_OUTPUT
 {
@@ -22,6 +22,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
     screenPos.xyz /= screenPos.w;
 
     screenPos.xy -= centerPos.xy;
+    screenPos.y *= -1;
 
     float2 screenUV = (screenPos.xy + float2(1, 1)) / 2;
 
