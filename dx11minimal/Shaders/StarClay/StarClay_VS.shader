@@ -4,8 +4,7 @@ struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
     float2 uv : TEXCOORD0;
-    uint   starID : COLOR0;
-    float4 worldpos : POSITION1;
+    float4 vpos : POSITION0;
 };
 
 float3 ball(float2 p, float radius)
@@ -45,7 +44,10 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 
     pos = mul(pos, model[iID]);
 
-    output.pos = mul(pos, mul(view, proj));
+    float4 vpos = mul(pos, mul(view, proj));
+
+    output.pos = vpos;
+    output.vpos = vpos;
     output.uv = float2(1, -1) * p / 2. + .5;
 
     return output;

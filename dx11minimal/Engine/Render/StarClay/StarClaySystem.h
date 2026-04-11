@@ -27,9 +27,9 @@ private:
 	CameraClass* camera;
 
 private:
-	void ClearOldBlobs(std::vector<Blob>& blobs, const double& lifetime);
+	void ClearOldBlobs(std::vector<Blob>& blobs, const double& lifetime, const double& localTime);
 	void EmitNewBlobs(Entity* entity, StarClay* starClay);
-	void RenderBlobs(StarClay* starClay, Transform& worldTransform);
+	void RenderBlobs(StarClay* starClay, Transform& worldTransform, const double& localTime);
 
 	void UpdateWorldMatrix(Transform worldTransform);
 	int GetVertexCount(point3d position, int min, int max, float size);

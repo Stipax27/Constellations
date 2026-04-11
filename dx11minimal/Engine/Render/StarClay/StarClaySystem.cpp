@@ -48,15 +48,16 @@ void StarClaySystem::Update(EntityStorage& entityStorage, float deltaTime)
 		if (starClay != nullptr && starClay->active)
 		{
 			Transform worldTransform = GetWorldTransform(entity);
+			const double localTime = entity->localTime;
 
 			if (!frustum->CheckSphere(worldTransform.position, worldTransform.scale.magnitude()))
 				continue;
 
-			ClearOldBlobs(starClay->blobs, starClay->lifetime);
-			ClearOldBlobs(starClay->out_blobs, starClay->lifetime);
+			ClearOldBlobs(starClay->blobs, starClay->lifetime, localTime);
+			ClearOldBlobs(starClay->out_blobs, starClay->lifetime, localTime);
 
 			EmitNewBlobs(entity, starClay);
-			RenderBlobs(starClay, worldTransform);
+			RenderBlobs(starClay, worldTransform, localTime);
 		}
 
 	}
@@ -64,16 +65,18 @@ void StarClaySystem::Update(EntityStorage& entityStorage, float deltaTime)
 
 //// Blobs processing ////
 
-void StarClaySystem::ClearOldBlobs(std::vector<Blob>& blobs, const double& lifetime) {
+void StarClaySystem::ClearOldBlobs(std::vector<Blob>& blobs, const double& lifetime, const double& localTime)
+{
 	auto it = std::remove_if(blobs.begin(), blobs.end(),
-		[lifetime](const auto& blob) {
-			return timer::currentTime - blob.startTime > lifetime;
+		[lifetime, localTime](const auto& blob) {
+			return localTime - blob.startTime > lifetime;
 		});
 
 	blobs.erase(it, blobs.end());
 }
 
-void StarClaySystem::EmitNewBlobs(Entity* entity, StarClay* starClay) {
+void StarClaySystem::EmitNewBlobs(Entity* entity, StarClay* starClay)
+{
 	double emitDelta = 1000.0f / starClay->rate;
 	double elapsedTime = abs(entity->localTime - starClay->lastEmitTime);
 
@@ -96,32 +99,37 @@ void StarClaySystem::EmitNewBlobs(Entity* entity, StarClay* starClay) {
 }
 
 
-void StarClaySystem::RenderBlobs(StarClay* starClay, Transform& worldTransform) {
+void StarClaySystem::RenderBlobs(StarClay* starClay, Transform& worldTransform, const double& localTime)
+{
 	int n = GetVertexCount(worldTransform.position, 3, 15, 1);
-
 	int blobsSize = starClay->blobs.size();
+
+	if (blobsSize == 0)
+		return;
+
 	for (int a = 0; a < blobsSize; a++) {
 		Blob& blob = starClay->blobs[a];
 
 		Transform blobTransform = worldTransform;
 		blobTransform.position += worldTransform.GetRightVector() * blob.pos.x + worldTransform.GetUpVector() * blob.pos.y + worldTransform.GetLookVector() * blob.pos.z;
 
-		float timeMultiplier = (timer::currentTime - blob.startTime) / starClay->lifetime;
+		float timeMultiplier = (localTime - blob.startTime) / starClay->lifetime;
 		timeMultiplier = min(timeMultiplier, 1.0f - timeMultiplier) * 2;
 
 		blobTransform.scale = point3d(blob.radius * timeMultiplier);
 
 		ConstBuf::drawerMatrix[a] = GetWorldMatrix(blobTransform);
-		ConstBuf::global[1] = XMFLOAT4(0.04f, 0.0f, 0.19f, 1.0f);
-		ConstBuf::drawerV[0] = n;
 	}
 
 	ConstBuf::Update(8, ConstBuf::drawerMatrix);
 	ConstBuf::ConstToVertex(8);
 
+	ConstBuf::global[0] = XMFLOAT4(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, 1.0f);
+	ConstBuf::global[1] = XMFLOAT4(0.04f, 0.0f, 0.19f, 1.0f);
 	ConstBuf::Update(5, ConstBuf::global);
 	ConstBuf::ConstToVertex(5);
 
+	ConstBuf::drawerV[0] = n;
 	ConstBuf::Update(0, ConstBuf::drawerV);
 	ConstBuf::ConstToVertex(0);
 
