@@ -37,6 +37,8 @@ DirectX::XMVECTOR eulerToQuanternion(float x, float y, float z);
 
 
 int getRandom(int min = 1, int max = 0);
+float getRandomFloat(float min, float max);
+point3d getRandomDirection();
 
 point3d rotatePoint(point3d, float);
 

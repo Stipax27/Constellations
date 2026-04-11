@@ -25,10 +25,10 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     VS_OUTPUT output;
 
     uint n = drawerV[0];
-    uint instanceID = vID / 6;
+    uint quadID = vID / 6;
 
-    float row = instanceID % n;
-    float col = instanceID / n;
+    float row = quadID % n;
+    float col = quadID / n;
 
     float2 quadUV[6] = {
         float2(-1, -1), float2(1, -1), float2(-1, 1),

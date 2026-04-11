@@ -393,8 +393,8 @@ void LevelManagerClass::Shutdown()
 void LevelManagerClass::Frame()
 {
 	mouse->UpdateSystemCursorVisibility();
-	/*if (!window->IsActive())
-		return;*/
+	if (!window->IsActive())
+		return;
 
 	mouse->Update();
 
@@ -563,8 +563,8 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 	};*/
 
 	StarClay* starClay = player->AddComponent<StarClay>();
-	starClay->blobs.push_back(Blob(point3d(0, 0.25, 0.5), 0.2f));
-	starClay->blobs.push_back(Blob(point3d(0.2, -0.1, -0.2), 0.3f));
+	starClay->blobsRadius = { 0.2f, 0.4f };
+	starClay->rate = 20;
 
 	PointCloud* pointCloud = player->AddComponent<PointCloud>();
 	pointCloud->index = 0;

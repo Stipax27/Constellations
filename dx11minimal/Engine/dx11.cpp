@@ -1915,9 +1915,6 @@ void InputAssembler::IA(topology topoType)
 	}
 
 	context->IASetPrimitiveTopology(ttype);
-	//context->IASetInputLayout(NULL);
-	//context->IASetVertexBuffers(0, 0, NULL, NULL, NULL);
-
 	context->IASetInputLayout(Shaders::VS[Shaders::currentVS].pLayout);
 }
 
@@ -1929,6 +1926,12 @@ void InputAssembler::vBuffer(int i)
 	// Set the vertex buffer to active in the input assembler so it can be rendered.
 	context->IASetVertexBuffers(0, 1, &Models::Model[i].vertexBuffer, &stride, &offset);
 	context->IASetIndexBuffer(Models::Model[i].indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+}
+
+void InputAssembler::vBufferNull()
+{
+	context->IASetInputLayout(NULL);
+	context->IASetVertexBuffers(0, 0, NULL, NULL, NULL);
 }
 
 //////////////////////////////////////////////////////////////////////////////////

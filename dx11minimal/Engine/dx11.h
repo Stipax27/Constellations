@@ -475,6 +475,7 @@ namespace InputAssembler
 
 	void IA(topology);
 	void vBuffer(int);
+	void vBufferNull();
 }
 
 

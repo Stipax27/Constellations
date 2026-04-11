@@ -32,7 +32,9 @@ void StarClaySystem::Update(EntityStorage& entityStorage, float deltaTime)
 	Depth::Depth(Depth::depthmode::on);
 
 	Shaders::gShader(0);
+
 	InputAssembler::IA(InputAssembler::topology::triList);
+	InputAssembler::vBufferNull();
 
 	const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<StarClay>();
 	size_t size = entities.size();
@@ -50,35 +52,86 @@ void StarClaySystem::Update(EntityStorage& entityStorage, float deltaTime)
 			if (!frustum->CheckSphere(worldTransform.position, worldTransform.scale.magnitude()))
 				continue;
 
-			for (Blob& blob : starClay->blobs) {
-				Transform blobTransform = worldTransform;
-				blobTransform.position += worldTransform.GetRightVector() * blob.pos.x + worldTransform.GetUpVector() * blob.pos.y + worldTransform.GetLookVector() * blob.pos.z;
-				blobTransform.scale = point3d(blob.radius);
+			ClearOldBlobs(starClay->blobs, starClay->lifetime);
+			ClearOldBlobs(starClay->out_blobs, starClay->lifetime);
 
-				ConstBuf::drawerMatrix[0] = GetWorldMatrix(blobTransform);
-				ConstBuf::Update(8, ConstBuf::drawerMatrix);
-				ConstBuf::ConstToVertex(8);
-
-				ConstBuf::global[1] = XMFLOAT4(0.04f, 0.0f, 0.19f, 1.0f);
-				ConstBuf::Update(5, ConstBuf::global);
-				ConstBuf::ConstToVertex(5);
-
-				Shaders::vShader(starClay->vShader);
-				Shaders::pShader(starClay->pShader);
-
-				int n = GetVertexCount(blobTransform.position, 3, 15, 1);
-
-				ConstBuf::drawerV[0] = n;
-				ConstBuf::Update(0, ConstBuf::drawerV);
-				ConstBuf::ConstToVertex(0);
-
-				context->DrawInstanced(n * n * 6, 1, 0, 0);
-			}
+			EmitNewBlobs(entity, starClay);
+			RenderBlobs(starClay, worldTransform);
 		}
 
 	}
 }
 
+//// Blobs processing ////
+
+void StarClaySystem::ClearOldBlobs(std::vector<Blob>& blobs, const double& lifetime) {
+	auto it = std::remove_if(blobs.begin(), blobs.end(),
+		[lifetime](const auto& blob) {
+			return timer::currentTime - blob.startTime > lifetime;
+		});
+
+	blobs.erase(it, blobs.end());
+}
+
+void StarClaySystem::EmitNewBlobs(Entity* entity, StarClay* starClay) {
+	double emitDelta = 1000.0f / starClay->rate;
+	double elapsedTime = abs(entity->localTime - starClay->lastEmitTime);
+
+	if (elapsedTime >= emitDelta)
+	{
+		int blobsToEmit = min(static_cast<int>(elapsedTime / emitDelta), constCount);
+
+		for (int i = 0; i < blobsToEmit; i++)
+		{
+			point3d pos = getRandomDirection() * getRandomFloat(0.0f, starClay->coreRadius);
+			double startTime = starClay->lastEmitTime + emitDelta * (i + 1);
+			float radius = getRandomFloat(starClay->blobsRadius.first, starClay->blobsRadius.second);
+
+			Blob blob = Blob(pos, radius, startTime);
+			starClay->blobs.push_back(blob);
+		}
+
+		starClay->lastEmitTime += emitDelta * blobsToEmit;
+	}
+}
+
+
+void StarClaySystem::RenderBlobs(StarClay* starClay, Transform& worldTransform) {
+	int n = GetVertexCount(worldTransform.position, 3, 15, 1);
+
+	int blobsSize = starClay->blobs.size();
+	for (int a = 0; a < blobsSize; a++) {
+		Blob& blob = starClay->blobs[a];
+
+		Transform blobTransform = worldTransform;
+		blobTransform.position += worldTransform.GetRightVector() * blob.pos.x + worldTransform.GetUpVector() * blob.pos.y + worldTransform.GetLookVector() * blob.pos.z;
+
+		float timeMultiplier = (timer::currentTime - blob.startTime) / starClay->lifetime;
+		timeMultiplier = min(timeMultiplier, 1.0f - timeMultiplier) * 2;
+
+		blobTransform.scale = point3d(blob.radius * timeMultiplier);
+
+		ConstBuf::drawerMatrix[a] = GetWorldMatrix(blobTransform);
+		ConstBuf::global[1] = XMFLOAT4(0.04f, 0.0f, 0.19f, 1.0f);
+		ConstBuf::drawerV[0] = n;
+	}
+
+	ConstBuf::Update(8, ConstBuf::drawerMatrix);
+	ConstBuf::ConstToVertex(8);
+
+	ConstBuf::Update(5, ConstBuf::global);
+	ConstBuf::ConstToVertex(5);
+
+	ConstBuf::Update(0, ConstBuf::drawerV);
+	ConstBuf::ConstToVertex(0);
+
+	Shaders::vShader(starClay->vShader);
+	Shaders::pShader(starClay->pShader);
+
+	context->DrawInstanced(n * n * 6, blobsSize, 0, 0);
+}
+
+//// Other functions ////
 
 void StarClaySystem::UpdateWorldMatrix(Transform worldTransform) {
 	ConstBuf::camera.world = GetWorldMatrix(worldTransform);
