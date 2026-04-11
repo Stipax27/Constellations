@@ -131,7 +131,7 @@ namespace Textures
 	void shaderResDepth(int);
 	void Create(int, tType, tFormat, XMFLOAT2, bool, bool, bool = false);
 	void UnbindAll();
-	void SetViewport(int, byte);
+	void SetViewport(int, byte); // there's kinda byte redefinition error, but the building works. idk if it'll cause problems if the future
 	void CopyColor(int, int);
 	void CopyDepth(int, int);
 	void TextureToShader(int, unsigned int, targetshader = targetshader::both);

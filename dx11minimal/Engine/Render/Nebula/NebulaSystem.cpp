@@ -116,6 +116,19 @@ void NebulaSystem::Update(EntityStorage& entityStorage, float deltaTime)
 					InputAssembler::IA(InputAssembler::topology::triList);
 					context->Draw(6, 0);
 				}
+				else if (nebula->isOnBackground)
+				{
+					int uavIndex = 11;
+
+					Textures::TextureToShader(uavIndex, 0);
+
+					Shaders::vShader(nebula->vShader);
+					Shaders::gShader(nebula->gShader);
+					PSModeSet(nebula->mode);
+
+					InputAssembler::IA(nebula->topology);
+					Draw::NullDrawer(1, (int)gX * (int)gY);
+				}
 				else
 				{
 					Shaders::vShader(nebula->vShader);

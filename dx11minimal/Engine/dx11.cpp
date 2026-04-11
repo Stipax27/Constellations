@@ -1974,12 +1974,15 @@ void Dx11Init(HWND hwnd, int width, int height)
 	// 1/16 sized rt
 	Textures::Create(10, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 16, height / 16), true, true);
 
+	// full sized uav
+	Textures::Create(11, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), false, false, true);
+
 	// perlin noise rt
-	Textures::Create(11, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
+	Textures::Create(12, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
 	// voronoi noise rt
-	Textures::Create(12, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
+	Textures::Create(13, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
 	// star noise rt
-	Textures::Create(13, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
+	Textures::Create(14, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
 }
 
 //////////////////////////////////////////////////////////////////////////////////

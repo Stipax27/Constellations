@@ -89,6 +89,8 @@ private:
 	void RenderPerlinNoise();
 	void RenderVoronoiNoise();
 	void RenderStarNoise();
+
+	void NoisesToShaders();
 };
 
 #endif

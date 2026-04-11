@@ -69,15 +69,14 @@ int getRandom(int min, int max) {
 float getRandomFloat(float min, float max) {
     static std::random_device rd;
     static std::mt19937 gen(rd());
-    std::uniform_real_distribution<float> dis(min, max);
 
-    return dis(gen);
+    return std::uniform_real_distribution<float>(min, max)(gen);
 }
 
 
 point3d getRandomDirection() {
-    float r1 = getRandomFloat(0, 1);
-    float r2 = getRandomFloat(0, 1);
+    float r1 = getRandomFloat(0.0f, 1.0f);
+    float r2 = getRandomFloat(0.0f, 1.0f);
 
     float z = 2.0f * r1 - 1.0f;
     float theta = 2.0f * XM_PI * r2;

@@ -110,9 +110,7 @@ void World::UpdateRender()
 		firstFrame = false;
 		PreCalculations();
 	}
-	Textures::TextureToShader(11, 1);
-	Textures::TextureToShader(12, 2);
-	Textures::TextureToShader(13, 3);
+	NoisesToShaders();
 
 	Textures::RenderTarget(1, 0);
 	// Clear the buffers to begin the scene.
@@ -150,7 +148,7 @@ void World::UpdateRender()
 ///////////////////////
 
 void World::RenderPerlinNoise() {
-	Textures::RenderTarget(11, 0);
+	Textures::RenderTarget(12, 0);
 	Shaders::vShader(10);
 	Shaders::pShader(200);
 	Draw::Clear({ 0.0f, 0.0f, 0.0f, 1.0f });
@@ -159,7 +157,7 @@ void World::RenderPerlinNoise() {
 }
 
 void World::RenderVoronoiNoise() {
-	Textures::RenderTarget(12, 0);
+	Textures::RenderTarget(13, 0);
 	Shaders::pShader(201);
 	Draw::Clear({ 0.0f, 0.0f, 0.0f, 1.0f });
 	context->Draw(6, 0);
@@ -167,10 +165,16 @@ void World::RenderVoronoiNoise() {
 }
 
 void World::RenderStarNoise() {
-	Textures::RenderTarget(13, 0);
+	Textures::RenderTarget(14, 0);
 	Shaders::vShader(10);
 	Shaders::pShader(202);
 	Draw::Clear({ 0.0f, 0.0f, 0.0f, 1.0f });
 	context->Draw(6, 0);
 	Textures::CreateMipMap();
+}
+
+void World::NoisesToShaders() {
+	Textures::TextureToShader(12, 1);
+	Textures::TextureToShader(13, 2);
+	Textures::TextureToShader(14, 3);
 }
