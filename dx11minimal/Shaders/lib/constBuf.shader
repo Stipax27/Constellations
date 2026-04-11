@@ -75,4 +75,5 @@ cbuffer nebulaDesc : register(b11)
     int nSkipper;
     float4 nBase_color;
     float nScale;
+    int nIsBackground;
 }

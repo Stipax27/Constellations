@@ -120,7 +120,12 @@ void NebulaSystem::Update(EntityStorage& entityStorage, float deltaTime)
 				{
 					int uavIndex = 11;
 
+					ConstBuf::ConstToCompute(7);
+
+					Compute::Dispatch(0, lastRT, uavIndex);
 					Textures::TextureToShader(uavIndex, 0);
+
+					Sampler::SamplerComp(0);
 
 					Shaders::vShader(nebula->vShader);
 					Shaders::gShader(nebula->gShader);

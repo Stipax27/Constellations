@@ -768,7 +768,7 @@ void LevelManagerClass::CreateSpaceBackground(Entity* folder, int quality)
 	nebula->vShader = 25;
 	nebula->count = outerSpace_cnt;
 	nebula->mode = pMode::point;
-	//nebula->isOnBackground = true;
+	nebula->isOnBackground = true;
 }
 
 

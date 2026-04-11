@@ -344,6 +344,7 @@ namespace ConstBuf
 		int skipper;
 		XMFLOAT4 base_color;
 		float scale;
+		int isBackground;
 	};
 
 	//----------------------------------------------------------------

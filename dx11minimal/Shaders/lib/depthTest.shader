@@ -17,3 +17,17 @@ void depthTest(float4 pos)
         }
     }
 }
+
+void depthTestAbs(float4 pos)
+{
+	uint width, height;
+    DepthTexture.GetDimensions(width, height);
+
+    float2 halfResUV = pos.xy / float2(width, height);
+    float sceneDepth = DepthTexture.Sample(DepthSampler, halfResUV);
+    
+    if (sceneDepth < 1)
+    {
+        discard;
+    }
+}
