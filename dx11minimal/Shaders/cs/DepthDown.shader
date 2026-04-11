@@ -1,4 +1,4 @@
-#include <lib/constBuf.shader>
+#include <../lib/constBuf.shader>
 
 
 Texture2D<float> InputDepth : register(t0);

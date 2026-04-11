@@ -26,7 +26,7 @@ void depthTestAbs(float4 pos)
     float2 halfResUV = pos.xy / float2(width, height);
     float sceneDepth = DepthTexture.Sample(DepthSampler, halfResUV);
     
-    if (sceneDepth < 1)
+    if (sceneDepth < 1.0)
     {
         discard;
     }

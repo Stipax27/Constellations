@@ -451,6 +451,37 @@ void LevelManagerClass::Frame()
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+void LevelManagerClass::InitSystems()
+{
+	m_World->AddComputeSystem<TimeSystem>();
+	m_World->AddComputeSystem<DelayedDestroySystem>();
+	m_World->AddComputeSystem<AISystem>();
+	m_World->AddComputeSystem<QuestSystem>();
+
+	m_World->AddPhysicSystem<GravitySystem>();
+	m_World->AddPhysicSystem<PhysicSystem>();
+	m_World->AddPhysicSystem<CollisionSystem>();
+	m_World->AddPhysicSystem<CombatSystem>();
+	m_World->AddPhysicSystem<SkeletalAnimationSystem>(context, m_BoneBuffer);
+
+	m_World->AddRenderSystem<MeshSystem>();
+	m_World->AddRenderSystem<StarClaySystem>();
+	m_World->AddRenderSystem<SkinnedMeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera, m_BoneBuffer);
+
+	if (SHOW_COLLIDERS) {
+		m_World->AddRenderSystem<CollisionDrawSystem>();
+	}
+	if (SHOW_GRAVITY) {
+		m_World->AddRenderSystem<GravityDrawSystem>();
+	}
+
+	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum, m_BoneBuffer);
+	m_World->AddRenderSystem<NebulaSystem>();
+	m_World->AddRenderSystem<UISystem>();
+	m_World->AddRenderSystem<UITextSystem>();
+}
+
+
 void LevelManagerClass::LoadModels()
 {
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\HeroFists.obj");
@@ -727,35 +758,7 @@ void LevelManagerClass::CreateUI()
 	rect->color = point3d(0.75f, 0.0f, 0.0f);
 }
 
-void LevelManagerClass::InitSystems()
-{
-	m_World->AddComputeSystem<TimeSystem>();
-	m_World->AddComputeSystem<DelayedDestroySystem>();
-	m_World->AddComputeSystem<AISystem>();
-	m_World->AddComputeSystem<QuestSystem>();
 
-	m_World->AddPhysicSystem<GravitySystem>();
-	m_World->AddPhysicSystem<PhysicSystem>();
-	m_World->AddPhysicSystem<CollisionSystem>();
-	m_World->AddPhysicSystem<CombatSystem>();
-	m_World->AddPhysicSystem<SkeletalAnimationSystem>(context, m_BoneBuffer);
-
-	m_World->AddRenderSystem<MeshSystem>();
-	m_World->AddRenderSystem<StarClaySystem>();
-	m_World->AddRenderSystem<SkinnedMeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera, m_BoneBuffer);
-
-	if (SHOW_COLLIDERS) {
-		m_World->AddRenderSystem<CollisionDrawSystem>();
-	}
-	if (SHOW_GRAVITY) {
-		m_World->AddRenderSystem<GravityDrawSystem>();
-	}
-
-	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum, m_BoneBuffer);
-	m_World->AddRenderSystem<NebulaSystem>();
-	m_World->AddRenderSystem<UISystem>();
-	m_World->AddRenderSystem<UITextSystem>();
-}
 
 
 void LevelManagerClass::CreateSpaceBackground(Entity* folder, int quality)
@@ -768,6 +771,7 @@ void LevelManagerClass::CreateSpaceBackground(Entity* folder, int quality)
 	nebula->vShader = 25;
 	nebula->count = outerSpace_cnt;
 	nebula->mode = pMode::point;
+	//nebula->compress = RenderCompress::x2;
 	nebula->isOnBackground = true;
 }
 

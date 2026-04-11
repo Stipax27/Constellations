@@ -148,7 +148,7 @@ void World::UpdateRender()
 ///////////////////////
 
 void World::RenderPerlinNoise() {
-	Textures::RenderTarget(12, 0);
+	Textures::RenderTarget(13, 0);
 	Shaders::vShader(10);
 	Shaders::pShader(200);
 	Draw::Clear({ 0.0f, 0.0f, 0.0f, 1.0f });
@@ -157,7 +157,7 @@ void World::RenderPerlinNoise() {
 }
 
 void World::RenderVoronoiNoise() {
-	Textures::RenderTarget(13, 0);
+	Textures::RenderTarget(14, 0);
 	Shaders::pShader(201);
 	Draw::Clear({ 0.0f, 0.0f, 0.0f, 1.0f });
 	context->Draw(6, 0);
@@ -165,7 +165,7 @@ void World::RenderVoronoiNoise() {
 }
 
 void World::RenderStarNoise() {
-	Textures::RenderTarget(14, 0);
+	Textures::RenderTarget(15, 0);
 	Shaders::vShader(10);
 	Shaders::pShader(202);
 	Draw::Clear({ 0.0f, 0.0f, 0.0f, 1.0f });
@@ -174,7 +174,7 @@ void World::RenderStarNoise() {
 }
 
 void World::NoisesToShaders() {
-	Textures::TextureToShader(12, 1);
-	Textures::TextureToShader(13, 2);
-	Textures::TextureToShader(14, 3);
+	Textures::TextureToShader(13, 1);
+	Textures::TextureToShader(14, 2);
+	Textures::TextureToShader(15, 3);
 }

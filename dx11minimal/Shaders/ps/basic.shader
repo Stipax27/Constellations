@@ -6,7 +6,7 @@
 
 float4 PS(VS_OUTPUT_PARTICLE input, bool isFrontFace : SV_IsFrontFace) : SV_Target
 {
-    depthTestAbs(input.pos);
+    depthTest(input.pos);
 
     float3 c = saturate(1.-2.*length(input.uv-.5));
 

@@ -25,7 +25,7 @@ private:
 	FrustumClass* frustum;
 
 private:
-	void PSModeSet(pMode);
+	void PSModeSet(pMode, bool);
 };
 
 #endif

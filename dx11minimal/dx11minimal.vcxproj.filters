@@ -350,7 +350,7 @@
     <None Include="Shaders\UIText_PS.shader">
       <Filter>Shaders\Text</Filter>
     </None>
-    <None Include="Shaders\DepthDown.shader">
+    <None Include="Shaders\cs\DepthDown.shader">
       <Filter>Shaders\Depth</Filter>
     </None>
     <None Include="Shaders\Lib\utils.shader">
@@ -528,6 +528,9 @@
     <None Include="Shaders\StarLink_PS.shader" />
     <None Include="Shaders\StarClay\StarClay_VS.shader" />
     <None Include="Shaders\StarClay\StarClay_PS.shader" />
+    <None Include="Shaders\cs\DepthDraw.shader" />
+    <None Include="Shaders\ps\basicBackground.shader" />
+    <None Include="Shaders\ps\basicLowBackground.shader" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">

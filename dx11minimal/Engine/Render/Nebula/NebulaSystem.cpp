@@ -82,10 +82,21 @@ void NebulaSystem::Update(EntityStorage& entityStorage, float deltaTime)
 				ConstBuf::Update(7, ConstBuf::drawerInt);
 				ConstBuf::ConstToPixel(7);
 
-				if (nebula->compress != RenderCompress::none)
+				if (nebula->compress != RenderCompress::none || nebula->isOnBackground)
 				{
-					int uavIndex = (int)nebula->compress * 2 + 1;
-					int rtIndex = (int)nebula->compress * 2 + 2;
+					int uavIndex;
+					int rtIndex;
+					int csIndex;
+					if (nebula->isOnBackground) {
+						uavIndex = 11;
+						rtIndex = 12;
+						csIndex = 1;
+					}
+					else {
+						uavIndex = (int)nebula->compress * 2 + 1;
+						rtIndex = (int)nebula->compress * 2 + 2;
+						csIndex = 0;
+					}
 
 					Textures::RenderTarget(rtIndex, 0);
 					Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
@@ -93,14 +104,14 @@ void NebulaSystem::Update(EntityStorage& entityStorage, float deltaTime)
 
 					ConstBuf::ConstToCompute(7);
 
-					Compute::Dispatch(0, lastRT, uavIndex);
+					Compute::Dispatch(csIndex, lastRT, uavIndex);
 					Textures::TextureToShader(uavIndex, 0);
 
 					Sampler::SamplerComp(0);
 
 					Shaders::vShader(nebula->vShader);
 					Shaders::gShader(nebula->gShader);
-					PSModeSet(nebula->mode);
+					PSModeSet(nebula->mode, nebula->isOnBackground);
 
 					InputAssembler::IA(nebula->topology);
 					Draw::NullDrawer(1, (int)gX * (int)gY);
@@ -116,29 +127,11 @@ void NebulaSystem::Update(EntityStorage& entityStorage, float deltaTime)
 					InputAssembler::IA(InputAssembler::topology::triList);
 					context->Draw(6, 0);
 				}
-				else if (nebula->isOnBackground)
-				{
-					int uavIndex = 11;
-
-					ConstBuf::ConstToCompute(7);
-
-					Compute::Dispatch(0, lastRT, uavIndex);
-					Textures::TextureToShader(uavIndex, 0);
-
-					Sampler::SamplerComp(0);
-
-					Shaders::vShader(nebula->vShader);
-					Shaders::gShader(nebula->gShader);
-					PSModeSet(nebula->mode);
-
-					InputAssembler::IA(nebula->topology);
-					Draw::NullDrawer(1, (int)gX * (int)gY);
-				}
 				else
 				{
 					Shaders::vShader(nebula->vShader);
 					Shaders::gShader(nebula->gShader);
-					PSModeSet(nebula->mode);
+					PSModeSet(nebula->mode, nebula->isOnBackground);
 
 					InputAssembler::IA(nebula->topology);
 					Draw::NullDrawer(1, (int)gX * (int)gY);
@@ -150,18 +143,18 @@ void NebulaSystem::Update(EntityStorage& entityStorage, float deltaTime)
 }
 
 
-void NebulaSystem::PSModeSet(pMode mode)
+void NebulaSystem::PSModeSet(pMode mode, bool isBackground)
 {
 	switch (mode)
 	{
 	case pMode::point:
 	{
-		Shaders::pShader(23);
+		Shaders::pShader(isBackground ? 26 : 23);
 		break;
 	}
 	case pMode::glow:
 	{
-		Shaders::pShader(24);
+		Shaders::pShader(isBackground ? 27 : 24);
 		break;
 	}
 	}
