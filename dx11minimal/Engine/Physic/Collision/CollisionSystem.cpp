@@ -31,9 +31,9 @@ void CollisionSystem::Update(EntityStorage& entityStorage, float deltaTime)
 		if (!IsEntityValid(entity1))
 			continue;
 		
-		Transform* transform1 = entity1->GetComponentInAncestor<Transform>();
+		Transform* transform1 = entity1->GetUpperComponent<Transform>();
 		PhysicBody* physicBody1 = entity1->GetComponentInAncestor<PhysicBody>();
-		SphereCollider* collider1 = entity1->GetFirstComponentOfBase<SphereCollider>();
+		SphereCollider* collider1 = entity1->GetComponent<SphereCollider>();
 		if (transform1 == nullptr || collider1 == nullptr || !collider1->active)
 			continue;
 
@@ -46,7 +46,7 @@ void CollisionSystem::Update(EntityStorage& entityStorage, float deltaTime)
 			if (entity2 == entity1 || !IsEntityValid(entity2) || (entity1->GetTimeScale() == 0.0f && entity2->GetTimeScale() == 0.0f))
 				continue;
 
-			SphereCollider* collider2 = entity2->GetFirstComponentOfBase<SphereCollider>();
+			SphereCollider* collider2 = entity2->GetComponent<SphereCollider>();
 			if (collider2 == nullptr || !collider2->active || !CollisionFilter::collisionTable[(int)collider1->collisionGroup][(int)collider2->collisionGroup])
 				continue;
 
