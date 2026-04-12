@@ -125,6 +125,7 @@ private:
 	std::vector<AnimationClip> m_TestAnimAnimations;
 private: // AI amogus
 	Entity* testEnemy;
+	Entity* worldFolder;
 
 };
 

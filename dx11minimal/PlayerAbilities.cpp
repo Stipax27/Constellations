@@ -236,13 +236,6 @@ void PlayerAbilities::Update()
 		if (shieldEntity) {
 			Star* shieldStar = shieldEntity->GetComponent<Star>();
 			if (shieldStar) {
-				// Обновляем позицию щита (следует за игроком)
-				Transform* playerTransform = playerEntity->GetComponent<Transform>();
-				Transform* shieldTransform = shieldEntity->GetComponent<Transform>();
-				if (playerTransform && shieldTransform) {
-					shieldTransform->position = playerTransform->position;
-				}
-
 				// Эффект при низкой энергии
 				if (stamina < maxStamina * 0.2f) {
 					// Мигаем красным
@@ -323,12 +316,10 @@ void PlayerAbilities::ShieldStart()
 	}
 
 	// Создаем визуальный эффект щита
-	shieldEntity = entityStorage->CreateEntity("PlayerShield");
+	shieldEntity = entityStorage->CreateEntity("PlayerShield", playerEntity);
 
 	// Делаем щит дочерним объектом игрока
-	Transform* playerTransform = playerEntity->GetComponent<Transform>();
 	Transform* shieldTransform = shieldEntity->AddComponent<Transform>();
-	shieldTransform->position = playerTransform->position;
 
 	// Добавляем визуальный компонент
 	Star* shieldStar = shieldEntity->AddComponent<Star>();
@@ -345,9 +336,10 @@ void PlayerAbilities::ShieldStart()
 	sphereCollider->isTouchable = true;
 	sphereCollider->radius = 2.0f;
 
-	Health* ShieldHp = shieldEntity->AddComponent<Health>();
-	ShieldHp->fraction = Fraction::Player;
-	ShieldHp->immortal = true;
+	DamageBlocker* damageBlocker = playerEntity->AddComponent<DamageBlocker>();
+	damageBlocker->SetBlockFactor(DamageType::Physic, 1);
+	damageBlocker->SetBlockFactor(DamageType::Magic, 0.5);
+
 	UpdateProjectiles();
 	shieldVisualIntensity = 0.5f;
 	shieldLastDamageTime = 0.0f;
@@ -374,6 +366,7 @@ void PlayerAbilities::ShieldEnd()
 		shieldEntity->Destroy();
 		shieldEntity = nullptr;
 	}
+	playerEntity->RemoveComponent<DamageBlocker>();
 }
 
 // Метод для обработки входящего урона
@@ -754,6 +747,10 @@ void PlayerAbilities::BlockStart()
 
 	block = true;
 
+	DamageBlocker* damageBlocker = playerEntity->AddComponent<DamageBlocker>();
+	damageBlocker->SetBlockFactor(DamageType::Magic, 1);
+	damageBlocker->SetBlockFactor(DamageType::Physic, 0.4);
+
 	PointCloud* pointCloud = playerEntity->GetComponent<PointCloud>();
 	if (pointCloud) {
 		pointCloud->color = point3d(1.0f, 1.0f, 0.0f);
@@ -768,6 +765,8 @@ void PlayerAbilities::BlockEnd()
 	if (pointCloud) {
 		pointCloud->color = point3d(1.0f, 0.6f, 0.9f);
 	}
+
+	playerEntity->RemoveComponent<DamageBlocker>();
 }
 
 

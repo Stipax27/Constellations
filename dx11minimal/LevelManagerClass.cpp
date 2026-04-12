@@ -99,8 +99,7 @@ bool LevelManagerClass::Initialize()
 	SingleDamager* singleDamager;
 
 
-	Entity* folder = m_World->entityStorage->CreateEntity("World");
-	folder->SetActive(true);
+	worldFolder = m_World->entityStorage->CreateEntity("World");
 
 	Entity* player = CreatePlayer();
 
@@ -144,7 +143,7 @@ bool LevelManagerClass::Initialize()
 	//singleDamager = entity->AddComponent<SingleDamager>();
 	//singleDamager->damage = 1000;
 
-	entity = m_World->entityStorage->CreateEntity("TestStar", folder);
+	entity = m_World->entityStorage->CreateEntity("TestStar", worldFolder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(-200, 0, -200);
 	star = entity->AddComponent<Star>();
@@ -161,7 +160,7 @@ bool LevelManagerClass::Initialize()
 	gravityPoint->radius = 150;
 
 
-	entity = m_World->entityStorage->CreateEntity("Snake", folder);
+	entity = m_World->entityStorage->CreateEntity("Snake", worldFolder);
 	entity->AddComponent<Transform>();
 
 	pointCloud = entity->AddComponent<PointCloud>();
@@ -175,11 +174,11 @@ bool LevelManagerClass::Initialize()
 
 	/////////////////////////
 	
-	CreateSpaceBackground(folder, 1);
-	CreateAries(folder);
+	CreateSpaceBackground(worldFolder, 1);
+	CreateAries(worldFolder);
 	//CreateZenithLocation(folder, 2);
-	CreateNebula(folder,2);
-	CreateStarQuestLoc(folder, 2);
+	CreateNebula(worldFolder,2);
+	CreateStarQuestLoc(worldFolder, 2);
 
 	/////////////////////////
 
@@ -204,7 +203,7 @@ bool LevelManagerClass::Initialize()
 	
 
 	// Тестовый враг для ИИ amogus
-	testEnemy = m_World->entityStorage->CreateEntity("TestEnemy", folder);
+	testEnemy = m_World->entityStorage->CreateEntity("TestEnemy", worldFolder);
 	Transform* testTransform = testEnemy->AddComponent<Transform>();
 	point3d CentralPatrolPoint = point3d(10.0f, 5.0f, 15.0f);
 	testTransform->position = CentralPatrolPoint + point3d(5.0f, 0.0f, 0.0f); // Стартовая позиция
@@ -266,7 +265,7 @@ bool LevelManagerClass::Initialize()
 	ai->maxAcceleration = 100;
 
 
-	auto spawnSkinned = [this, folder](
+	auto spawnSkinned = [this](
 		const char* name,
 		const point3d& pos,
 		const point3d& scale,
@@ -276,7 +275,7 @@ bool LevelManagerClass::Initialize()
 		const char* preferredClip = nullptr,
 		bool autoPlay = true) -> Entity*
 	{
-		Entity* e = m_World->entityStorage->CreateEntity(name, folder);
+		Entity* e = m_World->entityStorage->CreateEntity(name, worldFolder);
 		Transform* t = e->AddComponent<Transform>();
 		t->position = pos;
 		t->scale = scale;
@@ -387,6 +386,8 @@ void LevelManagerClass::Shutdown()
 	}
 }
 
+double shotTime = 0;
+
 void LevelManagerClass::Frame()
 {
 	mouse->UpdateSystemCursorVisibility();
@@ -405,6 +406,70 @@ void LevelManagerClass::Frame()
 	playerController->ProccessUI();
 
 	questManager->UpdateQuests();
+
+	// DEBUG
+
+	if (worldFolder->localTime - shotTime >= 500) {
+		shotTime = worldFolder->localTime;
+
+		// Physic damage
+		Entity* projectile = m_World->entityStorage->CreateEntity("TestProjectile", worldFolder);
+		Transform* transform = projectile->AddComponent<Transform>();
+		transform->position = point3d(0, 20, 0);
+
+		PhysicBody* physicBody = projectile->AddComponent<PhysicBody>();
+		physicBody->airFriction = 0.0f;
+		physicBody->velocity = point3d(0, 0, 1) * 20.0f;
+
+		Star* star = projectile->AddComponent<Star>();
+		star->radius = 0.8f;
+		star->color1 = point3d(0.9f, 1.0f, 0.99f);
+		star->color2 = point3d(0.34f, 0.8f, 0.45f);
+		star->crownColor = point3d(0.27f, 0.63f, 1.0f);
+
+		SingleDamager* singleDamager = projectile->AddComponent<SingleDamager>();
+		singleDamager->target = Fraction::Player;
+		singleDamager->damage = 5.0f;
+		singleDamager->destroyable = true;
+		singleDamager->damageType = DamageType::Physic;
+
+		SphereCollider* sphereCollider = projectile->AddComponent<SphereCollider>();
+		sphereCollider->isTouchable = false;
+		sphereCollider->radius = 0.8f;
+
+		DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
+		delayedDestroy->lifeTime = 2000;
+
+		// Magic damage
+		projectile = m_World->entityStorage->CreateEntity("TestProjectile", worldFolder);
+		transform = projectile->AddComponent<Transform>();
+		transform->position = point3d(10, 20, 0);
+
+		physicBody = projectile->AddComponent<PhysicBody>();
+		physicBody->airFriction = 0.0f;
+		physicBody->velocity = point3d(0, 0, 1) * 20.0f;
+
+		star = projectile->AddComponent<Star>();
+		star->radius = 0.8f;
+		star->color1 = point3d(1, 0.6, 0);
+		star->color2 = point3d(0.93, 0.28, 0);
+		star->crownColor = point3d(1, 0.87, 0.25);
+
+		singleDamager = projectile->AddComponent<SingleDamager>();
+		singleDamager->target = Fraction::Player;
+		singleDamager->damage = 5.0f;
+		singleDamager->destroyable = true;
+		singleDamager->damageType = DamageType::Magic;
+
+		sphereCollider = projectile->AddComponent<SphereCollider>();
+		sphereCollider->isTouchable = false;
+		sphereCollider->radius = 0.8f;
+
+		delayedDestroy = projectile->AddComponent<DelayedDestroy>();
+		delayedDestroy->lifeTime = 2000;
+	}
+
+	// DEBUG
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 

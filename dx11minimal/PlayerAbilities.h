@@ -26,6 +26,7 @@
 #include "Engine/Render/Beam.h"
 #include "Engine/Render/PointCloud.h"
 #include "Engine/Compute/Combat/Health.h"
+#include "Engine/Compute/Combat/DamageBlocker.h"
 #include "Engine/Render/Mesh/Mesh.h"
 
 #include "Engine/Render/Nebula/Nebula.h"
