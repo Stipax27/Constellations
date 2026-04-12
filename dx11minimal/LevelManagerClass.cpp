@@ -160,17 +160,14 @@ bool LevelManagerClass::Initialize()
 	gravityPoint->radius = 150;
 
 
-	entity = m_World->entityStorage->CreateEntity("Snake", worldFolder);
-	entity->AddComponent<Transform>();
-
-	pointCloud = entity->AddComponent<PointCloud>();
-	pointCloud->index = 7;
-	//pointCloud->scale = point3d(0.3f, 0.3f, 0.3f);
-	pointCloud->pointSize = 1.0f;
-	pointCloud->brightness = 2.0f;
-	pointCloud->color = point3d(1, 0.6f, 0.9f);
-	pointCloud->frustumRadius = 40;
-
+	entity = m_World->entityStorage->CreateEntity("Ray", worldFolder);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(20, 20, 0);
+	Beam* beam = entity->AddComponent<Beam>();
+	beam->point1 = point3d();
+	beam->point2 = point3d(0, 0, 25);
+	RayDamager* rayDamager = entity->AddComponent<RayDamager>();
+	rayDamager->repeats = -1;
 
 	/////////////////////////
 	
@@ -519,6 +516,7 @@ void LevelManagerClass::InitSystems()
 	m_World->AddComputeSystem<DelayedDestroySystem>();
 	m_World->AddComputeSystem<AISystem>();
 	m_World->AddComputeSystem<QuestSystem>();
+	m_World->AddComputeSystem<RayDamageSystem>();
 
 	m_World->AddPhysicSystem<GravitySystem>();
 	m_World->AddPhysicSystem<PhysicSystem>();

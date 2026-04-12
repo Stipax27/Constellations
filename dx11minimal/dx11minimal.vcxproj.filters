@@ -82,6 +82,7 @@
     <ClCompile Include="Engine\Compute\Quests\QuestManager.cpp" />
     <ClCompile Include="Engine\Compute\Quests\Queststarcollection.cpp" />
     <ClCompile Include="Engine\Render\StarClay\StarClaySystem.cpp" />
+    <ClCompile Include="Engine\Compute\Combat\RayDamageSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LevelManagerClass.h">
@@ -220,6 +221,8 @@
     <ClInclude Include="Engine\Compute\Quests\Queststarcollection.h" />
     <ClInclude Include="Engine\Render\StarClay\StarClay.h" />
     <ClInclude Include="Engine\Render\StarClay\StarClaySystem.h" />
+    <ClInclude Include="Engine\Compute\Combat\RayDamager.h" />
+    <ClInclude Include="Engine\Compute\Combat\RayDamageSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">
