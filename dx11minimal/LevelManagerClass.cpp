@@ -159,7 +159,6 @@ bool LevelManagerClass::Initialize()
 	gravityPoint->mass = 500;
 	gravityPoint->radius = 150;
 
-
 	entity = m_World->entityStorage->CreateEntity("Ray", worldFolder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(20, 20, 0);
@@ -167,7 +166,9 @@ bool LevelManagerClass::Initialize()
 	beam->point1 = point3d();
 	beam->point2 = point3d(0, 0, 25);
 	RayDamager* rayDamager = entity->AddComponent<RayDamager>();
+	rayDamager->direction = point3d(0, 0, 25);
 	rayDamager->repeats = -1;
+	rayDamager->damage = 0.1f;
 
 	/////////////////////////
 	

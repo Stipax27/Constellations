@@ -47,7 +47,7 @@ void RayDamageSystem::Update(EntityStorage& entityStorage, float deltaTime)
 			DamageUnit unit = DamageUnit(rayDamager->damageType, rayDamager->damage);
 			hres.second->damageQueue.push_back(unit);
 
-			rayDamager->lastDamageTime = timer::currentTime;
+			rayDamager->lastDamageTime = entity->localTime;
 			rayDamager->repeatCount++;
 
 			if (rayDamager->repeats >= 0 && rayDamager->repeatCount >= rayDamager->repeats) {
