@@ -26,6 +26,8 @@ private:
 	FrustumClass* frustum;
 	CameraClass* camera;
 
+	XMMATRIX camMatrix;
+
 private:
 	void ClearOldBlobs(std::vector<Blob>& blobs, const double& lifetime, const double& localTime);
 	void EmitNewBlobs(Entity* entity, StarClay* starClay);

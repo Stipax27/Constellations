@@ -12,6 +12,7 @@ StarClaySystem::StarClaySystem()
 
 void StarClaySystem::Initialize()
 {
+	camMatrix = XMMatrixIdentity();
 }
 
 
@@ -150,6 +151,7 @@ void StarClaySystem::RenderStarBackground()
 	Depth::Depth(Depth::depthmode::off);
 
 	int lastRT = Textures::currentRT;
+	camMatrix = LerpMatrix(camMatrix, camera->GetMatrixRotation(), 0.1f);
 
 	Textures::RenderTarget(16, 0);
 	Draw::Clear({ 0.04f, 0.0f, 0.19f, 1.0f });
@@ -162,6 +164,11 @@ void StarClaySystem::RenderStarBackground()
 	ConstBuf::drawerInt[0] = 0;
 	ConstBuf::Update(7, ConstBuf::drawerInt);
 	ConstBuf::ConstToPixel(7);
+
+	ConstBuf::camera.world = camMatrix;
+	ConstBuf::UpdateCamera();
+	ConstBuf::ConstToVertex(3);
+	ConstBuf::ConstToPixel(3);
 
 	Shaders::vShader(2);
 	Shaders::pShader(2);
