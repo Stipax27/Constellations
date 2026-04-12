@@ -35,15 +35,19 @@ struct RayInfo {
 	point3d origin;
 	point3d direction;
 	CollisionFilter::Group collisionGroup;
+	bool touchableOnly;
 
 	RayInfo()
 	{
 		origin = point3d();
 		direction = point3d();
 		collisionGroup = CollisionFilter::Group::Projectile;
+		touchableOnly = false;
 	}
 
-	RayInfo(point3d Origin, point3d Direction, CollisionFilter::Group CollisionGroup) : origin(Origin), direction(Direction), collisionGroup(CollisionGroup) {}
+	RayInfo(point3d Origin, point3d Direction, CollisionFilter::Group CollisionGroup, bool TouchableOnly)
+		: origin(Origin), direction(Direction), collisionGroup(CollisionGroup), touchableOnly(TouchableOnly)
+	{}
 };
 
 struct RaycastResult {

@@ -660,7 +660,7 @@ void PlayerAbilities::Attack(Transform startTransform, point3d direction)
 		stamina -= ATTACK_COST;
 	}
 
-	RayInfo rayInfo = RayInfo(camera->position, direction * RAY_DISTANCE, CollisionFilter::Group::PlayerRay);
+	RayInfo rayInfo = RayInfo(camera->position, direction * RAY_DISTANCE, CollisionFilter::Group::PlayerRay, false);
 	RaycastResult result = collisionManager->Raycast(rayInfo);
 
 	point3d pos = result.hit ? result.position : camera->position + direction * RAY_DISTANCE;

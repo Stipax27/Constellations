@@ -13,6 +13,7 @@ struct RayDamager : Component
 	Fraction target = Fraction::Player;
 	DamageType damageType = DamageType::Pure;
 	CollisionFilter::Group collisionGroup = CollisionFilter::Group::Enemy;
+	bool touchableOnly = true;
 
 	float damage = 1.0f;
 	int repeats = 100;

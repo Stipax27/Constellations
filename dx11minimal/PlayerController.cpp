@@ -411,7 +411,7 @@ void PlayerController::LockOnTarget()
 {
 	if (!lockMovementOnTarget) {
 		point3d mouseDirection = mouse->GetMouseDirection();
-		RayInfo rayInfo = RayInfo(camera->position, mouseDirection * RAY_DISTANCE, CollisionFilter::Group::PlayerRay);
+		RayInfo rayInfo = RayInfo(camera->position, mouseDirection * RAY_DISTANCE, CollisionFilter::Group::PlayerRay, false);
 		RaycastResult result = collisionManager->Raycast(rayInfo);
 
 		if (result.hit) {

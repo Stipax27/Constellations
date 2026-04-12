@@ -61,7 +61,10 @@ RaycastResult CollisionManagerClass::Raycast(const RayInfo& ray)
 		RaycastResult hit;
 
         SphereCollider* sphereCollider = entity->GetComponent<SphereCollider>();
-        if (sphereCollider != nullptr && sphereCollider->active && CollisionFilter::collisionTable[(int)sphereCollider->collisionGroup][(int)ray.collisionGroup]) {
+        if (sphereCollider != nullptr && sphereCollider->active 
+            && CollisionFilter::collisionTable[(int)sphereCollider->collisionGroup][(int)ray.collisionGroup]
+            && (!ray.touchableOnly || sphereCollider->isTouchable))
+        {
             if (raycast_sphere(ray, GetWorldTransform(entity), sphereCollider, hit) && hit.distance < closestHit.distance) {
                 closestHit.hit = true;
                 closestHit.distance = hit.distance;

@@ -36,7 +36,8 @@ void RayDamageSystem::Update(EntityStorage& entityStorage, float deltaTime)
 
 		Transform worldTransform = GetWorldTransform(entity);
 
-		RaycastResult result = collisionManagerClass->Raycast(RayInfo(worldTransform.position, rayDamager->direction, rayDamager->collisionGroup));
+		RayInfo rayInfo = RayInfo(worldTransform.position, rayDamager->direction, rayDamager->collisionGroup, rayDamager->touchableOnly);
+		RaycastResult result = collisionManagerClass->Raycast(rayInfo);
 		if (!result.hit)
 			continue;
 
