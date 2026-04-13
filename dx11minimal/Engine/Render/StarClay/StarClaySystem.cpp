@@ -153,11 +153,12 @@ void StarClaySystem::RenderStarBackground()
 
 	int lastRT = Textures::currentRT;
 
-	XMMATRIX matrixDelta = GetRelativeRotationMatrix(prevCamMatrix, camera->GetMatrixRotation());
-	matrixDelta *= matrixDelta;
+	XMMATRIX curCamMatrix = camera->GetMatrixRotation();
+	XMMATRIX matrixDelta = GetRelativeRotationMatrix(prevCamMatrix, curCamMatrix);
+	matrixDelta *= matrixDelta * matrixDelta;
 
 	starsRotMatrix = LerpMatrix(starsRotMatrix, matrixDelta, 0.1f);
-	prevCamMatrix = camera->GetMatrixRotation();
+	prevCamMatrix = curCamMatrix;
 
 	Textures::RenderTarget(16, 0);
 	Draw::Clear({ 0.04f, 0.0f, 0.19f, 1.0f });
