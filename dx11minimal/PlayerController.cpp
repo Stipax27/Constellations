@@ -58,6 +58,8 @@ void PlayerController::Initialize(Entity* Player, EntityStorage* entityStorage)
 
 	abilities = new PlayerAbilities;
 	abilities->Initialize(playerEntity, entityStorage);
+
+	SetCursorPos(window->width / 2, window->height / 2);
 }
 
 

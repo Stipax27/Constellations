@@ -2,6 +2,7 @@
 #include <random>
 
 using namespace std;
+using namespace DirectX;
 
 
 float clamp(float x, float a, float b) {
@@ -220,7 +221,7 @@ DirectX::XMMATRIX GetMatrixFromLookVector(Transform& transform, point3d directio
     return matrixRotation * transform.mRotation;
 }
 
-DirectX::XMMATRIX GetMatrixFromDirection(const point3d& direction, const point3d& upVector) {
+DirectX::XMMATRIX GetMatrixFromDirection(const point3d& direction, point3d upVector) {
     float length = direction.magnitude();
     if (length < 0.001f) {
         return DirectX::XMMatrixIdentity();
