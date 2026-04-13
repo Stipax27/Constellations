@@ -220,7 +220,7 @@ DirectX::XMMATRIX GetMatrixFromLookVector(Transform& transform, point3d directio
     return matrixRotation * transform.mRotation;
 }
 
-DirectX::XMMATRIX GetMatrixFromDirection(point3d direction, point3d upVector) {
+DirectX::XMMATRIX GetMatrixFromDirection(const point3d& direction, const point3d& upVector) {
     float length = direction.magnitude();
     if (length < 0.001f) {
         return DirectX::XMMatrixIdentity();
@@ -266,7 +266,7 @@ DirectX::XMMATRIX GetMatrixFromDirection(point3d direction, point3d upVector) {
     return matrixRotation;
 }
 
-DirectX::XMMATRIX GetMatrixLookAt(DirectX::XMMATRIX originMatrix, point3d direction) {
+DirectX::XMMATRIX GetMatrixLookAt(const DirectX::XMMATRIX& originMatrix, const point3d& direction) {
     point3d currentLookVector = point3d(originMatrix.r[2].m128_f32[0], originMatrix.r[2].m128_f32[1], originMatrix.r[2].m128_f32[2]).normalized();
     point3d rotationAxis = currentLookVector.cross(direction).normalized();
     DirectX::XMVECTOR rotationAxisVector = DirectX::XMVectorSet(rotationAxis.x, rotationAxis.y, rotationAxis.z, 0.0f);
@@ -278,7 +278,7 @@ DirectX::XMMATRIX GetMatrixLookAt(DirectX::XMMATRIX originMatrix, point3d direct
     return matrixRotation;
 }
 
-DirectX::XMMATRIX TransformMatrixToUpVector(DirectX::XMMATRIX sourceMatrix, point3d targetUpVector) {
+DirectX::XMMATRIX TransformMatrixToUpVector(const DirectX::XMMATRIX& sourceMatrix, const point3d& targetUpVector) {
     point3d currentRight = point3d(
         sourceMatrix.r[0].m128_f32[0],
         sourceMatrix.r[0].m128_f32[1],
@@ -337,6 +337,54 @@ DirectX::XMMATRIX TransformMatrixToUpVector(DirectX::XMMATRIX sourceMatrix, poin
     );
 
     return resultMatrix;
+}
+
+
+float GetSignedAngleBetweenLookVectors(const XMMATRIX& matrix1, const XMMATRIX& matrix2, bool inDegrees)
+{
+    XMVECTOR look1 = XMVector3Normalize(matrix1.r[2]);
+    XMVECTOR look2 = XMVector3Normalize(matrix2.r[2]);
+
+    float dot = XMVectorGetX(XMVector3Dot(look1, look2));
+    dot = max(-1.0f, min(1.0f, dot));
+    float angleRad = acosf(dot);
+
+    XMVECTOR cross = XMVector3Cross(look1, look2);
+    float sign = XMVectorGetX(XMVector3Dot(cross, XMVectorSet(0, 1, 0, 0)));
+
+    angleRad *= (sign < 0) ? -1.0f : 1.0f;
+
+    return inDegrees ? XMConvertToDegrees(angleRad) : angleRad;
+}
+
+
+XMMATRIX GetRelativeMatrix(const XMMATRIX& matrixA, const XMMATRIX& matrixB)
+{
+    XMMATRIX invA = XMMatrixInverse(nullptr, matrixA);
+    XMMATRIX delta = XMMatrixMultiply(matrixB, invA);
+
+    return delta;
+}
+
+
+XMMATRIX GetRelativeRotationMatrix(const XMMATRIX& matrixA, const XMMATRIX& matrixB)
+{
+    XMMATRIX rotationA = XMMatrixIdentity();
+    rotationA.r[0] = XMVector3Normalize(matrixA.r[0]);  // Right
+    rotationA.r[1] = XMVector3Normalize(matrixA.r[1]);  // Up
+    rotationA.r[2] = XMVector3Normalize(matrixA.r[2]);  // Look
+    rotationA.r[3] = XMVectorSet(0, 0, 0, 1);
+
+    XMMATRIX rotationB = XMMatrixIdentity();
+    rotationB.r[0] = XMVector3Normalize(matrixB.r[0]);
+    rotationB.r[1] = XMVector3Normalize(matrixB.r[1]);
+    rotationB.r[2] = XMVector3Normalize(matrixB.r[2]);
+    rotationB.r[3] = XMVectorSet(0, 0, 0, 1);
+
+    XMMATRIX invA = XMMatrixInverse(nullptr, rotationA);
+    XMMATRIX delta = XMMatrixMultiply(rotationB, invA);
+
+    return delta;
 }
 
 

@@ -28,9 +28,13 @@ float degreesToRadians(float);
 std::vector<point3d> smoothCornersPath(const std::vector<point3d>& points, int numberIterations);
 
 DirectX::XMMATRIX GetMatrixFromLookVector(Transform& transform, point3d direction);
-DirectX::XMMATRIX GetMatrixFromDirection(point3d direction, point3d upVector = point3d(0.0f, 1.0f, 0.0f));
-DirectX::XMMATRIX GetMatrixLookAt(DirectX::XMMATRIX originMatrix, point3d direction);
-DirectX::XMMATRIX TransformMatrixToUpVector(DirectX::XMMATRIX sourceMatrix, point3d targetUpVector);
+DirectX::XMMATRIX GetMatrixFromDirection(const point3d& direction, const point3d& upVector = point3d(0.0f, 1.0f, 0.0f));
+DirectX::XMMATRIX GetMatrixLookAt(const DirectX::XMMATRIX& originMatrix, const point3d& direction);
+DirectX::XMMATRIX TransformMatrixToUpVector(const DirectX::XMMATRIX& sourceMatrix, const point3d& targetUpVector);
+
+float GetSignedAngleBetweenLookVectors(const XMMATRIX& matrix1, const XMMATRIX& matrix2, bool inDegrees = false);
+XMMATRIX GetRelativeMatrix(const XMMATRIX& matrixA, const XMMATRIX& matrixB);
+XMMATRIX GetRelativeRotationMatrix(const XMMATRIX& matrixA, const XMMATRIX& matrixB);
 
 point3d quaternionToEuler(float x, float y, float z, float w);
 DirectX::XMVECTOR eulerToQuanternion(float x, float y, float z);
