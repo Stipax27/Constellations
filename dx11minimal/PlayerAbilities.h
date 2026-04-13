@@ -192,7 +192,7 @@ private:
 	Entity* SwordCharged(Transform, point3d);
 	Entity* BowCharged(Transform, point3d);
 
-	CollisionInfo GetProjectileCollisionInfo(Entity*);
+	const CollisionInfo GetProjectileCollisionInfo(Entity*);
 
 	Nebula* FindNearestNebula();
 };

@@ -832,7 +832,7 @@ void PlayerAbilities::UpdateProjectiles()
 		Entity* projectile = projectiles[i];
 
 		if (IsEntityValid(projectile) && !projectile->IsDeleting() && !projectile->HasComponent<SingleDamager>()) {
-			CollisionInfo info = GetProjectileCollisionInfo(projectile);
+			const CollisionInfo info = GetProjectileCollisionInfo(projectile);
 
 			Entity* impact = entityStorage->CreateEntity("Impact", worldFolder);
 
@@ -1117,7 +1117,7 @@ Entity* PlayerAbilities::BowCharged(Transform startTransform, point3d direction)
 }
 
 
-CollisionInfo PlayerAbilities::GetProjectileCollisionInfo(Entity* projectile)
+const CollisionInfo PlayerAbilities::GetProjectileCollisionInfo(Entity* projectile)
 {
 	SphereCollider* sphereCollider = projectile->GetComponent<SphereCollider>();
 
