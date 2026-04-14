@@ -662,7 +662,7 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 	pointCloud->index = 0;
 	pointCloud->position = point3d(-0.83, -0.8, 0);
 	pointCloud->scale = point3d(0.3f, 0.3f, 0.3f);
-	pointCloud->pointSize = 0.04f;
+	pointCloud->pointSize = 0.02f;
 	pointCloud->brightness = 0.1f;
 	pointCloud->color = point3d(1, 0.6f, 0.9f);
 	pointCloud->compress = RenderCompress::x2;

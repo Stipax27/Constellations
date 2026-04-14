@@ -39,6 +39,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     float size = 3;
     float range = 250;
     float3 starPos = normalize(randomPosition(iID) * range * 2 - range) * range;
+    starPos.z = abs(starPos.z);
 
     float4x4 v = world;
     v._m30_m31_m32 = 0;
