@@ -151,7 +151,7 @@ void StarClaySystem::RenderStarBackground()
 	Rasterizer::Cull(Rasterizer::cullmode::off);
 	Depth::Depth(Depth::depthmode::off);
 
-	string lastRT = Textures::currentRT;
+	const int lastRT = Textures::currentRT;
 
 	XMMATRIX curCamMatrix = camera->GetMatrixRotation();
 	XMMATRIX matrixDelta = GetRelativeRotationMatrix(prevCamMatrix, curCamMatrix);

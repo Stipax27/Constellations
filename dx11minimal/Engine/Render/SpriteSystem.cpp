@@ -62,7 +62,7 @@ void SpriteSystem::Update(EntityStorage& entityStorage, float deltaTime)
 					ConstBuf::ConstToGeometry(5);
 				}
 
-				string lastRT = Textures::currentRT;
+				const int lastRT = Textures::currentRT;
 
 				ConstBuf::drawerInt[0] = pow(2, (int)spriteCluster->compress);
 				ConstBuf::Update(7, ConstBuf::drawerInt);
@@ -70,16 +70,16 @@ void SpriteSystem::Update(EntityStorage& entityStorage, float deltaTime)
 
 				if (spriteCluster->compress != RenderCompress::none)
 				{
-					auto [uavName, rtName, csIndex] = Textures::GetCompressNames(spriteCluster->compress);
+					auto [uavIndex, rtIndex, csIndex] = Textures::GetCompressRes(spriteCluster->compress);
 
-					Textures::RenderTarget(rtName, 0);
+					Textures::RenderTarget(rtIndex, 0);
 					Draw::Clear({0.0f, 0.0f, 0.0f, 0.0f});
 					Draw::ClearDepth();
 
 					ConstBuf::ConstToCompute(7);
 
-					Compute::Dispatch(csIndex, lastRT, uavName);
-					Textures::TextureToShader(uavName, 0);
+					Compute::Dispatch(csIndex, lastRT, uavIndex);
+					Textures::TextureToShader(uavIndex, 0);
 
 					Sampler::SamplerComp(0);
 
@@ -94,7 +94,7 @@ void SpriteSystem::Update(EntityStorage& entityStorage, float deltaTime)
 
 					Textures::RenderTarget(lastRT, 0);
 
-					Textures::TextureToShader(rtName, 0, targetshader::pixel);
+					Textures::TextureToShader(rtIndex, 0, targetshader::pixel);
 
 					Shaders::vShader(10);
 					Shaders::gShader(0);
@@ -267,7 +267,7 @@ void SpriteSystem::Update(EntityStorage& entityStorage, float deltaTime)
 					ConstBuf::ConstToGeometry(0);
 					ConstBuf::ConstToPixel(5);
 
-					string lastRT = Textures::currentRT;
+					const int lastRT = Textures::currentRT;
 
 					ConstBuf::drawerInt[0] = pow(2, (int)pointCloud->compress);
 					ConstBuf::Update(7, ConstBuf::drawerInt);
@@ -275,16 +275,16 @@ void SpriteSystem::Update(EntityStorage& entityStorage, float deltaTime)
 
 					if (pointCloud->compress != RenderCompress::none)
 					{
-						auto [uavName, rtName, csIndex] = Textures::GetCompressNames(pointCloud->compress);
+						auto [uavIndex, rtIndex, csIndex] = Textures::GetCompressRes(pointCloud->compress);
 
-						Textures::RenderTarget(rtName, 0);
+						Textures::RenderTarget(rtIndex, 0);
 						Draw::Clear({ 0.0f, 0.0f, 0.0f, 0.0f });
 						Draw::ClearDepth();
 
 						ConstBuf::ConstToCompute(7);
 
-						Compute::Dispatch(csIndex, lastRT, uavName);
-						Textures::TextureToShader(uavName, 0);
+						Compute::Dispatch(csIndex, lastRT, uavIndex);
+						Textures::TextureToShader(uavIndex, 0);
 
 						Sampler::SamplerComp(0);
 
@@ -316,7 +316,7 @@ void SpriteSystem::Update(EntityStorage& entityStorage, float deltaTime)
 
 						Textures::RenderTarget(lastRT, 0);
 
-						Textures::TextureToShader(rtName, 0, targetshader::pixel);
+						Textures::TextureToShader(rtIndex, 0, targetshader::pixel);
 
 						Shaders::vShader(10);
 						Shaders::gShader(0);
