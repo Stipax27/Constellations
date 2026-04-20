@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <fstream>
 #include <unordered_map>
+#include <wincodec.h>
 #include <wrl/client.h>
 #include <direct.h>
 
@@ -36,6 +37,7 @@
 #include "Render/renderCompress.h"
 
 using namespace DirectX;
+using Microsoft::WRL::ComPtr;
 
 #define FRAMES_PER_SECOND 144
 
@@ -168,10 +170,13 @@ namespace Textures
 	void DepthTarget(std::string, int);
 	void DepthTarget(int, int);
 
-	void LoadTexture(const std::string name, const char* filename);
+	void LoadTGATexture(const std::string name, const char* filename);
 	void LoadDDSTexture(const std::string name, const wchar_t* filename);
+	void LoadPNGTexture(const std::string name, const wchar_t* filename);
 
 	tFormat GetTFormatFromDXGI(DXGI_FORMAT dxgiFormat);
+	DXGI_FORMAT WICToDXGIFormat(WICPixelFormatGUID& wicFormat);
+
 	std::tuple<int, int, int> GetCompressRes(RenderCompress compress);
 }
 

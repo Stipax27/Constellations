@@ -70,6 +70,7 @@ bool LevelManagerClass::Initialize()
 	//Textures::LoadTexture("..\\dx11minimal\\Resourses\\Textures\\testTexture.tga");
 	Textures::LoadDDSTexture("gta", L"..\\dx11minimal\\Resourses\\Textures\\gta.dds");
 	Textures::LoadDDSTexture("aperture", L"..\\dx11minimal\\Resourses\\Textures\\aperture.dds");
+	Textures::LoadPNGTexture("comicsSpot", L"..\\dx11minimal\\Resourses\\Textures\\comicsSpot.png");
 
 	if (modelsLoadingThread.joinable()) {
 		modelsLoadingThread.join();
@@ -824,7 +825,8 @@ void LevelManagerClass::CreateUI()
 	transform2D->position = point3d(0.75f, 0.0f, 0.0f);
 	transform2D->scale = point3d(0.2f, 0.2f, 0.0f);
 	ImageLabel* imageLabel = entity->AddComponent<ImageLabel>();
-	imageLabel->textureName = "aperture";
+	imageLabel->textureName = "comicsSpot";
+	imageLabel->color = point3d(0.12, 0.91, 0.62);
 }
 
 

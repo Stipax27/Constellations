@@ -1,8 +1,12 @@
 #include "dx11.h"
+
+#include <DirectXTex.h>
+
 #include "GLTFLoader.h"
 #include "Mesh/AnimationRetarget.h"
+
 #include "Lib/logging.h"
-#include <DirectXTex.h>
+
 
 
 static inline int32 _log2(float x)
@@ -437,7 +441,7 @@ void Textures::DepthTarget(int depthTarget, int depthMipLevel = 0)
 }
 
 
-void Textures::LoadTexture(const std::string name, const char* filename)
+void Textures::LoadTGATexture(const std::string name, const char* filename)
 {
 	int error, bpp, imageSize, index, i, j, k;
 	FILE* filePtr;
@@ -639,6 +643,143 @@ void Textures::LoadDDSTexture(const std::string name, const wchar_t* filename)
 	Log("\n");
 }
 
+void Textures::LoadPNGTexture(const std::string name, const wchar_t* filename)
+{
+	HRESULT hr;
+
+	// 1. Инициализируем WIC фабрику (создается один раз)
+	static ComPtr<IWICImagingFactory> wicFactory = nullptr;
+	if (!wicFactory)
+	{
+		hr = CoCreateInstance(
+			CLSID_WICImagingFactory,
+			nullptr,
+			CLSCTX_INPROC_SERVER,
+			IID_PPV_ARGS(&wicFactory)
+		);
+
+		if (FAILED(hr))
+		{
+			Log("Failed to create WIC factory\n");
+			return;
+		}
+	}
+
+	// 2. Создаем декодер для файла
+	ComPtr<IWICBitmapDecoder> decoder;
+	hr = wicFactory->CreateDecoderFromFilename(
+		filename,
+		nullptr,
+		GENERIC_READ,
+		WICDecodeMetadataCacheOnLoad,
+		&decoder
+	);
+
+	if (FAILED(hr))
+	{
+		Log("Failed to create PNG decoder\n");
+		return;
+	}
+
+	// 3. Получаем первый фрейм (для PNG это само изображение)
+	ComPtr<IWICBitmapFrameDecode> frame;
+	hr = decoder->GetFrame(0, &frame);
+
+	if (FAILED(hr))
+	{
+		Log("Failed to get PNG frame\n");
+		return;
+	}
+
+	// 4. Получаем размеры изображения
+	UINT width, height;
+	frame->GetSize(&width, &height);
+
+	// 5. Получаем формат пикселей
+	WICPixelFormatGUID pixelFormat;
+	frame->GetPixelFormat(&pixelFormat);
+
+	// 6. Конвертируем в RGBA (если нужно)
+	ComPtr<IWICFormatConverter> converter;
+	hr = wicFactory->CreateFormatConverter(&converter);
+
+	if (FAILED(hr))
+	{
+		Log("Failed to create format converter\n");
+		return;
+	}
+
+	// Настраиваем конвертер для преобразования в 32-bit RGBA
+	hr = converter->Initialize(
+		frame.Get(),
+		GUID_WICPixelFormat32bppRGBA,  // Целевой формат
+		WICBitmapDitherTypeNone,
+		nullptr,
+		0.0f,
+		WICBitmapPaletteTypeCustom
+	);
+
+	if (FAILED(hr))
+	{
+		Log("Failed to initialize converter\n");
+		return;
+	}
+
+	// 7. Вычисляем размер буфера
+	UINT rowPitch = width * 4; // 4 байта на пиксель (RGBA)
+	UINT imageSize = rowPitch * height;
+
+	// 8. Выделяем память и копируем пиксели
+	std::unique_ptr<unsigned char[]> pixels(new unsigned char[imageSize]);
+
+	hr = converter->CopyPixels(
+		nullptr,                    // Весь регион
+		rowPitch,
+		imageSize,
+		pixels.get()
+	);
+
+	if (FAILED(hr))
+	{
+		Log("Failed to copy pixels\n");
+		return;
+	}
+
+	// 9. Создаем текстуру через существующий Create
+	const int texIndex = Create(
+		name,
+		tType::flat,
+		tFormat::u8,  // PNG всегда загружаем как RGBA8
+		XMFLOAT2(static_cast<float>(width), static_cast<float>(height)),
+		true,         // mipMaps
+		false         // depth
+	);
+
+	if (texIndex < 0)
+	{
+		Log("Create() failed for PNG texture\n");
+		return;
+	}
+
+	// 10. Копируем данные в текстуру
+	context->UpdateSubresource(
+		Texture[texIndex].pTexture,
+		0,              // mip level 0
+		nullptr,        // весь регион
+		pixels.get(),   // данные
+		rowPitch,       // шаг строки
+		0               // шаг слоя
+	);
+
+	// 11. Генерируем мип-карты
+	context->GenerateMips(Texture[texIndex].TextureResView);
+
+	// Логирование
+	char logMsg[256];
+	sprintf_s(logMsg, "PNG loaded: %dx%d, size: %d bytes\n", width, height, imageSize);
+	Log(logMsg);
+}
+
 
 Textures::tFormat Textures::GetTFormatFromDXGI(DXGI_FORMAT dxgiFormat)
 {
@@ -663,6 +804,23 @@ Textures::tFormat Textures::GetTFormatFromDXGI(DXGI_FORMAT dxgiFormat)
 		return tFormat::u8;
 	}
 }
+
+DXGI_FORMAT Textures::WICToDXGIFormat(WICPixelFormatGUID& wicFormat)
+{
+	if (wicFormat == GUID_WICPixelFormat32bppRGBA)
+		return DXGI_FORMAT_R8G8B8A8_UNORM;
+	else if (wicFormat == GUID_WICPixelFormat32bppBGRA)
+		return DXGI_FORMAT_B8G8R8A8_UNORM;
+	else if (wicFormat == GUID_WICPixelFormat24bppRGB)
+		return DXGI_FORMAT_R8G8B8A8_UNORM; // Will be converted
+	else if (wicFormat == GUID_WICPixelFormat24bppBGR)
+		return DXGI_FORMAT_B8G8R8A8_UNORM; // Will be converted
+	else if (wicFormat == GUID_WICPixelFormat8bppIndexed)
+		return DXGI_FORMAT_R8G8B8A8_UNORM;
+	else
+		return DXGI_FORMAT_UNKNOWN;
+}
+
 
 std::tuple<int, int, int> Textures::GetCompressRes(RenderCompress compress)
 {
