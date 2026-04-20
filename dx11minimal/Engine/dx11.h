@@ -33,6 +33,7 @@
 
 #include "Utils/utils.h"
 #include "Lib/timer.h"
+#include "Render/renderCompress.h"
 
 using namespace DirectX;
 
@@ -76,7 +77,7 @@ namespace Textures
 {
 
 #define max_tex 255
-#define mainRTIndex 0
+#define mainRTName "MainRT"
 
 	enum tType { flat, cube };
 
@@ -119,26 +120,30 @@ namespace Textures
 		unsigned char data2;
 	};
 
-	extern textureDesc Texture[max_tex];
+	//extern textureDesc Texture[max_tex];
+	extern std::unordered_map<std::string, textureDesc> Texture;
 
-	extern int currentRT;
+	extern std::string currentRT;
+	//extern int currentRT;
 	extern int texturesCount;
 
-	void CreateTex(int, bool);
-	void ShaderRes(int);
-	void rtView(int);
-	void Depth(int);
-	void shaderResDepth(int);
-	void Create(int, tType, tFormat, XMFLOAT2, bool, bool, bool = false);
+	void CreateTex(std::string, bool);
+	void ShaderRes(std::string);
+	void rtView(std::string);
+	void Depth(std::string);
+	void shaderResDepth(std::string);
+	void Create(std::string, tType, tFormat, XMFLOAT2, bool, bool, bool = false);
 	void UnbindAll();
-	void SetViewport(int, byte); // there's kinda byte redefinition error, but the building works. idk if it'll cause problems if the future
-	void CopyColor(int, int);
-	void CopyDepth(int, int);
-	void TextureToShader(int, unsigned int, targetshader = targetshader::both);
+	void SetViewport(std::string, byte); // there's kinda byte redefinition error, but the build works. idk if it'll cause problems if the future
+	void CopyColor(std::string source, std::string destination);
+	void CopyDepth(std::string source, std::string destination);
+	void TextureToShader(std::string texName, unsigned int slot, targetshader tA = targetshader::both);
 	void CreateMipMap();
-	void RenderTarget(int, unsigned int);
-	void DepthTarget(int, int);
+	void RenderTarget(std::string target, unsigned int level = 0);
+	void DepthTarget(std::string, int);
 	void LoadTexture(const char*);
+
+	std::tuple<std::string, std::string, int> GetCompressNames(RenderCompress compress);
 }
 
 namespace Models
@@ -283,7 +288,7 @@ namespace Shaders {
 
 namespace Compute
 {
-	void Dispatch(int csIndex, int texInput, int texOutput);
+	void Dispatch(int csIndex, std::string texInput, std::string texOutput);
 }
 
 namespace Sampler

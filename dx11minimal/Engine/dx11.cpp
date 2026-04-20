@@ -107,14 +107,16 @@ D3D11_DEPTH_STENCIL_VIEW_DESC Textures::descDSV;
 
 ID3D11RenderTargetView* Textures::mrtView[8];
 
-Textures::textureDesc Textures::Texture[max_tex];
+//Textures::textureDesc Textures::Texture[max_tex];
+std::unordered_map<std::string, Textures::textureDesc> Textures::Texture;
 
-int Textures::currentRT = 0;
+std::string Textures::currentRT = "";
+//int Textures::currentRT = 0;
 int Textures::texturesCount = 0;
 
-void Textures::CreateTex(int i, bool uav)
+void Textures::CreateTex(std::string name, bool uav)
 {
-	auto cTex = Texture[i];
+	auto cTex = Texture[name];
 
 	tdesc.Width = (UINT)cTex.size.x;
 	tdesc.Height = (UINT)cTex.size.y;
@@ -140,16 +142,16 @@ void Textures::CreateTex(int i, bool uav)
 		tdesc.ArraySize = 6;
 	}
 
-	HRESULT hr = device->CreateTexture2D(&tdesc, NULL, &Texture[i].pTexture);
+	HRESULT hr = device->CreateTexture2D(&tdesc, NULL, &Texture[name].pTexture);
 
 }
 
-void Textures::ShaderRes(int i)
+void Textures::ShaderRes(std::string name)
 {
 	svDesc.Format = tdesc.Format;
 	svDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 
-	if (Texture[i].type == cube)
+	if (Texture[name].type == cube)
 	{
 		svDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
 		svDesc.TextureCube.MostDetailedMip = 0;
@@ -162,16 +164,16 @@ void Textures::ShaderRes(int i)
 		svDesc.Texture2D.MostDetailedMip = 0;
 	}
 
-	HRESULT hr = device->CreateShaderResourceView(Texture[i].pTexture, &svDesc, &Texture[i].TextureResView);
+	HRESULT hr = device->CreateShaderResourceView(Texture[name].pTexture, &svDesc, &Texture[name].TextureResView);
 }
 
-void Textures::rtView(int i)
+void Textures::rtView(std::string name)
 {
 	renderTargetViewDesc.Format = tdesc.Format;
 	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 	renderTargetViewDesc.Texture2D.MipSlice = 0;
 
-	if (Texture[i].type == cube)
+	if (Texture[name].type == cube)
 	{
 		renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
 		renderTargetViewDesc.Texture2DArray.ArraySize = 1;
@@ -180,7 +182,7 @@ void Textures::rtView(int i)
 		for (int j = 0; j < 6; j++)
 		{
 			renderTargetViewDesc.Texture2DArray.FirstArraySlice = j;
-			HRESULT hr = device->CreateRenderTargetView(Texture[i].pTexture, &renderTargetViewDesc, &Texture[i].RenderTargetView[0][j]);
+			HRESULT hr = device->CreateRenderTargetView(Texture[name].pTexture, &renderTargetViewDesc, &Texture[name].RenderTargetView[0][j]);
 		}
 	}
 	else
@@ -188,14 +190,14 @@ void Textures::rtView(int i)
 		for (unsigned int m = 0; m < tdesc.MipLevels; m++)
 		{
 			renderTargetViewDesc.Texture2D.MipSlice = m;
-			HRESULT hr = device->CreateRenderTargetView(Texture[i].pTexture, &renderTargetViewDesc, &Texture[i].RenderTargetView[m][0]);
+			HRESULT hr = device->CreateRenderTargetView(Texture[name].pTexture, &renderTargetViewDesc, &Texture[name].RenderTargetView[m][0]);
 		}
 	}
 }
 
-void Textures::Depth(int i)
+void Textures::Depth(std::string name)
 {
-	auto cTex = Texture[i];
+	auto cTex = Texture[name];
 
 	tdesc.Width = (UINT)cTex.size.x;
 	tdesc.Height = (UINT)cTex.size.y;
@@ -209,7 +211,7 @@ void Textures::Depth(int i)
 	tdesc.Format = DXGI_FORMAT_R32_TYPELESS;
 	tdesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
 	tdesc.MiscFlags = 0;
-	HRESULT hr = device->CreateTexture2D(&tdesc, NULL, &Texture[i].pDepth);
+	HRESULT hr = device->CreateTexture2D(&tdesc, NULL, &Texture[name].pDepth);
 
 	descDSV.Format = DXGI_FORMAT_D32_FLOAT;
 	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
@@ -218,42 +220,42 @@ void Textures::Depth(int i)
 	for (unsigned int m = 0; m < max(1, tdesc.MipLevels); m++)
 	{
 		descDSV.Texture2D.MipSlice = m;
-		HRESULT hr = device->CreateDepthStencilView(Texture[i].pDepth, &descDSV, &Texture[i].DepthStencilView[m]);
+		HRESULT hr = device->CreateDepthStencilView(Texture[name].pDepth, &descDSV, &Texture[name].DepthStencilView[m]);
 	}
 }
 
-void Textures::shaderResDepth(int i)
+void Textures::shaderResDepth(std::string name)
 {
 	svDesc.Format = DXGI_FORMAT_R32_FLOAT;
 	svDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	svDesc.Texture2D.MostDetailedMip = 0;
 	svDesc.Texture2D.MipLevels = 1;
 
-	HRESULT hr = device->CreateShaderResourceView(Texture[i].pDepth, &svDesc, &Texture[i].DepthResView);
+	HRESULT hr = device->CreateShaderResourceView(Texture[name].pDepth, &svDesc, &Texture[name].DepthResView);
 }
 
-void Textures::Create(int i, tType type, tFormat format, XMFLOAT2 size, bool mipMaps, bool depth, bool uav)
+void Textures::Create(std::string name, tType type, tFormat format, XMFLOAT2 size, bool mipMaps, bool depth, bool uav)
 {
-	texturesCount = max(i, texturesCount + 1);
+	texturesCount++;
 
 	ZeroMemory(&tdesc, sizeof(tdesc));
 	ZeroMemory(&svDesc, sizeof(svDesc));
 	ZeroMemory(&renderTargetViewDesc, sizeof(renderTargetViewDesc));
 	ZeroMemory(&descDSV, sizeof(descDSV));
 
-	Texture[i].type = type;
-	Texture[i].format = format;
-	Texture[i].size = size;
-	Texture[i].mipMaps = mipMaps;
-	Texture[i].depth = depth;
+	Texture[name].type = type;
+	Texture[name].format = format;
+	Texture[name].size = size;
+	Texture[name].mipMaps = mipMaps;
+	Texture[name].depth = depth;
 
-	if (i > 0)
+	if (name != mainRTName)
 	{
-		Textures::CreateTex(i, uav);
-		Textures::ShaderRes(i);
+		Textures::CreateTex(name, uav);
+		Textures::ShaderRes(name);
 
 		if (!uav) {
-			Textures::rtView(i);
+			Textures::rtView(name);
 		}
 		else {
 			D3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc;
@@ -262,14 +264,14 @@ void Textures::Create(int i, tType type, tFormat format, XMFLOAT2 size, bool mip
 			uavDesc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE2D;
 			uavDesc.Texture2D.MipSlice = 0;
 
-			HRESULT hr = device->CreateUnorderedAccessView(Texture[i].pTexture, &uavDesc, &Texture[i].UnorderedAccessView);
+			HRESULT hr = device->CreateUnorderedAccessView(Texture[name].pTexture, &uavDesc, &Texture[name].UnorderedAccessView);
 		}
 	}
 
 	if (depth)
 	{
-		Textures::Depth(i);
-		Textures::shaderResDepth(i);
+		Textures::Depth(name);
+		Textures::shaderResDepth(name);
 	}
 }
 
@@ -280,9 +282,9 @@ void Textures::UnbindAll()
 	context->PSSetShaderResources(0, 128, null);
 }
 
-void Textures::SetViewport(int texId, byte level = 0)
+void Textures::SetViewport(std::string name, byte level = 0)
 {
-	XMFLOAT2 size = Textures::Texture[texId].size;
+	XMFLOAT2 size = Textures::Texture[name].size;
 	float denom = powf(2, level);
 
 	D3D11_VIEWPORT vp;
@@ -300,26 +302,26 @@ void Textures::SetViewport(int texId, byte level = 0)
 	Rasterizer::Scissors(r);
 }
 
-void Textures::CopyColor(int dst, int src)
+void Textures::CopyColor(std::string source, std::string destination)
 {
-	context->CopyResource(Texture[(int)dst].pTexture, Texture[(int)src].pTexture);
+	context->CopyResource(Texture[destination].pTexture, Texture[source].pTexture);
 }
 
-void Textures::CopyDepth(int dst, int src)
+void Textures::CopyDepth(std::string source, std::string destination)
 {
-	context->CopyResource(Texture[(int)dst].pDepth, Texture[(int)src].pDepth);
+	context->CopyResource(Texture[destination].pDepth, Texture[source].pDepth);
 }
 
-void Textures::TextureToShader(int tex, unsigned int slot, targetshader tA)
+void Textures::TextureToShader(std::string texName, unsigned int slot, targetshader tA)
 {
 	if (tA == targetshader::both || tA == targetshader::vertex)
 	{
-		context->VSSetShaderResources(slot, 1, &Texture[(int)tex].TextureResView);
+		context->VSSetShaderResources(slot, 1, &Texture[texName].TextureResView);
 	}
 
 	if (tA == targetshader::both || tA == targetshader::pixel)
 	{
-		context->PSSetShaderResources(slot, 1, &Texture[(int)tex].TextureResView);
+		context->PSSetShaderResources(slot, 1, &Texture[texName].TextureResView);
 	}
 }
 
@@ -328,28 +330,28 @@ void Textures::CreateMipMap()
 	context->GenerateMips(Texture[currentRT].TextureResView);
 }
 
-void Textures::RenderTarget(int target, unsigned int level = 0)
+void Textures::RenderTarget(std::string target, unsigned int level)
 {
 	currentRT = target;
 
-	auto depthStencil = Texture[(int)target].depth ? Texture[(int)target].DepthStencilView[0] : 0;
+	auto depthStencil = Texture[target].depth ? Texture[target].DepthStencilView[0] : 0;
 
-	if (Texture[(int)target].type == tType::flat)
+	if (Texture[target].type == tType::flat)
 	{
-		context->OMSetRenderTargets(1, &Texture[(int)target].RenderTargetView[0][0], depthStencil);
+		context->OMSetRenderTargets(1, &Texture[target].RenderTargetView[0][0], depthStencil);
 	}
 
-	if (Texture[(int)target].type == tType::cube)
+	if (Texture[target].type == tType::cube)
 	{
-		context->OMSetRenderTargets(6, &Texture[(int)target].RenderTargetView[0][0], 0);
+		context->OMSetRenderTargets(6, &Texture[target].RenderTargetView[0][0], 0);
 	}
 
 	SetViewport(target, level);
 }
 
-void Textures::DepthTarget(int depthTarget, int depthMipLevel = 0)
+void Textures::DepthTarget(std::string depthTarget, int depthMipLevel = 0)
 {
-	auto depthStencil = Texture[(int)depthTarget].depth ? Texture[(int)depthTarget].DepthStencilView[depthMipLevel] : 0;
+	auto depthStencil = Texture[depthTarget].depth ? Texture[depthTarget].DepthStencilView[depthMipLevel] : 0;
 	context->OMSetRenderTargets(1, &Texture[currentRT].RenderTargetView[depthMipLevel][0], depthStencil);
 
 	SetViewport(currentRT, 0);
@@ -438,17 +440,17 @@ void Textures::LoadTexture(const char* filename)
 		k -= (m_width * 8);
 	}
 
-	int textureId = texturesCount;
-	Create(textureId, tType::flat, tFormat::u8, XMFLOAT2(targaFileHeader.width, targaFileHeader.height), true, false);
+	std::string name = filename;
+	Create(name, tType::flat, tFormat::u8, XMFLOAT2(targaFileHeader.width, targaFileHeader.height), true, false);
 
 	// Set the row pitch of the targa image data.
 	rowPitch = (m_width * 4) * sizeof(unsigned char);
 
 	// Copy the targa image data into the texture.
-	context->UpdateSubresource(Texture[textureId].pTexture, 0, NULL, targaData, rowPitch, 0);
+	context->UpdateSubresource(Texture[name].pTexture, 0, NULL, targaData, rowPitch, 0);
 
 	// Generate mipmaps for this texture.
-	context->GenerateMips(Texture[textureId].TextureResView);
+	context->GenerateMips(Texture[name].TextureResView);
 
 	// Release the targa image data now that it was copied into the destination array.
 	delete[] targaImage;
@@ -457,6 +459,32 @@ void Textures::LoadTexture(const char* filename)
 	// Release the targa image data now that the image data has been loaded into the texture.
 	delete[] targaData;
 	targaData = 0;
+}
+
+std::tuple<std::string, std::string, int> Textures::GetCompressNames(RenderCompress compress)
+{
+	std::tuple<std::string, std::string, int> result;
+
+	switch (compress)
+	{
+	case RenderCompress::none:
+		result = { "UAV_FULL", "RT_FULL", 1 };
+		break;
+	case RenderCompress::x2:
+		result = { "UAV_1/2", "RT_1/2", 0 };
+		break;
+	case RenderCompress::x4:
+		result = { "UAV_1/4", "RT_1/4", 0 };
+		break;
+	case RenderCompress::x8:
+		result = { "UAV_1/8", "RT_1/8", 0 };
+		break;
+	case RenderCompress::x16:
+		result = { "UAV_1/16", "RT_1/16", 0 };
+		break;
+	}
+
+	return result;
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -1492,7 +1520,7 @@ void Shaders::cShader(unsigned int n)
 
 //////////////////////////////////////////////////////////////////////////////////
 
-void Compute::Dispatch(int csIndex, int texInput, int texOutput)
+void Compute::Dispatch(int csIndex, std::string texInput, std::string texOutput)
 {
 	Shaders::cShader(csIndex);
 
@@ -1889,12 +1917,12 @@ void Device::Init(HWND hwnd, int width, int height)
 
 	hr = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, DirectXDebugMode ? D3D11_CREATE_DEVICE_DEBUG : 0, 0, 0, D3D11_SDK_VERSION, &sd, &swapChain, &device, NULL, &context);
 
-	Textures::Texture[0].pTexture = NULL;
-	hr = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&Textures::Texture[0].pTexture);
+	Textures::Texture[mainRTName].pTexture = NULL;
+	hr = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&Textures::Texture[mainRTName].pTexture);
 
-	hr = device->CreateRenderTargetView(Textures::Texture[0].pTexture, NULL, &Textures::Texture[0].RenderTargetView[0][0]);
+	hr = device->CreateRenderTargetView(Textures::Texture[mainRTName].pTexture, NULL, &Textures::Texture[mainRTName].RenderTargetView[0][0]);
 
-	Textures::Texture[0].pTexture->Release();
+	Textures::Texture[mainRTName].pTexture->Release();
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -1952,46 +1980,46 @@ void Dx11Init(HWND hwnd, int width, int height)
 	Models::Init();
 
 	// main RT
-	Textures::Create(0, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), false, true);
+	Textures::Create(mainRTName, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), false, true);
 	// rt1
-	Textures::Create(1, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
+	Textures::Create("BackRT_1", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
 	// rt2
-	Textures::Create(2, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
+	Textures::Create("BackRT_2", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
 
 	// 1/2 sized uav
-	Textures::Create(3, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 2, height / 2), false, false, true);
+	Textures::Create("UAV_1/2", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 2, height / 2), false, false, true);
 	// 1/2 sized rt
-	Textures::Create(4, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 2, height / 2), true, true);
+	Textures::Create("RT_1/2", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 2, height / 2), true, true);
 
 	// 1/4 sized uav
-	Textures::Create(5, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 4, height / 4), false, false, true);
+	Textures::Create("UAV_1/4", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 4, height / 4), false, false, true);
 	// 1/4 sized rt
-	Textures::Create(6, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 4, height / 4), true, true);
+	Textures::Create("RT_1/4", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 4, height / 4), true, true);
 
 	// 1/8 sized uav
-	Textures::Create(7, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 8, height / 8), false, false, true);
+	Textures::Create("UAV_1/8", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 8, height / 8), false, false, true);
 	// 1/8 sized rt
-	Textures::Create(8, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 8, height / 8), true, true);
+	Textures::Create("RT_1/8", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 8, height / 8), true, true);
 
 	// 1/16 sized uav
-	Textures::Create(9, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 16, height / 16), false, false, true);
+	Textures::Create("UAV_1/16", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 16, height / 16), false, false, true);
 	// 1/16 sized rt
-	Textures::Create(10, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 16, height / 16), true, true);
+	Textures::Create("RT_1/16", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 16, height / 16), true, true);
 
 	// full sized uav
-	Textures::Create(11, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), false, false, true);
+	Textures::Create("UAV_FULL", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), false, false, true);
 	// full sized rt
-	Textures::Create(12, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
+	Textures::Create("RT_FULL", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
 
 	// perlin noise rt
-	Textures::Create(13, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
+	Textures::Create("PerlinNoise", Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
 	// voronoi noise rt
-	Textures::Create(14, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
+	Textures::Create("VoronoiNoise", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(1024, 1024), true, false);
 	// star noise rt
-	Textures::Create(15, Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
+	Textures::Create("StarNoise", Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
 
 	// space background rt
-	Textures::Create(16, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), true, false);
+	Textures::Create("SpaceBackground", Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), true, false);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -2027,15 +2055,17 @@ void Draw::Drawer(int quadCount)
 }
 
 void Draw::SwitchRenderTextures() {
-	int index = 3 - Textures::currentRT;
-	Textures::RenderTarget(index, 0);
-	context->PSSetShaderResources(0, 1, &Textures::Texture[3 - index].TextureResView);
+	std::string rt = Textures::currentRT == "BackRT_1" ? "BackRT_2" : "BackRT_1";
+	std::string resource = Textures::currentRT;
+
+	Textures::RenderTarget(rt, 0);
+	context->PSSetShaderResources(0, 1, &Textures::Texture[resource].TextureResView);
 }
 
 void Draw::OutputRenderTextures() {
-	int index = Textures::currentRT;
-	Textures::RenderTarget(0, 0);
-	context->PSSetShaderResources(0, 1, &Textures::Texture[index].TextureResView);
+	std::string resource = Textures::currentRT;
+	Textures::RenderTarget("MainRT", 0);
+	context->PSSetShaderResources(0, 1, &Textures::Texture[resource].TextureResView);
 }
 
 void Draw::elipse(int quadCount, unsigned int instances = 1)//

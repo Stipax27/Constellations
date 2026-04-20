@@ -42,7 +42,7 @@ struct GlyphInfo
 
 struct FontAtlas
 {
-	int textureId = -1;
+	string textureName = "";
 	int atlasWidth = 1024;
 	int atlasHeight = 1024;
 	int ascent = 0;
@@ -387,11 +387,12 @@ bool BuildFontAtlas(const FontKey& key, FontAtlas& outAtlas)
 	DeleteDC(hdc);
 
 	const int textureId = Textures::texturesCount;
-	Textures::Create(textureId, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2((float)atlasWidth, (float)atlasHeight), true, false);
-	context->UpdateSubresource(Textures::Texture[textureId].pTexture, 0, nullptr, atlasPixels.data(), atlasWidth * 4, 0);
-	context->GenerateMips(Textures::Texture[textureId].TextureResView);
+	const string name = "font_" + std::to_string(textureId);
+	Textures::Create(name, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2((float)atlasWidth, (float)atlasHeight), true, false);
+	context->UpdateSubresource(Textures::Texture[name].pTexture, 0, nullptr, atlasPixels.data(), atlasWidth * 4, 0);
+	context->GenerateMips(Textures::Texture[name].TextureResView);
 
-	outAtlas.textureId = textureId;
+	outAtlas.textureName = name;
 	return true;
 }
 
@@ -510,7 +511,7 @@ void RenderTextLabel(const Transform2D& transform, const TextLabel& textLabel, c
 	Shaders::vShader(kUITextVertexShader);
 	Shaders::pShader(kUITextPixelShader);
 	InputAssembler::IA(InputAssembler::topology::triList);
-	Textures::TextureToShader(atlas.textureId, 0, targetshader::pixel);
+	Textures::TextureToShader(atlas.textureName, 0, targetshader::pixel);
 	Sampler::Sampler(targetshader::pixel, 0, Sampler::filter::linear, Sampler::addr::clamp, Sampler::addr::clamp);
 
 	const float letterSpacingPx = textLabel.letterSpacingPx;
@@ -602,7 +603,7 @@ void UITextSystem::Update(EntityStorage& entityStorage, float)
 		text = NormalizeToSupportedCharset(text);
 
 		const FontAtlas* atlas = GetOrCreateFontAtlas(*textLabel);
-		if (atlas == nullptr || atlas->textureId < 0) {
+		if (atlas == nullptr || atlas->textureName == "") {
 			continue;
 		}
 

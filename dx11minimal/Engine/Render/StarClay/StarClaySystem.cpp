@@ -151,7 +151,7 @@ void StarClaySystem::RenderStarBackground()
 	Rasterizer::Cull(Rasterizer::cullmode::off);
 	Depth::Depth(Depth::depthmode::off);
 
-	int lastRT = Textures::currentRT;
+	string lastRT = Textures::currentRT;
 
 	XMMATRIX curCamMatrix = camera->GetMatrixRotation();
 	XMMATRIX matrixDelta = GetRelativeRotationMatrix(prevCamMatrix, curCamMatrix);
@@ -160,7 +160,7 @@ void StarClaySystem::RenderStarBackground()
 	starsRotMatrix = LerpMatrix(starsRotMatrix, matrixDelta, 0.1f);
 	prevCamMatrix = curCamMatrix;
 
-	Textures::RenderTarget(16, 0);
+	Textures::RenderTarget("SpaceBackground", 0);
 	Draw::Clear({ 0.04f, 0.0f, 0.19f, 1.0f });
 
 	ConstBuf::drawerV[0] = (float)timer::currentTime * 0.01f;
@@ -184,7 +184,7 @@ void StarClaySystem::RenderStarBackground()
 
 	Textures::CreateMipMap();
 	Textures::RenderTarget(lastRT, 0);
-	Textures::TextureToShader(16, 4, targetshader::pixel);
+	Textures::TextureToShader("SpaceBackground", 4, targetshader::pixel);
 }
 
 //// Other functions ////
