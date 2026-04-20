@@ -111,7 +111,6 @@ ID3D11RenderTargetView* Textures::mrtView[8];
 Textures::textureDesc Textures::Texture[max_tex];
 std::unordered_map<std::string, int> Textures::TextureName;
 
-//std::string Textures::currentRT = "";
 int Textures::currentRT = 0;
 int Textures::texturesCount = 0;
 

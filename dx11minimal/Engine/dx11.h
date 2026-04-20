@@ -123,7 +123,6 @@ namespace Textures
 	extern textureDesc Texture[max_tex];
 	extern std::unordered_map<std::string, int> TextureName;
 
-	//extern std::string currentRT;
 	extern int currentRT;
 	extern int texturesCount;
 
