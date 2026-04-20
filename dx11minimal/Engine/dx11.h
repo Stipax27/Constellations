@@ -81,8 +81,23 @@ namespace Textures
 
 	enum tType { flat, cube };
 
-	extern DXGI_FORMAT dxTFormat[5];
-	enum tFormat { u8, s8, s16, s32, r8 };
+	extern DXGI_FORMAT dxTFormat[12];
+	enum tFormat {
+		u8,     // DXGI_FORMAT_R8G8B8A8_UNORM
+		s8,     // DXGI_FORMAT_R8G8B8A8_SNORM
+		s16,    // DXGI_FORMAT_R16G16B16A16_FLOAT
+		s32,    // DXGI_FORMAT_R32G32B32A32_FLOAT
+		r8,     // DXGI_FORMAT_R8_SNORM
+
+		// Compressed BCn formats
+		bc1,    // DXGI_FORMAT_BC1_UNORM
+		bc2,    // DXGI_FORMAT_BC2_UNORM
+		bc3,    // DXGI_FORMAT_BC3_UNORM
+		bc4,    // DXGI_FORMAT_BC4_UNORM
+		bc5,    // DXGI_FORMAT_BC5_UNORM
+		bc6h,   // DXGI_FORMAT_BC6H_UF16
+		bc7     // DXGI_FORMAT_BC7_UNORM
+	};
 
 	extern D3D11_TEXTURE2D_DESC tdesc;
 	extern D3D11_SHADER_RESOURCE_VIEW_DESC svDesc;
@@ -145,7 +160,7 @@ namespace Textures
 	void TextureToShader(std::string texName, unsigned int slot, targetshader tA = targetshader::both);
 	void TextureToShader(int texIndex, unsigned int slot, targetshader tA = targetshader::both);
 
-	void CreateMipMap();
+	void CreateMipMap(int texture = currentRT);
 
 	void RenderTarget(std::string target, unsigned int level = 0);
 	void RenderTarget(int target, unsigned int level = 0);
@@ -153,8 +168,10 @@ namespace Textures
 	void DepthTarget(std::string, int);
 	void DepthTarget(int, int);
 
-	void LoadTexture(const char*);
+	void LoadTexture(const std::string name, const char* filename);
+	void LoadDDSTexture(const std::string name, const wchar_t* filename);
 
+	tFormat GetTFormatFromDXGI(DXGI_FORMAT dxgiFormat);
 	std::tuple<int, int, int> GetCompressRes(RenderCompress compress);
 }
 

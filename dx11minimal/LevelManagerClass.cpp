@@ -68,6 +68,9 @@ bool LevelManagerClass::Initialize()
 	ConstBuf::UpdateFactors();
 
 	//Textures::LoadTexture("..\\dx11minimal\\Resourses\\Textures\\testTexture.tga");
+	Textures::LoadDDSTexture("gta", L"..\\dx11minimal\\Resourses\\Textures\\gta.dds");
+	Textures::LoadDDSTexture("aperture", L"..\\dx11minimal\\Resourses\\Textures\\aperture.dds");
+
 	if (modelsLoadingThread.joinable()) {
 		modelsLoadingThread.join();
 	}
@@ -813,6 +816,15 @@ void LevelManagerClass::CreateUI()
 	transform2D->scale = point3d(0.5f, 0.025f, 0.0f);
 	rect = entity->AddComponent<Rect>();
 	rect->color = point3d(0.75f, 0.0f, 0.0f);
+
+	entity = m_World->entityStorage->CreateEntity("BossHealth", uiFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(1, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::YY;
+	transform2D->position = point3d(0.75f, 0.0f, 0.0f);
+	transform2D->scale = point3d(0.2f, 0.2f, 0.0f);
+	ImageLabel* imageLabel = entity->AddComponent<ImageLabel>();
+	imageLabel->textureName = "aperture";
 }
 
 

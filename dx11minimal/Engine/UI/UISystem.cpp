@@ -122,6 +122,16 @@ void UISystem::Update(EntityStorage& entityStorage, float deltaTime)
 				DrawUiObject(transform2D, button->vShader);
 			}
 
+			ImageLabel* imageLabel = entity->GetComponent<ImageLabel>();
+			if (imageLabel != nullptr && imageLabel->active && imageLabel->opacity > 0.0f) {
+				Shaders::pShader(imageLabel->pShader);
+
+				ConstBuf::global[3] = XMFLOAT4(imageLabel->color.x, imageLabel->color.y, imageLabel->color.z, imageLabel->opacity);
+				Textures::TextureToShader(imageLabel->textureName, 5, targetshader::pixel);
+
+				DrawUiObject(transform2D, imageLabel->vShader);
+			}
+
 			// DEBUG //
 
 			if (SHOW_UI_ANCHOR_POINTS) {

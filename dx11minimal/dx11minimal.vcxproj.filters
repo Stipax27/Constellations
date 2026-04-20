@@ -223,6 +223,7 @@
     <ClInclude Include="Engine\Render\StarClay\StarClaySystem.h" />
     <ClInclude Include="Engine\Compute\Combat\RayDamager.h" />
     <ClInclude Include="Engine\Compute\Combat\RayDamageSystem.h" />
+    <ClInclude Include="Engine\UI\ImageLabel.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">
@@ -534,6 +535,8 @@
     <None Include="Shaders\cs\DepthDraw.shader" />
     <None Include="Shaders\ps\basicBackground.shader" />
     <None Include="Shaders\ps\basicLowBackground.shader" />
+    <None Include="packages.config" />
+    <None Include="Shaders\ui\Image_Stretch_PS.shader" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">

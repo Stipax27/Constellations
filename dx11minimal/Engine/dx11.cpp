@@ -2,6 +2,7 @@
 #include "GLTFLoader.h"
 #include "Mesh/AnimationRetarget.h"
 #include "Lib/logging.h"
+#include <DirectXTex.h>
 
 
 static inline int32 _log2(float x)
@@ -99,7 +100,21 @@ void Rasterizer::Init(int width, int height)
 
 //////////////////////////////////////////////////////////////////////////////////
 
-DXGI_FORMAT Textures::dxTFormat[5] = { DXGI_FORMAT_R8G8B8A8_UNORM ,DXGI_FORMAT_R8G8B8A8_SNORM ,DXGI_FORMAT_R16G16B16A16_FLOAT ,DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R8_SNORM };
+DXGI_FORMAT Textures::dxTFormat[12] = {
+	DXGI_FORMAT_R8G8B8A8_UNORM,     // u8
+	DXGI_FORMAT_R8G8B8A8_SNORM,     // s8
+	DXGI_FORMAT_R16G16B16A16_FLOAT, // s16
+	DXGI_FORMAT_R32G32B32A32_FLOAT, // s32
+	DXGI_FORMAT_R8_SNORM,           // r8
+
+	DXGI_FORMAT_BC1_UNORM,          // bc1
+	DXGI_FORMAT_BC2_UNORM,          // bc2
+	DXGI_FORMAT_BC3_UNORM,          // bc3
+	DXGI_FORMAT_BC4_UNORM,          // bc4
+	DXGI_FORMAT_BC5_UNORM,          // bc5
+	DXGI_FORMAT_BC6H_UF16,          // bc6h
+	DXGI_FORMAT_BC7_UNORM           // bc7
+};
 
 D3D11_TEXTURE2D_DESC Textures::tdesc;
 D3D11_SHADER_RESOURCE_VIEW_DESC Textures::svDesc;
@@ -375,9 +390,9 @@ void Textures::TextureToShader(int texIndex, unsigned int slot, targetshader tA)
 }
 
 
-void Textures::CreateMipMap()
+void Textures::CreateMipMap(int texture)
 {
-	context->GenerateMips(Texture[currentRT].TextureResView);
+	context->GenerateMips(Texture[texture].TextureResView);
 }
 
 
@@ -422,7 +437,7 @@ void Textures::DepthTarget(int depthTarget, int depthMipLevel = 0)
 }
 
 
-void Textures::LoadTexture(const char* filename)
+void Textures::LoadTexture(const std::string name, const char* filename)
 {
 	int error, bpp, imageSize, index, i, j, k;
 	FILE* filePtr;
@@ -505,7 +520,6 @@ void Textures::LoadTexture(const char* filename)
 		k -= (m_width * 8);
 	}
 
-	std::string name = filename;
 	const int texIndex = Create(name, tType::flat, tFormat::u8, XMFLOAT2(targaFileHeader.width, targaFileHeader.height), true, false);
 
 	// Set the row pitch of the targa image data.
@@ -524,6 +538,130 @@ void Textures::LoadTexture(const char* filename)
 	// Release the targa image data now that the image data has been loaded into the texture.
 	delete[] targaData;
 	targaData = 0;
+}
+
+// TODO: Make this algorithm without decompression
+void Textures::LoadDDSTexture(const std::string name, const wchar_t* filename)
+{
+	using namespace DirectX;
+
+	// 1. Loading DDS file
+	TexMetadata metadata;
+	ScratchImage scratchImage;
+	HRESULT hr = LoadFromDDSFile(filename, DDS_FLAGS_NONE, &metadata, scratchImage);
+
+	if (FAILED(hr))
+	{
+		Log("Failed to load DDS file\n");
+		return;
+	}
+
+	// 2. Checking the dimension
+	if (metadata.dimension != TEX_DIMENSION_TEXTURE2D)
+	{
+		Log("DDS is not a 2D texture\n");
+		return;
+	}
+
+	// 3. ALWAYS decompress/convert to R8G8B8A8_UNORM
+	ScratchImage rgbaImage;
+
+	if (DirectX::IsCompressed(metadata.format))
+	{
+		// Compressed format -> decompression
+		hr = Decompress(scratchImage.GetImages(), scratchImage.GetImageCount(),
+			metadata, DXGI_FORMAT_R8G8B8A8_UNORM, rgbaImage);
+	}
+	else
+	{
+		// Uncompressed, but not the right format -> conversion
+		hr = Convert(scratchImage.GetImages(), scratchImage.GetImageCount(),
+			metadata, DXGI_FORMAT_R8G8B8A8_UNORM,
+			TEX_FILTER_DEFAULT, TEX_THRESHOLD_DEFAULT, rgbaImage);
+	}
+
+	if (FAILED(hr))
+	{
+		Log("Failed to convert DDS to RGBA8\n");
+		return;
+	}
+
+	// 4. Receiving data after conversion
+	const TexMetadata& finalMeta = rgbaImage.GetMetadata();
+	const Image* finalImage = rgbaImage.GetImage(0, 0, 0);
+
+	if (!finalImage)
+	{
+		Log("No image data after conversion\n");
+		return;
+	}
+
+	// 5. Create a texture using Create (it works with u8)
+	const int texIndex = Create(
+		name,
+		tType::flat,
+		tFormat::u8,  // GUARANTEED TO WORK
+		XMFLOAT2(static_cast<float>(finalMeta.width), static_cast<float>(finalMeta.height)),
+		true,         // mipMaps
+		false         // depth
+	);
+
+	if (texIndex < 0)
+	{
+		Log("Create() failed for texture\n");
+		return;
+	}
+
+	// 6. CHECK that pTexture is not NULL
+	if (Texture[texIndex].pTexture == nullptr)
+	{
+		Log("ERROR: pTexture is NULL after Create()!\n");
+		return;
+	}
+
+	// 7. Copying the main level
+	UINT rowPitch = static_cast<UINT>(finalMeta.width) * 4; // RGBA8 = 4 bytes per pixel
+
+	context->UpdateSubresource(
+		Texture[texIndex].pTexture,
+		0,                      // Mip 0 only
+		nullptr,
+		finalImage->pixels,
+		rowPitch,
+		0
+	);
+
+	// 8. Generating mip-maps
+	context->GenerateMips(Texture[texIndex].TextureResView);
+
+	Log("DDS loaded successfully (decompressed): ");
+	Log(name.c_str());
+	Log("\n");
+}
+
+
+Textures::tFormat Textures::GetTFormatFromDXGI(DXGI_FORMAT dxgiFormat)
+{
+	switch (dxgiFormat)
+	{
+	case DXGI_FORMAT_R8G8B8A8_UNORM:     return tFormat::u8;
+	case DXGI_FORMAT_R8G8B8A8_SNORM:     return tFormat::s8;
+	case DXGI_FORMAT_R16G16B16A16_FLOAT: return tFormat::s16;
+	case DXGI_FORMAT_R32G32B32A32_FLOAT: return tFormat::s32;
+	case DXGI_FORMAT_R8_SNORM:           return tFormat::r8;
+
+	case DXGI_FORMAT_BC1_UNORM:          return tFormat::bc1;
+	case DXGI_FORMAT_BC2_UNORM:          return tFormat::bc2;
+	case DXGI_FORMAT_BC3_UNORM:          return tFormat::bc3;
+	case DXGI_FORMAT_BC4_UNORM:          return tFormat::bc4;
+	case DXGI_FORMAT_BC5_UNORM:          return tFormat::bc5;
+	case DXGI_FORMAT_BC6H_UF16:          return tFormat::bc6h;
+	case DXGI_FORMAT_BC7_UNORM:          return tFormat::bc7;
+
+	default:
+		Log("Unsupported DXGI format, falling back to u8\n");
+		return tFormat::u8;
+	}
 }
 
 std::tuple<int, int, int> Textures::GetCompressRes(RenderCompress compress)
@@ -1490,6 +1628,8 @@ void Shaders::Init()
 
 	Shaders::CreatePS(26, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ps\\basicBackground.shader"));
 	Shaders::CreatePS(27, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ps\\basicLowBackground.shader"));
+
+	Shaders::CreatePS(28, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ui\\Image_Stretch_PS.shader"));
 
 	Shaders::CreatePS(29, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ps\\OptimazeNebulaPS.shader"));
 

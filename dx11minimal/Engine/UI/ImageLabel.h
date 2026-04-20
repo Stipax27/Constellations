@@ -1,21 +1,20 @@
-#ifndef _RECT_H_
-#define _RECT_H_
+#ifndef _IMAGE_LABEL_H_
+#define _IMAGE_LABEL_H_
 
 #include "../ECS_Base/component.h"
 #include "../UI/cornerType.h"
 #include "../Types/Point3d.h"
 
 
-struct Rect : Component
+struct ImageLabel : Component
 {
+	std::string textureName = "";
+
 	float opacity = 1.0f;
 	point3d color = point3d(1, 1, 1);
 
-	float cornerRadius = 0.0f;
-	CornerType cornerType = CornerType::Strict;
-
 	int vShader = 13;
-	int pShader = 13;
+	int pShader = 28;
 };
 
 #endif
