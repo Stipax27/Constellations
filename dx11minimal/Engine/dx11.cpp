@@ -636,7 +636,7 @@ void Textures::LoadDDSTexture(const std::string name, const wchar_t* filename)
 	);
 
 	// 8. Generating mip-maps
-	context->GenerateMips(Texture[texIndex].TextureResView);
+	CreateMipMap(texIndex);
 
 	Log("DDS loaded successfully (decompressed): ");
 	Log(name.c_str());
@@ -647,7 +647,7 @@ void Textures::LoadPNGTexture(const std::string name, const wchar_t* filename)
 {
 	HRESULT hr;
 
-	// 1. Инициализируем WIC фабрику (создается один раз)
+	// 1. Initializing the WIC factory (created once)
 	static ComPtr<IWICImagingFactory> wicFactory = nullptr;
 	if (!wicFactory)
 	{
@@ -665,7 +665,7 @@ void Textures::LoadPNGTexture(const std::string name, const wchar_t* filename)
 		}
 	}
 
-	// 2. Создаем декодер для файла
+	// 2. Creating a decoder for a file
 	ComPtr<IWICBitmapDecoder> decoder;
 	hr = wicFactory->CreateDecoderFromFilename(
 		filename,
@@ -681,7 +681,7 @@ void Textures::LoadPNGTexture(const std::string name, const wchar_t* filename)
 		return;
 	}
 
-	// 3. Получаем первый фрейм (для PNG это само изображение)
+	// 3. Getting the first frame (for PNG, this is the image itself)
 	ComPtr<IWICBitmapFrameDecode> frame;
 	hr = decoder->GetFrame(0, &frame);
 
@@ -691,15 +691,15 @@ void Textures::LoadPNGTexture(const std::string name, const wchar_t* filename)
 		return;
 	}
 
-	// 4. Получаем размеры изображения
+	// 4. Getting the dimensions of the image
 	UINT width, height;
 	frame->GetSize(&width, &height);
 
-	// 5. Получаем формат пикселей
+	// 5. Getting the pixel format
 	WICPixelFormatGUID pixelFormat;
 	frame->GetPixelFormat(&pixelFormat);
 
-	// 6. Конвертируем в RGBA (если нужно)
+	// 6. Convert to RGBA (if necessary)
 	ComPtr<IWICFormatConverter> converter;
 	hr = wicFactory->CreateFormatConverter(&converter);
 
@@ -709,10 +709,10 @@ void Textures::LoadPNGTexture(const std::string name, const wchar_t* filename)
 		return;
 	}
 
-	// Настраиваем конвертер для преобразования в 32-bit RGBA
+	// Configuring the converter to convert to 32-bit RGBA
 	hr = converter->Initialize(
 		frame.Get(),
-		GUID_WICPixelFormat32bppRGBA,  // Целевой формат
+		GUID_WICPixelFormat32bppRGBA,  // Target format
 		WICBitmapDitherTypeNone,
 		nullptr,
 		0.0f,
@@ -725,15 +725,15 @@ void Textures::LoadPNGTexture(const std::string name, const wchar_t* filename)
 		return;
 	}
 
-	// 7. Вычисляем размер буфера
-	UINT rowPitch = width * 4; // 4 байта на пиксель (RGBA)
+	// 7. Calculating the buffer size
+	UINT rowPitch = width * 4; // 4 bytes per pixel (RGBA)
 	UINT imageSize = rowPitch * height;
 
-	// 8. Выделяем память и копируем пиксели
+	// 8. Allocate memory and copy pixels
 	std::unique_ptr<unsigned char[]> pixels(new unsigned char[imageSize]);
 
 	hr = converter->CopyPixels(
-		nullptr,                    // Весь регион
+		nullptr,                    // The whole region
 		rowPitch,
 		imageSize,
 		pixels.get()
@@ -745,11 +745,11 @@ void Textures::LoadPNGTexture(const std::string name, const wchar_t* filename)
 		return;
 	}
 
-	// 9. Создаем текстуру через существующий Create
+	// 9. Creating a texture
 	const int texIndex = Create(
 		name,
 		tType::flat,
-		tFormat::u8,  // PNG всегда загружаем как RGBA8
+		tFormat::u8,  // PNG is always loaded as RGBA8
 		XMFLOAT2(static_cast<float>(width), static_cast<float>(height)),
 		true,         // mipMaps
 		false         // depth
@@ -761,20 +761,20 @@ void Textures::LoadPNGTexture(const std::string name, const wchar_t* filename)
 		return;
 	}
 
-	// 10. Копируем данные в текстуру
+	// 10. Copying data to the texture
 	context->UpdateSubresource(
 		Texture[texIndex].pTexture,
 		0,              // mip level 0
-		nullptr,        // весь регион
-		pixels.get(),   // данные
-		rowPitch,       // шаг строки
-		0               // шаг слоя
+		nullptr,        // the whole region
+		pixels.get(),   // data
+		rowPitch,       // line step
+		0               // layer step
 	);
 
-	// 11. Генерируем мип-карты
-	context->GenerateMips(Texture[texIndex].TextureResView);
+	// 11. Generating mip-maps
+	CreateMipMap(texIndex);
 
-	// Логирование
+	// Logging
 	char logMsg[256];
 	sprintf_s(logMsg, "PNG loaded: %dx%d, size: %d bytes\n", width, height, imageSize);
 	Log(logMsg);
