@@ -269,6 +269,7 @@ int Textures::Create(int index, tType type, tFormat format, XMFLOAT2 size, bool 
 
 	texturesCount = max(index, texturesCount + 1);
 	std::string name = "texture_" + std::to_string(index);
+	//std::string name = index == mainRTIndex ? "MainRT" : "texture_" + std::to_string(index);
 
 	TextureName[name] = index;
 
@@ -2042,36 +2043,36 @@ void Dx11Init(HWND hwnd, int width, int height)
 	Models::Init();
 
 	// main RT
-	Textures::Create(mainRTName, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), false, true);
+	Textures::Create(mainRTIndex, Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), false, true);
 	// rt1
-	Textures::Create("BackRT_1", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
+	Textures::Create(1, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
 	// rt2
-	Textures::Create("BackRT_2", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
+	Textures::Create(2, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
 
 	// 1/2 sized uav
-	Textures::Create("UAV_1/2", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 2, height / 2), false, false, true);
+	Textures::Create(3, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 2, height / 2), false, false, true);
 	// 1/2 sized rt
-	Textures::Create("RT_1/2", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 2, height / 2), true, true);
+	Textures::Create(4, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 2, height / 2), true, true);
 
 	// 1/4 sized uav
-	Textures::Create("UAV_1/4", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 4, height / 4), false, false, true);
+	Textures::Create(5, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 4, height / 4), false, false, true);
 	// 1/4 sized rt
-	Textures::Create("RT_1/4", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 4, height / 4), true, true);
+	Textures::Create(6, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 4, height / 4), true, true);
 
 	// 1/8 sized uav
-	Textures::Create("UAV_1/8", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 8, height / 8), false, false, true);
+	Textures::Create(7, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 8, height / 8), false, false, true);
 	// 1/8 sized rt
-	Textures::Create("RT_1/8", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 8, height / 8), true, true);
+	Textures::Create(8, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 8, height / 8), true, true);
 
 	// 1/16 sized uav
-	Textures::Create("UAV_1/16", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 16, height / 16), false, false, true);
+	Textures::Create(9, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 16, height / 16), false, false, true);
 	// 1/16 sized rt
-	Textures::Create("RT_1/16", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 16, height / 16), true, true);
+	Textures::Create(10, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 16, height / 16), true, true);
 
 	// full sized uav
-	Textures::Create("UAV_FULL", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), false, false, true);
+	Textures::Create(11, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), false, false, true);
 	// full sized rt
-	Textures::Create("RT_FULL", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
+	Textures::Create(12, Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, true);
 
 	// perlin noise rt
 	Textures::Create("PerlinNoise", Textures::tType::flat, Textures::tFormat::r8, XMFLOAT2(256, 256), true, false);
@@ -2124,7 +2125,7 @@ void Draw::SwitchRenderTextures() {
 
 void Draw::OutputRenderTextures() {
 	int index = Textures::currentRT;
-	Textures::RenderTarget(0, 0);
+	Textures::RenderTarget(mainRTIndex, 0);
 	context->PSSetShaderResources(0, 1, &Textures::Texture[index].TextureResView);
 }
 

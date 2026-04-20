@@ -77,7 +77,6 @@ namespace Textures
 {
 
 #define max_tex 255
-#define mainRTName "MainRT"
 #define mainRTIndex 0
 
 	enum tType { flat, cube };

@@ -70,7 +70,7 @@ void World::PreCalculations()
 	RenderVoronoiNoise();
 	RenderStarNoise();
 
-	Textures::RenderTarget("BackRT_1", 0);
+	Textures::RenderTarget(1, 0);
 }
 
 
@@ -112,7 +112,7 @@ void World::UpdateRender()
 	}
 	NoisesToShaders();
 
-	Textures::RenderTarget("BackRT_1", 0);
+	Textures::RenderTarget(1, 0);
 	// Clear the buffers to begin the scene.
 	Draw::Clear({ 0.0f, 0.0588f, 0.1176f, 1.0f });
 	Draw::ClearDepth();
