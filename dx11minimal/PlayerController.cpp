@@ -266,7 +266,7 @@ void PlayerController::ProcessInput()
 
 void PlayerController::ProcessCamera()
 {
-	camera->position = camera->position.lerp(playerTransform->position - playerTransform->GetLookVector() * camera->distance + playerTransform->GetUpVector() * 2, 0.2f);
+	camera->position = camera->position.lerp(playerTransform->position - playerTransform->GetLookVector() * camera->distance + playerTransform->GetUpVector() * 2, 0.4f);
 
 	XMMATRIX matrixRotation;
 	CheckTargetValid();
