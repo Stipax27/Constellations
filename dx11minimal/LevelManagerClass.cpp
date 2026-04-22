@@ -549,7 +549,7 @@ void LevelManagerClass::InitSystems()
 
 void LevelManagerClass::LoadModels()
 {
-	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\FistPosOBJ.obj");
+	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\FistBasePos.obj");
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\Arrow.obj");
 
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesBody.obj");
