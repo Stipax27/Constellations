@@ -28,7 +28,7 @@ enum MouseState {
 struct MouseParticle {
 	point3d pos;
 	float angle;
-	DWORD startTime;
+	double startTime;
 	DWORD lifetime;
 };
 

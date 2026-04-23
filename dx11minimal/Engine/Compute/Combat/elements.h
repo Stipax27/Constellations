@@ -3,6 +3,7 @@
 
 enum class Elements
 {
+	None,
 	Air,
 	Fire,
 	Water,

@@ -36,6 +36,7 @@
 
 #include "Grabbable.h"
 #include "weapons.h"
+#include "attackTable.h"
 
 
 /////////////
@@ -164,7 +165,7 @@ private:
 	float radiusRad;
 	bool isRadaring;
 
-	std::vector<Entity*> projectiles;
+	std::vector<AttackDesc> attacks;
 
 private:
 	void UpdateProjectiles();
@@ -172,15 +173,9 @@ private:
 	void CommonAttack(Transform, point3d);
 	void ChargedAttack(Transform, point3d);
 
-	Entity* FistsCommon(Transform, point3d);
-	Entity* SwordCommon(Transform, point3d);
-	Entity* BowCommon(Transform, point3d);
-
 	Entity* FistsCharged(Transform, point3d);
 	Entity* SwordCharged(Transform, point3d);
 	Entity* BowCharged(Transform, point3d);
-
-	const CollisionInfo GetProjectileCollisionInfo(Entity*);
 
 	Nebula* FindNearestNebula();
 };

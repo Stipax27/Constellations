@@ -1,5 +1,7 @@
 #include "componentutils.h"
 
+#include "../Compute/Combat/Health.h"
+
 
 inline XMFLOAT3 Point3DToXMFLOAT3(const point3d& p) {
     return XMFLOAT3(p.x, p.y, p.z);
@@ -64,4 +66,26 @@ Transform GetRelativeTransform(const Transform& parentWorldTransform, const Tran
     );
 
     return relativeTransform;
+}
+
+
+const CollisionInfo GetProjectileCollisionInfo(EntityStorage* entityStorage, Entity* projectile)
+{
+    SphereCollider* sphereCollider = projectile->GetComponent<SphereCollider>();
+
+    if (sphereCollider != nullptr) {
+        for (CollisionInfo info : sphereCollider->collisions) {
+            Entity* entity = entityStorage->GetEntityById(info.entityId);
+            if (!IsEntityValid(entity)) {
+                continue;
+            }
+
+            Health* health = entity->GetComponentInAncestor<Health>();
+            if (health != nullptr && health->active) {
+                return info;
+            }
+        }
+    }
+
+    return CollisionInfo();
 }

@@ -1,5 +1,4 @@
 #include "PlayerAbilities.h"
-#include "attackTable.h"
 
 #include "../Lib/timer.h"
 
@@ -99,10 +98,7 @@ void PlayerAbilities::Shutdown()
 		shieldEntity = nullptr;
 	}
 
-	// Очистка проектайлов
-	for (Entity* entity : projectiles) {
-	}
-	projectiles.clear();
+	attacks.clear();
 }
 
 void PlayerAbilities::Update()
@@ -314,7 +310,7 @@ void PlayerAbilities::ShieldStart()
 		pointCloud->color = point3d(0.0f, 0.8f, 1.0f); // Голубой цвет для щита
 	}
 	else if (timestopProgress < 1.0f) {
-		timestopProgress = min(timestopProgress + TIMESTOP_STEP * (timer::deltaTime * 0.01), 1);
+		timestopProgress = min(timestopProgress + TIMESTOP_STEP * ((float)timer::deltaTime * 0.01f), 1.0f);
 		worldFolder->SetTimeScale(timestopProgress);
 	}
 
@@ -694,32 +690,13 @@ void PlayerAbilities::Charging()
 
 void PlayerAbilities::CommonAttack(Transform startTransform, point3d direction)
 {
-	Entity* projectile;
-
-	switch (weapon) {
-	case PlayerWeapons::Fists:
-	{
-		projectile = FistsCommon(startTransform, direction);
-		break;
-	}
-	case PlayerWeapons::Sword:
-	{
-		projectile = SwordCommon(startTransform, direction);
-		break;
-	}
-	case PlayerWeapons::Bow:
-	{
-		projectile = BowCommon(startTransform, direction);
-		break;
-	}
-	}
-
-	projectiles.push_back(projectile);
+	AttackDesc attackDesc = PlayerAttackTable[(int)weapon][0].start(entityStorage, startTransform, direction);
+	attacks.push_back(attackDesc);
 }
 
 void PlayerAbilities::ChargedAttack(Transform startTransform, point3d direction)
 {
-	Entity* projectile;
+	/*Entity* projectile;
 
 	switch (weapon) {
 	case PlayerWeapons::Fists:
@@ -739,7 +716,7 @@ void PlayerAbilities::ChargedAttack(Transform startTransform, point3d direction)
 	}
 	}
 
-	projectiles.push_back(projectile);
+	projectiles.push_back(projectile);*/
 }
 
 void PlayerAbilities::BlockStart()
@@ -830,39 +807,18 @@ void PlayerAbilities::Grab()
 void PlayerAbilities::UpdateProjectiles()
 {
 	int i = 0;
-	while (i < projectiles.size())
+	while (i < attacks.size())
 	{
-		Entity* projectile = projectiles[i];
+		AttackDesc attack = attacks[i];
+		Entity* projectile = attack.entity;
 
-		if (IsEntityValid(projectile) && !projectile->IsDeleting() && !projectile->HasComponent<SingleDamager>()) {
-			const CollisionInfo info = GetProjectileCollisionInfo(projectile);
-
-			Entity* impact = entityStorage->CreateEntity("Impact", worldFolder);
-
-			Transform* transform = impact->AddComponent<Transform>();
-			transform->position = info.position;
-
-			ParticleEmitter* particleEmitter = impact->AddComponent<ParticleEmitter>();
-			particleEmitter->rate = 150;
-			particleEmitter->lifetime = 500;
-			particleEmitter->color = point3d(1.0f, 0.15f, 0.85f);
-			particleEmitter->size = { 2.0f, 0.0f };
-			particleEmitter->opacity = { 1.0f, 0.0f };
-			particleEmitter->speed = { 20.0f, 0.0f };
-			particleEmitter->spread = { PI, PI };
-			particleEmitter->isHeapEmit = true;
-			particleEmitter->heapEmitRepeats = 1;
-			particleEmitter->lastEmitTime = timer::currentTime - particleEmitter->heapEmitInterval;
-
-			DelayedDestroy* delayedDestroy = impact->AddComponent<DelayedDestroy>();
-			delayedDestroy->lifeTime = 1000;
-
-			projectile->Destroy();
+		if (IsEntityValid(projectile) && !projectile->IsDeleting() && projectile->GetTimeScale() > 0) {
+			PlayerAttackTable[attack.weapon][attack.element].update(entityStorage, projectile);
 		}
 
 		if (!IsEntityValid(projectile))
 		{
-			projectiles.erase(projectiles.begin() + i);
+			attacks.erase(attacks.begin() + i);
 		}
 		else
 		{
@@ -876,129 +832,6 @@ void PlayerAbilities::UpdateProjectiles()
 			}
 		}
 	}
-}
-
-
-Entity* PlayerAbilities::FistsCommon(Transform startTransform, point3d direction)
-{
-	Entity* projectile = entityStorage->CreateEntity("PlayerProjectile");
-	Transform* transform = projectile->AddComponent<Transform>();
-	transform->position = startTransform.position;
-	transform->mRotation = startTransform.mRotation;
-
-	PhysicBody* physicBody = projectile->AddComponent<PhysicBody>();
-	physicBody->airFriction = 0.0f;
-	physicBody->velocity = direction.normalized() * 100.0f;
-
-	Star* star = projectile->AddComponent<Star>();
-	star->radius = 0.4f;
-	star->color1 = point3d(0.9f, 1.0f, 0.99f);
-	star->color2 = point3d(0.34f, 0.8f, 0.45f);
-	star->crownColor = point3d(0.27f, 0.63f, 1.0f);
-
-	SingleDamager* singleDamager = projectile->AddComponent<SingleDamager>();
-	singleDamager->target = Fraction::Enemy;
-	singleDamager->damage = 5.0f;
-
-	SphereCollider* sphereCollider = projectile->AddComponent<SphereCollider>();
-	sphereCollider->isTouchable = false;
-	sphereCollider->radius = 0.4f;
-
-	DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
-	delayedDestroy->lifeTime = 5000;
-
-	return projectile;
-}
-
-
-Entity* PlayerAbilities::SwordCommon(Transform startTransform, point3d direction)
-{
-	Entity* projectile = entityStorage->CreateEntity("PlayerProjectile");
-	Transform* transform = projectile->AddComponent<Transform>();
-	transform->position = startTransform.position;
-	transform->mRotation = startTransform.mRotation;
-
-	PhysicBody* physicBody = projectile->AddComponent<PhysicBody>();
-	physicBody->airFriction = 0.0f;
-	physicBody->velocity = direction.normalized() * 100.0f;
-
-	Beam* beam = projectile->AddComponent<Beam>();
-	beam->point1 = point3d(6, 6, 0) * -0.4f;
-	beam->point2 = point3d(6, 6, 0) * 0.4f;
-	beam->size1 = 1.0f;
-	beam->size2 = 1.0f;
-	beam->color1 = point3d(1, 0.15f, 0.15f);
-	beam->color2 = point3d(1, 0.15f, 0.15f);
-	beam->opacity1 = 1.25f;
-	beam->opacity2 = 1.25f;
-	beam->pShader = 22;
-
-	for (int i = -5; i < 6; i++) {
-		float offset = (float)i * 0.4f;
-
-		Entity* entity = entityStorage->CreateEntity("ProjectileCollider", projectile);
-		Transform* transform = entity->AddComponent<Transform>();
-		transform->position = point3d(offset, offset, 0);
-
-		SphereCollider* sphereCollider = entity->AddComponent<SphereCollider>();
-		sphereCollider->isTouchable = false;
-		sphereCollider->radius = 0.4f;
-	}
-
-	SingleDamager* singleDamager = projectile->AddComponent<SingleDamager>();
-	singleDamager->target = Fraction::Enemy;
-	singleDamager->damage = 5.0f;
-	singleDamager->maxHitCount = 3;
-
-	DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
-	delayedDestroy->lifeTime = 5000;
-
-	return projectile;
-}
-
-
-Entity* PlayerAbilities::BowCommon(Transform startTransform, point3d direction)
-{
-	Entity* projectile = entityStorage->CreateEntity("PlayerProjectile");
-	Transform* transform = projectile->AddComponent<Transform>();
-	transform->position = startTransform.position;
-	transform->mRotation = GetMatrixFromLookVector(*transform, direction) * transform->mRotation;
-
-	PhysicBody* physicBody = projectile->AddComponent<PhysicBody>();
-	physicBody->airFriction = 0.0f;
-	physicBody->velocity = direction.normalized() * 150.0f;
-
-	/*Star* star = projectile->AddComponent<Star>();
-	star->radius = 0.4f;
-	star->color1 = point3d(0.9f, 1.0f, 0.99f);
-	star->color2 = point3d(0.34f, 0.8f, 0.45f);
-	star->crownColor = point3d(0.27f, 0.63f, 1.0f);*/
-
-	Mesh* mesh = projectile->AddComponent<Mesh>();
-	mesh->index = 1;
-
-	ParticleEmitter* particleEmitter = projectile->AddComponent<ParticleEmitter>();
-	particleEmitter->rate = 100;
-	particleEmitter->lifetime = 1000;
-	particleEmitter->color = point3d(0.15f, 0.95f, 0.35f);
-	particleEmitter->size = { 1.5f, 5.0f };
-	particleEmitter->opacity = { 0.75f, 0.0f };
-	particleEmitter->emitDirection = EmitDirection::Front;
-	particleEmitter->speed = { 25.0f, -5.0f };
-
-	SingleDamager* singleDamager = projectile->AddComponent<SingleDamager>();
-	singleDamager->target = Fraction::Enemy;
-	singleDamager->damage = 15.0f;
-	singleDamager->maxHitCount = 5;
-
-	SphereCollider* sphereCollider = projectile->AddComponent<SphereCollider>();
-	sphereCollider->isTouchable = false;
-	sphereCollider->radius = 0.4f;
-
-	DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
-	delayedDestroy->lifeTime = 5000;
-
-	return projectile;
 }
 
 
@@ -1119,27 +952,6 @@ Entity* PlayerAbilities::BowCharged(Transform startTransform, point3d direction)
 	return projectile;
 }
 
-
-const CollisionInfo PlayerAbilities::GetProjectileCollisionInfo(Entity* projectile)
-{
-	SphereCollider* sphereCollider = projectile->GetComponent<SphereCollider>();
-
-	if (sphereCollider != nullptr) {
-		for (CollisionInfo info : sphereCollider->collisions) {
-			Entity* entity = entityStorage->GetEntityById(info.entityId);
-			if (!IsEntityValid(entity)) {
-				continue;
-			}
-
-			Health* health = entity->GetComponentInAncestor<Health>();
-			if (health != nullptr && health->active) {
-				return info;
-			}
-		}
-	}
-
-	return CollisionInfo();
-}
 
 Nebula* PlayerAbilities::FindNearestNebula()
 {

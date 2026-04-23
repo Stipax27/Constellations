@@ -38,5 +38,7 @@ CollisionInfo GetCollisionWithComponent(SphereCollider* sphereCollider) {
 	return CollisionInfo();
 }
 
+const CollisionInfo GetProjectileCollisionInfo(EntityStorage* entityStorage, Entity* projectile);
+
 
 #endif
