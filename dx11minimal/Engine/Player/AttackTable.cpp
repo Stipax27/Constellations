@@ -53,37 +53,6 @@ AttackDesc fists_none_start(EntityStorage* entityStorage, const Transform& start
 	return AttackDesc(projectile, PlayerWeapons::Fists, Elements::None);
 }
 
-void Update(EntityStorage* entityStorage, Entity* entity) {
-	if (!entity->HasComponent<SingleDamager>()) {
-		const CollisionInfo info = GetProjectileCollisionInfo(entityStorage, entity);
-		PlayerAttackTable[0][0].end(entityStorage, entity, info);
-	}
-}
-
-void End(EntityStorage* entityStorage, Entity* entity, const CollisionInfo& info) {
-	Entity* impact = entityStorage->CreateEntity("Impact", entityStorage->GetEntityByName("World"));
-
-	Transform* transform = impact->AddComponent<Transform>();
-	transform->position = info.position;
-
-	ParticleEmitter* particleEmitter = impact->AddComponent<ParticleEmitter>();
-	particleEmitter->rate = 150;
-	particleEmitter->lifetime = 500;
-	particleEmitter->color = point3d(1.0f, 0.15f, 0.85f);
-	particleEmitter->size = { 2.0f, 0.0f };
-	particleEmitter->opacity = { 1.0f, 0.0f };
-	particleEmitter->speed = { 20.0f, 0.0f };
-	particleEmitter->spread = { PI, PI };
-	particleEmitter->isHeapEmit = true;
-	particleEmitter->heapEmitRepeats = 1;
-	particleEmitter->lastEmitTime = timer::currentTime - particleEmitter->heapEmitInterval;
-
-	DelayedDestroy* delayedDestroy = impact->AddComponent<DelayedDestroy>();
-	delayedDestroy->lifeTime = 1000;
-
-	entity->Destroy();
-}
-
 // SWORD
 
 AttackDesc sword_none_start(EntityStorage* entityStorage, const Transform& startTransform, const point3d& direction)
@@ -169,6 +138,37 @@ AttackDesc bow_none_start(EntityStorage* entityStorage, const Transform& startTr
 	delayedDestroy->lifeTime = 5000;
 
 	return AttackDesc(projectile, PlayerWeapons::Bow, Elements::None);
+}
+
+void Update(EntityStorage* entityStorage, Entity* entity) {
+	if (!entity->HasComponent<SingleDamager>()) {
+		const CollisionInfo info = GetProjectileCollisionInfo(entityStorage, entity);
+		PlayerAttackTable[0][0].end(entityStorage, entity, info);
+	}
+}
+
+void End(EntityStorage* entityStorage, Entity* entity, const CollisionInfo& info) {
+	Entity* impact = entityStorage->CreateEntity("Impact", entityStorage->GetEntityByName("World"));
+
+	Transform* transform = impact->AddComponent<Transform>();
+	transform->position = info.position;
+
+	ParticleEmitter* particleEmitter = impact->AddComponent<ParticleEmitter>();
+	particleEmitter->rate = 150;
+	particleEmitter->lifetime = 500;
+	particleEmitter->color = point3d(1.0f, 0.15f, 0.85f);
+	particleEmitter->size = { 2.0f, 0.0f };
+	particleEmitter->opacity = { 1.0f, 0.0f };
+	particleEmitter->speed = { 20.0f, 0.0f };
+	particleEmitter->spread = { PI, PI };
+	particleEmitter->isHeapEmit = true;
+	particleEmitter->heapEmitRepeats = 1;
+	particleEmitter->lastEmitTime = timer::currentTime - particleEmitter->heapEmitInterval;
+
+	DelayedDestroy* delayedDestroy = impact->AddComponent<DelayedDestroy>();
+	delayedDestroy->lifeTime = 1000;
+
+	entity->Destroy();
 }
 
 /////////////////////////////////////////////////////////////////////
