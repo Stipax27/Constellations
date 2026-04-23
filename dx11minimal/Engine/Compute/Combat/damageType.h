@@ -7,7 +7,7 @@ enum class DamageType : size_t
 	Magic,
 	Pure,
 
-	Count // for getting enum count
+	_count // for getting enum count
 };
 
 #endif

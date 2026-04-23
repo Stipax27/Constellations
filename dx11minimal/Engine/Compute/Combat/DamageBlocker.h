@@ -7,7 +7,7 @@
 
 struct DamageBlocker : Component
 {
-    std::array<float, static_cast<size_t>(DamageType::Count)> blockFactors = { 0.5f, 0.5f, 0.0f };
+    std::array<float, static_cast<size_t>(DamageType::_count)> blockFactors = { 0.5f, 0.5f, 0.0f };
 
     void SetBlockFactor(DamageType type, float coeff);
     float GetBlockFactor(DamageType type) const;

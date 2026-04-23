@@ -15,10 +15,10 @@
     <ClCompile Include="Engine\Camera\FrustumClass.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerAbilities.cpp">
+    <ClCompile Include="Engine\Player\PlayerAbilities.cpp">
       <Filter>Source Files\Player</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerController.cpp">
+    <ClCompile Include="Engine\Player\PlayerController.cpp">
       <Filter>Source Files\Player</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Mesh\AnimationRetarget.cpp">
@@ -83,6 +83,7 @@
     <ClCompile Include="Engine\Compute\Quests\Queststarcollection.cpp" />
     <ClCompile Include="Engine\Render\StarClay\StarClaySystem.cpp" />
     <ClCompile Include="Engine\Compute\Combat\RayDamageSystem.cpp" />
+    <ClCompile Include="Engine\Player\AttackTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LevelManagerClass.h">
@@ -94,10 +95,10 @@
     <ClInclude Include="Components\Orientation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerAbilities.h">
+    <ClInclude Include="Engine\Player\PlayerAbilities.h">
       <Filter>Header Files\Player</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerController.h">
+    <ClInclude Include="Engine\Player\PlayerController.h">
       <Filter>Header Files\Player</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Mesh\AnimationRetarget.h">
@@ -130,10 +131,10 @@
     <ClInclude Include="Engine\Mesh\Animation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Components\Grabbable.h">
+    <ClInclude Include="Engine\Player\Grabbable.h">
       <Filter>Header Files\ECS\Components\Gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="Components\CameraTarget.h">
+    <ClInclude Include="Engine\Player\CameraTarget.h">
       <Filter>Header Files\ECS\Components\Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="Engine\DebugTools\GravityDrawSystem.h" />
@@ -224,6 +225,9 @@
     <ClInclude Include="Engine\Compute\Combat\RayDamager.h" />
     <ClInclude Include="Engine\Compute\Combat\RayDamageSystem.h" />
     <ClInclude Include="Engine\UI\ImageLabel.h" />
+    <ClInclude Include="Engine\Compute\Combat\elements.h" />
+    <ClInclude Include="Engine\Player\attackTable.h" />
+    <ClInclude Include="Engine\Player\weapons.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">

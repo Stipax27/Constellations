@@ -8,22 +8,22 @@
 //////////////
 // INCLUDES //
 //////////////
-#include "Engine/Lib/isingleton.h"
-#include "Engine/Lib/input.h"
+#include "../Lib/isingleton.h"
+#include "../Lib/input.h"
 
-#include "Engine/Camera/cameraclass.h"
-#include "Engine/Mouse/mouseclass.h"
-#include "Engine/Window/windowclass.h"
+#include "../Camera/cameraclass.h"
+#include "../Mouse/mouseclass.h"
+#include "../Window/windowclass.h"
 
-#include "Engine/Lib/timer.h"
-#include "Engine/ECS_Base/world.h"
-#include "Engine/ECS_Base/entity.h"
+#include "../Lib/timer.h"
+#include "../ECS_Base/world.h"
+#include "../ECS_Base/entity.h"
 
-#include "Engine/BasicComponents/Transform.h"
-#include "Engine/Physic/Movement/PhysicBody.h"
-#include "Engine/Render/PointCloud.h"
-#include "Engine/Compute/Combat/Health.h"
-#include "Components/CameraTarget.h"
+#include "../BasicComponents/Transform.h"
+#include "../Physic/Movement/PhysicBody.h"
+#include "../Render/PointCloud.h"
+#include "../Compute/Combat/Health.h"
+#include "CameraTarget.h"
 
 #include "PlayerAbilities.h"
 

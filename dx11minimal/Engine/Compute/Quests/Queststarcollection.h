@@ -22,7 +22,7 @@
 #include "../../Physic//Collision/SphereCollider.h"
 #include "../Combat/Health.h"
 #include "../../Render/ParticleEmitter.h"
-#include "../../../Components/Grabbable.h"
+#include "../../Player/Grabbable.h"
 
 #include "../../ECS_Base/world.h"
 #include "../../ECS_Base/entityStorage.h"

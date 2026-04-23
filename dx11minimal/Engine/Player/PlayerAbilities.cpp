@@ -1,7 +1,10 @@
 #include "PlayerAbilities.h"
-#include "Engine/Lib/timer.h"
+#include "attackTable.h"
+
+#include "../Lib/timer.h"
 
 using namespace std;
+
 
 PlayerAbilities::PlayerAbilities()
 {
