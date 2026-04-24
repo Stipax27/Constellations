@@ -69,7 +69,7 @@ Transform GetRelativeTransform(const Transform& parentWorldTransform, const Tran
 }
 
 
-const CollisionInfo GetProjectileCollisionInfo(EntityStorage* entityStorage, Entity* projectile)
+const CollisionInfo& GetProjectileCollisionInfo(EntityStorage* entityStorage, Entity* projectile)
 {
     SphereCollider* sphereCollider = projectile->GetComponent<SphereCollider>();
 

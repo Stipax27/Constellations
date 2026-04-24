@@ -65,7 +65,7 @@
 /////////////
 //const bool VSYNC_ENABLED = true;
 #define SHOW_COLLIDERS false
-#define SHOW_GRAVITY true
+#define SHOW_GRAVITY false
 
 
 ////////////////////////////////////////////////////////////////////////////////

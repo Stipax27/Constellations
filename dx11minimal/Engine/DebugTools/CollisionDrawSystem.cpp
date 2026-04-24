@@ -22,7 +22,7 @@ void CollisionDrawSystem::Shutdown()
 void CollisionDrawSystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
 	const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<SphereCollider>();
-	Blend::Blending(Blend::blendmode::off, Blend::blendop::add);
+	Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
 	Rasterizer::Cull(Rasterizer::cullmode::wireframe);
 
 	if (DEPTH_OFF) {
@@ -53,10 +53,10 @@ void CollisionDrawSystem::Update(EntityStorage& entityStorage, float deltaTime)
 					ConstBuf::global[0].w = sphereCollider->radius;
 
 					if (sphereCollider->active) {
-						ConstBuf::global[1] = XMFLOAT4(1, 0, 0, 1);
+						ConstBuf::global[1] = XMFLOAT4(1, 0, 0, 0.25f);
 					}
 					else {
-						ConstBuf::global[1] = XMFLOAT4(0.5f, 0.5f, 0.5f, 1);
+						ConstBuf::global[1] = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.25f);
 					}
 
 					ConstBuf::Update(5, ConstBuf::global);

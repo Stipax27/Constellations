@@ -1,6 +1,13 @@
 #ifndef _ATTACK_TABLE_H_
 #define _ATTACK_TABLE_H_
 
+
+///////////
+// NAMES //
+///////////
+
+#define AIR_FIELD "AIR_FIELD"
+
 //////////////
 // INCLUDES //
 //////////////
