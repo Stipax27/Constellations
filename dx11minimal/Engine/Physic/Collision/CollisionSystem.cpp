@@ -50,31 +50,32 @@ void CollisionSystem::Update(EntityStorage& entityStorage, float deltaTime)
 			if (collider2 == nullptr || !collider2->active || !CollisionFilter::collisionTable[(int)collider1->collisionGroup][(int)collider2->collisionGroup])
 				continue;
 
-			PhysicBody* physicBody2 = entity2->GetComponentInAncestor<PhysicBody>();
-			if (((physicBody1 != nullptr && physicBody1->active) || (physicBody2 != nullptr && physicBody2->active))) {
-				/*TypePair key{ std::type_index(typeid(collider1)), std::type_index(typeid(collider2)) };
+			/*TypePair key{ std::type_index(typeid(collider1)), std::type_index(typeid(collider2)) };
 
-				auto it = collisionMap.find(key);
-				if (it != collisionMap.end()) {
-					CollisionResult res = it->second(transform1, collider1, transform2, collider2);
-					if (res.collided) {
+			auto it = collisionMap.find(key);
+			if (it != collisionMap.end()) {
+				CollisionResult res = it->second(transform1, collider1, transform2, collider2);
+				if (res.collided) {
 
-					}
-				}*/
+				}
+			}*/
 
-				Transform worldTransform1 = GetWorldTransform(entity1);
-				Transform worldTransform2 = GetWorldTransform(entity2);
+			Transform worldTransform1 = GetWorldTransform(entity1);
+			Transform worldTransform2 = GetWorldTransform(entity2);
 
-				CollisionResult result = collisionManager->sphere_vs_sphere(worldTransform1, collider1, worldTransform2, collider2);
-				if (result.collided) {
-					CollisionInfo info = CollisionInfo();
-					info.entityId = entity2->GetId();
-					info.normal = result.normal;
-					info.position = result.position;
-					info.distance = result.distance;
-					collider1->collisions.push_back(info);
+			CollisionResult result = collisionManager->sphere_vs_sphere(worldTransform1, collider1, worldTransform2, collider2);
+			if (result.collided) {
+				CollisionInfo info = CollisionInfo();
+				info.entityId = entity2->GetId();
+				info.normal = result.normal;
+				info.position = result.position;
+				info.distance = result.distance;
+				collider1->collisions.push_back(info);
 
-					//transform1->position += planeCollider->normal * (sphereCollider->radius - distance);
+				//transform1->position += planeCollider->normal * (sphereCollider->radius - distance);
+
+				PhysicBody* physicBody2 = entity2->GetComponentInAncestor<PhysicBody>();
+				if (((physicBody1 != nullptr && physicBody1->active) || (physicBody2 != nullptr && physicBody2->active))) {
 
 					if (collider1->isTouchable && collider2->isTouchable && physicBody1 != nullptr && physicBody1->active) {
 						point3d nVel = physicBody1->velocity.normalized();
@@ -100,42 +101,43 @@ void CollisionSystem::Update(EntityStorage& entityStorage, float deltaTime)
 						}
 					}
 
-					pair<Entity*, Health*> hres = entity1->GetAncestorWithComponent<Health>();
-					if (hres.first != nullptr && hres.second->active) {
+				}
 
-						pair<Entity*, SingleDamager*> sdres = entity2->GetAncestorWithComponent<SingleDamager>();
-						if (sdres.first != nullptr && sdres.second->active && sdres.second->target == hres.second->fraction && find(sdres.second->entityFilter.begin(), sdres.second->entityFilter.end(), hres.first->GetId()) == sdres.second->entityFilter.end()) {
+				pair<Entity*, Health*> hres = entity1->GetAncestorWithComponent<Health>();
+				if (hres.first != nullptr && hres.second->active) {
 
-							DamageUnit unit = DamageUnit(sdres.second->damageType, sdres.second->damage);
-							hres.second->damageQueue.push_back(unit);
+					pair<Entity*, SingleDamager*> sdres = entity2->GetAncestorWithComponent<SingleDamager>();
+					if (sdres.first != nullptr && sdres.second->active && sdres.second->target == hres.second->fraction && find(sdres.second->entityFilter.begin(), sdres.second->entityFilter.end(), hres.first->GetId()) == sdres.second->entityFilter.end()) {
 
-							sdres.second->entityFilter.push_back(hres.first->GetId());
-							if (sdres.second->entityFilter.size() >= sdres.second->maxHitCount) {
-								if (sdres.second->destroyable) {
-									sdres.first->Destroy();
-								}
-								sdres.first->RemoveComponent<SingleDamager>();
+						DamageUnit unit = DamageUnit(sdres.second->damageType, sdres.second->damage);
+						hres.second->damageQueue.push_back(unit);
+
+						sdres.second->entityFilter.push_back(hres.first->GetId());
+						if (sdres.second->entityFilter.size() >= sdres.second->maxHitCount) {
+							if (sdres.second->destroyable) {
+								sdres.first->Destroy();
 							}
+							sdres.first->RemoveComponent<SingleDamager>();
 						}
-
-						pair<Entity*, MultiDamager*> mdres = entity2->GetAncestorWithComponent<MultiDamager>();
-						if (mdres.first != nullptr && mdres.second->active && mdres.second->target == hres.second->fraction && timer::currentTime - mdres.second->lastDamageTime >= mdres.second->inverval) {
-											
-							DamageUnit unit = DamageUnit(mdres.second->damageType, mdres.second->damage);
-							hres.second->damageQueue.push_back(unit);
-
-							mdres.second->lastDamageTime = timer::currentTime;
-							mdres.second->repeatCount++;
-
-							if (mdres.second->repeats >= 0 && mdres.second->repeatCount >= mdres.second->repeats) {
-								if (mdres.second->destroyable) {
-									mdres.first->Destroy();
-								}
-								mdres.first->RemoveComponent<MultiDamager>();
-							}
-						}
-
 					}
+
+					pair<Entity*, MultiDamager*> mdres = entity2->GetAncestorWithComponent<MultiDamager>();
+					if (mdres.first != nullptr && mdres.second->active && mdres.second->target == hres.second->fraction && timer::currentTime - mdres.second->lastDamageTime >= mdres.second->inverval) {
+											
+						DamageUnit unit = DamageUnit(mdres.second->damageType, mdres.second->damage);
+						hres.second->damageQueue.push_back(unit);
+
+						mdres.second->lastDamageTime = timer::currentTime;
+						mdres.second->repeatCount++;
+
+						if (mdres.second->repeats >= 0 && mdres.second->repeatCount >= mdres.second->repeats) {
+							if (mdres.second->destroyable) {
+								mdres.first->Destroy();
+							}
+							mdres.first->RemoveComponent<MultiDamager>();
+						}
+					}
+
 				}
 			}
 

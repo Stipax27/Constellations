@@ -133,6 +133,7 @@ void fists_air_end(EntityStorage* entityStorage, Entity* entity, const Collision
 
 	SphereCollider* sphereCollider = airField->AddComponent<SphereCollider>();
 	sphereCollider->isTouchable = false;
+	sphereCollider->collisionGroup = CollisionFilter::Group::StaticObject;
 	sphereCollider->radius = 1.0f;
 
 	interp::Animate(sphereCollider->radius, 5.0f, 10, interp::Curve::EaseOutQuad, airField);
@@ -195,7 +196,40 @@ void fists_fire_update(EntityStorage* entityStorage, Entity* entity) {
 		Entity* target = entityStorage->GetEntityById(collision.entityId);
 
 		if (target->name == AIR_FIELD) {
-			// TODO: explosion
+			Entity* explosion = entityStorage->CreateEntity("Explosion", entityStorage->GetEntityByName("World"));
+
+			Transform* transform = explosion->AddComponent<Transform>();
+			transform->position = target->GetComponent<Transform>()->position;
+
+			ParticleEmitter* particleEmitter = explosion->AddComponent<ParticleEmitter>();
+			particleEmitter->rate = 150;
+			particleEmitter->lifetime = 750;
+			particleEmitter->color = point3d(0.87, 0.26, 0);
+			particleEmitter->size = { 5.0f, 0.0f };
+			particleEmitter->opacity = { 1.0f, 0.0f };
+			particleEmitter->speed = { 20.0f, 0.0f };
+			particleEmitter->spread = { PI, PI };
+			particleEmitter->isHeapEmit = true;
+			particleEmitter->heapEmitRepeats = 1;
+			particleEmitter->lastEmitTime = timer::currentTime - particleEmitter->heapEmitInterval;
+
+			SphereCollider* sphereCollider = explosion->AddComponent<SphereCollider>();
+			sphereCollider->isTouchable = false;
+			sphereCollider->collisionGroup = CollisionFilter::Group::Projectile;
+			sphereCollider->radius = 2;
+
+			interp::Animate(sphereCollider->radius, 7.0f, 0.5, interp::Curve::Linear, explosion);
+
+			SingleDamager* singleDamager = explosion->AddComponent<SingleDamager>();
+			singleDamager->target = Fraction::Enemy;
+			singleDamager->damage = 25.0f;
+
+			DelayedDestroy* delayedDestroy = explosion->AddComponent<DelayedDestroy>();
+			delayedDestroy->lifeTime = 750;
+
+			target->Destroy();
+
+			break;
 		}
 	}
 
@@ -206,31 +240,25 @@ void fists_fire_update(EntityStorage* entityStorage, Entity* entity) {
 }
 
 void fists_fire_end(EntityStorage* entityStorage, Entity* entity, const CollisionInfo& info) {
-	Entity* airField = entityStorage->CreateEntity(AIR_FIELD, entityStorage->GetEntityByName("World"));
+	Entity* impact = entityStorage->CreateEntity("Impact", entityStorage->GetEntityByName("World"));
 
-	Transform* transform = airField->AddComponent<Transform>();
+	Transform* transform = impact->AddComponent<Transform>();
 	transform->position = info.position;
 
-	SphereCollider* sphereCollider = airField->AddComponent<SphereCollider>();
-	sphereCollider->isTouchable = false;
-	sphereCollider->radius = 1.0f;
-
-	interp::Animate(sphereCollider->radius, 5.0f, 10, interp::Curve::EaseOutQuad, airField);
-
-	ParticleEmitter* particleEmitter = airField->AddComponent<ParticleEmitter>();
-	particleEmitter->rate = 200;
-	particleEmitter->lifetime = 10000;
-	particleEmitter->color = point3d(0.55f, 1.0f, 1.0f);
-	particleEmitter->size = { 1.0f, 5.0f };
-	particleEmitter->opacity = { 0.1f, 0.0f };
-	particleEmitter->speed = { 1.0f, 0.0f };
+	ParticleEmitter* particleEmitter = impact->AddComponent<ParticleEmitter>();
+	particleEmitter->rate = 150;
+	particleEmitter->lifetime = 250;
+	particleEmitter->color = point3d(0.87, 0.42, 0);
+	particleEmitter->size = { 2.0f, 0.0f };
+	particleEmitter->opacity = { 1.0f, 0.0f };
+	particleEmitter->speed = { 15.0f, 0.0f };
 	particleEmitter->spread = { PI, PI };
 	particleEmitter->isHeapEmit = true;
 	particleEmitter->heapEmitRepeats = 1;
 	particleEmitter->lastEmitTime = timer::currentTime - particleEmitter->heapEmitInterval;
 
-	DelayedDestroy* delayedDestroy = airField->AddComponent<DelayedDestroy>();
-	delayedDestroy->lifeTime = 10000;
+	DelayedDestroy* delayedDestroy = impact->AddComponent<DelayedDestroy>();
+	delayedDestroy->lifeTime = 1000;
 
 	entity->Destroy();
 }
