@@ -21,6 +21,7 @@ PlayerAbilities::~PlayerAbilities()
 void PlayerAbilities::Initialize(Entity* PlayerEntity, EntityStorage* storage)
 {
 	weapon = PlayerWeapons::Fists;
+	element = Elements::None;
 
 	world = Singleton::GetInstance<World>();
 	entityStorage = storage;
@@ -690,7 +691,7 @@ void PlayerAbilities::Charging()
 
 void PlayerAbilities::CommonAttack(Transform startTransform, point3d direction)
 {
-	AttackDesc attackDesc = PlayerAttackTable[(int)weapon][0].start(entityStorage, startTransform, direction);
+	AttackDesc attackDesc = PlayerAttackTable[(int)weapon][(int)element].start(entityStorage, startTransform, direction);
 	attacks.push_back(attackDesc);
 }
 

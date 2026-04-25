@@ -115,13 +115,13 @@ AttackDesc fists_air_start(EntityStorage* entityStorage, const Transform& startT
 	DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
 	delayedDestroy->lifeTime = 5000;
 
-	return AttackDesc(projectile, PlayerWeapons::Fists, Elements::None);
+	return AttackDesc(projectile, PlayerWeapons::Fists, Elements::Air);
 }
 
 void fists_air_update(EntityStorage* entityStorage, Entity* entity) {
 	if (!entity->HasComponent<SingleDamager>()) {
 		const CollisionInfo& info = GetProjectileCollisionInfo(entityStorage, entity);
-		PlayerAttackTable[0][0].end(entityStorage, entity, info);
+		PlayerAttackTable[0][1].end(entityStorage, entity, info);
 	}
 }
 
@@ -184,7 +184,7 @@ AttackDesc fists_fire_start(EntityStorage* entityStorage, const Transform& start
 	DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
 	delayedDestroy->lifeTime = 5000;
 
-	return AttackDesc(projectile, PlayerWeapons::Fists, Elements::None);
+	return AttackDesc(projectile, PlayerWeapons::Fists, Elements::Fire);
 }
 
 void fists_fire_update(EntityStorage* entityStorage, Entity* entity) {
@@ -201,7 +201,7 @@ void fists_fire_update(EntityStorage* entityStorage, Entity* entity) {
 
 	if (!entity->HasComponent<SingleDamager>()) {
 		const CollisionInfo& info = GetProjectileCollisionInfo(entityStorage, entity);
-		PlayerAttackTable[0][0].end(entityStorage, entity, info);
+		PlayerAttackTable[0][2].end(entityStorage, entity, info);
 	}
 }
 
@@ -329,13 +329,13 @@ AttackLogic PlayerAttackTable[3][5] =
 	// Fists
 	{
 		// None
-		{fists_air_start, fists_air_update, fists_air_end},
+		{fists_none_start, fists_none_update, fists_none_end},
 
 		// Air
-		{},
+		{fists_air_start, fists_air_update, fists_air_end},
 
 		// Fire
-		{},
+		{fists_fire_start, fists_fire_update, fists_fire_end},
 
 		// Water
 		{},

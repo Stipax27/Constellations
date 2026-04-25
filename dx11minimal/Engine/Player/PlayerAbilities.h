@@ -35,7 +35,6 @@
 #include "../Physic/Collision/CollisionManagerClass.h"
 
 #include "Grabbable.h"
-#include "weapons.h"
 #include "attackTable.h"
 
 
@@ -68,6 +67,7 @@ class PlayerAbilities
 {
 public:
 	PlayerWeapons weapon;
+	Elements element;
 
 	float stamina;
 	float maxStamina;

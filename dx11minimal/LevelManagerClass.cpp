@@ -753,6 +753,19 @@ void LevelManagerClass::CreateUI()
 	textLabel->fontScale = 0.34f;
 	textLabel->letterSpacingPx = 1.0f;
 
+	entity = m_World->entityStorage->CreateEntity("ElementLabel", uiFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(0.8f, -0.64f, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"НЕТ";
+	textLabel->fontFamilyW = L"Impact";
+	textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+	textLabel->fontWeight = 900;
+	textLabel->fontSizePx = 44;
+	textLabel->fontScale = 0.40f;
+	textLabel->letterSpacingPx = 1.0f;
+
 
 	// UI Prototypes
 	// Selected weapon - circle
