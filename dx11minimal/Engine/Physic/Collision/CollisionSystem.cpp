@@ -113,7 +113,7 @@ void CollisionSystem::Update(EntityStorage& entityStorage, float deltaTime)
 						hres.second->damageQueue.push_back(unit);
 
 						sdres.second->entityFilter.push_back(hres.first->GetId());
-						if (sdres.second->entityFilter.size() >= sdres.second->maxHitCount) {
+						if (sdres.second->maxHitCount > 0 && sdres.second->entityFilter.size() >= sdres.second->maxHitCount) {
 							if (sdres.second->destroyable) {
 								sdres.first->Destroy();
 							}

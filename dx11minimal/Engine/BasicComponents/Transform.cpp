@@ -25,6 +25,7 @@ Transform& Transform::operator=(const Transform& other) {
     return *this;
 }
 
+// other Transform is child Transform
 Transform Transform::operator+(const Transform& other) {
     Transform transform = Transform();
 
@@ -35,6 +36,7 @@ Transform Transform::operator+(const Transform& other) {
     return transform;
 }
 
+// other Transform is child Transform
 Transform& Transform::operator+=(const Transform& other) {
     position += (GetRightVector() * other.position.x + GetUpVector() * other.position.y + GetLookVector() * other.position.z) * scale;
     scale *= other.scale;

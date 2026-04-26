@@ -133,7 +133,7 @@ void fists_air_end(EntityStorage* entityStorage, Entity* entity, const Collision
 
 	SphereCollider* sphereCollider = airField->AddComponent<SphereCollider>();
 	sphereCollider->isTouchable = false;
-	sphereCollider->collisionGroup = CollisionFilter::Group::StaticObject;
+	sphereCollider->collisionGroup = CollisionFilter::Group::Projectile;
 	sphereCollider->radius = 1.0f;
 
 	interp::Animate(sphereCollider->radius, 5.0f, 10, interp::Curve::EaseOutQuad, airField);
@@ -223,6 +223,7 @@ void fists_fire_update(EntityStorage* entityStorage, Entity* entity) {
 			SingleDamager* singleDamager = explosion->AddComponent<SingleDamager>();
 			singleDamager->target = Fraction::Enemy;
 			singleDamager->damage = 25.0f;
+			singleDamager->maxHitCount = -1;
 
 			DelayedDestroy* delayedDestroy = explosion->AddComponent<DelayedDestroy>();
 			delayedDestroy->lifeTime = 750;

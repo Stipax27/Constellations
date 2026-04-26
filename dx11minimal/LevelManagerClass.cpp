@@ -840,6 +840,19 @@ void LevelManagerClass::CreateUI()
 	ImageLabel* imageLabel = entity->AddComponent<ImageLabel>();
 	imageLabel->textureName = "comicsSpot";
 	imageLabel->color = point3d(0.12, 0.91, 0.62);
+
+
+
+
+	// TEST
+	entity = m_World->entityStorage->CreateEntity("Rect", uiFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::XX;
+	transform2D->position = point3d(0.4f, 0.1f, 0.0f);
+	transform2D->scale = point3d(0.1f, 0.1f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.25f, 0.25f, 0.25f);
 }
 
 

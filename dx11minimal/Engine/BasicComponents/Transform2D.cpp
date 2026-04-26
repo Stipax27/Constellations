@@ -22,6 +22,7 @@ Transform2D& Transform2D::operator=(const Transform2D& other) {
     return *this;
 }
 
+// other Transform2D is child Transform2D
 Transform2D Transform2D::operator+(const Transform2D& other) {
     Transform2D transform2d = Transform2D();
 
@@ -34,6 +35,7 @@ Transform2D Transform2D::operator+(const Transform2D& other) {
     return transform2d;
 }
 
+// other Transform2D is child Transform2D
 Transform2D& Transform2D::operator+=(const Transform2D& other) {
     position += (GetRightVector() * other.position.x + GetUpVector() * other.position.y) * scale;
     anchorPoint = other.anchorPoint;
