@@ -14,10 +14,6 @@
 
 #include "../Camera/cameraclass.h"
 
-/////////////
-// GLOBALS //
-/////////////
-const bool DEPTH_OFF = true;
 
 
 class CollisionDrawSystem : public System

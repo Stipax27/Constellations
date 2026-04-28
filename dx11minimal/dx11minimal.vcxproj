@@ -196,6 +196,7 @@
     <ClInclude Include="Engine\Lib\SerializationMacros.h" />
     <ClInclude Include="Engine\Player\attackTable.h" />
     <ClInclude Include="Engine\Compute\Combat\elements.h" />
+    <ClInclude Include="Engine\Player\comboclass.h" />
     <ClInclude Include="Engine\Player\weapons.h" />
     <ClInclude Include="Engine\Render\Beam.h" />
     <ClInclude Include="Engine\Render\StarClay\StarClay.h" />
@@ -931,6 +932,7 @@
     <ClCompile Include="Engine\Compute\Combat\CombatSystem.cpp" />
     <ClCompile Include="Engine\DebugTools\CollisionDrawSystem.cpp" />
     <ClCompile Include="Engine\Player\AttackTable.cpp" />
+    <ClCompile Include="Engine\Player\ComboClass.cpp" />
     <ClCompile Include="Engine\Render\StarClay\StarClaySystem.cpp" />
     <ClCompile Include="Engine\Utils\ComponentUtils.cpp" />
     <ClCompile Include="Engine\GLTFLoader.cpp" />

@@ -2,6 +2,8 @@
 
 using namespace std;
 
+#define DEPTH_OFF false
+
 
 
 CollisionDrawSystem::CollisionDrawSystem()

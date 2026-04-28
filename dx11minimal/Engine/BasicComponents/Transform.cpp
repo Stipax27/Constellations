@@ -1,17 +1,17 @@
 #include "Transform.h"
 
 
-point3d Transform::GetRightVector()
+point3d Transform::GetRightVector() const
 {
     return point3d(mRotation.r[0].m128_f32[0], mRotation.r[0].m128_f32[1], mRotation.r[0].m128_f32[2]).normalized();
 }
 
-point3d Transform::GetUpVector()
+point3d Transform::GetUpVector() const
 {
     return point3d(mRotation.r[1].m128_f32[0], mRotation.r[1].m128_f32[1], mRotation.r[1].m128_f32[2]).normalized();
 }
 
-point3d Transform::GetLookVector()
+point3d Transform::GetLookVector() const
 {
     return point3d(mRotation.r[2].m128_f32[0], mRotation.r[2].m128_f32[1], mRotation.r[2].m128_f32[2]).normalized();
 }

@@ -26,40 +26,55 @@
 // NONE
 AttackDesc fists_none_start(EntityStorage* entityStorage, const Transform& startTransform, const point3d& direction)
 {
-	Entity* projectile = entityStorage->CreateEntity("PlayerProjectile");
-	Transform* transform = projectile->AddComponent<Transform>();
-	transform->position = startTransform.position;
+	// Hitbox
+
+	Entity* hitbox = entityStorage->CreateEntity("FistHitbox");
+
+	Transform* transform = hitbox->AddComponent<Transform>();
+	transform->position = startTransform.position + startTransform.GetLookVector() * 5;
 	transform->mRotation = startTransform.mRotation;
 
-	PhysicBody* physicBody = projectile->AddComponent<PhysicBody>();
-	physicBody->airFriction = 0.0f;
-	physicBody->velocity = direction.normalized() * 100.0f;
-
-	Star* star = projectile->AddComponent<Star>();
-	star->radius = 0.4f;
-	star->color1 = point3d(0.9f, 1.0f, 0.99f);
-	star->color2 = point3d(0.34f, 0.8f, 0.45f);
-	star->crownColor = point3d(0.27f, 0.63f, 1.0f);
-
-	SingleDamager* singleDamager = projectile->AddComponent<SingleDamager>();
+	SingleDamager* singleDamager = hitbox->AddComponent<SingleDamager>();
 	singleDamager->target = Fraction::Enemy;
 	singleDamager->damage = 5.0f;
+	singleDamager->maxHitCount = -1;
 
-	SphereCollider* sphereCollider = projectile->AddComponent<SphereCollider>();
+	SphereCollider* sphereCollider = hitbox->AddComponent<SphereCollider>();
 	sphereCollider->isTouchable = false;
-	sphereCollider->radius = 0.4f;
+	sphereCollider->radius = 3.0f;
 
-	DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
-	delayedDestroy->lifeTime = 5000;
+	DelayedDestroy* delayedDestroy = hitbox->AddComponent<DelayedDestroy>();
+	delayedDestroy->lifeTime = 100;
 
-	return AttackDesc(projectile, PlayerWeapons::Fists, Elements::None);
+	// Visualisation
+
+	Entity* effect = entityStorage->CreateEntity("FistHitEffect");
+
+	transform = effect->AddComponent<Transform>();
+	transform->position = startTransform.position + startTransform.GetLookVector() * 5;
+	transform->mRotation = startTransform.mRotation;
+
+	ParticleEmitter* particleEmitter = effect->AddComponent<ParticleEmitter>();
+	particleEmitter->rate = 150;
+	particleEmitter->lifetime = 500;
+	particleEmitter->color = point3d(1.0f, 0.15f, 0.85f);
+	particleEmitter->size = { 2.0f, 0.0f };
+	particleEmitter->opacity = { 0.75f, 0.0f };
+	particleEmitter->speed = { 20.0f, 0.0f };
+	particleEmitter->spread = { PI, 0 };
+	particleEmitter->isHeapEmit = true;
+	particleEmitter->heapEmitRepeats = 1;
+	particleEmitter->lastEmitTime = timer::currentTime - particleEmitter->heapEmitInterval;
+	particleEmitter->emitDirection = EmitDirection::Right;
+
+	delayedDestroy = effect->AddComponent<DelayedDestroy>();
+	delayedDestroy->lifeTime = 500;
+
+	return AttackDesc(effect, PlayerWeapons::Fists, Elements::None);
 }
 
 void fists_none_update(EntityStorage* entityStorage, Entity* entity) {
-	if (!entity->HasComponent<SingleDamager>()) {
-		const CollisionInfo& info = GetProjectileCollisionInfo(entityStorage, entity);
-		PlayerAttackTable[0][0].end(entityStorage, entity, info);
-	}
+	return;
 }
 
 void fists_none_end(EntityStorage* entityStorage, Entity* entity, const CollisionInfo& info) {
@@ -361,10 +376,12 @@ AttackLogic PlayerAttackTable[3][5] =
 		{fists_none_start, fists_none_update, fists_none_end},
 
 		// Air
-		{fists_air_start, fists_air_update, fists_air_end},
+		//{fists_air_start, fists_air_update, fists_air_end},
+		{},
 
 		// Fire
-		{fists_fire_start, fists_fire_update, fists_fire_end},
+		//{fists_fire_start, fists_fire_update, fists_fire_end},
+		{},
 
 		// Water
 		{},
@@ -376,7 +393,8 @@ AttackLogic PlayerAttackTable[3][5] =
 	// Sword
 	{
 		// None
-		{sword_none_start, fists_none_update, fists_none_end},
+		//{sword_none_start, fists_none_update, fists_none_end},
+		{},
 
 		// Air
 		{},
@@ -394,7 +412,8 @@ AttackLogic PlayerAttackTable[3][5] =
 	// Bow
 	{
 		// None
-		{bow_none_start, fists_none_update, fists_none_end},
+		//{bow_none_start, fists_none_update, fists_none_end},
+		{},
 
 		// Air
 		{},

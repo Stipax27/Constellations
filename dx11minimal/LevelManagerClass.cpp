@@ -831,7 +831,7 @@ void LevelManagerClass::CreateUI()
 	rect = entity->AddComponent<Rect>();
 	rect->color = point3d(0.75f, 0.0f, 0.0f);
 
-	entity = m_World->entityStorage->CreateEntity("BossHealth", uiFolder);
+	/*entity = m_World->entityStorage->CreateEntity("BossHealth", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(1, 0, 0);
 	transform2D->ratio = ScreenAspectRatio::YY;
@@ -839,20 +839,7 @@ void LevelManagerClass::CreateUI()
 	transform2D->scale = point3d(0.2f, 0.2f, 0.0f);
 	ImageLabel* imageLabel = entity->AddComponent<ImageLabel>();
 	imageLabel->textureName = "comicsSpot";
-	imageLabel->color = point3d(0.12, 0.91, 0.62);
-
-
-
-
-	// TEST
-	entity = m_World->entityStorage->CreateEntity("Rect", uiFolder);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(0, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::XX;
-	transform2D->position = point3d(0.4f, 0.1f, 0.0f);
-	transform2D->scale = point3d(0.1f, 0.1f, 0.0f);
-	rect = entity->AddComponent<Rect>();
-	rect->color = point3d(0.25f, 0.25f, 0.25f);
+	imageLabel->color = point3d(0.12, 0.91, 0.62);*/
 }
 
 

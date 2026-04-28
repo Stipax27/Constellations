@@ -12,9 +12,9 @@ struct Transform : Component
     point3d scale = point3d(1.0f, 1.0f, 1.0f);
     DirectX::XMMATRIX mRotation = DirectX::XMMatrixIdentity();
 
-    point3d GetRightVector();
-    point3d GetUpVector();
-    point3d GetLookVector();
+    point3d GetRightVector() const;
+    point3d GetUpVector() const;
+    point3d GetLookVector() const;
 
     Transform& operator=(const Transform&);
     Transform operator+(const Transform&);

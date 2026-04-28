@@ -1,12 +1,12 @@
 #include "Transform2D.h"
 
 
-point3d Transform2D::GetRightVector()
+point3d Transform2D::GetRightVector() const
 {
     return point3d(cos(rotation), -sin(rotation), 0);
 }
 
-point3d Transform2D::GetUpVector()
+point3d Transform2D::GetUpVector() const
 {
     return point3d(sin(rotation), cos(rotation), 0);
 }
