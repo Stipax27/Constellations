@@ -113,6 +113,13 @@ void ComboManager::SaveInput(ComboInputType input)
 		}
 	}
 
+	if (heldInput != ComboInputType::Pause) {
+		if (timer::currentTime - heldInputTime >= COMBO_HELD_INPUT_START)
+			input = ComboInputType((int)heldInput + 2);
+
+		heldInput = ComboInputType::Pause;
+	}
+
 	if (inputBufferSize == 0) {
 		ComboInputType weaponInput = GetCITforCurrWeapon();
 		inputBuffer.push_back(weaponInput);
@@ -151,8 +158,24 @@ void ComboManager::SaveInput(ComboInputType input)
 }
 
 
+void ComboManager::StartHeldInput(ComboInputType input)
+{
+	if ((int)input > 1)
+		return;
+
+	// It's a crutch. I don't want to create a separate flag for the state when no key is being held down.
+	if (heldInput == ComboInputType::Pause) {
+		heldInput = input;
+		heldInputTime = timer::currentTime;
+	}
+}
+
+
 void ComboManager::Update()
 {
+	if (heldInput != ComboInputType::Pause)
+		return;
+
 	if (inputBuffer.size() > 0 && timer::currentTime - lastInputTime >= COMBO_PAUSE_TIME) {
 		SaveInput(ComboInputType::Pause);
 	}
@@ -190,7 +213,7 @@ void ComboManager::LockInputBuffer(double time) {
 
 
 ComboInputType ComboManager::GetCITforCurrWeapon() {
-	return (ComboInputType)((int)abilities->weapon + COMBO_INPUT_WEAPON_INDEX);
+	return ComboInputType((int)abilities->weapon + COMBO_INPUT_WEAPON_INDEX);
 }
 
 
