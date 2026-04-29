@@ -12,6 +12,7 @@
 // INCLUDES //
 //////////////
 
+#include "../ECS_Base/entityStorage.h"
 #include "../ECS_Base/entity.h"
 #include "../BasicComponents/Transform.h"
 

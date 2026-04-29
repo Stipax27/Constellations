@@ -53,6 +53,9 @@ void PlayerController::Initialize(Entity* Player, EntityStorage* entityStorage)
 	entityStorage = Singleton::GetInstance<EntityStorage>();
 	collisionManager = Singleton::GetInstance<CollisionManagerClass>();
 
+	comboManager = Singleton::GetInstance<ComboManager>();
+	comboManager->Initialize();
+
 	currentMaxSpeed = PLAYER_MOVE_SPEED;
 	isRunning = false;
 
@@ -333,18 +336,27 @@ void PlayerController::ProcessMouse()
 
 			// Обработка атак мышью - проверяем что щит не активен
 			if (!abilities->IsShieldActive()) {
-				if (mouse->IsLButtonDown()) {
+
+				/*if (mouse->IsLButtonDown()) {
 					abilities->Charging();
 				}
 				else if (mouse->IsLButtonUnclicked()) {
 					abilities->Attack(*playerTransform, mouse->GetMouseDirection());
-				}
+				}*/
 
-				if (mouse->IsRButtonClicked()) {
+				/*if (mouse->IsRButtonClicked()) {
 					abilities->BlockStart();
 				}
 				else if (mouse->IsRButtonUnclicked()) {
 					abilities->BlockEnd();
+				}*/
+
+				if (mouse->IsLButtonClicked()) {
+					comboManager->SaveInput(ComboInputType::Light);
+				}
+
+				if (mouse->IsRButtonClicked()) {
+					comboManager->SaveInput(ComboInputType::Heavy);
 				}
 			}
 		}
@@ -368,6 +380,8 @@ void PlayerController::ProcessMouse()
 		break;
 	}
 	}
+
+	comboManager->Update();
 }
 
 

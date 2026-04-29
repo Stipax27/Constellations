@@ -26,6 +26,7 @@
 #include "CameraTarget.h"
 
 #include "PlayerAbilities.h"
+#include "Combo/comboManager.h"
 
 
 /////////////
@@ -73,6 +74,8 @@ public:
 	void TakeDamage(float damage);
 
 private:
+	ComboManager* comboManager;
+
 	EntityStorage* entityStorage;
 	CollisionManagerClass* collisionManager;
 

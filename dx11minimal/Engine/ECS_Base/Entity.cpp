@@ -46,9 +46,11 @@ Entity::~Entity()
 
 
 void Entity::Destroy() {
+	SetParent(nullptr);
 	for (int i = 0; i < children.size(); i++) {
 		children[i]->Destroy();
 	}
+
 	deleted = true;
 	NotifyEntityDestroyed(this);
 }
@@ -72,7 +74,12 @@ int Entity::GetId() {
 
 
 void Entity::SetParent(Entity* newParent) {
-	newParent->AddChild(this);
+	if (newParent != nullptr) {
+		newParent->AddChild(this);
+	}
+	else if (parent != nullptr) {
+		parent->RemoveChild(this);
+	}
 }
 
 
@@ -84,6 +91,15 @@ Entity* Entity::GetParent() {
 void Entity::AddChild(Entity* Child) {
 	Child->parent = this;
 	children.push_back(Child);
+}
+
+
+void Entity::RemoveChild(Entity* Child) {
+	auto it = std::find(children.begin(), children.end(), Child);
+	if (it != children.end()) {
+		Child->parent = nullptr;
+		children.erase(it);
+	}
 }
 
 
@@ -149,6 +165,13 @@ vector<Entity*> Entity::GetChildren(bool Recursive) {
 	}
 
 	return array;
+}
+
+
+void Entity::ClearChildren() {
+	for (Entity* child : children) {
+		child->Destroy();
+	}
 }
 
 

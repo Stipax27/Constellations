@@ -157,9 +157,12 @@ public:
 	Entity* GetParent();
 
 	void AddChild(Entity*);
+	void RemoveChild(Entity*);
+
 	Entity* GetChildByName(std::string name, bool recursive = false);
 	std::vector<Entity*> GetChildrenByName(std::string name, bool recursive = false);
 	std::vector<Entity*> GetChildren(bool recursive = false);
+	void ClearChildren();
 
 	void SetActive(bool);
 	bool IsActive();
