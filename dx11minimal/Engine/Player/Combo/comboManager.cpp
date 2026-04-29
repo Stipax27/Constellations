@@ -123,7 +123,9 @@ void ComboManager::SaveInput(ComboInputType input)
 
 	inputBuffer.push_back(input);
 	lastInputTime = timer::currentTime;
-	LockInputBuffer(COMBO_BUFFER_LOCK_TIME);
+
+	if (input != ComboInputType::Pause)
+		LockInputBuffer(COMBO_BUFFER_LOCK_TIME);
 
 #if COMBO_BUFFER_DEBUG
 	PrintComboInput(input);
@@ -170,10 +172,10 @@ void ComboManager::ClearInputBuffer()
 #if COMBO_BUFFER_DEBUG
 	for (Entity* child : bufferUi->GetChildren()) {
 		Transform2D* transform2D = child->GetComponent<Transform2D>();
-		if (!transform2D)
+		if (!transform2D || transform2D->position.x == -0.1f)
 			continue;
 
-		transform2D->position.x -= 0.1f;
+		transform2D->position.x = -0.1f;
 
 		DelayedDestroy* delayedDestroy = child->AddComponent<DelayedDestroy>();
 		delayedDestroy->lifeTime = 500;

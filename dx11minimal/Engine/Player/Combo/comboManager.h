@@ -25,6 +25,7 @@ public:
 	void Update();
 
 	void SaveInput(ComboInputType input);
+	void ClearInputBuffer();
 
 private:
 	std::vector<ComboInputType> inputBuffer;
@@ -46,7 +47,6 @@ private:
 private:
 	bool IsComboComplete(Combo& combo);
 
-	void ClearInputBuffer();
 	void LockInputBuffer(double time);
 	ComboInputType GetCITforCurrWeapon();
 

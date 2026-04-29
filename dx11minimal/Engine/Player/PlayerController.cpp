@@ -195,6 +195,7 @@ void PlayerController::ProcessInput()
 	if (input::IsKeyDown('F') && !fKeyPressed) {
 		fKeyPressed = true;
 		abilities->ShieldStart(); // Активируем щит при нажатии F
+		comboManager->ClearInputBuffer();
 	}
 	else if (!input::IsKeyDown('F') && fKeyPressed) {
 		fKeyPressed = false;
@@ -441,6 +442,8 @@ void PlayerController::Dash()
 		playerPhysicBody->airFriction = DASH_AIR_FRICTION;
 
 		abilities->stamina -= DASH_COST;
+
+		comboManager->SaveInput(ComboInputType::Dash);
 	}
 }
 
