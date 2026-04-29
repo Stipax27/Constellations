@@ -3,6 +3,7 @@
 
 #include "combo.h"
 #include "../../Lib/singleton.h"
+#include "../PlayerAbilities.h"
 
 /////////////
 // GLOBALS //
@@ -10,8 +11,8 @@
 
 #define COMBO_BUFFER_DEBUG true
 
-#define COMBO_BUFFER_LOCK_TIME 200
-#define COMBO_PAUSE_TIME 500
+#define COMBO_BUFFER_LOCK_TIME 100
+#define COMBO_PAUSE_TIME 750
 
 /////////////
 //  CLASS  //
@@ -36,6 +37,7 @@ private:
 
 	EntityStorage* entityStorage;
 	Entity* playerEntity;
+	PlayerAbilities* abilities;
 
 #if COMBO_BUFFER_DEBUG
 	Entity* bufferUi;
@@ -46,6 +48,11 @@ private:
 
 	void ClearInputBuffer();
 	void LockInputBuffer(double time);
+	ComboInputType GetCITforCurrWeapon();
+
+#if COMBO_BUFFER_DEBUG
+	void PrintComboInput(const ComboInputType input);
+#endif
 };
 
 #endif

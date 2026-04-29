@@ -53,6 +53,9 @@ void PlayerController::Initialize(Entity* Player, EntityStorage* entityStorage)
 	entityStorage = Singleton::GetInstance<EntityStorage>();
 	collisionManager = Singleton::GetInstance<CollisionManagerClass>();
 
+	abilities = Singleton::GetInstance<PlayerAbilities>();
+	abilities->Initialize(playerEntity, entityStorage);
+
 	comboManager = Singleton::GetInstance<ComboManager>();
 	comboManager->Initialize();
 
@@ -61,9 +64,6 @@ void PlayerController::Initialize(Entity* Player, EntityStorage* entityStorage)
 
 	cameraTarget = nullptr;
 	lockMovementOnTarget = false;
-
-	abilities = new PlayerAbilities;
-	abilities->Initialize(playerEntity, entityStorage);
 
 	SetCursorPos(window->width / 2, window->height / 2);
 }
@@ -218,14 +218,17 @@ void PlayerController::ProcessInput()
 		playerPhysicBody->mAngVelocity = playerPhysicBody->mAngVelocity * XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), roll * RAD);
 	}
 
-	if (input::IsKeyPressed('1')) {
+	if (input::IsKeyPressed('1') && abilities->weapon != PlayerWeapons::Fists) {
 		abilities->weapon = PlayerWeapons::Fists;
+		comboManager->SaveInput(ComboInputType::TakeFists);
 	}
-	if (input::IsKeyPressed('2')) {
+	if (input::IsKeyPressed('2') && abilities->weapon != PlayerWeapons::Sword) {
 		abilities->weapon = PlayerWeapons::Sword;
+		comboManager->SaveInput(ComboInputType::TakeSword);
 	}
-	if (input::IsKeyPressed('3')) {
+	if (input::IsKeyPressed('3') && abilities->weapon != PlayerWeapons::Bow) {
 		abilities->weapon = PlayerWeapons::Bow;
+		comboManager->SaveInput(ComboInputType::TakeBow);
 	}
 
 	if (input::IsKeyPressed('T')) {

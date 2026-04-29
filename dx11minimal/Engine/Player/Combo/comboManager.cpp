@@ -34,14 +34,16 @@ void ComboManager::Initialize()
 {
 	entityStorage = Singleton::GetInstance<EntityStorage>();
 	playerEntity = entityStorage->GetEntityByName("Player");
+	abilities = Singleton::GetInstance<PlayerAbilities>();
 
 	comboList = {
 		Combo
 		(
 			{
+				ComboInputType::TakeFists,
 				ComboInputType::Light,
 				ComboInputType::Light,
-				ComboInputType::Heavy,
+				ComboInputType::Heavy
 			},
 			test,
 			false
@@ -50,10 +52,23 @@ void ComboManager::Initialize()
 		Combo
 		(
 			{
+				ComboInputType::TakeFists,
 				ComboInputType::Light,
 				ComboInputType::Light,
 				ComboInputType::Pause,
+				ComboInputType::Heavy
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeFists,
+				ComboInputType::Light,
 				ComboInputType::Heavy,
+				ComboInputType::TakeSword
 			},
 			test,
 			false
@@ -82,11 +97,28 @@ void ComboManager::SaveInput(ComboInputType input)
 	if (timer::currentTime < bufferUnlockTime)
 		return;
 
-	if (input == ComboInputType::Pause && inputBuffer.size() > 0) {
-		if (inputBuffer.back() == ComboInputType::Pause) {
-			ClearInputBuffer();
+	int inputBufferSize = inputBuffer.size();
+
+	if (inputBufferSize > 0) {
+		if (input == ComboInputType::Pause) {
+			if (inputBuffer.back() == ComboInputType::Pause) {
+				ClearInputBuffer();
+				return;
+			}
+		}
+	}
+	else {
+		if ((int)input >= COMBO_INPUT_WEAPON_INDEX) {
 			return;
 		}
+	}
+
+	if (inputBufferSize == 0) {
+		ComboInputType weaponInput = GetCITforCurrWeapon();
+		inputBuffer.push_back(weaponInput);
+#if COMBO_BUFFER_DEBUG
+		PrintComboInput(weaponInput);
+#endif
 	}
 
 	inputBuffer.push_back(input);
@@ -94,49 +126,7 @@ void ComboManager::SaveInput(ComboInputType input)
 	LockInputBuffer(COMBO_BUFFER_LOCK_TIME);
 
 #if COMBO_BUFFER_DEBUG
-	Entity* debugText = entityStorage->CreateEntity("InputText", bufferUi);
-
-	Transform2D* transform2D = debugText->AddComponent<Transform2D>();
-	transform2D->position = point3d(0.0f, (float)inputBuffer.size() * -0.05f, 0.0f);
-
-	TextLabel* textLabel = debugText->AddComponent<TextLabel>();
-	textLabel->fontFamilyW = L"Impact";
-	textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
-	textLabel->fontWeight = 900;
-	textLabel->fontSizePx = 44;
-	textLabel->fontScale = 0.40f;
-	textLabel->letterSpacingPx = 1.0f;
-
-	switch (input)
-	{
-	case ComboInputType::Light:
-		textLabel->textW = L"ЛА";
-		break;
-	case ComboInputType::Heavy:
-		textLabel->textW = L"ТА";
-		break;
-	case ComboInputType::LightHeld:
-		textLabel->textW = L"ЛА УДЕРЖ.";
-		break;
-	case ComboInputType::HeavyHeld:
-		textLabel->textW = L"ТА УДЕРЖ.";
-		break;
-	case ComboInputType::Pause:
-		textLabel->textW = L"ПАУЗА";
-		break;
-	case ComboInputType::Dash:
-		textLabel->textW = L"РЫВОК";
-		break;
-	case ComboInputType::SwitchToFists:
-		textLabel->textW = L"С КУЛАКИ";
-		break;
-	case ComboInputType::SwitchToSword:
-		textLabel->textW = L"С МЕЧ";
-		break;
-	case ComboInputType::SwitchToBow:
-		textLabel->textW = L"С ЛУК";
-		break;
-	}
+	PrintComboInput(input);
 #endif
 
 	for (Combo& combo : comboList) {
@@ -195,3 +185,58 @@ void ComboManager::ClearInputBuffer()
 void ComboManager::LockInputBuffer(double time) {
 	bufferUnlockTime = timer::currentTime + time;
 }
+
+
+ComboInputType ComboManager::GetCITforCurrWeapon() {
+	return (ComboInputType)((int)abilities->weapon + COMBO_INPUT_WEAPON_INDEX);
+}
+
+
+#if COMBO_BUFFER_DEBUG
+void ComboManager::PrintComboInput(const ComboInputType input)
+{
+	Entity* debugText = entityStorage->CreateEntity("InputText", bufferUi);
+
+	Transform2D* transform2D = debugText->AddComponent<Transform2D>();
+	transform2D->position = point3d(0.0f, (float)inputBuffer.size() * -0.05f, 0.0f);
+
+	TextLabel* textLabel = debugText->AddComponent<TextLabel>();
+	textLabel->fontFamilyW = L"Impact";
+	textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+	textLabel->fontWeight = 900;
+	textLabel->fontSizePx = 44;
+	textLabel->fontScale = 0.40f;
+	textLabel->letterSpacingPx = 1.0f;
+
+	switch (input)
+	{
+	case ComboInputType::Light:
+		textLabel->textW = L"ЛА";
+		break;
+	case ComboInputType::Heavy:
+		textLabel->textW = L"ТА";
+		break;
+	case ComboInputType::LightHeld:
+		textLabel->textW = L"ЛА УДЕРЖ.";
+		break;
+	case ComboInputType::HeavyHeld:
+		textLabel->textW = L"ТА УДЕРЖ.";
+		break;
+	case ComboInputType::Pause:
+		textLabel->textW = L"ПАУЗА";
+		break;
+	case ComboInputType::Dash:
+		textLabel->textW = L"РЫВОК";
+		break;
+	case ComboInputType::TakeFists:
+		textLabel->textW = L"ВЫБОР КУЛАКИ";
+		break;
+	case ComboInputType::TakeSword:
+		textLabel->textW = L"ВЫБОР МЕЧ";
+		break;
+	case ComboInputType::TakeBow:
+		textLabel->textW = L"ВЫБОР ЛУК";
+		break;
+	}
+}
+#endif

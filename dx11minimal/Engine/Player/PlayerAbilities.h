@@ -63,7 +63,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-class PlayerAbilities
+class PlayerAbilities : public ISingleton
 {
 public:
 	PlayerWeapons weapon;

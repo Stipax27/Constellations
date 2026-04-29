@@ -6,6 +6,10 @@
 
 #include <vector>
 
+
+#define COMBO_INPUT_WEAPON_INDEX 6
+
+
 using ComboRun = void(*)(EntityStorage*, Entity*, const point3d&);
 
 enum class ComboInputType
@@ -16,9 +20,9 @@ enum class ComboInputType
 	HeavyHeld,
 	Pause,
 	Dash,
-	SwitchToFists,
-	SwitchToSword,
-	SwitchToBow
+	TakeFists,
+	TakeSword,
+	TakeBow
 };
 
 struct Combo
