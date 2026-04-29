@@ -43,7 +43,8 @@ void ComboManager::Initialize()
 				ComboInputType::TakeFists,
 				ComboInputType::Light,
 				ComboInputType::Light,
-				ComboInputType::Heavy
+				ComboInputType::Light,
+				ComboInputType::Light
 			},
 			test,
 			false
@@ -56,7 +57,59 @@ void ComboManager::Initialize()
 				ComboInputType::Light,
 				ComboInputType::Light,
 				ComboInputType::Pause,
-				ComboInputType::Heavy
+				ComboInputType::Light
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeFists,
+				ComboInputType::Light,
+				ComboInputType::Pause,
+				ComboInputType::Light,
+				ComboInputType::Pause,
+				ComboInputType::Light,
+				ComboInputType::Pause,
+				ComboInputType::Light
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeFists,
+				ComboInputType::Light,
+				ComboInputType::LightHeld
+
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeFists,
+				ComboInputType::Dash,
+				ComboInputType::Light
+
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeFists,
+				ComboInputType::Light,
+				ComboInputType::Heavy,
+				ComboInputType::TakeBow
 			},
 			test,
 			false
