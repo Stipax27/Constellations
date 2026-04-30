@@ -37,6 +37,11 @@ void ComboManager::Initialize()
 	abilities = Singleton::GetInstance<PlayerAbilities>();
 
 	comboList = {
+
+		///////////////////////////////////
+		// Комбинации Лёгких ударов КУЛАКОВ
+		///////////////////////////////////
+
 		Combo
 		(
 			{
@@ -125,7 +130,543 @@ void ComboManager::Initialize()
 			},
 			test,
 			false
-		)
+		),
+
+		////////////////////////////////////
+		// Комбинации Тяжёлых ударов КУЛАКОВ
+		////////////////////////////////////
+
+		Combo
+		(
+			{
+				ComboInputType::TakeFists,
+				ComboInputType::Heavy,
+				ComboInputType::Heavy,
+				ComboInputType::Heavy,
+				ComboInputType::Heavy
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeFists,
+				ComboInputType::Heavy,
+				ComboInputType::Heavy,
+				ComboInputType::Light
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeFists,
+				ComboInputType::Heavy,
+				ComboInputType::Heavy,
+				ComboInputType::Pause,
+				ComboInputType::Heavy
+
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeFists,
+				ComboInputType::Heavy,
+				ComboInputType::Pause,
+				ComboInputType::Heavy,
+				ComboInputType::Pause,
+				ComboInputType::Heavy,
+				ComboInputType::Pause,
+				ComboInputType::Heavy
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeFists,
+				ComboInputType::Heavy,
+				ComboInputType::HeavyHeld
+
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeFists,
+				ComboInputType::Dash,
+				ComboInputType::Heavy
+
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeFists,
+				ComboInputType::Heavy,
+				ComboInputType::Light,
+				ComboInputType::TakeBow
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeFists,
+				ComboInputType::Heavy,
+				ComboInputType::Light,
+				ComboInputType::TakeSword
+			},
+			test,
+			false
+		),
+
+		////////////////////////////////
+		// Комбинации Лёгких ударов МЕЧА
+		////////////////////////////////
+
+		Combo
+		(
+			{
+				ComboInputType::TakeSword,
+				ComboInputType::Light,
+				ComboInputType::Heavy,
+				ComboInputType::Light,
+				ComboInputType::Heavy
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeSword,
+				ComboInputType::Light,
+				ComboInputType::Light,
+				ComboInputType::Light
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeSword,
+				ComboInputType::Light,
+				ComboInputType::Light,
+				ComboInputType::Pause,
+				ComboInputType::LightHeld
+
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeSword,
+				ComboInputType::LightHeld,
+				ComboInputType::LightHeld,
+				ComboInputType::LightHeld,
+				ComboInputType::LightHeld
+				
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeSword,
+				ComboInputType::Light,
+				ComboInputType::LightHeld
+
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeSword,
+				ComboInputType::Dash,
+				ComboInputType::Light
+
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeSword,
+				ComboInputType::Light,
+				ComboInputType::Heavy,
+				ComboInputType::TakeBow
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeSword,
+				ComboInputType::Light,
+				ComboInputType::Heavy,
+				ComboInputType::TakeFists
+			},
+			test,
+			false
+		),
+
+
+		////////////////////////////////
+		// Комбинации Тяжёлых ударов МЕЧА
+		////////////////////////////////
+
+		Combo
+		(
+			{
+				ComboInputType::TakeSword,
+				ComboInputType::Heavy,
+				ComboInputType::Light,
+				ComboInputType::Heavy,
+				ComboInputType::Light
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeSword,
+				ComboInputType::Heavy,
+				ComboInputType::Heavy,
+				ComboInputType::Heavy
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeSword,
+				ComboInputType::Heavy,
+				ComboInputType::Heavy,
+				ComboInputType::Pause,
+				ComboInputType::HeavyHeld
+
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeSword,
+				ComboInputType::HeavyHeld,
+				ComboInputType::HeavyHeld,
+				ComboInputType::HeavyHeld,
+				ComboInputType::HeavyHeld
+
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeSword,
+				ComboInputType::Heavy,
+				ComboInputType::HeavyHeld
+
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeSword,
+				ComboInputType::Dash,
+				ComboInputType::Heavy
+
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeSword,
+				ComboInputType::Heavy,
+				ComboInputType::Light,
+				ComboInputType::TakeBow
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeSword,
+				ComboInputType::Heavy,
+				ComboInputType::Light,
+				ComboInputType::TakeFists
+			},
+			test,
+			false
+		),
+
+		////////////////////////////////
+		// Комбинации Лёгких ударов ЛУКА
+		////////////////////////////////
+
+		Combo
+		(
+			{
+				ComboInputType::TakeBow,
+				ComboInputType::Light,
+				ComboInputType::Light,
+				ComboInputType::Light,
+				ComboInputType::Light
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeBow,
+				ComboInputType::LightHeld,
+				ComboInputType::LightHeld,
+				ComboInputType::HeavyHeld
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeBow,
+				ComboInputType::Light,
+				ComboInputType::Light,
+				ComboInputType::Pause,
+				ComboInputType::LightHeld
+
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeBow,
+				ComboInputType::LightHeld,
+				ComboInputType::Pause,
+				ComboInputType::LightHeld,
+				ComboInputType::Pause,
+				ComboInputType::LightHeld,
+				ComboInputType::Pause,
+				ComboInputType::LightHeld
+
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeBow,
+				ComboInputType::Light,
+				ComboInputType::LightHeld
+
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeBow,
+				ComboInputType::Dash,
+				ComboInputType::Light
+
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeBow,
+				ComboInputType::Light,
+				ComboInputType::Heavy,
+				ComboInputType::TakeSword
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeBow,
+				ComboInputType::Light,
+				ComboInputType::Heavy,
+				ComboInputType::TakeFists
+			},
+			test,
+			false
+		),
+
+		////////////////////////////////
+		// Комбинации Тяжёлых ударов ЛУКА
+		////////////////////////////////
+
+		Combo
+		(
+			{
+				ComboInputType::TakeBow,
+				ComboInputType::Heavy,
+				ComboInputType::Heavy,
+				ComboInputType::Heavy,
+				ComboInputType::Heavy
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeBow,
+				ComboInputType::Heavy,
+				ComboInputType::Heavy,
+				ComboInputType::HeavyHeld
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeBow,
+				ComboInputType::Heavy,
+				ComboInputType::Heavy,
+				ComboInputType::Pause,
+				ComboInputType::LightHeld
+
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeBow,
+				ComboInputType::HeavyHeld,
+				ComboInputType::Pause,
+				ComboInputType::HeavyHeld,
+				ComboInputType::Pause,
+				ComboInputType::HeavyHeld,
+				ComboInputType::Pause,
+				ComboInputType::HeavyHeld
+
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeBow,
+				ComboInputType::LightHeld,
+				ComboInputType::HeavyHeld
+
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeBow,
+				ComboInputType::Dash,
+				ComboInputType::Heavy
+
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeBow,
+				ComboInputType::Heavy,
+				ComboInputType::Light,
+				ComboInputType::TakeSword
+			},
+			test,
+			false
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeBow,
+				ComboInputType::Heavy,
+				ComboInputType::Light,
+				ComboInputType::TakeFists
+			},
+			test,
+			false
+		),
+
+
 	};
 
 	bufferUnlockTime = 0;
