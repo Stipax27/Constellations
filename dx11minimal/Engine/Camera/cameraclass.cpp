@@ -147,6 +147,6 @@ void CameraClass::UpdateProjectionMatrix()
 		SCREEN_NEAR,
 		SCREEN_DEPTH
 	);
-
+	
 	ConstBuf::camera.proj = XMMatrixTranspose(projectionMatrix);
 }

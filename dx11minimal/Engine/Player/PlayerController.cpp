@@ -270,6 +270,7 @@ void PlayerController::ProccessUI()
 }
 
 
+
 void PlayerController::ClickOnObject()
 {
 	if (target != nullptr) {
@@ -279,9 +280,14 @@ void PlayerController::ClickOnObject()
 		if ((palyerTransform.position - targetTransform.position).magnitude() > INTERACT_DISTANCE)
 			return;
 
+		
 		Sprite* sprite = target->GetComponent<Sprite>();
 		if (sprite) {
 			sprite->color = point3d(1, 0, 0);
 		}
+
+
+
+
 	}
 }

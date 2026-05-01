@@ -73,6 +73,54 @@ bool LevelManagerClass::Initialize()
 	Textures::LoadPNGTexture("comicsSpot", L"..\\dx11minimal\\Resourses\\Textures\\comicsSpot.png");
 	Textures::LoadPNGTexture("omniman", L"..\\dx11minimal\\Resourses\\Textures\\omniman.png");
 	Textures::LoadPNGTexture("garden", L"..\\dx11minimal\\Resourses\\Textures\\garden.png");
+	
+	Textures::LoadPNGTexture("Plant1KILER" , L"..\\dx11minimal\\Resourses\\Textures\\A\\A.png");
+	Textures::LoadPNGTexture("Plant1KIND"  , L"..\\dx11minimal\\Resourses\\Textures\\A\\B.png");
+	Textures::LoadPNGTexture("Plant1SEED"  , L"..\\dx11minimal\\Resourses\\Textures\\A\\C.png");
+	Textures::LoadPNGTexture("Plant1NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\A\\D.png");
+	Textures::LoadPNGTexture("Plant1EVIL"  , L"..\\dx11minimal\\Resourses\\Textures\\A\\E.png");
+
+	Textures::LoadPNGTexture("Plant2KILER" , L"..\\dx11minimal\\Resourses\\Textures\\B\\A.png");
+	Textures::LoadPNGTexture("Plant2KIND"  , L"..\\dx11minimal\\Resourses\\Textures\\B\\B.png");
+	Textures::LoadPNGTexture("Plant2SEED"  , L"..\\dx11minimal\\Resourses\\Textures\\B\\C.png");
+	Textures::LoadPNGTexture("Plant2NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\B\\D.png");
+	Textures::LoadPNGTexture("Plant2EVIL"  , L"..\\dx11minimal\\Resourses\\Textures\\B\\E.png");
+
+	Textures::LoadPNGTexture("Plant3KILER" , L"..\\dx11minimal\\Resourses\\Textures\\C\\A.png");
+	Textures::LoadPNGTexture("Plant3KIND"  , L"..\\dx11minimal\\Resourses\\Textures\\C\\B.png");
+	Textures::LoadPNGTexture("Plant3SEED"  , L"..\\dx11minimal\\Resourses\\Textures\\C\\C.png");
+	Textures::LoadPNGTexture("Plant3NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\C\\D.png");
+	Textures::LoadPNGTexture("Plant3EVIL"  , L"..\\dx11minimal\\Resourses\\Textures\\C\\E.png");
+
+	Textures::LoadPNGTexture("Plant4KILER" , L"..\\dx11minimal\\Resourses\\Textures\\D\\A.png");
+	Textures::LoadPNGTexture("Plant4KIND"  , L"..\\dx11minimal\\Resourses\\Textures\\D\\B.png");
+	Textures::LoadPNGTexture("Plant4SEED"  , L"..\\dx11minimal\\Resourses\\Textures\\D\\C.png");
+	Textures::LoadPNGTexture("Plant4NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\D\\D.png");
+	Textures::LoadPNGTexture("Plant4EVIL"  , L"..\\dx11minimal\\Resourses\\Textures\\D\\E.png");
+
+	Textures::LoadPNGTexture("Plant5KILER" , L"..\\dx11minimal\\Resourses\\Textures\\F\\A.png");
+	Textures::LoadPNGTexture("Plant5KIND"  , L"..\\dx11minimal\\Resourses\\Textures\\F\\B.png");
+	Textures::LoadPNGTexture("Plant5SEED"  , L"..\\dx11minimal\\Resourses\\Textures\\F\\C.png");
+	Textures::LoadPNGTexture("Plant5NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\F\\D.png");
+	Textures::LoadPNGTexture("Plant5EVIL"  , L"..\\dx11minimal\\Resourses\\Textures\\F\\E.png");
+
+	Textures::LoadPNGTexture("Plant6KILER" , L"..\\dx11minimal\\Resourses\\Textures\\G\\A.png");
+	Textures::LoadPNGTexture("Plant6KIND"  , L"..\\dx11minimal\\Resourses\\Textures\\G\\B.png");
+	Textures::LoadPNGTexture("Plant6SEED"  , L"..\\dx11minimal\\Resourses\\Textures\\G\\C.png");
+	Textures::LoadPNGTexture("Plant6NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\G\\D.png");
+	Textures::LoadPNGTexture("Plant6EVIL"  , L"..\\dx11minimal\\Resourses\\Textures\\G\\E.png");
+
+	Textures::LoadPNGTexture("ScaleBar", L"..\\dx11minimal\\Resourses\\Textures\\I\\A.png");
+	Textures::LoadPNGTexture("ScaleLineG", L"..\\dx11minimal\\Resourses\\Textures\\I\\B.png");
+	Textures::LoadPNGTexture("ScaleLineY", L"..\\dx11minimal\\Resourses\\Textures\\I\\C.png");
+	Textures::LoadPNGTexture("ScaleLineR", L"..\\dx11minimal\\Resourses\\Textures\\I\\D.png");
+
+	Textures::LoadPNGTexture("ANGRY_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\A.png");
+	Textures::LoadPNGTexture("NORMAL_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\B.png");
+	Textures::LoadPNGTexture("LOVE_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\C.png");
+	Textures::LoadPNGTexture("DEAD_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\D.png");
+
+
 
 	if (modelsLoadingThread.joinable()) {
 		modelsLoadingThread.join();
@@ -142,6 +190,196 @@ bool LevelManagerClass::Initialize()
 }
 
 
+
+
+// __ COMPONENTS GAMEJAM __ //
+enum StatusPlant {
+	GOOD,
+	NORMAL,
+	BAD,
+	DEAD,
+};
+
+enum Beverage {
+	WATER,
+	MILK,
+	TEA,
+	ESPRESSO,
+	AMERICANO,
+	LAVANDER_RAF,
+};
+
+enum Mutation
+{
+	SEED,
+	PLANT,
+	KIND_PLANT,
+	EVIL_PLANT,
+	KILLER_PLANT,
+};
+
+enum TypePlant
+{
+	BLUE,
+	YELLOW,
+	RED,
+	PURPLE,
+	ORANGE,
+	CYAN,
+};
+
+struct ComponentPlants
+{
+	ComponentPlants() = default;
+
+	//base property
+	float x, y, Width, Height;
+	const char* Name = "object";
+	int Number = 0;
+	bool CheckCreate = true;
+	bool Click = false;
+	bool Active = false;
+	string* TextureLine;
+	string* TexturePlant;
+	string* TextureEmogy;
+
+	//Plant property
+	const char* NameChar;
+	float LoyaltyScale = 1000;
+	float TimeGaine = 300;
+	TypePlant TypeColorPlant = TypePlant::BLUE;
+	StatusPlant Status = StatusPlant::GOOD;
+	Beverage LoveBeverage = Beverage::WATER;
+	Beverage HateBeverage = Beverage::MILK;
+	Mutation GainPlant = Mutation::SEED;
+
+	Entity* Plant;
+};
+// -- COMPONENTS GAMEJAM -- //
+
+
+
+
+vector<ComponentPlants> VPlants;
+
+// __METODS GAMEJAM__ //
+void Metamorf(TypePlant ColorPlant, Mutation Gain, string& TexturePlant)
+{
+	int PathSeed;
+
+	PathSeed = ColorPlant + 1;
+
+	string s = to_string(PathSeed);
+
+	if (Gain == Mutation::SEED)
+		TexturePlant = "Plant" + s + "SEED";
+	else if (Gain == Mutation::PLANT)
+		TexturePlant = "Plant" + s + "NORMAL";
+	else if (Gain == Mutation::KIND_PLANT)
+		TexturePlant = "Plant" + s + "KIND";
+	else if (Gain == Mutation::EVIL_PLANT)
+		TexturePlant = "Plant" + s + "EVIL";
+	else if (Gain == Mutation::KILLER_PLANT)
+		TexturePlant = "Plant" + s + "KILER";
+
+}
+void StatusMood(float scaleS, StatusPlant Status, string& TextureEmogy)
+{
+	if (Status == StatusPlant::GOOD)
+	{
+		TextureEmogy = "LOVE_EMOGY";
+	}
+	else if (Status == StatusPlant::NORMAL)
+	{
+		TextureEmogy = "NORMAL_EMOGY";
+	}
+	else if (Status == StatusPlant::BAD)
+	{
+		TextureEmogy = "ANGRY_EMOGY";
+	}
+	else if (Status == StatusPlant::DEAD)
+	{
+		TextureEmogy = "DEAD_EMOGY";
+	}
+}
+void MutationPlantation(ComponentPlants& PropPlant, float scaleS)
+{
+	float sec = 40;
+	PropPlant.TimeGaine -= 1. / sec;
+	float Scale = ((300 * PropPlant.TimeGaine) / 1000.);
+	float scaleGain = Scale / 100;
+
+	if (scaleGain >= 0.8)
+		PropPlant.GainPlant = Mutation::SEED;
+	else if (scaleGain >= 0.6 && scaleGain < 0.8)
+		PropPlant.GainPlant = Mutation::PLANT;
+	else if (scaleGain < 0.6 && scaleS > 0.7)
+		PropPlant.GainPlant = Mutation::KIND_PLANT;
+	else if (scaleGain < 0.6 && scaleS < 0.7 && scaleS > 0.3)
+		PropPlant.GainPlant = Mutation::EVIL_PLANT;
+	else if (scaleGain < 0.6 && scaleS < 0.3)
+		PropPlant.GainPlant = Mutation::KILLER_PLANT;
+}
+
+
+
+void GameJamMetod(ComponentPlants& PropPlant)
+{
+	float sec = 15;
+	PropPlant.LoyaltyScale -= 1. / sec;
+	float Scale = ((120 * PropPlant.LoyaltyScale) / 1000.);
+	float scaleS = Scale / 120;
+	string str;
+
+	if (scaleS >= 0.7)
+	{
+		PropPlant.Status = StatusPlant::GOOD; 
+		str = "ScaleLineG";
+		PropPlant.TextureLine = &str;
+	}
+	else if (scaleS >= 0.3 && scaleS < 0.7)
+	{
+		PropPlant.Status = StatusPlant::NORMAL;
+		str = "ScaleLineY";
+		PropPlant.TextureLine = &str;
+	}
+	else if (scaleS < 0.3 && scaleS > 0.2)
+	{
+		PropPlant.Status = StatusPlant::BAD;
+		str = "ScaleLineR";
+		PropPlant.TextureLine = &str;
+	}
+	else if (scaleS < 0.2)
+	{
+		PropPlant.Status = StatusPlant::DEAD;
+		str = "ScaleLineR";
+		PropPlant.TextureLine = &str;
+	}
+
+
+	if (GetAsyncKeyState('E'))
+		PropPlant.LoyaltyScale += 0.5;
+	if (GetAsyncKeyState('Q'))
+		PropPlant.LoyaltyScale -= 0.5;
+
+
+
+	/*StatusMood(scaleS, PropPlant.Status, *PropPlant.TextureEmogy);*/
+	MutationPlantation(PropPlant, scaleS);
+	Metamorf(PropPlant.TypeColorPlant, PropPlant.GainPlant, *PropPlant.TexturePlant);
+
+	if (scaleS < 0.01)
+	{
+
+		PropPlant.CheckCreate = false;
+		PropPlant.Plant->Destroy();
+	}
+}
+// __METODS GAMEJAM__ //
+
+
+
+
 void LevelManagerClass::Shutdown()
 {
 	if (playerController)
@@ -207,6 +445,16 @@ void LevelManagerClass::Frame()
 	playerController->ProcessMouse();
 	playerController->abilities->Update();
 	playerController->ProccessUI();
+
+	for (int i = 0; i < VPlants.size(); i++)
+	{
+
+
+
+		GameJamMetod(VPlants[i]);
+
+
+	}
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 
@@ -665,6 +913,7 @@ void LevelManagerClass::CreateRoom()
 	sprite->textureName = "comicsSpot";
 
 	CreateGardens(room);
+	
 }
 
 
@@ -685,7 +934,32 @@ void LevelManagerClass::CreateGardens(Entity* room)
 		sprite = garden->AddComponent<Sprite>();
 		sprite->textureName = "garden";
 
+		CreatePlant(garden);
+		
 		sphereCollider = garden->AddComponent<SphereCollider>();
 		sphereCollider->radius = 1.25f;
+
 	}
+}
+
+
+void LevelManagerClass::CreatePlant(Entity* Garden)
+{
+	Entity* Plant;
+	Transform* transform;
+	Sprite* sprite;
+	ComponentPlants PropPlant = ComponentPlants();
+
+	Plant = m_World->entityStorage->CreateEntity("Plant", Garden);
+
+	transform = Plant->AddComponent<Transform>();
+	transform->position = point3d(0, 0.1, 0);
+
+	sprite = Plant->AddComponent<Sprite>();
+
+	sprite->textureName = "Plant1KILER";
+	PropPlant.TexturePlant = &sprite->textureName;
+	PropPlant.Plant = Plant;
+
+	VPlants.push_back(PropPlant);
 }

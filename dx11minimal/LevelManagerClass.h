@@ -115,6 +115,10 @@ private:
 	void CreateRoom();
 	void CreateGardens(Entity* room);
 
+
+	void CreatePlant(Entity* Garden);
+
+
 	ID3D11Buffer* m_BoneBuffer = nullptr;
 	SkinnedMesh m_FoxMesh;
 	Skeleton    m_FoxSkeleton;
