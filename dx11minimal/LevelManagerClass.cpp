@@ -673,13 +673,19 @@ void LevelManagerClass::CreateGardens(Entity* room)
 	Entity* garden;
 	Transform* transform;
 	Sprite* sprite;
+	SphereCollider* sphereCollider;
 
 	for (int i = -9; i < 10; i += 2) {
 		garden = m_World->entityStorage->CreateEntity("WallSprite", room);
+
 		transform = garden->AddComponent<Transform>();
 		transform->position = point3d(i, 0, 9);
 		transform->mRotation = GetMatrixFromDirection(point3d(0, 1, 0).normalized(), point3d(0, 0, 1));
+
 		sprite = garden->AddComponent<Sprite>();
 		sprite->textureName = "garden";
+
+		sphereCollider = garden->AddComponent<SphereCollider>();
+		sphereCollider->radius = 1.25f;
 	}
 }
