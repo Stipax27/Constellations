@@ -282,7 +282,7 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 
 	transform = playerSprite->AddComponent<Transform>();
 	transform->scale = point3d(1.5);
-	transform->position = point3d(0, 1, 0.75);
+	transform->position = point3d(0, 0.1, 0.75);
 	transform->mRotation = GetMatrixFromDirection(point3d(0, 1, 0).normalized(), point3d(0, 0, 1));
 
 	Sprite* sprite = playerSprite->AddComponent<Sprite>();
