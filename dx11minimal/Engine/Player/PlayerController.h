@@ -62,7 +62,7 @@ public:
 	PlayerController(const PlayerController&);
 	~PlayerController();
 
-	void Initialize(Entity*, EntityStorage*);
+	void Initialize(Entity*);
 	void Shutdown();
 
 	void ProcessInput();

@@ -200,7 +200,7 @@ bool LevelManagerClass::Initialize()
 	InitSystems();
 
 	playerController = new PlayerController();
-	playerController->Initialize(player, m_World->entityStorage);
+	playerController->Initialize(player);
 
 	
 

@@ -28,7 +28,7 @@ PlayerController::~PlayerController()
 }
 
 
-void PlayerController::Initialize(Entity* Player, EntityStorage* entityStorage)
+void PlayerController::Initialize(Entity* Player)
 {
 	playerEntity = Player;
 
