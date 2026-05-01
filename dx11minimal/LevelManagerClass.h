@@ -64,7 +64,7 @@
 // GLOBALS //
 /////////////
 //const bool VSYNC_ENABLED = true;
-#define SHOW_COLLIDERS true
+#define SHOW_COLLIDERS false
 #define SHOW_GRAVITY false
 
 
@@ -122,6 +122,12 @@ private:
 	SkinnedMesh m_CesiumMesh;
 	Skeleton    m_CesiumSkeleton;
 	std::vector<AnimationClip> m_CesiumAnimations;
+
+
+	SkinnedMesh m_PunchComboNewMesh;
+	Skeleton    m_PunchComboNewSkeleton;
+	std::vector<AnimationClip> m_PunchComboNewAnimations;
+
 	SkinnedMesh m_TestAnimMesh;
 	Skeleton    m_TestAnimSkeleton;
 	std::vector<AnimationClip> m_TestAnimAnimations;
