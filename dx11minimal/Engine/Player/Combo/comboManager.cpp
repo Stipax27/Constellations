@@ -76,6 +76,7 @@ void ComboManager::Initialize()
 	};
 
 	bufferUnlockTime = 0;
+	heldInput = ComboInputType::Pause;
 
 	maxComboLength = 0;
 	for (Combo& combo : comboList) {
