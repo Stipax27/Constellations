@@ -72,6 +72,7 @@ bool LevelManagerClass::Initialize()
 	//Textures::LoadDDSTexture("aperture", L"..\\dx11minimal\\Resourses\\Textures\\aperture.dds");
 	Textures::LoadPNGTexture("comicsSpot", L"..\\dx11minimal\\Resourses\\Textures\\comicsSpot.png");
 	Textures::LoadPNGTexture("omniman", L"..\\dx11minimal\\Resourses\\Textures\\omniman.png");
+	Textures::LoadPNGTexture("garden", L"..\\dx11minimal\\Resourses\\Textures\\garden.png");
 
 	if (modelsLoadingThread.joinable()) {
 		modelsLoadingThread.join();
@@ -662,4 +663,23 @@ void LevelManagerClass::CreateRoom()
 	transform->position = point3d(0, -1, 0);
 	sprite = wallSprite->AddComponent<Sprite>();
 	sprite->textureName = "comicsSpot";
+
+	CreateGardens(room);
+}
+
+
+void LevelManagerClass::CreateGardens(Entity* room)
+{
+	Entity* garden;
+	Transform* transform;
+	Sprite* sprite;
+
+	for (int i = -9; i < 10; i += 2) {
+		garden = m_World->entityStorage->CreateEntity("WallSprite", room);
+		transform = garden->AddComponent<Transform>();
+		transform->position = point3d(i, 0, 9);
+		transform->mRotation = GetMatrixFromDirection(point3d(0, 1, 0).normalized(), point3d(0, 0, 1));
+		sprite = garden->AddComponent<Sprite>();
+		sprite->textureName = "garden";
+	}
 }

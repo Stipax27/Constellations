@@ -113,6 +113,7 @@ private:
 	void CreateNebula(Entity*, int);
 
 	void CreateRoom();
+	void CreateGardens(Entity* room);
 
 	ID3D11Buffer* m_BoneBuffer = nullptr;
 	SkinnedMesh m_FoxMesh;
