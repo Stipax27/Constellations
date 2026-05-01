@@ -427,26 +427,6 @@ void LevelManagerClass::CreateUI()
 	rect = entity->AddComponent<Rect>();
 	rect->color = point3d(0.75f, 0.0f, 0.0f);
 
-	// Enemy name - text
-	entity = m_World->entityStorage->CreateEntity("Rect", uiFolder);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(0, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::XX;
-	transform2D->position = point3d(0, 0.85f, 0.0f);
-	transform2D->scale = point3d(0.05f, 0.05f, 0.0f);
-	rect = entity->AddComponent<Rect>();
-	rect->color = point3d(0.75f, 0.0f, 0.0f);
-
-	// Enemy HP bar - rectangle
-	entity = m_World->entityStorage->CreateEntity("BossHealth", uiFolder);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(0, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::XY;
-	transform2D->position = point3d(0, 0.7f, 0.0f);
-	transform2D->scale = point3d(0.5f, 0.025f, 0.0f);
-	rect = entity->AddComponent<Rect>();
-	rect->color = point3d(0.75f, 0.0f, 0.0f);
-
 	/*entity = m_World->entityStorage->CreateEntity("BossHealth", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(1, 0, 0);
