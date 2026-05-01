@@ -43,7 +43,7 @@
 /////////////
 
 #define CHARGE_START_DELTA 500
-#define RAY_DISTANCE 1000.0f
+#define RAY_DISTANCE 100.0f
 #define STAMINA_RESTORE_STEP 0.5f
 
 #define ATTACK_COST 25.0f

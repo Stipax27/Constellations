@@ -205,22 +205,6 @@ void PlayerController::ProcessMouse()
 					playerPhysicBody->mAngVelocity = playerPhysicBody->mAngVelocity * additionalRotation;
 				}
 			}
-
-			if (mouse->IsLButtonClicked()) {
-				comboManager->StartHeldInput(ComboInputType::Light);
-			}
-
-			if (mouse->IsRButtonClicked()) {
-				comboManager->StartHeldInput(ComboInputType::Heavy);
-			}
-
-			if (mouse->IsLButtonUnclicked()) {
-				comboManager->SaveInput(ComboInputType::Light);
-			}
-
-			if (mouse->IsRButtonUnclicked()) {
-				comboManager->SaveInput(ComboInputType::Heavy);
-			}
 		}
 		break;
 	}
@@ -238,6 +222,8 @@ void PlayerController::ProcessMouse()
 
 				mouse->particles.push_back(particle);
 			}
+
+			ClickOnObject();
 		}
 		break;
 	}
@@ -245,24 +231,18 @@ void PlayerController::ProcessMouse()
 
 	point3d mouseDirection = mouse->GetMouseDirection();
 	
-	Entity* e = entityStorage->CreateEntity("beam");
+	/*Entity* e = entityStorage->CreateEntity("beam");
+	e->AddComponent<Transform>();
 	Beam* beam = e->AddComponent<Beam>();
 	beam->point1 = camera->position;
 	beam->point2 = camera->position + mouseDirection * RAY_DISTANCE;
 	DelayedDestroy* d = e->AddComponent<DelayedDestroy>();
-	d->lifeTime = 5;
+	d->lifeTime = 5;*/
 
 	RayInfo rayInfo = RayInfo(camera->position, mouseDirection * RAY_DISTANCE, CollisionFilter::Group::PlayerRay, false);
 	RaycastResult result = collisionManager->Raycast(rayInfo);
 
 	target = result.hit ? result.entity : nullptr;
-
-	if (target != nullptr) {
-		Sprite* sprite = target->GetComponent<Sprite>();
-		if (sprite) {
-			sprite->color = point3d(1, 0, 0);
-		}
-	}
 }
 
 
@@ -286,5 +266,22 @@ void PlayerController::ProccessUI()
 		case Elements::Earth:
 			elementText->textW = L"ЗЕМЛЯ";
 			break;
+	}
+}
+
+
+void PlayerController::ClickOnObject()
+{
+	if (target != nullptr) {
+		Transform targetTransform = GetWorldTransform(target);
+		Transform palyerTransform = GetWorldTransform(playerEntity);
+
+		if ((palyerTransform.position - targetTransform.position).magnitude() > INTERACT_DISTANCE)
+			return;
+
+		Sprite* sprite = target->GetComponent<Sprite>();
+		if (sprite) {
+			sprite->color = point3d(1, 0, 0);
+		}
 	}
 }

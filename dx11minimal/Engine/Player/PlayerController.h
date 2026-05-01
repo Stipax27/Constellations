@@ -47,6 +47,8 @@ const float CURSOR_ZONE_DELTA = MAX_CURSOR_DEVIATION - CURSOR_IGNORE_ZONE;
 #define DASH_COST 50.0f
 #define DASH_CD 1000
 
+#define INTERACT_DISTANCE 5
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: PlayerController
@@ -97,6 +99,9 @@ private:
 
 	Entity* cameraTarget;
 	bool lockMovementOnTarget;
+
+private:
+	void ClickOnObject();
 };
 
 #endif

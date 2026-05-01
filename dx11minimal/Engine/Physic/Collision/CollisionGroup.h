@@ -15,7 +15,7 @@ namespace CollisionFilter
 	};
 
 	const bool collisionTable[5][5] = {
-		{T, T, T, F}, // Projectile
+		{T, T, T, T}, // Projectile
 		{T, F, T, F}, // Player
 		{T, T, F, T}, // Enemy
 		{T, F, T, F}, // PlayerRay
