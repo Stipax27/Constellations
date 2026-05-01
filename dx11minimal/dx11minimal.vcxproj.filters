@@ -84,6 +84,9 @@
     <ClCompile Include="Engine\Render\StarClay\StarClaySystem.cpp" />
     <ClCompile Include="Engine\Compute\Combat\RayDamageSystem.cpp" />
     <ClCompile Include="Engine\Player\AttackTable.cpp" />
+    <ClCompile Include="Engine\Player\Combo\Combo.cpp" />
+    <ClCompile Include="Engine\Player\Combo\comboManager.cpp" />
+    <ClCompile Include="Engine\Render\Sprite\Sprite3dSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LevelManagerClass.h">
@@ -228,6 +231,10 @@
     <ClInclude Include="Engine\Compute\Combat\elements.h" />
     <ClInclude Include="Engine\Player\attackTable.h" />
     <ClInclude Include="Engine\Player\weapons.h" />
+    <ClInclude Include="Engine\Player\Combo\combo.h" />
+    <ClInclude Include="Engine\Player\Combo\comboManager.h" />
+    <ClInclude Include="Engine\Render\Sprite\Sprite.h" />
+    <ClInclude Include="Engine\Render\Sprite\Sprite3dSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">
@@ -541,6 +548,7 @@
     <None Include="Shaders\ps\basicLowBackground.shader" />
     <None Include="packages.config" />
     <None Include="Shaders\ui\Image_Stretch_PS.shader" />
+    <None Include="Shaders\vs\plane.shader" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">

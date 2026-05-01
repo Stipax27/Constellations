@@ -200,6 +200,8 @@
     <ClInclude Include="Engine\Player\Combo\comboManager.h" />
     <ClInclude Include="Engine\Player\weapons.h" />
     <ClInclude Include="Engine\Render\Beam.h" />
+    <ClInclude Include="Engine\Render\Sprite\Sprite.h" />
+    <ClInclude Include="Engine\Render\Sprite\Sprite3dSystem.h" />
     <ClInclude Include="Engine\Render\StarClay\StarClay.h" />
     <ClInclude Include="Engine\Render\StarClay\StarClaySystem.h" />
     <ClInclude Include="Engine\UI\Button.h" />
@@ -847,6 +849,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
+    <None Include="Shaders\vs\plane.shader">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
     <None Include="Shaders\vs\quad.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -935,6 +943,7 @@
     <ClCompile Include="Engine\Player\AttackTable.cpp" />
     <ClCompile Include="Engine\Player\Combo\Combo.cpp" />
     <ClCompile Include="Engine\Player\Combo\comboManager.cpp" />
+    <ClCompile Include="Engine\Render\Sprite\Sprite3dSystem.cpp" />
     <ClCompile Include="Engine\Render\StarClay\StarClaySystem.cpp" />
     <ClCompile Include="Engine\Utils\ComponentUtils.cpp" />
     <ClCompile Include="Engine\GLTFLoader.cpp" />

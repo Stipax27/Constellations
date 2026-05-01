@@ -29,6 +29,7 @@
 #include "Engine/Render/Mesh/meshSystem.h"
 #include "Engine/Render/Nebula/nebulaSystem.h"
 #include "Engine/Render/StarClay/StarClaySystem.h"
+#include "Engine/Render/Sprite/Sprite3dSystem.h"
 
 #include "Engine/UI/uiSystem.h"
 #include "Engine/UI/Text/UITextSystem.h"
@@ -109,10 +110,7 @@ private:
 	void InitSystems();
 
 	void CreateSpaceBackground(Entity*, int);
-	void CreateAries(Entity*);
-	void CreateZenithLocation(Entity*, int);
 	void CreateNebula(Entity*, int);
-	void CreateStarQuestLoc(Entity*, int);
 
 	void CreateRoom();
 
