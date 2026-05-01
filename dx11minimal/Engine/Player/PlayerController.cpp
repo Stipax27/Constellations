@@ -455,22 +455,6 @@ void PlayerController::Dash()
 	}
 }
 
-// Добавьте этот метод в PlayerController для обработки получения урона
-void PlayerController::TakeDamage(float damage)
-{
-	if (!playerEntity->IsActive()) return;
-
-	// Пытаемся заблокировать урон щитом
-	if (!abilities->TryBlockDamage(damage)) {
-		// Если не заблокировали - применяем урон
-		playerHealth->hp -= damage;
-
-		// Визуальный эффект получения урона
-		playerPointCloud->color = point3d(1.0f, 0.0f, 0.0f);
-		// Возвращаем цвет через некоторое время
-	}
-}
-
 
 void PlayerController::LockOnTarget()
 {
