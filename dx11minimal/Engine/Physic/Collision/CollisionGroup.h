@@ -18,7 +18,7 @@ namespace CollisionFilter
 		{T, T, T, F}, // Projectile
 		{T, F, T, F}, // Player
 		{T, T, F, T}, // Enemy
-		{F, F, T, F}, // PlayerRay
+		{T, F, T, F}, // PlayerRay
 	};
 }
 

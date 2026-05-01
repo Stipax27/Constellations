@@ -28,7 +28,7 @@ PlayerController::~PlayerController()
 }
 
 
-void PlayerController::Initialize(Entity* Player, EntityStorage* entityStorage)
+void PlayerController::Initialize(Entity* Player)
 {
 	playerEntity = Player;
 
@@ -243,7 +243,26 @@ void PlayerController::ProcessMouse()
 	}
 	}
 
+	point3d mouseDirection = mouse->GetMouseDirection();
 	
+	Entity* e = entityStorage->CreateEntity("beam");
+	Beam* beam = e->AddComponent<Beam>();
+	beam->point1 = camera->position;
+	beam->point2 = camera->position + mouseDirection * RAY_DISTANCE;
+	DelayedDestroy* d = e->AddComponent<DelayedDestroy>();
+	d->lifeTime = 5;
+
+	RayInfo rayInfo = RayInfo(camera->position, mouseDirection * RAY_DISTANCE, CollisionFilter::Group::PlayerRay, false);
+	RaycastResult result = collisionManager->Raycast(rayInfo);
+
+	target = result.hit ? result.entity : nullptr;
+
+	if (target != nullptr) {
+		Sprite* sprite = target->GetComponent<Sprite>();
+		if (sprite) {
+			sprite->color = point3d(1, 0, 0);
+		}
+	}
 }
 
 

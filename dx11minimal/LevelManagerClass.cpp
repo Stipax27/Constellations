@@ -136,7 +136,7 @@ bool LevelManagerClass::Initialize()
 	InitSystems();
 
 	playerController = new PlayerController();
-	playerController->Initialize(player, m_World->entityStorage);
+	playerController->Initialize(player);
 
 	return true;
 }
@@ -196,8 +196,8 @@ double shotTime = 0;
 void LevelManagerClass::Frame()
 {
 	mouse->UpdateSystemCursorVisibility();
-	if (!window->IsActive())
-		return;
+	//if (!window->IsActive())
+	//	return;
 
 	mouse->Update();
 

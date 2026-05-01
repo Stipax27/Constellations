@@ -22,6 +22,7 @@
 #include "../BasicComponents/Transform.h"
 #include "../Physic/Movement/PhysicBody.h"
 #include "../Render/PointCloud.h"
+#include "../Render/Sprite/Sprite.h"
 #include "../Compute/Combat/Health.h"
 #include "CameraTarget.h"
 
@@ -61,7 +62,7 @@ public:
 	PlayerController(const PlayerController&);
 	~PlayerController();
 
-	void Initialize(Entity*, EntityStorage*);
+	void Initialize(Entity*);
 	void Shutdown();
 
 	void ProcessInput();
