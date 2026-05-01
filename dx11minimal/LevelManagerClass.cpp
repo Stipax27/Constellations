@@ -191,7 +191,6 @@ bool LevelManagerClass::Initialize()
 
 
 
-
 // __ COMPONENTS GAMEJAM __ //
 enum StatusPlant {
 	GOOD,
@@ -254,10 +253,10 @@ struct ComponentPlants
 	Mutation GainPlant = Mutation::SEED;
 
 	Entity* Plant;
+	Entity* UiLine;
+	Entity* Emoji;
 };
 // -- COMPONENTS GAMEJAM -- //
-
-
 
 
 vector<ComponentPlants> VPlants;
@@ -304,7 +303,7 @@ void StatusMood(float scaleS, StatusPlant Status, string& TextureEmogy)
 }
 void MutationPlantation(ComponentPlants& PropPlant, float scaleS)
 {
-	float sec = 40;
+	float sec = 10;
 	PropPlant.TimeGaine -= 1. / sec;
 	float Scale = ((300 * PropPlant.TimeGaine) / 1000.);
 	float scaleGain = Scale / 100;
@@ -322,49 +321,46 @@ void MutationPlantation(ComponentPlants& PropPlant, float scaleS)
 }
 
 
-
 void GameJamMetod(ComponentPlants& PropPlant)
 {
-	float sec = 15;
+	float sec = 1;
 	PropPlant.LoyaltyScale -= 1. / sec;
 	float Scale = ((120 * PropPlant.LoyaltyScale) / 1000.);
 	float scaleS = Scale / 120;
 	string str;
+	point3d* scaleUI = &PropPlant.UiLine->GetComponent<Transform>()->scale;
 
+	scaleUI->x = scaleS;
 	if (scaleS >= 0.7)
 	{
 		PropPlant.Status = StatusPlant::GOOD; 
-		str = "ScaleLineG";
-		PropPlant.TextureLine = &str;
+		PropPlant.UiLine->GetComponent<Sprite>()->textureName = "ScaleLineG";
 	}
 	else if (scaleS >= 0.3 && scaleS < 0.7)
 	{
 		PropPlant.Status = StatusPlant::NORMAL;
-		str = "ScaleLineY";
-		PropPlant.TextureLine = &str;
+		PropPlant.UiLine->GetComponent<Sprite>()->textureName = "ScaleLineY";
 	}
 	else if (scaleS < 0.3 && scaleS > 0.2)
 	{
 		PropPlant.Status = StatusPlant::BAD;
-		str = "ScaleLineR";
-		PropPlant.TextureLine = &str;
+		PropPlant.UiLine->GetComponent<Sprite>()->textureName = "ScaleLineR";
 	}
 	else if (scaleS < 0.2)
 	{
 		PropPlant.Status = StatusPlant::DEAD;
-		str = "ScaleLineR";
-		PropPlant.TextureLine = &str;
+		PropPlant.UiLine->GetComponent<Sprite>()->textureName = "ScaleLineR";
 	}
 
 
 	if (GetAsyncKeyState('E'))
-		PropPlant.LoyaltyScale += 0.5;
+		PropPlant.LoyaltyScale += 2;
 	if (GetAsyncKeyState('Q'))
-		PropPlant.LoyaltyScale -= 0.5;
+		PropPlant.LoyaltyScale -= 2;
 
 
 
-	/*StatusMood(scaleS, PropPlant.Status, *PropPlant.TextureEmogy);*/
+	StatusMood(scaleS, PropPlant.Status, PropPlant.Emoji->GetComponent<Sprite>()->textureName);
 	MutationPlantation(PropPlant, scaleS);
 	Metamorf(PropPlant.TypeColorPlant, PropPlant.GainPlant, *PropPlant.TexturePlant);
 
@@ -376,9 +372,6 @@ void GameJamMetod(ComponentPlants& PropPlant)
 	}
 }
 // __METODS GAMEJAM__ //
-
-
-
 
 void LevelManagerClass::Shutdown()
 {
@@ -448,12 +441,7 @@ void LevelManagerClass::Frame()
 
 	for (int i = 0; i < VPlants.size(); i++)
 	{
-
-
-
 		GameJamMetod(VPlants[i]);
-
-
 	}
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
@@ -468,6 +456,8 @@ void LevelManagerClass::Frame()
 	mouse->RenderCursor();
 	Draw::Present();
 }
+
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -943,23 +933,88 @@ void LevelManagerClass::CreateGardens(Entity* room)
 }
 
 
+
+
+Entity* LevelManagerClass::CreateUIPlant(Entity* Plant)
+{
+	Entity* UIPlantBar;
+	Transform* transformBar;
+	Sprite* spriteLineBar;
+	UIPlantBar = m_World->entityStorage->CreateEntity("UIBar", Plant);
+	transformBar = UIPlantBar->AddComponent<Transform>();
+	transformBar->position = point3d(0, 1, 0.2);
+	transformBar->scale = point3d(1, 0.1, 1);
+	spriteLineBar = UIPlantBar->AddComponent<Sprite>();
+	spriteLineBar->textureName = "ScaleBar";
+	
+	
+	Entity* UIPlant;
+	Transform* transform;
+	Sprite* spriteLine;
+	UIPlant = m_World->entityStorage->CreateEntity("UILine", UIPlantBar);
+	transform = UIPlant->AddComponent<Transform>();
+	transform->position = point3d(0, 0, 0.3);
+	spriteLine = UIPlant->AddComponent<Sprite>();
+	spriteLine->textureName = "ScaleLineG";
+
+	return UIPlant;
+}
+
+Entity* LevelManagerClass::CreateEmogy(Entity* Plant)
+{
+	Entity* PlantEmoji;
+	Transform* transformEmoji;
+	Sprite* spriteLineEmoji;
+
+	PlantEmoji = m_World->entityStorage->CreateEntity("PlantEMOJI", Plant);
+
+	transformEmoji = PlantEmoji->AddComponent<Transform>();
+	transformEmoji->position = point3d(-0.7, 1.4, 0.4);
+	transformEmoji->scale = point3d(0.4, 0.4, 0.1);
+	spriteLineEmoji = PlantEmoji->AddComponent<Sprite>();
+	spriteLineEmoji->textureName = "LOVE_EMOGY";
+
+	return PlantEmoji;
+}
+
 void LevelManagerClass::CreatePlant(Entity* Garden)
 {
 	Entity* Plant;
 	Transform* transform;
-	Sprite* sprite;
+	Sprite* spritePlant;
 	ComponentPlants PropPlant = ComponentPlants();
 
 	Plant = m_World->entityStorage->CreateEntity("Plant", Garden);
 
 	transform = Plant->AddComponent<Transform>();
-	transform->position = point3d(0, 0.1, 0);
+	transform->position = point3d(0, 0.1, 0.1);
 
-	sprite = Plant->AddComponent<Sprite>();
+	spritePlant = Plant->AddComponent<Sprite>();
 
-	sprite->textureName = "Plant1KILER";
-	PropPlant.TexturePlant = &sprite->textureName;
+	spritePlant->textureName = "Plant1KILER";
+
+
+	PropPlant.TexturePlant = &spritePlant->textureName;
 	PropPlant.Plant = Plant;
 
+
+	PropPlant.UiLine = CreateUIPlant(Plant);
+	PropPlant.Emoji = CreateEmogy(Plant);
 	VPlants.push_back(PropPlant);
 }
+
+//Textures::LoadPNGTexture("Plant6KILER", L"..\\dx11minimal\\Resourses\\Textures\\G\\A.png");
+//Textures::LoadPNGTexture("Plant6KIND", L"..\\dx11minimal\\Resourses\\Textures\\G\\B.png");
+//Textures::LoadPNGTexture("Plant6SEED", L"..\\dx11minimal\\Resourses\\Textures\\G\\C.png");
+//Textures::LoadPNGTexture("Plant6NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\G\\D.png");
+//Textures::LoadPNGTexture("Plant6EVIL", L"..\\dx11minimal\\Resourses\\Textures\\G\\E.png");
+//
+//Textures::LoadPNGTexture("ScaleBar", L"..\\dx11minimal\\Resourses\\Textures\\I\\A.png");
+//Textures::LoadPNGTexture("ScaleLineG", L"..\\dx11minimal\\Resourses\\Textures\\I\\B.png");
+//Textures::LoadPNGTexture("ScaleLineY", L"..\\dx11minimal\\Resourses\\Textures\\I\\C.png");
+//Textures::LoadPNGTexture("ScaleLineR", L"..\\dx11minimal\\Resourses\\Textures\\I\\D.png");
+//
+//Textures::LoadPNGTexture("ANGRY_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\A.png");
+//Textures::LoadPNGTexture("NORMAL_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\B.png");
+//Textures::LoadPNGTexture("LOVE_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\C.png");
+//Textures::LoadPNGTexture("DEAD_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\D.png");

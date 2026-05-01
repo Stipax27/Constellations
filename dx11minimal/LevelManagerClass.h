@@ -74,6 +74,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
+
+
 class LevelManagerClass
 {
 public:
@@ -116,7 +118,12 @@ private:
 	void CreateGardens(Entity* room);
 
 
+
 	void CreatePlant(Entity* Garden);
+	Entity* CreateUIPlant(Entity* Plant);
+	Entity* CreateEmogy(Entity* Plant);
+
+
 
 
 	ID3D11Buffer* m_BoneBuffer = nullptr;
