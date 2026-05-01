@@ -52,6 +52,29 @@ CollisionResult CollisionManagerClass::sphere_vs_sphere(
 }
 
 
+CollisionResult CollisionManagerClass::sphere_vs_plane(
+    const Transform t1, const SphereCollider* c1,
+    const Transform t2, const PlaneCollider* c2)
+{
+    CollisionResult result = CollisionResult();
+
+    point3d planeNormal = c2->normal;
+
+    float signedDistance = (t1.position - t2.position).dot(planeNormal);
+
+    float penetration = c1->radius - signedDistance;
+
+    if (penetration > 0) {
+        result.collided = true;
+        result.normal = planeNormal;
+        result.position = t1.position - planeNormal * signedDistance;
+        result.distance = penetration;
+    }
+
+    return result;
+}
+
+
 RaycastResult CollisionManagerClass::Raycast(const RayInfo& ray)
 {
 	RaycastResult closestHit;

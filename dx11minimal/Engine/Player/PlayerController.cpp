@@ -35,17 +35,11 @@ void PlayerController::Initialize(Entity* Player, EntityStorage* entityStorage)
 	playerTransform = Player->GetComponent<Transform>();
 	playerPhysicBody = Player->GetComponent<PhysicBody>();
 	playerPointCloud = Player->GetComponent<PointCloud>();
-	playerHealth = Player->GetComponent<Health>();
 
 	World* world = Singleton::GetInstance<World>();
 
 	ui = world->entityStorage->GetEntityByName("UI");
-	healthBar = ui->GetChildByName("HealthBar", true);
-	staminaBar = ui->GetChildByName("StaminaBar", true);
-	bossHealthBar = ui->GetChildByName("BossHealth", true);
 	elementLabel = ui->GetChildByName("ElementLabel", true);
-
-	bossHealth = world->entityStorage->GetEntityByName("Aries")->GetComponent<Health>();
 
 	camera = world->m_Camera;
 	mouse = Singleton::GetInstance<MouseClass>();
@@ -58,9 +52,6 @@ void PlayerController::Initialize(Entity* Player, EntityStorage* entityStorage)
 
 	comboManager = Singleton::GetInstance<ComboManager>();
 	comboManager->Initialize();
-
-	currentMaxSpeed = PLAYER_MOVE_SPEED;
-	isRunning = false;
 
 	cameraTarget = nullptr;
 	lockMovementOnTarget = false;
@@ -89,17 +80,8 @@ void PlayerController::Shutdown()
 	if (playerPointCloud)
 		playerPointCloud = 0;
 
-	if (playerHealth)
-		playerHealth = 0;
-
 	if (ui)
 		ui = 0;
-
-	if (healthBar)
-		healthBar = 0;
-
-	if (staminaBar)
-		staminaBar = 0;
 
 	if (camera)
 		camera = 0;
@@ -117,41 +99,9 @@ void PlayerController::ProcessInput()
 	if (playerEntity == nullptr || !playerEntity->IsActive())
 		return;
 
-	isRunning = false;
-
-	// Проверяем Shift и наличие выносливости
-	if (input::IsKeyDown(VK_SHIFT) && abilities->stamina > 0) {
-		isRunning = true;
-		currentMaxSpeed = PLAYER_MOVE_SPEED * 10.0f;
-
-		// Тратим выносливость только если двигаемся
-		if (input::IsKeyDown('W') || input::IsKeyDown('S') || input::IsKeyDown('A') || input::IsKeyDown('D')) {
-			abilities->stamina = max(0.0f, abilities->stamina - 0.5f); 
-		}
-	}
-	else {
-	// Если Shift не нажат - возвращаем обычную скорость
-	currentMaxSpeed = PLAYER_MOVE_SPEED;
-	}
-
-	// Восстанавливаем выносливость, если не бежим
-	if (!isRunning && abilities->stamina < abilities->maxStamina) {
-		abilities->stamina = min(abilities->maxStamina, abilities->stamina + 0.2f);
-	}
-
-
 	if (movementLocked && playerPhysicBody->velocity.magnitude() < PLAYER_MOVE_SPEED) {
 		movementLocked = false;
 		playerPhysicBody->airFriction = 1;
-	}
-
-	CheckTargetValid();
-	if (lockMovementOnTarget && cameraTarget != nullptr) {
-		point3d targetPos = GetWorldTransform(cameraTarget).position;
-		point3d playerPos = GetWorldTransform(playerEntity).position;
-
-		point3d direction = targetPos - playerPos;
-		playerTransform->mRotation = LerpMatrix(playerTransform->mRotation, GetMatrixFromDirection(direction, playerTransform->GetUpVector()), 0.25f);
 	}
 
 	if (!movementLocked)
@@ -170,53 +120,10 @@ void PlayerController::ProcessInput()
 		if (input::IsKeyDown('D')) {
 			velocity += playerTransform->GetRightVector();
 		}
-		if (input::IsKeyDown(VK_SPACE)) {
-			velocity += playerTransform->GetUpVector();
-		}
-		if (input::IsKeyDown(VK_CONTROL)) {
-			velocity += playerTransform->GetUpVector() * -1;
-		}
 
 		if (velocity.magnitude() > 0) {
-			/*point3d newVelocity = playerPhysicBody->velocity + velocity.normalized();
-			if (newVelocity.magnitude() > currentMaxSpeed) {
-				playerPhysicBody->velocity = newVelocity.normalized() * currentMaxSpeed;
-			}
-			else {
-				playerPhysicBody->velocity = newVelocity;
-			}*/
-
-			playerPhysicBody->acceleration += velocity.normalized() * currentMaxSpeed;
+			playerPhysicBody->acceleration += velocity.normalized() * PLAYER_MOVE_SPEED;
 		}
-	}
-
-		// Обработка кнопки F для щита
-	static bool fKeyPressed = false;
-	if (input::IsKeyDown('F') && !fKeyPressed) {
-		fKeyPressed = true;
-		abilities->ShieldStart(); // Активируем щит при нажатии F
-		comboManager->ClearInputBuffer();
-	}
-	else if (!input::IsKeyDown('F') && fKeyPressed) {
-		fKeyPressed = false;
-		abilities->ShieldEnd(); // Деактивируем щит при отпускании F
-	}
-
-	
-	float roll = 0.0f;
-	if (input::IsKeyDown('C')) {
-		Dash();
-	}
-		
-	if (input::IsKeyDown('E')) {
-		roll = -ROLL_SPEED;
-	}
-	if (input::IsKeyDown('Q')) {
-		roll = ROLL_SPEED;
-	}
-
-	if (roll != 0) {
-		playerPhysicBody->mAngVelocity = playerPhysicBody->mAngVelocity * XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), roll * RAD);
 	}
 
 	if (input::IsKeyPressed('1') && abilities->weapon != PlayerWeapons::Fists) {
@@ -236,39 +143,9 @@ void PlayerController::ProcessInput()
 		abilities->Timestop();
 	}
 
-	if (input::IsKeyPressed('V')) {
-		abilities->ParticleVacuumStart();
-	}
-	if (input::IsKeyReleased('V')) {
-		abilities->ParticleVacuumEnd();
-	}
-
-	/*static bool gKeyPressed = false;
-	if (input::IsKeyDown('G') && !gKeyPressed) {
-		gKeyPressed = true;
-		if (abilities) {
-			abilities->BlowGasStart(); 
-		}
-	}
-	else if (!input::IsKeyDown('G') && gKeyPressed) {
-		gKeyPressed = false;
-		if (abilities) {
-			abilities->BlowGasEnd();
-		}
-	}*/
-
-	if (input::IsKeyPressed('G')) {
+	/*if (input::IsKeyPressed('G')) {
 		abilities->Grab();
-	}
-
-	if (input::IsKeyDown('K'))
-	{
-		abilities->StartRadar();
-	}
-
-	if (input::IsKeyPressed(VK_MBUTTON)) {
-		LockOnTarget();
-	}
+	}*/
 
 	if (input::IsKeyPressed('P')) {
 		int i = (int)abilities->element;
@@ -288,17 +165,9 @@ void PlayerController::ProcessInput()
 
 void PlayerController::ProcessCamera()
 {
-	camera->position = camera->position.lerp(playerTransform->position - playerTransform->GetLookVector() * camera->distance + playerTransform->GetUpVector() * 2, 0.4f);
+	camera->position = camera->position.lerp(playerTransform->position + playerTransform->GetUpVector() * camera->distance, 0.4f);
 
-	XMMATRIX matrixRotation;
-	CheckTargetValid();
-	if (cameraTarget == nullptr) {
-		matrixRotation = playerTransform->mRotation;
-	}
-	else {
-		point3d direction = GetWorldTransform(cameraTarget).position - camera->position;
-		matrixRotation = GetMatrixFromDirection(direction, playerTransform->GetUpVector());
-	}
+	XMMATRIX matrixRotation = GetMatrixFromDirection(point3d(0, -1, 0), playerTransform->GetLookVector());
 
 	camera->SetMatrixRotation(LerpMatrix(camera->GetMatrixRotation(), matrixRotation, 0.15f));
 }
@@ -327,7 +196,6 @@ void PlayerController::ProcessMouse()
 					SetCursorPos(mouse->absolutePos.x, mouse->absolutePos.y);
 				}
 
-				CheckTargetValid();
 				if (!lockMovementOnTarget || cameraTarget == nullptr) {
 					float k = (length - CURSOR_IGNORE_ZONE) / MAX_CURSOR_DEVIATION;
 					mousePos *= SENSIVITY * k;
@@ -338,38 +206,20 @@ void PlayerController::ProcessMouse()
 				}
 			}
 
-			// Обработка атак мышью - проверяем что щит не активен
-			if (!abilities->IsShieldActive()) {
+			if (mouse->IsLButtonClicked()) {
+				comboManager->StartHeldInput(ComboInputType::Light);
+			}
 
-				/*if (mouse->IsLButtonDown()) {
-					abilities->Charging();
-				}
-				else if (mouse->IsLButtonUnclicked()) {
-					abilities->Attack(*playerTransform, mouse->GetMouseDirection());
-				}*/
+			if (mouse->IsRButtonClicked()) {
+				comboManager->StartHeldInput(ComboInputType::Heavy);
+			}
 
-				/*if (mouse->IsRButtonClicked()) {
-					abilities->BlockStart();
-				}
-				else if (mouse->IsRButtonUnclicked()) {
-					abilities->BlockEnd();
-				}*/
+			if (mouse->IsLButtonUnclicked()) {
+				comboManager->SaveInput(ComboInputType::Light);
+			}
 
-				if (mouse->IsLButtonClicked()) {
-					comboManager->StartHeldInput(ComboInputType::Light);
-				}
-
-				if (mouse->IsRButtonClicked()) {
-					comboManager->StartHeldInput(ComboInputType::Heavy);
-				}
-
-				if (mouse->IsLButtonUnclicked()) {
-					comboManager->SaveInput(ComboInputType::Light);
-				}
-
-				if (mouse->IsRButtonUnclicked()) {
-					comboManager->SaveInput(ComboInputType::Heavy);
-				}
+			if (mouse->IsRButtonUnclicked()) {
+				comboManager->SaveInput(ComboInputType::Heavy);
 			}
 		}
 		break;
@@ -399,17 +249,6 @@ void PlayerController::ProcessMouse()
 
 void PlayerController::ProccessUI()
 {
-	Transform2D* healthTransform = healthBar->GetComponent<Transform2D>();
-	healthTransform->scale = point3d(playerHealth->GetHealthRatio(), 1, 0);
-
-	Transform2D* staminaTransform = staminaBar->GetComponent<Transform2D>();
-	staminaTransform->scale = point3d(abilities->stamina / abilities->maxStamina, 1, 0);
-
-	if (bossHealth != nullptr) {
-		Transform2D* bossHealthBarTransform = bossHealthBar->GetComponent<Transform2D>();
-		bossHealthBarTransform->scale = point3d(bossHealth->GetHealthRatio() * 0.5f, bossHealthBarTransform->scale.y, 0);
-	}
-
 	TextLabel* elementText = elementLabel->GetComponent<TextLabel>();
 	switch (abilities->element)
 	{
@@ -428,79 +267,5 @@ void PlayerController::ProccessUI()
 		case Elements::Earth:
 			elementText->textW = L"ЗЕМЛЯ";
 			break;
-	}
-}
-
-
-void PlayerController::Dash()
-{
-	if (!movementLocked && timer::currentTime >= lastDashTime + DASH_CD && abilities->stamina >= DASH_COST) {
-		lastDashTime = timer::currentTime;
-
-		point3d velocity;
-		if (playerPhysicBody->velocity.magnitude() > 0) {
-			velocity = playerPhysicBody->velocity.normalized();
-		}
-		else {
-			velocity = playerTransform->GetLookVector();
-		}
-
-		playerPhysicBody->velocity = velocity * DASH_SPEED;
-		movementLocked = true;
-		playerPhysicBody->airFriction = DASH_AIR_FRICTION;
-
-		abilities->stamina -= DASH_COST;
-
-		comboManager->SaveInput(ComboInputType::Dash);
-	}
-}
-
-// Добавьте этот метод в PlayerController для обработки получения урона
-void PlayerController::TakeDamage(float damage)
-{
-	if (!playerEntity->IsActive()) return;
-
-	// Пытаемся заблокировать урон щитом
-	if (!abilities->TryBlockDamage(damage)) {
-		// Если не заблокировали - применяем урон
-		playerHealth->hp -= damage;
-
-		// Визуальный эффект получения урона
-		playerPointCloud->color = point3d(1.0f, 0.0f, 0.0f);
-		// Возвращаем цвет через некоторое время
-	}
-}
-
-
-void PlayerController::LockOnTarget()
-{
-	if (!lockMovementOnTarget) {
-		point3d mouseDirection = mouse->GetMouseDirection();
-		RayInfo rayInfo = RayInfo(camera->position, mouseDirection * RAY_DISTANCE, CollisionFilter::Group::PlayerRay, false);
-		RaycastResult result = collisionManager->Raycast(rayInfo);
-
-		if (result.hit) {
-			pair<Entity*, CameraTarget*> targetRes = result.entity->GetAncestorWithComponent<CameraTarget>();
-			if (targetRes.first != nullptr) {
-				cameraTarget = targetRes.first;
-				lockMovementOnTarget = true;
-			}
-		}
-	}
-	else {
-		lockMovementOnTarget = false;
-		cameraTarget = nullptr;
-	}
-}
-
-
-void PlayerController::CheckTargetValid()
-{
-	if (cameraTarget == nullptr)
-		return;
-
-	if (!IsEntityValid(cameraTarget)) {
-		lockMovementOnTarget = false;
-		cameraTarget = nullptr;
 	}
 }

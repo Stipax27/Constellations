@@ -39,7 +39,7 @@ const float MAX_CURSOR_DEVIATION = 0.45f;
 const float CURSOR_ZONE_DELTA = MAX_CURSOR_DEVIATION - CURSOR_IGNORE_ZONE;
 
 #define ROLL_SPEED 1.0f
-#define PLAYER_MOVE_SPEED 100.0f
+#define PLAYER_MOVE_SPEED 1000.0f
 
 #define DASH_SPEED 200.0f
 #define DASH_AIR_FRICTION 0.35f
@@ -55,7 +55,6 @@ class PlayerController
 {
 public:
 	PlayerAbilities* abilities;
-	Health* bossHealth;
 
 public:
 	PlayerController();
@@ -85,11 +84,7 @@ private:
 	Transform* playerTransform;
 	PhysicBody* playerPhysicBody;
 	PointCloud* playerPointCloud;
-	Health* playerHealth;
 
-	Entity* healthBar;
-	Entity* staminaBar;
-	Entity* bossHealthBar;
 	Entity* elementLabel;
 
 	CameraClass* camera;
@@ -98,18 +93,10 @@ private:
 
 	bool movementLocked = false;
 
-	float currentMaxSpeed;
-	bool isRunning;
-
 	DWORD lastDashTime = 0;
 
 	Entity* cameraTarget;
 	bool lockMovementOnTarget;
-
-private:
-	void Dash();
-	void LockOnTarget();
-	void CheckTargetValid();
 };
 
 #endif

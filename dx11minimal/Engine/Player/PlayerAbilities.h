@@ -68,27 +68,7 @@ class PlayerAbilities : public ISingleton
 public:
 	PlayerWeapons weapon;
 	Elements element;
-
-	float stamina;
-	float maxStamina;
-
-	// Новые публичные методы для работы со щитом
-	void ShieldStart();
-	void ShieldEnd();
-	bool TryBlockDamage(float damage);
-	bool IsShieldActive() const { return shieldActive; }
-
-
-	void ParticleVacuumStart();
-	void ParticleVacuumEnd();
-	void CreateBlueStar(float size = 1.0f);
-	void BlowGasStart();
-	void BlowGasEnd();
-
-	void StartRadar();
 	
-
-
 public:
 	PlayerAbilities();
 	PlayerAbilities(const PlayerAbilities&);
@@ -99,10 +79,6 @@ public:
 	void Update();
 
 	void Attack(Transform, point3d);
-	void Charging();
-
-	void BlockStart();
-	void BlockEnd();
 
 	void Timestop();
 
@@ -121,49 +97,8 @@ private:
 
 	Entity* grabbedObject;
 
-	bool charging;
-	bool chargeAnim;
-	double chargeTimeAchor;
-	bool chargeDone;
-
-	float charge;
-	float maxCharge;
-
-	bool block;
-
 	bool timeStopped;
 	float timestopProgress;
-
-	// Новые переменные для щита
-	bool shieldActive;
-	Entity* shieldEntity;
-	float shieldVisualIntensity;
-	double shieldLastDamageTime;
-	double lastShieldUpdateTime;
-	double shieldStartTime;
-
-	Entity* starEntity;
-	Entity* currentParticles;
-	bool burstActive;
-
-	Entity* vacuumCenterEntity;
-	double vacuumStartTime;   
-	float maxStarSize;
-	bool isVacuum;
-	Nebula* interactiveNebula;
-
-	bool canBlowGas;          
-	Entity* gasBurstEntity;
-	float starMinSize;
-	bool isBlowingGas;    
-	double blowGasStartTime;
-	float blowGasRate;
-
-	Entity* radarEntity;
-	float radarStartTime;
-	float speedRadius;
-	float radiusRad;
-	bool isRadaring;
 
 	std::vector<AttackDesc> attacks;
 

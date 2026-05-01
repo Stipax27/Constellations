@@ -19,7 +19,7 @@
 /////////////
 // GLOBALS //
 /////////////
-#define SPACE_DENSITY 1.0f
+#define SPACE_DENSITY 10.0f
 
 #define HIGH_RENDER_DISTANCE 10.0f
 #define LOW_RENDER_DISTANCE 100.0f

@@ -113,7 +113,8 @@ private:
 	void CreateZenithLocation(Entity*, int);
 	void CreateNebula(Entity*, int);
 	void CreateStarQuestLoc(Entity*, int);
-	void UpdateTestAnimationToggle();
+
+	void CreateRoom();
 
 	ID3D11Buffer* m_BoneBuffer = nullptr;
 	SkinnedMesh m_FoxMesh;

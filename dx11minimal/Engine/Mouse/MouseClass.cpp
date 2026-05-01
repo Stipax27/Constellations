@@ -22,7 +22,7 @@ void MouseClass::Initialize() {
 	window = Singleton::GetInstance<WindowClass>();
 	camera = Singleton::GetInstance<CameraClass>();
 
-	state = MouseState::Centered;
+	state = MouseState::Free;
 	visible = true;
 
 	lbuttonDown = false;

@@ -92,6 +92,10 @@ public:
 		const Transform t1, const SphereCollider* c1,
 		const Transform t2, const SphereCollider* c2);
 
+	static CollisionResult sphere_vs_plane(
+		const Transform t1, const SphereCollider* c1,
+		const Transform t2, const PlaneCollider* c2);
+
 	RaycastResult Raycast(const RayInfo& ray);
 	static std::map<TypePair, CollisionFn> collisionMap;
 

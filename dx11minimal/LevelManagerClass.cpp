@@ -84,68 +84,21 @@ bool LevelManagerClass::Initialize()
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
 	Entity* entity;
-	Constellation* constellation;
 	Transform* transform;
-	PhysicBody* physicBody;
-	AIComponent* aiComponent;
 
 	SphereCollider* sphereCollider;
 
-	SpriteCluster* spriteCluster;
 	PlaneCollider* planeCollider;
 	ParticleEmitter* particleEmitter;
 
 	Mesh* mesh;
 	PointCloud* pointCloud;
-	DelayedDestroy* delayedDestroy;
 	Star* star;
-	Health* health;
-	SingleDamager* singleDamager;
 
 
 	worldFolder = m_World->entityStorage->CreateEntity("World");
 
 	Entity* player = CreatePlayer();
-
-
-	
-	/*entity = m_World->entityStorage->CreateEntity("AriesNebulaLocation", folder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0.0f, 0.0f, 50.0f);
-	transform->scale = point3d(1, 0, 0);
-	spriteCluster = entity->AddComponent<SpriteCluster>();
-	spriteCluster->vShader = 7;
-	spriteCluster->gShader = 7;
-	spriteCluster->pShader = 7;
-	spriteCluster->pointsNum = 900000;
-	spriteCluster->vertexNum = 1;
-	spriteCluster->frustumRadius = 60;
-	spriteCluster->topology = InputAssembler::topology::pointList;
-	spriteCluster->compress = RenderCompress::x2;*/
-	/*sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->radius = 25.0f;
-	sphereCollider->softness = 0.5f;*/
-	//entity->AddComponent<SurfaceCollider>();
-
-	/*entity = m_World->entityStorage->CreateEntity("StarsBackground", folder);
-	spriteCluster = entity->AddComponent<SpriteCluster>();
-	spriteCluster->vShader = 2;
-	spriteCluster->pShader = 2;
-	spriteCluster->pointsNum = 10000;*/
-
-	/////////////////////////
-
-	//entity = m_World->entityStorage->CreateEntity("Star", folder);
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(0.0f, 0.0f, -20.0f);
-	//star = entity->AddComponent<Star>();
-	//sphereCollider = entity->AddComponent<SphereCollider>();
-	//sphereCollider->radius = 0.5f;
-	//sphereCollider->active = false;
-	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	////sphereCollider->softness = 0.5f;
-	//singleDamager = entity->AddComponent<SingleDamager>();
-	//singleDamager->damage = 1000;
 
 	entity = m_World->entityStorage->CreateEntity("TestStar", worldFolder);
 	transform = entity->AddComponent<Transform>();
@@ -163,33 +116,14 @@ bool LevelManagerClass::Initialize()
 	gravityPoint->mass = 500;
 	gravityPoint->radius = 150;
 
-	entity = m_World->entityStorage->CreateEntity("Ray", worldFolder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(20, 20, 0);
-	Beam* beam = entity->AddComponent<Beam>();
-	beam->point1 = point3d();
-	beam->point2 = point3d(0, 0, 25);
-	RayDamager* rayDamager = entity->AddComponent<RayDamager>();
-	rayDamager->direction = point3d(0, 0, 25);
-	rayDamager->repeats = -1;
-	rayDamager->damage = 0.1f;
-
 	/////////////////////////
 	
 	CreateSpaceBackground(worldFolder, 1);
-	CreateAries(worldFolder);
-	//CreateZenithLocation(folder, 2);
 	CreateNebula(worldFolder,2);
-	CreateStarQuestLoc(worldFolder, 2);
+
+	CreateRoom();
 
 	/////////////////////////
-
-	/*Entity* holder = m_World->entityStorage->CreateEntity("Holder", folder);
-	transform = holder->AddComponent<Transform>();
-	transform->scale = point3d(10, 10, 10);
-	transform->position = point3d(0.0f, 0.0f, -50.0f);
-	mesh = holder->AddComponent<Mesh>();
-	mesh->index = 1;*/
 
 	CreateUI();
 
@@ -201,139 +135,6 @@ bool LevelManagerClass::Initialize()
 
 	playerController = new PlayerController();
 	playerController->Initialize(player, m_World->entityStorage);
-
-	
-
-	// Тестовый враг для ИИ amogus
-	testEnemy = m_World->entityStorage->CreateEntity("TestEnemy", worldFolder);
-	Transform* testTransform = testEnemy->AddComponent<Transform>();
-	point3d CentralPatrolPoint = point3d(10.0f, 5.0f, 15.0f);
-	testTransform->position = CentralPatrolPoint + point3d(5.0f, 0.0f, 0.0f); // Стартовая позиция
-
-	sphereCollider = testEnemy->AddComponent<SphereCollider>();
-	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	testEnemy->AddComponent<CameraTarget>();
-
-	health = testEnemy->AddComponent<Health>();
-	health->fraction = Fraction::Enemy;
-	health->maxHp = 50;
-
-	// Кодовое слово: amogus
-	PhysicBody* testPhysic = testEnemy->AddComponent<PhysicBody>();
-	testPhysic->airFriction = 0.01f; // Обычное трение
-
-	testPhysic->velocity = point3d(0.0f, 10.0f, 0.0f);
-
-	// Визуальная составляющая (можно использовать Star или любой другой компонент)
-	Star* testStar = testEnemy->AddComponent<Star>();
-	testStar->radius = 1.0f;
-	star->color1 = point3d(0.5f, 0.5f, 0.5f); // Цвет (бесполезен)
-
-	// Компонент ИИ
-	AIComponent* ai = testEnemy->AddComponent<AIComponent>();
-	ai->enabled = true;
-	ai->behaviorType = AIBehaviorType::PATROL; // Начинаем с патруля
-
-	// Точки патрулирования (локальные координаты относительно врага? 
-	// В текущей реализации patrolPoints задаются в мировых координатах, 
-	// поэтому зададим абсолютные позиции)
-	
-	ai->patrolPoints = {
-		CentralPatrolPoint + point3d(-2.0f, 2.0f, 0.0f),
-		CentralPatrolPoint + point3d(2.0f, 2.0f, 0.0f),
-		CentralPatrolPoint + point3d(2.0f, -2.0f, 0.0f),
-		CentralPatrolPoint + point3d(-2.0f, -2.0f, 0.0f)
-	};
-	//ai->patrolPoints = { CentralPatrolPoint };
-
-	ai->movementSpeed = 3.0f;
-	ai->arrivalDistance = 1.0f;
-
-	// Параметры обнаружения
-	ai->detectionRange = 12.0f;  // Радиус, в котором замечает игрока
-	ai->chaseRange = 18.0f;      // Радиус преследования
-	ai->attackRange = 3.0f;      // Радиус атаки
-
-	// Параметры атаки (пока атака не реализована, но можно оставить)
-	ai->attackCooldown = 1.5f;
-	ai->attackDamage = 5.0f;
-
-	// Таймеры состояний
-	ai->idleDuration = 2.0f;
-	ai->fleeDuration = 4.0f;
-
-	//Параметры ускорения
-	ai->accelerationStrength = 10;
-	ai->maxAcceleration = 100;
-
-
-	auto spawnSkinned = [this](
-		const char* name,
-		const point3d& pos,
-		const point3d& scale,
-		const SkinnedMesh& srcMesh,
-		Skeleton* skeleton,
-		std::vector<AnimationClip>* animations,
-		const char* preferredClip = nullptr,
-		bool autoPlay = true) -> Entity*
-	{
-		Entity* e = m_World->entityStorage->CreateEntity(name, worldFolder);
-		Transform* t = e->AddComponent<Transform>();
-		t->position = pos;
-		t->scale = scale;
-
-		SkinnedMesh* meshComp = e->AddComponent<SkinnedMesh>();
-		meshComp->vertices = srcMesh.vertices;
-		meshComp->indices = srcMesh.indices;
-		meshComp->gpuModelIndex = srcMesh.gpuModelIndex;
-		meshComp->active = false;
-
-		PointCloud* pointCloud = e->AddComponent<PointCloud>();
-		pointCloud->index = srcMesh.gpuModelIndex;
-		pointCloud->vShader = 28;
-		pointCloud->gShader = 17;
-		pointCloud->pShader = 17;
-		pointCloud->pointSize = 1.0f;
-		pointCloud->brightness = 1.25f;
-		pointCloud->color = point3d(1.0f, 0.95f, 0.85f);
-		pointCloud->compress = RenderCompress::x2;
-		pointCloud->frustumRadius = 12.0f;
-
-		SkeletalAnimationComponent* animComp = e->AddComponent<SkeletalAnimationComponent>();
-		animComp->skeleton = skeleton;
-		animComp->animationClips = animations;
-		animComp->rootMotionMode = RootMotionMode::Accumulate;
-		animComp->CaptureBindPose();
-		if (animations && !animations->empty())
-		{
-			animComp->SetAnimationByIndex(0, true);
-			if (preferredClip && preferredClip[0] != '\0')
-			{
-				animComp->SetAnimationByName(preferredClip, true);
-			}
-		}
-		animComp->isPlaying = autoPlay && animComp->animationClip != nullptr;
-		animComp->isLooping = true;
-		animComp->currentTime = 0.0f;
-		return e;
-	};
-
-	spawnSkinned("Fox", point3d(0.0f, 0.0f, 10.0f), point3d(0.2f, 0.2f, 0.2f), m_FoxMesh, &m_FoxSkeleton, &m_FoxAnimations);
-	spawnSkinned("CesiumMan", point3d(3.0f, 0.0f, 10.0f), point3d(1.0f, 1.0f, 1.0f), m_CesiumMesh, &m_CesiumSkeleton, &m_CesiumAnimations);
-	m_TestAnimEntity = spawnSkinned("TestMannequin", point3d(6.0f, 0.0f, 10.0f), point3d(1.0f, 1.0f, 1.0f), m_TestAnimMesh, &m_TestAnimSkeleton, &m_TestAnimAnimations, nullptr, false);
-	m_TestAnimCycleIndex = 0;
-	if (m_TestAnimEntity)
-	{
-		if (SkeletalAnimationComponent* animComp = m_TestAnimEntity->GetComponent<SkeletalAnimationComponent>())
-		{
-			animComp->ResetToBindPose();
-			animComp->animationClip = nullptr;
-			animComp->isPlaying = false;
-			animComp->currentTime = 0.0f;
-		}
-	}
-	
-
 
 	return true;
 }
@@ -398,8 +199,6 @@ void LevelManagerClass::Frame()
 
 	mouse->Update();
 
-	UpdateTestAnimationToggle();
-
 	interp::UpdateTweens();
 
 	playerController->ProcessInput();
@@ -407,101 +206,10 @@ void LevelManagerClass::Frame()
 	playerController->abilities->Update();
 	playerController->ProccessUI();
 
-	questManager->UpdateQuests();
-
-	// DEBUG
-
-	if (worldFolder->localTime - shotTime >= 500) {
-		shotTime = worldFolder->localTime;
-
-		// Physic damage
-		Entity* projectile = m_World->entityStorage->CreateEntity("TestProjectile", worldFolder);
-		Transform* transform = projectile->AddComponent<Transform>();
-		transform->position = point3d(0, 20, 0);
-
-		PhysicBody* physicBody = projectile->AddComponent<PhysicBody>();
-		physicBody->airFriction = 0.0f;
-		physicBody->velocity = point3d(0, 0, 1) * 20.0f;
-
-		Star* star = projectile->AddComponent<Star>();
-		star->radius = 0.8f;
-		star->color1 = point3d(0.9f, 1.0f, 0.99f);
-		star->color2 = point3d(0.34f, 0.8f, 0.45f);
-		star->crownColor = point3d(0.27f, 0.63f, 1.0f);
-
-		SingleDamager* singleDamager = projectile->AddComponent<SingleDamager>();
-		singleDamager->target = Fraction::Player;
-		singleDamager->damage = 5.0f;
-		singleDamager->destroyable = true;
-		singleDamager->damageType = DamageType::Physic;
-
-		SphereCollider* sphereCollider = projectile->AddComponent<SphereCollider>();
-		sphereCollider->isTouchable = false;
-		sphereCollider->radius = 0.8f;
-
-		DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
-		delayedDestroy->lifeTime = 2000;
-
-		// Magic damage
-		projectile = m_World->entityStorage->CreateEntity("TestProjectile", worldFolder);
-		transform = projectile->AddComponent<Transform>();
-		transform->position = point3d(10, 20, 0);
-
-		physicBody = projectile->AddComponent<PhysicBody>();
-		physicBody->airFriction = 0.0f;
-		physicBody->velocity = point3d(0, 0, 1) * 20.0f;
-
-		star = projectile->AddComponent<Star>();
-		star->radius = 0.8f;
-		star->color1 = point3d(1, 0.6, 0);
-		star->color2 = point3d(0.93, 0.28, 0);
-		star->crownColor = point3d(1, 0.87, 0.25);
-
-		singleDamager = projectile->AddComponent<SingleDamager>();
-		singleDamager->target = Fraction::Player;
-		singleDamager->damage = 5.0f;
-		singleDamager->destroyable = true;
-		singleDamager->damageType = DamageType::Magic;
-
-		sphereCollider = projectile->AddComponent<SphereCollider>();
-		sphereCollider->isTouchable = false;
-		sphereCollider->radius = 0.8f;
-
-		delayedDestroy = projectile->AddComponent<DelayedDestroy>();
-		delayedDestroy->lifeTime = 2000;
-	}
-
-	// DEBUG
-
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 
 	m_World->UpdateCompute();
 	m_World->UpdatePhysic();
-
-	// Изменение цвета testStar в зависимости от состояния ИИ
-	if (testEnemy && testEnemy->IsActive()) {
-		AIComponent* ai = testEnemy->GetComponent<AIComponent>();
-		Star* star = testEnemy->GetComponent<Star>();
-		if (ai && star) {
-			switch (ai->behaviorType) {
-			case AIBehaviorType::PATROL:
-				star->color1 = point3d(0.2f, 0.8f, 0.2f); // зелёный
-				break;
-			case AIBehaviorType::CHASE:
-				star->color1 = point3d(1.0f, 0.5f, 0.0f); // оранжевый
-				break;
-			case AIBehaviorType::ATTACK:
-				star->color1 = point3d(1.0f, 0.0f, 0.0f); // красный
-				break;
-			case AIBehaviorType::FLEE:
-				star->color1 = point3d(0.0f, 0.0f, 1.0f); // синий
-				break;
-			case AIBehaviorType::IDLE:
-				star->color1 = point3d(0.5f, 0.5f, 0.5f); // серый
-				break;
-			}
-		}
-	}
 
 	playerController->ProcessCamera();
 
@@ -519,8 +227,6 @@ void LevelManagerClass::InitSystems()
 {
 	m_World->AddComputeSystem<TimeSystem>();
 	m_World->AddComputeSystem<DelayedDestroySystem>();
-	m_World->AddComputeSystem<AISystem>();
-	m_World->AddComputeSystem<QuestSystem>();
 	m_World->AddComputeSystem<RayDamageSystem>();
 
 	m_World->AddPhysicSystem<GravitySystem>();
@@ -567,61 +273,6 @@ void LevelManagerClass::LoadModels()
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\SnakeModel.obj");
 }
 
-// TODO: Remove, only for test animation change
-void LevelManagerClass::UpdateTestAnimationToggle()
-{
-	const bool isTogglePressed = input::IsKeyDown('Y');
-	if (!isTogglePressed)
-	{
-		m_WasToggleAnimationPressed = false;
-		return;
-	}
-
-	if (m_WasToggleAnimationPressed)
-	{
-		return;
-	}
-
-	m_WasToggleAnimationPressed = true;
-
-	if (!m_TestAnimEntity)
-	{
-		return;
-	}
-
-	SkeletalAnimationComponent* animComp = m_TestAnimEntity->GetComponent<SkeletalAnimationComponent>();
-	if (!animComp)
-	{
-		return;
-	}
-
-	const int clipCount = animComp->animationClips ? static_cast<int>(animComp->animationClips->size()) : 0;
-	if (clipCount <= 0)
-	{
-		animComp->ResetToBindPose();
-		animComp->animationClip = nullptr;
-		animComp->isPlaying = false;
-		animComp->currentTime = 0.0f;
-		m_TestAnimCycleIndex = 0;
-		return;
-	}
-
-	m_TestAnimCycleIndex = (m_TestAnimCycleIndex + 1) % (clipCount + 1);
-	if (m_TestAnimCycleIndex == 0)
-	{
-		animComp->ResetToBindPose();
-		animComp->animationClip = nullptr;
-		animComp->isPlaying = false;
-		animComp->currentTime = 0.0f;
-		return;
-	}
-
-	animComp->SetAnimationByIndex(static_cast<size_t>(m_TestAnimCycleIndex - 1), true);
-	animComp->isPlaying = animComp->animationClip != nullptr;
-	animComp->isLooping = true;
-	animComp->currentTime = 0.0f;
-}
-
 
 Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 {
@@ -637,44 +288,9 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 	sphereCollider->radius = 0.75f;
 	sphereCollider->collisionGroup = CollisionFilter::Group::Player;
 
-	Health* health = player->AddComponent<Health>();
-	health->fraction = Fraction::Player;
-
-	/*Constellation* constellation = player->AddComponent<Constellation>();
-	constellation->stars = {
-		point3d(-0.09, -0.7, 0),
-		point3d(-0.05, -0.15, 0),
-		point3d(0, 0, 0),
-		point3d(-0.4, 0.5, 0),
-		point3d(0, 0, 0),
-		point3d(0.4, 0.3, 0)
-	};
-	constellation->links = {
-		{0,1},
-		{1,2},
-		{2,3},
-		{2,5}
-	};*/
-
 	StarClay* starClay = player->AddComponent<StarClay>();
 	starClay->blobsRadius = { 0.2f, 0.4f };
 	starClay->rate = 20;
-
-	PointCloud* pointCloud = player->AddComponent<PointCloud>();
-	pointCloud->index = 0;
-	pointCloud->scale = point3d(0.3f, 0.3f, 0.3f);
-	pointCloud->pointSize = 0.01f;
-	pointCloud->brightness = 0.2f;
-	pointCloud->color = point3d(1, 0.6f, 0.9f);
-
-	Entity* grabHitbox = m_World->entityStorage->CreateEntity("GrabHitbox", player);
-	transform = grabHitbox->AddComponent<Transform>();
-	transform->position = point3d(0, 0, 4);
-	sphereCollider = grabHitbox->AddComponent<SphereCollider>();
-	sphereCollider->radius = 4;
-	sphereCollider->isTouchable = false;
-
-	m_World->entityStorage->SaveEntityToFile(player, "Player");
 
 	return player;
 }
@@ -1285,4 +901,45 @@ void LevelManagerClass::CreateStarQuestLoc(Entity* folder, int quality)
 	triggerCollider->radius = 40;
 	triggerCollider->collisionGroup = CollisionFilter::Group::Projectile;
 	triggerCollider->isTouchable = false;
+}
+
+void LevelManagerClass::CreateRoom()
+{
+	Entity* room = m_World->entityStorage->CreateEntity("Room");
+	Transform* transform = room->AddComponent<Transform>();
+
+	Entity* wall = m_World->entityStorage->CreateEntity("Wall", room);
+	transform = wall->AddComponent<Transform>();
+	transform->position = point3d(0, -10, 0);
+	PlaneCollider* planeCollider = wall->AddComponent<PlaneCollider>();
+	planeCollider->normal = point3d(0, 1, 0);
+	wall->AddComponent<Star>();
+
+	wall = m_World->entityStorage->CreateEntity("Wall", room);
+	transform = wall->AddComponent<Transform>();
+	transform->position = point3d(10, 0, 0);
+	planeCollider = wall->AddComponent<PlaneCollider>();
+	planeCollider->normal = point3d(-1, 0, 0);
+	wall->AddComponent<Star>();
+
+	wall = m_World->entityStorage->CreateEntity("Wall", room);
+	transform = wall->AddComponent<Transform>();
+	transform->position = point3d(-10, 0, 0);
+	planeCollider = wall->AddComponent<PlaneCollider>();
+	planeCollider->normal = point3d(1, 0, 0);
+	wall->AddComponent<Star>();
+
+	wall = m_World->entityStorage->CreateEntity("Wall", room);
+	transform = wall->AddComponent<Transform>();
+	transform->position = point3d(0, 0, 10);
+	planeCollider = wall->AddComponent<PlaneCollider>();
+	planeCollider->normal = point3d(0, 0, -1);
+	wall->AddComponent<Star>();
+
+	wall = m_World->entityStorage->CreateEntity("Wall", room);
+	transform = wall->AddComponent<Transform>();
+	transform->position = point3d(0, 0, -10);
+	planeCollider = wall->AddComponent<PlaneCollider>();
+	planeCollider->normal = point3d(0, 0, 1);
+	wall->AddComponent<Star>();
 }
