@@ -69,9 +69,6 @@ public:
 	void ProcessMouse();
 	void ProccessUI();
 
-	// Ќовый метод дл€ обработки получени€ урона
-	void TakeDamage(float damage);
-
 private:
 	ComboManager* comboManager;
 
@@ -86,6 +83,8 @@ private:
 	PointCloud* playerPointCloud;
 
 	Entity* elementLabel;
+
+	Entity* target;
 
 	CameraClass* camera;
 	MouseClass* mouse;
