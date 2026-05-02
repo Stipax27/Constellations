@@ -395,7 +395,7 @@ void LevelManagerClass::Frame()
 		ComponentPlants* com = VPlants[i]->GetComponent<ComponentPlants>();
 		if (com->CheckCreate == true)
 		{
-			if (PlayerBackPack.whatChange == true)
+			if (PlayerBackPack.whatChange == true && PlayerBackPack.PlantInHand == false)
 			{
 				PlayerBackPack.ChangeItemInHands();
 			}

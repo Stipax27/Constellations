@@ -108,6 +108,7 @@ struct BackPacks
 	ItemsInBackPack ItemInHand = ItemsInBackPack::EMPTYItem;
 	bool whatChange = false;
 	bool ItemActiveted = false;
+	bool PlantInHand = false;
 
 	ItemsBackPack ListItems[16] =
 	{
