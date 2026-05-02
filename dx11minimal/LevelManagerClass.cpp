@@ -1240,6 +1240,43 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 	nebula->scale = 1;
 	nebula->frustumRadius = 40;
 
+
+
+	// СОЗДАНИЕ ПОРТАЛА
+	//Entity* portal = m_World->entityStorage->CreateEntity("CosmicPortal", folder);
+	//Transform* portalTransform = portal->AddComponent<Transform>();
+	//portalTransform->position = point3d(0, 0, 0);  // Позиция портала
+
+	//// Добавляем Nebula компонент с шейдером портала
+	//Nebula* portalNebula = portal->AddComponent<Nebula>();
+	//portalNebula->vShader = 32;      // Ваш вершинный шейдер портала
+	////portalNebula->pShader = 23;      // Пиксельный шейдер (базовый)
+	//portalNebula->count = 50000;     // Количество частиц
+	//portalNebula->mode = pMode::point; // Режим отображения (точки)
+	//portalNebula->scale = 2.0f;      // Масштаб портала
+	//portalNebula->frustumRadius = 30.0f; // Радиус отсечения
+
+	//// Добавляем свечение портала
+	//Entity* portalGlow = m_World->entityStorage->CreateEntity("PortalGlow", portal);
+	//Nebula* glowNebula = portalGlow->AddComponent<Nebula>();
+	//glowNebula->vShader = 32;
+	////glowNebula->pShader = 24;        // Шейдер для свечения
+	//glowNebula->count = 50000;
+	//glowNebula->skipper = 1394;      // Пропуск частиц для эффекта свечения
+	//glowNebula->mode = pMode::glow;  // Режим свечения
+	//glowNebula->scale = 2.2f;        // Чуть больше основного портала
+	//glowNebula->frustumRadius = 35.0f;
+
+	//// Добавляем коллайдер для взаимодействия
+	//SphereCollider* portalCollider = portal->AddComponent<SphereCollider>();
+	//portalCollider->radius = 25.0f;
+	//portalCollider->isTouchable = true;
+	//portalCollider->collisionGroup = CollisionFilter::Group::Player;
+
+	//// Делаем портал видимым для камеры
+	//CameraTarget* cameraTarget = portal->AddComponent<CameraTarget>();
+	//cameraTarget->active = true;
+
 }
 
 

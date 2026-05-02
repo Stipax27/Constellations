@@ -1797,6 +1797,9 @@ void Shaders::Init()
 	Shaders::CreateVS(31, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarClay\\StarClay_VS.shader"));
 	Shaders::CreatePS(31, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\StarClay\\StarClay_PS.shader"));
 
+	Shaders::CreateVS(32, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\vs\\PortalPS.shader"));
+	//Shaders::CreatePS(32, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ps\\Portal.shader"));
+
 	//-----------------------------------------------
 
 	Shaders::CreatePS(100, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ColorCorrection_PS.shader"));
