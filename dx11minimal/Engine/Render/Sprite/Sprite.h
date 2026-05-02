@@ -1,7 +1,8 @@
-#ifndef _SPRITE_H_
+﻿#ifndef _SPRITE_H_
 #define _SPRITE_H_
 
 #include "../../ECS_Base/component.h"
+
 
 
 struct Sprite : Component
@@ -14,7 +15,6 @@ struct Sprite : Component
 	int vShader = 32;
 	int pShader = 28;
 };
-
 
 // __ COMPONENTS GAMEJAM __ //
 enum StatusPlant {
@@ -90,7 +90,13 @@ struct ComponentPlants : Component
 	Entity* UiLine;
 	Entity* Emoji;
 	Entity* Garden;
+
 };
+
+ 
+
+
+
 // -- COMPONENTS GAMEJAM -- //
 
 
@@ -109,6 +115,9 @@ struct BackPacks
 	bool whatChange = false;
 	bool ItemActiveted = false;
 	bool PlantInHand = false;
+
+	ComponentPlants GigaDaun[1];
+
 
 	ItemsBackPack ListItems[16] =
 	{
@@ -301,5 +310,7 @@ struct BackPacks
 
 
 extern BackPacks PlayerBackPack;
+
+
 
 #endif

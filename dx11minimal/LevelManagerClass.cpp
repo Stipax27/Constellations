@@ -3,6 +3,7 @@
 
 using namespace std;
 
+vector <ComponentPlants*> YDaun;
 
 
 LevelManagerClass::LevelManagerClass()
@@ -36,7 +37,6 @@ void LevelManagerClass::ProcessSound(const char* name)
 }
 
 
-vector<Entity*> VPlants;
 
 // __METODS GAMEJAM__ //
 void Metamorf(TypePlant ColorPlant, Mutation Gain, std::string& TexturePlant)
@@ -390,9 +390,9 @@ void LevelManagerClass::Frame()
 	playerController->ProccessUI();
 
 
-	for (int i = 0; i < VPlants.size(); i++)
+	for (int i = 0; i < YDaun.size(); i++)
 	{
-		ComponentPlants* com = VPlants[i]->GetComponent<ComponentPlants>();
+		ComponentPlants* com = YDaun[i];
 		if (com->CheckCreate == true)
 		{
 			if (PlayerBackPack.whatChange == true && PlayerBackPack.PlantInHand == false)
@@ -407,7 +407,7 @@ void LevelManagerClass::Frame()
 		{
 			com->Plant->ClearChildren();
 			com->Plant->Destroy();
-			VPlants.erase(VPlants.begin() + i);
+			YDaun.erase(YDaun.begin() + i);
 		}
 	}
 
@@ -968,7 +968,7 @@ void LevelManagerClass::CreatePlant(Entity* Garden)
 	PropPlant->UiLine = CreateUIPlant(Plant);
 	PropPlant->Emoji = CreateEmogy(Plant);
 	PropPlant->Garden = Garden;
-	VPlants.push_back(Plant);
+	YDaun.push_back(PropPlant);
 }
 
 //Textures::LoadPNGTexture("Plant1KILER", L"..\\dx11minimal\\Resourses\\Textures\\G\\A.png");

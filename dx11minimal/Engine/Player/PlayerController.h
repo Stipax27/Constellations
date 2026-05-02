@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////////
 // Filename: PlayerController.h
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef _PLAYERCONTROLLER_H_
@@ -75,7 +75,6 @@ public:
 private:
 	ComboManager* comboManager;
 
-
 	EntityStorage* entityStorage;
 	CollisionManagerClass* collisionManager;
 
@@ -102,7 +101,7 @@ private:
 	bool lockMovementOnTarget;
 
 private:
-	void ClickOnObjectL();
+	void ClickOnObjectL(EntityStorage* entity_storage);
 	void ClickOnObjectR();
 };
 

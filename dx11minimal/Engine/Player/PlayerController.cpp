@@ -9,6 +9,8 @@ using namespace std;
 
 BackPacks PlayerBackPack;
 
+
+
 PlayerController::PlayerController()
 {
 	playerEntity = 0;
@@ -257,7 +259,7 @@ void PlayerController::ProcessMouse()
 				mouse->particles.push_back(particle);
 			}
 
-			ClickOnObjectL();
+			ClickOnObjectL(entityStorage);
 		}
 		if (mouse->IsRButtonClicked() && mouse->visible)
 		{
@@ -322,7 +324,78 @@ void PlayerController::ProccessUI()
 	}
 }
 
-void PlayerController::ClickOnObjectL()
+Entity* CreateUIPlant(Entity* Plant, EntityStorage* entity_storage)
+{
+	Entity* UIPlantBar;
+	Transform* transformBar;
+	Sprite* spriteLineBar;
+	UIPlantBar = entity_storage->CreateEntity("UIBar", Plant);
+	transformBar = UIPlantBar->AddComponent<Transform>();
+	transformBar->position = point3d(0, 1, 0.2);
+	transformBar->scale = point3d(1, 0.1, 1);
+	spriteLineBar = UIPlantBar->AddComponent<Sprite>();
+	spriteLineBar->textureName = "ScaleBar";
+
+
+	Entity* UIPlant;
+	Transform* transform;
+	Sprite* spriteLine;
+	UIPlant = entity_storage->CreateEntity("UILine", UIPlantBar);
+	transform = UIPlant->AddComponent<Transform>();
+	transform->position = point3d(0, 0, 0.3);
+	spriteLine = UIPlant->AddComponent<Sprite>();
+	spriteLine->textureName = "ScaleLineG";
+
+	return UIPlant;
+}
+
+Entity* CreateEmogy(Entity* Plant, EntityStorage* entity_storage)
+{
+	Entity* PlantEmoji;
+	Transform* transformEmoji;
+	Sprite* spriteLineEmoji;
+
+	PlantEmoji = entity_storage->CreateEntity("PlantEMOJI", Plant);
+
+	transformEmoji = PlantEmoji->AddComponent<Transform>();
+	transformEmoji->position = point3d(-0.7, 1.4, 0.4);
+	transformEmoji->scale = point3d(0.4, 0.4, 0.1);
+	spriteLineEmoji = PlantEmoji->AddComponent<Sprite>();
+	spriteLineEmoji->textureName = "LOVE_EMOGY";
+
+	return PlantEmoji;
+}
+
+ComponentPlants* CreatePlant(Entity* Garden, EntityStorage* entity_storage)
+{
+	Entity* Plant;
+	Transform* transform;
+	Sprite* spritePlant;
+	ComponentPlants* PropPlant;
+
+	Plant = entity_storage->CreateEntity("Plant", Garden);
+
+	transform = Plant->AddComponent<Transform>();
+	transform->position = point3d(0, 0.1, 0.1);
+
+	spritePlant = Plant->AddComponent<Sprite>();
+	PropPlant = Plant->AddComponent<ComponentPlants>();
+
+	spritePlant->textureName = "Plant1KILER";
+
+	PropPlant->TexturePlant = spritePlant->textureName;
+	PropPlant->Plant = Plant;
+
+
+	PropPlant->UiLine = CreateUIPlant(Plant, entity_storage);
+	PropPlant->Emoji = CreateEmogy(Plant, entity_storage);
+	PropPlant->Garden = Garden;
+
+	return PropPlant;
+	//YDaun.push_back(PropPlant);
+}
+
+void PlayerController::ClickOnObjectL(EntityStorage* entity_storage)
 {
 	if (target != nullptr) {
 		Transform targetTransform = GetWorldTransform(target);
@@ -334,7 +407,11 @@ void PlayerController::ClickOnObjectL()
 		Sprite* sprite = target->GetComponent<Sprite>();
 
 		if (sprite) {
+
+			PlayerBackPack.GigaDaun[0] =* CreatePlant(target, entity_storage);
+
 			Entity* Plant = target->GetChildByName("Plant");
+
 			if (Plant != NULL)
 			{
 				PlayerBackPack.UseItem(Plant);
@@ -361,32 +438,35 @@ void PlayerController::ClickOnObjectR()
 			PlayerBackPack.ResetItem();
 			}
 		}
-		// является ли объект грядкой
-		if (target->name == "WallSprite")
-		{
-			// есть ли уже растение
-			bool hasPlant = false;
-			for (Entity* child : target->GetChildren()) {
-				if (child->name == "Plant") {
-					hasPlant = true;
-					break;
-				}
-			}
 
-			if (!hasPlant) { // создал в тупую 
-				
-				Entity* plant = entityStorage->CreateEntity("Plant", target);
 
-				
 
-				Transform* transform = plant->AddComponent<Transform>();
-				transform->position = point3d(0, 0.1, 0.1);
 
-				Sprite* sprite = plant->AddComponent<Sprite>();
-				sprite->textureName = "Plant1KILER"; 
 
-				
-			}
-		}
+		//// является ли объект грядкой
+		//if (target->name == "WallSprite")
+		//{
+		//	// есть ли уже растение
+		//	bool hasPlant = false;
+		//	for (Entity* child : target->GetChildren()) {
+		//		if (child->name == "Plant") {
+		//			hasPlant = true;
+		//			break;
+		//		}
+		//	}
+
+		//	if (!hasPlant) { // создал в тупую 
+		//		
+		//		Entity* plant = entityStorage->CreateEntity("Plant", target);
+
+		//		Transform* transform = plant->AddComponent<Transform>();
+		//		transform->position = point3d(0, 0.1, 0.1);
+
+		//		Sprite* sprite = plant->AddComponent<Sprite>();
+		//		sprite->textureName = "Plant1KILER"; 
+
+		//		
+		//	}
+		//}
 	}
 }
