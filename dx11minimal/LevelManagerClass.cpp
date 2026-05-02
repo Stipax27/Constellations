@@ -531,37 +531,13 @@ void LevelManagerClass::CreateUI()
 
 	Entity* uiFolder = m_World->entityStorage->CreateEntity("UI");
 
-
-
-	entity = m_World->entityStorage->CreateEntity("HealthHolder", uiFolder);
+	entity = m_World->entityStorage->CreateEntity("HandSlot", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(-1, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::XY;
-	transform2D->position = point3d(-0.9f, -0.6f, 0.0f);
-	transform2D->scale = point3d(0.18f, 0.04f, 0.0f);
-	rect = entity->AddComponent<Rect>();
-	rect->color = point3d(0.5f, 0.5f, 0.5f);
-	rect->opacity = 0.5f;
-
-	entity = m_World->entityStorage->CreateEntity("HealthBar", entity);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(-1, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::XY;
-	//transform2D->position = point3d(-1, 0, 0);
-	rect = entity->AddComponent<Rect>();
-
-	entity = m_World->entityStorage->CreateEntity("HealthLabel", uiFolder);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->ratio = ScreenAspectRatio::XY;
-	transform2D->position = point3d(-0.9f, -0.64f, 0.0f);
-	textLabel = entity->AddComponent<TextLabel>();
-	textLabel->textW = L"ЗДОРОВЬЕ";
-	textLabel->fontFamilyW = L"Impact";
-	textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
-	textLabel->fontWeight = 900;
-	textLabel->fontSizePx = 44;
-	textLabel->fontScale = 0.40f;
-	textLabel->letterSpacingPx = 1.0f;
+	transform2D->position = point3d(-0.9f, -0.85f, 0.0f);
+	transform2D->ratio = ScreenAspectRatio::YY;
+	transform2D->scale = point3d(0.1f, 0.1f, 0.0f);
+	imageLabel = entity->AddComponent<ImageLabel>();
+	imageLabel->textureName = "Menu_Slot";
 
 	CreateInventoryUI(uiFolder);
 }

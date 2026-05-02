@@ -335,6 +335,11 @@ void PlayerController::ProccessUI()
 					slot->GetComponent<ImageLabel>()->textureName = "Menu_Raf";
 					break;
 				}
+
+				if (slot->GetComponent<Button>()->isClicked) {
+					PlayerBackPack.whatChange = true;
+					PlayerBackPack.ItemInHand = item.Name;
+				}
 			}
 			else {
 				count->SetActive(false);
@@ -374,6 +379,11 @@ void PlayerController::ProccessUI()
 					slot->GetComponent<ImageLabel>()->textureName = "MENU_UP4";
 					break;
 				}
+
+				if (slot->GetComponent<Button>()->isClicked) {
+					PlayerBackPack.whatChange = true;
+					PlayerBackPack.ItemInHand = item.Name;
+				}
 			}
 			else {
 				count->SetActive(false);
@@ -411,6 +421,11 @@ void PlayerController::ProccessUI()
 				case ItemsInBackPack::CYAN:
 					slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantCyan";
 					break;
+				}
+
+				if (slot->GetComponent<Button>()->isClicked) {
+					PlayerBackPack.whatChange = true;
+					PlayerBackPack.ItemInHand = item.Name;
 				}
 			}
 			else {
