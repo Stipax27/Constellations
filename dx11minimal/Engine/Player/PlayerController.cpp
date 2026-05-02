@@ -155,28 +155,6 @@ void PlayerController::ProcessInput()
 		PlayerBackPack.ItemInHand = ItemsInBackPack::UP4;
 	}
 
-
-
-
-
-
-	if (input::IsKeyPressed('1') && abilities->weapon != PlayerWeapons::Fists) {
-		abilities->weapon = PlayerWeapons::Fists;
-		comboManager->SaveInput(ComboInputType::TakeFists);
-	}
-	if (input::IsKeyPressed('2') && abilities->weapon != PlayerWeapons::Sword) {
-		abilities->weapon = PlayerWeapons::Sword;
-		comboManager->SaveInput(ComboInputType::TakeSword);
-	}
-	if (input::IsKeyPressed('3') && abilities->weapon != PlayerWeapons::Bow) {
-		abilities->weapon = PlayerWeapons::Bow;
-		comboManager->SaveInput(ComboInputType::TakeBow);
-	}
-
-	if (input::IsKeyPressed('T')) {
-		abilities->Timestop();
-	}
-
 	/*if (input::IsKeyPressed('G')) {
 		abilities->Grab();
 	}*/
