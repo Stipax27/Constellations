@@ -71,7 +71,7 @@ struct ComponentPlants : Component
 	int Number = 0;
 	bool CheckCreate = true;
 	bool Click = false;
-	bool Active = false;
+	bool Active = true;
 	std::string TextureLine;
 	std::string TexturePlant;
 	std::string TextureEmogy;
@@ -106,8 +106,6 @@ struct ItemsBackPack
 struct BackPacks
 {
 	ItemsInBackPack ItemInHand = ItemsInBackPack::EMPTYItem;
-	bool whatChange = false;
-	bool ItemActiveted = false;
 	bool PlantInHand = false;
 
 	ItemsBackPack ListItems[16] =
@@ -141,7 +139,7 @@ struct BackPacks
 
 	void ClearHandItem()
 	{
-		ItemsInBackPack ItemInHand = ItemsInBackPack::EMPTYItem;
+		ItemInHand = ItemsInBackPack::EMPTYItem;
 		ItemPick.Count = 0;
 		ItemPick.Name = ItemsInBackPack::EMPTYItem;
 		Plant = 0;
@@ -158,38 +156,25 @@ struct BackPacks
 			return true;
 		}
 		else
+		{
 			return false;
-	}
-
-
-	void ChangeItemInHands()
-	{
-		whatChange = false;
-		if (ItemInHand != ItemsInBackPack::EMPTYItem && ChangeCountItem(ListItems[ItemInHand].Count))
-		{
-			ItemPick = ListItems[ItemInHand];
-			ItemActiveted = true;
-		}
-		else
-		{
-			ClearHandItem();
 		}
 	}
+
 
 	void ResetItem()
 	{
-		ItemActiveted = false;
 		ClearHandItem();
 	}
 	void UseItem(Entity* Plants)
 	{
-		if (ItemActiveted == true)
+		if (ItemInHand != ItemsInBackPack::EMPTYItem)
 		{
-			ItemActiveted = false;
+			ItemPick = ListItems[ItemInHand];
 			Garden = Plants->GetParent();
 			Plant = Plants;
-			ItemPick;
 			ComponentPlants* com = Plant->GetComponent<ComponentPlants>();
+			ListItems[ItemInHand].Count--;
 			switch (ItemPick.Name)
 			{
 				// посадка ростений
@@ -291,12 +276,13 @@ struct BackPacks
 			}
 			// использование удобрения
 			}
-
-			ListItems[ItemInHand].Count--;
-			ClearHandItem();
 		}
+		ClearHandItem();
 	}
 
+
+
+	std::vector<Entity*> VPlants;
 };
 
 

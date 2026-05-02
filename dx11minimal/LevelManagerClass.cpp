@@ -36,8 +36,6 @@ void LevelManagerClass::ProcessSound(const char* name)
 }
 
 
-vector<Entity*> VPlants;
-
 // __METODS GAMEJAM__ //
 void Metamorf(TypePlant ColorPlant, Mutation Gain, std::string& TexturePlant)
 {
@@ -115,6 +113,8 @@ void MutationPlantation(ComponentPlants& PropPlant, float scaleS)
 
 void GameJamMetod(ComponentPlants& PropPlant)
 {
+	if(PropPlant.Plant->GetParent() != 0)
+	{ 
 	float sec = 1;
 	PropPlant.LoyaltyScale -= 1. / sec;
 	float Scale = ((120 * PropPlant.LoyaltyScale) / 1000.);
@@ -162,6 +162,13 @@ void GameJamMetod(ComponentPlants& PropPlant)
 	{
 		PropPlant.CheckCreate = false;
 		return;
+	}
+	}
+	else
+	{
+
+
+		
 	}
 }
 // __METODS GAMEJAM__ //
@@ -390,24 +397,18 @@ void LevelManagerClass::Frame()
 	playerController->ProccessUI();
 
 
-	for (int i = 0; i < VPlants.size(); i++)
+	for (int i = 0; i < PlayerBackPack.VPlants.size(); i++)
 	{
-		ComponentPlants* com = VPlants[i]->GetComponent<ComponentPlants>();
+		ComponentPlants* com = PlayerBackPack.VPlants[i]->GetComponent<ComponentPlants>();
 		if (com->CheckCreate == true)
 		{
-			if (PlayerBackPack.whatChange == true && PlayerBackPack.PlantInHand == false)
-			{
-				PlayerBackPack.ChangeItemInHands();
-			}
-			
-
 		GameJamMetod(*com);
 		}
 		else
 		{
 			com->Plant->ClearChildren();
 			com->Plant->Destroy();
-			VPlants.erase(VPlants.begin() + i);
+			PlayerBackPack.VPlants.erase(PlayerBackPack.VPlants.begin() + i);
 		}
 	}
 
@@ -424,11 +425,7 @@ void LevelManagerClass::Frame()
 	Draw::Present();
 }
 
-
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 void LevelManagerClass::InitSystems()
 {
@@ -873,7 +870,6 @@ void LevelManagerClass::CreateRoom()
 	
 }
 
-
 void LevelManagerClass::CreateGardens(Entity* room)
 {
 	Entity* garden;
@@ -891,98 +887,7 @@ void LevelManagerClass::CreateGardens(Entity* room)
 		sprite = garden->AddComponent<Sprite>();
 		sprite->textureName = "garden";
 
-		CreatePlant(garden);
-		
 		sphereCollider = garden->AddComponent<SphereCollider>();
 		sphereCollider->radius = 1.25f;
-
 	}
 }
-
-
-
-
-Entity* LevelManagerClass::CreateUIPlant(Entity* Plant)
-{
-	Entity* UIPlantBar;
-	Transform* transformBar;
-	Sprite* spriteLineBar;
-	UIPlantBar = m_World->entityStorage->CreateEntity("UIBar", Plant);
-	transformBar = UIPlantBar->AddComponent<Transform>();
-	transformBar->position = point3d(0, 1, 0.2);
-	transformBar->scale = point3d(1, 0.1, 1);
-	spriteLineBar = UIPlantBar->AddComponent<Sprite>();
-	spriteLineBar->textureName = "ScaleBar";
-	
-	
-	Entity* UIPlant;
-	Transform* transform;
-	Sprite* spriteLine;
-	UIPlant = m_World->entityStorage->CreateEntity("UILine", UIPlantBar);
-	transform = UIPlant->AddComponent<Transform>();
-	transform->position = point3d(0, 0, 0.3);
-	spriteLine = UIPlant->AddComponent<Sprite>();
-	spriteLine->textureName = "ScaleLineG";
-
-	return UIPlant;
-}
-
-Entity* LevelManagerClass::CreateEmogy(Entity* Plant)
-{
-	Entity* PlantEmoji;
-	Transform* transformEmoji;
-	Sprite* spriteLineEmoji;
-
-	PlantEmoji = m_World->entityStorage->CreateEntity("PlantEMOJI", Plant);
-
-	transformEmoji = PlantEmoji->AddComponent<Transform>();
-	transformEmoji->position = point3d(-0.7, 1.4, 0.4);
-	transformEmoji->scale = point3d(0.4, 0.4, 0.1);
-	spriteLineEmoji = PlantEmoji->AddComponent<Sprite>();
-	spriteLineEmoji->textureName = "LOVE_EMOGY";
-
-	return PlantEmoji;
-}
-
-void LevelManagerClass::CreatePlant(Entity* Garden)
-{
-	Entity* Plant;
-	Transform* transform;
-	Sprite* spritePlant;
-	ComponentPlants* PropPlant;
-
-	Plant = m_World->entityStorage->CreateEntity("Plant", Garden);
-
-	transform = Plant->AddComponent<Transform>();
-	transform->position = point3d(0, 0.1, 0.1);
-
-	spritePlant = Plant->AddComponent<Sprite>();
-	PropPlant = Plant->AddComponent<ComponentPlants>();
-
-	spritePlant->textureName = "Plant1KILER";
-
-	PropPlant->TexturePlant = spritePlant->textureName;
-	PropPlant->Plant = Plant;
-
-
-	PropPlant->UiLine = CreateUIPlant(Plant);
-	PropPlant->Emoji = CreateEmogy(Plant);
-	PropPlant->Garden = Garden;
-	VPlants.push_back(Plant);
-}
-
-//Textures::LoadPNGTexture("Plant1KILER", L"..\\dx11minimal\\Resourses\\Textures\\G\\A.png");
-//Textures::LoadPNGTexture("Plant1KIND", L"..\\dx11minimal\\Resourses\\Textures\\G\\B.png");
-//Textures::LoadPNGTexture("Plant1SEED", L"..\\dx11minimal\\Resourses\\Textures\\G\\C.png");
-//Textures::LoadPNGTexture("Plant1NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\G\\D.png");
-//Textures::LoadPNGTexture("Plant1EVIL", L"..\\dx11minimal\\Resourses\\Textures\\G\\E.png");
-//
-//Textures::LoadPNGTexture("ScaleBar", L"..\\dx11minimal\\Resourses\\Textures\\I\\A.png");
-//Textures::LoadPNGTexture("ScaleLineG", L"..\\dx11minimal\\Resourses\\Textures\\I\\B.png");
-//Textures::LoadPNGTexture("ScaleLineY", L"..\\dx11minimal\\Resourses\\Textures\\I\\C.png");
-//Textures::LoadPNGTexture("ScaleLineR", L"..\\dx11minimal\\Resourses\\Textures\\I\\D.png");
-//
-//Textures::LoadPNGTexture("ANGRY_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\A.png");
-//Textures::LoadPNGTexture("NORMAL_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\B.png");
-//Textures::LoadPNGTexture("LOVE_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\C.png");
-//Textures::LoadPNGTexture("DEAD_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\D.png");
