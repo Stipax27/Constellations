@@ -891,7 +891,7 @@ void LevelManagerClass::CreateGardens(Entity* room)
 		sprite = garden->AddComponent<Sprite>();
 		sprite->textureName = "garden";
 
-		CreatePlant(garden);
+		//CreatePlant(garden);
 		
 		sphereCollider = garden->AddComponent<SphereCollider>();
 		sphereCollider->radius = 1.25f;
