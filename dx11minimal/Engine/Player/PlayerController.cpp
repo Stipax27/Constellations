@@ -269,25 +269,41 @@ void PlayerController::ProccessUI()
 	}
 }
 
-
-
 void PlayerController::ClickOnObject()
 {
 	if (target != nullptr) {
 		Transform targetTransform = GetWorldTransform(target);
-		Transform palyerTransform = GetWorldTransform(playerEntity);
+		Transform playerTransform = GetWorldTransform(playerEntity);
 
-		if ((palyerTransform.position - targetTransform.position).magnitude() > INTERACT_DISTANCE)
+		if ((playerTransform.position - targetTransform.position).magnitude() > INTERACT_DISTANCE)
 			return;
 
-		
-		Sprite* sprite = target->GetComponent<Sprite>();
-		if (sprite) {
-			sprite->color = point3d(1, 0, 0);
+		// является ли объект грядкой
+		if (target->name == "WallSprite")
+		{
+			// есть ли уже растение
+			bool hasPlant = false;
+			for (Entity* child : target->GetChildren()) {
+				if (child->name == "Plant") {
+					hasPlant = true;
+					break;
+				}
+			}
+
+			if (!hasPlant) { // создал в тупую 
+				
+				Entity* plant = entityStorage->CreateEntity("Plant", target);
+
+				
+
+				Transform* transform = plant->AddComponent<Transform>();
+				transform->position = point3d(0, 0.1, 0.1);
+
+				Sprite* sprite = plant->AddComponent<Sprite>();
+				sprite->textureName = "Plant1KILER"; 
+
+				
+			}
 		}
-
-
-
-
 	}
 }
