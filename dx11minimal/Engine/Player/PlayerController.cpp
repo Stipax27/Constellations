@@ -2,8 +2,12 @@
 
 #include "../UI/Text/TextLabel.h"
 
+
+
 using namespace std;
 
+
+BackPacks PlayerBackPack;
 
 PlayerController::PlayerController()
 {
@@ -120,11 +124,41 @@ void PlayerController::ProcessInput()
 		if (input::IsKeyDown('D')) {
 			velocity += playerTransform->GetRightVector();
 		}
-
 		if (velocity.magnitude() > 0) {
 			playerPhysicBody->acceleration += velocity.normalized() * PLAYER_MOVE_SPEED;
 		}
 	}
+
+
+
+
+
+
+	if (input::IsKeyPressed('1'))
+	{	// берет уражай UP1
+		PlayerBackPack.whatChange = true;
+		PlayerBackPack.ItemInHand = ItemsInBackPack::UP1;
+	}
+	if (input::IsKeyPressed('2'))
+	{
+		PlayerBackPack.whatChange = true;
+		PlayerBackPack.ItemInHand = ItemsInBackPack::UP2;
+	}
+	if (input::IsKeyPressed('3'))
+	{
+		PlayerBackPack.whatChange = true;
+		PlayerBackPack.ItemInHand = ItemsInBackPack::UP3;
+	}
+	if (input::IsKeyPressed('4'))
+	{
+		PlayerBackPack.whatChange = true;
+		PlayerBackPack.ItemInHand = ItemsInBackPack::UP4;
+	}
+
+
+
+
+
 
 	if (input::IsKeyPressed('1') && abilities->weapon != PlayerWeapons::Fists) {
 		abilities->weapon = PlayerWeapons::Fists;
@@ -240,6 +274,7 @@ void PlayerController::ProcessMouse()
 
 			ClickOnObjectR();
 		}
+
 		break;
 	}
 	}
@@ -302,10 +337,7 @@ void PlayerController::ClickOnObjectL()
 			Entity* Plant = target->GetChildByName("Plant");
 			if (Plant != NULL)
 			{
-				//Plant->GetComponent<Sprite>()->color = point3d(1, 0, 0);
-				/*Plant->GetComponent<Sprite>()->active = false;*/
-				ComponentPlants* com = Plant->GetComponent<ComponentPlants>();
-				com->LoyaltyScale += 100;
+				PlayerBackPack.UseItem(Plant);
 			}
 		}
 	}
@@ -325,8 +357,8 @@ void PlayerController::ClickOnObjectR()
 			Entity* Plant = target->GetChildByName("Plant");
 			if (Plant != NULL)
 			{
-			ComponentPlants* com = Plant->GetComponent<ComponentPlants>();
-			com->LoyaltyScale -= 100;
+			//ComponentPlants* com = Plant->GetComponent<ComponentPlants>();
+			PlayerBackPack.ResetItem();
 			}
 		}
 

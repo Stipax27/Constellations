@@ -75,6 +75,7 @@ public:
 private:
 	ComboManager* comboManager;
 
+
 	EntityStorage* entityStorage;
 	CollisionManagerClass* collisionManager;
 

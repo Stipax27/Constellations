@@ -1,5 +1,6 @@
 ﻿#include "LevelManagerClass.h"
 
+
 using namespace std;
 
 
@@ -34,160 +35,6 @@ void LevelManagerClass::ProcessSound(const char* name)
 	//PlaySound(TEXT(name), NULL, SND_FILENAME | SND_ASYNC);
 }
 
-
-bool LevelManagerClass::Initialize()
-{
-	InitWindow();
-
-	m_World = Singleton::GetInstance<World>();
-	m_World->Initialize();
-
-	collisionManager = Singleton::GetInstance<CollisionManagerClass>();
-	collisionManager->Initialize(*m_World->entityStorage);
-
-	mouse = Singleton::GetInstance<MouseClass>();
-	mouse->Initialize();
-
-	questManager = Singleton::GetInstance<QuestManager>();
-	questManager->Initialize();
-
-	Dx11Init(window->hWnd, window->width, window->height);
-	std::thread modelsLoadingThread(&LevelManagerClass::LoadModels, this);
-
-	D3D11_BUFFER_DESC boneDesc = {};
-	boneDesc.Usage = D3D11_USAGE_DEFAULT;
-	boneDesc.ByteWidth = sizeof(XMMATRIX) * 128;
-	boneDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-
-	device->CreateBuffer(&boneDesc, nullptr, &m_BoneBuffer);
-
-	// window params into const buffer
-	ConstBuf::frame.aspect = XMFLOAT4(window->aspect, window->iaspect, float(window->width), float(window->height));
-
-	ConstBuf::factors.AriesNebulaLerpFactor = 0;
-	ConstBuf::UpdateFactors();
-
-	//Textures::LoadTexture("..\\dx11minimal\\Resourses\\Textures\\testTexture.tga");
-	//Textures::LoadDDSTexture("gta", L"..\\dx11minimal\\Resourses\\Textures\\gta.dds");
-	//Textures::LoadDDSTexture("aperture", L"..\\dx11minimal\\Resourses\\Textures\\aperture.dds");
-	Textures::LoadPNGTexture("comicsSpot", L"..\\dx11minimal\\Resourses\\Textures\\comicsSpot.png");
-	Textures::LoadPNGTexture("omniman", L"..\\dx11minimal\\Resourses\\Textures\\omniman.png");
-	Textures::LoadPNGTexture("garden", L"..\\dx11minimal\\Resourses\\Textures\\garden.png");
-	
-	Textures::LoadPNGTexture("Plant1KILER" , L"..\\dx11minimal\\Resourses\\Textures\\A\\A.png");
-	Textures::LoadPNGTexture("Plant1KIND"  , L"..\\dx11minimal\\Resourses\\Textures\\A\\B.png");
-	Textures::LoadPNGTexture("Plant1SEED"  , L"..\\dx11minimal\\Resourses\\Textures\\A\\C.png");
-	Textures::LoadPNGTexture("Plant1NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\A\\D.png");
-	Textures::LoadPNGTexture("Plant1EVIL"  , L"..\\dx11minimal\\Resourses\\Textures\\A\\E.png");
-
-	Textures::LoadPNGTexture("Plant2KILER" , L"..\\dx11minimal\\Resourses\\Textures\\B\\A.png");
-	Textures::LoadPNGTexture("Plant2KIND"  , L"..\\dx11minimal\\Resourses\\Textures\\B\\B.png");
-	Textures::LoadPNGTexture("Plant2SEED"  , L"..\\dx11minimal\\Resourses\\Textures\\B\\C.png");
-	Textures::LoadPNGTexture("Plant2NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\B\\D.png");
-	Textures::LoadPNGTexture("Plant2EVIL"  , L"..\\dx11minimal\\Resourses\\Textures\\B\\E.png");
-
-	Textures::LoadPNGTexture("Plant3KILER" , L"..\\dx11minimal\\Resourses\\Textures\\C\\A.png");
-	Textures::LoadPNGTexture("Plant3KIND"  , L"..\\dx11minimal\\Resourses\\Textures\\C\\B.png");
-	Textures::LoadPNGTexture("Plant3SEED"  , L"..\\dx11minimal\\Resourses\\Textures\\C\\C.png");
-	Textures::LoadPNGTexture("Plant3NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\C\\D.png");
-	Textures::LoadPNGTexture("Plant3EVIL"  , L"..\\dx11minimal\\Resourses\\Textures\\C\\E.png");
-
-	Textures::LoadPNGTexture("Plant4KILER" , L"..\\dx11minimal\\Resourses\\Textures\\D\\A.png");
-	Textures::LoadPNGTexture("Plant4KIND"  , L"..\\dx11minimal\\Resourses\\Textures\\D\\B.png");
-	Textures::LoadPNGTexture("Plant4SEED"  , L"..\\dx11minimal\\Resourses\\Textures\\D\\C.png");
-	Textures::LoadPNGTexture("Plant4NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\D\\D.png");
-	Textures::LoadPNGTexture("Plant4EVIL"  , L"..\\dx11minimal\\Resourses\\Textures\\D\\E.png");
-
-	Textures::LoadPNGTexture("Plant5KILER" , L"..\\dx11minimal\\Resourses\\Textures\\F\\A.png");
-	Textures::LoadPNGTexture("Plant5KIND"  , L"..\\dx11minimal\\Resourses\\Textures\\F\\B.png");
-	Textures::LoadPNGTexture("Plant5SEED"  , L"..\\dx11minimal\\Resourses\\Textures\\F\\C.png");
-	Textures::LoadPNGTexture("Plant5NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\F\\D.png");
-	Textures::LoadPNGTexture("Plant5EVIL"  , L"..\\dx11minimal\\Resourses\\Textures\\F\\E.png");
-
-	Textures::LoadPNGTexture("Plant6KILER" , L"..\\dx11minimal\\Resourses\\Textures\\G\\A.png");
-	Textures::LoadPNGTexture("Plant6KIND"  , L"..\\dx11minimal\\Resourses\\Textures\\G\\B.png");
-	Textures::LoadPNGTexture("Plant6SEED"  , L"..\\dx11minimal\\Resourses\\Textures\\G\\C.png");
-	Textures::LoadPNGTexture("Plant6NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\G\\D.png");
-	Textures::LoadPNGTexture("Plant6EVIL"  , L"..\\dx11minimal\\Resourses\\Textures\\G\\E.png");
-
-	Textures::LoadPNGTexture("ScaleBar", L"..\\dx11minimal\\Resourses\\Textures\\I\\A.png");
-	Textures::LoadPNGTexture("ScaleLineG", L"..\\dx11minimal\\Resourses\\Textures\\I\\B.png");
-	Textures::LoadPNGTexture("ScaleLineY", L"..\\dx11minimal\\Resourses\\Textures\\I\\C.png");
-	Textures::LoadPNGTexture("ScaleLineR", L"..\\dx11minimal\\Resourses\\Textures\\I\\D.png");
-
-	Textures::LoadPNGTexture("ANGRY_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\A.png");
-	Textures::LoadPNGTexture("NORMAL_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\B.png");
-	Textures::LoadPNGTexture("LOVE_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\C.png");
-	Textures::LoadPNGTexture("DEAD_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\D.png");
-
-
-
-	if (modelsLoadingThread.joinable()) {
-		modelsLoadingThread.join();
-	}
-	else {
-		modelsLoadingThread.detach();
-	}
-
-	//////////////////////////////////////////////////////////////////////////////////////////////
-	// WORLD CREATING START //
-	//////////////////////////////////////////////////////////////////////////////////////////////
-
-	Entity* entity;
-	Transform* transform;
-
-	SphereCollider* sphereCollider;
-
-	PlaneCollider* planeCollider;
-	ParticleEmitter* particleEmitter;
-
-	Mesh* mesh;
-	PointCloud* pointCloud;
-	Star* star;
-
-
-	worldFolder = m_World->entityStorage->CreateEntity("World");
-
-	Entity* player = CreatePlayer();
-
-	entity = m_World->entityStorage->CreateEntity("TestStar", worldFolder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-200, 0, -200);
-	star = entity->AddComponent<Star>();
-	star->radius = 75;
-	star->crownRadius = 3.0f;
-	star->color1 = point3d(0.87f, 0.24f, 0.13f);
-	star->color2 = point3d(0.35f, 0.0f, 0.07f);
-	star->crownColor = point3d(0.87f, 0.25f, 0.15f);
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->radius = 75;
-	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	GravityPoint* gravityPoint = entity->AddComponent<GravityPoint>();
-	gravityPoint->mass = 500;
-	gravityPoint->radius = 150;
-
-	/////////////////////////
-	
-	CreateSpaceBackground(worldFolder, 1);
-	CreateNebula(worldFolder,2);
-
-	CreateRoom();
-
-	/////////////////////////
-
-	CreateUI();
-
-	//////////////////////////////////////////////////////////////////////////////////////////////
-	// WORLD CREATING END //
-	//////////////////////////////////////////////////////////////////////////////////////////////
-
-	InitSystems();
-
-	playerController = new PlayerController();
-	playerController->Initialize(player);
-
-	return true;
-}
 
 vector<Entity*> VPlants;
 
@@ -278,7 +125,7 @@ void GameJamMetod(ComponentPlants& PropPlant)
 	scaleUI->x = scaleS;
 	if (scaleS >= 0.7)
 	{
-		PropPlant.Status = StatusPlant::GOOD; 
+		PropPlant.Status = StatusPlant::GOOD;
 		PropPlant.UiLine->GetComponent<Sprite>()->textureName = "ScaleLineG";
 	}
 	else if (scaleS >= 0.3 && scaleS < 0.7)
@@ -318,6 +165,163 @@ void GameJamMetod(ComponentPlants& PropPlant)
 	}
 }
 // __METODS GAMEJAM__ //
+
+
+
+bool LevelManagerClass::Initialize()
+{
+	InitWindow();
+
+	m_World = Singleton::GetInstance<World>();
+	m_World->Initialize();
+
+	collisionManager = Singleton::GetInstance<CollisionManagerClass>();
+	collisionManager->Initialize(*m_World->entityStorage);
+
+	mouse = Singleton::GetInstance<MouseClass>();
+	mouse->Initialize();
+
+	questManager = Singleton::GetInstance<QuestManager>();
+	questManager->Initialize();
+
+	Dx11Init(window->hWnd, window->width, window->height);
+	std::thread modelsLoadingThread(&LevelManagerClass::LoadModels, this);
+
+	D3D11_BUFFER_DESC boneDesc = {};
+	boneDesc.Usage = D3D11_USAGE_DEFAULT;
+	boneDesc.ByteWidth = sizeof(XMMATRIX) * 128;
+	boneDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+	device->CreateBuffer(&boneDesc, nullptr, &m_BoneBuffer);
+
+	// window params into const buffer
+	ConstBuf::frame.aspect = XMFLOAT4(window->aspect, window->iaspect, float(window->width), float(window->height));
+
+	ConstBuf::factors.AriesNebulaLerpFactor = 0;
+	ConstBuf::UpdateFactors();
+
+	//Textures::LoadTexture("..\\dx11minimal\\Resourses\\Textures\\testTexture.tga");
+	//Textures::LoadDDSTexture("gta", L"..\\dx11minimal\\Resourses\\Textures\\gta.dds");
+	//Textures::LoadDDSTexture("aperture", L"..\\dx11minimal\\Resourses\\Textures\\aperture.dds");
+	Textures::LoadPNGTexture("comicsSpot", L"..\\dx11minimal\\Resourses\\Textures\\comicsSpot.png");
+	Textures::LoadPNGTexture("omniman", L"..\\dx11minimal\\Resourses\\Textures\\omniman.png");
+	Textures::LoadPNGTexture("garden", L"..\\dx11minimal\\Resourses\\Textures\\garden.png");
+	
+	Textures::LoadPNGTexture("Plant1KILER" , L"..\\dx11minimal\\Resourses\\Textures\\A\\A.png");
+	Textures::LoadPNGTexture("Plant1KIND"  , L"..\\dx11minimal\\Resourses\\Textures\\A\\B.png");
+	Textures::LoadPNGTexture("Plant1SEED"  , L"..\\dx11minimal\\Resourses\\Textures\\A\\C.png");
+	Textures::LoadPNGTexture("Plant1NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\A\\D.png");
+	Textures::LoadPNGTexture("Plant1EVIL"  , L"..\\dx11minimal\\Resourses\\Textures\\A\\E.png");
+
+	Textures::LoadPNGTexture("Plant2KILER" , L"..\\dx11minimal\\Resourses\\Textures\\B\\A.png");
+	Textures::LoadPNGTexture("Plant2KIND"  , L"..\\dx11minimal\\Resourses\\Textures\\B\\B.png");
+	Textures::LoadPNGTexture("Plant2SEED"  , L"..\\dx11minimal\\Resourses\\Textures\\B\\C.png");
+	Textures::LoadPNGTexture("Plant2NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\B\\D.png");
+	Textures::LoadPNGTexture("Plant2EVIL"  , L"..\\dx11minimal\\Resourses\\Textures\\B\\E.png");
+
+	Textures::LoadPNGTexture("Plant3KILER" , L"..\\dx11minimal\\Resourses\\Textures\\C\\A.png");
+	Textures::LoadPNGTexture("Plant3KIND"  , L"..\\dx11minimal\\Resourses\\Textures\\C\\B.png");
+	Textures::LoadPNGTexture("Plant3SEED"  , L"..\\dx11minimal\\Resourses\\Textures\\C\\C.png");
+	Textures::LoadPNGTexture("Plant3NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\C\\D.png");
+	Textures::LoadPNGTexture("Plant3EVIL"  , L"..\\dx11minimal\\Resourses\\Textures\\C\\E.png");
+
+	Textures::LoadPNGTexture("Plant4KILER" , L"..\\dx11minimal\\Resourses\\Textures\\D\\A.png");
+	Textures::LoadPNGTexture("Plant4KIND"  , L"..\\dx11minimal\\Resourses\\Textures\\D\\B.png");
+	Textures::LoadPNGTexture("Plant4SEED"  , L"..\\dx11minimal\\Resourses\\Textures\\D\\C.png");
+	Textures::LoadPNGTexture("Plant4NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\D\\D.png");
+	Textures::LoadPNGTexture("Plant4EVIL"  , L"..\\dx11minimal\\Resourses\\Textures\\D\\E.png");
+
+	Textures::LoadPNGTexture("Plant5KILER" , L"..\\dx11minimal\\Resourses\\Textures\\F\\A.png");
+	Textures::LoadPNGTexture("Plant5KIND"  , L"..\\dx11minimal\\Resourses\\Textures\\F\\B.png");
+	Textures::LoadPNGTexture("Plant5SEED"  , L"..\\dx11minimal\\Resourses\\Textures\\F\\C.png");
+	Textures::LoadPNGTexture("Plant5NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\F\\D.png");
+	Textures::LoadPNGTexture("Plant5EVIL"  , L"..\\dx11minimal\\Resourses\\Textures\\F\\E.png");
+
+	Textures::LoadPNGTexture("Plant6KILER" , L"..\\dx11minimal\\Resourses\\Textures\\G\\A.png");
+	Textures::LoadPNGTexture("Plant6KIND"  , L"..\\dx11minimal\\Resourses\\Textures\\G\\B.png");
+	Textures::LoadPNGTexture("Plant6SEED"  , L"..\\dx11minimal\\Resourses\\Textures\\G\\C.png");
+	Textures::LoadPNGTexture("Plant6NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\G\\D.png");
+	Textures::LoadPNGTexture("Plant6EVIL"  , L"..\\dx11minimal\\Resourses\\Textures\\G\\E.png");
+
+	Textures::LoadPNGTexture("ScaleBar", L"..\\dx11minimal\\Resourses\\Textures\\I\\A.png");
+	Textures::LoadPNGTexture("ScaleLineG", L"..\\dx11minimal\\Resourses\\Textures\\I\\B.png");
+	Textures::LoadPNGTexture("ScaleLineY", L"..\\dx11minimal\\Resourses\\Textures\\I\\C.png");
+	Textures::LoadPNGTexture("ScaleLineR", L"..\\dx11minimal\\Resourses\\Textures\\I\\D.png");
+
+	Textures::LoadPNGTexture("ANGRY_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\A.png");
+	Textures::LoadPNGTexture("NORMAL_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\B.png");
+	Textures::LoadPNGTexture("LOVE_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\C.png");
+	Textures::LoadPNGTexture("DEAD_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\D.png");
+
+	Textures::LoadPNGTexture("Menu_Dressing", L"..\\dx11minimal\\Resourses\\Textures\\MENU_1.png");
+
+
+	if (modelsLoadingThread.joinable()) {
+		modelsLoadingThread.join();
+	}
+	else {
+		modelsLoadingThread.detach();
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	// WORLD CREATING START //
+	//////////////////////////////////////////////////////////////////////////////////////////////
+
+	Entity* entity;
+	Transform* transform;
+
+	SphereCollider* sphereCollider;
+
+	PlaneCollider* planeCollider;
+	ParticleEmitter* particleEmitter;
+
+	Mesh* mesh;
+	PointCloud* pointCloud;
+	Star* star;
+
+
+	worldFolder = m_World->entityStorage->CreateEntity("World");
+
+	Entity* player = CreatePlayer();
+
+	entity = m_World->entityStorage->CreateEntity("TestStar", worldFolder);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(-200, 0, -200);
+	star = entity->AddComponent<Star>();
+	star->radius = 75;
+	star->crownRadius = 3.0f;
+	star->color1 = point3d(0.87f, 0.24f, 0.13f);
+	star->color2 = point3d(0.35f, 0.0f, 0.07f);
+	star->crownColor = point3d(0.87f, 0.25f, 0.15f);
+	sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider->radius = 75;
+	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	GravityPoint* gravityPoint = entity->AddComponent<GravityPoint>();
+	gravityPoint->mass = 500;
+	gravityPoint->radius = 150;
+
+	/////////////////////////
+	
+	CreateSpaceBackground(worldFolder, 1);
+	CreateNebula(worldFolder,2);
+
+	CreateRoom();
+
+	/////////////////////////
+
+	CreateUI();
+
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	// WORLD CREATING END //
+	//////////////////////////////////////////////////////////////////////////////////////////////
+
+	InitSystems();
+
+	playerController = new PlayerController();
+	playerController->Initialize(player);
+
+	return true;
+}
 
 void LevelManagerClass::Shutdown()
 {
@@ -385,11 +389,20 @@ void LevelManagerClass::Frame()
 	playerController->abilities->Update();
 	playerController->ProccessUI();
 
+
 	for (int i = 0; i < VPlants.size(); i++)
 	{
 		ComponentPlants* com = VPlants[i]->GetComponent<ComponentPlants>();
 		if (com->CheckCreate == true)
+		{
+			if (PlayerBackPack.whatChange == true)
+			{
+				PlayerBackPack.ChangeItemInHands();
+			}
+			
+
 		GameJamMetod(*com);
+		}
 		else
 		{
 			com->Plant->ClearChildren();
