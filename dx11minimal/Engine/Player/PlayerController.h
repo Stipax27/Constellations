@@ -23,6 +23,7 @@
 #include "../Physic/Movement/PhysicBody.h"
 #include "../Render/PointCloud.h"
 #include "../Render/Sprite/Sprite.h"
+#include "../UI/Button.h"
 #include "../Compute/Combat/Health.h"
 #include "CameraTarget.h"
 
@@ -82,11 +83,13 @@ private:
 	Entity* playerEntity;
 	Entity* ui;
 
+	Button* inventoryButton;
+	Entity* inventoryWindow;
+	Button* inventoryExit;
+
 	Transform* playerTransform;
 	PhysicBody* playerPhysicBody;
 	PointCloud* playerPointCloud;
-
-	Entity* elementLabel;
 
 	Entity* target;
 

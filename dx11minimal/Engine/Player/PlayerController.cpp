@@ -43,7 +43,10 @@ void PlayerController::Initialize(Entity* Player)
 	World* world = Singleton::GetInstance<World>();
 
 	ui = world->entityStorage->GetEntityByName("UI");
-	elementLabel = ui->GetChildByName("ElementLabel", true);
+
+	inventoryButton = ui->GetChildByName("InventoryButton", true)->GetComponent<Button>();
+	inventoryWindow = ui->GetChildByName("InventoryWindow");
+	inventoryExit = inventoryWindow->GetChildByName("InventoryExit")->GetComponent<Button>();
 
 	camera = world->m_Camera;
 	mouse = Singleton::GetInstance<MouseClass>();
@@ -258,24 +261,14 @@ void PlayerController::ProcessMouse()
 
 void PlayerController::ProccessUI()
 {
-	TextLabel* elementText = elementLabel->GetComponent<TextLabel>();
-	switch (abilities->element)
-	{
-		case Elements::None:
-			elementText->textW = L"НЕТ";
-			break;
-		case Elements::Air:
-			elementText->textW = L"ВОЗДУХ";
-			break;
-		case Elements::Fire:
-			elementText->textW = L"ОГОНЬ";
-			break;
-		case Elements::Water:
-			elementText->textW = L"ВОДА";
-			break;
-		case Elements::Earth:
-			elementText->textW = L"ЗЕМЛЯ";
-			break;
+	if (inventoryWindow->IsActive()) {
+		if (inventoryExit->isClicked) {
+			inventoryWindow->SetActive(false);
+		}
+	}
+
+	if (inventoryButton->isClicked) {
+		inventoryWindow->SetActive(!inventoryWindow->IsLocalActive());
 	}
 }
 

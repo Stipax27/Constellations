@@ -109,12 +109,11 @@ private:
 	void CreateUI();
 	void InitSystems();
 
-	void CreateSpaceBackground(Entity*, int);
-	void CreateNebula(Entity*, int);
-
 	void CreateRoom();
 	void CreateGardens(Entity* room);
 
+
+	void CreateInventoryUI(Entity* uiFolder);
 
 
 	void CreatePlant(Entity* Garden);

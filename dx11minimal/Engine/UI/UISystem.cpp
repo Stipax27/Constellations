@@ -50,7 +50,7 @@ void UISystem::Update(EntityStorage& entityStorage, float deltaTime)
 			Button* button = entity->GetComponent<Button>();
 			if (button != nullptr && button->active) {
 
-				if (mouse->IsLButtonDown()) {
+				if (mouse->IsLButtonClicked()) {
 					point3d aspectCorrection = point3d();
 					switch (transform2D.ratio)
 					{

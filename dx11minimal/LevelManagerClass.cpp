@@ -253,7 +253,16 @@ bool LevelManagerClass::Initialize()
 	Textures::LoadPNGTexture("LOVE_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\C.png");
 	Textures::LoadPNGTexture("DEAD_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\D.png");
 
+	Textures::LoadPNGTexture("Menu_Backpack", L"..\\dx11minimal\\Resourses\\Textures\\MENU_BACKPACK.png");
+	Textures::LoadPNGTexture("Menu_Exit", L"..\\dx11minimal\\Resourses\\Textures\\MENU_EXIT.png");
+
 	Textures::LoadPNGTexture("Menu_Dressing", L"..\\dx11minimal\\Resourses\\Textures\\MENU_1.png");
+	Textures::LoadPNGTexture("Menu_Drink", L"..\\dx11minimal\\Resourses\\Textures\\MENU_2.png");
+	Textures::LoadPNGTexture("Menu_Plants", L"..\\dx11minimal\\Resourses\\Textures\\MENU_3.png");
+
+	Textures::LoadPNGTexture("Menu_Bar", L"..\\dx11minimal\\Resourses\\Textures\\MENU_BAR.png");
+	Textures::LoadPNGTexture("Menu_Slot", L"..\\dx11minimal\\Resourses\\Textures\\MENU_Slot.png");
+
 
 
 	if (modelsLoadingThread.joinable()) {
@@ -301,14 +310,8 @@ bool LevelManagerClass::Initialize()
 	gravityPoint->radius = 150;
 
 	/////////////////////////
-	
-	CreateSpaceBackground(worldFolder, 1);
-	CreateNebula(worldFolder,2);
 
 	CreateRoom();
-
-	/////////////////////////
-
 	CreateUI();
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
@@ -488,7 +491,7 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 
 	transform = playerSprite->AddComponent<Transform>();
 	transform->scale = point3d(1.5);
-	transform->position = point3d(0, 0.1, 0.75);
+	transform->position = point3d(0, 0.2, 0.75);
 	transform->mRotation = GetMatrixFromDirection(point3d(0, 1, 0).normalized(), point3d(0, 0, 1));
 
 	Sprite* sprite = playerSprite->AddComponent<Sprite>();
@@ -505,6 +508,7 @@ void LevelManagerClass::CreateUI()
 	Rect* rect;
 	Button* button;
 	TextLabel* textLabel;
+	ImageLabel* imageLabel;
 
 	Entity* uiFolder = m_World->entityStorage->CreateEntity("UI");
 
@@ -527,24 +531,6 @@ void LevelManagerClass::CreateUI()
 	//transform2D->position = point3d(-1, 0, 0);
 	rect = entity->AddComponent<Rect>();
 
-	entity = m_World->entityStorage->CreateEntity("StaminaHolder", uiFolder);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(-1, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::XY;
-	transform2D->position = point3d(-0.9f, -0.7f, 0.0f);
-	transform2D->scale = point3d(0.18f, 0.02f, 0.0f);
-	rect = entity->AddComponent<Rect>();
-	rect->color = point3d(0.5f, 0.5f, 0.5f);
-	rect->opacity = 0.5f;
-
-	entity = m_World->entityStorage->CreateEntity("StaminaBar", entity);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(-1, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::XY;
-	//transform2D->position = point3d(-1, 0, 0);
-	rect = entity->AddComponent<Rect>();
-	rect->color = point3d(0.8f, 0.8f, 1);
-
 	entity = m_World->entityStorage->CreateEntity("HealthLabel", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->ratio = ScreenAspectRatio::XY;
@@ -558,230 +544,104 @@ void LevelManagerClass::CreateUI()
 	textLabel->fontScale = 0.40f;
 	textLabel->letterSpacingPx = 1.0f;
 
-	entity = m_World->entityStorage->CreateEntity("StaminaLabel", uiFolder);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->ratio = ScreenAspectRatio::XY;
-	transform2D->position = point3d(-0.9f, -0.74f, 0.0f);
-	textLabel = entity->AddComponent<TextLabel>();
-	textLabel->textW = L"ВЫНОСЛИВОСТЬ";
-	textLabel->fontFamilyW = L"Impact";
-	textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
-	textLabel->fontWeight = 900;
-	textLabel->fontSizePx = 38;
-	textLabel->fontScale = 0.34f;
-	textLabel->letterSpacingPx = 1.0f;
-
-	entity = m_World->entityStorage->CreateEntity("ElementLabel", uiFolder);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->ratio = ScreenAspectRatio::XY;
-	transform2D->position = point3d(0.8f, -0.64f, 0.0f);
-	textLabel = entity->AddComponent<TextLabel>();
-	textLabel->textW = L"НЕТ";
-	textLabel->fontFamilyW = L"Impact";
-	textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
-	textLabel->fontWeight = 900;
-	textLabel->fontSizePx = 44;
-	textLabel->fontScale = 0.40f;
-	textLabel->letterSpacingPx = 1.0f;
-
-
-	// UI Prototypes
-	// Selected weapon - circle
-	entity = m_World->entityStorage->CreateEntity("Rect", uiFolder);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(-1, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::XX;
-	transform2D->position = point3d(-0.9f, -0.85f, 0.0f);
-	transform2D->scale = point3d(0.05f, 0.05f, 0.0f);
-	rect = entity->AddComponent<Rect>();
-	rect->color = point3d(0.75f, 0.0f, 0.0f);
-	//rect->opacity = 0.5f;
-	rect->cornerRadius = 1.f;
-
-	// Charged attack - circle
-	entity = m_World->entityStorage->CreateEntity("Rect", uiFolder);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(-1, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::XX;
-	transform2D->position = point3d(-0.75f, -0.85f, 0.0f);
-	transform2D->scale = point3d(0.05f, 0.05f, 0.0f);
-	rect = entity->AddComponent<Rect>();
-	rect->color = point3d(0.75f, 0.0f, 0.0f);
-	rect->cornerRadius = 1.f;
-
-	// Battle end timer - icon
-	entity = m_World->entityStorage->CreateEntity("Rect", uiFolder);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(-1, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::XX;
-	transform2D->position = point3d(-0.9f, 0.85f, 0.0f);
-	transform2D->scale = point3d(0.05f, 0.05f, 0.0f);
-	rect = entity->AddComponent<Rect>();
-	rect->color = point3d(0.75f, 0.0f, 0.0f);
-
-	// Battle end timer - text
-	entity = m_World->entityStorage->CreateEntity("Rect", uiFolder);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(-1, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::XX;
-	transform2D->position = point3d(-0.75f, 0.85f, 0.0f);
-	transform2D->scale = point3d(0.05f, 0.05f, 0.0f);
-	rect = entity->AddComponent<Rect>();
-	rect->color = point3d(0.75f, 0.0f, 0.0f);
-
-	/*entity = m_World->entityStorage->CreateEntity("BossHealth", uiFolder);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(1, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::YY;
-	transform2D->position = point3d(0.75f, 0.0f, 0.0f);
-	transform2D->scale = point3d(0.2f, 0.2f, 0.0f);
-	ImageLabel* imageLabel = entity->AddComponent<ImageLabel>();
-	imageLabel->textureName = "comicsSpot";
-	imageLabel->color = point3d(0.12, 0.91, 0.62);*/
+	CreateInventoryUI(uiFolder);
 }
 
 
-
-
-void LevelManagerClass::CreateSpaceBackground(Entity* folder, int quality)
+void LevelManagerClass::CreateInventoryUI(Entity* uiFolder)
 {
-	int outerSpace_cnt = 6853 / quality;
-
-	Entity* entity = m_World->entityStorage->CreateEntity("OuterSpace", folder);
-
-	Nebula* nebula = entity->AddComponent<Nebula>();
-	nebula->vShader = 25;
-	nebula->count = outerSpace_cnt;
-	nebula->mode = pMode::point;
-	nebula->isOnBackground = true;
-}
-
-void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
-
 	Entity* entity;
-	Nebula* nebula;
-	Transform* transform;
-	SphereCollider* sphereCollider;
-	MultiDamager* multiDamager;
+	Transform2D* transform2D;
+	Rect* rect;
+	Button* button;
+	TextLabel* textLabel;
+	ImageLabel* imageLabel;
 
-	int pillars_cnt = 3725470 / 2 / quality;
-	int galaxy_cnt = 182361 / quality;
+	// Инвентарь
+	entity = m_World->entityStorage->CreateEntity("InventoryButton", uiFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->ratio = ScreenAspectRatio::YY;
+	transform2D->position = point3d(0.9f, 0.85f, 0.0f);
+	transform2D->scale = point3d(0.1f, 0.1f, 0.0f);
+	imageLabel = entity->AddComponent<ImageLabel>();
+	imageLabel->textureName = "Menu_Backpack";
+	button = entity->AddComponent<Button>();
+	button->opacity = 0;
 
-	Entity* location = m_World->entityStorage->CreateEntity("Zenith location", folder);
+	// Окно инвентаря
+	Entity* inventoryWindow = m_World->entityStorage->CreateEntity("InventoryWindow", uiFolder);
+	transform2D = inventoryWindow->AddComponent<Transform2D>();
+	transform2D->ratio = ScreenAspectRatio::YY;
+	transform2D->position = point3d(0.0f, 0.0f, 0.0f);
+	transform2D->scale = point3d(0.5f, 0.25f, 0.0f);
+	imageLabel = inventoryWindow->AddComponent<ImageLabel>();
+	imageLabel->textureName = "Menu_Bar";
+	inventoryWindow->SetActive(false);
 
-	transform = location->AddComponent<Transform>();
-	transform->position = point3d(0, 50, 0);
+	for (int a = -1; a < 2; a++) {
+		for (int b = -1; b < 2; b += 2) {
+			entity = m_World->entityStorage->CreateEntity("Slot", inventoryWindow);
+			transform2D = entity->AddComponent<Transform2D>();
+			transform2D->position = point3d((float)a * 0.3f, (float)b * 0.5f, 0.0f);
+			transform2D->ratio = ScreenAspectRatio::YY;
+			transform2D->scale = point3d(0.2f, 0.4f, 0.0f);
+			imageLabel = entity->AddComponent<ImageLabel>();
+			imageLabel->textureName = "Menu_Slot";
+			button = entity->AddComponent<Button>();
+			button->opacity = 0;
+		}
+	}
 
-	// first nebula Heal
-	entity = m_World->entityStorage->CreateEntity("INP", location);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-150, 50, 0);
+	// Кнопка закрытия инвентаря
+	entity = m_World->entityStorage->CreateEntity("InventoryExit", inventoryWindow);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(-1.0f, -1.0f, 0.0f);
+	transform2D->position = point3d(0.6f, 1.0f, 0.0f);
+	transform2D->ratio = ScreenAspectRatio::YY;
+	transform2D->scale = point3d(0.13f, 0.25f, 0.0f);
+	imageLabel = entity->AddComponent<ImageLabel>();
+	imageLabel->textureName = "Menu_Exit";
+	button = entity->AddComponent<Button>();
+	button->opacity = 0;
 
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->radius = 30.f;
-	sphereCollider->isTouchable = false;
+	// Напитки
+	entity = m_World->entityStorage->CreateEntity("DrinksButton", inventoryWindow);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.0f, -1.0f, 0.0f);
+	transform2D->position = point3d(0.0f, 1.05f, 0.0f);
+	transform2D->ratio = ScreenAspectRatio::YY;
+	transform2D->scale = point3d(0.24f, 0.5f, 0.0f);
+	imageLabel = entity->AddComponent<ImageLabel>();
+	imageLabel->textureName = "Menu_Drink";
+	button = entity->AddComponent<Button>();
+	button->opacity = 0;
 
-	multiDamager = entity->AddComponent<MultiDamager>();
-	multiDamager->damage = -5;
-	multiDamager->repeats = -1;
-	multiDamager->inverval = 1000;
+	// Удобрения
+	entity = m_World->entityStorage->CreateEntity("DressingButton", inventoryWindow);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.0f, -1.0f, 0.0f);
+	transform2D->position = point3d(-0.3f, 1.05f, 0.0f);
+	transform2D->ratio = ScreenAspectRatio::YY;
+	transform2D->scale = point3d(0.24f, 0.5f, 0.0f);
+	imageLabel = entity->AddComponent<ImageLabel>();
+	imageLabel->textureName = "Menu_Dressing";
+	button = entity->AddComponent<Button>();
+	button->opacity = 0;
 
-	nebula = entity->AddComponent<Nebula>();
-	nebula->vShader = 26;
-	nebula->count = pillars_cnt;
-	nebula->mode = pMode::point;
-	nebula->color = point3d(1, 0.3, 0.5);  // Розоватый
-	nebula->color = point3d(0.2, 0.8, 0.3); // Зеленый
-	nebula->color = point3d(0.3, 0.5, 1.0); // Голубой
-	nebula->scale = 1;
-	nebula->frustumRadius = 40;
-
-	// first nebula Heal Glow
-	entity = m_World->entityStorage->CreateEntity("ING", location);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-150, 50, 0);
-
-
-	nebula = entity->AddComponent<Nebula>();
-	nebula->vShader = 26;
-	nebula->count = pillars_cnt;
-	nebula->skipper = 1394;
-	nebula->mode = pMode::glow;
-	nebula->color = point3d(1, 0.3, 0.5);  // Розоватый
-	nebula->color = point3d(0.2, 0.8, 0.3); // Зеленый
-	nebula->color = point3d(0.3, 0.5, 1.0); // Голубой
-	nebula->scale = 1;
-	nebula->frustumRadius = 40;
-
-
-	// First Nebula DMG
-
-	entity = m_World->entityStorage->CreateEntity("INP1", location);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-450, 50, 0);
-
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->radius = 30.f;
-	sphereCollider->isTouchable = false;
-
-	multiDamager = entity->AddComponent<MultiDamager>();
-	multiDamager->damage = 5;
-	multiDamager->repeats = -1;
-	multiDamager->inverval = 1000;
-
-	nebula = entity->AddComponent<Nebula>();
-	nebula->vShader = 26;
-	nebula->count = pillars_cnt;
-	nebula->mode = pMode::point;
-	nebula->color = point3d(0.8, 0.4, 0.2);
-	nebula->scale = 1;
-	nebula->frustumRadius = 40;
-	nebula->isInteractive = true;
-
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->radius = 40;
-	sphereCollider->isTouchable = false;
-
-	// First Nebula DMG Glow
-	entity = m_World->entityStorage->CreateEntity("ING1", location);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-450, 50, 0);
-
-	nebula = entity->AddComponent<Nebula>();
-	nebula->vShader = 26;
-	nebula->count = pillars_cnt;
-	nebula->skipper = 1394;
-	nebula->mode = pMode::glow;
-	nebula->color = point3d(0.8, 0.4, 0.2);
-	nebula->scale = 1;
-	nebula->frustumRadius = 40;
-
-
-	// Test Nebula
-
-	entity = m_World->entityStorage->CreateEntity("INP1", location);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0, 50, 0);
-
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->radius = 30.f;
-	sphereCollider->isTouchable = false;
-
-	multiDamager = entity->AddComponent<MultiDamager>();
-	multiDamager->damage = 5;
-	multiDamager->repeats = -1;
-	multiDamager->inverval = 1000;
-
-	nebula = entity->AddComponent<Nebula>();
-	nebula->vShader = 29;
-	nebula->count = pillars_cnt;
-	nebula->mode = pMode::point;
-	nebula->color = point3d(0.6, 0.3, 0.1);
-
-	nebula->scale = 1;
-	nebula->frustumRadius = 40;
-
+	// Растения
+	entity = m_World->entityStorage->CreateEntity("PlantsButton", inventoryWindow);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.0f, -1.0f, 0.0f);
+	transform2D->position = point3d(0.3f, 1.05f, 0.0f);
+	transform2D->ratio = ScreenAspectRatio::YY;
+	transform2D->scale = point3d(0.24f, 0.5f, 0.0f);
+	imageLabel = entity->AddComponent<ImageLabel>();
+	imageLabel->textureName = "Menu_Plants";
+	button = entity->AddComponent<Button>();
+	button->opacity = 0;
 }
+
+
 
 
 void LevelManagerClass::CreateRoom()
@@ -803,7 +663,6 @@ void LevelManagerClass::CreateRoom()
 	transform->position = point3d(0, -10, 0);
 	planeCollider = wall->AddComponent<PlaneCollider>();
 	planeCollider->normal = point3d(0, 1, 0);
-	wall->AddComponent<Star>();
 
 	////////////////////////////////
 
@@ -842,14 +701,14 @@ void LevelManagerClass::CreateRoom()
 	wall = m_World->entityStorage->CreateEntity("Wall", room);
 	transform = wall->AddComponent<Transform>();
 	transform->scale = point3d(10, 1, 1);
-	transform->position = point3d(0, 0, 10);
+	transform->position = point3d(0, 0, 8);
 	transform->mRotation = GetMatrixFromDirection(point3d(0, 1, 0).normalized(), point3d(0, 0, 1));
 	planeCollider = wall->AddComponent<PlaneCollider>();
 	planeCollider->normal = point3d(0, 0, -1);
 
 	wallSprite = m_World->entityStorage->CreateEntity("WallSprite", wall);
 	transform = wallSprite->AddComponent<Transform>();
-	transform->position = point3d(0, 1, 0);
+	transform->position = point3d(0, 3, 0);
 	sprite = wallSprite->AddComponent<Sprite>();
 	sprite->textureName = "comicsSpot";
 
