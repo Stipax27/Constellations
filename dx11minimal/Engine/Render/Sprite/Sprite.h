@@ -2,6 +2,7 @@
 #define _SPRITE_H_
 
 #include "../../ECS_Base/component.h"
+#include "../../UI/ImageLabel.h"
 
 
 struct Sprite : Component
@@ -103,6 +104,8 @@ struct ItemsBackPack
 	int Count;
 };
 
+extern std::string itemTextures[16];
+
 struct BackPacks
 {
 	ItemsInBackPack ItemInHand = ItemsInBackPack::EMPTYItem;
@@ -146,6 +149,10 @@ struct BackPacks
 		ItemPick.Name = ItemsInBackPack::EMPTYItem;
 		Plant = 0;
 		Garden = 0;
+
+		EntityStorage* entityStorage = Singleton::GetInstance<EntityStorage>();
+		Entity* handSlot = entityStorage->GetEntityByName("HandSlot");
+		handSlot->GetComponent<ImageLabel>()->textureName = "Menu_Slot";
 	}
 	void AddItem(ItemsInBackPack NameItem, int PlusAddItems)
 	{
@@ -162,13 +169,18 @@ struct BackPacks
 	}
 
 
-	void ChangeItemInHands()
+	void ChangeItemInHands(EntityStorage* entityStorage)
 	{
 		whatChange = false;
 		if (ItemInHand != ItemsInBackPack::EMPTYItem && ChangeCountItem(ListItems[ItemInHand].Count))
 		{
 			ItemPick = ListItems[ItemInHand];
 			ItemActiveted = true;
+
+			Entity* handSlot = entityStorage->GetEntityByName("HandSlot");
+			ImageLabel* imageLabel = handSlot->GetComponent<ImageLabel>();
+
+			imageLabel->textureName = itemTextures[ItemInHand];
 		}
 		else
 		{

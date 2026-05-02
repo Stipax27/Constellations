@@ -9,6 +9,27 @@ using namespace std;
 
 BackPacks PlayerBackPack;
 
+std::string itemTextures[16] = {
+	"MENU_PlantBlue",
+	"MENU_PlantYellow",
+	"MENU_PlantRed",
+	"MENU_PlantPurple",
+	"MENU_PlantOrange",
+	"MENU_PlantCyan",
+
+	"Menu_Water",
+	"Menu_Milk",
+	"Menu_Tea",
+	"Menu_Espresso",
+	"Menu_Americano",
+	"Menu_Raf",
+
+	"MENU_UP1",
+	"MENU_UP2",
+	"MENU_UP3",
+	"MENU_UP4",
+};
+
 PlayerController::PlayerController()
 {
 	playerEntity = 0;
@@ -314,27 +335,7 @@ void PlayerController::ProccessUI()
 				count->SetActive(true);
 				count->GetComponent<TextLabel>()->textW = std::to_wstring(item.Count);
 
-				switch (item.Name)
-				{
-				case ItemsInBackPack::WATER:
-					slot->GetComponent<ImageLabel>()->textureName = "Menu_Water";
-					break;
-				case ItemsInBackPack::MILK:
-					slot->GetComponent<ImageLabel>()->textureName = "Menu_Milk";
-					break;
-				case ItemsInBackPack::TEA:
-					slot->GetComponent<ImageLabel>()->textureName = "Menu_Tea";
-					break;
-				case ItemsInBackPack::ESPRESSO:
-					slot->GetComponent<ImageLabel>()->textureName = "Menu_Espresso";
-					break;
-				case ItemsInBackPack::AMERICANO:
-					slot->GetComponent<ImageLabel>()->textureName = "Menu_Americano";
-					break;
-				case ItemsInBackPack::LAVANDER_RAF:
-					slot->GetComponent<ImageLabel>()->textureName = "Menu_Raf";
-					break;
-				}
+				slot->GetComponent<ImageLabel>()->textureName = itemTextures[i + 6];
 
 				if (slot->GetComponent<Button>()->isClicked) {
 					PlayerBackPack.whatChange = true;
@@ -364,21 +365,7 @@ void PlayerController::ProccessUI()
 				count->SetActive(true);
 				count->GetComponent<TextLabel>()->textW = std::to_wstring(item.Count);
 
-				switch (item.Name)
-				{
-				case ItemsInBackPack::UP1:
-					slot->GetComponent<ImageLabel>()->textureName = "MENU_UP1";
-					break;
-				case ItemsInBackPack::UP2:
-					slot->GetComponent<ImageLabel>()->textureName = "MENU_UP2";
-					break;
-				case ItemsInBackPack::UP3:
-					slot->GetComponent<ImageLabel>()->textureName = "MENU_UP3";
-					break;
-				case ItemsInBackPack::UP4:
-					slot->GetComponent<ImageLabel>()->textureName = "MENU_UP4";
-					break;
-				}
+				slot->GetComponent<ImageLabel>()->textureName = itemTextures[i + 12];
 
 				if (slot->GetComponent<Button>()->isClicked) {
 					PlayerBackPack.whatChange = true;
@@ -401,27 +388,7 @@ void PlayerController::ProccessUI()
 				count->SetActive(true);
 				count->GetComponent<TextLabel>()->textW = std::to_wstring(item.Count);
 
-				switch (item.Name)
-				{
-				case ItemsInBackPack::BLUE:
-					slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantBlue";
-					break;
-				case ItemsInBackPack::YELLOW:
-					slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantYellow";
-					break;
-				case ItemsInBackPack::RED:
-					slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantRed";
-					break;
-				case ItemsInBackPack::PURPLE:
-					slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantPurple";
-					break;
-				case ItemsInBackPack::ORANGE:
-					slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantOrange";
-					break;
-				case ItemsInBackPack::CYAN:
-					slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantCyan";
-					break;
-				}
+				slot->GetComponent<ImageLabel>()->textureName = itemTextures[i];
 
 				if (slot->GetComponent<Button>()->isClicked) {
 					PlayerBackPack.whatChange = true;

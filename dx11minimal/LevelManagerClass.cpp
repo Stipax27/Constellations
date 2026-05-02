@@ -412,6 +412,11 @@ void LevelManagerClass::Frame()
 	playerController->ProccessUI();
 
 
+	if (PlayerBackPack.whatChange == true && PlayerBackPack.PlantInHand == false)
+	{
+		PlayerBackPack.ChangeItemInHands(m_World->entityStorage);
+	}
+
 	int i = 0;
 	while (i < VPlants.size())
 	{
@@ -419,11 +424,6 @@ void LevelManagerClass::Frame()
 		if (com->CheckCreate == true)
 		{
 			i++;
-			if (PlayerBackPack.whatChange == true && PlayerBackPack.PlantInHand == false)
-			{
-				PlayerBackPack.ChangeItemInHands();
-			}
-
 			GameJamMetod(*com);
 		}
 		else
