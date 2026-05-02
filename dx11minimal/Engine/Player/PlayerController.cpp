@@ -48,6 +48,10 @@ void PlayerController::Initialize(Entity* Player)
 	inventoryWindow = ui->GetChildByName("InventoryWindow");
 	inventoryExit = inventoryWindow->GetChildByName("InventoryExit")->GetComponent<Button>();
 
+	drinksButton = inventoryWindow->GetChildByName("DrinksButton")->GetComponent<Button>();
+	dressingButton = inventoryWindow->GetChildByName("DressingButton")->GetComponent<Button>();
+	plantsButton = inventoryWindow->GetChildByName("PlantsButton")->GetComponent<Button>();
+
 	camera = world->m_Camera;
 	mouse = Singleton::GetInstance<MouseClass>();
 	window = Singleton::GetInstance<WindowClass>();
@@ -264,6 +268,24 @@ void PlayerController::ProccessUI()
 	if (inventoryWindow->IsActive()) {
 		if (inventoryExit->isClicked) {
 			inventoryWindow->SetActive(false);
+		}
+
+		if (drinksButton->isClicked) {
+			drinksButton->opacity = 1.0f;
+			dressingButton->opacity = 0.75f;
+			plantsButton->opacity = 0.75f;
+		}
+
+		if (dressingButton->isClicked) {
+			drinksButton->opacity = 0.75f;
+			dressingButton->opacity = 1.0f;
+			plantsButton->opacity = 0.75f;
+		}
+
+		if (plantsButton->isClicked) {
+			drinksButton->opacity = 0.75f;
+			dressingButton->opacity = 0.75f;
+			plantsButton->opacity = 1.0f;
 		}
 	}
 

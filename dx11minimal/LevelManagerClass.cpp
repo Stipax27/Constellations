@@ -393,22 +393,22 @@ void LevelManagerClass::Frame()
 	playerController->ProccessUI();
 
 
-	for (int i = 0; i < VPlants.size(); i++)
+	int i = 0;
+	while (i < VPlants.size())
 	{
 		ComponentPlants* com = VPlants[i]->GetComponent<ComponentPlants>();
 		if (com->CheckCreate == true)
 		{
+			i++;
 			if (PlayerBackPack.whatChange == true && PlayerBackPack.PlantInHand == false)
 			{
 				PlayerBackPack.ChangeItemInHands();
 			}
-			
 
-		GameJamMetod(*com);
+			GameJamMetod(*com);
 		}
 		else
 		{
-			com->Plant->ClearChildren();
 			com->Plant->Destroy();
 			VPlants.erase(VPlants.begin() + i);
 		}
@@ -578,9 +578,23 @@ void LevelManagerClass::CreateInventoryUI(Entity* uiFolder)
 	imageLabel->textureName = "Menu_Bar";
 	inventoryWindow->SetActive(false);
 
+	Entity* drinksList = m_World->entityStorage->CreateEntity("DrinksList", inventoryWindow);
+	transform2D = drinksList->AddComponent<Transform2D>();
+	transform2D->ratio = ScreenAspectRatio::YY;
+
+	Entity* dressingList = m_World->entityStorage->CreateEntity("DressingList", inventoryWindow);
+	transform2D = dressingList->AddComponent<Transform2D>();
+	transform2D->ratio = ScreenAspectRatio::YY;
+	dressingList->SetActive(false);
+
+	Entity* plantsList = m_World->entityStorage->CreateEntity("PlantsList", inventoryWindow);
+	transform2D = plantsList->AddComponent<Transform2D>();
+	transform2D->ratio = ScreenAspectRatio::YY;
+	plantsList->SetActive(false);
+
 	for (int a = -1; a < 2; a++) {
 		for (int b = -1; b < 2; b += 2) {
-			entity = m_World->entityStorage->CreateEntity("Slot", inventoryWindow);
+			entity = m_World->entityStorage->CreateEntity("Slot", drinksList);
 			transform2D = entity->AddComponent<Transform2D>();
 			transform2D->position = point3d((float)a * 0.3f, (float)b * 0.5f, 0.0f);
 			transform2D->ratio = ScreenAspectRatio::YY;
@@ -591,6 +605,34 @@ void LevelManagerClass::CreateInventoryUI(Entity* uiFolder)
 			button->opacity = 0;
 		}
 	}
+
+	/*for (int a = -1; a < 2; a++) {
+		for (int b = -1; b < 2; b += 2) {
+			entity = m_World->entityStorage->CreateEntity("Slot", dressingList);
+			transform2D = entity->AddComponent<Transform2D>();
+			transform2D->position = point3d((float)a * 0.3f, (float)b * 0.5f, 0.0f);
+			transform2D->ratio = ScreenAspectRatio::YY;
+			transform2D->scale = point3d(0.2f, 0.4f, 0.0f);
+			imageLabel = entity->AddComponent<ImageLabel>();
+			imageLabel->textureName = "Menu_Slot";
+			button = entity->AddComponent<Button>();
+			button->opacity = 0;
+		}
+	}
+
+	for (int a = -1; a < 2; a++) {
+		for (int b = -1; b < 2; b += 2) {
+			entity = m_World->entityStorage->CreateEntity("Slot", plantsList);
+			transform2D = entity->AddComponent<Transform2D>();
+			transform2D->position = point3d((float)a * 0.3f, (float)b * 0.5f, 0.0f);
+			transform2D->ratio = ScreenAspectRatio::YY;
+			transform2D->scale = point3d(0.2f, 0.4f, 0.0f);
+			imageLabel = entity->AddComponent<ImageLabel>();
+			imageLabel->textureName = "Menu_Slot";
+			button = entity->AddComponent<Button>();
+			button->opacity = 0;
+		}
+	}*/
 
 	// Кнопка закрытия инвентаря
 	entity = m_World->entityStorage->CreateEntity("InventoryExit", inventoryWindow);

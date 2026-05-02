@@ -87,6 +87,10 @@ private:
 	Entity* inventoryWindow;
 	Button* inventoryExit;
 
+	Button* drinksButton;
+	Button* dressingButton;
+	Button* plantsButton;
+
 	Transform* playerTransform;
 	PhysicBody* playerPhysicBody;
 	PointCloud* playerPointCloud;
