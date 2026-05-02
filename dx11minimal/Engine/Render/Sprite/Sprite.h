@@ -113,26 +113,26 @@ struct BackPacks
 	ItemsBackPack ListItems[16] =
 	{
 		//СЕМЕНА
-		ItemsBackPack(ItemsInBackPack::BLUE,   1), // 0
-		ItemsBackPack(ItemsInBackPack::YELLOW, 1), // 1
-		ItemsBackPack(ItemsInBackPack::RED,    1), // 2
-		ItemsBackPack(ItemsInBackPack::PURPLE, 1), // 3
-		ItemsBackPack(ItemsInBackPack::ORANGE, 1), // 4
-		ItemsBackPack(ItemsInBackPack::CYAN,   1), // 5
+		ItemsBackPack(ItemsInBackPack::BLUE,   5), // 0
+		ItemsBackPack(ItemsInBackPack::YELLOW, 5), // 1
+		ItemsBackPack(ItemsInBackPack::RED,    5), // 2
+		ItemsBackPack(ItemsInBackPack::PURPLE, 5), // 3
+		ItemsBackPack(ItemsInBackPack::ORANGE, 5), // 4
+		ItemsBackPack(ItemsInBackPack::CYAN,   5), // 5
 
 		//НАПИТКИ
-		ItemsBackPack(ItemsInBackPack::WATER,           1), // 6
-		ItemsBackPack(ItemsInBackPack::MILK,            1), // 7
-		ItemsBackPack(ItemsInBackPack::TEA,             1), // 8
-		ItemsBackPack(ItemsInBackPack::ESPRESSO,        1), // 9
-		ItemsBackPack(ItemsInBackPack::AMERICANO,       1), // 10
-		ItemsBackPack(ItemsInBackPack::LAVANDER_RAF,    1), // 11
+		ItemsBackPack(ItemsInBackPack::WATER,           5), // 6
+		ItemsBackPack(ItemsInBackPack::MILK,            5), // 7
+		ItemsBackPack(ItemsInBackPack::TEA,             5), // 8
+		ItemsBackPack(ItemsInBackPack::ESPRESSO,        5), // 9
+		ItemsBackPack(ItemsInBackPack::AMERICANO,       5), // 10
+		ItemsBackPack(ItemsInBackPack::LAVANDER_RAF,    5), // 11
 
 		//УДОБРЕНИЯ
-		ItemsBackPack(ItemsInBackPack::UP1,             1), // 12
-		ItemsBackPack(ItemsInBackPack::UP2,             1), // 13
-		ItemsBackPack(ItemsInBackPack::UP3,             1), // 14
-		ItemsBackPack(ItemsInBackPack::UP4,             1), // 15
+		ItemsBackPack(ItemsInBackPack::UP1,             5), // 12
+		ItemsBackPack(ItemsInBackPack::UP2,             5), // 13
+		ItemsBackPack(ItemsInBackPack::UP3,             5), // 14
+		ItemsBackPack(ItemsInBackPack::UP4,             5), // 15
 	};
 
 	ItemsBackPack ItemPick;

@@ -307,78 +307,115 @@ void PlayerController::ProccessUI()
 		std::vector<Entity*> children = drinksList->GetChildren();
 		for (int i = 0; i < children.size(); i++) {
 			Entity* slot = children[i];
+			Entity* count = slot->GetChildByName("Count");
 			ItemsBackPack& item = PlayerBackPack.ListItems[i + 6];
 
-			switch (item.Name)
-			{
-			case ItemsInBackPack::WATER:
-				slot->GetComponent<ImageLabel>()->textureName = "Menu_Water";
-				break;
-			case ItemsInBackPack::MILK:
-				slot->GetComponent<ImageLabel>()->textureName = "Menu_Milk";
-				break;
-			case ItemsInBackPack::TEA:
-				slot->GetComponent<ImageLabel>()->textureName = "Menu_Tea";
-				break;
-			case ItemsInBackPack::ESPRESSO:
-				slot->GetComponent<ImageLabel>()->textureName = "Menu_Espresso";
-				break;
-			case ItemsInBackPack::AMERICANO:
-				slot->GetComponent<ImageLabel>()->textureName = "Menu_Americano";
-				break;
-			case ItemsInBackPack::LAVANDER_RAF:
-				slot->GetComponent<ImageLabel>()->textureName = "Menu_Raf";
-				break;
+			if (item.Count > 0) {
+				count->SetActive(true);
+				count->GetComponent<TextLabel>()->textW = std::to_wstring(item.Count);
+
+				switch (item.Name)
+				{
+				case ItemsInBackPack::WATER:
+					slot->GetComponent<ImageLabel>()->textureName = "Menu_Water";
+					break;
+				case ItemsInBackPack::MILK:
+					slot->GetComponent<ImageLabel>()->textureName = "Menu_Milk";
+					break;
+				case ItemsInBackPack::TEA:
+					slot->GetComponent<ImageLabel>()->textureName = "Menu_Tea";
+					break;
+				case ItemsInBackPack::ESPRESSO:
+					slot->GetComponent<ImageLabel>()->textureName = "Menu_Espresso";
+					break;
+				case ItemsInBackPack::AMERICANO:
+					slot->GetComponent<ImageLabel>()->textureName = "Menu_Americano";
+					break;
+				case ItemsInBackPack::LAVANDER_RAF:
+					slot->GetComponent<ImageLabel>()->textureName = "Menu_Raf";
+					break;
+				}
+			}
+			else {
+				count->SetActive(false);
+				slot->GetComponent<ImageLabel>()->textureName = "Menu_Slot";
 			}
 		}
 
 		children = dressingList->GetChildren();
-		for (int i = 0; i < children.size() - 2; i++) {
+		for (int i = 0; i < children.size(); i++) {
 			Entity* slot = children[i];
+			Entity* count = slot->GetChildByName("Count");
+
+			if (i + 12 >= std::size(PlayerBackPack.ListItems)) {
+				count->SetActive(false);
+				slot->GetComponent<ImageLabel>()->textureName = "Menu_Slot";
+				continue;
+			}
+
 			ItemsBackPack& item = PlayerBackPack.ListItems[i + 12];
 
-			switch (item.Name)
-			{
-			case ItemsInBackPack::UP1:
-				slot->GetComponent<ImageLabel>()->textureName = "MENU_UP1";
-				break;
-			case ItemsInBackPack::UP2:
-				slot->GetComponent<ImageLabel>()->textureName = "MENU_UP2";
-				break;
-			case ItemsInBackPack::UP3:
-				slot->GetComponent<ImageLabel>()->textureName = "MENU_UP3";
-				break;
-			case ItemsInBackPack::UP4:
-				slot->GetComponent<ImageLabel>()->textureName = "MENU_UP4";
-				break;
+			if (item.Count > 0) {
+				count->SetActive(true);
+				count->GetComponent<TextLabel>()->textW = std::to_wstring(item.Count);
+
+				switch (item.Name)
+				{
+				case ItemsInBackPack::UP1:
+					slot->GetComponent<ImageLabel>()->textureName = "MENU_UP1";
+					break;
+				case ItemsInBackPack::UP2:
+					slot->GetComponent<ImageLabel>()->textureName = "MENU_UP2";
+					break;
+				case ItemsInBackPack::UP3:
+					slot->GetComponent<ImageLabel>()->textureName = "MENU_UP3";
+					break;
+				case ItemsInBackPack::UP4:
+					slot->GetComponent<ImageLabel>()->textureName = "MENU_UP4";
+					break;
+				}
+			}
+			else {
+				count->SetActive(false);
+				slot->GetComponent<ImageLabel>()->textureName = "Menu_Slot";
 			}
 		}
 
 		children = plantsList->GetChildren();
 		for (int i = 0; i < children.size(); i++) {
 			Entity* slot = children[i];
+			Entity* count = slot->GetChildByName("Count");
 			ItemsBackPack& item = PlayerBackPack.ListItems[i];
+			
+			if (item.Count > 0) {
+				count->SetActive(true);
+				count->GetComponent<TextLabel>()->textW = std::to_wstring(item.Count);
 
-			switch (item.Name)
-			{
-			case ItemsInBackPack::BLUE:
-				slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantBlue";
-				break;
-			case ItemsInBackPack::YELLOW:
-				slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantYellow";
-				break;
-			case ItemsInBackPack::RED:
-				slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantRed";
-				break;
-			case ItemsInBackPack::PURPLE:
-				slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantPurple";
-				break;
-			case ItemsInBackPack::ORANGE:
-				slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantOrange";
-				break;
-			case ItemsInBackPack::CYAN:
-				slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantCyan";
-				break;
+				switch (item.Name)
+				{
+				case ItemsInBackPack::BLUE:
+					slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantBlue";
+					break;
+				case ItemsInBackPack::YELLOW:
+					slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantYellow";
+					break;
+				case ItemsInBackPack::RED:
+					slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantRed";
+					break;
+				case ItemsInBackPack::PURPLE:
+					slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantPurple";
+					break;
+				case ItemsInBackPack::ORANGE:
+					slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantOrange";
+					break;
+				case ItemsInBackPack::CYAN:
+					slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantCyan";
+					break;
+				}
+			}
+			else {
+				count->SetActive(false);
+				slot->GetComponent<ImageLabel>()->textureName = "Menu_Slot";
 			}
 		}
 	}

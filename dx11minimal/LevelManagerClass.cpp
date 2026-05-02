@@ -622,6 +622,20 @@ void LevelManagerClass::CreateInventoryUI(Entity* uiFolder)
 			imageLabel->textureName = "Menu_Slot";
 			button = entity->AddComponent<Button>();
 			button->opacity = 0;
+
+			entity = m_World->entityStorage->CreateEntity("Count", entity);
+			transform2D = entity->AddComponent<Transform2D>();
+			transform2D->ratio = ScreenAspectRatio::YY;
+			transform2D->position = point3d(0.35, -0.5, 0);
+			TextLabel* textLabel = entity->AddComponent<TextLabel>();
+			textLabel->textW = L"0";
+			textLabel->fontFamilyW = L"Impact";
+			textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+			textLabel->fontWeight = 900;
+			textLabel->fontSizePx = 44;
+			textLabel->fontScale = 0.5f;
+			textLabel->letterSpacingPx = 1.0f;
+			textLabel->color = point3d();
 		}
 	}
 	
@@ -636,6 +650,20 @@ void LevelManagerClass::CreateInventoryUI(Entity* uiFolder)
 			imageLabel->textureName = "Menu_Slot";
 			button = entity->AddComponent<Button>();
 			button->opacity = 0;
+
+			entity = m_World->entityStorage->CreateEntity("Count", entity);
+			transform2D = entity->AddComponent<Transform2D>();
+			transform2D->ratio = ScreenAspectRatio::YY;
+			transform2D->position = point3d(0.35, -0.5, 0);
+			TextLabel* textLabel = entity->AddComponent<TextLabel>();
+			textLabel->textW = L"0";
+			textLabel->fontFamilyW = L"Impact";
+			textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+			textLabel->fontWeight = 900;
+			textLabel->fontSizePx = 44;
+			textLabel->fontScale = 0.5f;
+			textLabel->letterSpacingPx = 1.0f;
+			textLabel->color = point3d();
 		}
 	}
 
@@ -650,6 +678,20 @@ void LevelManagerClass::CreateInventoryUI(Entity* uiFolder)
 			imageLabel->textureName = "Menu_Slot";
 			button = entity->AddComponent<Button>();
 			button->opacity = 0;
+
+			entity = m_World->entityStorage->CreateEntity("Count", entity);
+			transform2D = entity->AddComponent<Transform2D>();
+			transform2D->ratio = ScreenAspectRatio::YY;
+			transform2D->position = point3d(0.35, -0.5, 0);
+			TextLabel* textLabel = entity->AddComponent<TextLabel>();
+			textLabel->textW = L"0";
+			textLabel->fontFamilyW = L"Impact";
+			textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+			textLabel->fontWeight = 900;
+			textLabel->fontSizePx = 44;
+			textLabel->fontScale = 0.5f;
+			textLabel->letterSpacingPx = 1.0f;
+			textLabel->color = point3d();
 		}
 	}
 
