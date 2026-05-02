@@ -130,10 +130,6 @@ void PlayerController::ProcessInput()
 	}
 
 
-
-
-
-
 	if (input::IsKeyPressed('1'))
 	{	// берет уражай UP1
 		PlayerBackPack.whatChange = true;
@@ -154,23 +150,6 @@ void PlayerController::ProcessInput()
 		PlayerBackPack.whatChange = true;
 		PlayerBackPack.ItemInHand = ItemsInBackPack::UP4;
 	}
-
-	/*if (input::IsKeyPressed('G')) {
-		abilities->Grab();
-	}*/
-
-	if (input::IsKeyPressed('P')) {
-		int i = (int)abilities->element;
-		i = i < 4 ? i + 1 : 0;
-		abilities->element = (Elements)i;
-	}
-
-	if (input::IsKeyPressed('O')) {
-		int i = (int)abilities->element;
-		i = i > 0 ? i - 1 : 4;
-		abilities->element = (Elements)i;
-	}
-
 }
 		
 
