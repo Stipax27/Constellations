@@ -76,6 +76,12 @@ struct ComponentPlants : Component
 	std::string TexturePlant;
 	std::string TextureEmogy;
 
+	const float BUFF_DRING = 1;
+	const float BUFF_TOGECHER = 0.2;
+
+	float BAF_D = 0.0;
+	float BAF_T = 0.0;
+
 	//Plant property
 	const char* NameChar;
 	float LoyaltyScale = 1000;
@@ -90,6 +96,7 @@ struct ComponentPlants : Component
 	Entity* UiLine;
 	Entity* Emoji;
 	Entity* Garden;
+	Entity* BuffInfo;
 };
 // -- COMPONENTS GAMEJAM -- //
 
@@ -119,12 +126,12 @@ struct BackPacks
 		ItemsBackPack(ItemsInBackPack::CYAN,   1), // 5
 
 		//НАПИТКИ
-		ItemsBackPack(ItemsInBackPack::WATER,           1), // 6
+		ItemsBackPack(ItemsInBackPack::WATER,           4), // 6
 		ItemsBackPack(ItemsInBackPack::MILK,            1), // 7
 		ItemsBackPack(ItemsInBackPack::TEA,             1), // 8
 		ItemsBackPack(ItemsInBackPack::ESPRESSO,        1), // 9
 		ItemsBackPack(ItemsInBackPack::AMERICANO,       1), // 10
-		ItemsBackPack(ItemsInBackPack::LAVANDER_RAF,    1), // 11
+		ItemsBackPack(ItemsInBackPack::LAVANDER_RAF,    4), // 11
 
 		//УДОБРЕНИЯ
 		ItemsBackPack(ItemsInBackPack::UP1,             1), // 12
@@ -177,70 +184,101 @@ struct BackPacks
 			ListItems[ItemInHand].Count--;
 			switch (ItemPick.Name)
 			{
-				// посадка ростений
-			case (ItemsInBackPack::BLUE):
-			{
-
-				break;
-			}
-			case (ItemsInBackPack::YELLOW):
-			{
-
-				break;
-			}
-			case (ItemsInBackPack::RED):
-			{
-
-				break;
-			}
-			case (ItemsInBackPack::PURPLE):
-			{
-
-				break;
-			}
-			case (ItemsInBackPack::ORANGE):
-			{
-
-				break;
-			}
-			case (ItemsInBackPack::CYAN):
-			{
-
-				break;
-			}
-			// посадка ростений
-
 			// полив ростений
 			case (ItemsInBackPack::WATER):
 			{
-
+				if (com->TypeColorPlant == TypePlant::RED_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::YELLOW_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::BLUE_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::PURPLE_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::ORANGE_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::CYAN_P)
+					com->BAF_D += com->BUFF_DRING;
 				break;
 			}
 			case (ItemsInBackPack::MILK):
 			{
-
+				if (com->TypeColorPlant == TypePlant::RED_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::YELLOW_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::BLUE_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::PURPLE_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::ORANGE_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::CYAN_P)
+					com->BAF_D += com->BUFF_DRING;
 				break;
 			}
 			case (ItemsInBackPack::TEA):
 			{
-
+				if (com->TypeColorPlant == TypePlant::RED_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::YELLOW_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::BLUE_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::PURPLE_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::ORANGE_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::CYAN_P)
+					com->BAF_D -= com->BUFF_DRING;
 				break;
 			}
 			case (ItemsInBackPack::ESPRESSO):
 			{
-
+				if (com->TypeColorPlant == TypePlant::RED_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::YELLOW_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::BLUE_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::PURPLE_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::ORANGE_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::CYAN_P)
+					com->BAF_D -= com->BUFF_DRING;
 				break;
 			}
 			case (ItemsInBackPack::AMERICANO):
 			{
-
-
+				if (com->TypeColorPlant == TypePlant::RED_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::YELLOW_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::BLUE_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::PURPLE_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::ORANGE_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::CYAN_P)
+					com->BAF_D += com->BUFF_DRING;
 				break;
 			}
 			case (ItemsInBackPack::LAVANDER_RAF):
 			{
-
-
+				if (com->TypeColorPlant == TypePlant::RED_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::YELLOW_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::BLUE_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::PURPLE_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::ORANGE_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::CYAN_P)
+					com->BAF_D += com->BUFF_DRING;
 				break;
 			}
 			// полив ростений

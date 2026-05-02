@@ -136,25 +136,28 @@ void PlayerController::ProcessInput()
 
 	if (input::IsKeyPressed('1'))
 	{
-		PlayerBackPack.ItemInHand = ItemsInBackPack::UP4;
+		PlayerBackPack.ItemInHand = ItemsInBackPack::RED;
 	}
 	if (input::IsKeyPressed('2'))
 	{
-		PlayerBackPack.ItemInHand = ItemsInBackPack::YELLOW;
+		PlayerBackPack.ItemInHand = ItemsInBackPack::WATER;
 	}
 	if (input::IsKeyPressed('3'))
 	{
-		PlayerBackPack.ItemInHand = ItemsInBackPack::RED;
+		PlayerBackPack.ItemInHand = ItemsInBackPack::WATER;
 	}
 	if (input::IsKeyPressed('4'))
 	{
-		PlayerBackPack.ItemInHand = ItemsInBackPack::PURPLE;
+		PlayerBackPack.ItemInHand = ItemsInBackPack::WATER;
 	}
-	if (input::IsKeyPressed('5')) // reset item
+	if (input::IsKeyPressed('5'))
+	{
+		PlayerBackPack.ItemInHand = ItemsInBackPack::WATER;
+	}
+	if (input::IsKeyPressed('6')) // reset item
 	{
 		PlayerBackPack.ResetItem();
 	}
-
 
 
 
@@ -338,6 +341,23 @@ Entity* CreateEmogy(Entity* Plant, EntityStorage* entityStorage)
 	return PlantEmoji;
 }
 
+Entity* CreateBuffInfo(Entity* Plant, EntityStorage* entityStorage)
+{
+	Entity* Plantbuff;
+	Transform* transformbuff;
+	Sprite* spriteLinebuff;
+
+	Plantbuff = entityStorage->CreateEntity("PlantBuff", Plant);
+
+	transformbuff = Plantbuff->AddComponent<Transform>();
+	transformbuff->position = point3d(0.8, 1.3, 0.5);
+	transformbuff->scale = point3d(0.2, 0.2, 0.1);
+	spriteLinebuff = Plantbuff->AddComponent<Sprite>();
+	spriteLinebuff->textureName = "BUFF_PLUS1";
+
+	return Plantbuff;
+}
+
 void CreatePlant(Entity* Garden, EntityStorage* entityStorage , int Color)
 {
 	Entity* Plant;
@@ -361,10 +381,10 @@ void CreatePlant(Entity* Garden, EntityStorage* entityStorage , int Color)
 	PropPlant->TypeColorPlant = (TypePlant)Color;
 	PropPlant->UiLine = CreateUIPlant(Plant, entityStorage);
 	PropPlant->Emoji = CreateEmogy(Plant, entityStorage);
+	PropPlant->BuffInfo = CreateBuffInfo(Plant, entityStorage);
 	PropPlant->Garden = Garden;
 	PlayerBackPack.VPlants.push_back(Plant);
 }
-
 
 void PlayerController::ProccessUI()
 {

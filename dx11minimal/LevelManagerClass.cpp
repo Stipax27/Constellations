@@ -115,10 +115,16 @@ void GameJamMetod(ComponentPlants& PropPlant)
 {
 	if(PropPlant.Plant->GetParent() != 0)
 	{ 
-	float sec = 1;
+	const float summBuf = PropPlant.BAF_D + PropPlant.BAF_T;
+
+	float sec = 5 + summBuf;
+
+	if (sec < 0.1)
+		sec = 0.1;
+
 	PropPlant.LoyaltyScale -= 1. / sec;
-	float Scale = ((120 * PropPlant.LoyaltyScale) / 1000.);
-	float scaleS = Scale / 120;
+	float Scale = ((800 * PropPlant.LoyaltyScale) / 1000.);
+	float scaleS = Scale / 800;
 	string str;
 	point3d* scaleUI = &PropPlant.UiLine->GetComponent<Transform>()->scale;
 
@@ -143,6 +149,16 @@ void GameJamMetod(ComponentPlants& PropPlant)
 		PropPlant.Status = StatusPlant::DEAD;
 		PropPlant.UiLine->GetComponent<Sprite>()->textureName = "ScaleLineR";
 	}
+	
+
+	if (summBuf >= 0 && summBuf < 3)
+		PropPlant.BuffInfo->GetComponent<Sprite>()->textureName = "BUFF_PLUS1";
+	else if(summBuf >= 3)
+		PropPlant.BuffInfo->GetComponent<Sprite>()->textureName = "BUFF_PLUS2";
+	else if(summBuf < 0 && summBuf >= -3)
+		PropPlant.BuffInfo->GetComponent<Sprite>()->textureName = "BUFF_MINUS1";
+	else if (summBuf < 3)
+		PropPlant.BuffInfo->GetComponent<Sprite>()->textureName = "BUFF_MINUS2";
 
 
 	if (GetAsyncKeyState('E'))
@@ -261,6 +277,15 @@ bool LevelManagerClass::Initialize()
 	Textures::LoadPNGTexture("DEAD_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\D.png");
 
 	Textures::LoadPNGTexture("Menu_Dressing", L"..\\dx11minimal\\Resourses\\Textures\\MENU_1.png");
+
+	Textures::LoadPNGTexture("BUFF_MINUS1", L"..\\dx11minimal\\Resourses\\Textures\\BUFF_MINUS1.png");
+	Textures::LoadPNGTexture("BUFF_MINUS2", L"..\\dx11minimal\\Resourses\\Textures\\BUFF_MINUS2.png");
+	Textures::LoadPNGTexture("BUFF_PLUS1", L"..\\dx11minimal\\Resourses\\Textures\\BUFF_PLUS1.png");
+	Textures::LoadPNGTexture("BUFF_PLUS2", L"..\\dx11minimal\\Resourses\\Textures\\BUFF_PLUS2.png");
+
+
+
+
 
 
 	if (modelsLoadingThread.joinable()) {
