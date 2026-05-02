@@ -189,80 +189,10 @@ bool LevelManagerClass::Initialize()
 	return true;
 }
 
-
-
-// __ COMPONENTS GAMEJAM __ //
-enum StatusPlant {
-	GOOD,
-	NORMAL,
-	BAD,
-	DEAD,
-};
-
-enum Beverage {
-	WATER,
-	MILK,
-	TEA,
-	ESPRESSO,
-	AMERICANO,
-	LAVANDER_RAF,
-};
-
-enum Mutation
-{
-	SEED,
-	PLANT,
-	KIND_PLANT,
-	EVIL_PLANT,
-	KILLER_PLANT,
-};
-
-enum TypePlant
-{
-	BLUE,
-	YELLOW,
-	RED,
-	PURPLE,
-	ORANGE,
-	CYAN,
-};
-
-struct ComponentPlants
-{
-	ComponentPlants() = default;
-
-	//base property
-	float x, y, Width, Height;
-	const char* Name = "object";
-	int Number = 0;
-	bool CheckCreate = true;
-	bool Click = false;
-	bool Active = false;
-	string* TextureLine;
-	string* TexturePlant;
-	string* TextureEmogy;
-
-	//Plant property
-	const char* NameChar;
-	float LoyaltyScale = 1000;
-	float TimeGaine = 300;
-	TypePlant TypeColorPlant = TypePlant::BLUE;
-	StatusPlant Status = StatusPlant::GOOD;
-	Beverage LoveBeverage = Beverage::WATER;
-	Beverage HateBeverage = Beverage::MILK;
-	Mutation GainPlant = Mutation::SEED;
-
-	Entity* Plant;
-	Entity* UiLine;
-	Entity* Emoji;
-};
-// -- COMPONENTS GAMEJAM -- //
-
-
-vector<ComponentPlants> VPlants;
+vector<Entity*> VPlants;
 
 // __METODS GAMEJAM__ //
-void Metamorf(TypePlant ColorPlant, Mutation Gain, string& TexturePlant)
+void Metamorf(TypePlant ColorPlant, Mutation Gain, std::string& TexturePlant)
 {
 	int PathSeed;
 
@@ -271,18 +201,33 @@ void Metamorf(TypePlant ColorPlant, Mutation Gain, string& TexturePlant)
 	string s = to_string(PathSeed);
 
 	if (Gain == Mutation::SEED)
-		TexturePlant = "Plant" + s + "SEED";
+	{
+		s = "Plant" + to_string(PathSeed) + "SEED";
+		TexturePlant = s;
+	}
 	else if (Gain == Mutation::PLANT)
-		TexturePlant = "Plant" + s + "NORMAL";
+	{
+		s = "Plant" + to_string(PathSeed) + "NORMAL";
+		TexturePlant = s;
+	}
 	else if (Gain == Mutation::KIND_PLANT)
-		TexturePlant = "Plant" + s + "KIND";
+	{
+		s = "Plant" + to_string(PathSeed) + "KIND";
+		TexturePlant = s;
+	}
 	else if (Gain == Mutation::EVIL_PLANT)
-		TexturePlant = "Plant" + s + "EVIL";
+	{
+		s = "Plant" + to_string(PathSeed) + "EVIL";
+		TexturePlant = s;
+	}
 	else if (Gain == Mutation::KILLER_PLANT)
-		TexturePlant = "Plant" + s + "KILER";
+	{
+		s = "Plant" + to_string(PathSeed) + "KILER";
+		TexturePlant = s;
+	}
 
 }
-void StatusMood(float scaleS, StatusPlant Status, string& TextureEmogy)
+void StatusMood(float scaleS, StatusPlant Status, std::string& TextureEmogy)
 {
 	if (Status == StatusPlant::GOOD)
 	{
@@ -360,15 +305,16 @@ void GameJamMetod(ComponentPlants& PropPlant)
 
 
 
-	StatusMood(scaleS, PropPlant.Status, PropPlant.Emoji->GetComponent<Sprite>()->textureName);
+	StatusMood(scaleS, PropPlant.Status, PropPlant.TextureEmogy);
 	MutationPlantation(PropPlant, scaleS);
-	Metamorf(PropPlant.TypeColorPlant, PropPlant.GainPlant, *PropPlant.TexturePlant);
+	Metamorf(PropPlant.TypeColorPlant, PropPlant.GainPlant, PropPlant.TexturePlant);
+	PropPlant.Plant->GetComponent<Sprite>()->textureName = PropPlant.TexturePlant;
+	PropPlant.Emoji->GetComponent<Sprite>()->textureName = PropPlant.TextureEmogy;
 
 	if (scaleS < 0.01)
 	{
-
 		PropPlant.CheckCreate = false;
-		PropPlant.Plant->Destroy();
+		return;
 	}
 }
 // __METODS GAMEJAM__ //
@@ -441,7 +387,15 @@ void LevelManagerClass::Frame()
 
 	for (int i = 0; i < VPlants.size(); i++)
 	{
-		GameJamMetod(VPlants[i]);
+		ComponentPlants* com = VPlants[i]->GetComponent<ComponentPlants>();
+		if (com->CheckCreate == true)
+		GameJamMetod(*com);
+		else
+		{
+			com->Plant->ClearChildren();
+			com->Plant->Destroy();
+			VPlants.erase(VPlants.begin() + i);
+		}
 	}
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
@@ -982,7 +936,7 @@ void LevelManagerClass::CreatePlant(Entity* Garden)
 	Entity* Plant;
 	Transform* transform;
 	Sprite* spritePlant;
-	ComponentPlants PropPlant = ComponentPlants();
+	ComponentPlants* PropPlant;
 
 	Plant = m_World->entityStorage->CreateEntity("Plant", Garden);
 
@@ -990,24 +944,25 @@ void LevelManagerClass::CreatePlant(Entity* Garden)
 	transform->position = point3d(0, 0.1, 0.1);
 
 	spritePlant = Plant->AddComponent<Sprite>();
+	PropPlant = Plant->AddComponent<ComponentPlants>();
 
 	spritePlant->textureName = "Plant1KILER";
 
+	PropPlant->TexturePlant = spritePlant->textureName;
+	PropPlant->Plant = Plant;
 
-	PropPlant.TexturePlant = &spritePlant->textureName;
-	PropPlant.Plant = Plant;
 
-
-	PropPlant.UiLine = CreateUIPlant(Plant);
-	PropPlant.Emoji = CreateEmogy(Plant);
-	VPlants.push_back(PropPlant);
+	PropPlant->UiLine = CreateUIPlant(Plant);
+	PropPlant->Emoji = CreateEmogy(Plant);
+	PropPlant->Garden = Garden;
+	VPlants.push_back(Plant);
 }
 
-//Textures::LoadPNGTexture("Plant6KILER", L"..\\dx11minimal\\Resourses\\Textures\\G\\A.png");
-//Textures::LoadPNGTexture("Plant6KIND", L"..\\dx11minimal\\Resourses\\Textures\\G\\B.png");
-//Textures::LoadPNGTexture("Plant6SEED", L"..\\dx11minimal\\Resourses\\Textures\\G\\C.png");
-//Textures::LoadPNGTexture("Plant6NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\G\\D.png");
-//Textures::LoadPNGTexture("Plant6EVIL", L"..\\dx11minimal\\Resourses\\Textures\\G\\E.png");
+//Textures::LoadPNGTexture("Plant1KILER", L"..\\dx11minimal\\Resourses\\Textures\\G\\A.png");
+//Textures::LoadPNGTexture("Plant1KIND", L"..\\dx11minimal\\Resourses\\Textures\\G\\B.png");
+//Textures::LoadPNGTexture("Plant1SEED", L"..\\dx11minimal\\Resourses\\Textures\\G\\C.png");
+//Textures::LoadPNGTexture("Plant1NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\G\\D.png");
+//Textures::LoadPNGTexture("Plant1EVIL", L"..\\dx11minimal\\Resourses\\Textures\\G\\E.png");
 //
 //Textures::LoadPNGTexture("ScaleBar", L"..\\dx11minimal\\Resourses\\Textures\\I\\A.png");
 //Textures::LoadPNGTexture("ScaleLineG", L"..\\dx11minimal\\Resourses\\Textures\\I\\B.png");

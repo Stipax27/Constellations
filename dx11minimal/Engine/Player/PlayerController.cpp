@@ -223,7 +223,22 @@ void PlayerController::ProcessMouse()
 				mouse->particles.push_back(particle);
 			}
 
-			ClickOnObject();
+			ClickOnObjectL();
+		}
+		if (mouse->IsRButtonClicked() && mouse->visible)
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				MouseParticle particle = MouseParticle();
+				particle.pos = mouse->pos;
+				particle.angle = (float)getRandom(0, 100) / 100.0f * PI * 2.0f;
+				particle.lifetime = getRandom(500, 1500);
+				particle.startTime = timer::currentTime;
+				
+				mouse->particles.push_back(particle);
+			}
+
+			ClickOnObjectR();
 		}
 		break;
 	}
@@ -244,6 +259,9 @@ void PlayerController::ProcessMouse()
 
 	target = result.hit ? result.entity : nullptr;
 }
+
+
+
 
 
 void PlayerController::ProccessUI()
@@ -269,9 +287,7 @@ void PlayerController::ProccessUI()
 	}
 }
 
-
-
-void PlayerController::ClickOnObject()
+void PlayerController::ClickOnObjectL()
 {
 	if (target != nullptr) {
 		Transform targetTransform = GetWorldTransform(target);
@@ -280,10 +296,38 @@ void PlayerController::ClickOnObject()
 		if ((palyerTransform.position - targetTransform.position).magnitude() > INTERACT_DISTANCE)
 			return;
 
-		
 		Sprite* sprite = target->GetComponent<Sprite>();
+
 		if (sprite) {
-			sprite->color = point3d(1, 0, 0);
+			Entity* Plant = target->GetChildByName("Plant");
+			if (Plant != NULL)
+			{
+				//Plant->GetComponent<Sprite>()->color = point3d(1, 0, 0);
+				/*Plant->GetComponent<Sprite>()->active = false;*/
+				ComponentPlants* com = Plant->GetComponent<ComponentPlants>();
+				com->LoyaltyScale += 100;
+			}
+		}
+	}
+}
+void PlayerController::ClickOnObjectR()
+{
+	if (target != nullptr) {
+		Transform targetTransform = GetWorldTransform(target);
+		Transform palyerTransform = GetWorldTransform(playerEntity);
+
+		if ((palyerTransform.position - targetTransform.position).magnitude() > INTERACT_DISTANCE)
+			return;
+
+		Sprite* sprite = target->GetComponent<Sprite>();
+
+		if (sprite) {
+			Entity* Plant = target->GetChildByName("Plant");
+			if (Plant != NULL)
+			{
+			ComponentPlants* com = Plant->GetComponent<ComponentPlants>();
+			com->LoyaltyScale -= 100;
+			}
 		}
 
 

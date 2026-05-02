@@ -101,7 +101,8 @@ private:
 	bool lockMovementOnTarget;
 
 private:
-	void ClickOnObject();
+	void ClickOnObjectL();
+	void ClickOnObjectR();
 };
 
 #endif
