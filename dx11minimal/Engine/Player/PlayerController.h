@@ -24,6 +24,7 @@
 #include "../Render/PointCloud.h"
 #include "../Render/Sprite/Sprite.h"
 #include "../UI/Button.h"
+#include "../UI/ImageLabel.h"
 #include "../Compute/Combat/Health.h"
 #include "CameraTarget.h"
 
@@ -87,9 +88,13 @@ private:
 	Entity* inventoryWindow;
 	Button* inventoryExit;
 
-	Button* drinksButton;
-	Button* dressingButton;
-	Button* plantsButton;
+	Entity* drinksButton;
+	Entity* dressingButton;
+	Entity* plantsButton;
+
+	Entity* drinksList;
+	Entity* dressingList;
+	Entity* plantsList;
 
 	Transform* playerTransform;
 	PhysicBody* playerPhysicBody;

@@ -48,9 +48,13 @@ void PlayerController::Initialize(Entity* Player)
 	inventoryWindow = ui->GetChildByName("InventoryWindow");
 	inventoryExit = inventoryWindow->GetChildByName("InventoryExit")->GetComponent<Button>();
 
-	drinksButton = inventoryWindow->GetChildByName("DrinksButton")->GetComponent<Button>();
-	dressingButton = inventoryWindow->GetChildByName("DressingButton")->GetComponent<Button>();
-	plantsButton = inventoryWindow->GetChildByName("PlantsButton")->GetComponent<Button>();
+	drinksButton = inventoryWindow->GetChildByName("DrinksButton");
+	dressingButton = inventoryWindow->GetChildByName("DressingButton");
+	plantsButton = inventoryWindow->GetChildByName("PlantsButton");
+
+	drinksList = inventoryWindow->GetChildByName("DrinksList");
+	dressingList = inventoryWindow->GetChildByName("DressingList");
+	plantsList = inventoryWindow->GetChildByName("PlantsList");
 
 	camera = world->m_Camera;
 	mouse = Singleton::GetInstance<MouseClass>();
@@ -270,22 +274,112 @@ void PlayerController::ProccessUI()
 			inventoryWindow->SetActive(false);
 		}
 
-		if (drinksButton->isClicked) {
-			drinksButton->opacity = 1.0f;
-			dressingButton->opacity = 0.75f;
-			plantsButton->opacity = 0.75f;
+		if (drinksButton->GetComponent<Button>()->isClicked) {
+			drinksButton->GetComponent<ImageLabel>()->opacity = 1.0f;
+			dressingButton->GetComponent<ImageLabel>()->opacity = 0.65f;
+			plantsButton->GetComponent<ImageLabel>()->opacity = 0.65f;
+
+			drinksList->SetActive(true);
+			dressingList->SetActive(false);
+			plantsList->SetActive(false);
 		}
 
-		if (dressingButton->isClicked) {
-			drinksButton->opacity = 0.75f;
-			dressingButton->opacity = 1.0f;
-			plantsButton->opacity = 0.75f;
+		if (dressingButton->GetComponent<Button>()->isClicked) {
+			drinksButton->GetComponent<ImageLabel>()->opacity = 0.65f;
+			dressingButton->GetComponent<ImageLabel>()->opacity = 1.0f;
+			plantsButton->GetComponent<ImageLabel>()->opacity = 0.65f;
+
+			drinksList->SetActive(false);
+			dressingList->SetActive(true);
+			plantsList->SetActive(false);
 		}
 
-		if (plantsButton->isClicked) {
-			drinksButton->opacity = 0.75f;
-			dressingButton->opacity = 0.75f;
-			plantsButton->opacity = 1.0f;
+		if (plantsButton->GetComponent<Button>()->isClicked) {
+			drinksButton->GetComponent<ImageLabel>()->opacity = 0.65f;
+			dressingButton->GetComponent<ImageLabel>()->opacity = 0.65f;
+			plantsButton->GetComponent<ImageLabel>()->opacity = 1.0f;
+
+			drinksList->SetActive(false);
+			dressingList->SetActive(false);
+			plantsList->SetActive(true);
+		}
+
+		std::vector<Entity*> children = drinksList->GetChildren();
+		for (int i = 0; i < children.size(); i++) {
+			Entity* slot = children[i];
+			ItemsBackPack& item = PlayerBackPack.ListItems[i + 6];
+
+			switch (item.Name)
+			{
+			case ItemsInBackPack::WATER:
+				slot->GetComponent<ImageLabel>()->textureName = "Menu_Water";
+				break;
+			case ItemsInBackPack::MILK:
+				slot->GetComponent<ImageLabel>()->textureName = "Menu_Milk";
+				break;
+			case ItemsInBackPack::TEA:
+				slot->GetComponent<ImageLabel>()->textureName = "Menu_Tea";
+				break;
+			case ItemsInBackPack::ESPRESSO:
+				slot->GetComponent<ImageLabel>()->textureName = "Menu_Espresso";
+				break;
+			case ItemsInBackPack::AMERICANO:
+				slot->GetComponent<ImageLabel>()->textureName = "Menu_Americano";
+				break;
+			case ItemsInBackPack::LAVANDER_RAF:
+				slot->GetComponent<ImageLabel>()->textureName = "Menu_Raf";
+				break;
+			}
+		}
+
+		children = dressingList->GetChildren();
+		for (int i = 0; i < children.size() - 2; i++) {
+			Entity* slot = children[i];
+			ItemsBackPack& item = PlayerBackPack.ListItems[i + 12];
+
+			switch (item.Name)
+			{
+			case ItemsInBackPack::UP1:
+				slot->GetComponent<ImageLabel>()->textureName = "MENU_UP1";
+				break;
+			case ItemsInBackPack::UP2:
+				slot->GetComponent<ImageLabel>()->textureName = "MENU_UP2";
+				break;
+			case ItemsInBackPack::UP3:
+				slot->GetComponent<ImageLabel>()->textureName = "MENU_UP3";
+				break;
+			case ItemsInBackPack::UP4:
+				slot->GetComponent<ImageLabel>()->textureName = "MENU_UP4";
+				break;
+			}
+		}
+
+		children = plantsList->GetChildren();
+		for (int i = 0; i < children.size(); i++) {
+			Entity* slot = children[i];
+			ItemsBackPack& item = PlayerBackPack.ListItems[i];
+
+			switch (item.Name)
+			{
+			case ItemsInBackPack::BLUE:
+				slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantBlue";
+				break;
+			case ItemsInBackPack::YELLOW:
+				slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantYellow";
+				break;
+			case ItemsInBackPack::RED:
+				slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantRed";
+				break;
+			case ItemsInBackPack::PURPLE:
+				slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantPurple";
+				break;
+			case ItemsInBackPack::ORANGE:
+				slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantOrange";
+				break;
+			case ItemsInBackPack::CYAN:
+				slot->GetComponent<ImageLabel>()->textureName = "MENU_PlantCyan";
+				break;
+			}
 		}
 	}
 

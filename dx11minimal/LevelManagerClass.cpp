@@ -263,6 +263,25 @@ bool LevelManagerClass::Initialize()
 	Textures::LoadPNGTexture("Menu_Bar", L"..\\dx11minimal\\Resourses\\Textures\\MENU_BAR.png");
 	Textures::LoadPNGTexture("Menu_Slot", L"..\\dx11minimal\\Resourses\\Textures\\MENU_Slot.png");
 
+	Textures::LoadPNGTexture("Menu_Water", L"..\\dx11minimal\\Resourses\\Textures\\MENU_Water.png");
+	Textures::LoadPNGTexture("Menu_Milk", L"..\\dx11minimal\\Resourses\\Textures\\MENU_Milk.png");
+	Textures::LoadPNGTexture("Menu_Tea", L"..\\dx11minimal\\Resourses\\Textures\\MENU_Tea.png");
+	Textures::LoadPNGTexture("Menu_Espresso", L"..\\dx11minimal\\Resourses\\Textures\\MENU_Coffe2.png");
+	Textures::LoadPNGTexture("Menu_Americano", L"..\\dx11minimal\\Resourses\\Textures\\MENU_Coffe1.png");
+	Textures::LoadPNGTexture("Menu_Raf", L"..\\dx11minimal\\Resourses\\Textures\\MENU_Coffe3.png");
+
+	Textures::LoadPNGTexture("MENU_UP1", L"..\\dx11minimal\\Resourses\\Textures\\MENU_UP1.png");
+	Textures::LoadPNGTexture("MENU_UP2", L"..\\dx11minimal\\Resourses\\Textures\\MENU_UP2.png");
+	Textures::LoadPNGTexture("MENU_UP3", L"..\\dx11minimal\\Resourses\\Textures\\MENU_UP3.png");
+	Textures::LoadPNGTexture("MENU_UP4", L"..\\dx11minimal\\Resourses\\Textures\\MENU_UP4.png");
+
+	Textures::LoadPNGTexture("MENU_PlantBlue", L"..\\dx11minimal\\Resourses\\Textures\\MENU_Plant1.png");
+	Textures::LoadPNGTexture("MENU_PlantYellow", L"..\\dx11minimal\\Resourses\\Textures\\MENU_Plant2.png");
+	Textures::LoadPNGTexture("MENU_PlantRed", L"..\\dx11minimal\\Resourses\\Textures\\MENU_Plant3.png");
+	Textures::LoadPNGTexture("MENU_PlantPurple", L"..\\dx11minimal\\Resourses\\Textures\\MENU_Plant4.png");
+	Textures::LoadPNGTexture("MENU_PlantOrange", L"..\\dx11minimal\\Resourses\\Textures\\MENU_Plant5.png");
+	Textures::LoadPNGTexture("MENU_PlantCyan", L"..\\dx11minimal\\Resourses\\Textures\\MENU_Plant6.png");
+
 
 
 	if (modelsLoadingThread.joinable()) {
@@ -311,8 +330,8 @@ bool LevelManagerClass::Initialize()
 
 	/////////////////////////
 
-	CreateRoom();
 	CreateUI();
+	CreateRoom();
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING END //
@@ -592,8 +611,8 @@ void LevelManagerClass::CreateInventoryUI(Entity* uiFolder)
 	transform2D->ratio = ScreenAspectRatio::YY;
 	plantsList->SetActive(false);
 
-	for (int a = -1; a < 2; a++) {
-		for (int b = -1; b < 2; b += 2) {
+	for (int b = 1; b > -2; b -= 2) {
+		for (int a = -1; a < 2; a++) {
 			entity = m_World->entityStorage->CreateEntity("Slot", drinksList);
 			transform2D = entity->AddComponent<Transform2D>();
 			transform2D->position = point3d((float)a * 0.3f, (float)b * 0.5f, 0.0f);
@@ -605,9 +624,9 @@ void LevelManagerClass::CreateInventoryUI(Entity* uiFolder)
 			button->opacity = 0;
 		}
 	}
-
-	/*for (int a = -1; a < 2; a++) {
-		for (int b = -1; b < 2; b += 2) {
+	
+	for (int b = 1; b > -2; b -= 2) {
+		for (int a = -1; a < 2; a++) {
 			entity = m_World->entityStorage->CreateEntity("Slot", dressingList);
 			transform2D = entity->AddComponent<Transform2D>();
 			transform2D->position = point3d((float)a * 0.3f, (float)b * 0.5f, 0.0f);
@@ -620,8 +639,8 @@ void LevelManagerClass::CreateInventoryUI(Entity* uiFolder)
 		}
 	}
 
-	for (int a = -1; a < 2; a++) {
-		for (int b = -1; b < 2; b += 2) {
+	for (int b = 1; b > -2; b -= 2) {
+		for (int a = -1; a < 2; a++) {
 			entity = m_World->entityStorage->CreateEntity("Slot", plantsList);
 			transform2D = entity->AddComponent<Transform2D>();
 			transform2D->position = point3d((float)a * 0.3f, (float)b * 0.5f, 0.0f);
@@ -632,7 +651,7 @@ void LevelManagerClass::CreateInventoryUI(Entity* uiFolder)
 			button = entity->AddComponent<Button>();
 			button->opacity = 0;
 		}
-	}*/
+	}
 
 	// Кнопка закрытия инвентаря
 	entity = m_World->entityStorage->CreateEntity("InventoryExit", inventoryWindow);
@@ -667,6 +686,7 @@ void LevelManagerClass::CreateInventoryUI(Entity* uiFolder)
 	transform2D->scale = point3d(0.24f, 0.5f, 0.0f);
 	imageLabel = entity->AddComponent<ImageLabel>();
 	imageLabel->textureName = "Menu_Dressing";
+	imageLabel->opacity = 0.65f;
 	button = entity->AddComponent<Button>();
 	button->opacity = 0;
 
@@ -679,6 +699,7 @@ void LevelManagerClass::CreateInventoryUI(Entity* uiFolder)
 	transform2D->scale = point3d(0.24f, 0.5f, 0.0f);
 	imageLabel = entity->AddComponent<ImageLabel>();
 	imageLabel->textureName = "Menu_Plants";
+	imageLabel->opacity = 0.65f;
 	button = entity->AddComponent<Button>();
 	button->opacity = 0;
 }
