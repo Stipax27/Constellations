@@ -136,7 +136,7 @@ void PlayerController::ProcessInput()
 
 	if (input::IsKeyPressed('1'))
 	{
-		PlayerBackPack.ItemInHand = ItemsInBackPack::BLUE;
+		PlayerBackPack.ItemInHand = ItemsInBackPack::UP4;
 	}
 	if (input::IsKeyPressed('2'))
 	{
@@ -404,12 +404,28 @@ void PlayerController::ClickOnObjectL()
 			Entity* Plant;
 
 			if (target->GetChildByName("Plant") == 0 && 
-				PlayerBackPack.ChangeCountItem(PlayerBackPack.ListItems[PlayerBackPack.ItemInHand].Count) == true && 
+				PlayerBackPack.ChangeCountItem(PlayerBackPack.ListItems[PlayerBackPack.ItemInHand].Count) == true 
+				&& PlayerBackPack.PlantInHand == false 
+				)
+			{
+				if (PlayerBackPack.ItemInHand == ItemsInBackPack::BLUE ||
+					PlayerBackPack.ItemInHand == ItemsInBackPack::RED ||
+					PlayerBackPack.ItemInHand == ItemsInBackPack::YELLOW ||
+					PlayerBackPack.ItemInHand == ItemsInBackPack::PURPLE ||
+					PlayerBackPack.ItemInHand == ItemsInBackPack::ORANGE ||
+					PlayerBackPack.ItemInHand == ItemsInBackPack::CYAN)
+				{
+					CreatePlant(target, entityStorage, PlayerBackPack.ItemInHand);
+					Plant = target->GetChildByName("Plant");
+					PlayerBackPack.UseItem(Plant);
+				}
+			}
+			else if (target->GetChildByName("Plant") != 0 && 
+				PlayerBackPack.ChangeCountItem(PlayerBackPack.ListItems[PlayerBackPack.ItemInHand].Count) == true &&
 				PlayerBackPack.PlantInHand == false)
 			{
-			CreatePlant(target, entityStorage, PlayerBackPack.ItemInHand);
-			Plant = target->GetChildByName("Plant");
-			PlayerBackPack.UseItem(Plant);
+				Plant = target->GetChildByName("Plant");
+				PlayerBackPack.UseItem(Plant);
 			}
 			else if (PlayerBackPack.PlantInHand == true && target->GetChildByName("Plant") == 0)
 			{
