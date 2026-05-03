@@ -84,6 +84,7 @@ void PlayerController::Initialize(Entity* Player)
 	collisionManager = Singleton::GetInstance<CollisionManagerClass>();
 
 	handSlot = entityStorage->GetEntityByName("HandSlot")->GetComponent<ImageLabel>();
+	plantSlot = entityStorage->GetEntityByName("PlantSlot")->GetComponent<ImageLabel>();
 
 	abilities = Singleton::GetInstance<PlayerAbilities>();
 	abilities->Initialize(playerEntity, entityStorage);
@@ -549,6 +550,8 @@ void PlayerController::ClickOnObjectL()
 				PlayerBackPack.PlantInHand = false;
 				target->AddChild(PlayerBackPack.Plant);
 				PlayerBackPack.Plant->GetComponent<Sprite>()->active = true;
+				plantSlot->textureName = "";
+
 				for (int i = 0; i < PlayerBackPack.Plant->GetChildren().size(); i++)
 				{PlayerBackPack.Plant->GetChildren()[i]->GetComponent<Sprite>()->active = true;}
 				PlayerBackPack.Plant->GetChildByName("UIBar")->GetChildByName("UILine")->GetComponent<Sprite>()->active = true;
@@ -574,7 +577,10 @@ void PlayerController::ClickOnObjectR()
 				PlayerBackPack.PlantInHand = true;
 				PlayerBackPack.Plant = Plant;
 				target->RemoveChild(Plant);
-				PlayerBackPack.Plant->GetComponent<Sprite>()->active = false;
+				Sprite* plantSprite = PlayerBackPack.Plant->GetComponent<Sprite>();
+				plantSprite->active = false;
+				plantSlot->textureName = plantSprite->textureName;
+
 				for (int i = 0; i < PlayerBackPack.Plant->GetChildren().size(); i++)
 				{PlayerBackPack.Plant->GetChildren()[i]->GetComponent<Sprite>()->active = false;}
 				PlayerBackPack.Plant->GetChildByName("UIBar")->GetChildByName("UILine")->GetComponent<Sprite>()->active = false;

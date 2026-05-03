@@ -728,6 +728,21 @@ void LevelManagerClass::CreateUI()
 	imageLabel = entity->AddComponent<ImageLabel>();
 	imageLabel->textureName = "Menu_Slot";
 
+	entity = m_World->entityStorage->CreateEntity("PlantSlotHolder", uiFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->position = point3d(-0.75f, -0.85f, 0.0f);
+	transform2D->ratio = ScreenAspectRatio::YY;
+	transform2D->scale = point3d(0.1f, 0.1f, 0.0f);
+	imageLabel = entity->AddComponent<ImageLabel>();
+	imageLabel->textureName = "Menu_Slot";
+
+	entity = m_World->entityStorage->CreateEntity("PlantSlot", entity);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->ratio = ScreenAspectRatio::YY;
+	transform2D->scale = point3d(0.8f, 0.8f, 0.0f);
+	imageLabel = entity->AddComponent<ImageLabel>();
+	imageLabel->textureName = "";
+
 	CreateInventoryUI(uiFolder);
 }
 

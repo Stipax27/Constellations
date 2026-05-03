@@ -96,6 +96,7 @@ private:
 	Entity* plantsList;
 
 	ImageLabel* handSlot;
+	ImageLabel* plantSlot;
 
 	Transform* playerTransform;
 	PhysicBody* playerPhysicBody;
