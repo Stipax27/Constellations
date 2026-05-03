@@ -274,13 +274,26 @@ void PlantsNear()
 }
 void GameChangeWin()
 {
+	int purple = 0;
+	int orange = 0;
+	int cyan = 0;
+
 	for (int i = 0; i < PlayerBackPack.VPlants.size(); i++)
 	{
-
-
-
-
+		ComponentPlants* comSelf = PlayerBackPack.VPlants[i]->GetComponent<ComponentPlants>();
+		if (comSelf->TypeColorPlant == TypePlant::PURPLE_P && comSelf->Status == StatusPlant::GOOD)
+			purple++;
+		else if (comSelf->TypeColorPlant == TypePlant::ORANGE_P && comSelf->Status == StatusPlant::GOOD)
+			orange++;
+		else if (comSelf->TypeColorPlant == TypePlant::CYAN_P && comSelf->Status == StatusPlant::GOOD)
+			cyan++;
 	}
+
+	if (purple >= 2 && orange >= 2 && cyan >= 2)
+	{
+		///WIN
+	}
+
 }
 
 
@@ -289,6 +302,7 @@ void GameJamMetod(ComponentPlants& PropPlant)
 {
 	if(PropPlant.Plant->GetParent() != 0)
 	{ 
+	GameChangeWin();
 	PlantsNear();
 	const float summBuf = PropPlant.BAF_D + PropPlant.StackBuFF_TOGEC;
 

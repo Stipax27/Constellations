@@ -492,9 +492,28 @@ void PlayerController::ClickOnObjectR()
 
 void PlayerController::GameReset()
 {
+	for (int i = 0; i < PlayerBackPack.VPlants.size(); i++)
+	{
+		ComponentPlants* com = PlayerBackPack.VPlants[i]->GetComponent<ComponentPlants>();
+		com->CheckCreate = false;
+	}
+	
+	PlayerBackPack.ListItems[0] = ItemsBackPack(ItemsInBackPack::BLUE, 1);
+	PlayerBackPack.ListItems[1] = ItemsBackPack(ItemsInBackPack::YELLOW, 1);
+	PlayerBackPack.ListItems[2] = ItemsBackPack(ItemsInBackPack::RED, 1);
+	PlayerBackPack.ListItems[3] = ItemsBackPack(ItemsInBackPack::PURPLE, 1);
+	PlayerBackPack.ListItems[4] = ItemsBackPack(ItemsInBackPack::ORANGE, 1);
+	PlayerBackPack.ListItems[5] = ItemsBackPack(ItemsInBackPack::CYAN, 1);
 
+	PlayerBackPack.ListItems[6] = ItemsBackPack(ItemsInBackPack::WATER, 1);
+	PlayerBackPack.ListItems[7] = ItemsBackPack(ItemsInBackPack::MILK, 1);
+	PlayerBackPack.ListItems[8] = ItemsBackPack(ItemsInBackPack::TEA, 1);
+	PlayerBackPack.ListItems[9] = ItemsBackPack(ItemsInBackPack::ESPRESSO, 1);
+	PlayerBackPack.ListItems[10] = ItemsBackPack(ItemsInBackPack::AMERICANO, 1);
+	PlayerBackPack.ListItems[11] = ItemsBackPack(ItemsInBackPack::LAVANDER_RAF, 1);
 
-
-
-
+	PlayerBackPack.ListItems[12] = ItemsBackPack(ItemsInBackPack::UP1, 1);
+	PlayerBackPack.ListItems[13] = ItemsBackPack(ItemsInBackPack::UP2, 1);
+	PlayerBackPack.ListItems[14] = ItemsBackPack(ItemsInBackPack::UP3, 1);
+	PlayerBackPack.ListItems[15] = ItemsBackPack(ItemsInBackPack::UP4, 1);
 }
