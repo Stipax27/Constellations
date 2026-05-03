@@ -169,36 +169,6 @@ void PlayerController::ProcessInput()
 	if (input::IsKeyPressed('E')) {
 		inventoryWindow->SetActive(!inventoryWindow->IsLocalActive());
 	}
-
-
-	//if (input::IsKeyPressed('1'))
-	//{
-	//	PlayerBackPack.ItemInHand = ItemsInBackPack::RED;
-	//}
-	//if (input::IsKeyPressed('2'))
-	//{
-	//	PlayerBackPack.ItemInHand = ItemsInBackPack::BLUE;
-	//}
-	//if (input::IsKeyPressed('3'))
-	//{
-	//	PlayerBackPack.ItemInHand = ItemsInBackPack::RED;
-	//}
-	//if (input::IsKeyPressed('4'))
-	//{
-	//	PlayerBackPack.ItemInHand = ItemsInBackPack::WATER;
-	//}
-	//if (input::IsKeyPressed('5'))
-	//{
-	//	PlayerBackPack.ItemInHand = ItemsInBackPack::WATER;
-	//}
-	//if (input::IsKeyPressed('6')) // reset item
-	//{
-	//	PlayerBackPack.ResetItem();
-	//}
-	if (input::IsKeyPressed('7')) // reset item
-	{
-		GameReset();
-	}
 }
 		
 
