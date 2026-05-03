@@ -163,6 +163,10 @@ void PlayerController::ProcessInput()
 		}
 	}
 
+	if (input::IsKeyPressed('E')) {
+		inventoryWindow->SetActive(!inventoryWindow->IsLocalActive());
+	}
+
 
 	if (input::IsKeyPressed('1'))
 	{

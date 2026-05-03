@@ -351,12 +351,6 @@ void GameJamMetod(ComponentPlants& PropPlant)
 		PropPlant.BuffInfo->GetComponent<Sprite>()->textureName = "BUFF_MINUS2";
 
 
-	if (GetAsyncKeyState('E'))
-		PropPlant.LoyaltyScale += 2;
-	if (GetAsyncKeyState('Q'))
-		PropPlant.LoyaltyScale -= 2;
-
-
 	StatusMood(scaleS, PropPlant.Status, PropPlant.TextureEmogy);
 	MutationPlantation(PropPlant, scaleS);
 	Metamorf(PropPlant.TypeColorPlant, PropPlant.GainPlant, PropPlant.TexturePlant);
@@ -757,6 +751,19 @@ void LevelManagerClass::CreateInventoryUI(Entity* uiFolder)
 	imageLabel->textureName = "Menu_Backpack";
 	button = entity->AddComponent<Button>();
 	button->opacity = 0;
+
+	entity = m_World->entityStorage->CreateEntity("Count", entity);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->ratio = ScreenAspectRatio::YY;
+	transform2D->position = point3d(-0.8, -0.7, 0);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"E";
+	textLabel->fontFamilyW = L"Impact";
+	textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+	textLabel->fontWeight = 900;
+	textLabel->fontSizePx = 44;
+	textLabel->fontScale = 0.9f;
+	textLabel->letterSpacingPx = 1.0f;
 
 	// Окно инвентаря
 	Entity* inventoryWindow = m_World->entityStorage->CreateEntity("InventoryWindow", uiFolder);
