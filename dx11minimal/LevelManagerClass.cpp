@@ -489,6 +489,7 @@ bool LevelManagerClass::Initialize()
 	Textures::LoadPNGTexture("MENU_PlantCyan", L"..\\dx11minimal\\Resourses\\Textures\\MENU_Plant6.png");
 
 	Textures::LoadPNGTexture("Location", L"..\\dx11minimal\\Resourses\\Textures\\Location.png");
+	Textures::LoadPNGTexture("MENU_RESET", L"..\\dx11minimal\\Resourses\\Textures\\MENU_RESET.png");
 
 
 
@@ -742,6 +743,16 @@ void LevelManagerClass::CreateUI()
 	transform2D->scale = point3d(0.8f, 0.8f, 0.0f);
 	imageLabel = entity->AddComponent<ImageLabel>();
 	imageLabel->textureName = "";
+
+	entity = m_World->entityStorage->CreateEntity("RestartButton", uiFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->ratio = ScreenAspectRatio::YY;
+	transform2D->position = point3d(-0.9f, 0.85f, 0.0f);
+	transform2D->scale = point3d(0.1f, 0.1f, 0.0f);
+	imageLabel = entity->AddComponent<ImageLabel>();
+	imageLabel->textureName = "MENU_RESET";
+	button = entity->AddComponent<Button>();
+	button->opacity = 0;
 
 	CreateInventoryUI(uiFolder);
 }
