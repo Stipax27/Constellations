@@ -30,6 +30,27 @@ std::string itemTextures[16] = {
 	"MENU_UP4",
 };
 
+std::wstring itemNames[16] = {
+	L"Синий росток",
+	L"Желтый росток",
+	L"Красный росток",
+	L"Фиолетовый росток",
+	L"Оранжевый росток",
+	L"Голубой росток",
+
+	L"Вода",
+	L"Молоко",
+	L"Чай",
+	L"Эспрессо",
+	L"Американо",
+	L"Лавандовый раф",
+
+	L"Удобрение 1",
+	L"Удобрение 2",
+	L"Удобрение 3",
+	L"Удобрение 4",
+};
+
 PlayerController::PlayerController()
 {
 	playerEntity = 0;
@@ -549,6 +570,7 @@ void PlayerController::ProccessUI()
 		for (int i = 0; i < children.size(); i++) {
 			Entity* slot = children[i];
 			Entity* count = slot->GetChildByName("Count");
+			Entity* itemName = count->GetChildByName("ItemName");
 			ItemsBackPack& item = PlayerBackPack.ListItems[i + 6];
 
 			if (item.Count > 0) {
@@ -556,6 +578,7 @@ void PlayerController::ProccessUI()
 				count->GetComponent<TextLabel>()->textW = std::to_wstring(item.Count);
 
 				slot->GetComponent<ImageLabel>()->textureName = itemTextures[i + 6];
+				itemName->GetComponent<TextLabel>()->textW = itemNames[i + 6];
 
 				if (slot->GetComponent<Button>()->isClicked) {
 					PlayerBackPack.ItemInHand = item.Name;
@@ -565,6 +588,7 @@ void PlayerController::ProccessUI()
 			else {
 				count->SetActive(false);
 				slot->GetComponent<ImageLabel>()->textureName = "Menu_Slot";
+				itemName->GetComponent<TextLabel>()->textW = L"";
 			}
 		}
 
@@ -572,10 +596,12 @@ void PlayerController::ProccessUI()
 		for (int i = 0; i < children.size(); i++) {
 			Entity* slot = children[i];
 			Entity* count = slot->GetChildByName("Count");
+			Entity* itemName = count->GetChildByName("ItemName");
 
 			if (i + 12 >= std::size(PlayerBackPack.ListItems)) {
 				count->SetActive(false);
 				slot->GetComponent<ImageLabel>()->textureName = "Menu_Slot";
+				itemName->GetComponent<TextLabel>()->textW = L"";
 				continue;
 			}
 
@@ -586,6 +612,7 @@ void PlayerController::ProccessUI()
 				count->GetComponent<TextLabel>()->textW = std::to_wstring(item.Count);
 
 				slot->GetComponent<ImageLabel>()->textureName = itemTextures[i + 12];
+				itemName->GetComponent<TextLabel>()->textW = itemNames[i + 12];
 
 				if (slot->GetComponent<Button>()->isClicked) {
 					PlayerBackPack.ItemInHand = item.Name;
@@ -595,6 +622,7 @@ void PlayerController::ProccessUI()
 			else {
 				count->SetActive(false);
 				slot->GetComponent<ImageLabel>()->textureName = "Menu_Slot";
+				itemName->GetComponent<TextLabel>()->textW = L"";
 			}
 		}
 
@@ -602,6 +630,7 @@ void PlayerController::ProccessUI()
 		for (int i = 0; i < children.size(); i++) {
 			Entity* slot = children[i];
 			Entity* count = slot->GetChildByName("Count");
+			Entity* itemName = count->GetChildByName("ItemName");
 			ItemsBackPack& item = PlayerBackPack.ListItems[i];
 			
 			if (item.Count > 0) {
@@ -609,6 +638,7 @@ void PlayerController::ProccessUI()
 				count->GetComponent<TextLabel>()->textW = std::to_wstring(item.Count);
 
 				slot->GetComponent<ImageLabel>()->textureName = itemTextures[i];
+				itemName->GetComponent<TextLabel>()->textW = itemNames[i];
 
 				if (slot->GetComponent<Button>()->isClicked) {
 					PlayerBackPack.ItemInHand = item.Name;
@@ -618,6 +648,7 @@ void PlayerController::ProccessUI()
 			else {
 				count->SetActive(false);
 				slot->GetComponent<ImageLabel>()->textureName = "Menu_Slot";
+				itemName->GetComponent<TextLabel>()->textW = L"";
 			}
 		}
 	}

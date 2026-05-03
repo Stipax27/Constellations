@@ -884,6 +884,20 @@ void LevelManagerClass::CreateInventoryUI(Entity* uiFolder)
 			textLabel->fontScale = 0.5f;
 			textLabel->letterSpacingPx = 1.0f;
 			textLabel->color = point3d();
+
+			entity = m_World->entityStorage->CreateEntity("ItemName", entity);
+			transform2D = entity->AddComponent<Transform2D>();
+			transform2D->ratio = ScreenAspectRatio::YY;
+			transform2D->position = point3d(-0.85, 1.4, 0);
+			textLabel = entity->AddComponent<TextLabel>();
+			textLabel->textW = L"ITEM_NAME";
+			textLabel->fontFamilyW = L"Impact";
+			textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+			textLabel->fontWeight = 900;
+			textLabel->fontSizePx = 44;
+			textLabel->fontScale = 0.3f;
+			textLabel->letterSpacingPx = 1.0f;
+			textLabel->color = point3d();
 		}
 	}
 	
@@ -912,6 +926,20 @@ void LevelManagerClass::CreateInventoryUI(Entity* uiFolder)
 			textLabel->fontScale = 0.5f;
 			textLabel->letterSpacingPx = 1.0f;
 			textLabel->color = point3d();
+
+			entity = m_World->entityStorage->CreateEntity("ItemName", entity);
+			transform2D = entity->AddComponent<Transform2D>();
+			transform2D->ratio = ScreenAspectRatio::YY;
+			transform2D->position = point3d(-0.85, 1.4, 0);
+			textLabel = entity->AddComponent<TextLabel>();
+			textLabel->textW = L"ITEM_NAME";
+			textLabel->fontFamilyW = L"Impact";
+			textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+			textLabel->fontWeight = 900;
+			textLabel->fontSizePx = 44;
+			textLabel->fontScale = 0.3f;
+			textLabel->letterSpacingPx = 1.0f;
+			textLabel->color = point3d();
 		}
 	}
 
@@ -938,6 +966,20 @@ void LevelManagerClass::CreateInventoryUI(Entity* uiFolder)
 			textLabel->fontWeight = 900;
 			textLabel->fontSizePx = 44;
 			textLabel->fontScale = 0.5f;
+			textLabel->letterSpacingPx = 1.0f;
+			textLabel->color = point3d();
+
+			entity = m_World->entityStorage->CreateEntity("ItemName", entity);
+			transform2D = entity->AddComponent<Transform2D>();
+			transform2D->ratio = ScreenAspectRatio::YY;
+			transform2D->position = point3d(-0.85, 1.4, 0);
+			textLabel = entity->AddComponent<TextLabel>();
+			textLabel->textW = L"ITEM_NAME";
+			textLabel->fontFamilyW = L"Impact";
+			textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+			textLabel->fontWeight = 900;
+			textLabel->fontSizePx = 44;
+			textLabel->fontScale = 0.3f;
 			textLabel->letterSpacingPx = 1.0f;
 			textLabel->color = point3d();
 		}
