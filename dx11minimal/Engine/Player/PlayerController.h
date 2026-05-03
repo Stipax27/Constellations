@@ -83,6 +83,8 @@ private:
 	Entity* playerEntity;
 	Entity* ui;
 
+	Button* resetButton;
+
 	Button* inventoryButton;
 	Entity* inventoryWindow;
 	Button* inventoryExit;

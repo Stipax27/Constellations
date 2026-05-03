@@ -65,6 +65,8 @@ void PlayerController::Initialize(Entity* Player)
 
 	ui = world->entityStorage->GetEntityByName("UI");
 
+	resetButton = ui->GetChildByName("RestartButton")->GetComponent<Button>();
+
 	inventoryButton = ui->GetChildByName("InventoryButton", true)->GetComponent<Button>();
 	inventoryWindow = ui->GetChildByName("InventoryWindow");
 	inventoryExit = inventoryWindow->GetChildByName("InventoryExit")->GetComponent<Button>();
@@ -506,6 +508,10 @@ void PlayerController::ProccessUI()
 	if (inventoryButton->isClicked) {
 		inventoryWindow->SetActive(!inventoryWindow->IsLocalActive());
 	}
+
+	if (resetButton->isClicked) {
+		GameReset();
+	}
 }
 
 void PlayerController::ClickOnObjectL()
@@ -601,6 +607,7 @@ void PlayerController::GameReset()
 		ComponentPlants* com = PlayerBackPack.VPlants[i]->GetComponent<ComponentPlants>();
 		com->CheckCreate = false;
 	}
+	plantSlot->textureName = "";
 	
 	PlayerBackPack.ListItems[0] = ItemsBackPack(ItemsInBackPack::BLUE, 1);
 	PlayerBackPack.ListItems[1] = ItemsBackPack(ItemsInBackPack::YELLOW, 1);
