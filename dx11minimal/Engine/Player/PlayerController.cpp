@@ -1,6 +1,7 @@
 ﻿#include "PlayerController.h"
 
 #include "../UI/Text/TextLabel.h"
+#include "../Lib/interp.h"
 
 
 
@@ -682,6 +683,9 @@ void PlayerController::ClickOnObjectL()
 				PlayerBackPack.AddItem(ItemsInBackPack::TEA, 1);
 
 				PlayerBackPack.AddItem(ItemsInBackPack::UP2, 1);
+
+				sprite->color = point3d(0, 1, 0);
+				interp::Animate(sprite->color, point3d(1, 1, 1), 0.1);
 			}
 			else {
 				Entity* Plant;
