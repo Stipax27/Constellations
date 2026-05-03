@@ -177,6 +177,22 @@ struct BackPacks
 	}
 
 
+
+	void ProcessSound(const wchar_t* name)  // меняем тип параметра
+	{
+		PlaySoundW(name, NULL, SND_FILENAME | SND_ASYNC);
+	}
+
+	void MusicPlayer(const wchar_t* NameMusic)  // меняем тип параметра
+	{
+		std::wstring command = L"open \"";
+		command += NameMusic;
+		command += L"\" alias MyMusic";
+
+		mciSendStringW(command.c_str(), NULL, 0, NULL);
+		mciSendStringW(L"play MyMusic", NULL, 0, NULL);
+	}
+
 	void ResetItem()
 	{
 		ClearHandItem();
@@ -325,7 +341,6 @@ struct BackPacks
 		}
 		ClearHandItem();
 	}
-
 
 
 	std::vector<Entity*> VPlants;

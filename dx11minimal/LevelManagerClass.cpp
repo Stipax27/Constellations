@@ -298,6 +298,8 @@ void GameChangeWin()
 
 
 
+
+
 void GameJamMetod(ComponentPlants& PropPlant)
 {
 	if(PropPlant.Plant->GetParent() != 0)
@@ -1024,11 +1026,11 @@ void LevelManagerClass::CreateGardens(Entity* room)
 	Sprite* sprite;
 	SphereCollider* sphereCollider;
 
-	for (int i = -9; i < 18; i += 2) {
+	for (int i = -13; i < 16; i += 2) {
 		garden = m_World->entityStorage->CreateEntity("WallSprite", room);
 
 		transform = garden->AddComponent<Transform>();
-		transform->position = point3d(i, 0, 3);
+		transform->position = point3d(i, 0, -10);
 		transform->mRotation = GetMatrixFromDirection(point3d(0, 1, 0).normalized(), point3d(0, 0, 1));
 
 		sprite = garden->AddComponent<Sprite>();
