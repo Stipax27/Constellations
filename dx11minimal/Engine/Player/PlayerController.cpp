@@ -370,7 +370,7 @@ void CreatePlant(Entity* Garden, EntityStorage* entityStorage , int Color)
 	Plant = entityStorage->CreateEntity("Plant", Garden);
 
 	transform = Plant->AddComponent<Transform>();
-	transform->position = point3d(0, 0.1, 0.1);
+	transform->position = point3d(0, 0.65, 0.1);
 
 	spritePlant = Plant->AddComponent<Sprite>();
 	PropPlant = Plant->AddComponent<ComponentPlants>();
