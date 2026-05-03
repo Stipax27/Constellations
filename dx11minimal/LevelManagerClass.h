@@ -119,7 +119,7 @@ private:
 	void CreatePlant(Entity* Garden);
 	Entity* CreateUIPlant(Entity* Plant);
 	Entity* CreateEmogy(Entity* Plant);
-
+	Entity* CreateCoffeMachine(Entity* room);
 
 
 

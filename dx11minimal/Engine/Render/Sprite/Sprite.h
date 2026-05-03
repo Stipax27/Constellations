@@ -130,18 +130,18 @@ struct BackPacks
 		ItemsBackPack(ItemsInBackPack::CYAN,   5), // 5
 
 		//НАПИТКИ
-		ItemsBackPack(ItemsInBackPack::WATER,           4), // 6
-		ItemsBackPack(ItemsInBackPack::MILK,            1), // 7
-		ItemsBackPack(ItemsInBackPack::TEA,             1), // 8
-		ItemsBackPack(ItemsInBackPack::ESPRESSO,        1), // 9
-		ItemsBackPack(ItemsInBackPack::AMERICANO,       1), // 10
-		ItemsBackPack(ItemsInBackPack::LAVANDER_RAF,    4), // 11
+		ItemsBackPack(ItemsInBackPack::WATER,           3), // 6
+		ItemsBackPack(ItemsInBackPack::MILK,            3), // 7
+		ItemsBackPack(ItemsInBackPack::TEA,             3), // 8
+		ItemsBackPack(ItemsInBackPack::ESPRESSO,        3), // 9
+		ItemsBackPack(ItemsInBackPack::AMERICANO,       3), // 10
+		ItemsBackPack(ItemsInBackPack::LAVANDER_RAF,    3), // 11
 
 		//УДОБРЕНИЯ
-		ItemsBackPack(ItemsInBackPack::UP1,             5), // 12
-		ItemsBackPack(ItemsInBackPack::UP2,             5), // 13
-		ItemsBackPack(ItemsInBackPack::UP3,             5), // 14
-		ItemsBackPack(ItemsInBackPack::UP4,             5), // 15
+		ItemsBackPack(ItemsInBackPack::UP1,             3), // 12
+		ItemsBackPack(ItemsInBackPack::UP2,             3), // 13
+		ItemsBackPack(ItemsInBackPack::UP3,             3), // 14
+		ItemsBackPack(ItemsInBackPack::UP4,             3), // 15
 	};
 
 	ItemsBackPack ItemPick;
@@ -208,7 +208,7 @@ struct BackPacks
 			ListItems[ItemInHand].Count--;
 			switch (ItemPick.Name)
 			{
-			// полив ростений
+				// полив ростений
 			case (ItemsInBackPack::WATER):
 			{
 				if (com->TypeColorPlant == TypePlant::RED_P)
@@ -343,6 +343,24 @@ struct BackPacks
 	}
 
 
+	std::string AniImages[9] =
+	{
+		"Front1",
+		"Front2",
+
+		"Stop",
+
+		"Back1",
+		"Back2",
+		"Back3",
+
+		"RLMOVE1",
+		"RLMOVE2",
+
+		"RLStop",
+	};
+
+
 	std::vector<Entity*> VPlants;
 };
 
@@ -350,3 +368,17 @@ struct BackPacks
 extern BackPacks PlayerBackPack;
 
 #endif
+
+//Textures::LoadPNGTexture("Front1", L"..\\dx11minimal\\Resourses\\Textures\\char1.png");
+//Textures::LoadPNGTexture("Front2", L"..\\dx11minimal\\Resourses\\Textures\\char2.png");
+//
+//Textures::LoadPNGTexture("Stop", L"..\\dx11minimal\\Resourses\\Textures\\char9.png");
+//
+//Textures::LoadPNGTexture("Back1", L"..\\dx11minimal\\Resourses\\Textures\\char3.png");
+//Textures::LoadPNGTexture("Back2", L"..\\dx11minimal\\Resourses\\Textures\\char4.png");
+//Textures::LoadPNGTexture("Back3", L"..\\dx11minimal\\Resourses\\Textures\\char5.png");
+//
+//Textures::LoadPNGTexture("RLMOVE1", L"..\\dx11minimal\\Resourses\\Textures\\char6.png");
+//Textures::LoadPNGTexture("RLMOVE2", L"..\\dx11minimal\\Resourses\\Textures\\char7.png");
+//
+//Textures::LoadPNGTexture("RLStop", L"..\\dx11minimal\\Resourses\\Textures\\char8.png");

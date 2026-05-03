@@ -136,6 +136,140 @@ void PlayerController::Shutdown()
 		window = 0;
 }
 
+double last_step_time = 0.;
+bool stepfront = false;
+bool stepback = false;
+bool stepLMove = false;
+bool stepRMove = false;
+
+//Textures::LoadPNGTexture("Front1", L"..\\dx11minimal\\Resourses\\Textures\\char1.png");
+//Textures::LoadPNGTexture("Front2", L"..\\dx11minimal\\Resourses\\Textures\\char2.png");
+//
+//Textures::LoadPNGTexture("Stop", L"..\\dx11minimal\\Resourses\\Textures\\char9.png");
+//
+//Textures::LoadPNGTexture("Back1", L"..\\dx11minimal\\Resourses\\Textures\\char3.png");
+//Textures::LoadPNGTexture("Back2", L"..\\dx11minimal\\Resourses\\Textures\\char4.png");
+//Textures::LoadPNGTexture("Back3", L"..\\dx11minimal\\Resourses\\Textures\\char5.png");
+//
+//Textures::LoadPNGTexture("RLMOVE1", L"..\\dx11minimal\\Resourses\\Textures\\char6.png");
+//Textures::LoadPNGTexture("RLMOVE2", L"..\\dx11minimal\\Resourses\\Textures\\char7.png");
+//
+//Textures::LoadPNGTexture("RLStop", L"..\\dx11minimal\\Resourses\\Textures\\char8.png");
+
+void MovePlayerAnimation(int time, int key, Entity* Player)
+{
+	Sprite* amime = Player->GetChildByName("PlayerSprite")->GetComponent<Sprite>();
+
+	double times = 150.;
+
+	switch (key)
+	{
+	case (0): ///front
+	{
+		if (timer::currentTime - last_step_time > times) {
+			last_step_time = timer::currentTime;
+			if (stepfront == true)
+				stepfront = false;
+			else
+				stepfront = true;
+		}
+
+		if (stepfront == true)
+		{
+			amime->textureName = "Back1";
+		}
+		else
+		{
+			amime->textureName = "Back2";
+
+		}
+
+
+
+		break;
+	}
+	case (1): ///back
+	{
+		if (timer::currentTime - last_step_time > times) {
+			last_step_time = timer::currentTime;
+			if (stepback == true)
+				stepback = false;
+			else
+				stepback = true;
+		}
+
+		if (stepback == true)
+		{
+			amime->textureName = "Front1";
+		}
+		else
+		{
+			amime->textureName = "Front2";
+
+		}
+
+
+		break;
+	}
+	case (2): ///left !!!! нужно поменять сторону
+	{
+		if (timer::currentTime - last_step_time > times) {
+			last_step_time = timer::currentTime;
+			if (stepLMove == true)
+				stepLMove = false;
+			else
+				stepLMove = true;
+		}
+
+		if (stepLMove == true)
+		{
+			amime->textureName = "LMOVE1";
+		}
+		else
+		{
+			amime->textureName = "LMOVE2";
+
+		}
+
+
+
+		break;
+	}
+	case (3): ///right
+	{
+		if (timer::currentTime - last_step_time > times) {
+			last_step_time = timer::currentTime;
+			if (stepRMove == true)
+				stepRMove = false;
+			else
+				stepRMove = true;
+		}
+
+		if (stepRMove == true)
+		{
+			amime->textureName = "RMOVE1";
+		}
+		else
+		{
+			amime->textureName = "RMOVE2";
+
+		}
+
+
+
+		break;
+	}
+	case (4): ///stop
+	{
+		amime->textureName = "Stop";
+
+		break;
+	}
+
+	}
+
+}
+
 
 void PlayerController::ProcessInput()
 {
@@ -150,18 +284,28 @@ void PlayerController::ProcessInput()
 	if (!movementLocked)
 	{
 		point3d velocity = point3d();
+		MovePlayerAnimation(0, 4, playerEntity);
 
 		if (input::IsKeyDown('W')) {
 			velocity += playerTransform->GetLookVector();
+
+			MovePlayerAnimation(0, 0, playerEntity);
+
 		}
 		if (input::IsKeyDown('S')) {
 			velocity += playerTransform->GetLookVector() * -1;
+
+			MovePlayerAnimation(0, 1, playerEntity);
 		}
 		if (input::IsKeyDown('A')) {
 			velocity += playerTransform->GetRightVector() * -1;
+
+			MovePlayerAnimation(0, 2, playerEntity);
 		}
 		if (input::IsKeyDown('D')) {
 			velocity += playerTransform->GetRightVector();
+			MovePlayerAnimation(0, 3, playerEntity);
+
 		}
 		if (velocity.magnitude() > 0) {
 			playerPhysicBody->acceleration += velocity.normalized() * PLAYER_MOVE_SPEED;
@@ -497,44 +641,57 @@ void PlayerController::ClickOnObjectL()
 			return;
 
 		Sprite* sprite = target->GetComponent<Sprite>();
-
 		if (sprite) {
-			Entity* Plant;
-
-			if (target->GetChildByName("Plant") == 0 && 
-				PlayerBackPack.ChangeCountItem(PlayerBackPack.ListItems[PlayerBackPack.ItemInHand].Count) == true 
-				&& PlayerBackPack.PlantInHand == false 
-				)
+			if (sprite->textureName == "CoffeeMachin")
 			{
-				if (PlayerBackPack.ItemInHand == ItemsInBackPack::BLUE ||
-					PlayerBackPack.ItemInHand == ItemsInBackPack::RED ||
-					PlayerBackPack.ItemInHand == ItemsInBackPack::YELLOW ||
-					PlayerBackPack.ItemInHand == ItemsInBackPack::PURPLE ||
-					PlayerBackPack.ItemInHand == ItemsInBackPack::ORANGE ||
-					PlayerBackPack.ItemInHand == ItemsInBackPack::CYAN)
+				PlayerBackPack.AddItem(ItemsInBackPack::WATER, 1);
+				PlayerBackPack.AddItem(ItemsInBackPack::AMERICANO, 1);
+				PlayerBackPack.AddItem(ItemsInBackPack::MILK, 1);
+				PlayerBackPack.AddItem(ItemsInBackPack::LAVANDER_RAF, 1);
+				PlayerBackPack.AddItem(ItemsInBackPack::TEA, 1);
+
+				PlayerBackPack.AddItem(ItemsInBackPack::UP2, 1);
+			}
+			else {
+				Entity* Plant;
+
+				if (target->GetChildByName("Plant") == 0 &&
+					PlayerBackPack.ChangeCountItem(PlayerBackPack.ListItems[PlayerBackPack.ItemInHand].Count) == true
+					&& PlayerBackPack.PlantInHand == false && sprite->textureName != "CoffeeMachin"
+					)
 				{
-					CreatePlant(target, entityStorage, PlayerBackPack.ItemInHand);
+					if (PlayerBackPack.ItemInHand == ItemsInBackPack::BLUE ||
+						PlayerBackPack.ItemInHand == ItemsInBackPack::RED ||
+						PlayerBackPack.ItemInHand == ItemsInBackPack::YELLOW ||
+						PlayerBackPack.ItemInHand == ItemsInBackPack::PURPLE ||
+						PlayerBackPack.ItemInHand == ItemsInBackPack::ORANGE ||
+						PlayerBackPack.ItemInHand == ItemsInBackPack::CYAN)
+					{
+						CreatePlant(target, entityStorage, PlayerBackPack.ItemInHand);
+						Plant = target->GetChildByName("Plant");
+						PlayerBackPack.UseItem(Plant);
+					}
+				}
+				else if (target->GetChildByName("Plant") != 0 &&
+					PlayerBackPack.ChangeCountItem(PlayerBackPack.ListItems[PlayerBackPack.ItemInHand].Count) == true &&
+					PlayerBackPack.PlantInHand == false && sprite->textureName != "CoffeeMachin")
+				{
 					Plant = target->GetChildByName("Plant");
 					PlayerBackPack.UseItem(Plant);
 				}
-			}
-			else if (target->GetChildByName("Plant") != 0 && 
-				PlayerBackPack.ChangeCountItem(PlayerBackPack.ListItems[PlayerBackPack.ItemInHand].Count) == true &&
-				PlayerBackPack.PlantInHand == false)
-			{
-				Plant = target->GetChildByName("Plant");
-				PlayerBackPack.UseItem(Plant);
-			}
-			else if (PlayerBackPack.PlantInHand == true && target->GetChildByName("Plant") == 0)
-			{
-				PlayerBackPack.PlantInHand = false;
-				target->AddChild(PlayerBackPack.Plant);
-				PlayerBackPack.Plant->GetComponent<Sprite>()->active = true;
-				plantSlot->textureName = "";
+				else if (PlayerBackPack.PlantInHand == true && target->GetChildByName("Plant") == 0 && sprite->textureName != "CoffeeMachin")
+				{
+					PlayerBackPack.PlantInHand = false;
+					target->AddChild(PlayerBackPack.Plant);
+					PlayerBackPack.Plant->GetComponent<Sprite>()->active = true;
+					plantSlot->textureName = "";
 
-				for (int i = 0; i < PlayerBackPack.Plant->GetChildren().size(); i++)
-				{PlayerBackPack.Plant->GetChildren()[i]->GetComponent<Sprite>()->active = true;}
-				PlayerBackPack.Plant->GetChildByName("UIBar")->GetChildByName("UILine")->GetComponent<Sprite>()->active = true;
+					for (int i = 0; i < PlayerBackPack.Plant->GetChildren().size(); i++)
+					{
+						PlayerBackPack.Plant->GetChildren()[i]->GetComponent<Sprite>()->active = true;
+					}
+					PlayerBackPack.Plant->GetChildByName("UIBar")->GetChildByName("UILine")->GetComponent<Sprite>()->active = true;
+				}
 			}
 		}
 	}
@@ -582,23 +739,23 @@ void PlayerController::GameReset()
 	}
 	plantSlot->textureName = "";
 	
-	PlayerBackPack.ListItems[0] = ItemsBackPack(ItemsInBackPack::BLUE, 1);
-	PlayerBackPack.ListItems[1] = ItemsBackPack(ItemsInBackPack::YELLOW, 1);
-	PlayerBackPack.ListItems[2] = ItemsBackPack(ItemsInBackPack::RED, 1);
-	PlayerBackPack.ListItems[3] = ItemsBackPack(ItemsInBackPack::PURPLE, 1);
-	PlayerBackPack.ListItems[4] = ItemsBackPack(ItemsInBackPack::ORANGE, 1);
-	PlayerBackPack.ListItems[5] = ItemsBackPack(ItemsInBackPack::CYAN, 1);
+	PlayerBackPack.ListItems[0] = ItemsBackPack(ItemsInBackPack::BLUE, 5);
+	PlayerBackPack.ListItems[1] = ItemsBackPack(ItemsInBackPack::YELLOW, 5);
+	PlayerBackPack.ListItems[2] = ItemsBackPack(ItemsInBackPack::RED, 5);
+	PlayerBackPack.ListItems[3] = ItemsBackPack(ItemsInBackPack::PURPLE, 5);
+	PlayerBackPack.ListItems[4] = ItemsBackPack(ItemsInBackPack::ORANGE, 5);
+	PlayerBackPack.ListItems[5] = ItemsBackPack(ItemsInBackPack::CYAN, 5);
 
-	PlayerBackPack.ListItems[6] = ItemsBackPack(ItemsInBackPack::WATER, 1);
-	PlayerBackPack.ListItems[7] = ItemsBackPack(ItemsInBackPack::MILK, 1);
-	PlayerBackPack.ListItems[8] = ItemsBackPack(ItemsInBackPack::TEA, 1);
-	PlayerBackPack.ListItems[9] = ItemsBackPack(ItemsInBackPack::ESPRESSO, 1);
-	PlayerBackPack.ListItems[10] = ItemsBackPack(ItemsInBackPack::AMERICANO, 1);
-	PlayerBackPack.ListItems[11] = ItemsBackPack(ItemsInBackPack::LAVANDER_RAF, 1);
+	PlayerBackPack.ListItems[6] = ItemsBackPack(ItemsInBackPack::WATER, 3);
+	PlayerBackPack.ListItems[7] = ItemsBackPack(ItemsInBackPack::MILK, 3);
+	PlayerBackPack.ListItems[8] = ItemsBackPack(ItemsInBackPack::TEA, 3);
+	PlayerBackPack.ListItems[9] = ItemsBackPack(ItemsInBackPack::ESPRESSO, 3);
+	PlayerBackPack.ListItems[10] = ItemsBackPack(ItemsInBackPack::AMERICANO, 3);
+	PlayerBackPack.ListItems[11] = ItemsBackPack(ItemsInBackPack::LAVANDER_RAF, 3);
 
-	PlayerBackPack.ListItems[12] = ItemsBackPack(ItemsInBackPack::UP1, 1);
-	PlayerBackPack.ListItems[13] = ItemsBackPack(ItemsInBackPack::UP2, 1);
-	PlayerBackPack.ListItems[14] = ItemsBackPack(ItemsInBackPack::UP3, 1);
-	PlayerBackPack.ListItems[15] = ItemsBackPack(ItemsInBackPack::UP4, 1);
+	PlayerBackPack.ListItems[12] = ItemsBackPack(ItemsInBackPack::UP1, 5);
+	PlayerBackPack.ListItems[13] = ItemsBackPack(ItemsInBackPack::UP2, 3);
+	PlayerBackPack.ListItems[14] = ItemsBackPack(ItemsInBackPack::UP3, 3);
+	PlayerBackPack.ListItems[15] = ItemsBackPack(ItemsInBackPack::UP4, 3);
 	PlayerBackPack.ClearHandItem();
 }

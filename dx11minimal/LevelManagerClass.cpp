@@ -490,8 +490,34 @@ bool LevelManagerClass::Initialize()
 	Textures::LoadPNGTexture("MENU_PlantOrange", L"..\\dx11minimal\\Resourses\\Textures\\MENU_Plant5.png");
 	Textures::LoadPNGTexture("MENU_PlantCyan", L"..\\dx11minimal\\Resourses\\Textures\\MENU_Plant6.png");
 
-	Textures::LoadPNGTexture("Location", L"..\\dx11minimal\\Resourses\\Textures\\Location.png");
+	Textures::LoadPNGTexture("Location", L"..\\dx11minimal\\Resourses\\Textures\\Location2.png");
 	Textures::LoadPNGTexture("MENU_RESET", L"..\\dx11minimal\\Resourses\\Textures\\MENU_RESET.png");
+
+	Textures::LoadPNGTexture("CoffeeMachin", L"..\\dx11minimal\\Resourses\\Textures\\CoffeMachin.png");
+
+
+
+	Textures::LoadPNGTexture("Front1", L"..\\dx11minimal\\Resourses\\Textures\\char1.png");
+	Textures::LoadPNGTexture("Front2", L"..\\dx11minimal\\Resourses\\Textures\\char2.png");
+
+	Textures::LoadPNGTexture("Stop", L"..\\dx11minimal\\Resourses\\Textures\\char9.png");
+
+	Textures::LoadPNGTexture("Back1", L"..\\dx11minimal\\Resourses\\Textures\\char3.png");
+	Textures::LoadPNGTexture("Back2", L"..\\dx11minimal\\Resourses\\Textures\\char4.png");
+	Textures::LoadPNGTexture("Back3", L"..\\dx11minimal\\Resourses\\Textures\\char5.png");
+
+	Textures::LoadPNGTexture("LMOVE1", L"..\\dx11minimal\\Resourses\\Textures\\char6.png");
+	Textures::LoadPNGTexture("LMOVE2", L"..\\dx11minimal\\Resourses\\Textures\\char7.png");
+
+	Textures::LoadPNGTexture("RMOVE1", L"..\\dx11minimal\\Resourses\\Textures\\char10.png");
+	Textures::LoadPNGTexture("RMOVE2", L"..\\dx11minimal\\Resourses\\Textures\\char12.png");
+
+
+	Textures::LoadPNGTexture("RLStop", L"..\\dx11minimal\\Resourses\\Textures\\char8.png");
+
+
+
+
 
 
 
@@ -698,7 +724,7 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 
 	/////////////////////////////////////////////////
 
-	Entity* playerSprite = m_World->entityStorage->CreateEntity("WallSprite", player);
+	Entity* playerSprite = m_World->entityStorage->CreateEntity("PlayerSprite", player);
 
 	transform = playerSprite->AddComponent<Transform>();
 	transform->scale = point3d(2);
@@ -706,10 +732,26 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 	transform->mRotation = GetMatrixFromDirection(point3d(0, 1, 0).normalized(), point3d(0, 0, 1));
 
 	Sprite* sprite = playerSprite->AddComponent<Sprite>();
-	sprite->textureName = "omniman";
+	sprite->textureName = "Stop";
 
 	return player;
 }
+
+//Textures::LoadPNGTexture("Front1", L"..\\dx11minimal\\Resourses\\Textures\\char1.png");
+//Textures::LoadPNGTexture("Front2", L"..\\dx11minimal\\Resourses\\Textures\\char2.png");
+//
+//Textures::LoadPNGTexture("Stop", L"..\\dx11minimal\\Resourses\\Textures\\char9.png");
+//
+//Textures::LoadPNGTexture("Back1", L"..\\dx11minimal\\Resourses\\Textures\\char3.png");
+//Textures::LoadPNGTexture("Back2", L"..\\dx11minimal\\Resourses\\Textures\\char4.png");
+//Textures::LoadPNGTexture("Back3", L"..\\dx11minimal\\Resourses\\Textures\\char5.png");
+//
+//Textures::LoadPNGTexture("RLMOVE1", L"..\\dx11minimal\\Resourses\\Textures\\char6.png");
+//Textures::LoadPNGTexture("RLMOVE2", L"..\\dx11minimal\\Resourses\\Textures\\char7.png");
+//
+//Textures::LoadPNGTexture("RLStop", L"..\\dx11minimal\\Resourses\\Textures\\char8.png");
+
+
 
 
 void LevelManagerClass::CreateUI()
@@ -1016,6 +1058,7 @@ void LevelManagerClass::CreateRoom()
 	planeCollider->normal = point3d(0, 0, 1);
 
 	CreateGardens(room);
+	CreateCoffeMachine(room);
 	
 }
 
@@ -1039,4 +1082,26 @@ void LevelManagerClass::CreateGardens(Entity* room)
 		sphereCollider = garden->AddComponent<SphereCollider>();
 		sphereCollider->radius = 1.25f;
 	}
+}
+
+Entity* LevelManagerClass::CreateCoffeMachine(Entity* room)
+{
+	Entity* CoffeMachin;
+	Transform* transform;
+	Sprite* sprite;
+	SphereCollider* sphereCollider;
+
+		CoffeMachin = m_World->entityStorage->CreateEntity("CoffeMachin", room);
+
+		transform = CoffeMachin->AddComponent<Transform>();
+		transform->position = point3d(0, 0, 3);
+		transform->mRotation = GetMatrixFromDirection(point3d(0, 1, 0).normalized(), point3d(0, 0, 1));
+
+		sprite = CoffeMachin->AddComponent<Sprite>();
+		sprite->textureName = "CoffeeMachin";
+
+		sphereCollider = CoffeMachin->AddComponent<SphereCollider>();
+		sphereCollider->radius = 1.25f;
+
+		return CoffeMachin;
 }
