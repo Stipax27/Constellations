@@ -282,6 +282,8 @@ bool LevelManagerClass::Initialize()
 	Textures::LoadPNGTexture("MENU_PlantOrange", L"..\\dx11minimal\\Resourses\\Textures\\MENU_Plant5.png");
 	Textures::LoadPNGTexture("MENU_PlantCyan", L"..\\dx11minimal\\Resourses\\Textures\\MENU_Plant6.png");
 
+	Textures::LoadPNGTexture("Location", L"..\\dx11minimal\\Resourses\\Textures\\Location.png");
+
 
 
 	if (modelsLoadingThread.joinable()) {
@@ -312,21 +314,13 @@ bool LevelManagerClass::Initialize()
 
 	Entity* player = CreatePlayer();
 
-	entity = m_World->entityStorage->CreateEntity("TestStar", worldFolder);
+	entity = m_World->entityStorage->CreateEntity("Background", worldFolder);
 	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-200, 0, -200);
-	star = entity->AddComponent<Star>();
-	star->radius = 75;
-	star->crownRadius = 3.0f;
-	star->color1 = point3d(0.87f, 0.24f, 0.13f);
-	star->color2 = point3d(0.35f, 0.0f, 0.07f);
-	star->crownColor = point3d(0.87f, 0.25f, 0.15f);
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->radius = 75;
-	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	GravityPoint* gravityPoint = entity->AddComponent<GravityPoint>();
-	gravityPoint->mass = 500;
-	gravityPoint->radius = 150;
+	transform->scale = point3d(30, 18, 1);
+	transform->mRotation = GetMatrixFromDirection(point3d(0, 1, 0).normalized(), point3d(0, 0, 1));
+	transform->position = point3d(0, -2, 0);
+	Sprite* sprite = entity->AddComponent<Sprite>();
+	sprite->textureName = "Location";
 
 	/////////////////////////
 
@@ -501,7 +495,7 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 	physicBody->preciseMovement = true;
 
 	SphereCollider* sphereCollider = player->AddComponent<SphereCollider>();
-	sphereCollider->radius = 0.75f;
+	sphereCollider->radius = 1.0f;
 	sphereCollider->collisionGroup = CollisionFilter::Group::Player;
 
 	/////////////////////////////////////////////////
@@ -509,8 +503,8 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 	Entity* playerSprite = m_World->entityStorage->CreateEntity("WallSprite", player);
 
 	transform = playerSprite->AddComponent<Transform>();
-	transform->scale = point3d(1.5);
-	transform->position = point3d(0, 0.2, 0.75);
+	transform->scale = point3d(2);
+	transform->position = point3d(0, 0.2, 1);
 	transform->mRotation = GetMatrixFromDirection(point3d(0, 1, 0).normalized(), point3d(0, 0, 1));
 
 	Sprite* sprite = playerSprite->AddComponent<Sprite>();
@@ -750,64 +744,40 @@ void LevelManagerClass::CreateRoom()
 	wall = m_World->entityStorage->CreateEntity("Wall", room);
 	transform = wall->AddComponent<Transform>();
 	transform->scale = point3d(1, 10, 1);
-	transform->position = point3d(10, 0, 0);
+	transform->position = point3d(20, 0, 0);
 	transform->mRotation = GetMatrixFromDirection(point3d(0, 1, 0).normalized(), point3d(0, 0, 1));
 	planeCollider = wall->AddComponent<PlaneCollider>();
 	planeCollider->normal = point3d(-1, 0, 0);
-
-	wallSprite = m_World->entityStorage->CreateEntity("WallSprite", wall);
-	transform = wallSprite->AddComponent<Transform>();
-	transform->position = point3d(-1, 0, 0);
-	sprite = wallSprite->AddComponent<Sprite>();
-	sprite->textureName = "comicsSpot";
 
 	////////////////////////////////
 
 	wall = m_World->entityStorage->CreateEntity("Wall", room);
 	transform = wall->AddComponent<Transform>();
 	transform->scale = point3d(1, 10, 1);
-	transform->position = point3d(-10, 0, 0);
+	transform->position = point3d(-17, 0, 0);
 	transform->mRotation = GetMatrixFromDirection(point3d(0, 1, 0).normalized(), point3d(0, 0, 1));
 	planeCollider = wall->AddComponent<PlaneCollider>();
 	planeCollider->normal = point3d(1, 0, 0);
-
-	wallSprite = m_World->entityStorage->CreateEntity("WallSprite", wall);
-	transform = wallSprite->AddComponent<Transform>();
-	transform->position = point3d(1, 0, 0);
-	sprite = wallSprite->AddComponent<Sprite>();
-	sprite->textureName = "comicsSpot";
 
 	////////////////////////////////
 
 	wall = m_World->entityStorage->CreateEntity("Wall", room);
 	transform = wall->AddComponent<Transform>();
 	transform->scale = point3d(10, 1, 1);
-	transform->position = point3d(0, 0, 8);
+	transform->position = point3d(0, 0, 2);
 	transform->mRotation = GetMatrixFromDirection(point3d(0, 1, 0).normalized(), point3d(0, 0, 1));
 	planeCollider = wall->AddComponent<PlaneCollider>();
 	planeCollider->normal = point3d(0, 0, -1);
-
-	wallSprite = m_World->entityStorage->CreateEntity("WallSprite", wall);
-	transform = wallSprite->AddComponent<Transform>();
-	transform->position = point3d(0, 3, 0);
-	sprite = wallSprite->AddComponent<Sprite>();
-	sprite->textureName = "comicsSpot";
 
 	////////////////////////////////
 
 	wall = m_World->entityStorage->CreateEntity("Wall", room);
 	transform = wall->AddComponent<Transform>();
 	transform->scale = point3d(-10, 1, 1);
-	transform->position = point3d(0, 0, -10);
+	transform->position = point3d(0, 0, -9);
 	transform->mRotation = GetMatrixFromDirection(point3d(0, 1, 0).normalized(), point3d(0, 0, 1));
 	planeCollider = wall->AddComponent<PlaneCollider>();
 	planeCollider->normal = point3d(0, 0, 1);
-
-	wallSprite = m_World->entityStorage->CreateEntity("WallSprite", wall);
-	transform = wallSprite->AddComponent<Transform>();
-	transform->position = point3d(0, -1, 0);
-	sprite = wallSprite->AddComponent<Sprite>();
-	sprite->textureName = "comicsSpot";
 
 	CreateGardens(room);
 	
@@ -821,11 +791,11 @@ void LevelManagerClass::CreateGardens(Entity* room)
 	Sprite* sprite;
 	SphereCollider* sphereCollider;
 
-	for (int i = -9; i < 10; i += 2) {
+	for (int i = -9; i < 18; i += 2) {
 		garden = m_World->entityStorage->CreateEntity("WallSprite", room);
 
 		transform = garden->AddComponent<Transform>();
-		transform->position = point3d(i, 0, 9);
+		transform->position = point3d(i, 0, 3);
 		transform->mRotation = GetMatrixFromDirection(point3d(0, 1, 0).normalized(), point3d(0, 0, 1));
 
 		sprite = garden->AddComponent<Sprite>();

@@ -114,7 +114,7 @@ void World::UpdateRender()
 
 	Textures::RenderTarget(1, 0);
 	// Clear the buffers to begin the scene.
-	Draw::Clear({ 0.31f, 0.61f, 0.89f, 1.0f });
+	Draw::Clear({ 0.0f, 0.0f, 0.0f, 1.0f });
 	Draw::ClearDepth();
 
 	InputAssembler::IA(InputAssembler::topology::triList);
