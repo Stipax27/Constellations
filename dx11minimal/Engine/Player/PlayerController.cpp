@@ -99,7 +99,7 @@ void PlayerController::Initialize(Entity* Player)
 
 	SetCursorPos(window->width / 2, window->height / 2);
 
-	PlayerBackPack.MusicPlayer(L"..\\dx11minimal\\Resourses\\Sounds\\Oven_NEW.mp3");
+	PlayerBackPack.MusicPlayer(L"..\\dx11minimal\\Resourses\\Sounds\\gamejam.mp3");
 }
 
 
@@ -237,7 +237,7 @@ void PlayerController::ProcessMouse()
 				mouse->particles.push_back(particle);
 			}
 
-			PlayerBackPack.ProcessSound(L"..\\dx11minimal\\Resourses\\Sounds\\Damage.wav");
+			//PlayerBackPack.ProcessSound(L"..\\dx11minimal\\Resourses\\Sounds\\Damage.wav");
 			ClickOnObjectL();
 		}
 		if (mouse->IsRButtonClicked() && mouse->visible)
