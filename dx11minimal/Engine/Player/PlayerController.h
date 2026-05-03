@@ -95,6 +95,8 @@ private:
 	Entity* dressingList;
 	Entity* plantsList;
 
+	ImageLabel* handSlot;
+
 	Transform* playerTransform;
 	PhysicBody* playerPhysicBody;
 	PointCloud* playerPointCloud;

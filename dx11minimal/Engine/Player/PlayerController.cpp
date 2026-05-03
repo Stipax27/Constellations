@@ -83,6 +83,8 @@ void PlayerController::Initialize(Entity* Player)
 	entityStorage = Singleton::GetInstance<EntityStorage>();
 	collisionManager = Singleton::GetInstance<CollisionManagerClass>();
 
+	handSlot = entityStorage->GetEntityByName("HandSlot")->GetComponent<ImageLabel>();
+
 	abilities = Singleton::GetInstance<PlayerAbilities>();
 	abilities->Initialize(playerEntity, entityStorage);
 
@@ -431,8 +433,8 @@ void PlayerController::ProccessUI()
 				slot->GetComponent<ImageLabel>()->textureName = itemTextures[i + 6];
 
 				if (slot->GetComponent<Button>()->isClicked) {
-					PlayerBackPack.whatChange = true;
 					PlayerBackPack.ItemInHand = item.Name;
+					handSlot->textureName = itemTextures[item.Name];
 				}
 			}
 			else {
@@ -461,8 +463,8 @@ void PlayerController::ProccessUI()
 				slot->GetComponent<ImageLabel>()->textureName = itemTextures[i + 12];
 
 				if (slot->GetComponent<Button>()->isClicked) {
-					PlayerBackPack.whatChange = true;
 					PlayerBackPack.ItemInHand = item.Name;
+					handSlot->textureName = itemTextures[item.Name];
 				}
 			}
 			else {
@@ -484,8 +486,8 @@ void PlayerController::ProccessUI()
 				slot->GetComponent<ImageLabel>()->textureName = itemTextures[i];
 
 				if (slot->GetComponent<Button>()->isClicked) {
-					PlayerBackPack.whatChange = true;
 					PlayerBackPack.ItemInHand = item.Name;
+					handSlot->textureName = itemTextures[item.Name];
 				}
 			}
 			else {
