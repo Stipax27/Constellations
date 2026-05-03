@@ -155,7 +155,7 @@ struct BackPacks
 		ItemPick.Name = ItemsInBackPack::EMPTYItem;
 		Plant = 0;
 		Garden = 0;
-
+		PlantInHand = false;
 		EntityStorage* entityStorage = Singleton::GetInstance<EntityStorage>();
 		Entity* handSlot = entityStorage->GetEntityByName("HandSlot");
 		handSlot->GetComponent<ImageLabel>()->textureName = "Menu_Slot";

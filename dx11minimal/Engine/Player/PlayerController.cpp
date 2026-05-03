@@ -609,4 +609,5 @@ void PlayerController::GameReset()
 	PlayerBackPack.ListItems[13] = ItemsBackPack(ItemsInBackPack::UP2, 1);
 	PlayerBackPack.ListItems[14] = ItemsBackPack(ItemsInBackPack::UP3, 1);
 	PlayerBackPack.ListItems[15] = ItemsBackPack(ItemsInBackPack::UP4, 1);
+	PlayerBackPack.ClearHandItem();
 }
