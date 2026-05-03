@@ -163,24 +163,32 @@ void PlayerController::ProcessInput()
 
 
 	if (input::IsKeyPressed('1'))
-	{	// берет уражай UP1
-		PlayerBackPack.whatChange = true;
-		PlayerBackPack.ItemInHand = ItemsInBackPack::UP1;
+	{
+		PlayerBackPack.ItemInHand = ItemsInBackPack::RED;
 	}
 	if (input::IsKeyPressed('2'))
 	{
-		PlayerBackPack.whatChange = true;
-		PlayerBackPack.ItemInHand = ItemsInBackPack::UP2;
+		PlayerBackPack.ItemInHand = ItemsInBackPack::BLUE;
 	}
 	if (input::IsKeyPressed('3'))
 	{
-		PlayerBackPack.whatChange = true;
-		PlayerBackPack.ItemInHand = ItemsInBackPack::UP3;
+		PlayerBackPack.ItemInHand = ItemsInBackPack::RED;
 	}
 	if (input::IsKeyPressed('4'))
 	{
-		PlayerBackPack.whatChange = true;
-		PlayerBackPack.ItemInHand = ItemsInBackPack::UP4;
+		PlayerBackPack.ItemInHand = ItemsInBackPack::WATER;
+	}
+	if (input::IsKeyPressed('5'))
+	{
+		PlayerBackPack.ItemInHand = ItemsInBackPack::WATER;
+	}
+	if (input::IsKeyPressed('6')) // reset item
+	{
+		PlayerBackPack.ResetItem();
+	}
+	if (input::IsKeyPressed('7')) // reset item
+	{
+		GameReset();
 	}
 }
 		
@@ -194,6 +202,8 @@ void PlayerController::ProcessCamera()
 
 	camera->SetMatrixRotation(LerpMatrix(camera->GetMatrixRotation(), matrixRotation, 0.15f));
 }
+
+
 
 
 void PlayerController::ProcessMouse()
@@ -284,9 +294,92 @@ void PlayerController::ProcessMouse()
 	target = result.hit ? result.entity : nullptr;
 }
 
+Entity* CreateUIPlant(Entity* Plant, EntityStorage* entityStorage)
+{
+	Entity* UIPlantBar;
+	Transform* transformBar;
+	Sprite* spriteLineBar;
+	UIPlantBar = entityStorage->CreateEntity("UIBar", Plant);
+	transformBar = UIPlantBar->AddComponent<Transform>();
+	transformBar->position = point3d(0, 1, 0.2);
+	transformBar->scale = point3d(1, 0.1, 1);
+	spriteLineBar = UIPlantBar->AddComponent<Sprite>();
+	spriteLineBar->textureName = "ScaleBar";
 
 
+	Entity* UIPlant;
+	Transform* transform;
+	Sprite* spriteLine;
+	UIPlant = entityStorage->CreateEntity("UILine", UIPlantBar);
+	transform = UIPlant->AddComponent<Transform>();
+	transform->position = point3d(0, 0, 0.3);
+	spriteLine = UIPlant->AddComponent<Sprite>();
+	spriteLine->textureName = "ScaleLineG";
 
+	return UIPlant;
+}
+
+Entity* CreateEmogy(Entity* Plant, EntityStorage* entityStorage)
+{
+	Entity* PlantEmoji;
+	Transform* transformEmoji;
+	Sprite* spriteLineEmoji;
+
+	PlantEmoji = entityStorage->CreateEntity("PlantEMOJI", Plant);
+
+	transformEmoji = PlantEmoji->AddComponent<Transform>();
+	transformEmoji->position = point3d(-0.7, 1.4, 0.4);
+	transformEmoji->scale = point3d(0.4, 0.4, 0.1);
+	spriteLineEmoji = PlantEmoji->AddComponent<Sprite>();
+	spriteLineEmoji->textureName = "LOVE_EMOGY";
+
+	return PlantEmoji;
+}
+
+Entity* CreateBuffInfo(Entity* Plant, EntityStorage* entityStorage)
+{
+	Entity* Plantbuff;
+	Transform* transformbuff;
+	Sprite* spriteLinebuff;
+
+	Plantbuff = entityStorage->CreateEntity("PlantBuff", Plant);
+
+	transformbuff = Plantbuff->AddComponent<Transform>();
+	transformbuff->position = point3d(0.8, 1.3, 0.5);
+	transformbuff->scale = point3d(0.2, 0.2, 0.1);
+	spriteLinebuff = Plantbuff->AddComponent<Sprite>();
+	spriteLinebuff->textureName = "BUFF_PLUS1";
+
+	return Plantbuff;
+}
+
+void CreatePlant(Entity* Garden, EntityStorage* entityStorage , int Color)
+{
+	Entity* Plant;
+	Transform* transform;
+	Sprite* spritePlant;
+	ComponentPlants* PropPlant;
+
+	Plant = entityStorage->CreateEntity("Plant", Garden);
+
+	transform = Plant->AddComponent<Transform>();
+	transform->position = point3d(0, 0.1, 0.1);
+
+	spritePlant = Plant->AddComponent<Sprite>();
+	PropPlant = Plant->AddComponent<ComponentPlants>();
+
+	spritePlant->textureName = "Plant1KILER";
+
+	PropPlant->TexturePlant = spritePlant->textureName;
+	PropPlant->Plant = Plant;
+
+	PropPlant->TypeColorPlant = (TypePlant)Color;
+	PropPlant->UiLine = CreateUIPlant(Plant, entityStorage);
+	PropPlant->Emoji = CreateEmogy(Plant, entityStorage);
+	PropPlant->BuffInfo = CreateBuffInfo(Plant, entityStorage);
+	PropPlant->Garden = Garden;
+	PlayerBackPack.VPlants.push_back(Plant);
+}
 
 void PlayerController::ProccessUI()
 {
@@ -419,10 +512,40 @@ void PlayerController::ClickOnObjectL()
 		Sprite* sprite = target->GetComponent<Sprite>();
 
 		if (sprite) {
-			Entity* Plant = target->GetChildByName("Plant");
-			if (Plant != NULL)
+			Entity* Plant;
+
+			if (target->GetChildByName("Plant") == 0 && 
+				PlayerBackPack.ChangeCountItem(PlayerBackPack.ListItems[PlayerBackPack.ItemInHand].Count) == true 
+				&& PlayerBackPack.PlantInHand == false 
+				)
 			{
+				if (PlayerBackPack.ItemInHand == ItemsInBackPack::BLUE ||
+					PlayerBackPack.ItemInHand == ItemsInBackPack::RED ||
+					PlayerBackPack.ItemInHand == ItemsInBackPack::YELLOW ||
+					PlayerBackPack.ItemInHand == ItemsInBackPack::PURPLE ||
+					PlayerBackPack.ItemInHand == ItemsInBackPack::ORANGE ||
+					PlayerBackPack.ItemInHand == ItemsInBackPack::CYAN)
+				{
+					CreatePlant(target, entityStorage, PlayerBackPack.ItemInHand);
+					Plant = target->GetChildByName("Plant");
+					PlayerBackPack.UseItem(Plant);
+				}
+			}
+			else if (target->GetChildByName("Plant") != 0 && 
+				PlayerBackPack.ChangeCountItem(PlayerBackPack.ListItems[PlayerBackPack.ItemInHand].Count) == true &&
+				PlayerBackPack.PlantInHand == false)
+			{
+				Plant = target->GetChildByName("Plant");
 				PlayerBackPack.UseItem(Plant);
+			}
+			else if (PlayerBackPack.PlantInHand == true && target->GetChildByName("Plant") == 0)
+			{
+				PlayerBackPack.PlantInHand = false;
+				target->AddChild(PlayerBackPack.Plant);
+				PlayerBackPack.Plant->GetComponent<Sprite>()->active = true;
+				for (int i = 0; i < PlayerBackPack.Plant->GetChildren().size(); i++)
+				{PlayerBackPack.Plant->GetChildren()[i]->GetComponent<Sprite>()->active = true;}
+				PlayerBackPack.Plant->GetChildByName("UIBar")->GetChildByName("UILine")->GetComponent<Sprite>()->active = true;
 			}
 		}
 	}
@@ -440,10 +563,15 @@ void PlayerController::ClickOnObjectR()
 
 		if (sprite) {
 			Entity* Plant = target->GetChildByName("Plant");
-			if (Plant != NULL)
+			if (Plant != NULL && PlayerBackPack.PlantInHand == false)
 			{
-			//ComponentPlants* com = Plant->GetComponent<ComponentPlants>();
-			PlayerBackPack.ResetItem();
+				PlayerBackPack.PlantInHand = true;
+				PlayerBackPack.Plant = Plant;
+				target->RemoveChild(Plant);
+				PlayerBackPack.Plant->GetComponent<Sprite>()->active = false;
+				for (int i = 0; i < PlayerBackPack.Plant->GetChildren().size(); i++)
+				{PlayerBackPack.Plant->GetChildren()[i]->GetComponent<Sprite>()->active = false;}
+				PlayerBackPack.Plant->GetChildByName("UIBar")->GetChildByName("UILine")->GetComponent<Sprite>()->active = false;
 			}
 		}
 
@@ -451,4 +579,32 @@ void PlayerController::ClickOnObjectR()
 
 
 	}
+}
+
+void PlayerController::GameReset()
+{
+	for (int i = 0; i < PlayerBackPack.VPlants.size(); i++)
+	{
+		ComponentPlants* com = PlayerBackPack.VPlants[i]->GetComponent<ComponentPlants>();
+		com->CheckCreate = false;
+	}
+	
+	PlayerBackPack.ListItems[0] = ItemsBackPack(ItemsInBackPack::BLUE, 1);
+	PlayerBackPack.ListItems[1] = ItemsBackPack(ItemsInBackPack::YELLOW, 1);
+	PlayerBackPack.ListItems[2] = ItemsBackPack(ItemsInBackPack::RED, 1);
+	PlayerBackPack.ListItems[3] = ItemsBackPack(ItemsInBackPack::PURPLE, 1);
+	PlayerBackPack.ListItems[4] = ItemsBackPack(ItemsInBackPack::ORANGE, 1);
+	PlayerBackPack.ListItems[5] = ItemsBackPack(ItemsInBackPack::CYAN, 1);
+
+	PlayerBackPack.ListItems[6] = ItemsBackPack(ItemsInBackPack::WATER, 1);
+	PlayerBackPack.ListItems[7] = ItemsBackPack(ItemsInBackPack::MILK, 1);
+	PlayerBackPack.ListItems[8] = ItemsBackPack(ItemsInBackPack::TEA, 1);
+	PlayerBackPack.ListItems[9] = ItemsBackPack(ItemsInBackPack::ESPRESSO, 1);
+	PlayerBackPack.ListItems[10] = ItemsBackPack(ItemsInBackPack::AMERICANO, 1);
+	PlayerBackPack.ListItems[11] = ItemsBackPack(ItemsInBackPack::LAVANDER_RAF, 1);
+
+	PlayerBackPack.ListItems[12] = ItemsBackPack(ItemsInBackPack::UP1, 1);
+	PlayerBackPack.ListItems[13] = ItemsBackPack(ItemsInBackPack::UP2, 1);
+	PlayerBackPack.ListItems[14] = ItemsBackPack(ItemsInBackPack::UP3, 1);
+	PlayerBackPack.ListItems[15] = ItemsBackPack(ItemsInBackPack::UP4, 1);
 }

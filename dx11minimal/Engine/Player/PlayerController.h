@@ -77,7 +77,6 @@ public:
 private:
 	ComboManager* comboManager;
 
-
 	EntityStorage* entityStorage;
 	CollisionManagerClass* collisionManager;
 
@@ -116,6 +115,7 @@ private:
 private:
 	void ClickOnObjectL();
 	void ClickOnObjectR();
+	void GameReset();
 };
 
 #endif

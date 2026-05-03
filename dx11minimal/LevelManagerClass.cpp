@@ -36,8 +36,6 @@ void LevelManagerClass::ProcessSound(const char* name)
 }
 
 
-vector<Entity*> VPlants;
-
 // __METODS GAMEJAM__ //
 void Metamorf(TypePlant ColorPlant, Mutation Gain, std::string& TexturePlant)
 {
@@ -111,14 +109,212 @@ void MutationPlantation(ComponentPlants& PropPlant, float scaleS)
 	else if (scaleGain < 0.6 && scaleS < 0.3)
 		PropPlant.GainPlant = Mutation::KILLER_PLANT;
 }
+void PlantsNear()
+{
+	for (int i = 0; i < PlayerBackPack.VPlants.size(); i++)
+	{
+		for (int j = 0; j < PlayerBackPack.VPlants.size(); j++)
+		{
+			if (PlayerBackPack.VPlants[i]->GetId() != PlayerBackPack.VPlants[j]->GetId())
+			{
+				Transform SelfT = GetWorldTransform(PlayerBackPack.VPlants[i]);
+				Transform NeverT = GetWorldTransform(PlayerBackPack.VPlants[j]);
+
+				if ((SelfT.position - NeverT.position).magnitude() < 3)
+				{
+					
+				ComponentPlants* comSelf = PlayerBackPack.VPlants[i]->GetComponent<ComponentPlants>();
+				ComponentPlants* comNever = PlayerBackPack.VPlants[j]->GetComponent<ComponentPlants>();
+
+				comSelf->StackBuFF_TOGEC = 0;
+
+				switch (comSelf->TypeColorPlant)
+				{
+					case (TypePlant::BLUE_P):
+					{
+						if (comNever->TypeColorPlant == TypePlant::YELLOW_P &&
+							comSelf->GainPlant == Mutation::KIND_PLANT &&
+							comNever->GainPlant == Mutation::KIND_PLANT
+							)
+						{
+							comSelf->TypeColorPlant = TypePlant::CYAN_P;
+							comNever->LoyaltyScale = 0;
+							break;
+						}
+
+
+						if (comNever->TypeColorPlant == TypePlant::BLUE_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if(comNever->TypeColorPlant == TypePlant::YELLOW_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::RED_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::PURPLE_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::ORANGE_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::CYAN_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+
+						break;
+					}
+					case (TypePlant::YELLOW_P):
+					{
+						if (comNever->TypeColorPlant == TypePlant::RED_P &&
+							comSelf->GainPlant == Mutation::KIND_PLANT &&
+							comNever->GainPlant == Mutation::KIND_PLANT
+							)
+						{
+							comSelf->TypeColorPlant = TypePlant::ORANGE_P;
+							comNever->LoyaltyScale = 0;
+							break;
+						}
+
+
+
+						if (comNever->TypeColorPlant == TypePlant::BLUE_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::YELLOW_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::RED_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::PURPLE_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::ORANGE_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::CYAN_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+
+						break;
+					}
+					case (TypePlant::RED_P):
+					{
+						if (comNever->TypeColorPlant == TypePlant::BLUE_P &&
+							comSelf->GainPlant == Mutation::KIND_PLANT && 
+							comNever->GainPlant == Mutation::KIND_PLANT
+							)
+						{
+							comSelf->TypeColorPlant = TypePlant::PURPLE_P;
+							comNever->LoyaltyScale = 0;
+							break;
+						}
+
+						if (comNever->TypeColorPlant == TypePlant::BLUE_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::YELLOW_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::RED_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::PURPLE_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::ORANGE_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::CYAN_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+
+						break;
+					}
+					case (TypePlant::PURPLE_P):
+					{
+						if (comNever->TypeColorPlant == TypePlant::BLUE_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::YELLOW_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::RED_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::PURPLE_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::ORANGE_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::CYAN_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+
+						break;
+					}
+					case (TypePlant::ORANGE_P):
+					{
+						if (comNever->TypeColorPlant == TypePlant::BLUE_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::YELLOW_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::RED_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::PURPLE_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::ORANGE_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::CYAN_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+
+						break;
+					}
+					case (TypePlant::CYAN_P):
+					{
+						if (comNever->TypeColorPlant == TypePlant::BLUE_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::YELLOW_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::RED_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::PURPLE_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::ORANGE_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::CYAN_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+
+						break;
+					}
+				}
+
+				}
+			}
+		}
+	}
+}
+void GameChangeWin()
+{
+	int purple = 0;
+	int orange = 0;
+	int cyan = 0;
+
+	for (int i = 0; i < PlayerBackPack.VPlants.size(); i++)
+	{
+		ComponentPlants* comSelf = PlayerBackPack.VPlants[i]->GetComponent<ComponentPlants>();
+		if (comSelf->TypeColorPlant == TypePlant::PURPLE_P && comSelf->Status == StatusPlant::GOOD)
+			purple++;
+		else if (comSelf->TypeColorPlant == TypePlant::ORANGE_P && comSelf->Status == StatusPlant::GOOD)
+			orange++;
+		else if (comSelf->TypeColorPlant == TypePlant::CYAN_P && comSelf->Status == StatusPlant::GOOD)
+			cyan++;
+	}
+
+	if (purple >= 2 && orange >= 2 && cyan >= 2)
+	{
+		///WIN
+	}
+
+}
+
 
 
 void GameJamMetod(ComponentPlants& PropPlant)
 {
-	float sec = 1;
+	if(PropPlant.Plant->GetParent() != 0)
+	{ 
+	GameChangeWin();
+	PlantsNear();
+	const float summBuf = PropPlant.BAF_D + PropPlant.StackBuFF_TOGEC;
+
+
+	float sec = 5 + summBuf;
+
+	if (sec < 0.1)
+		sec = 0.1;
+
 	PropPlant.LoyaltyScale -= 1. / sec;
-	float Scale = ((120 * PropPlant.LoyaltyScale) / 1000.);
-	float scaleS = Scale / 120;
+	float Scale = ((800 * PropPlant.LoyaltyScale) / 1000.);
+	float scaleS = Scale / 800;
 	string str;
 	point3d* scaleUI = &PropPlant.UiLine->GetComponent<Transform>()->scale;
 
@@ -143,13 +339,22 @@ void GameJamMetod(ComponentPlants& PropPlant)
 		PropPlant.Status = StatusPlant::DEAD;
 		PropPlant.UiLine->GetComponent<Sprite>()->textureName = "ScaleLineR";
 	}
+	
+
+	if (summBuf >= 0 && summBuf < 3)
+		PropPlant.BuffInfo->GetComponent<Sprite>()->textureName = "BUFF_PLUS1";
+	else if(summBuf >= 3)
+		PropPlant.BuffInfo->GetComponent<Sprite>()->textureName = "BUFF_PLUS2";
+	else if(summBuf < 0 && summBuf >= -3)
+		PropPlant.BuffInfo->GetComponent<Sprite>()->textureName = "BUFF_MINUS1";
+	else if (summBuf < 3)
+		PropPlant.BuffInfo->GetComponent<Sprite>()->textureName = "BUFF_MINUS2";
 
 
 	if (GetAsyncKeyState('E'))
 		PropPlant.LoyaltyScale += 2;
 	if (GetAsyncKeyState('Q'))
 		PropPlant.LoyaltyScale -= 2;
-
 
 
 	StatusMood(scaleS, PropPlant.Status, PropPlant.TextureEmogy);
@@ -163,6 +368,9 @@ void GameJamMetod(ComponentPlants& PropPlant)
 		PropPlant.CheckCreate = false;
 		return;
 	}
+	}
+	else
+	{}
 }
 // __METODS GAMEJAM__ //
 
@@ -260,6 +468,10 @@ bool LevelManagerClass::Initialize()
 	Textures::LoadPNGTexture("Menu_Drink", L"..\\dx11minimal\\Resourses\\Textures\\MENU_2.png");
 	Textures::LoadPNGTexture("Menu_Plants", L"..\\dx11minimal\\Resourses\\Textures\\MENU_3.png");
 
+	Textures::LoadPNGTexture("BUFF_MINUS1", L"..\\dx11minimal\\Resourses\\Textures\\BUFF_MINUS1.png");
+	Textures::LoadPNGTexture("BUFF_MINUS2", L"..\\dx11minimal\\Resourses\\Textures\\BUFF_MINUS2.png");
+	Textures::LoadPNGTexture("BUFF_PLUS1", L"..\\dx11minimal\\Resourses\\Textures\\BUFF_PLUS1.png");
+	Textures::LoadPNGTexture("BUFF_PLUS2", L"..\\dx11minimal\\Resourses\\Textures\\BUFF_PLUS2.png");
 	Textures::LoadPNGTexture("Menu_Bar", L"..\\dx11minimal\\Resourses\\Textures\\MENU_BAR.png");
 	Textures::LoadPNGTexture("Menu_Slot", L"..\\dx11minimal\\Resourses\\Textures\\MENU_Slot.png");
 
@@ -406,24 +618,17 @@ void LevelManagerClass::Frame()
 	playerController->ProccessUI();
 
 
-	if (PlayerBackPack.whatChange == true && PlayerBackPack.PlantInHand == false)
+	for (int i = 0; i < PlayerBackPack.VPlants.size(); i++)
 	{
-		PlayerBackPack.ChangeItemInHands(m_World->entityStorage);
-	}
-
-	int i = 0;
-	while (i < VPlants.size())
-	{
-		ComponentPlants* com = VPlants[i]->GetComponent<ComponentPlants>();
+		ComponentPlants* com = PlayerBackPack.VPlants[i]->GetComponent<ComponentPlants>();
 		if (com->CheckCreate == true)
 		{
-			i++;
-			GameJamMetod(*com);
+		GameJamMetod(*com);
 		}
 		else
 		{
 			com->Plant->Destroy();
-			VPlants.erase(VPlants.begin() + i);
+			PlayerBackPack.VPlants.erase(PlayerBackPack.VPlants.begin() + i);
 		}
 	}
 
@@ -440,11 +645,7 @@ void LevelManagerClass::Frame()
 	Draw::Present();
 }
 
-
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 void LevelManagerClass::InitSystems()
 {
@@ -783,7 +984,6 @@ void LevelManagerClass::CreateRoom()
 	
 }
 
-
 void LevelManagerClass::CreateGardens(Entity* room)
 {
 	Entity* garden;
@@ -801,98 +1001,7 @@ void LevelManagerClass::CreateGardens(Entity* room)
 		sprite = garden->AddComponent<Sprite>();
 		sprite->textureName = "garden";
 
-		CreatePlant(garden);
-		
 		sphereCollider = garden->AddComponent<SphereCollider>();
 		sphereCollider->radius = 1.25f;
-
 	}
 }
-
-
-
-
-Entity* LevelManagerClass::CreateUIPlant(Entity* Plant)
-{
-	Entity* UIPlantBar;
-	Transform* transformBar;
-	Sprite* spriteLineBar;
-	UIPlantBar = m_World->entityStorage->CreateEntity("UIBar", Plant);
-	transformBar = UIPlantBar->AddComponent<Transform>();
-	transformBar->position = point3d(0, 1, 0.2);
-	transformBar->scale = point3d(1, 0.1, 1);
-	spriteLineBar = UIPlantBar->AddComponent<Sprite>();
-	spriteLineBar->textureName = "ScaleBar";
-	
-	
-	Entity* UIPlant;
-	Transform* transform;
-	Sprite* spriteLine;
-	UIPlant = m_World->entityStorage->CreateEntity("UILine", UIPlantBar);
-	transform = UIPlant->AddComponent<Transform>();
-	transform->position = point3d(0, 0, 0.3);
-	spriteLine = UIPlant->AddComponent<Sprite>();
-	spriteLine->textureName = "ScaleLineG";
-
-	return UIPlant;
-}
-
-Entity* LevelManagerClass::CreateEmogy(Entity* Plant)
-{
-	Entity* PlantEmoji;
-	Transform* transformEmoji;
-	Sprite* spriteLineEmoji;
-
-	PlantEmoji = m_World->entityStorage->CreateEntity("PlantEMOJI", Plant);
-
-	transformEmoji = PlantEmoji->AddComponent<Transform>();
-	transformEmoji->position = point3d(-0.7, 1.4, 0.4);
-	transformEmoji->scale = point3d(0.4, 0.4, 0.1);
-	spriteLineEmoji = PlantEmoji->AddComponent<Sprite>();
-	spriteLineEmoji->textureName = "LOVE_EMOGY";
-
-	return PlantEmoji;
-}
-
-void LevelManagerClass::CreatePlant(Entity* Garden)
-{
-	Entity* Plant;
-	Transform* transform;
-	Sprite* spritePlant;
-	ComponentPlants* PropPlant;
-
-	Plant = m_World->entityStorage->CreateEntity("Plant", Garden);
-
-	transform = Plant->AddComponent<Transform>();
-	transform->position = point3d(0, 0.1, 0.1);
-
-	spritePlant = Plant->AddComponent<Sprite>();
-	PropPlant = Plant->AddComponent<ComponentPlants>();
-
-	spritePlant->textureName = "Plant1KILER";
-
-	PropPlant->TexturePlant = spritePlant->textureName;
-	PropPlant->Plant = Plant;
-
-
-	PropPlant->UiLine = CreateUIPlant(Plant);
-	PropPlant->Emoji = CreateEmogy(Plant);
-	PropPlant->Garden = Garden;
-	VPlants.push_back(Plant);
-}
-
-//Textures::LoadPNGTexture("Plant1KILER", L"..\\dx11minimal\\Resourses\\Textures\\G\\A.png");
-//Textures::LoadPNGTexture("Plant1KIND", L"..\\dx11minimal\\Resourses\\Textures\\G\\B.png");
-//Textures::LoadPNGTexture("Plant1SEED", L"..\\dx11minimal\\Resourses\\Textures\\G\\C.png");
-//Textures::LoadPNGTexture("Plant1NORMAL", L"..\\dx11minimal\\Resourses\\Textures\\G\\D.png");
-//Textures::LoadPNGTexture("Plant1EVIL", L"..\\dx11minimal\\Resourses\\Textures\\G\\E.png");
-//
-//Textures::LoadPNGTexture("ScaleBar", L"..\\dx11minimal\\Resourses\\Textures\\I\\A.png");
-//Textures::LoadPNGTexture("ScaleLineG", L"..\\dx11minimal\\Resourses\\Textures\\I\\B.png");
-//Textures::LoadPNGTexture("ScaleLineY", L"..\\dx11minimal\\Resourses\\Textures\\I\\C.png");
-//Textures::LoadPNGTexture("ScaleLineR", L"..\\dx11minimal\\Resourses\\Textures\\I\\D.png");
-//
-//Textures::LoadPNGTexture("ANGRY_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\A.png");
-//Textures::LoadPNGTexture("NORMAL_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\B.png");
-//Textures::LoadPNGTexture("LOVE_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\C.png");
-//Textures::LoadPNGTexture("DEAD_EMOGY", L"..\\dx11minimal\\Resourses\\Textures\\L\\D.png");

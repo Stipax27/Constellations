@@ -72,10 +72,16 @@ struct ComponentPlants : Component
 	int Number = 0;
 	bool CheckCreate = true;
 	bool Click = false;
-	bool Active = false;
+	bool Active = true;
 	std::string TextureLine;
 	std::string TexturePlant;
 	std::string TextureEmogy;
+
+	const float BUFF_DRING = 1;
+	const float BUFF_TOGECHER = 0.5;
+	float StackBuFF_TOGEC = 0.0;
+
+	float BAF_D = 0.0;
 
 	//Plant property
 	const char* NameChar;
@@ -87,10 +93,12 @@ struct ComponentPlants : Component
 	ItemsInBackPack HateBeverage = ItemsInBackPack::MILK;
 	Mutation GainPlant = Mutation::SEED;
 
+
 	Entity* Plant;
 	Entity* UiLine;
 	Entity* Emoji;
 	Entity* Garden;
+	Entity* BuffInfo;
 };
 // -- COMPONENTS GAMEJAM -- //
 
@@ -109,8 +117,6 @@ extern std::string itemTextures[16];
 struct BackPacks
 {
 	ItemsInBackPack ItemInHand = ItemsInBackPack::EMPTYItem;
-	bool whatChange = false;
-	bool ItemActiveted = false;
 	bool PlantInHand = false;
 
 	ItemsBackPack ListItems[16] =
@@ -124,12 +130,12 @@ struct BackPacks
 		ItemsBackPack(ItemsInBackPack::CYAN,   5), // 5
 
 		//НАПИТКИ
-		ItemsBackPack(ItemsInBackPack::WATER,           5), // 6
-		ItemsBackPack(ItemsInBackPack::MILK,            5), // 7
-		ItemsBackPack(ItemsInBackPack::TEA,             5), // 8
-		ItemsBackPack(ItemsInBackPack::ESPRESSO,        5), // 9
-		ItemsBackPack(ItemsInBackPack::AMERICANO,       5), // 10
-		ItemsBackPack(ItemsInBackPack::LAVANDER_RAF,    5), // 11
+		ItemsBackPack(ItemsInBackPack::WATER,           4), // 6
+		ItemsBackPack(ItemsInBackPack::MILK,            1), // 7
+		ItemsBackPack(ItemsInBackPack::TEA,             1), // 8
+		ItemsBackPack(ItemsInBackPack::ESPRESSO,        1), // 9
+		ItemsBackPack(ItemsInBackPack::AMERICANO,       1), // 10
+		ItemsBackPack(ItemsInBackPack::LAVANDER_RAF,    4), // 11
 
 		//УДОБРЕНИЯ
 		ItemsBackPack(ItemsInBackPack::UP1,             5), // 12
@@ -144,7 +150,7 @@ struct BackPacks
 
 	void ClearHandItem()
 	{
-		ItemsInBackPack ItemInHand = ItemsInBackPack::EMPTYItem;
+		ItemInHand = ItemsInBackPack::EMPTYItem;
 		ItemPick.Count = 0;
 		ItemPick.Name = ItemsInBackPack::EMPTYItem;
 		Plant = 0;
@@ -165,109 +171,122 @@ struct BackPacks
 			return true;
 		}
 		else
+		{
 			return false;
-	}
-
-
-	void ChangeItemInHands(EntityStorage* entityStorage)
-	{
-		whatChange = false;
-		if (ItemInHand != ItemsInBackPack::EMPTYItem && ChangeCountItem(ListItems[ItemInHand].Count))
-		{
-			ItemPick = ListItems[ItemInHand];
-			ItemActiveted = true;
-
-			Entity* handSlot = entityStorage->GetEntityByName("HandSlot");
-			ImageLabel* imageLabel = handSlot->GetComponent<ImageLabel>();
-
-			imageLabel->textureName = itemTextures[ItemInHand];
-		}
-		else
-		{
-			ClearHandItem();
 		}
 	}
+
 
 	void ResetItem()
 	{
-		ItemActiveted = false;
 		ClearHandItem();
 	}
 	void UseItem(Entity* Plants)
 	{
-		if (ItemActiveted == true)
+		if (ItemInHand != ItemsInBackPack::EMPTYItem)
 		{
-			ItemActiveted = false;
+			ItemPick = ListItems[ItemInHand];
 			Garden = Plants->GetParent();
 			Plant = Plants;
-			ItemPick;
 			ComponentPlants* com = Plant->GetComponent<ComponentPlants>();
+			ListItems[ItemInHand].Count--;
 			switch (ItemPick.Name)
 			{
-				// посадка ростений
-			case (ItemsInBackPack::BLUE):
-			{
-
-				break;
-			}
-			case (ItemsInBackPack::YELLOW):
-			{
-
-				break;
-			}
-			case (ItemsInBackPack::RED):
-			{
-
-				break;
-			}
-			case (ItemsInBackPack::PURPLE):
-			{
-
-				break;
-			}
-			case (ItemsInBackPack::ORANGE):
-			{
-
-				break;
-			}
-			case (ItemsInBackPack::CYAN):
-			{
-
-				break;
-			}
-			// посадка ростений
-
 			// полив ростений
 			case (ItemsInBackPack::WATER):
 			{
-
+				if (com->TypeColorPlant == TypePlant::RED_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::YELLOW_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::BLUE_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::PURPLE_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::ORANGE_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::CYAN_P)
+					com->BAF_D += com->BUFF_DRING;
 				break;
 			}
 			case (ItemsInBackPack::MILK):
 			{
-
+				if (com->TypeColorPlant == TypePlant::RED_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::YELLOW_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::BLUE_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::PURPLE_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::ORANGE_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::CYAN_P)
+					com->BAF_D += com->BUFF_DRING;
 				break;
 			}
 			case (ItemsInBackPack::TEA):
 			{
-
+				if (com->TypeColorPlant == TypePlant::RED_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::YELLOW_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::BLUE_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::PURPLE_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::ORANGE_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::CYAN_P)
+					com->BAF_D -= com->BUFF_DRING;
 				break;
 			}
 			case (ItemsInBackPack::ESPRESSO):
 			{
-
+				if (com->TypeColorPlant == TypePlant::RED_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::YELLOW_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::BLUE_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::PURPLE_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::ORANGE_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::CYAN_P)
+					com->BAF_D -= com->BUFF_DRING;
 				break;
 			}
 			case (ItemsInBackPack::AMERICANO):
 			{
-
-
+				if (com->TypeColorPlant == TypePlant::RED_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::YELLOW_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::BLUE_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::PURPLE_P)
+					com->BAF_D -= com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::ORANGE_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::CYAN_P)
+					com->BAF_D += com->BUFF_DRING;
 				break;
 			}
 			case (ItemsInBackPack::LAVANDER_RAF):
 			{
-
-
+				if (com->TypeColorPlant == TypePlant::RED_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::YELLOW_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::BLUE_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::PURPLE_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::ORANGE_P)
+					com->BAF_D += com->BUFF_DRING;
+				else if (com->TypeColorPlant == TypePlant::CYAN_P)
+					com->BAF_D += com->BUFF_DRING;
 				break;
 			}
 			// полив ростений
@@ -303,12 +322,13 @@ struct BackPacks
 			}
 			// использование удобрения
 			}
-
-			ListItems[ItemInHand].Count--;
-			ClearHandItem();
 		}
+		ClearHandItem();
 	}
 
+
+
+	std::vector<Entity*> VPlants;
 };
 
 
