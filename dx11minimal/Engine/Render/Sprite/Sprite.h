@@ -77,10 +77,10 @@ struct ComponentPlants : Component
 	std::string TextureEmogy;
 
 	const float BUFF_DRING = 1;
-	const float BUFF_TOGECHER = 0.2;
+	const float BUFF_TOGECHER = 0.5;
+	float StackBuFF_TOGEC = 0.0;
 
 	float BAF_D = 0.0;
-	float BAF_T = 0.0;
 
 	//Plant property
 	const char* NameChar;
@@ -91,6 +91,7 @@ struct ComponentPlants : Component
 	ItemsInBackPack LoveBeverage = ItemsInBackPack::WATER;
 	ItemsInBackPack HateBeverage = ItemsInBackPack::MILK;
 	Mutation GainPlant = Mutation::SEED;
+
 
 	Entity* Plant;
 	Entity* UiLine;

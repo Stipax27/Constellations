@@ -109,13 +109,189 @@ void MutationPlantation(ComponentPlants& PropPlant, float scaleS)
 	else if (scaleGain < 0.6 && scaleS < 0.3)
 		PropPlant.GainPlant = Mutation::KILLER_PLANT;
 }
+void PlantsNear()
+{
+	for (int i = 0; i < PlayerBackPack.VPlants.size(); i++)
+	{
+		for (int j = 0; j < PlayerBackPack.VPlants.size(); j++)
+		{
+			if (PlayerBackPack.VPlants[i]->GetId() != PlayerBackPack.VPlants[j]->GetId())
+			{
+				Transform SelfT = GetWorldTransform(PlayerBackPack.VPlants[i]);
+				Transform NeverT = GetWorldTransform(PlayerBackPack.VPlants[j]);
+
+				if ((SelfT.position - NeverT.position).magnitude() < 3)
+				{
+					
+				ComponentPlants* comSelf = PlayerBackPack.VPlants[i]->GetComponent<ComponentPlants>();
+				ComponentPlants* comNever = PlayerBackPack.VPlants[j]->GetComponent<ComponentPlants>();
+
+				comSelf->StackBuFF_TOGEC = 0;
+
+				switch (comSelf->TypeColorPlant)
+				{
+					case (TypePlant::BLUE_P):
+					{
+						if (comNever->TypeColorPlant == TypePlant::YELLOW_P &&
+							comSelf->GainPlant == Mutation::KIND_PLANT &&
+							comNever->GainPlant == Mutation::KIND_PLANT
+							)
+						{
+							comSelf->TypeColorPlant = TypePlant::CYAN_P;
+							comNever->LoyaltyScale = 0;
+							break;
+						}
+
+
+						if (comNever->TypeColorPlant == TypePlant::BLUE_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if(comNever->TypeColorPlant == TypePlant::YELLOW_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::RED_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::PURPLE_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::ORANGE_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::CYAN_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+
+						break;
+					}
+					case (TypePlant::YELLOW_P):
+					{
+						if (comNever->TypeColorPlant == TypePlant::RED_P &&
+							comSelf->GainPlant == Mutation::KIND_PLANT &&
+							comNever->GainPlant == Mutation::KIND_PLANT
+							)
+						{
+							comSelf->TypeColorPlant = TypePlant::ORANGE_P;
+							comNever->LoyaltyScale = 0;
+							break;
+						}
+
+
+
+						if (comNever->TypeColorPlant == TypePlant::BLUE_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::YELLOW_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::RED_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::PURPLE_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::ORANGE_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::CYAN_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+
+						break;
+					}
+					case (TypePlant::RED_P):
+					{
+						if (comNever->TypeColorPlant == TypePlant::BLUE_P &&
+							comSelf->GainPlant == Mutation::KIND_PLANT && 
+							comNever->GainPlant == Mutation::KIND_PLANT
+							)
+						{
+							comSelf->TypeColorPlant = TypePlant::PURPLE_P;
+							comNever->LoyaltyScale = 0;
+							break;
+						}
+
+						if (comNever->TypeColorPlant == TypePlant::BLUE_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::YELLOW_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::RED_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::PURPLE_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::ORANGE_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::CYAN_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+
+						break;
+					}
+					case (TypePlant::PURPLE_P):
+					{
+						if (comNever->TypeColorPlant == TypePlant::BLUE_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::YELLOW_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::RED_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::PURPLE_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::ORANGE_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::CYAN_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+
+						break;
+					}
+					case (TypePlant::ORANGE_P):
+					{
+						if (comNever->TypeColorPlant == TypePlant::BLUE_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::YELLOW_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::RED_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::PURPLE_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::ORANGE_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::CYAN_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+
+						break;
+					}
+					case (TypePlant::CYAN_P):
+					{
+						if (comNever->TypeColorPlant == TypePlant::BLUE_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::YELLOW_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::RED_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::PURPLE_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::ORANGE_P)
+							comSelf->StackBuFF_TOGEC += comSelf->BUFF_TOGECHER;
+						else if (comNever->TypeColorPlant == TypePlant::CYAN_P)
+							comSelf->StackBuFF_TOGEC -= comSelf->BUFF_TOGECHER;
+
+						break;
+					}
+				}
+
+				}
+			}
+		}
+	}
+}
+void GameChangeWin()
+{
+	for (int i = 0; i < PlayerBackPack.VPlants.size(); i++)
+	{
+
+
+
+
+	}
+}
+
 
 
 void GameJamMetod(ComponentPlants& PropPlant)
 {
 	if(PropPlant.Plant->GetParent() != 0)
 	{ 
-	const float summBuf = PropPlant.BAF_D + PropPlant.BAF_T;
+	PlantsNear();
+	const float summBuf = PropPlant.BAF_D + PropPlant.StackBuFF_TOGEC;
+
 
 	float sec = 5 + summBuf;
 
@@ -167,7 +343,6 @@ void GameJamMetod(ComponentPlants& PropPlant)
 		PropPlant.LoyaltyScale -= 2;
 
 
-
 	StatusMood(scaleS, PropPlant.Status, PropPlant.TextureEmogy);
 	MutationPlantation(PropPlant, scaleS);
 	Metamorf(PropPlant.TypeColorPlant, PropPlant.GainPlant, PropPlant.TexturePlant);
@@ -181,11 +356,7 @@ void GameJamMetod(ComponentPlants& PropPlant)
 	}
 	}
 	else
-	{
-
-
-		
-	}
+	{}
 }
 // __METODS GAMEJAM__ //
 

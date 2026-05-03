@@ -103,6 +103,7 @@ private:
 private:
 	void ClickOnObjectL();
 	void ClickOnObjectR();
+	void GameReset();
 };
 
 #endif

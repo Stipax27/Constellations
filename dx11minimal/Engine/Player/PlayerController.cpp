@@ -131,20 +131,17 @@ void PlayerController::ProcessInput()
 
 
 
-
-
-
 	if (input::IsKeyPressed('1'))
 	{
 		PlayerBackPack.ItemInHand = ItemsInBackPack::RED;
 	}
 	if (input::IsKeyPressed('2'))
 	{
-		PlayerBackPack.ItemInHand = ItemsInBackPack::WATER;
+		PlayerBackPack.ItemInHand = ItemsInBackPack::BLUE;
 	}
 	if (input::IsKeyPressed('3'))
 	{
-		PlayerBackPack.ItemInHand = ItemsInBackPack::WATER;
+		PlayerBackPack.ItemInHand = ItemsInBackPack::RED;
 	}
 	if (input::IsKeyPressed('4'))
 	{
@@ -158,7 +155,10 @@ void PlayerController::ProcessInput()
 	{
 		PlayerBackPack.ResetItem();
 	}
-
+	if (input::IsKeyPressed('7')) // reset item
+	{
+		GameReset();
+	}
 
 
 
@@ -488,4 +488,13 @@ void PlayerController::ClickOnObjectR()
 
 
 	}
+}
+
+void PlayerController::GameReset()
+{
+
+
+
+
+
 }
