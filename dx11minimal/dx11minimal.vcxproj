@@ -199,6 +199,7 @@
     <ClInclude Include="Constellation.h" />
     <ClInclude Include="cornerType.h" />
     <ClInclude Include="DelayedDestroy.h" />
+    <ClInclude Include="Systems\Transform2DDebugUI.h" />
     <ClInclude Include="Engine\GLTFLoader.h" />
     <ClInclude Include="Engine\Mesh\Animation.h" />
     <ClInclude Include="Engine\Mesh\AnimationRetarget.h" />
@@ -780,6 +781,7 @@
     <ClCompile Include="Systems\SkeletalAnimationSystem.cpp" />
     <ClCompile Include="Systems\SkinnedMeshSystem.cpp" />
     <ClCompile Include="Components\SkeletalAnimationComponent.cpp" />
+    <ClCompile Include="Systems\Transform2DDebugUI.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="TimeSystem.cpp" />
     <ClCompile Include="Transform.cpp" />
@@ -805,6 +807,8 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Shaders\StarLink_PS.shader">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -813,6 +817,8 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Shaders\SpaceStars_VS.shader">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>

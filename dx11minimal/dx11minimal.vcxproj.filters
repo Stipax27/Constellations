@@ -78,6 +78,9 @@
     <ClCompile Include="Systems\UITextSystem.cpp">
       <Filter>Source Files\Render\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\Transform2DDebugUI.cpp">
+      <Filter>Source Files\Render\UI</Filter>
+    </ClCompile>
     <ClCompile Include="EntityManagerSystem.cpp">
       <Filter>Source Files\Compute</Filter>
     </ClCompile>
@@ -219,6 +222,9 @@
       <Filter>Header Files\ECS\Components\Render\UI</Filter>
     </ClInclude>
     <ClInclude Include="Systems\UITextSystem.h">
+      <Filter>Header Files\ECS\Systems\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\Transform2DDebugUI.h">
       <Filter>Header Files\ECS\Systems\Render</Filter>
     </ClInclude>
     <ClInclude Include="PhysicBody.h">

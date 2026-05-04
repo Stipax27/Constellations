@@ -44,6 +44,7 @@
 #include "Engine/Mesh/Animator.h"
 #include "Engine/Mesh/Skeleton.h"
 #include "Engine/Mesh/SkinnedMesh.h"
+#include "Systems/Transform2DDebugUI.h"
 
 /////////////
 // GLOBALS //
@@ -81,6 +82,7 @@ private:
 	PlayerController* playerController;
 	CollisionManagerClass* collisionManager;
 	Entity* m_TestAnimEntity = nullptr;
+	Transform2DDebugUI m_Transform2DDebugUI;
 	int m_TestAnimCycleIndex = 0;
 	bool m_WasToggleAnimationPressed = false;
 

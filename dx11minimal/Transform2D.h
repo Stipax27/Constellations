@@ -15,6 +15,7 @@ struct Transform2D : Component
 {
 	point3d position = point3d();
 	point3d anchorPoint = point3d();
+	point3d parentAnchor = point3d();
 	point3d scale = point3d(1.0f, 1.0f, 0.0f);
 
 	float rotation = 0.0f;

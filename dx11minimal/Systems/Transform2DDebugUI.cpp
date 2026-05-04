@@ -1,0 +1,171 @@
+#include "Transform2DDebugUI.h"
+
+#include "../Components/TextLabel.h"
+#include "../Rect.h"
+#include "../Transform2D.h"
+#include "../entity.h"
+#include "../entityStorage.h"
+#include "../utils.h"
+
+namespace {
+	Transform2D* AddUiTransform(
+		Entity* entity,
+		const point3d& position,
+		const point3d& scale,
+		ScreenAspectRatio ratio = ScreenAspectRatio::XY,
+		const point3d& anchorPoint = point3d(),
+		const point3d& parentAnchor = point3d(),
+		float rotation = 0.0f)
+	{
+		Transform2D* transform = entity->AddComponent<Transform2D>();
+		transform->position = position;
+		transform->scale = scale;
+		transform->ratio = ratio;
+		transform->anchorPoint = anchorPoint;
+		transform->parentAnchor = parentAnchor;
+		transform->rotation = rotation;
+		return transform;
+	}
+
+	Rect* AddUiRect(Entity* entity, const point3d& color, float opacity = 1.0f, float cornerRadius = 0.0f)
+	{
+		Rect* rect = entity->AddComponent<Rect>();
+		rect->color = color;
+		rect->opacity = opacity;
+		rect->cornerRadius = cornerRadius;
+		rect->cornerType = CornerType::Strict;
+		return rect;
+	}
+
+	TextLabel* AddUiText(
+		Entity* entity,
+		const wchar_t* text,
+		const point3d& color = point3d(1.0f, 1.0f, 1.0f),
+		float fontScale = 0.42f,
+		int fontSizePx = 34)
+	{
+		TextLabel* textLabel = entity->AddComponent<TextLabel>();
+		textLabel->textW = text;
+		textLabel->fontFamilyW = L"Impact";
+		textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+		textLabel->fontWeight = 900;
+		textLabel->fontSizePx = fontSizePx;
+		textLabel->fontScale = fontScale;
+		textLabel->letterSpacingPx = 0.5f;
+		textLabel->color = color;
+		return textLabel;
+	}
+
+	Entity* CreateUiRect(
+		EntityStorage* storage,
+		const string& name,
+		Entity* parent,
+		const point3d& position,
+		const point3d& scale,
+		const point3d& color,
+		float opacity = 1.0f,
+		ScreenAspectRatio ratio = ScreenAspectRatio::XY,
+		const point3d& anchorPoint = point3d(),
+		const point3d& parentAnchor = point3d(),
+		float rotation = 0.0f,
+		float cornerRadius = 0.0f)
+	{
+		Entity* entity = storage->CreateEntity(name, parent);
+		AddUiTransform(entity, position, scale, ratio, anchorPoint, parentAnchor, rotation);
+		AddUiRect(entity, color, opacity, cornerRadius);
+		return entity;
+	}
+
+	Entity* CreateUiText(
+		EntityStorage* storage,
+		const string& name,
+		Entity* parent,
+		const wchar_t* text,
+		const point3d& position,
+		const point3d& color = point3d(1.0f, 1.0f, 1.0f),
+		const point3d& parentAnchor = point3d(-1.0f, 1.0f, 0.0f),
+		float fontScale = 0.42f,
+		int fontSizePx = 34)
+	{
+		Entity* entity = storage->CreateEntity(name, parent);
+		AddUiTransform(entity, position, point3d(1.0f, 1.0f, 0.0f), ScreenAspectRatio::XY, point3d(), parentAnchor);
+		AddUiText(entity, text, color, fontScale, fontSizePx);
+		return entity;
+	}
+
+	Entity* CreateParentAnchorMarker(EntityStorage* storage, const string& name, Entity* parent, const point3d& parentAnchor)
+	{
+		return CreateUiRect(
+			storage,
+			name,
+			parent,
+			point3d(),
+			point3d(0.05f, 0.05f, 0.0f),
+			point3d(1.0f, 0.86f, 0.15f),
+			1.0f,
+			ScreenAspectRatio::XX,
+			point3d(),
+			parentAnchor,
+			0.0f,
+			1.0f);
+	}
+}
+
+void Transform2DDebugUI::Create(EntityStorage* storage, Entity* uiFolder)
+{
+	root = storage->CreateEntity("Transform2D Debug UI", uiFolder);
+	AddUiTransform(root, point3d(), point3d(1.0f, 1.0f, 0.0f));
+	root->SetActive(false);
+	visible = false;
+
+	CreateUiRect(storage, "Debug fullscreen background", root, point3d(), point3d(1.0f, 1.0f, 0.0f), point3d(0.02f, 0.03f, 0.05f), 0.82f);
+	CreateUiText(storage, "Debug title", root, L"Transform2D anchors/pivots demo - press U to hide/show", point3d(0.08f, -0.08f, 0.0f), point3d(1.0f, 0.95f, 0.72f), point3d(-1.0f, 1.0f, 0.0f), 0.58f, 42);
+	CreateUiText(storage, "Debug legend", root, L"Yellow squares = parentAnchor. Blinking dots = object pivot / anchorPoint.", point3d(0.08f, -0.19f, 0.0f), point3d(0.72f, 0.9f, 1.0f), point3d(-1.0f, 1.0f, 0.0f), 0.46f, 36);
+
+	Entity* centerPanel = CreateUiRect(storage, "Center anchored parent", root, point3d(-0.55f, 0.34f, 0.0f), point3d(0.28f, 0.18f, 0.0f), point3d(0.12f, 0.33f, 0.75f), 0.82f, ScreenAspectRatio::XY, point3d(), point3d(), 0.0f, 0.08f);
+	CreateUiText(storage, "Center panel label", centerPanel, L"parentAnchor center / pivot center", point3d(0.06f, -0.13f, 0.0f));
+	CreateParentAnchorMarker(storage, "Center parent anchor marker", centerPanel, point3d());
+	CreateUiRect(storage, "Center child", centerPanel, point3d(), point3d(0.35f, 0.35f, 0.0f), point3d(0.2f, 0.95f, 0.55f), 0.95f, ScreenAspectRatio::XY, point3d(), point3d(), 0.0f, 0.18f);
+
+	Entity* cornerPanel = CreateUiRect(storage, "Corner anchored parent", root, point3d(0.28f, 0.52f, 0.0f), point3d(0.28f, 0.18f, 0.0f), point3d(0.46f, 0.18f, 0.68f), 0.82f, ScreenAspectRatio::XY, point3d(-1.0f, 1.0f, 0.0f), point3d(), 0.0f, 0.08f);
+	CreateUiText(storage, "Corner panel label", cornerPanel, L"parent center, parent pivot top-left", point3d(0.06f, -0.13f, 0.0f));
+	CreateParentAnchorMarker(storage, "Top left parent anchor marker", cornerPanel, point3d(-1.0f, 1.0f, 0.0f));
+	CreateParentAnchorMarker(storage, "Bottom right parent anchor marker", cornerPanel, point3d(1.0f, -1.0f, 0.0f));
+	CreateUiRect(storage, "Top left child", cornerPanel, point3d(0.04f, -0.04f, 0.0f), point3d(0.30f, 0.30f, 0.0f), point3d(1.0f, 0.58f, 0.18f), 0.95f, ScreenAspectRatio::XY, point3d(-1.0f, 1.0f, 0.0f), point3d(-1.0f, 1.0f, 0.0f), 0.0f, 0.12f);
+	CreateUiRect(storage, "Bottom right child", cornerPanel, point3d(-0.04f, 0.04f, 0.0f), point3d(0.26f, 0.26f, 0.0f), point3d(0.95f, 0.28f, 0.38f), 0.95f, ScreenAspectRatio::XY, point3d(1.0f, -1.0f, 0.0f), point3d(1.0f, -1.0f, 0.0f), 0.0f, 0.12f);
+
+	Entity* rotatedPanel = CreateUiRect(storage, "Rotated parent", root, point3d(-0.48f, -0.35f, 0.0f), point3d(0.30f, 0.16f, 0.0f), point3d(0.08f, 0.50f, 0.47f), 0.82f, ScreenAspectRatio::XY, point3d(), point3d(), 0.55f, 0.08f);
+	CreateUiText(storage, "Rotated panel label", rotatedPanel, L"rotated parent moves child position", point3d(0.06f, -0.12f, 0.0f));
+	CreateParentAnchorMarker(storage, "Right edge parent anchor marker", rotatedPanel, point3d(1.0f, 0.0f, 0.0f));
+	CreateUiRect(storage, "Rotated right edge child", rotatedPanel, point3d(0.08f, 0.0f, 0.0f), point3d(0.25f, 0.45f, 0.0f), point3d(0.38f, 1.0f, 0.38f), 0.95f, ScreenAspectRatio::XY, point3d(), point3d(1.0f, 0.0f, 0.0f), 0.0f, 0.12f);
+
+	Entity* stretchPanel = CreateUiRect(storage, "Aspect ratio parent", root, point3d(0.34f, -0.34f, 0.0f), point3d(0.32f, 0.16f, 0.0f), point3d(0.48f, 0.42f, 0.13f), 0.82f, ScreenAspectRatio::XY, point3d(), point3d(), 0.0f, 0.08f);
+	CreateUiText(storage, "Aspect ratio label", stretchPanel, L"same parent, different ratios", point3d(0.06f, -0.12f, 0.0f));
+	CreateParentAnchorMarker(storage, "Left ratio anchor marker", stretchPanel, point3d(-0.55f, 0.0f, 0.0f));
+	CreateParentAnchorMarker(storage, "Right ratio anchor marker", stretchPanel, point3d(0.55f, 0.0f, 0.0f));
+	CreateUiRect(storage, "YY child", stretchPanel, point3d(), point3d(0.24f, 0.24f, 0.0f), point3d(0.35f, 0.75f, 1.0f), 0.95f, ScreenAspectRatio::YY, point3d(), point3d(-0.55f, 0.0f, 0.0f), 0.0f, 0.15f);
+	CreateUiRect(storage, "XX child", stretchPanel, point3d(), point3d(0.24f, 0.24f, 0.0f), point3d(1.0f, 0.45f, 0.88f), 0.95f, ScreenAspectRatio::XX, point3d(), point3d(0.55f, 0.0f, 0.0f), 0.0f, 0.15f);
+}
+
+void Transform2DDebugUI::UpdateToggle()
+{
+	const bool isTogglePressed = IsKeyPressed('U');
+	if (!isTogglePressed)
+	{
+		wasTogglePressed = false;
+		return;
+	}
+
+	if (wasTogglePressed)
+	{
+		return;
+	}
+
+	wasTogglePressed = true;
+	visible = !visible;
+
+	if (root)
+	{
+		root->SetActive(visible);
+	}
+}

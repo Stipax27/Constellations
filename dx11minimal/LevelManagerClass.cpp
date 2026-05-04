@@ -379,6 +379,7 @@ void LevelManagerClass::Frame()
 
 	mouse->Update();
 	UpdateTestAnimationToggle();
+	m_Transform2DDebugUI.UpdateToggle();
 	playerController->ProcessInput();
 	playerController->ProcessMouse();
 	playerController->abilities->Update();
@@ -553,7 +554,6 @@ void LevelManagerClass::UpdateTestAnimationToggle()
 	animComp->currentTime = 0.0f;
 }
 
-
 Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 {
 	Entity* player = m_World->entityStorage->CreateEntity("Player", folder);
@@ -625,8 +625,8 @@ void LevelManagerClass::CreateUI()
 	entity = m_World->entityStorage->CreateEntity("HealthBar", entity);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(-1, 0, 0);
+	transform2D->parentAnchor = point3d(-1, 0, 0);
 	transform2D->ratio = ScreenAspectRatio::XY;
-	//transform2D->position = point3d(-1, 0, 0);
 	rect = entity->AddComponent<Rect>();
 
 	entity = m_World->entityStorage->CreateEntity("StaminaHolder", uiFolder);
@@ -642,8 +642,8 @@ void LevelManagerClass::CreateUI()
 	entity = m_World->entityStorage->CreateEntity("StaminaBar", entity);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(-1, 0, 0);
+	transform2D->parentAnchor = point3d(-1, 0, 0);
 	transform2D->ratio = ScreenAspectRatio::XY;
-	//transform2D->position = point3d(-1, 0, 0);
 	rect = entity->AddComponent<Rect>();
 	rect->color = point3d(0.8f, 0.8f, 1);
 
@@ -737,6 +737,8 @@ void LevelManagerClass::CreateUI()
 	transform2D->scale = point3d(0.5f, 0.025f, 0.0f);
 	rect = entity->AddComponent<Rect>();
 	rect->color = point3d(0.75f, 0.0f, 0.0f);
+
+	m_Transform2DDebugUI.Create(m_World->entityStorage, uiFolder);
 }
 
 void LevelManagerClass::InitSystems()
