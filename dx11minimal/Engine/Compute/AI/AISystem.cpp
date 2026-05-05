@@ -18,19 +18,70 @@ void AISystem::Update(EntityStorage& entityStorage, float deltaTime)
         if (!IsEntityValid(entity) || entity->GetTimeScale() == 0.0f)
             continue;
 
-        // Получаем необходимые компоненты
         Transform* transform = entity->GetComponent<Transform>();
         AIComponent* ai = entity->GetComponent<AIComponent>();
         PhysicBody* physicBody = entity->GetComponent<PhysicBody>();
+        BossComponent* boss = entity->GetComponent<BossComponent>();
+        Star* star = entity->GetComponent<Star>();
 
-        // Если все компоненты есть и ИИ включён – обрабатываем поведение
-        if (transform && ai && physicBody && ai->enabled)
+        if (!transform || !ai || !physicBody || !ai->enabled)
+            continue;
+
+        // Обновление визуальных эффектов
+        if (star && ai->visual.isAttacking)
+        {
+            // Обновляем таймеры
+            if (ai->visual.attackVisualTimer > 0)
+                ai->visual.attackVisualTimer -= deltaTime;
+            if (ai->visual.specialCastTimer > 0)
+                ai->visual.specialCastTimer -= deltaTime;
+            if (ai->visual.aoeCastTimer > 0)
+                ai->visual.aoeCastTimer -= deltaTime;
+            if (ai->visual.summonTimer > 0)
+                ai->visual.summonTimer -= deltaTime;
+            if (ai->visual.transitionTimer > 0)
+                ai->visual.transitionTimer -= deltaTime;
+
+            // Пульсация для АОЕ
+            if (ai->visual.aoeCastTimer > 0)
+            {
+                float pulse = sin(ai->visual.aoeCastTimer * ai->visual.aoePulseSpeed * 20.0f) * 0.5f + 0.5f;
+                float scaleOffset = (ai->visual.attackScale - 1.0f) * pulse;
+                star->radius = ai->visual.originalRadius + scaleOffset;
+            }
+
+            // Восстановление после эффектов
+            bool allEffectsFinished = (ai->visual.attackVisualTimer <= 0 &&
+                ai->visual.specialCastTimer <= 0 &&
+                ai->visual.aoeCastTimer <= 0 &&
+                ai->visual.summonTimer <= 0 &&
+                ai->visual.transitionTimer <= 0);
+
+            if (allEffectsFinished)
+            {
+                star->radius = ai->visual.originalRadius;
+                star->color1 = ai->visual.originalColor;
+               
+
+                ai->visual.isAttacking = false;
+                ai->visual.isCastingSpecial = false;
+                ai->visual.isCastingAOE = false;
+                ai->visual.isSummoning = false;
+                ai->visual.isTransitioning = false;
+            }
+        }
+
+        // Выбор поведения
+        if (boss)
+        {
+            UpdateBossBehavior(entityStorage, entity, transform, ai, boss, physicBody, deltaTime);
+        }
+        else
         {
             ProcessAIBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime);
         }
     }
 }
-
 
 // Метод, который в зависимости от текущего состояния ИИ вызывает соответствующую функцию
 void AISystem::ProcessAIBehavior(EntityStorage& entityStorage, Entity* entity, Transform* transform, AIComponent* ai,
@@ -48,7 +99,14 @@ void AISystem::ProcessAIBehavior(EntityStorage& entityStorage, Entity* entity, T
         case AIBehaviorType::FLEE:   star->color1 = point3d(0.0f, 0.0f, 1.0f); break; // синий
         case AIBehaviorType::IDLE:   star->color1 = point3d(0.5f, 0.5f, 0.5f); break; // серый
         case AIBehaviorType::SEARCH: star->color1 = point3d(1.0f, 1.0f, 0.0f); break; // жёлтый
+
+        // Цвета для Босса
+        case AIBehaviorType::BOSS_PHASE_1: star->color1 = point3d(0.8f, 0.2f, 0.8f); break; // фиолетовый
+        case AIBehaviorType::BOSS_PHASE_2: star->color1 = point3d(1.0f, 0.2f, 0.5f); break; // розовый
+        case AIBehaviorType::BOSS_PHASE_3: star->color1 = point3d(1.0f, 0.0f, 0.3f); break; // ярко-красный
         }
+
+
     }
 
     // Выбор подходящего обработчика в зависимости от текущего состояния
@@ -77,9 +135,362 @@ void AISystem::ProcessAIBehavior(EntityStorage& entityStorage, Entity* entity, T
     case AIBehaviorType::SEARCH:       // Если поиск (после потери игрока)
         UpdateSearchBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime); // Вызываем метод поиска
         break;
+
+    case AIBehaviorType::BOSS_PHASE_1:
+    case AIBehaviorType::BOSS_PHASE_2:
+    case AIBehaviorType::BOSS_PHASE_3:
+    case AIBehaviorType::BOSS_SUMMON:
+    case AIBehaviorType::BOSS_SPECIAL_ATTACK:
+    case AIBehaviorType::BOSS_RAGE:
+       
+        break;
     }
 
     ai->stateTimer += deltaTime;   // Увеличиваем таймер текущего состояния
+}
+
+
+void AISystem::UpdateBossBehavior(EntityStorage& entityStorage, Entity* entity, Transform* transform,
+    AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, float deltaTime)
+{
+    // Проверяем смену фазы
+    Health* health = entity->GetComponent<Health>();
+    if (health)
+    {
+        CheckBossPhaseTransition(entityStorage, entity, health, boss, ai);
+    }
+
+    // Анимируем цвет звезды для визуальной обратной связи
+    Star* star = entity->GetComponent<Star>();
+    if (star)
+    {
+        switch (boss->currentPhase)
+        {
+        case 1: star->color1 = point3d(0.8f, 0.2f, 0.8f); break;
+        case 2: star->color1 = point3d(1.0f, 0.2f, 0.5f); break;
+        case 3: star->color1 = point3d(1.0f, 0.0f, 0.3f); break;
+        }
+    }
+
+    // Обновляем таймер спецатаки
+    boss->lastSpecialAttackTime += deltaTime;
+
+    // Логика в зависимости от фазы
+    switch (boss->currentPhase)
+    {
+    case 1:
+        UpdateBossPhase1(entityStorage, entity, transform, ai, boss, physicBody,star, deltaTime);
+        break;
+    case 2:
+        UpdateBossPhase2(entityStorage, entity, transform, ai, boss, physicBody, deltaTime);
+        break;
+    case 3:
+        UpdateBossPhase3(entityStorage, entity, transform, ai, boss, physicBody, star ,deltaTime);
+        break;
+    }
+
+    ai->stateTimer += deltaTime;
+}
+
+
+void AISystem::UpdateBossPhase1(EntityStorage& entityStorage, Entity* entity, Transform* transform,
+    AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, Star* star, float deltaTime)
+{
+    Entity* player = GetNearestPlayer(entityStorage, transform);
+    if (!player)
+    {
+        // Если нет игрока - бездействуем
+        physicBody->acceleration = point3d();
+        physicBody->velocity = point3d();
+        return;
+    }
+
+    float distance = GetDistanceToPlayer(entityStorage, transform);
+
+    // Периодическая спецатака в фазе 1 (редко, например при таймере > 8 секунд)
+    if (boss->lastSpecialAttackTime >= boss->specialAttackCooldown)
+    {
+        // 20% шанс спецатаки при возможности
+        if (rand() % 100 < 20)
+        {
+            BossSpecialAttack(entityStorage, entity, transform, ai,boss, physicBody, star);
+            boss->lastSpecialAttackTime = 0.0f;
+            return;
+        }
+    }
+
+    // Стандартное поведение: преследование и атака
+    if (distance <= ai->attackRange)
+    {
+        // Атака
+        Health* playerHealth = player->GetComponent<Health>();
+        if (playerHealth && ai->stateTimer >= ai->attackCooldown)
+        {
+            playerHealth->hp -= ai->attackDamage;
+            ai->stateTimer = 0.0f;
+
+            // Эффект отбрасывания при атаке (опционально)
+            PhysicBody* playerPhysic = player->GetComponent<PhysicBody>();
+            if (playerPhysic)
+            {
+                point3d pushDirection = (player->GetComponent<Transform>()->position - transform->position).normalized();
+                playerPhysic->velocity = pushDirection * 5.0f;
+            }
+        }
+        physicBody->acceleration = point3d(); // Останавливаемся при атаке
+    }
+    else
+    {
+        // Движение к игроку
+        point3d direction = (GetWorldTransform(player).position - transform->position).normalized();
+        point3d targetVelocity = direction * ai->movementSpeed;
+        point3d desiredAccel = targetVelocity * ai->accelerationStrength;
+
+        if (desiredAccel.magnitude() > ai->maxAcceleration)
+            desiredAccel = desiredAccel.normalized() * ai->maxAcceleration;
+
+        physicBody->acceleration = desiredAccel;
+    }
+}
+
+void AISystem::UpdateBossPhase2(EntityStorage& entityStorage, Entity* entity, Transform* transform,
+    AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, float deltaTime)
+{
+    Entity* player = GetNearestPlayer(entityStorage, transform);
+    if (!player) return;
+
+    float distance = GetDistanceToPlayer(entityStorage, transform);
+
+    // Призыв миньонов в фазе 2 (чаще, чем спецатаки)
+    if (boss->lastSpecialAttackTime >= boss->specialAttackCooldown * 0.6f)
+    {
+        //BossSummonMinions(entityStorage, transform, boss);
+        boss->lastSpecialAttackTime = 0.0f;
+        return;
+    }
+
+    // Увеличенная скорость в фазе 2
+    float currentSpeed = ai->movementSpeed * 1.3f;
+
+    if (distance <= ai->attackRange)
+    {
+        // Удвоенный урон в фазе 2 и более быстрая атака
+        Health* playerHealth = player->GetComponent<Health>();
+        if (playerHealth && ai->stateTimer >= ai->attackCooldown * 0.7f)
+        {
+            playerHealth->hp -= ai->attackDamage * 2;
+            ai->stateTimer = 0.0f;
+        }
+        physicBody->acceleration = point3d();
+    }
+    else
+    {
+        point3d direction = (GetWorldTransform(player).position - transform->position).normalized();
+        point3d targetVelocity = direction * currentSpeed;
+        point3d desiredAccel = targetVelocity * ai->accelerationStrength;
+
+        if (desiredAccel.magnitude() > ai->maxAcceleration * 1.2f)
+            desiredAccel = desiredAccel.normalized() * ai->maxAcceleration * 1.2f;
+
+        physicBody->acceleration = desiredAccel;
+    }
+}
+
+void AISystem::UpdateBossPhase3(EntityStorage& entityStorage, Entity* entity, Transform* transform,
+    AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, Star* star,float deltaTime)
+{
+    Entity* player = GetNearestPlayer(entityStorage, transform);
+    if (!player) return;
+
+    float distance = GetDistanceToPlayer(entityStorage, transform);
+
+    // Частые спецатаки в фазе 3
+    if (boss->lastSpecialAttackTime >= boss->specialAttackCooldown * 0.4f)
+    {
+        // Чередуем AOE и обычные спецатаки
+        if (rand() % 100 < 50)
+        {
+            BossAOEAttack(entityStorage, transform, boss);
+        }
+        else
+        {
+            BossSpecialAttack(entityStorage, entity, transform,ai, boss, physicBody,star);
+        }
+        boss->lastSpecialAttackTime = 0.0f;
+        return;
+    }
+
+    // Ещё большая скорость в фазе 3
+    float currentSpeed = ai->movementSpeed * boss->rageSpeedMultiplier;
+
+    if (distance <= ai->attackRange)
+    {
+        // Тройной урон и очень быстрые атаки
+        Health* playerHealth = player->GetComponent<Health>();
+        if (playerHealth && ai->stateTimer >= ai->attackCooldown * 0.4f)
+        {
+            playerHealth->hp -= ai->attackDamage * 3;
+            ai->stateTimer = 0.0f;
+        }
+        physicBody->acceleration = point3d();
+    }
+    else
+    {
+        point3d direction = (GetWorldTransform(player).position - transform->position).normalized();
+        point3d targetVelocity = direction * currentSpeed;
+        point3d desiredAccel = targetVelocity * ai->accelerationStrength;
+
+        if (desiredAccel.magnitude() > ai->maxAcceleration * 1.5f)
+            desiredAccel = desiredAccel.normalized() * ai->maxAcceleration * 1.5f;
+
+        physicBody->acceleration = desiredAccel;
+    }
+}
+
+// ============ СПЕЦИАЛЬНЫЕ АТАКИ БОССА ============
+
+void AISystem::BossSpecialAttack(EntityStorage& entityStorage, Entity* entity, Transform* transform,
+    AIComponent* ai,BossComponent* boss, PhysicBody* physicBody ,Star* star)
+{
+    Entity* player = GetNearestPlayer(entityStorage, transform);
+    if (!player) return;
+
+    if (!ai->visual.isAttacking && ai->visual.attackVisualTimer <= 0)
+    {
+        ai->visual.originalRadius = star->radius;
+        ai->visual.originalColor = star->color1;
+       
+    }
+
+    // Устанавливаем визуальные эффекты
+    ai->visual.isAttacking = true;
+    ai->visual.isCastingSpecial = true;
+    ai->visual.attackVisualTimer = ai->visual.attackDuration;
+    ai->visual.specialCastTimer = ai->visual.specialCastDuration;
+
+    // Меняем внешний вид
+    star->radius = ai->visual.originalRadius * ai->visual.attackScale;
+    star->color1 = ai->visual.specialAttackColor;
+    
+    // Рывок к игроку с уроном
+    Transform* playerTransform = player->GetComponent<Transform>();
+    if (playerTransform)
+    {
+        point3d dashDirection = (playerTransform->position - transform->position).normalized();
+
+        // Быстрый рывок
+        physicBody->velocity = dashDirection * boss->dashAttackSpeed;
+
+        // Наносим урон
+        Health* playerHealth = player->GetComponent<Health>();
+        if (playerHealth)
+        {
+            playerHealth->hp -= ai->attackDamage * 1.5f;
+        }
+
+        // Небольшая задержка после рывка (можно через таймер)
+        // Здесь можно добавить визуальный эффект
+    }
+}
+
+void AISystem::BossAOEAttack(EntityStorage& entityStorage, Transform* transform, BossComponent* boss)
+{
+    // Поиск всех игроков в радиусе AOE
+    const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<Health>();
+
+    for (Entity* target : entities)
+    {
+        Transform* targetTransform = target->GetComponent<Transform>();
+        Health* health = target->GetComponent<Health>();
+
+        if (health && health->fraction == Fraction::Player && targetTransform)
+        {
+            float distance = (targetTransform->position - transform->position).magnitude();
+
+            if (distance <= boss->aoeAttackRange)
+            {
+                // Урон уменьшается с расстоянием
+                float damageMultiplier = 1.0f - (distance / boss->aoeAttackRange);
+                float damage = boss->aoeDamage * damageMultiplier;
+                health->hp -= damage;
+                if (health->hp < 0) health->hp = 0;
+            }
+        }
+    }
+}
+
+void AISystem::CheckBossPhaseTransition(EntityStorage& entityStorage, Entity* entity, Health* health,
+    BossComponent* boss, AIComponent* ai)
+{
+    if (!health || boss->isTransitioning) return;
+
+    float healthPercentage = health->hp / health->maxHp;
+
+    // Переход на фазу 2 (30% здоровья)
+    if (healthPercentage <= 0.3f && boss->currentPhase < 3)
+    {
+        boss->currentPhase = 3;
+        boss->isTransitioning = true;
+
+        // Эффект перехода - например, вспышка или исцеление
+        // health->hp = health->maxHp * 0.3f; // если нужно установить точно 30%
+
+        // Призыв миньонов при переходе
+        //BossSummonMinions(entityStorage, entity->GetComponent<Transform>(), boss);
+
+        boss->isTransitioning = false;
+    }
+    // Переход на фазу 2 (70% здоровья)
+    else if (healthPercentage <= 0.7f && boss->currentPhase < 2)
+    {
+        boss->currentPhase = 2;
+        boss->isTransitioning = true;
+
+        // Призыв миньонов при переходе
+        //BossSummonMinions(entityStorage, entity->GetComponent<Transform>(), boss);
+
+        boss->isTransitioning = false;
+    }
+}
+
+// ============ ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ ============
+
+Entity* AISystem::GetNearestPlayer(EntityStorage& entityStorage, Transform* bossTransform)
+{
+    const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<Health>();
+    Entity* nearestPlayer = nullptr;
+    float minDistance = FLT_MAX;
+
+    for (Entity* target : entities)
+    {
+        Health* health = target->GetComponent<Health>();
+        if (health && health->fraction == Fraction::Player)
+        {
+            Transform* targetTransform = target->GetComponent<Transform>();
+            if (targetTransform)
+            {
+                float distance = (targetTransform->position - bossTransform->position).magnitude();
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    nearestPlayer = target;
+                }
+            }
+        }
+    }
+
+    return nearestPlayer;
+}
+
+float AISystem::GetDistanceToPlayer(EntityStorage& entityStorage, Transform* bossTransform)
+{
+    Entity* player = GetNearestPlayer(entityStorage, bossTransform);
+    if (!player) return FLT_MAX;
+
+    Transform* playerTransform = player->GetComponent<Transform>();
+    if (!playerTransform) return FLT_MAX;
+
+    return (playerTransform->position - bossTransform->position).magnitude();
 }
 
 // ---------- Патрулирование ----------

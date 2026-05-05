@@ -178,9 +178,9 @@ bool LevelManagerClass::Initialize()
 	
 	CreateSpaceBackground(worldFolder, 1);
 	CreateAries(worldFolder);
-	//CreateZenithLocation(folder, 2);
+	CreateZenithLocation(worldFolder, 2);
 	CreateNebula(worldFolder,2);
-	CreateStarQuestLoc(worldFolder, 2);
+	//CreateStarQuestLoc(worldFolder, 2);
 
 	/////////////////////////
 
@@ -1023,7 +1023,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	Entity* location = m_World->entityStorage->CreateEntity("Zenith location", folder);
 
 	transform = location->AddComponent<Transform>();
-	//transform->position = point3d(0, 50, 0);
+	transform->position = point3d(0, 0, -100);
 
 	// Pillars hand | point
 
@@ -1112,6 +1112,104 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	
 	nebula->scale = 10;
 	nebula->frustumRadius = 40;
+
+
+	Entity* BossEntity = m_World->entityStorage->CreateEntity("BossEnemy", location);
+	Transform* testTransform = BossEntity->AddComponent<Transform>();
+	point3d CentralPatrolPoint = point3d(20.0f, 10.0f, 15.0f);
+	testTransform->position = CentralPatrolPoint;
+
+	// === КОЛЛАЙДЕР ===
+	sphereCollider = BossEntity->AddComponent<SphereCollider>();
+	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	sphereCollider->radius = 4.5f; // Добавьте радиус побольше для босса
+	BossEntity->AddComponent<CameraTarget>();
+
+	// === ЗДОРОВЬЕ ===
+	Health* health = BossEntity->AddComponent<Health>();
+	health->fraction = Fraction::Enemy;
+	health->maxHp = 2000.0f;  // 2000 HP - достойный босс
+	health->hp = 2000.0f;
+
+	// === ФИЗИКА ===
+	PhysicBody* testPhysic = BossEntity->AddComponent<PhysicBody>();
+	testPhysic->airFriction = 0.01f;      // Выше = меньше торможения
+	testPhysic->mass = 100.0f;             // Тяжелый, его сложно сдвинуть
+	testPhysic->velocity = point3d(0.0f, 0.0f, 0.0f);
+	         
+
+	// === ВИЗУАЛ ===
+	Star* testStar = BossEntity->AddComponent<Star>();
+	testStar->radius = 3.5f;               // Большой видимый размер
+	testStar->color1 = point3d(0.8f, 0.2f, 0.8f); // Фиолетовый для босса
+	testStar->crownColor = point3d(0.3f, 0.6f, 0.8f);    
+
+	// === КОМПОНЕНТ ИИ (Базовые настройки) ===
+	AIComponent* ai = BossEntity->AddComponent<AIComponent>();
+	ai->enabled = true;
+	ai->behaviorType = AIBehaviorType::BOSS_PHASE_1; // Начинаем с первой фазы
+
+	// Параметры движения босса
+	ai->movementSpeed = 8.0f;               // Быстрее обычных врагов
+	ai->arrivalDistance = 2.0f;             // Ближе подходит к цели
+	ai->accelerationStrength = 0.35f;       // Быстрый разгон
+	ai->maxAcceleration = 15.0f;            // Мощное ускорение
+
+	// Параметры обнаружения
+	ai->detectionRange = 40.0f;             // Видит игрока издалека
+	ai->chaseRange = 50.0f;                 // Преследует далеко
+	ai->attackRange = 4.5f;                // Атакует с 4.5 метров
+
+	// Параметры атаки
+	ai->attackCooldown = 1.2f;              // Атака каждые 1.2 секунды
+	ai->attackDamage = 35.0f;               // Сильный урон
+
+	// Таймеры состояний
+	ai->stateTimer = 0.0f;
+
+	// Параметры поиска (если потеряет игрока)
+	ai->searchDuration = 5.0f;              // Ищет 5 секунд
+	ai->searchPatrolRadius = 15.0f;         // Радиус обыска
+
+	// Цель
+	ai->targetId = -1;
+
+	// Патрульные точки (на случай если нужны)
+	ai->patrolPoints = {
+		CentralPatrolPoint + point3d(-5.0f, 5.0f, -5.0f),
+		CentralPatrolPoint + point3d(5.0f, 0.0f, -5.0f),
+		CentralPatrolPoint + point3d(5.0f, 0.0f, 5.0f),
+		CentralPatrolPoint + point3d(-5.0f, 5.0f, 5.0f)
+	};
+	ai->currentPatrolIndex = 0;
+
+	// === КОМПОНЕНТ БОССА (Специфичные параметры) ===
+	BossComponent* boss = BossEntity->AddComponent<BossComponent>();
+
+	// Фазы боя
+	boss->currentPhase = 1;
+	boss->phaseHealthThresholds[0] = 0.7f;   // 70% HP - фаза 2
+	boss->phaseHealthThresholds[1] = 0.3f;   // 30% HP - фаза 3
+	boss->phaseHealthThresholds[2] = 0.0f;
+
+	// Специальные атаки
+	boss->specialAttackCooldown = 12.0f;      // Спецатака каждые 12 секунд
+	boss->lastSpecialAttackTime = 0.0f;
+	boss->summonCount = 3;                    // Призывает 3 миньонов
+
+	// Усиления в разных фазах
+	boss->rageSpeedMultiplier = 1.5f;         // В фазе 3 скорость x1.5
+
+	// АОЕ атака
+	boss->aoeAttackRange = 12.0f;             // АОЕ радиус 12 метров
+	boss->aoeDamage = 10.0f;                  // 50 урона по области
+
+	// Рывок
+	boss->dashAttackSpeed = 100.0f;            // Скорость рывка
+
+	// Переходы между фазами
+	boss->phaseTransitionTime = 2.0f;
+	boss->isTransitioning = false;
 
 }
 

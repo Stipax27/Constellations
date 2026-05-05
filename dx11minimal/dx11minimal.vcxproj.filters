@@ -232,6 +232,7 @@
     <ClInclude Include="Engine\Player\weapons.h" />
     <ClInclude Include="Engine\Player\Combo\combo.h" />
     <ClInclude Include="Engine\Player\Combo\comboManager.h" />
+    <ClInclude Include="Engine\Compute\AI\BossComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">

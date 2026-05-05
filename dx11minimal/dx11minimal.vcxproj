@@ -184,6 +184,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Compute\AI\BossComponent.h" />
     <ClInclude Include="Engine\Compute\Combat\DamageBlocker.h" />
     <ClInclude Include="Engine\Compute\Combat\damageType.h" />
     <ClInclude Include="Engine\Compute\Combat\damageUnit.h" />
