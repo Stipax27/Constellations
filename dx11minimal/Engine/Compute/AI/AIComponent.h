@@ -16,7 +16,14 @@ enum class AIBehaviorType
     CHASE,
     ATTACK,
     FLEE,
-    SEARCH
+    SEARCH,
+
+    BOSS_PHASE_1,
+    BOSS_PHASE_2,
+    BOSS_PHASE_3,
+    BOSS_SUMMON,
+    BOSS_SPECIAL_ATTACK,
+    BOSS_RAGE
 };
 
 struct AIComponent : Component
@@ -61,6 +68,49 @@ public:
     float maxAcceleration = 10.0f;       // ограничение, чтобы избежать рывков
 
     int targetId = -1;
+
+    // ============ ВИЗУАЛЬНЫЕ ЭФФЕКТЫ ДЛЯ БОССА ============
+    struct VisualFeedback
+    {
+        // Флаги состояния
+        bool isAttacking = false;           // идет ли анимация атаки
+        bool isCastingSpecial = false;      // зарядка спецатаки
+        bool isCastingAOE = false;          // зарядка АОЕ атаки
+        bool isSummoning = false;            // призыв миньонов
+        bool isTransitioning = false;        // переход между фазами
+
+        // Таймеры визуальных эффектов
+        float attackVisualTimer = 0.0f;      // сколько осталось анимации атаки
+        float specialCastTimer = 0.0f;       // таймер зарядки спецатаки
+        float aoeCastTimer = 0.0f;           // таймер зарядки АОЕ
+        float summonTimer = 0.0f;            // таймер призыва
+        float transitionTimer = 0.0f;        // таймер перехода фазы
+
+        // Длительности эффектов
+        float attackDuration = 0.3f;         // длительность анимации атаки
+        float specialCastDuration = 0.5f;    // время зарядки спецатаки
+        float aoeCastDuration = 1.0f;        // время зарядки АОЕ (игрок может убежать)
+        float summonDuration = 0.8f;         // длительность призыва
+        float transitionDuration = 1.5f;     // длительность перехода фазы
+
+        // Оригинальные значения Star компонента (для восстановления)
+        float originalRadius = 1.0f;
+        point3d originalColor = point3d(1.0f, 1.0f, 1.0f);
+        float originalIntensity = 1.0f;
+
+        // Эффекты для разных типов атак
+        float attackScale = 2.5f;             // увеличение размера при атаке
+        float specialGlow = 2.0f;             // интенсивность свечения при спецатаке
+        float aoePulseSpeed = 3.0f;           // скорость пульсации при АОЕ
+
+        // Цвета для разных типов атак
+        point3d meleeAttackColor = point3d(1.0f, 0.2f, 0.2f);     // красный
+        point3d specialAttackColor = point3d(1.0f, 0.5f, 0.0f);   // оранжевый
+        point3d aoeAttackColor = point3d(1.0f, 0.0f, 1.0f);       // фиолетовый
+        point3d summonColor = point3d(0.2f, 1.0f, 0.2f);          // зеленый
+        point3d phaseTransitionColor = point3d(1.0f, 1.0f, 0.0f);  // желтый
+
+    } visual;
 };
 
 #endif
