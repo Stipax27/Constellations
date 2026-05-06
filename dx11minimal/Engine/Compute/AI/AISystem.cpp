@@ -150,6 +150,223 @@ void AISystem::ProcessAIBehavior(EntityStorage& entityStorage, Entity* entity, T
 }
 
 
+// Эффект удара (вспышка с частицами)
+void AISystem::SpawnAttackEffect(EntityStorage& entityStorage, const point3d& position, const point3d& color, float size)
+{
+    Entity* effect = entityStorage.CreateEntity("BossAttackEffect", nullptr);
+
+    Transform* transform = effect->AddComponent<Transform>();
+    transform->position = position;
+
+    Star* star = effect->AddComponent<Star>();
+    star->radius = size;
+    star->crownRadius = size * 1.5f;
+    star->color1 = color;
+    star->color2 = color * 0.5f;
+    star->crownColor = color * 1.5f;
+
+    // Добавляем партиклы для эффекта
+    ParticleEmitter* particles = effect->AddComponent<ParticleEmitter>();
+    particles->rate = 200;
+    particles->lifetime = 300;
+    particles->color = color;
+    particles->size = { 0.2f, 1.0f };
+    particles->opacity = { 1.0f, 0.0f };
+    particles->emitDirection = EmitDirection::Up;
+    particles->spread = { 3.14f, 3.14f }; // PI, PI
+    particles->speed = { 10.0f, 5.0f };
+    particles->useWorldSpace = true;
+
+    // Автоматическое уничтожение через 0.5 секунды
+    DelayedDestroy* delayed = effect->AddComponent<DelayedDestroy>();
+    delayed->lifeTime = 500;
+}
+
+// Эффект рубящего удара (как мечом)
+void AISystem::SpawnSlashEffect(EntityStorage& entityStorage, const point3d& position, const point3d& direction, const point3d& color)
+{
+    Entity* slash = entityStorage.CreateEntity("BossSlashEffect", nullptr);
+
+    Transform* transform = slash->AddComponent<Transform>();
+    transform->position = position;
+
+    // Направляем взгляд в сторону удара
+    point3d lookDir = direction;
+    if (lookDir.magnitude() < 0.01f) lookDir = point3d(1, 0, 0);
+    lookDir = lookDir.normalized();
+
+    // Вычисляем углы для матрицы поворота
+    float yaw = atan2(lookDir.x, lookDir.z);
+    float pitch = asin(lookDir.y);
+    transform->mRotation = XMMatrixRotationRollPitchYaw(pitch, yaw, 0);
+
+    Beam* beam = slash->AddComponent<Beam>();
+    beam->point1 = point3d(0, 0, -1.5f);
+    beam->point2 = point3d(0, 0, 1.5f);
+    beam->size1 = 0.5f;
+    beam->size2 = 0.5f;
+    beam->color1 = color;
+    beam->color2 = color;
+    beam->opacity1 = 1.0f;
+    beam->opacity2 = 0.0f;
+    beam->pShader = 22;
+
+    // Партиклы вдоль разреза
+    ParticleEmitter* particles = slash->AddComponent<ParticleEmitter>();
+    particles->rate = 300;
+    particles->lifetime = 200;
+    particles->color = color;
+    particles->size = { 0.1f, 0.5f };
+    particles->opacity = { 1.0f, 0.0f };
+    particles->emitDirection = EmitDirection::Right;
+    particles->spread = { 1.57f, 1.57f }; // PI/2, PI/2
+    particles->speed = { 15.0f, 8.0f };
+    particles->useWorldSpace = false;
+
+    DelayedDestroy* delayed = slash->AddComponent<DelayedDestroy>();
+    delayed->lifeTime = 300;
+}
+
+// Эффект ударной волны
+void AISystem::SpawnImpactEffect(EntityStorage& entityStorage, const point3d& position, const point3d& color)
+{
+    Entity* impact = entityStorage.CreateEntity("BossImpactEffect", nullptr);
+
+    Transform* transform = impact->AddComponent<Transform>();
+    transform->position = position;
+
+    // Кольцевая волна частиц
+    ParticleEmitter* particles = impact->AddComponent<ParticleEmitter>();
+    particles->rate = 400;
+    particles->lifetime = 400;
+    particles->color = color;
+    particles->size = { 0.1f, 0.8f };
+    particles->opacity = { 1.0f, 0.0f };
+    particles->emitDirection = EmitDirection::Up;
+    particles->spread = { 3.14f, 3.14f }; // PI, PI - все направления
+    particles->speed = { 15.0f, 10.0f };
+    particles->useWorldSpace = true;
+
+    // Звезда в центре удара
+    Star* star = impact->AddComponent<Star>();
+    star->radius = 0.3f;
+    star->crownRadius = 0.6f;
+    star->color1 = color;
+    star->color2 = color * 0.5f;
+    star->crownColor = point3d(1, 1, 1);
+
+    DelayedDestroy* delayed = impact->AddComponent<DelayedDestroy>();
+    delayed->lifeTime = 400;
+}
+
+// Aura эффект для фаз босса
+void AISystem::SpawnAuraEffect(Entity* bossEntity, const point3d& color, float duration)
+{
+    if (!bossEntity) return;
+
+    Entity* aura = bossEntity->GetOwnerStorage()->CreateEntity("BossAura", bossEntity);
+
+    Transform* transform = aura->AddComponent<Transform>();
+    transform->position = point3d(0, 0, 0);
+
+    // Пульсирующая звезда вокруг босса
+    Star* star = aura->AddComponent<Star>();
+    star->radius = 5.0f;
+    star->crownRadius = 7.0f;
+    star->color1 = color;
+    star->color2 = color * 0.3f;
+    star->crownColor = color * 1.2f;
+   
+
+    // Постоянные партиклы вокруг босса
+    ParticleEmitter* particles = aura->AddComponent<ParticleEmitter>();
+    particles->rate = 50;
+    particles->lifetime = 1000;
+    particles->color = color;
+    particles->size = { 0.1f, 0.3f };
+    particles->opacity = { 0.8f, 0.0f };
+    particles->emitDirection = EmitDirection::Up;
+    particles->spread = { 3.14f, 3.14f }; // PI, PI - все направления
+    particles->speed = { 3.0f, 1.0f };
+    particles->useWorldSpace = true;
+
+    DelayedDestroy* delayed = aura->AddComponent<DelayedDestroy>();
+    delayed->lifeTime = duration * 1000;
+}
+
+// Эффект ближней атаки
+void AISystem::SpawnMeleeAttackEffect(EntityStorage& entityStorage, const point3d& position, const point3d& direction)
+{
+    SpawnSlashEffect(entityStorage, position, direction, point3d(1.0f, 0.2f, 0.2f));
+    SpawnAttackEffect(entityStorage, position + direction * 2.0f, point3d(1.0f, 0.5f, 0.0f), 0.8f);
+}
+
+// Эффект дальней атаки
+void AISystem::SpawnRangedAttackEffect(EntityStorage& entityStorage, const point3d& position, const point3d& direction)
+{
+    // Эффект заряда перед выстрелом
+    SpawnAttackEffect(entityStorage, position, point3d(0.8f, 0.2f, 1.0f), 0.5f);
+
+    // Линия полета снаряда
+    Entity* beam = entityStorage.CreateEntity("AttackBeam", nullptr);
+    Transform* transform = beam->AddComponent<Transform>();
+    transform->position = position;
+
+    Beam* beamComp = beam->AddComponent<Beam>();
+    beamComp->point1 = point3d(0, 0, 0);
+    beamComp->point2 = direction * 10.0f;
+    beamComp->size1 = 0.2f;
+    beamComp->size2 = 0.2f;
+    beamComp->color1 = point3d(0.8f, 0.2f, 1.0f);
+    beamComp->color2 = point3d(0.8f, 0.2f, 1.0f);
+    beamComp->opacity1 = 1.0f;
+    beamComp->opacity2 = 0.0f;
+
+    DelayedDestroy* delayed = beam->AddComponent<DelayedDestroy>();
+    delayed->lifeTime = 200;
+}
+
+// Эффект АОЕ атаки
+void AISystem::SpawnAOEEffect(EntityStorage& entityStorage, const point3d& position, float radius, const point3d& color)
+{
+    // Расширяющееся кольцо
+    Entity* ring = entityStorage.CreateEntity("AOERing", nullptr);
+
+    Transform* transform = ring->AddComponent<Transform>();
+    transform->position = position;
+
+    Star* star = ring->AddComponent<Star>();
+    star->radius = 0.5f;
+    star->crownRadius = radius;
+    star->color1 = color;
+    star->color2 = color * 0.3f;
+    star->crownColor = color * 1.5f;
+    
+
+    // Взрывные частицы
+    Entity* explosion = entityStorage.CreateEntity("AOEExplosion", nullptr);
+    transform = explosion->AddComponent<Transform>();
+    transform->position = position;
+
+    ParticleEmitter* particles = explosion->AddComponent<ParticleEmitter>();
+    particles->rate = 500;
+    particles->lifetime = 500;
+    particles->color = color;
+    particles->size = { 0.2f, 1.0f };
+    particles->opacity = { 1.0f, 0.0f };
+    particles->emitDirection = EmitDirection::Up;
+    particles->spread = { 3.14f, 3.14f }; // PI, PI - все направления
+    particles->speed = { 20.0f, 10.0f };
+    particles->useWorldSpace = true;
+
+    DelayedDestroy* delayed = ring->AddComponent<DelayedDestroy>();
+    delayed->lifeTime = 300;
+
+    delayed = explosion->AddComponent<DelayedDestroy>();
+    delayed->lifeTime = 500;
+}
+
+
 void AISystem::UpdateBossBehavior(EntityStorage& entityStorage, Entity* entity, Transform* transform,
     AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, float deltaTime)
 {
@@ -196,61 +413,84 @@ void AISystem::UpdateBossBehavior(EntityStorage& entityStorage, Entity* entity, 
 void AISystem::UpdateBossPhase1(EntityStorage& entityStorage, Entity* entity, Transform* transform,
     AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, Star* star, float deltaTime)
 {
+    // ПОИСК ИГРОКА
     Entity* player = GetNearestPlayer(entityStorage, transform);
     if (!player)
     {
-        // Если нет игрока - бездействуем
+        // Нет игрока - стоим на месте
         physicBody->acceleration = point3d();
-        physicBody->velocity = point3d();
+        physicBody->velocity = physicBody->velocity * 0.95f;
         return;
     }
 
     float distance = GetDistanceToPlayer(entityStorage, transform);
 
-    // Периодическая спецатака в фазе 1 (редко, например при таймере > 8 секунд)
+    // Специальная атака
     if (boss->lastSpecialAttackTime >= boss->specialAttackCooldown)
     {
-        // 20% шанс спецатаки при возможности
         if (rand() % 100 < 20)
         {
-            BossSpecialAttack(entityStorage, entity, transform, ai,boss, physicBody, star);
-            boss->lastSpecialAttackTime = 0.0f;
+            BossSpecialAttack(entityStorage, entity, transform, ai, boss, physicBody, star);
+            boss->lastSpecialAttackTime = 0.0f;  // ИСПРАВЛЕНО: только это поле есть
             return;
         }
     }
 
-    // Стандартное поведение: преследование и атака
+    // Если в радиусе атаки
     if (distance <= ai->attackRange)
     {
-        // Атака
+        // Останавливаемся
+        physicBody->acceleration = point3d();
+        physicBody->velocity = physicBody->velocity * 0.9f;
+
+        // Атакуем
         Health* playerHealth = player->GetComponent<Health>();
         if (playerHealth && ai->stateTimer >= ai->attackCooldown)
         {
             playerHealth->hp -= ai->attackDamage;
             ai->stateTimer = 0.0f;
 
-            // Эффект отбрасывания при атаке (опционально)
+            // Отбрасываем игрока
             PhysicBody* playerPhysic = player->GetComponent<PhysicBody>();
             if (playerPhysic)
             {
                 point3d pushDirection = (player->GetComponent<Transform>()->position - transform->position).normalized();
-                playerPhysic->velocity = pushDirection * 5.0f;
+                playerPhysic->velocity = pushDirection * 8.0f;
             }
         }
-        physicBody->acceleration = point3d(); // Останавливаемся при атаке
     }
     else
     {
-        // Движение к игроку
-        point3d direction = (GetWorldTransform(player).position - transform->position).normalized();
-        point3d targetVelocity = direction * ai->movementSpeed;
-        point3d desiredAccel = targetVelocity * ai->accelerationStrength;
+        // ДВИГАЕМСЯ К ИГРОКУ
+        point3d playerPos = GetWorldTransform(player).position;
+        point3d bossPos = transform->position;
+        point3d direction = (playerPos - bossPos).normalized();
 
+        // Желаемая скорость
+        point3d targetVelocity = direction * ai->movementSpeed;
+
+        // Ускорение для достижения желаемой скорости
+        point3d desiredAccel = (targetVelocity - physicBody->velocity) * ai->accelerationStrength;
+
+        // Ограничиваем ускорение
         if (desiredAccel.magnitude() > ai->maxAcceleration)
+        {
             desiredAccel = desiredAccel.normalized() * ai->maxAcceleration;
+        }
 
         physicBody->acceleration = desiredAccel;
+
+        // Ограничиваем максимальную скорость
+        float maxSpeed = 15.0f;
+        if (physicBody->velocity.magnitude() > maxSpeed)
+        {
+            physicBody->velocity = physicBody->velocity.normalized() * maxSpeed;
+        }
     }
+
+    // Обновляем таймеры
+    ai->stateTimer += deltaTime;
+    boss->lastSpecialAttackTime += deltaTime;  // ИСПРАВЛЕНО: увеличиваем таймер спецатаки
 }
 
 void AISystem::UpdateBossPhase2(EntityStorage& entityStorage, Entity* entity, Transform* transform,
@@ -350,52 +590,97 @@ void AISystem::UpdateBossPhase3(EntityStorage& entityStorage, Entity* entity, Tr
 // ============ СПЕЦИАЛЬНЫЕ АТАКИ БОССА ============
 
 void AISystem::BossSpecialAttack(EntityStorage& entityStorage, Entity* entity, Transform* transform,
-    AIComponent* ai,BossComponent* boss, PhysicBody* physicBody ,Star* star)
+    AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, Star* star)
 {
     Entity* player = GetNearestPlayer(entityStorage, transform);
     if (!player) return;
+
+    // ВИЗУАЛЬНЫЙ ЭФФЕКТ ПОДГОТОВКИ АТАКИ
+    SpawnAuraEffect(entity, point3d(0.8f, 0.2f, 0.8f), 0.5f);
+    SpawnAttackEffect(entityStorage, transform->position, point3d(0.8f, 0.2f, 0.8f), 1.5f);
 
     if (!ai->visual.isAttacking && ai->visual.attackVisualTimer <= 0)
     {
         ai->visual.originalRadius = star->radius;
         ai->visual.originalColor = star->color1;
-       
     }
 
-    // Устанавливаем визуальные эффекты
     ai->visual.isAttacking = true;
     ai->visual.isCastingSpecial = true;
     ai->visual.attackVisualTimer = ai->visual.attackDuration;
     ai->visual.specialCastTimer = ai->visual.specialCastDuration;
 
-    // Меняем внешний вид
     star->radius = ai->visual.originalRadius * ai->visual.attackScale;
     star->color1 = ai->visual.specialAttackColor;
-    
-    // Рывок к игроку с уроном
+
     Transform* playerTransform = player->GetComponent<Transform>();
     if (playerTransform)
     {
         point3d dashDirection = (playerTransform->position - transform->position).normalized();
 
-        // Быстрый рывок
-        physicBody->velocity = dashDirection * boss->dashAttackSpeed;
+        // ЭФФЕКТ ПЕРЕД РЫВКОМ
+        SpawnSlashEffect(entityStorage, transform->position, dashDirection, point3d(1.0f, 0.0f, 0.5f));
 
-        // Наносим урон
+        physicBody->velocity = dashDirection * boss->dashAttackSpeed;
+        physicBody->acceleration = point3d();
+
+        // ЭФФЕКТ СЛЕДА ВО ВРЕМЯ РЫВКА
+        Entity* trail = entityStorage.CreateEntity("DashTrail", entity);
+        ParticleEmitter* trailParticles = trail->AddComponent<ParticleEmitter>();
+        trailParticles->rate = 300;
+        trailParticles->lifetime = 200;
+        trailParticles->color = point3d(1.0f, 0.3f, 0.8f);
+        trailParticles->size = { 0.1f, 0.4f };
+        trailParticles->opacity = { 0.8f, 0.0f };
+        trailParticles->emitDirection = EmitDirection::Back;
+        trailParticles->spread = { 0.5f, 0.5f };
+        trailParticles->speed = { 5.0f, 2.0f };
+        trailParticles->useWorldSpace = false;
+
+        DelayedDestroy* delayed = trail->AddComponent<DelayedDestroy>();
+        delayed->lifeTime = 300;
+
         Health* playerHealth = player->GetComponent<Health>();
         if (playerHealth)
         {
             playerHealth->hp -= ai->attackDamage * 1.5f;
-        }
 
-        // Небольшая задержка после рывка (можно через таймер)
-        // Здесь можно добавить визуальный эффект
+            // ЭФФЕКТ ПОПАДАНИЯ В ИГРОКА
+            SpawnImpactEffect(entityStorage, playerTransform->position, point3d(1.0f, 0.2f, 0.2f));
+
+            PhysicBody* playerPhysic = player->GetComponent<PhysicBody>();
+            if (playerPhysic)
+            {
+                point3d pushDirection = dashDirection * 8.0f;
+                playerPhysic->velocity = pushDirection;
+            }
+        }
     }
 }
 
 void AISystem::BossAOEAttack(EntityStorage& entityStorage, Transform* transform, BossComponent* boss)
 {
-    // Поиск всех игроков в радиусе AOE
+    if (!transform) return;
+
+    // ВИЗУАЛЬНЫЙ ЭФФЕКТ ПОДГОТОВКИ АОЕ
+    SpawnAOEEffect(entityStorage, transform->position, boss->aoeAttackRange, point3d(1.0f, 0.5f, 0.0f));
+
+    // Эффект заряда
+    Entity* chargeEffect = entityStorage.CreateEntity("AOECharge", nullptr);
+    Transform* chargeTransform = chargeEffect->AddComponent<Transform>();
+    chargeTransform->position = transform->position;
+
+    Star* chargeStar = chargeEffect->AddComponent<Star>();
+    chargeStar->radius = 1.0f;
+    chargeStar->crownRadius = boss->aoeAttackRange;
+    chargeStar->color1 = point3d(1.0f, 0.3f, 0.0f);
+    chargeStar->color2 = point3d(0.8f, 0.2f, 0.0f);
+    
+
+    DelayedDestroy* delayed = chargeEffect->AddComponent<DelayedDestroy>();
+    delayed->lifeTime = 500;
+
+    // Поиск игроков в радиусе АОЕ
     const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<Health>();
 
     for (Entity* target : entities)
@@ -409,11 +694,12 @@ void AISystem::BossAOEAttack(EntityStorage& entityStorage, Transform* transform,
 
             if (distance <= boss->aoeAttackRange)
             {
-                // Урон уменьшается с расстоянием
+                // ЭФФЕКТ ПОПАДАНИЯ ПО КАЖДОМУ ИГРОКУ
+                SpawnImpactEffect(entityStorage, targetTransform->position, point3d(1.0f, 0.5f, 0.0f));
+
                 float damageMultiplier = 1.0f - (distance / boss->aoeAttackRange);
                 float damage = boss->aoeDamage * damageMultiplier;
                 health->hp -= damage;
-                if (health->hp < 0) health->hp = 0;
             }
         }
     }
@@ -426,33 +712,46 @@ void AISystem::CheckBossPhaseTransition(EntityStorage& entityStorage, Entity* en
 
     float healthPercentage = health->hp / health->maxHp;
 
-    // Переход на фазу 2 (30% здоровья)
     if (healthPercentage <= 0.3f && boss->currentPhase < 3)
     {
         boss->currentPhase = 3;
         boss->isTransitioning = true;
 
-        // Эффект перехода - например, вспышка или исцеление
-        // health->hp = health->maxHp * 0.3f; // если нужно установить точно 30%
+        // ВИЗУАЛЬНЫЙ ЭФФЕКТ ПЕРЕХОДА В ФАЗУ 3
+        Transform* transform = entity->GetComponent<Transform>();
+        if (transform)
+        {
+            // Большой взрыв при переходе
+            SpawnAOEEffect(entityStorage, transform->position, 15.0f, point3d(1.0f, 0.2f, 0.3f));
+            SpawnAuraEffect(entity, point3d(1.0f, 0.0f, 0.3f), 3.0f);
 
-        // Призыв миньонов при переходе
-        //BossSummonMinions(entityStorage, entity->GetComponent<Transform>(), boss);
+            // Множественные эффекты вокруг
+            for (int i = 0; i < 8; i++)
+            {
+                float angle = (i * PI * 2 / 8);
+                point3d offset = point3d(cos(angle), 0, sin(angle)) * 3.0f;
+                SpawnAttackEffect(entityStorage, transform->position + offset, point3d(1.0f, 0.2f, 0.5f), 0.8f);
+            }
+        }
 
         boss->isTransitioning = false;
     }
-    // Переход на фазу 2 (70% здоровья)
     else if (healthPercentage <= 0.7f && boss->currentPhase < 2)
     {
         boss->currentPhase = 2;
         boss->isTransitioning = true;
 
-        // Призыв миньонов при переходе
-        //BossSummonMinions(entityStorage, entity->GetComponent<Transform>(), boss);
+        // ВИЗУАЛЬНЫЙ ЭФФЕКТ ПЕРЕХОДА В ФАЗУ 2
+        Transform* transform = entity->GetComponent<Transform>();
+        if (transform)
+        {
+            SpawnAuraEffect(entity, point3d(1.0f, 0.2f, 0.5f), 3.0f);
+            SpawnAttackEffect(entityStorage, transform->position, point3d(0.8f, 0.2f, 0.8f), 2.0f);
+        }
 
         boss->isTransitioning = false;
     }
 }
-
 // ============ ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ ============
 
 Entity* AISystem::GetNearestPlayer(EntityStorage& entityStorage, Transform* bossTransform)
@@ -463,6 +762,8 @@ Entity* AISystem::GetNearestPlayer(EntityStorage& entityStorage, Transform* boss
 
     for (Entity* target : entities)
     {
+        if (!IsEntityValid(target)) continue;
+
         Health* health = target->GetComponent<Health>();
         if (health && health->fraction == Fraction::Player)
         {
@@ -477,6 +778,13 @@ Entity* AISystem::GetNearestPlayer(EntityStorage& entityStorage, Transform* boss
                 }
             }
         }
+    }
+
+    // Если нашли игрока - сохраняем его ID
+    if (nearestPlayer)
+    {
+        AIComponent* ai = nearestPlayer->GetComponent<AIComponent>();
+        if (ai) ai->targetId = nearestPlayer->GetId();
     }
 
     return nearestPlayer;

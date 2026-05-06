@@ -27,7 +27,7 @@ namespace fistsCombos
 
 		SingleDamager* singleDamager = hitbox->AddComponent<SingleDamager>();
 		singleDamager->target = Fraction::Enemy;
-		singleDamager->damage = 5.0f;
+		singleDamager->damage = 50.0f;
 		singleDamager->maxHitCount = -1;
 
 		SphereCollider* sphereCollider = hitbox->AddComponent<SphereCollider>();
