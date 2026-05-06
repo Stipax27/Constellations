@@ -86,7 +86,7 @@ void ComboManager::Initialize()
 				ComboInputType::Light,
 				ComboInputType::Light
 			},
-			test,
+			fistsCombos::final_punch_l,
 			false
 		),
 
