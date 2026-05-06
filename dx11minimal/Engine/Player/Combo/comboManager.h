@@ -13,6 +13,7 @@
 
 #define COMBO_BUFFER_LOCK_TIME 100
 #define COMBO_PAUSE_TIME 750
+#define COMBO_HELD_INPUT_START 200
 
 /////////////
 //  CLASS  //
@@ -25,6 +26,7 @@ public:
 	void Update();
 
 	void SaveInput(ComboInputType input);
+	void StartHeldInput(ComboInputType input);
 	void ClearInputBuffer();
 
 private:
@@ -35,6 +37,9 @@ private:
 
 	double lastInputTime;
 	double bufferUnlockTime;
+
+	ComboInputType heldInput;
+	double heldInputTime;
 
 	EntityStorage* entityStorage;
 	Entity* playerEntity;

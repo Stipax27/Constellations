@@ -64,7 +64,7 @@
 // GLOBALS //
 /////////////
 //const bool VSYNC_ENABLED = true;
-#define SHOW_COLLIDERS true
+#define SHOW_COLLIDERS false
 #define SHOW_GRAVITY false
 
 
@@ -134,7 +134,10 @@ private:
 private: // AI amogus
 	Entity* testEnemy;
 	Entity* worldFolder;
-
+	Entity* m_CurrentBoss;
+	Entity* m_BossHealthFill;      // Полоска здоровья
+	TextLabel* m_BossNumbersText;  // Текст с цифрами
+	TextLabel* m_BossNameText;     // Текст с именем
 };
 
 #endif

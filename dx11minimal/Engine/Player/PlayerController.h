@@ -62,16 +62,13 @@ public:
 	PlayerController(const PlayerController&);
 	~PlayerController();
 
-	void Initialize(Entity*, EntityStorage*);
+	void Initialize(Entity*);
 	void Shutdown();
 
 	void ProcessInput();
 	void ProcessCamera();
 	void ProcessMouse();
 	void ProccessUI();
-
-	// Ќовый метод дл€ обработки получени€ урона
-	void TakeDamage(float damage);
 
 private:
 	ComboManager* comboManager;

@@ -179,7 +179,7 @@ bool LevelManagerClass::Initialize()
 	CreateSpaceBackground(worldFolder, 1);
 	CreateAries(worldFolder);
 	CreateZenithLocation(worldFolder, 2);
-	CreateNebula(worldFolder,2);
+	//CreateNebula(worldFolder,2);
 	//CreateStarQuestLoc(worldFolder, 2);
 
 	/////////////////////////
@@ -200,7 +200,7 @@ bool LevelManagerClass::Initialize()
 	InitSystems();
 
 	playerController = new PlayerController();
-	playerController->Initialize(player, m_World->entityStorage);
+	playerController->Initialize(player);
 
 	
 
@@ -296,8 +296,8 @@ bool LevelManagerClass::Initialize()
 		pointCloud->pointSize = 1.0f;
 		pointCloud->brightness = 1.25f;
 		pointCloud->color = point3d(1.0f, 0.95f, 0.85f);
-		pointCloud->compress = RenderCompress::x2;
 		pointCloud->frustumRadius = 12.0f;
+		pointCloud->compress = RenderCompress::x2;
 
 		SkeletalAnimationComponent* animComp = e->AddComponent<SkeletalAnimationComponent>();
 		animComp->skeleton = skeleton;
@@ -411,6 +411,46 @@ void LevelManagerClass::Frame()
 	questManager->UpdateQuests();
 
 	// DEBUG
+
+	 // Обновление полоски здоровья босса
+	if (m_CurrentBoss && m_CurrentBoss->IsActive() && m_BossHealthFill) {
+
+		Health* bossHealth = m_CurrentBoss->GetComponent<Health>();
+		if (bossHealth) {
+			// Показываем контейнер
+			Entity* bossContainer = m_BossHealthFill->GetParent();
+			if (bossContainer) bossContainer->SetActive(true);
+
+			// Обновляем полоску
+			float healthPercent = bossHealth->hp / bossHealth->maxHp;
+			Transform2D* barTransform = m_BossHealthFill->GetComponent<Transform2D>();
+			if (barTransform) {
+				barTransform->scale.x = 0.5f * healthPercent;
+			}
+
+			// Меняем цвет
+			Rect* barRect = m_BossHealthFill->GetComponent<Rect>();
+			if (barRect) {
+				if (healthPercent > 0.6f) barRect->color = point3d(0.2f, 0.8f, 0.2f);
+				else if (healthPercent > 0.3f) barRect->color = point3d(0.8f, 0.8f, 0.2f);
+				else barRect->color = point3d(0.8f, 0.2f, 0.2f);
+			}
+
+			// Обновляем цифры (прямо по указателю)
+			if (m_BossNumbersText) {
+				wchar_t buffer[64];
+				swprintf(buffer, 64, L"%.0f / %.0f", bossHealth->hp, bossHealth->maxHp);
+				m_BossNumbersText->textW = buffer;
+			}
+		}
+	}
+	else {
+		// Скрываем UI босса
+		if (m_BossHealthFill) {
+			Entity* bossContainer = m_BossHealthFill->GetParent();
+			if (bossContainer) bossContainer->SetActive(false);
+		}
+	}
 
 	if (worldFolder->localTime - shotTime >= 500) {
 		shotTime = worldFolder->localTime;
@@ -819,7 +859,7 @@ void LevelManagerClass::CreateUI()
 	transform2D->anchorPoint = point3d(0, 0, 0);
 	transform2D->ratio = ScreenAspectRatio::XX;
 	transform2D->position = point3d(0, 0.85f, 0.0f);
-	transform2D->scale = point3d(0.05f, 0.05f, 0.0f);
+	transform2D->scale = point3d(0.2f, 0.05f, 0.0f);
 	rect = entity->AddComponent<Rect>();
 	rect->color = point3d(0.75f, 0.0f, 0.0f);
 
@@ -842,6 +882,65 @@ void LevelManagerClass::CreateUI()
 	ImageLabel* imageLabel = entity->AddComponent<ImageLabel>();
 	imageLabel->textureName = "comicsSpot";
 	imageLabel->color = point3d(0.12, 0.91, 0.62);*/
+	//////////////////////////////////////////////////////////////////////
+	Entity* bossUIContainer = m_World->entityStorage->CreateEntity("BossUIContainer", uiFolder);
+
+	// Фон полоски здоровья босса
+	entity = m_World->entityStorage->CreateEntity("BossHealthBg", bossUIContainer);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(0, 0.7f, 0.0f);
+	transform2D->scale = point3d(0.5f, 0.035f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.2f, 0.2f, 0.2f);
+	rect->opacity = 0.7f;
+
+	// Сама полоска здоровья (будет менять ширину)
+	entity = m_World->entityStorage->CreateEntity("BossHealthBar", bossUIContainer);
+	m_BossHealthFill = entity;  // Сохраняем указатель на полоску
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(-1, 0, 0);  // Привязка к левому краю
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.5f, 0.7f, 0.0f);
+	transform2D->scale = point3d(0.5f, 0.035f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.8f, 0.2f, 0.2f);
+
+	// Имя босса
+	entity = m_World->entityStorage->CreateEntity("BossName", bossUIContainer);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.16f, 0.91f, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"ГИПЕРЗВЕЗДА";
+	textLabel->fontFamilyW = L"Impact";
+	textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+	textLabel->fontWeight = 900;
+	textLabel->fontSizePx = 52;
+	textLabel->fontScale = 1.0f;
+	textLabel->color = point3d(1.0f, 0.85f, 0.2f);
+	textLabel->opacity = 1.0f;
+
+	// Цифры здоровья (текущее / максимальное)
+	entity = m_World->entityStorage->CreateEntity("BossHealthNumbers", bossUIContainer);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.1f, 0.74f, 0.0f);
+	m_BossNumbersText = entity->AddComponent<TextLabel>();  // Сохраняем указатель
+	m_BossNumbersText->textW = L"2000 / 2000";
+	m_BossNumbersText->fontFamilyW = L"Impact";
+	m_BossNumbersText->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+	m_BossNumbersText->fontWeight = 700;
+	m_BossNumbersText->fontSizePx = 36;
+	m_BossNumbersText->fontScale = 1.0f;
+	m_BossNumbersText->color = point3d(1.0f, 1.0f, 1.0f);
+	m_BossNumbersText->opacity = 0.9f;
+
+	// Изначально скрываем весь UI босса
+	bossUIContainer->SetActive(false);
 }
 
 
@@ -879,20 +978,20 @@ void LevelManagerClass::CreateAries(Entity* folder)
 	transform = aries->AddComponent<Transform>();
 	transform->scale = point3d(4, 4, 4);
 	transform->position = point3d(0.0f, 20.0f, 50.0f);
-	pointCloud = aries->AddComponent<PointCloud>();
-	pointCloud->index = 2;
-	pointCloud->pointSize = 1.0f;
-	pointCloud->brightness = 0.4f;
-	//pointCloud->color = point3d(1, 0.2, 0.25);
-	pointCloud->instances = 1;
-	pointCloud->frustumRadius = 8;
+	//pointCloud = aries->AddComponent<PointCloud>();
+	//pointCloud->index = 2;
+	//pointCloud->pointSize = 1.0f;
+	//pointCloud->brightness = 0.4f;
+	////pointCloud->color = point3d(1, 0.2, 0.25);
+	//pointCloud->instances = 1;
+	//pointCloud->frustumRadius = 8;
 	//pointCloud->compress = RenderCompress::x2;
-	health = aries->AddComponent<Health>();
+	/*health = aries->AddComponent<Health>();
 	health->hp = 1000;
 	health->maxHp = 1000;
-	cameraTarget = aries->AddComponent<CameraTarget>();
+	cameraTarget = aries->AddComponent<CameraTarget>();*/
 
-	constellation = aries->AddComponent<Constellation>();
+	/*constellation = aries->AddComponent<Constellation>();
 	constellation->starSize = 0.04f;
 	constellation->stars = {
 		point3d(0, 2.5f, 3.0f),
@@ -932,79 +1031,79 @@ void LevelManagerClass::CreateAries(Entity* folder)
 		{11,13},
 		{12,14},
 		{13,15},
-	};
+	};*/
 
-	entity = m_World->entityStorage->CreateEntity("Armor", aries);
-	transform = entity->AddComponent<Transform>();
-	pointCloud = entity->AddComponent<PointCloud>();
-	pointCloud->index = 3;
-	pointCloud->pointSize = 0.75f;
-	pointCloud->brightness = 0.2f;
-	pointCloud->color = point3d(1, 0.9f, 0.2f);
-	pointCloud->frustumRadius = 8;
-	//pointCloud->compress = RenderCompress::x2;
+	//entity = m_World->entityStorage->CreateEntity("Armor", aries);
+	//transform = entity->AddComponent<Transform>();
+	//pointCloud = entity->AddComponent<PointCloud>();
+	//pointCloud->index = 3;
+	//pointCloud->pointSize = 0.75f;
+	//pointCloud->brightness = 0.2f;
+	//pointCloud->color = point3d(1, 0.9f, 0.2f);
+	//pointCloud->frustumRadius = 8;
+	////pointCloud->compress = RenderCompress::x2;
 
-	//Body
+	////Body
 
-	entity = m_World->entityStorage->CreateEntity("Collider", aries);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0, 0.08, 0.1);
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->softness = 0.7;
-	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	sphereCollider->radius = 3;
+	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	//transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(0, 0.08, 0.1);
+	//sphereCollider = entity->AddComponent<SphereCollider>();
+	//sphereCollider->softness = 0.7;
+	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	//sphereCollider->radius = 3;
 
-	entity = m_World->entityStorage->CreateEntity("Collider", aries);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0, -0.05, -1.5);
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->softness = 0.7;
-	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	sphereCollider->radius = 2.2;
+	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	//transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(0, -0.05, -1.5);
+	//sphereCollider = entity->AddComponent<SphereCollider>();
+	//sphereCollider->softness = 0.7;
+	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	//sphereCollider->radius = 2.2;
 
-	entity = m_World->entityStorage->CreateEntity("Collider", aries);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0, -0.1, -0.7);
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->softness = 0.7;
-	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	sphereCollider->radius = 2.7;
+	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	//transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(0, -0.1, -0.7);
+	//sphereCollider = entity->AddComponent<SphereCollider>();
+	//sphereCollider->softness = 0.7;
+	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	//sphereCollider->radius = 2.7;
 
-	//Head
+	////Head
 
-	entity = m_World->entityStorage->CreateEntity("Collider", aries);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0, 0.9, 0.8);
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->softness = 0.7;
-	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	sphereCollider->radius = 2;
+	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	//transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(0, 0.9, 0.8);
+	//sphereCollider = entity->AddComponent<SphereCollider>();
+	//sphereCollider->softness = 0.7;
+	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	//sphereCollider->radius = 2;
 
-	entity = m_World->entityStorage->CreateEntity("Collider", aries);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0, 0.7, 1.4);
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->softness = 0.7;
-	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	sphereCollider->radius = 1.1;
+	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	//transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(0, 0.7, 1.4);
+	//sphereCollider = entity->AddComponent<SphereCollider>();
+	//sphereCollider->softness = 0.7;
+	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	//sphereCollider->radius = 1.1;
 
-	//Horns
+	////Horns
 
-	entity = m_World->entityStorage->CreateEntity("Collider", aries);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0.5, 1.2, 0.5);
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->softness = 0.7;
-	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	sphereCollider->radius = 1.6;
+	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	//transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(0.5, 1.2, 0.5);
+	//sphereCollider = entity->AddComponent<SphereCollider>();
+	//sphereCollider->softness = 0.7;
+	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	//sphereCollider->radius = 1.6;
 
-	entity = m_World->entityStorage->CreateEntity("Collider", aries);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-0.5, 1.2, 0.5);
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->softness = 0.7;
-	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	sphereCollider->radius = 1.6;
+	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	//transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(-0.5, 1.2, 0.5);
+	//sphereCollider = entity->AddComponent<SphereCollider>();
+	//sphereCollider->softness = 0.7;
+	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	//sphereCollider->radius = 1.6;
 }
 
 
@@ -1015,7 +1114,6 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	Transform* transform;
 	SphereCollider* sphereCollider;
 	MultiDamager* multiDamager;
-	
 
 	int pillars_cnt = 3725470 / 2 / quality;
 	int galaxy_cnt = 182361 / quality;
@@ -1026,7 +1124,6 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	transform->position = point3d(0, 0, -100);
 
 	// Pillars hand | point
-
 	entity = m_World->entityStorage->CreateEntity("PHP", folder);
 	transform = entity->AddComponent<Transform>();
 
@@ -1038,22 +1135,19 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->frustumRadius = 40;
 
 	// Inside nebula | point
-
 	entity = m_World->entityStorage->CreateEntity("INP", location);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(150, 0, 0);
 
-	
 	nebula = entity->AddComponent<Nebula>();
 	nebula->vShader = 23;
 	nebula->count = pillars_cnt;
 	nebula->mode = pMode::point;
-	nebula->color = point3d(0.3, 0.5, 1.0); // Голубой
+	nebula->color = point3d(0.3, 0.5, 1.0);
 	nebula->scale = 10;
 	nebula->frustumRadius = 40;
 
 	// Pillars hand | glow
-
 	entity = m_World->entityStorage->CreateEntity("PHG", location);
 	transform = entity->AddComponent<Transform>();
 
@@ -1066,38 +1160,31 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->frustumRadius = 40;
 
 	// Inside nebula | glow
-
 	entity = m_World->entityStorage->CreateEntity("ING", location);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(150, 0, 0);
-
 
 	nebula = entity->AddComponent<Nebula>();
 	nebula->vShader = 23;
 	nebula->count = pillars_cnt;
 	nebula->skipper = 1394;
 	nebula->mode = pMode::glow;
-	nebula->color = point3d(0.3, 0.5, 1.0); // Голубой
+	nebula->color = point3d(0.3, 0.5, 1.0);
 	nebula->scale = 10;
 	nebula->frustumRadius = 40;
 
-
 	// 2 Nebula
-
 	entity = m_World->entityStorage->CreateEntity("INP1", location);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0, 0, 0);
 
-	
 	nebula = entity->AddComponent<Nebula>();
 	nebula->vShader = 23;
 	nebula->count = pillars_cnt;
 	nebula->mode = pMode::point;
 	nebula->color = point3d(0.8, 0.4, 0.2);
-
 	nebula->scale = 10;
 	nebula->frustumRadius = 40;
-
 
 	entity = m_World->entityStorage->CreateEntity("ING1", location);
 	transform = entity->AddComponent<Transform>();
@@ -1109,108 +1196,114 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->skipper = 1394;
 	nebula->mode = pMode::glow;
 	nebula->color = point3d(0.8, 0.4, 0.2);
-	
 	nebula->scale = 10;
 	nebula->frustumRadius = 40;
 
-
+	// ========== БОСС С ИСПРАВЛЕННЫМИ ПАРАМЕТРАМИ ==========
 	Entity* BossEntity = m_World->entityStorage->CreateEntity("BossEnemy", location);
+	m_CurrentBoss = BossEntity;
+
 	Transform* testTransform = BossEntity->AddComponent<Transform>();
-	point3d CentralPatrolPoint = point3d(20.0f, 10.0f, 15.0f);
+	point3d CentralPatrolPoint = point3d(20.0f, 5.0f, 15.0f);
 	testTransform->position = CentralPatrolPoint;
 
 	// === КОЛЛАЙДЕР ===
 	sphereCollider = BossEntity->AddComponent<SphereCollider>();
 	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	sphereCollider->radius = 4.5f; // Добавьте радиус побольше для босса
+	sphereCollider->radius = 3.5f;
 	BossEntity->AddComponent<CameraTarget>();
 
 	// === ЗДОРОВЬЕ ===
 	Health* health = BossEntity->AddComponent<Health>();
 	health->fraction = Fraction::Enemy;
-	health->maxHp = 2000.0f;  // 2000 HP - достойный босс
+	health->maxHp = 2000.0f;
 	health->hp = 2000.0f;
 
-	// === ФИЗИКА ===
+	// === ФИЗИКА - оптимальные параметры ===
 	PhysicBody* testPhysic = BossEntity->AddComponent<PhysicBody>();
-	testPhysic->airFriction = 0.01f;      // Выше = меньше торможения
-	testPhysic->mass = 100.0f;             // Тяжелый, его сложно сдвинуть
+	testPhysic->airFriction = 0.98f;      // Небольшое трение, чтобы не улетал
+	testPhysic->mass = 100.0f;             // Средняя масса
 	testPhysic->velocity = point3d(0.0f, 0.0f, 0.0f);
-	         
 
 	// === ВИЗУАЛ ===
 	Star* testStar = BossEntity->AddComponent<Star>();
-	testStar->radius = 3.5f;               // Большой видимый размер
-	testStar->color1 = point3d(0.8f, 0.2f, 0.8f); // Фиолетовый для босса
-	testStar->crownColor = point3d(0.3f, 0.6f, 0.8f);    
+	testStar->radius = 3.0f;
+	testStar->crownRadius = 4.5f;
+	testStar->color1 = point3d(0.8f, 0.2f, 0.8f);
+	testStar->color2 = point3d(0.5f, 0.1f, 0.5f);
+	testStar->crownColor = point3d(0.3f, 0.6f, 0.8f);
 
-	// === КОМПОНЕНТ ИИ (Базовые настройки) ===
+	// === КОМПОНЕНТ ИИ ===
 	AIComponent* ai = BossEntity->AddComponent<AIComponent>();
 	ai->enabled = true;
-	ai->behaviorType = AIBehaviorType::BOSS_PHASE_1; // Начинаем с первой фазы
+	ai->behaviorType = AIBehaviorType::BOSS_PHASE_1;
 
-	// Параметры движения босса
-	ai->movementSpeed = 8.0f;               // Быстрее обычных врагов
-	ai->arrivalDistance = 2.0f;             // Ближе подходит к цели
-	ai->accelerationStrength = 0.35f;       // Быстрый разгон
-	ai->maxAcceleration = 15.0f;            // Мощное ускорение
+	// Параметры движения - НОРМАЛЬНЫЕ для движения
+	ai->movementSpeed = 10.0f;               // Скорость движения
+	ai->arrivalDistance = 2.5f;             // Дистанция остановки
+	ai->accelerationStrength = 0.35f;       // Нормальное ускорение
+	ai->maxAcceleration = 12.0f;            // Нормальное макс ускорение
 
 	// Параметры обнаружения
-	ai->detectionRange = 40.0f;             // Видит игрока издалека
+	ai->detectionRange = 40.0f;             // Видит издалека
 	ai->chaseRange = 50.0f;                 // Преследует далеко
-	ai->attackRange = 4.5f;                // Атакует с 4.5 метров
+	ai->attackRange = 4.0f;                 // Атакует в 4 метрах
 
 	// Параметры атаки
-	ai->attackCooldown = 1.2f;              // Атака каждые 1.2 секунды
-	ai->attackDamage = 35.0f;               // Сильный урон
+	ai->attackCooldown = 1.2f;              // Атака каждые 1.2 сек
+	ai->attackDamage = 20.0f;
 
-	// Таймеры состояний
+	// Таймеры
 	ai->stateTimer = 0.0f;
-
-	// Параметры поиска (если потеряет игрока)
-	ai->searchDuration = 5.0f;              // Ищет 5 секунд
-	ai->searchPatrolRadius = 15.0f;         // Радиус обыска
-
-	// Цель
+	ai->searchDuration = 5.0f;
+	ai->searchPatrolRadius = 15.0f;
 	ai->targetId = -1;
 
-	// Патрульные точки (на случай если нужны)
+	// Патрульные точки (для фазы поиска)
 	ai->patrolPoints = {
-		CentralPatrolPoint + point3d(-5.0f, 5.0f, -5.0f),
+		CentralPatrolPoint + point3d(-5.0f, 0.0f, -5.0f),
 		CentralPatrolPoint + point3d(5.0f, 0.0f, -5.0f),
 		CentralPatrolPoint + point3d(5.0f, 0.0f, 5.0f),
-		CentralPatrolPoint + point3d(-5.0f, 5.0f, 5.0f)
+		CentralPatrolPoint + point3d(-5.0f, 0.0f, 5.0f)
 	};
 	ai->currentPatrolIndex = 0;
 
-	// === КОМПОНЕНТ БОССА (Специфичные параметры) ===
+	// Визуальные эффекты
+	ai->visual.originalRadius = testStar->radius;
+	ai->visual.originalColor = testStar->color1;
+	ai->visual.attackScale = 1.5f;
+	ai->visual.attackDuration = 0.3f;
+	ai->visual.specialCastDuration = 0.5f;
+	ai->visual.specialAttackColor = point3d(1.0f, 0.3f, 0.8f);
+	ai->visual.aoePulseSpeed = 5.0f;
+
+	// === КОМПОНЕНТ БОССА ===
 	BossComponent* boss = BossEntity->AddComponent<BossComponent>();
 
 	// Фазы боя
 	boss->currentPhase = 1;
-	boss->phaseHealthThresholds[0] = 0.7f;   // 70% HP - фаза 2
-	boss->phaseHealthThresholds[1] = 0.3f;   // 30% HP - фаза 3
+	boss->phaseHealthThresholds[0] = 0.7f;
+	boss->phaseHealthThresholds[1] = 0.3f;
 	boss->phaseHealthThresholds[2] = 0.0f;
 
 	// Специальные атаки
-	boss->specialAttackCooldown = 12.0f;      // Спецатака каждые 12 секунд
+	boss->specialAttackCooldown = 12.0f;
 	boss->lastSpecialAttackTime = 0.0f;
-	boss->summonCount = 3;                    // Призывает 3 миньонов
+	boss->summonCount = 2;
 
-	// Усиления в разных фазах
-	boss->rageSpeedMultiplier = 1.5f;         // В фазе 3 скорость x1.5
+	// Усиления в фазах
+	boss->rageSpeedMultiplier = 1.4f;
 
 	// АОЕ атака
-	boss->aoeAttackRange = 12.0f;             // АОЕ радиус 12 метров
-	boss->aoeDamage = 10.0f;                  // 50 урона по области
+	boss->aoeAttackRange = 10.0f;
+	boss->aoeDamage = 20.0f;
 
-	// Рывок
-	boss->dashAttackSpeed = 100.0f;            // Скорость рывка
+	// Рывок (умеренная скорость)
+	boss->dashAttackSpeed = 35.0f;
 
 	// Переходы между фазами
-	boss->phaseTransitionTime = 2.0f;
+	boss->phaseTransitionTime = 1.5f;
 	boss->isTransitioning = false;
-
 }
 
 void LevelManagerClass::CreateNebula(Entity* folder, int quality) {

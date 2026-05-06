@@ -28,7 +28,7 @@ PlayerController::~PlayerController()
 }
 
 
-void PlayerController::Initialize(Entity* Player, EntityStorage* entityStorage)
+void PlayerController::Initialize(Entity* Player)
 {
 	playerEntity = Player;
 
@@ -356,10 +356,18 @@ void PlayerController::ProcessMouse()
 				}*/
 
 				if (mouse->IsLButtonClicked()) {
-					comboManager->SaveInput(ComboInputType::Light);
+					comboManager->StartHeldInput(ComboInputType::Light);
 				}
 
 				if (mouse->IsRButtonClicked()) {
+					comboManager->StartHeldInput(ComboInputType::Heavy);
+				}
+
+				if (mouse->IsLButtonUnclicked()) {
+					comboManager->SaveInput(ComboInputType::Light);
+				}
+
+				if (mouse->IsRButtonUnclicked()) {
 					comboManager->SaveInput(ComboInputType::Heavy);
 				}
 			}
@@ -444,22 +452,6 @@ void PlayerController::Dash()
 		abilities->stamina -= DASH_COST;
 
 		comboManager->SaveInput(ComboInputType::Dash);
-	}
-}
-
-// Добавьте этот метод в PlayerController для обработки получения урона
-void PlayerController::TakeDamage(float damage)
-{
-	if (!playerEntity->IsActive()) return;
-
-	// Пытаемся заблокировать урон щитом
-	if (!abilities->TryBlockDamage(damage)) {
-		// Если не заблокировали - применяем урон
-		playerHealth->hp -= damage;
-
-		// Визуальный эффект получения урона
-		playerPointCloud->color = point3d(1.0f, 0.0f, 0.0f);
-		// Возвращаем цвет через некоторое время
 	}
 }
 

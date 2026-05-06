@@ -5,6 +5,8 @@
 #include "../../UI/Text/TextLabel.h"
 #include "../../Compute/DelayedDestroy/DelayedDestroy.h"
 
+#include "fistsCombos.h"
+
 /////////////////////////////////////////////////////////////////////
 
 void test(EntityStorage* entityStorage, Entity* player, const point3d& direction)
@@ -47,11 +49,44 @@ void ComboManager::Initialize()
 			{
 				ComboInputType::TakeFists,
 				ComboInputType::Light,
+			},
+			fistsCombos::first_punch_l,
+			true
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeFists,
+				ComboInputType::Light,
+				ComboInputType::Light,
+			},
+			fistsCombos::first_punch_l,
+			true
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeFists,
+				ComboInputType::Light,
+				ComboInputType::Light,
+				ComboInputType::Light,
+			},
+			fistsCombos::first_punch_l,
+			true
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeFists,
+				ComboInputType::Light,
 				ComboInputType::Light,
 				ComboInputType::Light,
 				ComboInputType::Light
 			},
-			test,
+			fistsCombos::final_punch_l,
 			false
 		),
 
@@ -670,6 +705,7 @@ void ComboManager::Initialize()
 	};
 
 	bufferUnlockTime = 0;
+	heldInput = ComboInputType::Pause;
 
 	maxComboLength = 0;
 	for (Combo& combo : comboList) {
@@ -705,6 +741,13 @@ void ComboManager::SaveInput(ComboInputType input)
 		if ((int)input >= COMBO_INPUT_WEAPON_INDEX) {
 			return;
 		}
+	}
+
+	if (heldInput != ComboInputType::Pause) {
+		if (timer::currentTime - heldInputTime >= COMBO_HELD_INPUT_START)
+			input = ComboInputType((int)heldInput + 2);
+
+		heldInput = ComboInputType::Pause;
 	}
 
 	if (inputBufferSize == 0) {
@@ -745,8 +788,24 @@ void ComboManager::SaveInput(ComboInputType input)
 }
 
 
+void ComboManager::StartHeldInput(ComboInputType input)
+{
+	if ((int)input > 1)
+		return;
+
+	// It's a crutch. I don't want to create a separate flag for the state when no key is being held down.
+	if (heldInput == ComboInputType::Pause) {
+		heldInput = input;
+		heldInputTime = timer::currentTime;
+	}
+}
+
+
 void ComboManager::Update()
 {
+	if (heldInput != ComboInputType::Pause)
+		return;
+
 	if (inputBuffer.size() > 0 && timer::currentTime - lastInputTime >= COMBO_PAUSE_TIME) {
 		SaveInput(ComboInputType::Pause);
 	}
@@ -784,7 +843,7 @@ void ComboManager::LockInputBuffer(double time) {
 
 
 ComboInputType ComboManager::GetCITforCurrWeapon() {
-	return (ComboInputType)((int)abilities->weapon + COMBO_INPUT_WEAPON_INDEX);
+	return ComboInputType((int)abilities->weapon + COMBO_INPUT_WEAPON_INDEX);
 }
 
 

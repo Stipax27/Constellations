@@ -7,6 +7,9 @@
 #include "../../Physic/Movement/PhysicBody.h"
 #include "AIComponent.h"
 #include "BossComponent.h"
+#include "../../Render/ParticleEmitter.h"
+#include "../../Render/Beam.h"
+#include "../../Compute/DelayedDestroy/DelayedDestroy.h"
 #include "../../Render/Star.h"
 #include "../../Compute/Combat/Health.h"
 
@@ -80,10 +83,21 @@ private:
     // ---------- Вспомогательная функция: переход к патрулю вокруг последней позиции ----------
     void GoToPatrolAroundLastPosition(AIComponent* ai);
 
-
     // ---------- Вспомогательные методы для босса ----------
     Entity* GetNearestPlayer(EntityStorage& entityStorage, Transform* bossTransform);
     float GetDistanceToPlayer(EntityStorage& entityStorage, Transform* bossTransform);
+
+    // Визуальные эффекты для атак босса
+    void SpawnAttackEffect(EntityStorage& entityStorage, const point3d& position, const point3d& color, float size);
+    void SpawnSlashEffect(EntityStorage& entityStorage, const point3d& position, const point3d& direction, const point3d& color);
+    void SpawnImpactEffect(EntityStorage& entityStorage, const point3d& position, const point3d& color);
+    void SpawnAuraEffect(Entity* bossEntity, const point3d& color, float duration);
+
+    // Эффекты для разных типов атак
+    void SpawnMeleeAttackEffect(EntityStorage& entityStorage, const point3d& position, const point3d& direction);
+    void SpawnRangedAttackEffect(EntityStorage& entityStorage, const point3d& position, const point3d& direction);
+    void SpawnAOEEffect(EntityStorage& entityStorage, const point3d& position, float radius, const point3d& color);
+
 };
 
 #endif
