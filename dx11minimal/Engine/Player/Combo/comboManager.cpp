@@ -5,6 +5,8 @@
 #include "../../UI/Text/TextLabel.h"
 #include "../../Compute/DelayedDestroy/DelayedDestroy.h"
 
+#include "fistsCombos.h"
+
 /////////////////////////////////////////////////////////////////////
 
 void test(EntityStorage* entityStorage, Entity* player, const point3d& direction)
@@ -41,6 +43,39 @@ void ComboManager::Initialize()
 		///////////////////////////////////
 		// Комбинации Лёгких ударов КУЛАКОВ
 		///////////////////////////////////
+
+		Combo
+		(
+			{
+				ComboInputType::TakeFists,
+				ComboInputType::Light,
+			},
+			fistsCombos::first_punch,
+			true
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeFists,
+				ComboInputType::Light,
+				ComboInputType::Light,
+			},
+			fistsCombos::first_punch,
+			true
+		),
+
+		Combo
+		(
+			{
+				ComboInputType::TakeFists,
+				ComboInputType::Light,
+				ComboInputType::Light,
+				ComboInputType::Light,
+			},
+			fistsCombos::first_punch,
+			true
+		),
 
 		Combo
 		(

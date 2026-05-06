@@ -296,8 +296,8 @@ bool LevelManagerClass::Initialize()
 		pointCloud->pointSize = 1.0f;
 		pointCloud->brightness = 1.25f;
 		pointCloud->color = point3d(1.0f, 0.95f, 0.85f);
-		pointCloud->compress = RenderCompress::x2;
 		pointCloud->frustumRadius = 12.0f;
+		pointCloud->compress = RenderCompress::x2;
 
 		SkeletalAnimationComponent* animComp = e->AddComponent<SkeletalAnimationComponent>();
 		animComp->skeleton = skeleton;
