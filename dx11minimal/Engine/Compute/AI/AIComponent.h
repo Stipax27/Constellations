@@ -68,6 +68,7 @@ public:
     float maxAcceleration = 10.0f;       // ограничение, чтобы избежать рывков
 
     int targetId = -1;
+    bool isBoss = false;
 
     // ============ ВИЗУАЛЬНЫЕ ЭФФЕКТЫ ДЛЯ БОССА ============
     struct VisualFeedback
