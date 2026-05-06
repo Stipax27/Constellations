@@ -1183,33 +1183,33 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	};
 	ai->currentPatrolIndex = 0;
 
-	// === КОМПОНЕНТ БОССА (Специфичные параметры) ===
-	BossComponent* boss = BossEntity->AddComponent<BossComponent>();
+	//// === КОМПОНЕНТ БОССА (Специфичные параметры) ===
+	//BossComponent* boss = BossEntity->AddComponent<BossComponent>();
 
-	// Фазы боя
-	boss->currentPhase = 1;
-	boss->phaseHealthThresholds[0] = 0.7f;   // 70% HP - фаза 2
-	boss->phaseHealthThresholds[1] = 0.3f;   // 30% HP - фаза 3
-	boss->phaseHealthThresholds[2] = 0.0f;
+	//// Фазы боя
+	//boss->currentPhase = 1;
+	//boss->phaseHealthThresholds[0] = 0.7f;   // 70% HP - фаза 2
+	//boss->phaseHealthThresholds[1] = 0.3f;   // 30% HP - фаза 3
+	//boss->phaseHealthThresholds[2] = 0.0f;
 
-	// Специальные атаки
-	boss->specialAttackCooldown = 12.0f;      // Спецатака каждые 12 секунд
-	boss->lastSpecialAttackTime = 0.0f;
-	boss->summonCount = 3;                    // Призывает 3 миньонов
+	//// Специальные атаки
+	//boss->specialAttackCooldown = 12.0f;      // Спецатака каждые 12 секунд
+	//boss->lastSpecialAttackTime = 0.0f;
+	//boss->summonCount = 3;                    // Призывает 3 миньонов
 
-	// Усиления в разных фазах
-	boss->rageSpeedMultiplier = 1.5f;         // В фазе 3 скорость x1.5
+	//// Усиления в разных фазах
+	//boss->rageSpeedMultiplier = 1.5f;         // В фазе 3 скорость x1.5
 
-	// АОЕ атака
-	boss->aoeAttackRange = 12.0f;             // АОЕ радиус 12 метров
-	boss->aoeDamage = 10.0f;                  // 50 урона по области
+	//// АОЕ атака
+	//boss->aoeAttackRange = 12.0f;             // АОЕ радиус 12 метров
+	//boss->aoeDamage = 10.0f;                  // 50 урона по области
 
-	// Рывок
-	boss->dashAttackSpeed = 100.0f;            // Скорость рывка
+	//// Рывок
+	//boss->dashAttackSpeed = 100.0f;            // Скорость рывка
 
-	// Переходы между фазами
-	boss->phaseTransitionTime = 2.0f;
-	boss->isTransitioning = false;
+	//// Переходы между фазами
+	//boss->phaseTransitionTime = 2.0f;
+	//boss->isTransitioning = false;
 
 }
 
