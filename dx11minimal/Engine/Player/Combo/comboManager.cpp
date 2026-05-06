@@ -50,7 +50,7 @@ void ComboManager::Initialize()
 				ComboInputType::TakeFists,
 				ComboInputType::Light,
 			},
-			fistsCombos::first_punch,
+			fistsCombos::first_punch_l,
 			true
 		),
 
@@ -61,7 +61,7 @@ void ComboManager::Initialize()
 				ComboInputType::Light,
 				ComboInputType::Light,
 			},
-			fistsCombos::first_punch,
+			fistsCombos::first_punch_l,
 			true
 		),
 
@@ -73,7 +73,7 @@ void ComboManager::Initialize()
 				ComboInputType::Light,
 				ComboInputType::Light,
 			},
-			fistsCombos::first_punch,
+			fistsCombos::first_punch_l,
 			true
 		),
 
