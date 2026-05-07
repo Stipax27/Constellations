@@ -1745,7 +1745,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	boss->starShotCooldown = 3.5f;
 	boss->starShotCount = 20.f;
 	boss->starShotSpeed = 15.0f;
-	boss->starShotDamage = 0.2f;
+	boss->starShotDamage = 0.5f;
 
 	boss->sideDashCooldown = 2.5f;
 	boss->sideDashSpeed = 10.0f;
