@@ -39,7 +39,7 @@ public:
 	Entity* CloneEntity(Entity* entity);
 
 	Entity* GetEntityByName(std::string);
-	std::vector<Entity*> GetEntitiesByName(std::string);
+	std::vector<Entity*> GetAllEntitiesByName(std::string);
 	Entity* GetEntityById(int);
 	const std::vector<Entity*>& GetEntitiesWithComponent(const std::type_index& componentType);
 
