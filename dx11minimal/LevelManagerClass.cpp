@@ -526,9 +526,20 @@ void LevelManagerClass::Frame()
 		}
 
 		// ===== ПРОВЕРКА НАЖАТИЯ КНОПКИ R =====
-		if (input::IsKeyDown('R'))
+		if (input::IsKeyPressed('R'))
 		{
-			ExecuteBoss();
+			static int pressCount = 0;
+			
+
+			pressCount++;
+
+			if (pressCount >= 5)
+			{
+				ExecuteBoss();
+				pressCount = 0; // Сброс после казни
+			}
+			
+			
 		}
 	}
 
@@ -1674,6 +1685,10 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	testPhysic->airFriction = 0.95f;
 	testPhysic->mass = 100.0f;
 	testPhysic->velocity = point3d(0.0f, 0.0f, 0.0f);
+
+	/*GravityPoint* gravityP = BossEntity->AddComponent<GravityPoint>();
+	gravityP->radius = 50;
+	gravityP->mass = 100;*/
 
 	// === ВИЗУАЛ ===
 	Star* testStar = BossEntity->AddComponent<Star>();
