@@ -19,6 +19,9 @@
 using namespace std;
 using namespace rapidjson;
 
+#define SAVE_DIRECTORY "..\\dx11minimal\\Resourses\\EntitySaves\\"
+#define EXTENSION ".json"
+
 /////////////////////////////////////////////////////////////////
 
 static string ReadFileToString(const string& filepath) {
@@ -196,7 +199,7 @@ Entity* EntityStorage::GetEntityByName(string Name)
 }
 
 
-vector<Entity*> EntityStorage::GetEntitiesByName(string Name)
+vector<Entity*> EntityStorage::GetAllEntitiesByName(string Name)
 {
 	vector<Entity*> array;
 	for (Entity* entity : entities) {

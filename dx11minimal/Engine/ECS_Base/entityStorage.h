@@ -63,9 +63,6 @@ public:
 private:
 	int entityCount = 0;
 	std::unordered_map<std::type_index, ComponentEntityCache> componentEntityCaches;
-
-	const std::string SAVE_DIRECTORY = "..\\dx11minimal\\Resourses\\EntitySaves\\";
-	const std::string EXTENSION = ".json";
 };
 
 #endif
