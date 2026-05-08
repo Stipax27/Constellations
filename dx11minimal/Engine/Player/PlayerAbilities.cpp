@@ -800,6 +800,32 @@ void PlayerAbilities::Grab()
 
 	}
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void PlayerAbilities::Execution()
+{
+
+	Entity* ExecutionHitbox = playerEntity->GetChildByName("GrabHitbox");
+	SphereCollider* ExecutionCollider = ExecutionHitbox->GetComponent<SphereCollider>();
+
+	CollisionInfo result = GetCollisionWithComponent<Health>(ExecutionCollider, {playerEntity});
+	if (result.entityId >= 0) {
+		ExecutionObject = entityStorage->GetEntityById(result.entityId);
+		if (ExecutionObject != nullptr) {
+
+			Transform* ExecutionTransform = ExecutionObject->GetComponent<Transform>();
+			  
+			
+		}
+	}
+	else {
+		ExecutionObject = nullptr;
+	}
+
+	
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

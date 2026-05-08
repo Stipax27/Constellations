@@ -58,6 +58,11 @@
 #define RADAR_START_RADIUS 1.f
 #define RADAR_FINAL_RADIUS 150.f
 
+// Данные шкалы змеинной прыти
+
+#define SNAKE_FORM_MAX_VALUE 100
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: PlayerAbilities
 ////////////////////////////////////////////////////////////////////////////////
@@ -68,6 +73,7 @@ class PlayerAbilities : public ISingleton
 public:
 	PlayerWeapons weapon;
 	Elements element;
+	Entity* ExecutionObject;
 
 	float stamina;
 	float maxStamina;
@@ -107,6 +113,7 @@ public:
 	void Timestop();
 
 	void Grab();
+	void Execution();
 
 	
 
@@ -120,6 +127,7 @@ private:
 	Entity* worldFolder;
 
 	Entity* grabbedObject;
+	
 
 	bool charging;
 	bool chargeAnim;

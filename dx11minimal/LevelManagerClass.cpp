@@ -530,7 +530,6 @@ void LevelManagerClass::Frame()
 		{
 			static int pressCount = 0;
 			
-
 			pressCount++;
 
 			if (pressCount >= 5)
@@ -1187,6 +1186,20 @@ void LevelManagerClass::CreateUI()
 
 	// Изначально скрываем весь UI босса
 	bossUIContainer->SetActive(false);
+
+	entity = m_World->entityStorage->CreateEntity("ExecutionLabel", uiFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(0.9f, -0.74f, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"НИЧЕГО";
+	textLabel->fontFamilyW = L"Impact";
+	textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+	textLabel->fontWeight = 900;
+	textLabel->fontSizePx = 38;
+	textLabel->fontScale = 0.34f;
+	textLabel->letterSpacingPx = 1.0f;
+
 }
 
 
