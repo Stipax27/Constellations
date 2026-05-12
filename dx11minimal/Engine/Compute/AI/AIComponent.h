@@ -70,6 +70,21 @@ public:
     int targetId = -1;
     bool isBoss = false;
 
+    enum class AttackType {
+        None,
+        Dash,
+        StarShot,
+        SideDash,   
+        AOE
+    };
+
+    bool isChargingAttack = false;
+    float chargeTimer = 0.0f;
+    float chargeDuration = 1.0f;  // Время зарядки перед атакой
+    AttackType pendingAttackType = AttackType::None;
+    bool isChargeEffectSpawned = false;
+    
+
     // ============ ВИЗУАЛЬНЫЕ ЭФФЕКТЫ ДЛЯ БОССА ============
     struct VisualFeedback
     {

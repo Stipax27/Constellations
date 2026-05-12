@@ -53,6 +53,22 @@ struct BossComponent : Component
     float executionTimer = 5.0f;
     float executionTimeLimit = 5.0f;
     bool isInExecutionPhase = false;
+
+    float dashChargeTimer = 0.0f;
+    float starShotChargeTimer = 0.0f;
+    float sideDashChargeTimer = 0.0f;
+    float aoeChargeTimer = 0.0f;
+
+    bool isChargingDash = false;
+    bool isChargingStarShot = false;
+    bool isChargingSideDash = false;
+    bool isChargingAOE = false;
+
+    float dashChargeDuration = 1.2f;      // Зарядка рывка
+    float starShotChargeDuration = 2.0f;  // Зарядка выстрела
+    float sideDashChargeDuration = 1.6f;  // Зарядка бокового рывка
+    float aoeChargeDuration = 1.5f;       // Зарядка АОЕ
+
 };
 
 #endif

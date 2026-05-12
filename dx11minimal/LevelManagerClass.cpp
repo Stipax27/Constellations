@@ -1705,8 +1705,8 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 
 	// === ВИЗУАЛ ===
 	Star* testStar = BossEntity->AddComponent<Star>();
-	testStar->radius = 5.0f;
-	testStar->crownRadius = 5.5f;
+	testStar->radius = 3.0f;
+	testStar->crownRadius = 3.5f;
 	testStar->color1 = point3d(0.8f, 0.2f, 0.8f);
 	testStar->color2 = point3d(0.5f, 0.1f, 0.5f);
 	testStar->crownColor = point3d(0.3f, 0.6f, 0.8f);
@@ -1789,6 +1789,8 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	boss->lastDashTime = 0.0f;
 	boss->lastSideDashTime = 0.0f;
 	boss->lastStarShotTime = 0.0f;
+
+
 
 }
 

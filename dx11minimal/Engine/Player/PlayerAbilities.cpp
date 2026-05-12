@@ -469,6 +469,8 @@ void PlayerAbilities::ParticleVacuumStart() {
 	particleEmitter->spread = { PI, PI };
 	particleEmitter->isReverse = true;
 	particleEmitter->useWorldSpace = false;
+
+
 }
 
 void PlayerAbilities::ParticleVacuumEnd() {
