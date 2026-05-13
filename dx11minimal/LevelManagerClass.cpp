@@ -420,7 +420,7 @@ void LevelManagerClass::Frame()
 
 	// DEBUG
 	Entity* player = m_World->entityStorage->GetEntityByName("Player");
-	if (player && !m_ShowVictoryMessage)
+	if (IsEntityValid(player) && !m_ShowVictoryMessage)
 	{
 		Health* playerHealth = player->GetComponent<Health>();
 		if (playerHealth && playerHealth->hp <= 0 && !m_ShowGameOverMessage)
