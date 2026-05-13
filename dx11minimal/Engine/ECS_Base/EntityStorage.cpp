@@ -196,6 +196,8 @@ Entity* EntityStorage::GetEntityByName(string Name)
 			return entity;
 		}
 	}
+
+    return nullptr;
 }
 
 
