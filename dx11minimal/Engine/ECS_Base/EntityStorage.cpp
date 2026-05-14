@@ -218,6 +218,7 @@ Entity* EntityStorage::GetEntityById(int id)
 			return entity;
 		}
 	}
+
     return nullptr;
 }
 
