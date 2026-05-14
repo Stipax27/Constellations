@@ -194,7 +194,10 @@ void PlayerController::ProcessInput()
 				playerPhysicBody->velocity = newVelocity;
 			}*/
 
-			playerPhysicBody->acceleration += velocity.normalized() * currentMaxSpeed;
+			velocity = velocity.normalized();
+
+			playerPhysicBody->acceleration += velocity * currentMaxSpeed;
+			playerTransform->mRotation = GetMatrixFromDirection(velocity, upVector);
 		}
 	}
 
