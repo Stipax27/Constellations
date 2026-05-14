@@ -1,11 +1,14 @@
 #include "Transform2DDebugUI.h"
 
-#include "../Components/TextLabel.h"
-#include "../Rect.h"
-#include "../Transform2D.h"
-#include "../entity.h"
-#include "../entityStorage.h"
-#include "../utils.h"
+#include "../Engine/ECS_Base/entity.h"
+#include "../Engine/ECS_Base/entityStorage.h"
+
+#include "../Engine/UI/Text/TextLabel.h"
+#include "../Engine/UI/Rect.h"
+#include "../Engine/BasicComponents/Transform2D.h"
+
+#include "../Engine/Utils/utils.h"
+#include "../Engine/Lib/input.h"
 
 namespace {
 	Transform2D* AddUiTransform(
@@ -58,7 +61,7 @@ namespace {
 
 	Entity* CreateUiRect(
 		EntityStorage* storage,
-		const string& name,
+		const std::string& name,
 		Entity* parent,
 		const point3d& position,
 		const point3d& scale,
@@ -78,7 +81,7 @@ namespace {
 
 	Entity* CreateUiText(
 		EntityStorage* storage,
-		const string& name,
+		const std::string& name,
 		Entity* parent,
 		const wchar_t* text,
 		const point3d& position,
@@ -93,7 +96,7 @@ namespace {
 		return entity;
 	}
 
-	Entity* CreateParentAnchorMarker(EntityStorage* storage, const string& name, Entity* parent, const point3d& parentAnchor)
+	Entity* CreateParentAnchorMarker(EntityStorage* storage, const std::string& name, Entity* parent, const point3d& parentAnchor)
 	{
 		return CreateUiRect(
 			storage,
@@ -174,7 +177,7 @@ void Transform2DDebugUI::Create(EntityStorage* storage, Entity* uiFolder)
 
 void Transform2DDebugUI::UpdateToggle()
 {
-	const bool isTogglePressed = IsKeyPressed('U');
+	const bool isTogglePressed = input::IsKeyPressed('U');
 	if (!isTogglePressed)
 	{
 		wasTogglePressed = false;

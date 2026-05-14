@@ -60,6 +60,8 @@
 #include "Engine/Compute/Quests/questmanager.h"
 #include "Engine/Compute/Quests/QuestSystem.h"
 
+#include "Systems/Transform2DDebugUI.h"
+
 /////////////
 // GLOBALS //
 /////////////

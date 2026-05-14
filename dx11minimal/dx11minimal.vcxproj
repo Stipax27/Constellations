@@ -237,6 +237,7 @@
     <ClInclude Include="Engine\Compute\Quests\questclass.h" />
     <ClInclude Include="Engine\Compute\Quests\questmanager.h" />
     <ClInclude Include="Engine\Compute\Quests\Queststarcollection.h" />
+    <ClInclude Include="Systems\Transform2DDebugUI.h" />
     <ClInclude Include="Unused\Font_OLD.h" />
     <ClInclude Include="Framework\framework.h" />
     <ClInclude Include="Engine\Camera\frustumclass.h" />
@@ -993,6 +994,7 @@
     <ClCompile Include="Engine\Compute\Quests\QuestSystem.cpp" />
     <ClCompile Include="Engine\Compute\Quests\QuestManager.cpp" />
     <ClCompile Include="Engine\Compute\Quests\Queststarcollection.cpp" />
+    <ClCompile Include="Systems\Transform2DDebugUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="dx11minimal.rc" />
