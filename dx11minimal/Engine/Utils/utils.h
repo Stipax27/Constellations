@@ -36,6 +36,8 @@ float GetSignedAngleBetweenLookVectors(const DirectX::XMMATRIX& matrix1, const D
 DirectX::XMMATRIX GetRelativeMatrix(const DirectX::XMMATRIX& matrixA, const DirectX::XMMATRIX& matrixB);
 DirectX::XMMATRIX GetRelativeRotationMatrix(const DirectX::XMMATRIX& matrixA, const DirectX::XMMATRIX& matrixB);
 
+float GetSignedAngleBetweenVectors(const point3d& vector1, const point3d& vector2, bool inDegrees = false);
+
 point3d quaternionToEuler(float x, float y, float z, float w);
 DirectX::XMVECTOR eulerToQuanternion(float x, float y, float z);
 

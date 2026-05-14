@@ -405,6 +405,21 @@ XMMATRIX GetRelativeRotationMatrix(const XMMATRIX& matrixA, const XMMATRIX& matr
 }
 
 
+float GetSignedAngleBetweenVectors(const point3d& vector1, const point3d& vector2, bool inDegrees)
+{
+    float dot = vector1.dot(vector2);
+    dot = max(-1.0f, min(1.0f, dot));
+    float angleRad = acosf(dot);
+
+    point3d cross = vector1.cross(vector2);
+    float sign = cross.dot(point3d(0, 1, 0));
+
+    angleRad *= (sign < 0) ? -1.0f : 1.0f;
+
+    return inDegrees ? XMConvertToDegrees(angleRad) : angleRad;
+}
+
+
 vector<point3d> smoothCornersPath(const vector<point3d>& pointsBefore, int numberIterations) {
 
     if (pointsBefore.size() <= 1) return pointsBefore;

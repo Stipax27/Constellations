@@ -157,24 +157,32 @@ void PlayerController::ProcessInput()
 	if (!movementLocked)
 	{
 		point3d velocity = point3d();
+		point3d upVector = playerTransform->GetUpVector();
+		XMMATRIX cameraMatrix = camera->GetMatrixRotation();
+
+		point3d lookVector = point3d(cameraMatrix.r[2].m128_f32[0], cameraMatrix.r[2].m128_f32[1], cameraMatrix.r[2].m128_f32[2]).normalized();
+		lookVector = (lookVector - upVector * lookVector.dot(upVector)).normalized();
+
+		point3d rightVecttor = point3d(cameraMatrix.r[0].m128_f32[0], cameraMatrix.r[0].m128_f32[1], cameraMatrix.r[0].m128_f32[2]).normalized();
+		rightVecttor = (rightVecttor - upVector * rightVecttor.dot(upVector)).normalized();
 
 		if (input::IsKeyDown('W')) {
-			velocity += playerTransform->GetLookVector();
+			velocity += lookVector;
 		}
 		if (input::IsKeyDown('S')) {
-			velocity += playerTransform->GetLookVector() * -1;
+			velocity += lookVector * -1;
 		}
 		if (input::IsKeyDown('A')) {
-			velocity += playerTransform->GetRightVector() * -1;
+			velocity += rightVecttor * -1;
 		}
 		if (input::IsKeyDown('D')) {
-			velocity += playerTransform->GetRightVector();
+			velocity += rightVecttor;
 		}
 		if (input::IsKeyDown(VK_SPACE)) {
-			velocity += playerTransform->GetUpVector();
+			velocity += upVector;
 		}
 		if (input::IsKeyDown(VK_CONTROL)) {
-			velocity += playerTransform->GetUpVector() * -1;
+			velocity += upVector * -1;
 		}
 
 		if (velocity.magnitude() > 0) {
@@ -201,18 +209,19 @@ void PlayerController::ProcessInput()
 		fKeyPressed = false;
 		abilities->ShieldEnd(); // Деактивируем щит при отпускании F
 	}
-
 	
-	float roll = 0.0f;
 	if (input::IsKeyDown('C')) {
 		Dash();
 	}
-		
-	if (input::IsKeyDown('E')) {
-		roll = -ROLL_SPEED;
-	}
-	if (input::IsKeyDown('Q')) {
-		roll = ROLL_SPEED;
+	
+	float roll = 0.0f;
+	if (mouse->state != MouseState::Locked) {
+		if (input::IsKeyDown('E')) {
+			roll = -ROLL_SPEED;
+		}
+		if (input::IsKeyDown('Q')) {
+			roll = ROLL_SPEED;
+		}
 	}
 
 	if (roll != 0) {
@@ -289,6 +298,9 @@ void PlayerController::ProcessInput()
 
 void PlayerController::ProcessCamera()
 {
+	if (mouse->state == MouseState::Locked)
+		return;
+
 	camera->position = camera->position.lerp(playerTransform->position - playerTransform->GetLookVector() * camera->distance + playerTransform->GetUpVector() * 2, 0.4f);
 
 	XMMATRIX matrixRotation;
@@ -405,8 +417,26 @@ void PlayerController::ProcessMouse()
 				mousePos *= SENSIVITY * 4;
 
 				XMMATRIX additionalRotation = XMMatrixRotationRollPitchYaw(XMConvertToRadians(mousePos.y), XMConvertToRadians(mousePos.x), 0);
+				point3d upVector = playerTransform->GetUpVector();
 
-				playerPhysicBody->mAngVelocity = playerPhysicBody->mAngVelocity * additionalRotation;
+
+				XMMATRIX cameraMatrix = camera->GetMatrixRotation();
+				cameraMatrix = additionalRotation * cameraMatrix;
+				cameraMatrix = TransformMatrixToUpVector(cameraMatrix, upVector);
+
+				point3d cameraUpVector = point3d(cameraMatrix.r[1].m128_f32[0], cameraMatrix.r[1].m128_f32[1], cameraMatrix.r[1].m128_f32[2]).normalized();
+				additionalRotation = XMMatrixRotationRollPitchYaw(0, XMConvertToRadians(mousePos.x), 0);
+
+				if (abs(GetSignedAngleBetweenVectors(cameraUpVector, upVector, true)) >= 85) {
+					cameraMatrix = camera->GetMatrixRotation();
+					cameraMatrix = additionalRotation * cameraMatrix;
+					cameraMatrix = TransformMatrixToUpVector(cameraMatrix, upVector);
+				}
+
+				point3d cameraLookVector = point3d(cameraMatrix.r[2].m128_f32[0], cameraMatrix.r[2].m128_f32[1], cameraMatrix.r[2].m128_f32[2]).normalized();
+
+				camera->SetMatrixRotation(cameraMatrix);
+				camera->position = camera->position.lerp(playerTransform->position - cameraLookVector * camera->distance + cameraUpVector * 2, 0.4f);
 			}
 
 			// Обработка атак мышью - проверяем что щит не активен
