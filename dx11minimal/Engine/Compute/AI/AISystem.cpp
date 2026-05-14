@@ -141,19 +141,19 @@ void AISystem::ExecutePendingAttack(EntityStorage& entityStorage, Entity* entity
     {
     case AIComponent::AttackType::Dash:
         BossDashAttack(entityStorage, entity, transform, ai, boss, physicBody, star);
-        boss->lastDashTime = 0.0f;
+       
         break;
     case AIComponent::AttackType::StarShot:
         BossStarShot(entityStorage, entity, transform, ai, boss, physicBody, star);
-        boss->lastStarShotTime = 0.0f;
+       
         break;
     case AIComponent::AttackType::SideDash:
         BossSideDash(entityStorage, entity, transform, ai, boss, physicBody);
-        boss->lastSideDashTime = 0.0f;
+       
         break;
     case AIComponent::AttackType::AOE:
         BossAOEAttack(entityStorage, transform, boss);
-        boss->lastSpecialAttackTime = 0.0f;
+       
         break;
     }
 
@@ -185,13 +185,13 @@ void AISystem::UpdateBossBehavior(EntityStorage& entityStorage, Entity* entity, 
     }
 
     // Обновляем таймеры атак (только если не в режиме зарядки)
-    if (!ai->isChargingAttack)
+   /* if (!ai->isChargingAttack)
     {
         boss->lastSpecialAttackTime += deltaTime;
         boss->lastDashTime += deltaTime;
         boss->lastSideDashTime += deltaTime;
         boss->lastStarShotTime += deltaTime;
-    }
+    }*/
 
     // Ограничение движения в пределах арены
     point3d pos = transform->position;
@@ -265,17 +265,20 @@ void AISystem::UpdateBossPhase1(EntityStorage& entityStorage, Entity* entity, Tr
         return;
     }
 
+    DrawDebugString(std::to_wstring(boss->lastSideDashTime));
+    DrawDebugString(std::to_wstring(boss->lastDashTime), {0.75,0.70,0});
+    DrawDebugString(std::to_wstring(boss->lastStarShotTime), { 0.75,0.65,0 });
+
     // Если босс уже заряжает атаку - ничего не делаем
     if (ai->isChargingAttack) return;
 
     // ===== АТАКИ С ЗАРЯДКОЙ =====
 
     // Боковой рывок
-    DrawDebugString(std::to_wstring(boss->lastSideDashTime));
 
-    if (boss->lastSideDashTime >= (boss->sideDashCooldown * 1000) && !boss->isSideDashing)
+    if (entity->localTime - boss->lastSideDashTime >= (boss->sideDashCooldown * 1000))
     {
-        if (getRandom(100) < 20)
+        if (getRandom(100) < 30)
         {
 
             if (!ai->isChargingAttack) // Проверяем, что еще не в зарядке
@@ -294,14 +297,14 @@ void AISystem::UpdateBossPhase1(EntityStorage& entityStorage, Entity* entity, Tr
             }
         }
     }
-    else if (boss->lastDashTime >= (boss->dashCooldown * 1000)) // Рывок к игроку
+    else if (entity->localTime - boss->lastDashTime >= (boss->dashCooldown * 1000)) // Рывок к игроку
     {
         if (getRandom(100) < 60)
         {
             if (!ai->isChargingAttack) // Проверяем, что еще не в зарядке
             {
                 StartChargeAttack(ai, boss, AIComponent::AttackType::Dash, boss->dashChargeDuration);
-
+    
                 // Создаем эффект только если еще не создавали
                 if (!ai->isChargeEffectSpawned)
                 {
@@ -312,18 +315,18 @@ void AISystem::UpdateBossPhase1(EntityStorage& entityStorage, Entity* entity, Tr
                 }
                 return;
             }
-
+    
         }
     }
-    else if (boss->lastStarShotTime >= (boss->starShotCooldown * 1000)) // Выстрел звездами
+    else if (entity->localTime - boss->lastStarShotTime >= (boss->starShotCooldown * 1000)) // Выстрел звездами
     {
         if (getRandom(100) < 100)
         {
-
+    
             if (!ai->isChargingAttack) // Проверяем, что еще не в зарядке
             {
                 StartChargeAttack(ai, boss, AIComponent::AttackType::StarShot, boss->starShotChargeDuration);
-
+    
                 // Создаем эффект только если еще не создавали
                 if (!ai->isChargeEffectSpawned)
                 {
@@ -334,7 +337,7 @@ void AISystem::UpdateBossPhase1(EntityStorage& entityStorage, Entity* entity, Tr
                 }
                 return;
             }
-
+    
            
         }
     }

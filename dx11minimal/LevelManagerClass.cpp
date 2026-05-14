@@ -926,6 +926,7 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 
 	Health* health = player->AddComponent<Health>();
 	health->fraction = Fraction::Player;
+	health->destroyOnDeath = false;
 
 	/*Constellation* constellation = player->AddComponent<Constellation>();
 	constellation->stars = {
@@ -1201,35 +1202,7 @@ void LevelManagerClass::CreateUI()
 	textLabel->letterSpacingPx = 1.0f;
 
 
-	entity = m_World->entityStorage->CreateEntity("BossName", bossUIContainer);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(0, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::XY;
-	transform2D->position = point3d(-0.16f, 0.91f, 0.0f);
-	textLabel = entity->AddComponent<TextLabel>();
-	textLabel->textW = L"Время с предедущей атаки";
-	textLabel->fontFamilyW = L"Impact";
-	textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
-	textLabel->fontWeight = 900;
-	textLabel->fontSizePx = 52;
-	textLabel->fontScale = 1.0f;
-	textLabel->color = point3d(1.0f, 0.85f, 0.2f);
-	textLabel->opacity = 1.0f;
 
-	entity = m_World->entityStorage->CreateEntity("BossHealthNumbers", bossUIContainer);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(0, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::XY;
-	transform2D->position = point3d(-0.1f, 0.74f, 0.0f);
-	m_BossNumbersText = entity->AddComponent<TextLabel>();  // Сохраняем указатель
-	m_BossNumbersText->textW = L"";
-	m_BossNumbersText->fontFamilyW = L"Impact";
-	m_BossNumbersText->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
-	m_BossNumbersText->fontWeight = 700;
-	m_BossNumbersText->fontSizePx = 36;
-	m_BossNumbersText->fontScale = 1.0f;
-	m_BossNumbersText->color = point3d(1.0f, 1.0f, 1.0f);
-	m_BossNumbersText->opacity = 0.9f;
 
 }
 
@@ -1797,7 +1770,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	boss->arenaMaxZ = 50.0f;
 
 	// Атаки
-	boss->dashCooldown = 20.0f;
+	boss->dashCooldown = 2.0f;
 	boss->dashSpeed = 10.0f;
 	boss->dashDamage = 5.0f;
 
