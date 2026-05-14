@@ -4,6 +4,39 @@
 using namespace std;
 using namespace DirectX;
 
+namespace {
+    point3d GetRatioScale(ScreenAspectRatio ratio, const point3d& frameScale)
+    {
+        switch (ratio)
+        {
+        case ScreenAspectRatio::XY:
+            return point3d(frameScale.x, frameScale.y, 0.0f);
+        case ScreenAspectRatio::YX:
+            return point3d(frameScale.y * ConstBuf::frame.aspect.x, frameScale.x * ConstBuf::frame.aspect.y, 0.0f);
+        case ScreenAspectRatio::XX:
+            return point3d(frameScale.x, frameScale.x * ConstBuf::frame.aspect.y, 0.0f);
+        case ScreenAspectRatio::YY:
+            return point3d(frameScale.y * ConstBuf::frame.aspect.x, frameScale.y, 0.0f);
+        default:
+            return point3d(frameScale.x, frameScale.y, 0.0f);
+        }
+    }
+
+    point3d RotateUiVector(const point3d& vector, float rotation)
+    {
+        point3d aspectSpaceVector = vector;
+        aspectSpaceVector.x *= ConstBuf::frame.aspect.y;
+        aspectSpaceVector = rotatePoint(aspectSpaceVector, rotation);
+        aspectSpaceVector.x *= ConstBuf::frame.aspect.x;
+
+        return aspectSpaceVector;
+    }
+
+    point3d GetTransform2DFrameCenter(const Transform2D& transform)
+    {
+        return transform.position + RotateUiVector(-transform.anchorPoint * transform.scale, transform.rotation);
+    }
+}
 
 float clamp(float x, float a, float b) {
     return fmax(fmin(x, b), a);
@@ -152,36 +185,19 @@ Transform2D GetWorldTransform2D(Entity* entity) {
         }
 
         for (int i = transforms2d.size() - 1; i >= 0; i--) {
-            worldTransform2D += *transforms2d[i];
+            Transform2D* localTransform = transforms2d[i];
+            const point3d parentFrameCenter = GetTransform2DFrameCenter(worldTransform2D);
+            const point3d localPosition = (localTransform->parentAnchor + localTransform->position) * worldTransform2D.scale;
 
-            /*Transform2D other = *transforms2d[i];
+            Transform2D nextWorldTransform2D = Transform2D();
+            nextWorldTransform2D.position = parentFrameCenter + RotateUiVector(localPosition, worldTransform2D.rotation);
+            nextWorldTransform2D.anchorPoint = localTransform->anchorPoint;
+            nextWorldTransform2D.parentAnchor = localTransform->parentAnchor;
+            nextWorldTransform2D.scale = localTransform->scale * GetRatioScale(localTransform->ratio, worldTransform2D.scale);
+            nextWorldTransform2D.rotation = worldTransform2D.rotation + localTransform->rotation;
+            nextWorldTransform2D.ratio = ScreenAspectRatio::XY;
 
-            point3d aspectCorrection;
-            switch (worldTransform2D.ratio)
-            {
-            case ScreenAspectRatio::XY:
-                aspectCorrection = point3d(1, 1, 0);
-                break;
-            case ScreenAspectRatio::YX:
-                aspectCorrection = point3d(ConstBuf::frame.aspect.x, ConstBuf::frame.aspect.y, 0);
-                break;
-            case ScreenAspectRatio::XX:
-                aspectCorrection = point3d(1, ConstBuf::frame.aspect.y, 0);
-                break;
-            case ScreenAspectRatio::YY:
-                aspectCorrection = point3d(ConstBuf::frame.aspect.x, 1, 0);
-                break;
-            }
-
-            worldTransform2D.position += other.position * worldTransform2D.scale * aspectCorrection;
-            worldTransform2D.position.x *= ConstBuf::frame.aspect.y;
-            worldTransform2D.position = rotatePoint(worldTransform2D.position, worldTransform2D.rotation);
-            worldTransform2D.position.x *= ConstBuf::frame.aspect.x;
-
-            worldTransform2D.anchorPoint = other.anchorPoint;
-            worldTransform2D.scale *= other.scale;
-            worldTransform2D.rotation += other.rotation;
-            worldTransform2D.ratio = other.ratio;*/
+            worldTransform2D = nextWorldTransform2D;
         }
     }
 

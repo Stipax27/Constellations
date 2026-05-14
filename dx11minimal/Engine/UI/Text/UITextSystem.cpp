@@ -24,6 +24,16 @@ namespace {
 constexpr int kUITextVertexShader = 13;
 constexpr int kUITextPixelShader = 25;
 
+point3d RotateUiOffset(const point3d& offset, float rotation)
+{
+	point3d aspectSpaceOffset = offset;
+	aspectSpaceOffset.x *= ConstBuf::frame.aspect.y;
+	aspectSpaceOffset = rotatePoint(aspectSpaceOffset, rotation);
+	aspectSpaceOffset.x *= ConstBuf::frame.aspect.x;
+
+	return aspectSpaceOffset;
+}
+
 struct GlyphInfo
 {
 	float u0 = 0.0f;
@@ -468,14 +478,16 @@ void DrawGlyphQuad(
 		return;
 	}
 
+	const point3d localGlyphCenter(
+		(leftPx + widthPx * 0.5f) * 2.0f / screenWidth,
+		-(topPx + heightPx * 0.5f) * 2.0f / screenHeight,
+		0.0f);
+
 	Transform2D glyphTransform;
-	glyphTransform.position = point3d(
-		originTransform.position.x + ((leftPx + widthPx * 0.5f) * 2.0f / screenWidth),
-		originTransform.position.y - ((topPx + heightPx * 0.5f) * 2.0f / screenHeight),
-		originTransform.position.z);
+	glyphTransform.position = originTransform.position + RotateUiOffset(localGlyphCenter, originTransform.rotation);
 	glyphTransform.anchorPoint = point3d();
 	glyphTransform.scale = point3d(widthPx / screenWidth, heightPx / screenHeight, 0.0f);
-	glyphTransform.rotation = 0.0f;
+	glyphTransform.rotation = originTransform.rotation;
 	glyphTransform.ratio = ScreenAspectRatio::XY;
 
 	ConstBuf::global[3] = XMFLOAT4(

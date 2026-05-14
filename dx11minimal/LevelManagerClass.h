@@ -99,6 +99,7 @@ private:
 	QuestManager* questManager;
 
 	Entity* m_TestAnimEntity = nullptr;
+	Transform2DDebugUI m_Transform2DDebugUI;
 	int m_TestAnimCycleIndex = 0;
 	bool m_WasToggleAnimationPressed = false;
 

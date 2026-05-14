@@ -14,7 +14,8 @@ point3d Transform2D::GetUpVector() const
 
 Transform2D& Transform2D::operator=(const Transform2D& other) {
     position = other.position;
-    anchorPoint = other.position;
+    anchorPoint = other.anchorPoint;
+    parentAnchor = other.parentAnchor;
     scale = other.scale;
     rotation = other.rotation;
     ratio = other.ratio;
@@ -28,6 +29,7 @@ Transform2D Transform2D::operator+(const Transform2D& other) {
 
     transform2d.position = position + (GetRightVector() * other.position.x + GetUpVector() * other.position.y) * scale;
     transform2d.anchorPoint = other.anchorPoint;
+    transform2d.parentAnchor = other.parentAnchor;
     transform2d.scale = scale * other.scale;
     transform2d.rotation = other.rotation + rotation;
     transform2d.ratio = other.ratio;
@@ -39,6 +41,7 @@ Transform2D Transform2D::operator+(const Transform2D& other) {
 Transform2D& Transform2D::operator+=(const Transform2D& other) {
     position += (GetRightVector() * other.position.x + GetUpVector() * other.position.y) * scale;
     anchorPoint = other.anchorPoint;
+    parentAnchor = other.parentAnchor;
     scale *= other.scale;
     rotation = other.rotation + rotation;
     ratio = other.ratio;
