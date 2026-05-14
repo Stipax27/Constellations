@@ -70,7 +70,7 @@ struct BossComponent : Component
     float aoeChargeDuration = 1.5f;       // Зарядка АОЕ
 
     bool isDashing = false;        // Флаг: босс сейчас в рывке
-    float dashDuration = 0.5f;     // Длительность рывка
+    float dashDuration = 1.0f;     // Длительность рывка
     float dashTimer = 0.0f;
 
 };

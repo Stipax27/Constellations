@@ -97,10 +97,10 @@ private:
     float GetDistanceToPlayer(EntityStorage& entityStorage, Entity* bossEntity);
 
     // Визуальные эффекты для атак босса
-    void SpawnAttackEffect(EntityStorage& entityStorage, const point3d& position, const point3d& color, float size);
-    void SpawnDashEffect(EntityStorage& entityStorage, const point3d& position, const point3d& color, float size);
-    void SpawnSideEffect(EntityStorage& entityStorage, const point3d& position, const point3d& color, float size);
-    void SpawnSlashEffect(EntityStorage& entityStorage, const point3d& position, const point3d& direction, const point3d& color);
+    void SpawnAttackEffect(EntityStorage& entityStorage, Entity* entity,  point3d& position, const point3d& color, float size);
+    void SpawnDashEffect(EntityStorage& entityStorage, Entity* entity,    point3d& position, const point3d& color, float size);
+    void SpawnSideEffect(EntityStorage& entityStorage, Entity* entity,    point3d& position, const point3d& color, float size);
+    void SpawnSlashEffect(EntityStorage& entityStorage,  const point3d& position, const point3d& direction, const point3d& color);
     void SpawnImpactEffect(EntityStorage& entityStorage, const point3d& position, const point3d& color);
     void SpawnAuraEffect(Entity* bossEntity, const point3d& color, float duration);
 

@@ -1699,7 +1699,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 
 	// === ФИЗИКА ===
 	PhysicBody* testPhysic = BossEntity->AddComponent<PhysicBody>();
-	testPhysic->airFriction = 0.95f;
+	testPhysic->airFriction = 0.5f;
 	testPhysic->mass = 100.0f;
 	testPhysic->velocity = point3d(0.0f, 0.0f, 0.0f);
 
@@ -1771,7 +1771,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 
 	// Атаки
 	boss->dashCooldown = 2.0f;
-	boss->dashSpeed = 10.0f;
+	boss->dashSpeed = 1000.0f;
 	boss->dashDamage = 5.0f;
 
 	boss->starShotCooldown = 3.5f;
