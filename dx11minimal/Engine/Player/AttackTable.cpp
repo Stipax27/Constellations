@@ -333,7 +333,7 @@ AttackDesc bow_none_start(EntityStorage* entityStorage, const Transform& startTr
 	Entity* projectile = entityStorage->CreateEntity("PlayerProjectile");
 	Transform* transform = projectile->AddComponent<Transform>();
 	transform->position = startTransform.position;
-	transform->mRotation = GetMatrixFromLookVector(*transform, direction) * transform->mRotation;
+	transform->mRotation = GetMatrixBetweenLookVector(*transform, direction) * transform->mRotation;
 
 	PhysicBody* physicBody = projectile->AddComponent<PhysicBody>();
 	physicBody->airFriction = 0.0f;

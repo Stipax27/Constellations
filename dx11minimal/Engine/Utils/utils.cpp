@@ -43,14 +43,6 @@ float clamp(float x, float a, float b) {
 }
 
 
-float smoothstep(float edge0, float edge1, float x) {
-    // Scale, bias and saturate x to 0..1 range
-    clamp((x - edge0) / (edge1 - edge0), 0.0f, 1.0f);
-    // Evaluate polynomial
-    return x * x * (3 - 2 * x);
-}
-
-
 float fract(float a) {
     return a - floor(a);
 }
@@ -226,7 +218,7 @@ vector<string> split(string s, string temp) {
 }
 
 
-DirectX::XMMATRIX GetMatrixFromLookVector(Transform& transform, point3d direction) {
+DirectX::XMMATRIX GetMatrixBetweenLookVector(Transform& transform, point3d direction) {
     point3d currentLookVector = transform.GetLookVector();
     point3d rotationAxis = currentLookVector.cross(direction).normalized();
     DirectX::XMVECTOR rotationAxisVector = DirectX::XMVectorSet(rotationAxis.x, rotationAxis.y, rotationAxis.z, 0.0f);
@@ -283,7 +275,7 @@ DirectX::XMMATRIX GetMatrixFromDirection(const point3d& direction, point3d upVec
     return matrixRotation;
 }
 
-DirectX::XMMATRIX GetMatrixLookAt(const DirectX::XMMATRIX& originMatrix, const point3d& direction) {
+DirectX::XMMATRIX TransformMatrixToLookVector(const DirectX::XMMATRIX& originMatrix, const point3d& direction) {
     point3d currentLookVector = point3d(originMatrix.r[2].m128_f32[0], originMatrix.r[2].m128_f32[1], originMatrix.r[2].m128_f32[2]).normalized();
     point3d rotationAxis = currentLookVector.cross(direction).normalized();
     DirectX::XMVECTOR rotationAxisVector = DirectX::XMVectorSet(rotationAxis.x, rotationAxis.y, rotationAxis.z, 0.0f);
@@ -295,23 +287,23 @@ DirectX::XMMATRIX GetMatrixLookAt(const DirectX::XMMATRIX& originMatrix, const p
     return matrixRotation;
 }
 
-DirectX::XMMATRIX TransformMatrixToUpVector(const DirectX::XMMATRIX& sourceMatrix, const point3d& targetUpVector) {
+DirectX::XMMATRIX TransformMatrixToUpVector(const DirectX::XMMATRIX& originMatrix, const point3d& targetUpVector) {
     point3d currentRight = point3d(
-        sourceMatrix.r[0].m128_f32[0],
-        sourceMatrix.r[0].m128_f32[1],
-        sourceMatrix.r[0].m128_f32[2]
+        originMatrix.r[0].m128_f32[0],
+        originMatrix.r[0].m128_f32[1],
+        originMatrix.r[0].m128_f32[2]
     ).normalized();
 
     point3d currentUp = point3d(
-        sourceMatrix.r[1].m128_f32[0],
-        sourceMatrix.r[1].m128_f32[1],
-        sourceMatrix.r[1].m128_f32[2]
+        originMatrix.r[1].m128_f32[0],
+        originMatrix.r[1].m128_f32[1],
+        originMatrix.r[1].m128_f32[2]
     ).normalized();
 
     point3d currentLook = point3d(
-        sourceMatrix.r[2].m128_f32[0],
-        sourceMatrix.r[2].m128_f32[1],
-        sourceMatrix.r[2].m128_f32[2]
+        originMatrix.r[2].m128_f32[0],
+        originMatrix.r[2].m128_f32[1],
+        originMatrix.r[2].m128_f32[2]
     ).normalized();
 
     point3d targetUp = targetUpVector.normalized();
@@ -327,11 +319,11 @@ DirectX::XMMATRIX TransformMatrixToUpVector(const DirectX::XMMATRIX& sourceMatri
         point3d newUp = currentLook.cross(newRight).normalized();
 
         return DirectX::XMMatrixSet(
-            newRight.x, newRight.y, newRight.z, sourceMatrix.r[0].m128_f32[3],
-            newUp.x, newUp.y, newUp.z, sourceMatrix.r[1].m128_f32[3],
-            currentLook.x, currentLook.y, currentLook.z, sourceMatrix.r[2].m128_f32[3],
-            sourceMatrix.r[3].m128_f32[0], sourceMatrix.r[3].m128_f32[1],
-            sourceMatrix.r[3].m128_f32[2], sourceMatrix.r[3].m128_f32[3]
+            newRight.x, newRight.y, newRight.z, originMatrix.r[0].m128_f32[3],
+            newUp.x, newUp.y, newUp.z, originMatrix.r[1].m128_f32[3],
+            currentLook.x, currentLook.y, currentLook.z, originMatrix.r[2].m128_f32[3],
+            originMatrix.r[3].m128_f32[0], originMatrix.r[3].m128_f32[1],
+            originMatrix.r[3].m128_f32[2], originMatrix.r[3].m128_f32[3]
         );
     }
 
@@ -346,11 +338,11 @@ DirectX::XMMATRIX TransformMatrixToUpVector(const DirectX::XMMATRIX& sourceMatri
     point3d newUp = currentLook.cross(newRight).normalized();
 
     DirectX::XMMATRIX resultMatrix = DirectX::XMMatrixSet(
-        newRight.x, newRight.y, newRight.z, sourceMatrix.r[0].m128_f32[3],
-        newUp.x, newUp.y, newUp.z, sourceMatrix.r[1].m128_f32[3],
-        currentLook.x, currentLook.y, currentLook.z, sourceMatrix.r[2].m128_f32[3],
-        sourceMatrix.r[3].m128_f32[0], sourceMatrix.r[3].m128_f32[1],
-        sourceMatrix.r[3].m128_f32[2], sourceMatrix.r[3].m128_f32[3]
+        newRight.x, newRight.y, newRight.z, originMatrix.r[0].m128_f32[3],
+        newUp.x, newUp.y, newUp.z, originMatrix.r[1].m128_f32[3],
+        currentLook.x, currentLook.y, currentLook.z, originMatrix.r[2].m128_f32[3],
+        originMatrix.r[3].m128_f32[0], originMatrix.r[3].m128_f32[1],
+        originMatrix.r[3].m128_f32[2], originMatrix.r[3].m128_f32[3]
     );
 
     return resultMatrix;
@@ -417,50 +409,6 @@ float GetSignedAngleBetweenVectors(const point3d& vector1, const point3d& vector
     angleRad *= (sign < 0) ? -1.0f : 1.0f;
 
     return inDegrees ? XMConvertToDegrees(angleRad) : angleRad;
-}
-
-
-vector<point3d> smoothCornersPath(const vector<point3d>& pointsBefore, int numberIterations) {
-
-    if (pointsBefore.size() <= 1) return pointsBefore;
-
-    vector<point3d> pointsAfter;
-
-    for (int i = 0; i < pointsBefore.size(); i++) {
-
-        int iPrevious;
-        int iNext;
-
-        if (i == 0) {
-            iPrevious = pointsBefore.size() - 1;
-            iNext = i + 1;
-        }
-        else if (i == pointsBefore.size() - 1) {
-            iPrevious = i - 1;
-            iNext = 0;
-        }
-        else {
-            iPrevious = i - 1;
-            iNext = i + 1;
-        }
-
-        point3d previousPoint = pointsBefore[iPrevious];
-        point3d currentPoint = pointsBefore[i];
-        point3d nextPoint = pointsBefore[iNext];
-
-        point3d localStartPoint = previousPoint.lerp(currentPoint, 0.6666f);
-        point3d localEndPoint = currentPoint.lerp(nextPoint, 0.3333f);
-        point3d supportivePoint = localStartPoint.lerp(localEndPoint, 0.5f);
-        point3d localMiddlePoint = supportivePoint.lerp(currentPoint, 0.5f);
-
-        pointsAfter.push_back(localStartPoint);
-        pointsAfter.push_back(localMiddlePoint);
-        pointsAfter.push_back(localEndPoint);
-
-    }
-
-    if (numberIterations <= 1) return pointsAfter;
-    else return smoothCornersPath(pointsAfter, numberIterations-1);
 }
 
 

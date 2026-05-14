@@ -20,17 +20,16 @@
 
 
 float clamp(float x, float a, float b);
-float smoothstep(float edge0, float edge1, float x);
 float fract(float);
 //float lerp(float x1, float x2, float a);
 
 float degreesToRadians(float);
-std::vector<point3d> smoothCornersPath(const std::vector<point3d>& points, int numberIterations);
 
-DirectX::XMMATRIX GetMatrixFromLookVector(Transform& transform, point3d direction);
+DirectX::XMMATRIX GetMatrixBetweenLookVector(Transform& transform, point3d direction);
 DirectX::XMMATRIX GetMatrixFromDirection(const point3d& direction, point3d upVector = point3d(0.0f, 1.0f, 0.0f));
-DirectX::XMMATRIX GetMatrixLookAt(const DirectX::XMMATRIX& originMatrix, const point3d& direction);
-DirectX::XMMATRIX TransformMatrixToUpVector(const DirectX::XMMATRIX& sourceMatrix, const point3d& targetUpVector);
+
+DirectX::XMMATRIX TransformMatrixToLookVector(const DirectX::XMMATRIX& originMatrix, const point3d& direction);
+DirectX::XMMATRIX TransformMatrixToUpVector(const DirectX::XMMATRIX& originMatrix, const point3d& targetUpVector);
 
 float GetSignedAngleBetweenLookVectors(const DirectX::XMMATRIX& matrix1, const DirectX::XMMATRIX& matrix2, bool inDegrees = false);
 DirectX::XMMATRIX GetRelativeMatrix(const DirectX::XMMATRIX& matrixA, const DirectX::XMMATRIX& matrixB);
