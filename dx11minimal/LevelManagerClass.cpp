@@ -1120,7 +1120,7 @@ void LevelManagerClass::CreateUI()
 	rect->color = point3d(0.75f, 0.0f, 0.0f);
 
 	m_Transform2DDebugUI.Create(m_World->entityStorage, uiFolder);
-}
+
 
 	/*entity = m_World->entityStorage->CreateEntity("BossHealth", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
@@ -1203,10 +1203,6 @@ void LevelManagerClass::CreateUI()
 	textLabel->fontSizePx = 38;
 	textLabel->fontScale = 0.34f;
 	textLabel->letterSpacingPx = 1.0f;
-
-
-
-
 }
 
 
