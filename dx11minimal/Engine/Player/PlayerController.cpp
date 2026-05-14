@@ -197,7 +197,11 @@ void PlayerController::ProcessInput()
 			velocity = velocity.normalized();
 
 			playerPhysicBody->acceleration += velocity * currentMaxSpeed;
-			playerTransform->mRotation = GetMatrixFromDirection(velocity, upVector);
+
+			float factor = velocity.dot(upVector);
+			if (factor > -1 && factor < 1) {
+				playerTransform->mRotation = GetMatrixFromDirection((velocity - upVector * factor).normalized(), upVector);
+			}
 		}
 	}
 
@@ -439,7 +443,7 @@ void PlayerController::ProcessMouse()
 				point3d cameraLookVector = point3d(cameraMatrix.r[2].m128_f32[0], cameraMatrix.r[2].m128_f32[1], cameraMatrix.r[2].m128_f32[2]).normalized();
 
 				camera->SetMatrixRotation(cameraMatrix);
-				camera->position = camera->position.lerp(playerTransform->position - cameraLookVector * camera->distance + cameraUpVector * 2, 0.4f);
+				camera->position = playerTransform->position - cameraLookVector * camera->distance + cameraUpVector * 2;
 			}
 
 			// Обработка атак мышью - проверяем что щит не активен

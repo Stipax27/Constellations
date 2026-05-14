@@ -155,7 +155,7 @@ bool LevelManagerClass::Initialize()
 	//singleDamager = entity->AddComponent<SingleDamager>();
 	//singleDamager->damage = 1000;
 
-	/*entity = m_World->entityStorage->CreateEntity("TestStar", worldFolder);
+	entity = m_World->entityStorage->CreateEntity("TestStar", worldFolder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(-200, 0, -200);
 	star = entity->AddComponent<Star>();
@@ -171,7 +171,7 @@ bool LevelManagerClass::Initialize()
 	gravityPoint->mass = 500;
 	gravityPoint->radius = 150;
 
-	entity = m_World->entityStorage->CreateEntity("Ray", worldFolder);
+	/*entity = m_World->entityStorage->CreateEntity("Ray", worldFolder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(20, 20, 0);
 	Beam* beam = entity->AddComponent<Beam>();
