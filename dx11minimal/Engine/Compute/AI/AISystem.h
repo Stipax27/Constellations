@@ -7,11 +7,14 @@
 #include "../../Physic/Movement/PhysicBody.h"
 #include "AIComponent.h"
 #include "BossComponent.h"
+#include "../../UI/Text/TextLabel.h"
 #include "../../Render/ParticleEmitter.h"
 #include "../../Render/Beam.h"
 #include "../../Compute/DelayedDestroy/DelayedDestroy.h"
+#include "../../Compute/Combat/SingleDamager.h"
 #include "../../Render/Star.h"
 #include "../../Compute/Combat/Health.h"
+
 
 
 
@@ -54,6 +57,12 @@ private:
         PhysicBody* physicBody, float deltaTime);
 
     // ---------- НОВЫЕ методы для босса ----------
+    void ExecutePendingAttack(EntityStorage& entityStorage, Entity* entity, Transform* transform,
+        AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, Star* star);
+
+    void StartChargeAttack(AIComponent* ai, BossComponent* boss,
+        AIComponent::AttackType attackType, float chargeDuration);
+       
     void UpdateBossBehavior(EntityStorage& entityStorage, Entity* entity, Transform* transform,
         AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, float deltaTime);
 
@@ -84,11 +93,13 @@ private:
     void GoToPatrolAroundLastPosition(AIComponent* ai);
 
     // ---------- Вспомогательные методы для босса ----------
-    Entity* GetNearestPlayer(EntityStorage& entityStorage, Transform* bossTransform);
-    float GetDistanceToPlayer(EntityStorage& entityStorage, Transform* bossTransform);
+    Entity* GetNearestPlayer(EntityStorage& entityStorage, Entity* bossEntity);
+    float GetDistanceToPlayer(EntityStorage& entityStorage, Entity* bossEntity);
 
     // Визуальные эффекты для атак босса
     void SpawnAttackEffect(EntityStorage& entityStorage, const point3d& position, const point3d& color, float size);
+    void SpawnDashEffect(EntityStorage& entityStorage, const point3d& position, const point3d& color, float size);
+    void SpawnSideEffect(EntityStorage& entityStorage, const point3d& position, const point3d& color, float size);
     void SpawnSlashEffect(EntityStorage& entityStorage, const point3d& position, const point3d& direction, const point3d& color);
     void SpawnImpactEffect(EntityStorage& entityStorage, const point3d& position, const point3d& color);
     void SpawnAuraEffect(Entity* bossEntity, const point3d& color, float duration);
@@ -97,6 +108,20 @@ private:
     void SpawnMeleeAttackEffect(EntityStorage& entityStorage, const point3d& position, const point3d& direction);
     void SpawnRangedAttackEffect(EntityStorage& entityStorage, const point3d& position, const point3d& direction);
     void SpawnAOEEffect(EntityStorage& entityStorage, const point3d& position, float radius, const point3d& color);
+
+    void BossSideDash(EntityStorage& entityStorage, Entity* entity, Transform* transform,
+        AIComponent* ai, BossComponent* boss, PhysicBody* physicBody);
+
+    void BossDashAttack(EntityStorage& entityStorage, Entity* entity, Transform* transform,
+        AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, Star* star);
+
+    void BossStarShot(EntityStorage& entityStorage, Entity* entity, Transform* transform,
+        AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, Star* star);
+
+    void UpdateBossCircleMovement(EntityStorage& entityStorage, Entity* entity, Transform* transform,
+        AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, float deltaTime);
+
+    point3d GetGlobalPosition(Entity* entity);
 
 };
 

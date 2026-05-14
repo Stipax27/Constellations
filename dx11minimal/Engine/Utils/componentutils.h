@@ -20,13 +20,26 @@ XMMATRIX GetWorldMatrix(Transform);
 
 Transform GetRelativeTransform(const Transform& parentWorldTransform, const Transform& childWorldTransform);
 
+static bool IsInFilters(Entity* entity, std::vector<Entity*> filters) {
+	for (Entity* e : filters) {
+		if (e == entity) {
+			return true;
+		}
+	}
+	return false;
+}
+
 template <typename T>
-CollisionInfo GetCollisionWithComponent(SphereCollider* sphereCollider) {
+CollisionInfo GetCollisionWithComponent(SphereCollider* sphereCollider, std::vector<Entity*> filters = std::vector<Entity*>()) {
 	EntityStorage* entityStorage = Singleton::GetInstance<EntityStorage>();
 
 	for (CollisionInfo info : sphereCollider->collisions) {
 		Entity* entity = entityStorage->GetEntityById(info.entityId);
 		if (!IsEntityValid(entity)) {
+			continue;
+		}
+
+		if (IsInFilters(entity, filters)) {
 			continue;
 		}
 
@@ -39,6 +52,8 @@ CollisionInfo GetCollisionWithComponent(SphereCollider* sphereCollider) {
 }
 
 const CollisionInfo& GetProjectileCollisionInfo(EntityStorage* entityStorage, Entity* projectile);
+
+void DrawDebugString(std::wstring text, point3d screenPos = point3d(0.75f, 0.75f, 0));
 
 
 #endif

@@ -64,7 +64,7 @@
 // GLOBALS //
 /////////////
 //const bool VSYNC_ENABLED = true;
-#define SHOW_COLLIDERS false
+#define SHOW_COLLIDERS true
 #define SHOW_GRAVITY false
 
 
@@ -114,6 +114,18 @@ private:
 	void CreateNebula(Entity*, int);
 	void CreateStarQuestLoc(Entity*, int);
 	void UpdateTestAnimationToggle();
+	void CreateArenaBarrier(Entity* parent, const point3d& center, float radius, int starCount);
+	void ShowGameOverMessage(const wchar_t* message, const point3d& color);
+
+	bool m_IsExecutionActive = false;
+	Entity* m_ExecutionUI = nullptr;
+	float m_ExecutionTimer = 0.0f;
+	float m_ExecutionTimeLimit = 5.0f;
+
+	void TriggerExecution();
+	void ExecuteBoss();
+	void ShowExecutionUI();
+	void HideExecutionUI();
 
 	ID3D11Buffer* m_BoneBuffer = nullptr;
 	SkinnedMesh m_FoxMesh;
@@ -138,6 +150,14 @@ private: // AI amogus
 	Entity* m_BossHealthFill;      // Полоска здоровья
 	TextLabel* m_BossNumbersText;  // Текст с цифрами
 	TextLabel* m_BossNameText;     // Текст с именем
+	bool m_IsInBossArena = false;
+	float m_BossArenaRadius = 60.0f;
+	point3d m_BossArenaCenter = point3d(0, 0, 0);
+
+	bool m_ShowGameOverMessage = false;
+	bool m_ShowVictoryMessage = false;
+	float m_MessageTimer = 0.0f;
+	
 };
 
 #endif
