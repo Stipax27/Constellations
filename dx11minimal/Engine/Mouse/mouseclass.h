@@ -17,9 +17,10 @@
 ///////////
 // ENUMS //
 ///////////
-enum MouseState {
+enum class MouseState {
 	Free,
-	Centered
+	Centered,
+	Locked
 };
 
 /////////////
@@ -39,8 +40,8 @@ struct MouseParticle {
 class MouseClass : public ISingleton
 {
 public:
-	point3d pos;
-	point3d absolutePos;
+	point3d pos; // Position in coords [-1, 1]
+	point3d absolutePos; // Position in pixels
 	point3d worldPos;
 	MouseState state;
 	bool visible;

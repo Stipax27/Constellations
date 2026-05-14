@@ -17,7 +17,7 @@
 // GLOBALS //
 /////////////
 
-#define DEFAULT_CAMERA_DISTANCE 7
+#define DEFAULT_CAMERA_DISTANCE 10
 #define DEFAULT_FOV 70
 #define SCREEN_NEAR 0.1f
 #define SCREEN_DEPTH 10000.0f

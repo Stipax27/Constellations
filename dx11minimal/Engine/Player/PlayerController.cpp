@@ -392,6 +392,58 @@ void PlayerController::ProcessMouse()
 		}
 		break;
 	}
+	case MouseState::Locked:
+		if (playerEntity != nullptr && playerEntity->IsActive()) {
+			float length = mousePos.magnitude();
+
+			mouse->absolutePos = point3d(window->width / 2, window->height / 2, 0);
+			mouse->pos = point3d();
+			SetCursorPos(mouse->absolutePos.x, mouse->absolutePos.y);
+
+			CheckTargetValid();
+			if (!lockMovementOnTarget || cameraTarget == nullptr) {
+				mousePos *= SENSIVITY * 4;
+
+				XMMATRIX additionalRotation = XMMatrixRotationRollPitchYaw(XMConvertToRadians(mousePos.y), XMConvertToRadians(mousePos.x), 0);
+
+				playerPhysicBody->mAngVelocity = playerPhysicBody->mAngVelocity * additionalRotation;
+			}
+
+			// Обработка атак мышью - проверяем что щит не активен
+			if (!abilities->IsShieldActive()) {
+
+				/*if (mouse->IsLButtonDown()) {
+					abilities->Charging();
+				}
+				else if (mouse->IsLButtonUnclicked()) {
+					abilities->Attack(*playerTransform, mouse->GetMouseDirection());
+				}*/
+
+				/*if (mouse->IsRButtonClicked()) {
+					abilities->BlockStart();
+				}
+				else if (mouse->IsRButtonUnclicked()) {
+					abilities->BlockEnd();
+				}*/
+
+				if (mouse->IsLButtonClicked()) {
+					comboManager->StartHeldInput(ComboInputType::Light);
+				}
+
+				if (mouse->IsRButtonClicked()) {
+					comboManager->StartHeldInput(ComboInputType::Heavy);
+				}
+
+				if (mouse->IsLButtonUnclicked()) {
+					comboManager->SaveInput(ComboInputType::Light);
+				}
+
+				if (mouse->IsRButtonUnclicked()) {
+					comboManager->SaveInput(ComboInputType::Heavy);
+				}
+			}
+		}
+		break;
 	}
 
 	comboManager->Update();
