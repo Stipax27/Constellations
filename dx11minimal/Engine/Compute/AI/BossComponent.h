@@ -22,7 +22,7 @@ struct BossComponent : Component
     float lastSideDashTime = 0.0f;
     float sideDashSpeed = 10.f;
     // Параметры атак
-    float dashSpeed = 30.0f;
+    float dashSpeed = 300.0f;
     float dashDamage = 25.0f;
 
     float starShotCount = 12;
@@ -68,6 +68,10 @@ struct BossComponent : Component
     float starShotChargeDuration = 2.0f;  // Зарядка выстрела
     float sideDashChargeDuration = 1.6f;  // Зарядка бокового рывка
     float aoeChargeDuration = 1.5f;       // Зарядка АОЕ
+
+    bool isDashing = false;        // Флаг: босс сейчас в рывке
+    float dashDuration = 0.5f;     // Длительность рывка
+    float dashTimer = 0.0f;
 
 };
 

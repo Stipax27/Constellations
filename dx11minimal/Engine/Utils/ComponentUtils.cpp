@@ -1,6 +1,8 @@
 #include "componentutils.h"
 
 #include "../Compute/Combat/Health.h"
+#include "../UI/Text/TextLabel.h"
+#include "../Compute/DelayedDestroy/DelayedDestroy.h"
 
 
 inline XMFLOAT3 Point3DToXMFLOAT3(const point3d& p) {
@@ -88,4 +90,26 @@ const CollisionInfo& GetProjectileCollisionInfo(EntityStorage* entityStorage, En
     }
 
     return CollisionInfo();
+}
+
+
+void DrawDebugString(std::wstring text, point3d screenPos) {
+    EntityStorage* entityStorage = Singleton::GetInstance<EntityStorage>();
+
+    Entity* entity = entityStorage->CreateEntity("DebugString");
+
+    Transform2D* transform2D = entity->AddComponent<Transform2D>();
+    transform2D->position = screenPos;
+
+    TextLabel* textLabel = entity->AddComponent<TextLabel>();
+    textLabel->textW = text;
+    textLabel->fontFamilyW = L"Impact";
+    textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+    textLabel->fontWeight = 900;
+    textLabel->fontSizePx = 38;
+    textLabel->fontScale = 0.5f;
+    textLabel->letterSpacingPx = 1.0f;
+
+    DelayedDestroy* delayedDestroy = entity->AddComponent<DelayedDestroy>();
+    delayedDestroy->lifeTime = 1;
 }

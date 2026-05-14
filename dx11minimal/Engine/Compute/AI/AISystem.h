@@ -7,12 +7,14 @@
 #include "../../Physic/Movement/PhysicBody.h"
 #include "AIComponent.h"
 #include "BossComponent.h"
+#include "../../UI/Text/TextLabel.h"
 #include "../../Render/ParticleEmitter.h"
 #include "../../Render/Beam.h"
 #include "../../Compute/DelayedDestroy/DelayedDestroy.h"
 #include "../../Compute/Combat/SingleDamager.h"
 #include "../../Render/Star.h"
 #include "../../Compute/Combat/Health.h"
+
 
 
 
@@ -96,6 +98,7 @@ private:
 
     // Визуальные эффекты для атак босса
     void SpawnAttackEffect(EntityStorage& entityStorage, const point3d& position, const point3d& color, float size);
+    void SpawnDashEffect(EntityStorage& entityStorage, const point3d& position, const point3d& color, float size);
     void SpawnSideEffect(EntityStorage& entityStorage, const point3d& position, const point3d& color, float size);
     void SpawnSlashEffect(EntityStorage& entityStorage, const point3d& position, const point3d& direction, const point3d& color);
     void SpawnImpactEffect(EntityStorage& entityStorage, const point3d& position, const point3d& color);

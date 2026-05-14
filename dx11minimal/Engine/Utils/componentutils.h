@@ -53,5 +53,7 @@ CollisionInfo GetCollisionWithComponent(SphereCollider* sphereCollider, std::vec
 
 const CollisionInfo& GetProjectileCollisionInfo(EntityStorage* entityStorage, Entity* projectile);
 
+void DrawDebugString(std::wstring text, point3d screenPos = point3d(0.75f, 0.75f, 0));
+
 
 #endif
