@@ -1589,6 +1589,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	Transform* transform;
 	SphereCollider* sphereCollider;
 	MultiDamager* multiDamager;
+	Star* star;
 
 	int pillars_cnt = 3725470 / 2 / quality;
 	int galaxy_cnt = 182361 / quality;
@@ -1673,6 +1674,29 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->color = point3d(0.8, 0.4, 0.2);
 	nebula->scale = 10;
 	nebula->frustumRadius = 40;
+
+	// Звезда с гравитацией в локации
+
+	/*entity = m_World->entityStorage->CreateEntity("Gravity", location);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(0, 0, 0);
+
+	sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	sphereCollider->radius = 20.0f;
+	
+	star = entity->AddComponent<Star>();
+	star->radius = 20.0f;
+	star->crownRadius = 21.5f;
+	star->color1 = point3d(0.1f, 0.1f, 0.1f);
+	star->color2 = point3d(0.4f, 0.4f, 0.4f);
+	star->crownColor = point3d(0.5f, 0.5f, 0.5f);
+
+	GravityPoint* gravityPoint = entity->AddComponent<GravityPoint>();
+	gravityPoint->mass = 50;
+	gravityPoint->radius = 50;*/
+
+
 
 	CreateArenaBarrier(location, point3d(0, 0, 0), 52.0f, 200);
 	m_BossArenaCenter = point3d(0, 0, 200);
@@ -1770,16 +1794,16 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	boss->arenaMaxZ = 50.0f;
 
 	// Атаки
-	boss->dashCooldown = 2.0f;
+	boss->dashCooldown = 3.0f;
 	boss->dashSpeed = 1000.0f;
 	boss->dashDamage = 5.0f;
 
-	boss->starShotCooldown = 3.5f;
+	boss->starShotCooldown = 5.5f;
 	boss->starShotCount = 20.f;
 	boss->starShotSpeed = 15.0f;
 	boss->starShotDamage = 0.5f;
 
-	boss->sideDashCooldown = 2.5f;
+	boss->sideDashCooldown = 4.5f;
 	boss->sideDashSpeed = 10.0f;
 
 	boss->aoeAttackRange = 12.0f;
@@ -1832,7 +1856,7 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 	nebula->vShader = 26;
 	nebula->count = pillars_cnt;
 	nebula->mode = pMode::point;
-	nebula->color = point3d(1, 0.3, 0.5);  // Розоватый
+	nebula->color = point3d(1, 0.3, 0.5);	// Розоватый
 	nebula->color = point3d(0.2, 0.8, 0.3); // Зеленый
 	nebula->color = point3d(0.3, 0.5, 1.0); // Голубой
 	nebula->scale = 1;
@@ -1849,7 +1873,7 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 	nebula->count = pillars_cnt;
 	nebula->skipper = 1394;
 	nebula->mode = pMode::glow;
-	nebula->color = point3d(1, 0.3, 0.5);  // Розоватый
+	nebula->color = point3d(1, 0.3, 0.5);   // Розоватый
 	nebula->color = point3d(0.2, 0.8, 0.3); // Зеленый
 	nebula->color = point3d(0.3, 0.5, 1.0); // Голубой
 	nebula->scale = 1;

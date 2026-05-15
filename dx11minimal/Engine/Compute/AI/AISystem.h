@@ -70,7 +70,7 @@ private:
         AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, Star* star, float deltaTime);
 
     void UpdateBossPhase2(EntityStorage& entityStorage, Entity* entity, Transform* transform,
-        AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, float deltaTime);
+        AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, Star* star, float deltaTime);
 
     void UpdateBossPhase3(EntityStorage& entityStorage, Entity* entity, Transform* transform,
         AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, Star* star, float deltaTime);
@@ -97,9 +97,9 @@ private:
     float GetDistanceToPlayer(EntityStorage& entityStorage, Entity* bossEntity);
 
     // Визуальные эффекты для атак босса
-    void SpawnAttackEffect(EntityStorage& entityStorage, Entity* entity,  point3d& position, const point3d& color, float size);
-    void SpawnDashEffect(EntityStorage& entityStorage, Entity* entity,    point3d& position, const point3d& color, float size);
-    void SpawnSideEffect(EntityStorage& entityStorage, Entity* entity,    point3d& position, const point3d& color, float size);
+    void SpawnAttackEffect(EntityStorage& entityStorage, Entity* entity,  point3d& position, const point3d& color, float size, float timeCharge);
+    void SpawnDashEffect(EntityStorage& entityStorage, Entity* entity,    point3d& position, const point3d& color, float size, float timeCharge);
+    void SpawnSideEffect(EntityStorage& entityStorage, Entity* entity,    point3d& position, const point3d& color, float size, float timeCharge);
     void SpawnSlashEffect(EntityStorage& entityStorage,  const point3d& position, const point3d& direction, const point3d& color);
     void SpawnImpactEffect(EntityStorage& entityStorage, const point3d& position, const point3d& color);
     void SpawnAuraEffect(Entity* bossEntity, const point3d& color, float duration);

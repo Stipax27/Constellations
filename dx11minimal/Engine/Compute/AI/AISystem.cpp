@@ -210,7 +210,7 @@ void AISystem::UpdateBossBehavior(EntityStorage& entityStorage, Entity* entity, 
         UpdateBossPhase1(entityStorage, entity, transform, ai, boss, physicBody, star, deltaTime);
         break;
     case 2:
-        UpdateBossPhase2(entityStorage, entity, transform, ai, boss, physicBody, deltaTime);
+        UpdateBossPhase2(entityStorage, entity, transform, ai, boss, physicBody, star,deltaTime);
         break;
     case 3:
         UpdateBossPhase3(entityStorage, entity, transform, ai, boss, physicBody, star, deltaTime);
@@ -294,7 +294,7 @@ void AISystem::UpdateBossPhase1(EntityStorage& entityStorage, Entity* entity, Tr
                 if (!ai->isChargeEffectSpawned)
                 {
                     point3d p = GetWorldTransform(entity).position;
-                    SpawnSideEffect(entityStorage, entity, p, point3d(0.3f, 0.6f, 1.0f), 1.5f);
+                    SpawnSideEffect(entityStorage, entity, p, point3d(0.3f, 0.6f, 1.0f), 1.5f,1.5f);
                     ai->isChargeEffectSpawned = true;
                     if (star) star->color1 = point3d(0.3f, 0.6f, 1.0f);
                     boss->lastSideDashTime = entity->localTime;
@@ -315,7 +315,7 @@ void AISystem::UpdateBossPhase1(EntityStorage& entityStorage, Entity* entity, Tr
                 if (!ai->isChargeEffectSpawned)
                 {
                     point3d p = GetWorldTransform(entity).position;
-                    SpawnDashEffect(entityStorage, entity, p, point3d(1.0f, 0.2f, 0.2f), 1.5f);
+                    SpawnDashEffect(entityStorage, entity, p, point3d(1.0f, 0.2f, 0.2f), 1.5f,1.6f);
                     ai->isChargeEffectSpawned = true;
                     if (star) star->color1 = point3d(1.0f, 0.5f, 0.5f);
                     boss->lastDashTime = entity->localTime;
@@ -338,7 +338,7 @@ void AISystem::UpdateBossPhase1(EntityStorage& entityStorage, Entity* entity, Tr
                 if (!ai->isChargeEffectSpawned)
                 {
                     point3d p = GetWorldTransform(entity).position;
-                    SpawnAttackEffect(entityStorage, entity, p, point3d(0.8f, 0.2f, 1.0f), 2.0f);
+                    SpawnAttackEffect(entityStorage, entity, p, point3d(0.8f, 0.2f, 1.0f), 2.0f,2.0f);
                     ai->isChargeEffectSpawned = true;
                     if (star) star->color1 = point3d(0.8f, 0.2f, 1.0f);
                     boss->lastStarShotTime = entity->localTime;
@@ -416,7 +416,7 @@ void AISystem::StartChargeAttack(AIComponent* ai, BossComponent* boss,
 
 
 void AISystem::UpdateBossPhase2(EntityStorage& entityStorage, Entity* entity, Transform* transform,
-    AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, float deltaTime)
+    AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, Star* star, float deltaTime)
 {
     Entity* player = GetNearestPlayer(entityStorage,entity );
     if (!player) return;
@@ -432,26 +432,80 @@ void AISystem::UpdateBossPhase2(EntityStorage& entityStorage, Entity* entity, Tr
         transform->position.z = boss->arenaMinZ + 5.0f;
     if (transform->position.z > boss->arenaMaxZ - 5.0f)
         transform->position.z = boss->arenaMaxZ - 5.0f;
+
+    int r = getRandom(100);
+
     // Атаки в фазе 2
-    if (boss->lastDashTime >= boss->dashCooldown * 0.7f)
+    if (r < 30)
     {
-        if (distance <= 18.0f && distance > 3.0f && (rand() % 100 < 40))
+        if (entity->localTime - boss->lastSideDashTime >= (boss->sideDashCooldown*0.7f ) * 1000)
         {
-            BossDashAttack(entityStorage, entity, transform, ai, boss, physicBody, entity->GetComponent<Star>());
-            boss->lastDashTime = 0.0f;
-            return;
+
+            if (!ai->isChargingAttack) // Проверяем, что еще не в зарядке
+            {
+                StartChargeAttack(ai, boss, AIComponent::AttackType::SideDash, boss->sideDashChargeDuration * 0.7f);
+
+                // Создаем эффект только если еще не создавали
+                if (!ai->isChargeEffectSpawned)
+                {
+                    point3d p = GetWorldTransform(entity).position;
+                    SpawnSideEffect(entityStorage, entity, p, point3d(0.3f, 0.6f, 1.0f), 1.5f,1.05f);
+                    ai->isChargeEffectSpawned = true;
+                    if (star) star->color1 = point3d(0.3f, 0.6f, 1.0f);
+                    boss->lastSideDashTime = entity->localTime;
+                }
+                return;
+            }
+        }
+    }
+    else if (r < 60) // Рывок к игроку
+    {
+        if (entity->localTime - boss->lastDashTime >= (boss->dashCooldown * 0.7f) * 1000)
+        {
+            if (!ai->isChargingAttack) // Проверяем, что еще не в зарядке
+            {
+                StartChargeAttack(ai, boss, AIComponent::AttackType::Dash, boss->dashChargeDuration * 0.7f);
+
+                // Создаем эффект только если еще не создавали
+                if (!ai->isChargeEffectSpawned)
+                {
+                    point3d p = GetWorldTransform(entity).position;
+                    SpawnDashEffect(entityStorage, entity, p, point3d(1.0f, 0.2f, 0.2f), 1.5f,1.12f);
+                    ai->isChargeEffectSpawned = true;
+                    if (star) star->color1 = point3d(1.0f, 0.5f, 0.5f);
+                    boss->lastDashTime = entity->localTime;
+                }
+                return;
+            }
+
+        }
+    }
+    else if (r < 100) // Выстрел звездами
+    {
+        if (entity->localTime - boss->lastStarShotTime >= (boss->starShotCooldown* 0.7f) * 1000)
+        {
+
+            if (!ai->isChargingAttack) // Проверяем, что еще не в зарядке
+            {
+                StartChargeAttack(ai, boss, AIComponent::AttackType::StarShot, boss->starShotChargeDuration * 0.7f);
+
+                // Создаем эффект только если еще не создавали
+                if (!ai->isChargeEffectSpawned)
+                {
+                    point3d p = GetWorldTransform(entity).position;
+                    SpawnAttackEffect(entityStorage, entity, p, point3d(0.8f, 0.2f, 1.0f), 2.0f,1.4f);
+                    ai->isChargeEffectSpawned = true;
+                    if (star) star->color1 = point3d(0.8f, 0.2f, 1.0f);
+                    boss->lastStarShotTime = entity->localTime;
+                }
+                return;
+            }
+
+
         }
     }
 
-    if (boss->lastStarShotTime >= boss->starShotCooldown * 0.7f)
-    {
-        if (distance <= 30.0f && (rand() % 100 < 50))
-        {
-            BossStarShot(entityStorage, entity, transform, ai, boss, physicBody, entity->GetComponent<Star>());
-            boss->lastStarShotTime = 0.0f;
-            return;
-        }
-    }
+    
 
     // Движение к игроку
     point3d direction = (GetWorldTransform(player).position - transform->position).normalized();
@@ -496,35 +550,66 @@ void AISystem::UpdateBossPhase3(EntityStorage& entityStorage, Entity* entity, Tr
         transform->position.z = boss->arenaMaxZ - 5.0f;
 
     //// Атаки в фазе 3
-    //if (boss->lastDashTime >= boss->dashCooldown * 0.5f)
-    //{
-    //    if (distance <= 20.0f && (rand() % 100 < 50))
-    //    {
-    //        BossDashAttack(entityStorage, entity, transform, ai, boss, physicBody, star);
-    //        boss->lastDashTime = 0.0f;
-    //        return;
-    //    }
-    //}
-    //
-    //if (boss->lastStarShotTime >= boss->starShotCooldown * 0.5f)
-    //{
-    //    if (distance <= 35.0f && (rand() % 100 < 60))
-    //    {
-    //        BossStarShot(entityStorage, entity, transform, ai, boss, physicBody, star);
-    //        boss->lastStarShotTime = 0.0f;
-    //        return;
-    //    }
-    //}
 
-    // АОЕ атака
-    if (boss->lastSpecialAttackTime >= boss->specialAttackCooldown * 0.5f)
-    {
-        if (distance <= boss->aoeAttackRange && (rand() % 100 < 30))
-        {
+    int r = getRandom(100);
+
+    // if (r < 30) // Рывок к игроку
+    // {
+    //    if (entity->localTime - boss->lastDashTime >= (boss->dashCooldown * 0.5f) * 1000)
+    //    {
+    //        if (!ai->isChargingAttack) // Проверяем, что еще не в зарядке
+    //        {
+    //            StartChargeAttack(ai, boss, AIComponent::AttackType::Dash, boss->dashChargeDuration * 0.5f);
+
+    //            // Создаем эффект только если еще не создавали
+    //            if (!ai->isChargeEffectSpawned)
+    //            {
+    //                point3d p = GetWorldTransform(entity).position;
+    //                SpawnDashEffect(entityStorage, entity, p, point3d(1.0f, 0.2f, 0.2f), 1.5f, 1.12f);
+    //                ai->isChargeEffectSpawned = true;
+    //                if (star) star->color1 = point3d(1.0f, 0.5f, 0.5f);
+    //                boss->lastDashTime = entity->localTime;
+    //            }
+    //            return;
+    //        }
+
+    //    }
+    // }
+    //else if (r < 60) // Выстрел звездами
+    //{
+    //    if (entity->localTime - boss->lastStarShotTime >= (boss->starShotCooldown * 0.5f) * 1000)
+    //    {
+
+    //        if (!ai->isChargingAttack) // Проверяем, что еще не в зарядке
+    //        {
+    //            StartChargeAttack(ai, boss, AIComponent::AttackType::StarShot, boss->starShotChargeDuration * 0.5f);
+
+    //            // Создаем эффект только если еще не создавали
+    //            if (!ai->isChargeEffectSpawned)
+    //            {
+    //                point3d p = GetWorldTransform(entity).position;
+    //                SpawnAttackEffect(entityStorage, entity, p, point3d(0.8f, 0.2f, 1.0f), 2.0f, 1.4f);
+    //                ai->isChargeEffectSpawned = true;
+    //                if (star) star->color1 = point3d(0.8f, 0.2f, 1.0f);
+    //                boss->lastStarShotTime = entity->localTime;
+    //            }
+    //            return;
+    //        }
+
+
+    //    }
+    //}
+    //else
+         if (r<100) {
+
+         if (entity->localTime - boss->lastSpecialAttackTime >= (boss->specialAttackCooldown * 0.5f)*1000)// АОЕ атака
+         {   
+        
             BossAOEAttack(entityStorage, transform, boss);
-            boss->lastSpecialAttackTime = 0.0f;
+            boss->lastSpecialAttackTime = entity->localTime;
             return;
-        }
+            
+         }
     }
 
     // Движение к игроку
@@ -793,7 +878,7 @@ void AISystem::CheckBossPhaseTransition(EntityStorage& entityStorage, Entity* en
 
 // ============ ВИЗУАЛЬНЫЕ ЭФФЕКТЫ ============
 
-void AISystem::SpawnAttackEffect(EntityStorage& entityStorage,Entity* entity,  point3d& position, const point3d& color, float size)
+void AISystem::SpawnAttackEffect(EntityStorage& entityStorage,Entity* entity,  point3d& position, const point3d& color, float size , float timeCharge)
 {
     Entity* effect = entityStorage.CreateEntity("BossAttackEffect", entity);
 
@@ -810,7 +895,7 @@ void AISystem::SpawnAttackEffect(EntityStorage& entityStorage,Entity* entity,  p
     ParticleEmitter* particles = effect->AddComponent<ParticleEmitter>();
 
     particles->rate = 350;
-    particles->lifetime = 2000;
+    particles->lifetime = timeCharge*1000;
     particles->color = color;
     particles->size = { 0.0f, 5.0f };
     particles->opacity = { 1.0f, 0.0f };
@@ -822,10 +907,10 @@ void AISystem::SpawnAttackEffect(EntityStorage& entityStorage,Entity* entity,  p
     
 
     DelayedDestroy* delayed = effect->AddComponent<DelayedDestroy>();
-    delayed->lifeTime = 2000;
+    delayed->lifeTime = timeCharge*1000;
 }
 
-void AISystem::SpawnDashEffect(EntityStorage& entityStorage, Entity* entity,  point3d& position, const point3d& color, float size)
+void AISystem::SpawnDashEffect(EntityStorage& entityStorage, Entity* entity,  point3d& position, const point3d& color, float size, float timeCharge)
 {
     Entity* effect = entityStorage.CreateEntity("BossAttackEffect", entity);
 
@@ -835,7 +920,7 @@ void AISystem::SpawnDashEffect(EntityStorage& entityStorage, Entity* entity,  po
     ParticleEmitter* particles = effect->AddComponent<ParticleEmitter>();
 
     particles->rate = 350;
-    particles->lifetime = 1600;
+    particles->lifetime = timeCharge*1000;
     particles->color = color;
     particles->size = { 0.0f, 5.0f };
     particles->opacity = { 1.0f, 0.0f };
@@ -847,10 +932,10 @@ void AISystem::SpawnDashEffect(EntityStorage& entityStorage, Entity* entity,  po
 
 
     DelayedDestroy* delayed = effect->AddComponent<DelayedDestroy>();
-    delayed->lifeTime = 1600;
+    delayed->lifeTime = timeCharge*1000;
 }
 
-void AISystem::SpawnSideEffect(EntityStorage& entityStorage, Entity* entity,  point3d& position, const point3d& color, float size)
+void AISystem::SpawnSideEffect(EntityStorage& entityStorage, Entity* entity,  point3d& position, const point3d& color, float size, float timeCharge)
 {
     Entity* effect = entityStorage.CreateEntity("BossAttackEffect", entity);
 
@@ -867,7 +952,7 @@ void AISystem::SpawnSideEffect(EntityStorage& entityStorage, Entity* entity,  po
     ParticleEmitter* particles = effect->AddComponent<ParticleEmitter>();
 
     particles->rate = 50;
-    particles->lifetime = 1500;
+    particles->lifetime = timeCharge * 1000;
     particles->color = color;
     particles->size = { 10.0f, 10.0f };
     particles->opacity = { 1.0f, 0.0f };
@@ -879,7 +964,7 @@ void AISystem::SpawnSideEffect(EntityStorage& entityStorage, Entity* entity,  po
 
 
     DelayedDestroy* delayed = effect->AddComponent<DelayedDestroy>();
-    delayed->lifeTime = 1500;
+    delayed->lifeTime = timeCharge*1000;
 }
 
 void AISystem::SpawnSlashEffect(EntityStorage& entityStorage, const point3d& position, const point3d& direction, const point3d& color)
