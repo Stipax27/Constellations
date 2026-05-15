@@ -1677,7 +1677,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 
 	// Звезда с гравитацией в локации
 
-	/*entity = m_World->entityStorage->CreateEntity("Gravity", location);
+	entity = m_World->entityStorage->CreateEntity("Gravity", location);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0, 0, 0);
 
@@ -1693,8 +1693,8 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	star->crownColor = point3d(0.5f, 0.5f, 0.5f);
 
 	GravityPoint* gravityPoint = entity->AddComponent<GravityPoint>();
-	gravityPoint->mass = 50;
-	gravityPoint->radius = 50;*/
+	gravityPoint->mass = 100;
+	gravityPoint->radius = 150;
 
 
 
@@ -1723,7 +1723,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 
 	// === ФИЗИКА ===
 	PhysicBody* testPhysic = BossEntity->AddComponent<PhysicBody>();
-	testPhysic->airFriction = 0.5f;
+	testPhysic->airFriction = 0.1f;
 	testPhysic->mass = 100.0f;
 	testPhysic->velocity = point3d(0.0f, 0.0f, 0.0f);
 
@@ -1795,7 +1795,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 
 	// Атаки
 	boss->dashCooldown = 3.0f;
-	boss->dashSpeed = 1000.0f;
+	boss->dashSpeed = 100.0f;
 	boss->dashDamage = 5.0f;
 
 	boss->starShotCooldown = 5.5f;

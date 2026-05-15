@@ -553,54 +553,54 @@ void AISystem::UpdateBossPhase3(EntityStorage& entityStorage, Entity* entity, Tr
 
     int r = getRandom(100);
 
-    // if (r < 30) // Рывок к игроку
-    // {
-    //    if (entity->localTime - boss->lastDashTime >= (boss->dashCooldown * 0.5f) * 1000)
-    //    {
-    //        if (!ai->isChargingAttack) // Проверяем, что еще не в зарядке
-    //        {
-    //            StartChargeAttack(ai, boss, AIComponent::AttackType::Dash, boss->dashChargeDuration * 0.5f);
+     if (r < 30) // Рывок к игроку
+     {
+        if (entity->localTime - boss->lastDashTime >= (boss->dashCooldown * 0.5f) * 1000)
+        {
+            if (!ai->isChargingAttack) // Проверяем, что еще не в зарядке
+            {
+                StartChargeAttack(ai, boss, AIComponent::AttackType::Dash, boss->dashChargeDuration * 0.5f);
 
-    //            // Создаем эффект только если еще не создавали
-    //            if (!ai->isChargeEffectSpawned)
-    //            {
-    //                point3d p = GetWorldTransform(entity).position;
-    //                SpawnDashEffect(entityStorage, entity, p, point3d(1.0f, 0.2f, 0.2f), 1.5f, 1.12f);
-    //                ai->isChargeEffectSpawned = true;
-    //                if (star) star->color1 = point3d(1.0f, 0.5f, 0.5f);
-    //                boss->lastDashTime = entity->localTime;
-    //            }
-    //            return;
-    //        }
+                // Создаем эффект только если еще не создавали
+                if (!ai->isChargeEffectSpawned)
+                {
+                    point3d p = GetWorldTransform(entity).position;
+                    SpawnDashEffect(entityStorage, entity, p, point3d(1.0f, 0.2f, 0.2f), 1.5f, 1.12f);
+                    ai->isChargeEffectSpawned = true;
+                    if (star) star->color1 = point3d(1.0f, 0.5f, 0.5f);
+                    boss->lastDashTime = entity->localTime;
+                }
+                return;
+            }
 
-    //    }
-    // }
-    //else if (r < 60) // Выстрел звездами
-    //{
-    //    if (entity->localTime - boss->lastStarShotTime >= (boss->starShotCooldown * 0.5f) * 1000)
-    //    {
+        }
+     }
+    else if (r < 60) // Выстрел звездами
+    {
+        if (entity->localTime - boss->lastStarShotTime >= (boss->starShotCooldown * 0.5f) * 1000)
+        {
 
-    //        if (!ai->isChargingAttack) // Проверяем, что еще не в зарядке
-    //        {
-    //            StartChargeAttack(ai, boss, AIComponent::AttackType::StarShot, boss->starShotChargeDuration * 0.5f);
+            if (!ai->isChargingAttack) // Проверяем, что еще не в зарядке
+            {
+                StartChargeAttack(ai, boss, AIComponent::AttackType::StarShot, boss->starShotChargeDuration * 0.5f);
 
-    //            // Создаем эффект только если еще не создавали
-    //            if (!ai->isChargeEffectSpawned)
-    //            {
-    //                point3d p = GetWorldTransform(entity).position;
-    //                SpawnAttackEffect(entityStorage, entity, p, point3d(0.8f, 0.2f, 1.0f), 2.0f, 1.4f);
-    //                ai->isChargeEffectSpawned = true;
-    //                if (star) star->color1 = point3d(0.8f, 0.2f, 1.0f);
-    //                boss->lastStarShotTime = entity->localTime;
-    //            }
-    //            return;
-    //        }
+                // Создаем эффект только если еще не создавали
+                if (!ai->isChargeEffectSpawned)
+                {
+                    point3d p = GetWorldTransform(entity).position;
+                    SpawnAttackEffect(entityStorage, entity, p, point3d(0.8f, 0.2f, 1.0f), 2.0f, 1.4f);
+                    ai->isChargeEffectSpawned = true;
+                    if (star) star->color1 = point3d(0.8f, 0.2f, 1.0f);
+                    boss->lastStarShotTime = entity->localTime;
+                }
+                return;
+            }
 
 
-    //    }
-    //}
-    //else
-         if (r<100) {
+        }
+    }
+    else if (r < 100) {
+        
 
          if (entity->localTime - boss->lastSpecialAttackTime >= (boss->specialAttackCooldown * 0.5f)*1000)// АОЕ атака
          {   
