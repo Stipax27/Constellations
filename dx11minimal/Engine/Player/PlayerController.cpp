@@ -413,7 +413,8 @@ void PlayerController::ProcessMouse()
 	}
 	case MouseState::Locked:
 		if (playerEntity != nullptr && playerEntity->IsActive()) {
-			float length = mousePos.magnitude();
+			point3d mPos = mouse->pos;
+			mPos.y *= -1;
 
 			mouse->absolutePos = point3d(window->width / 2, window->height / 2, 0);
 			mouse->pos = point3d();
@@ -421,9 +422,9 @@ void PlayerController::ProcessMouse()
 
 			CheckTargetValid();
 			if (!lockMovementOnTarget || cameraTarget == nullptr) {
-				mousePos *= SENSIVITY * 4;
+				mPos *= SENSIVITY * 5;
 
-				XMMATRIX additionalRotation = XMMatrixRotationRollPitchYaw(XMConvertToRadians(mousePos.y), XMConvertToRadians(mousePos.x), 0);
+				XMMATRIX additionalRotation = XMMatrixRotationRollPitchYaw(XMConvertToRadians(mPos.y), XMConvertToRadians(mPos.x), 0);
 				point3d upVector = playerTransform->GetUpVector();
 
 
@@ -432,7 +433,7 @@ void PlayerController::ProcessMouse()
 				cameraMatrix = TransformMatrixToUpVector(cameraMatrix, upVector);
 
 				point3d cameraUpVector = point3d(cameraMatrix.r[1].m128_f32[0], cameraMatrix.r[1].m128_f32[1], cameraMatrix.r[1].m128_f32[2]).normalized();
-				additionalRotation = XMMatrixRotationRollPitchYaw(0, XMConvertToRadians(mousePos.x), 0);
+				additionalRotation = XMMatrixRotationRollPitchYaw(0, XMConvertToRadians(mPos.x), 0);
 
 				if (abs(GetSignedAngleBetweenVectors(cameraUpVector, upVector, true)) >= 85) {
 					cameraMatrix = camera->GetMatrixRotation();
