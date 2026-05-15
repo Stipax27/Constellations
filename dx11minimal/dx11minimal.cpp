@@ -102,18 +102,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         if (time >= timer::nextFrameTime)
         {
+            timer::lastFrameTime = timer::currentTime;
             timer::currentTime = timer::GetCounter();
             timer::deltaTime = timer::currentTime - timer::lastFrameTime;
-            timer::lastFrameTime = timer::currentTime;
 
             //timer::CalcDeltaAverage();
             timer::frameBeginTime = timer::GetCounter();
+            timer::nextFrameTime = timer::frameBeginTime + RENDER_DT;
 
             levelManager.Frame();
 
             timer::frameEndTime = timer::GetCounter();
             timer::frameRenderingDuration = timer::frameEndTime - timer::frameBeginTime;
-            timer::nextFrameTime = timer::frameBeginTime + RENDER_DT;
         }
 
         Sleep((DWORD)min(RENDER_DT, max(RENDER_DT - timer::frameRenderingDuration, 0)));
