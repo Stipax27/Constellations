@@ -17,17 +17,17 @@
 /////////////
 
 struct CollisionResult {
-	bool collided = false;
-	point3d normal = point3d(0, 1, 0);
 	point3d position = point3d();
+	point3d normal = point3d(0, 1, 0);
 	float distance = 0;
+	bool collided = false;
 };
 
 struct CollisionInfo {
-	int entityId = -1;
-	point3d normal = point3d(0, 1, 0);
 	point3d position = point3d();
+	point3d normal = point3d(0, 1, 0);
 	float distance = 0;
+	int entityId = -1;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

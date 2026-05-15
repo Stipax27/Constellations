@@ -16,7 +16,7 @@ inline point3d XMFLOAT3ToPoint3D(const XMFLOAT3& v);
 inline XMVECTOR LoadPoint3D(const point3d& p);
 inline point3d StorePoint3D(FXMVECTOR v);
 
-XMMATRIX GetWorldMatrix(Transform);
+XMMATRIX GetWorldMatrix(const Transform&);
 
 Transform GetRelativeTransform(const Transform& parentWorldTransform, const Transform& childWorldTransform);
 
@@ -33,7 +33,9 @@ template <typename T>
 CollisionInfo GetCollisionWithComponent(SphereCollider* sphereCollider, std::vector<Entity*> filters = std::vector<Entity*>()) {
 	EntityStorage* entityStorage = Singleton::GetInstance<EntityStorage>();
 
-	for (CollisionInfo info : sphereCollider->collisions) {
+	for (int i = 0; i < sphereCollider->collisions.size(); i++) {
+		CollisionInfo& info = sphereCollider->collisions[i];
+
 		Entity* entity = entityStorage->GetEntityById(info.entityId);
 		if (!IsEntityValid(entity)) {
 			continue;
@@ -44,14 +46,14 @@ CollisionInfo GetCollisionWithComponent(SphereCollider* sphereCollider, std::vec
 		}
 
 		if (entity->HasComponent<T>()) {
-			return info;
+			return sphereCollider->collisions[i];
 		}
 	}
 
 	return CollisionInfo();
 }
 
-const CollisionInfo& GetProjectileCollisionInfo(EntityStorage* entityStorage, Entity* projectile);
+CollisionInfo GetProjectileCollisionInfo(EntityStorage* entityStorage, Entity* projectile);
 
 void DrawDebugString(std::wstring text, point3d screenPos = point3d(0.75f, 0.75f, 0));
 

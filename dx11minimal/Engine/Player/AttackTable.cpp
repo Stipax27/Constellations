@@ -135,7 +135,7 @@ AttackDesc fists_air_start(EntityStorage* entityStorage, const Transform& startT
 
 void fists_air_update(EntityStorage* entityStorage, Entity* entity) {
 	if (!entity->HasComponent<SingleDamager>()) {
-		const CollisionInfo& info = GetProjectileCollisionInfo(entityStorage, entity);
+		CollisionInfo info = GetProjectileCollisionInfo(entityStorage, entity);
 		PlayerAttackTable[0][1].end(entityStorage, entity, info);
 	}
 }
@@ -207,7 +207,7 @@ void fists_fire_update(EntityStorage* entityStorage, Entity* entity) {
 	SphereCollider* sphereCollider = entity->GetComponent<SphereCollider>();
 
 	for (int i = 0; i < sphereCollider->collisions.size(); i++) {
-		const CollisionInfo& collision = sphereCollider->collisions[i];
+		CollisionInfo collision = sphereCollider->collisions[i];
 		Entity* target = entityStorage->GetEntityById(collision.entityId);
 
 		if (target->name == AIR_FIELD) {

@@ -24,7 +24,7 @@ inline point3d StorePoint3D(FXMVECTOR v) {
 }
 
 
-XMMATRIX GetWorldMatrix(Transform worldTransform) {
+XMMATRIX GetWorldMatrix(const Transform& worldTransform) {
 	XMMATRIX rotateMatrix = worldTransform.mRotation;
 	XMMATRIX scaleMatrix = XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z);
 	XMMATRIX translateMatrix = XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z);
@@ -71,12 +71,14 @@ Transform GetRelativeTransform(const Transform& parentWorldTransform, const Tran
 }
 
 
-const CollisionInfo& GetProjectileCollisionInfo(EntityStorage* entityStorage, Entity* projectile)
+CollisionInfo GetProjectileCollisionInfo(EntityStorage* entityStorage, Entity* projectile)
 {
     SphereCollider* sphereCollider = projectile->GetComponent<SphereCollider>();
 
     if (sphereCollider != nullptr) {
-        for (CollisionInfo info : sphereCollider->collisions) {
+        for (int i = 0; i < sphereCollider->collisions.size(); i++) {
+            CollisionInfo& info = sphereCollider->collisions[i];
+
             Entity* entity = entityStorage->GetEntityById(info.entityId);
             if (!IsEntityValid(entity)) {
                 continue;
@@ -84,7 +86,7 @@ const CollisionInfo& GetProjectileCollisionInfo(EntityStorage* entityStorage, En
 
             Health* health = entity->GetComponentInAncestor<Health>();
             if (health != nullptr && health->active) {
-                return info;
+                return sphereCollider->collisions[i];
             }
         }
     }
