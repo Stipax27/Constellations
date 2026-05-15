@@ -422,7 +422,7 @@ void PlayerController::ProcessMouse()
 
 			CheckTargetValid();
 			if (!lockMovementOnTarget || cameraTarget == nullptr) {
-				mPos *= SENSIVITY * 5;
+				mPos *= SENSIVITY * 10;
 
 				XMMATRIX additionalRotation = XMMatrixRotationRollPitchYaw(XMConvertToRadians(mPos.y), XMConvertToRadians(mPos.x), 0);
 				point3d upVector = playerTransform->GetUpVector();
