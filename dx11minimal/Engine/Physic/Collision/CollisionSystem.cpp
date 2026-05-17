@@ -122,7 +122,7 @@ void CollisionSystem::Update(EntityStorage& entityStorage, float deltaTime)
 					}
 
 					pair<Entity*, MultiDamager*> mdres = entity2->GetAncestorWithComponent<MultiDamager>();
-					if (mdres.first != nullptr && mdres.second->active && mdres.second->target == hres.second->fraction && timer::currentTime - mdres.second->lastDamageTime >= mdres.second->inverval) {
+					if (mdres.first != nullptr && mdres.second->active && mdres.second->target == hres.second->fraction && timer::currentTime - mdres.second->lastDamageTime >= mdres.second->interval) {
 											
 						DamageUnit unit = DamageUnit(mdres.second->damageType, mdres.second->damage);
 						hres.second->damageQueue.push_back(unit);

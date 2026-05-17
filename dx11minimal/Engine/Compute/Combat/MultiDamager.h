@@ -14,7 +14,7 @@ struct MultiDamager : Component
 	float damage = 1.0f;
 	int repeats = 10;
 
-	double inverval = 100;
+	double interval = 100;
 
 	double lastDamageTime = 0;
 	int repeatCount = 0;

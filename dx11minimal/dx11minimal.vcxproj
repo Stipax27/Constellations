@@ -191,8 +191,8 @@
     <ClInclude Include="Engine\Compute\Combat\DamageBlocker.h" />
     <ClInclude Include="Engine\Compute\Combat\damageType.h" />
     <ClInclude Include="Engine\Compute\Combat\damageUnit.h" />
-    <ClInclude Include="Engine\Compute\Combat\RayDamager.h" />
-    <ClInclude Include="Engine\Compute\Combat\RayDamageSystem.h" />
+    <ClInclude Include="Engine\Compute\Combat\RayDamage\RayDamager.h" />
+    <ClInclude Include="Engine\Compute\Combat\RayDamage\RayDamageSystem.h" />
     <ClInclude Include="Engine\DebugTools\GravityDrawSystem.h" />
     <ClInclude Include="Engine\Compute\AI\AISystem.h" />
     <ClInclude Include="Engine\Lib\class_name.h" />
@@ -942,7 +942,7 @@
     <ClCompile Include="Engine\Camera\cameraclass.cpp" />
     <ClCompile Include="Engine\Compute\Combat\DamageBlocker.cpp" />
     <ClCompile Include="Engine\Compute\Combat\Health.cpp" />
-    <ClCompile Include="Engine\Compute\Combat\RayDamageSystem.cpp" />
+    <ClCompile Include="Engine\Compute\Combat\RayDamage\RayDamageSystem.cpp" />
     <ClCompile Include="Engine\Lib\interp.cpp" />
     <ClCompile Include="Engine\Lib\logging.cpp" />
     <ClCompile Include="Engine\Lib\SerializationHelpers.cpp" />

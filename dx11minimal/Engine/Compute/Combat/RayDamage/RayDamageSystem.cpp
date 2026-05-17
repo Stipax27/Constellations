@@ -31,7 +31,7 @@ void RayDamageSystem::Update(EntityStorage& entityStorage, float deltaTime)
 			continue;
 
 		RayDamager* rayDamager = entity->GetComponent<RayDamager>();
-		if (rayDamager == nullptr || !rayDamager->active || entity->localTime - rayDamager->lastDamageTime < rayDamager->inverval)
+		if (rayDamager == nullptr || !rayDamager->active || entity->localTime - rayDamager->lastDamageTime < rayDamager->interval)
 			continue;
 
 		Transform worldTransform = GetWorldTransform(entity);

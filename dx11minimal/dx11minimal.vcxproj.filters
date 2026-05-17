@@ -82,10 +82,11 @@
     <ClCompile Include="Engine\Compute\Quests\QuestManager.cpp" />
     <ClCompile Include="Engine\Compute\Quests\Queststarcollection.cpp" />
     <ClCompile Include="Engine\Render\StarClay\StarClaySystem.cpp" />
-    <ClCompile Include="Engine\Compute\Combat\RayDamageSystem.cpp" />
+    <ClCompile Include="Engine\Compute\Combat\RayDamage\RayDamageSystem.cpp" />
     <ClCompile Include="Engine\Player\AttackTable.cpp" />
     <ClCompile Include="Engine\Player\Combo\Combo.cpp" />
     <ClCompile Include="Engine\Player\Combo\comboManager.cpp" />
+    <ClCompile Include="Systems\Transform2DDebugUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LevelManagerClass.h">
@@ -224,8 +225,8 @@
     <ClInclude Include="Engine\Compute\Quests\Queststarcollection.h" />
     <ClInclude Include="Engine\Render\StarClay\StarClay.h" />
     <ClInclude Include="Engine\Render\StarClay\StarClaySystem.h" />
-    <ClInclude Include="Engine\Compute\Combat\RayDamager.h" />
-    <ClInclude Include="Engine\Compute\Combat\RayDamageSystem.h" />
+    <ClInclude Include="Engine\Compute\Combat\RayDamage\RayDamager.h" />
+    <ClInclude Include="Engine\Compute\Combat\RayDamage\RayDamageSystem.h" />
     <ClInclude Include="Engine\UI\ImageLabel.h" />
     <ClInclude Include="Engine\Compute\Combat\elements.h" />
     <ClInclude Include="Engine\Player\attackTable.h" />
@@ -233,6 +234,8 @@
     <ClInclude Include="Engine\Player\Combo\combo.h" />
     <ClInclude Include="Engine\Player\Combo\comboManager.h" />
     <ClInclude Include="Engine\Compute\AI\BossComponent.h" />
+    <ClInclude Include="Engine\Player\Combo\fistsCombos.h" />
+    <ClInclude Include="Systems\Transform2DDebugUI.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">

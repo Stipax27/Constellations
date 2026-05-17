@@ -38,7 +38,7 @@
 #include "Engine/Physic/Collision/collisionSystem.h"
 
 #include "Engine/Compute/Combat/combatSystem.h"
-#include "Engine/Compute/Combat/RayDamageSystem.h"
+#include "Engine/Compute/Combat/RayDamage/RayDamageSystem.h"
 
 #include "Engine/Compute/DelayedDestroy/DelayedDestroySystem.h"
 #include "Engine/Compute/Time/timeSystem.h"

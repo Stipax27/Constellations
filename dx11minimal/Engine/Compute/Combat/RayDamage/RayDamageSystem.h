@@ -5,11 +5,11 @@
 // INCLUDES //
 //////////////
 #include<cmath>
-#include "../../ECS_Base/system.h"
-#include "Health.h"
+#include "../../../ECS_Base/system.h"
+#include "../Health.h"
 #include "RayDamager.h"
 
-#include "../../Physic/Collision/CollisionManagerClass.h"
+#include "../../../Physic/Collision/CollisionManagerClass.h"
 
 
 class RayDamageSystem : public System

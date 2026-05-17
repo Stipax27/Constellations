@@ -1825,7 +1825,7 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 	multiDamager = entity->AddComponent<MultiDamager>();
 	multiDamager->damage = -5;
 	multiDamager->repeats = -1;
-	multiDamager->inverval = 1000;
+	multiDamager->interval = 1000;
 
 	nebula = entity->AddComponent<Nebula>();
 	nebula->vShader = 26;
@@ -1868,7 +1868,7 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 	multiDamager = entity->AddComponent<MultiDamager>();
 	multiDamager->damage = 5;
 	multiDamager->repeats = -1;
-	multiDamager->inverval = 1000;
+	multiDamager->interval = 1000;
 
 	nebula = entity->AddComponent<Nebula>();
 	nebula->vShader = 26;
@@ -1911,7 +1911,7 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 	multiDamager = entity->AddComponent<MultiDamager>();
 	multiDamager->damage = 5;
 	multiDamager->repeats = -1;
-	multiDamager->inverval = 1000;
+	multiDamager->interval = 1000;
 
 	nebula = entity->AddComponent<Nebula>();
 	nebula->vShader = 29;
