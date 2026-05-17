@@ -28,9 +28,9 @@ void MouseClass::Initialize() {
 	lbuttonDown = false;
 	rbuttonDown = false;
 	lbuttonClicked = false;
-	lbuttonClicked = false;
-	lbuttonUnclicked = false;
-	lbuttonUnclicked = false;
+	rbuttonClicked = false;
+	lbuttonReleased = false;
+	rbuttonReleased = false;
 
 	lbuttonDownPos = point3d();
 	rbuttonDownPos = point3d();
@@ -59,7 +59,7 @@ void MouseClass::Update() {
 
 	if (input::IsKeyDown(VK_LBUTTON))
 	{
-		lbuttonUnclicked = false;
+		lbuttonReleased = false;
 		if (!lbuttonDown)
 		{
 			lbuttonDown = true;
@@ -75,16 +75,16 @@ void MouseClass::Update() {
 		lbuttonClicked = false;
 		if (lbuttonDown) {
 			lbuttonDown = false;
-			lbuttonUnclicked = true;
+			lbuttonReleased = true;
 		}
 		else {
-			lbuttonUnclicked = false;
+			lbuttonReleased = false;
 		}
 	}
 
 	if (input::IsKeyDown(VK_RBUTTON))
 	{
-		rbuttonUnclicked = false;
+		rbuttonReleased = false;
 		if (!rbuttonDown)
 		{
 			rbuttonDown = true;
@@ -100,10 +100,10 @@ void MouseClass::Update() {
 		rbuttonClicked = false;
 		if (rbuttonDown) {
 			rbuttonDown = false;
-			rbuttonUnclicked = true;
+			rbuttonReleased = true;
 		}
 		else {
-			rbuttonUnclicked = false;
+			rbuttonReleased = false;
 		}
 	}
 }
@@ -127,12 +127,12 @@ bool MouseClass::IsRButtonClicked() {
 }
 
 
-bool MouseClass::IsLButtonUnclicked() {
-	return lbuttonUnclicked;
+bool MouseClass::IsLButtonReleased() {
+	return lbuttonReleased;
 }
 
-bool MouseClass::IsRButtonUnclicked() {
-	return rbuttonUnclicked;
+bool MouseClass::IsRButtonReleased() {
+	return rbuttonReleased;
 }
 
 

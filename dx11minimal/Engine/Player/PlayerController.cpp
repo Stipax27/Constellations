@@ -383,11 +383,11 @@ void PlayerController::ProcessMouse()
 					comboManager->StartHeldInput(ComboInputType::Heavy);
 				}
 
-				if (mouse->IsLButtonUnclicked()) {
+				if (mouse->IsLButtonReleased()) {
 					comboManager->SaveInput(ComboInputType::Light);
 				}
 
-				if (mouse->IsRButtonUnclicked()) {
+				if (mouse->IsRButtonReleased()) {
 					comboManager->SaveInput(ComboInputType::Heavy);
 				}
 			}
@@ -472,11 +472,11 @@ void PlayerController::ProcessMouse()
 					comboManager->StartHeldInput(ComboInputType::Heavy);
 				}
 
-				if (mouse->IsLButtonUnclicked()) {
+				if (mouse->IsLButtonReleased()) {
 					comboManager->SaveInput(ComboInputType::Light);
 				}
 
-				if (mouse->IsRButtonUnclicked()) {
+				if (mouse->IsRButtonReleased()) {
 					comboManager->SaveInput(ComboInputType::Heavy);
 				}
 			}

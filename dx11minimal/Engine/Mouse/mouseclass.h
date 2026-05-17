@@ -42,7 +42,6 @@ class MouseClass : public ISingleton
 public:
 	point3d pos; // Position in coords [-1, 1]
 	point3d absolutePos; // Position in pixels
-	point3d worldPos;
 	MouseState state;
 	bool visible;
 
@@ -63,8 +62,8 @@ public:
 	bool IsLButtonClicked();
 	bool IsRButtonClicked();
 
-	bool IsLButtonUnclicked();
-	bool IsRButtonUnclicked();
+	bool IsLButtonReleased();
+	bool IsRButtonReleased();
 
 	point3d GetLButtonDownPosition();
 	point3d GetRButtonDownPosition();
@@ -83,8 +82,8 @@ private:
 	bool lbuttonClicked;
 	bool rbuttonClicked;
 
-	bool lbuttonUnclicked;
-	bool rbuttonUnclicked;
+	bool lbuttonReleased;
+	bool rbuttonReleased;
 
 	point3d lbuttonDownPos;
 	point3d rbuttonDownPos;
