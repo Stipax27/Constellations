@@ -23,12 +23,12 @@ public:
     FrustumClass(const FrustumClass&);
     ~FrustumClass();
 
-    void ConstructFrustum(XMMATRIX, XMMATRIX, float);
+    void ConstructFrustum(XMMATRIX viewMatrix, XMMATRIX projectionMatrix, float screenDepth);
 
-    bool CheckPoint(point3d);
-    bool CheckCube(point3d, float);
-    bool CheckSphere(point3d, float);
-    bool CheckRectangle(point3d, point3d);
+    bool CheckPoint(point3d pos);
+    bool CheckCube(point3d pos, float radius);
+    bool CheckSphere(point3d pos, float radius);
+    bool CheckRectangle(point3d pos, point3d size);
 
 private:
     XMFLOAT4 planes[6];

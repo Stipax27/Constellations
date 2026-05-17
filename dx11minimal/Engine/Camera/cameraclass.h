@@ -44,7 +44,7 @@ public:
 	void SetFov(float);
 
 	void AddMatrixRotation(XMMATRIX);
-	void AddVectorRotation(point3d, float);
+	void AddVectorRotation(point3d vector, float angle);
 
 	XMMATRIX GetMatrixRotation();
 	float GetFov();
