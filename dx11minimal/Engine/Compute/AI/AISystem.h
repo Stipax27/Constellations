@@ -81,7 +81,7 @@ private:
 
     //void BossSummonMinions(EntityStorage& entityStorage, Transform* transform, BossComponent* boss);
 
-    void BossAOEAttack(EntityStorage& entityStorage, Transform* transform, BossComponent* boss);
+    void BossAOEAttack(EntityStorage& entityStorage, Entity* entity, Transform* transform, BossComponent* boss);
 
     void CheckBossPhaseTransition(EntityStorage& entityStorage, Entity* entity, Health* health,
         BossComponent* boss, AIComponent* ai);
@@ -103,11 +103,11 @@ private:
     void SpawnSlashEffect(EntityStorage& entityStorage,  const point3d& position, const point3d& direction, const point3d& color);
     void SpawnImpactEffect(EntityStorage& entityStorage, const point3d& position, const point3d& color);
     void SpawnAuraEffect(Entity* bossEntity, const point3d& color, float duration);
+    void SpawnAOEEffect(EntityStorage& entityStorage, Entity* entity, point3d& position, float radius, const point3d& color, float timeCharge);
 
     // Эффекты для разных типов атак
     void SpawnMeleeAttackEffect(EntityStorage& entityStorage, const point3d& position, const point3d& direction);
     void SpawnRangedAttackEffect(EntityStorage& entityStorage, const point3d& position, const point3d& direction);
-    void SpawnAOEEffect(EntityStorage& entityStorage, const point3d& position, float radius, const point3d& color);
 
     void BossSideDash(EntityStorage& entityStorage, Entity* entity, Transform* transform,
         AIComponent* ai, BossComponent* boss, PhysicBody* physicBody);

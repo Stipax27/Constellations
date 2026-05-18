@@ -1677,24 +1677,24 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 
 	// Звезда с гравитацией в локации
 
-	entity = m_World->entityStorage->CreateEntity("Gravity", location);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0, 0, 0);
+	//entity = m_World->entityStorage->CreateEntity("Gravity", location);
+	//transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(0, 0, 0);
 
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	sphereCollider->radius = 20.0f;
-	
-	star = entity->AddComponent<Star>();
-	star->radius = 20.0f;
-	star->crownRadius = 21.5f;
-	star->color1 = point3d(0.1f, 0.1f, 0.1f);
-	star->color2 = point3d(0.4f, 0.4f, 0.4f);
-	star->crownColor = point3d(0.5f, 0.5f, 0.5f);
+	//sphereCollider = entity->AddComponent<SphereCollider>();
+	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	//sphereCollider->radius = 20.0f;
+	//
+	//star = entity->AddComponent<Star>();
+	//star->radius = 20.0f;
+	//star->crownRadius = 21.5f;
+	//star->color1 = point3d(0.1f, 0.1f, 0.1f);
+	//star->color2 = point3d(0.4f, 0.4f, 0.4f);
+	//star->crownColor = point3d(0.5f, 0.5f, 0.5f);
 
-	GravityPoint* gravityPoint = entity->AddComponent<GravityPoint>();
-	gravityPoint->mass = 100;
-	gravityPoint->radius = 150;
+	//GravityPoint* gravityPoint = entity->AddComponent<GravityPoint>();
+	//gravityPoint->mass = 100;
+	//gravityPoint->radius = 150;
 
 
 
@@ -1781,7 +1781,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	BossComponent* boss = BossEntity->AddComponent<BossComponent>();
 
 	// Фазы
-	boss->currentPhase = 1;
+	boss->currentPhase = 3;
 	boss->phaseHealthThresholds[0] = 0.7f;  // 1400 HP
 	boss->phaseHealthThresholds[1] = 0.3f;  // 600 HP
 
