@@ -50,8 +50,10 @@ bool LevelManagerClass::Initialize()
 	m_World = Singleton::GetInstance<World>();
 	m_World->Initialize();
 
+	entityStorage = m_World->entityStorage;
+
 	collisionManager = Singleton::GetInstance<CollisionManagerClass>();
-	collisionManager->Initialize(*m_World->entityStorage);
+	collisionManager->Initialize(*entityStorage);
 
 	mouse = Singleton::GetInstance<MouseClass>();
 	mouse->Initialize();
@@ -111,13 +113,13 @@ bool LevelManagerClass::Initialize()
 	SingleDamager* singleDamager;
 
 
-	worldFolder = m_World->entityStorage->CreateEntity("World");
+	worldFolder = entityStorage->CreateEntity("World");
 
 	Entity* player = CreatePlayer();
 
 
 	
-	/*entity = m_World->entityStorage->CreateEntity("AriesNebulaLocation", folder);
+	/*entity = entityStorage->CreateEntity("AriesNebulaLocation", folder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, 50.0f);
 	transform->scale = point3d(1, 0, 0);
@@ -135,7 +137,7 @@ bool LevelManagerClass::Initialize()
 	sphereCollider->softness = 0.5f;*/
 	//entity->AddComponent<SurfaceCollider>();
 
-	/*entity = m_World->entityStorage->CreateEntity("StarsBackground", folder);
+	/*entity = entityStorage->CreateEntity("StarsBackground", folder);
 	spriteCluster = entity->AddComponent<SpriteCluster>();
 	spriteCluster->vShader = 2;
 	spriteCluster->pShader = 2;
@@ -143,7 +145,7 @@ bool LevelManagerClass::Initialize()
 
 	/////////////////////////
 
-	//entity = m_World->entityStorage->CreateEntity("Star", folder);
+	//entity = entityStorage->CreateEntity("Star", folder);
 	//transform = entity->AddComponent<Transform>();
 	//transform->position = point3d(0.0f, 0.0f, -20.0f);
 	//star = entity->AddComponent<Star>();
@@ -155,7 +157,7 @@ bool LevelManagerClass::Initialize()
 	//singleDamager = entity->AddComponent<SingleDamager>();
 	//singleDamager->damage = 1000;
 
-	entity = m_World->entityStorage->CreateEntity("TestStar", worldFolder);
+	entity = entityStorage->CreateEntity("TestStar", worldFolder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(-200, 0, -200);
 	star = entity->AddComponent<Star>();
@@ -171,7 +173,7 @@ bool LevelManagerClass::Initialize()
 	gravityPoint->mass = 500;
 	gravityPoint->radius = 150;
 
-	/*entity = m_World->entityStorage->CreateEntity("Ray", worldFolder);
+	/*entity = entityStorage->CreateEntity("Ray", worldFolder);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(20, 20, 0);
 	Beam* beam = entity->AddComponent<Beam>();
@@ -192,7 +194,7 @@ bool LevelManagerClass::Initialize()
 
 	/////////////////////////
 
-	/*Entity* holder = m_World->entityStorage->CreateEntity("Holder", folder);
+	/*Entity* holder = entityStorage->CreateEntity("Holder", folder);
 	transform = holder->AddComponent<Transform>();
 	transform->scale = point3d(10, 10, 10);
 	transform->position = point3d(0.0f, 0.0f, -50.0f);
@@ -213,7 +215,7 @@ bool LevelManagerClass::Initialize()
 	
 
 	// Тестовый враг для ИИ amogus
-	//testEnemy = m_World->entityStorage->CreateEntity("TestEnemy", worldFolder);
+	//testEnemy = entityStorage->CreateEntity("TestEnemy", worldFolder);
 	//Transform* testTransform = testEnemy->AddComponent<Transform>();
 	//point3d CentralPatrolPoint = point3d(10.0f, 5.0f, 15.0f);
 	//testTransform->position = CentralPatrolPoint + point3d(5.0f, 0.0f, 0.0f); // Стартовая позиция
@@ -285,7 +287,7 @@ bool LevelManagerClass::Initialize()
 		const char* preferredClip = nullptr,
 		bool autoPlay = true) -> Entity*
 	{
-		Entity* e = m_World->entityStorage->CreateEntity(name, worldFolder);
+		Entity* e = entityStorage->CreateEntity(name, worldFolder);
 		Transform* t = e->AddComponent<Transform>();
 		t->position = pos;
 		t->scale = scale;
@@ -420,7 +422,7 @@ void LevelManagerClass::Frame()
 	questManager->UpdateQuests();
 
 	// DEBUG
-	Entity* player = m_World->entityStorage->GetEntityByName("Player");
+	Entity* player = entityStorage->GetEntityByName("Player");
 	if (IsEntityValid(player) && !m_ShowVictoryMessage)
 	{
 		Health* playerHealth = player->GetComponent<Health>();
@@ -430,7 +432,7 @@ void LevelManagerClass::Frame()
 			m_MessageTimer = 3.0f;
 
 			// Создаём сообщение
-			Entity* msgContainer = m_World->entityStorage->CreateEntity("GameOverMsg", nullptr);
+			Entity* msgContainer = entityStorage->CreateEntity("GameOverMsg", nullptr);
 			Transform2D* msgTransform = msgContainer->AddComponent<Transform2D>();
 			msgTransform->anchorPoint = point3d(0, 0, 0);
 			msgTransform->ratio = ScreenAspectRatio::XY;
@@ -583,7 +585,7 @@ void LevelManagerClass::Frame()
 			//Log("BOSS DEFEATED! Showing victory message...\n");
 
 			// Сообщение победы
-			Entity* msg = m_World->entityStorage->CreateEntity("VictoryMsg", nullptr);
+			Entity* msg = entityStorage->CreateEntity("VictoryMsg", nullptr);
 			Transform2D* t = msg->AddComponent<Transform2D>();
 			t->anchorPoint = point3d(0, 0, 0);
 			t->ratio = ScreenAspectRatio::XY;
@@ -660,7 +662,7 @@ void LevelManagerClass::Frame()
 
 	if (m_CurrentBoss && m_CurrentBoss->IsActive())
 	{
-		Entity* player = m_World->entityStorage->GetEntityByName("Player");
+		Entity* player = entityStorage->GetEntityByName("Player");
 		if (player)
 		{
 			Transform* playerTransform = player->GetComponent<Transform>();
@@ -677,7 +679,7 @@ void LevelManagerClass::Frame()
 					m_IsInBossArena = true;
 					AIComponent* bossAI = m_CurrentBoss->GetComponent<AIComponent>();
 					if (bossAI) bossAI->enabled = true;
-					Entity* bossUIContainer = m_World->entityStorage->GetEntityByName("BossUIContainer");
+					Entity* bossUIContainer = entityStorage->GetEntityByName("BossUIContainer");
 					if (bossUIContainer) bossUIContainer->SetActive(true);
 				}
 
@@ -702,7 +704,7 @@ void LevelManagerClass::Frame()
 	//	shotTime = worldFolder->localTime;
 
 	//	// Physic damage
-	//	Entity* projectile = m_World->entityStorage->CreateEntity("TestProjectile", worldFolder);
+	//	Entity* projectile = entityStorage->CreateEntity("TestProjectile", worldFolder);
 	//	Transform* transform = projectile->AddComponent<Transform>();
 	//	transform->position = point3d(0, 20, 0);
 
@@ -730,7 +732,7 @@ void LevelManagerClass::Frame()
 	//	delayedDestroy->lifeTime = 2000;
 
 	//	// Magic damage
-	//	projectile = m_World->entityStorage->CreateEntity("TestProjectile", worldFolder);
+	//	projectile = entityStorage->CreateEntity("TestProjectile", worldFolder);
 	//	transform = projectile->AddComponent<Transform>();
 	//	transform->position = point3d(10, 20, 0);
 
@@ -912,7 +914,7 @@ void LevelManagerClass::UpdateTestAnimationToggle()
 
 Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 {
-	Entity* player = m_World->entityStorage->CreateEntity("Player", folder);
+	Entity* player = entityStorage->CreateEntity("Player", folder);
 
 	Transform* transform = player->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, 0.0f);
@@ -955,14 +957,14 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 	pointCloud->brightness = 0.2f;
 	pointCloud->color = point3d(1, 0.6f, 0.9f);
 
-	Entity* grabHitbox = m_World->entityStorage->CreateEntity("GrabHitbox", player);
+	Entity* grabHitbox = entityStorage->CreateEntity("GrabHitbox", player);
 	transform = grabHitbox->AddComponent<Transform>();
 	transform->position = point3d(0, 0, 4);
 	sphereCollider = grabHitbox->AddComponent<SphereCollider>();
 	sphereCollider->radius = 4;
 	sphereCollider->isTouchable = false;
 
-	m_World->entityStorage->SaveEntityToFile(player, "Player");
+	entityStorage->SaveEntityToFile(player, "Player");
 
 	return player;
 }
@@ -976,11 +978,11 @@ void LevelManagerClass::CreateUI()
 	Button* button;
 	TextLabel* textLabel;
 
-	Entity* uiFolder = m_World->entityStorage->CreateEntity("UI");
+	Entity* uiFolder = entityStorage->CreateEntity("UI");
 
 
 
-	entity = m_World->entityStorage->CreateEntity("HealthHolder", uiFolder);
+	entity = entityStorage->CreateEntity("HealthHolder", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(-1, 0, 0);
 	transform2D->ratio = ScreenAspectRatio::XY;
@@ -990,14 +992,14 @@ void LevelManagerClass::CreateUI()
 	rect->color = point3d(0.5f, 0.5f, 0.5f);
 	rect->opacity = 0.5f;
 
-	entity = m_World->entityStorage->CreateEntity("HealthBar", entity);
+	entity = entityStorage->CreateEntity("HealthBar", entity);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(-1, 0, 0);
 	transform2D->parentAnchor = point3d(-1, 0, 0);
 	transform2D->ratio = ScreenAspectRatio::XY;
 	rect = entity->AddComponent<Rect>();
 
-	entity = m_World->entityStorage->CreateEntity("StaminaHolder", uiFolder);
+	entity = entityStorage->CreateEntity("StaminaHolder", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(-1, 0, 0);
 	transform2D->ratio = ScreenAspectRatio::XY;
@@ -1007,7 +1009,7 @@ void LevelManagerClass::CreateUI()
 	rect->color = point3d(0.5f, 0.5f, 0.5f);
 	rect->opacity = 0.5f;
 
-	entity = m_World->entityStorage->CreateEntity("StaminaBar", entity);
+	entity = entityStorage->CreateEntity("StaminaBar", entity);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(-1, 0, 0);
 	transform2D->parentAnchor = point3d(-1, 0, 0);
@@ -1015,7 +1017,7 @@ void LevelManagerClass::CreateUI()
 	rect = entity->AddComponent<Rect>();
 	rect->color = point3d(0.8f, 0.8f, 1);
 
-	entity = m_World->entityStorage->CreateEntity("HealthLabel", uiFolder);
+	entity = entityStorage->CreateEntity("HealthLabel", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->ratio = ScreenAspectRatio::XY;
 	transform2D->position = point3d(-0.9f, -0.64f, 0.0f);
@@ -1028,7 +1030,7 @@ void LevelManagerClass::CreateUI()
 	textLabel->fontScale = 0.40f;
 	textLabel->letterSpacingPx = 1.0f;
 
-	entity = m_World->entityStorage->CreateEntity("StaminaLabel", uiFolder);
+	entity = entityStorage->CreateEntity("StaminaLabel", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->ratio = ScreenAspectRatio::XY;
 	transform2D->position = point3d(-0.9f, -0.74f, 0.0f);
@@ -1041,7 +1043,7 @@ void LevelManagerClass::CreateUI()
 	textLabel->fontScale = 0.34f;
 	textLabel->letterSpacingPx = 1.0f;
 
-	entity = m_World->entityStorage->CreateEntity("ElementLabel", uiFolder);
+	entity = entityStorage->CreateEntity("ElementLabel", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->ratio = ScreenAspectRatio::XY;
 	transform2D->position = point3d(0.8f, -0.64f, 0.0f);
@@ -1057,7 +1059,7 @@ void LevelManagerClass::CreateUI()
 
 	// UI Prototypes
 	// Selected weapon - circle
-	entity = m_World->entityStorage->CreateEntity("Rect", uiFolder);
+	entity = entityStorage->CreateEntity("Rect", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(-1, 0, 0);
 	transform2D->ratio = ScreenAspectRatio::XX;
@@ -1069,7 +1071,7 @@ void LevelManagerClass::CreateUI()
 	rect->cornerRadius = 1.f;
 
 	// Charged attack - circle
-	entity = m_World->entityStorage->CreateEntity("Rect", uiFolder);
+	entity = entityStorage->CreateEntity("Rect", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(-1, 0, 0);
 	transform2D->ratio = ScreenAspectRatio::XX;
@@ -1080,7 +1082,7 @@ void LevelManagerClass::CreateUI()
 	rect->cornerRadius = 1.f;
 
 	// Battle end timer - icon
-	entity = m_World->entityStorage->CreateEntity("Rect", uiFolder);
+	entity = entityStorage->CreateEntity("Rect", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(-1, 0, 0);
 	transform2D->ratio = ScreenAspectRatio::XX;
@@ -1090,7 +1092,7 @@ void LevelManagerClass::CreateUI()
 	rect->color = point3d(0.75f, 0.0f, 0.0f);
 
 	// Battle end timer - text
-	entity = m_World->entityStorage->CreateEntity("Rect", uiFolder);
+	entity = entityStorage->CreateEntity("Rect", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(-1, 0, 0);
 	transform2D->ratio = ScreenAspectRatio::XX;
@@ -1100,7 +1102,7 @@ void LevelManagerClass::CreateUI()
 	rect->color = point3d(0.75f, 0.0f, 0.0f);
 
 	// Enemy name - text
-	entity = m_World->entityStorage->CreateEntity("Rect", uiFolder);
+	entity = entityStorage->CreateEntity("Rect", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(0, 0, 0);
 	transform2D->ratio = ScreenAspectRatio::XX;
@@ -1110,7 +1112,7 @@ void LevelManagerClass::CreateUI()
 	rect->color = point3d(0.75f, 0.0f, 0.0f);
 
 	// Enemy HP bar - rectangle
-	entity = m_World->entityStorage->CreateEntity("BossHealth", uiFolder);
+	entity = entityStorage->CreateEntity("BossHealth", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(0, 0, 0);
 	transform2D->ratio = ScreenAspectRatio::XY;
@@ -1119,10 +1121,10 @@ void LevelManagerClass::CreateUI()
 	rect = entity->AddComponent<Rect>();
 	rect->color = point3d(0.75f, 0.0f, 0.0f);
 
-	m_Transform2DDebugUI.Create(m_World->entityStorage, uiFolder);
+	m_Transform2DDebugUI.Create(entityStorage, uiFolder);
 
 
-	/*entity = m_World->entityStorage->CreateEntity("BossHealth", uiFolder);
+	/*entity = entityStorage->CreateEntity("BossHealth", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(1, 0, 0);
 	transform2D->ratio = ScreenAspectRatio::YY;
@@ -1132,10 +1134,10 @@ void LevelManagerClass::CreateUI()
 	imageLabel->textureName = "comicsSpot";
 	imageLabel->color = point3d(0.12, 0.91, 0.62);*/
 	//////////////////////////////////////////////////////////////////////
-	Entity* bossUIContainer = m_World->entityStorage->CreateEntity("BossUIContainer", uiFolder);
+	Entity* bossUIContainer = entityStorage->CreateEntity("BossUIContainer", uiFolder);
 
 	// Фон полоски здоровья босса
-	entity = m_World->entityStorage->CreateEntity("BossHealthBg", bossUIContainer);
+	entity = entityStorage->CreateEntity("BossHealthBg", bossUIContainer);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(0, 0, 0);
 	transform2D->ratio = ScreenAspectRatio::XY;
@@ -1146,7 +1148,7 @@ void LevelManagerClass::CreateUI()
 	rect->opacity = 0.7f;
 
 	// Сама полоска здоровья (будет менять ширину)
-	entity = m_World->entityStorage->CreateEntity("BossHealthBar", bossUIContainer);
+	entity = entityStorage->CreateEntity("BossHealthBar", bossUIContainer);
 	m_BossHealthFill = entity;  // Сохраняем указатель на полоску
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(-1, 0, 0);  // Привязка к левому краю
@@ -1157,7 +1159,7 @@ void LevelManagerClass::CreateUI()
 	rect->color = point3d(0.8f, 0.2f, 0.2f);
 
 	// Имя босса
-	entity = m_World->entityStorage->CreateEntity("BossName", bossUIContainer);
+	entity = entityStorage->CreateEntity("BossName", bossUIContainer);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(0, 0, 0);
 	transform2D->ratio = ScreenAspectRatio::XY;
@@ -1173,7 +1175,7 @@ void LevelManagerClass::CreateUI()
 	textLabel->opacity = 1.0f;
 
 	// Цифры здоровья (текущее / максимальное)
-	entity = m_World->entityStorage->CreateEntity("BossHealthNumbers", bossUIContainer);
+	entity = entityStorage->CreateEntity("BossHealthNumbers", bossUIContainer);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(0, 0, 0);
 	transform2D->ratio = ScreenAspectRatio::XY;
@@ -1191,7 +1193,7 @@ void LevelManagerClass::CreateUI()
 	// Изначально скрываем весь UI босса
 	bossUIContainer->SetActive(false);
 
-	entity = m_World->entityStorage->CreateEntity("ExecutionLabel", uiFolder);
+	entity = entityStorage->CreateEntity("ExecutionLabel", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->ratio = ScreenAspectRatio::XY;
 	transform2D->position = point3d(0.9f, -0.74f, 0.0f);
@@ -1212,7 +1214,7 @@ void LevelManagerClass::CreateSpaceBackground(Entity* folder, int quality)
 {
 	int outerSpace_cnt = 6853 / quality;
 
-	Entity* entity = m_World->entityStorage->CreateEntity("OuterSpace", folder);
+	Entity* entity = entityStorage->CreateEntity("OuterSpace", folder);
 
 	Nebula* nebula = entity->AddComponent<Nebula>();
 	nebula->vShader = 25;
@@ -1236,7 +1238,7 @@ void LevelManagerClass::CreateAries(Entity* folder)
 	Health* health;
 	CameraTarget* cameraTarget;
 
-	Entity* aries = m_World->entityStorage->CreateEntity("Aries", folder);
+	Entity* aries = entityStorage->CreateEntity("Aries", folder);
 	transform = aries->AddComponent<Transform>();
 	transform->scale = point3d(4, 4, 4);
 	transform->position = point3d(0.0f, 20.0f, 50.0f);
@@ -1295,7 +1297,7 @@ void LevelManagerClass::CreateAries(Entity* folder)
 		{13,15},
 	};*/
 
-	//entity = m_World->entityStorage->CreateEntity("Armor", aries);
+	//entity = entityStorage->CreateEntity("Armor", aries);
 	//transform = entity->AddComponent<Transform>();
 	//pointCloud = entity->AddComponent<PointCloud>();
 	//pointCloud->index = 3;
@@ -1307,7 +1309,7 @@ void LevelManagerClass::CreateAries(Entity* folder)
 
 	////Body
 
-	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	//entity = entityStorage->CreateEntity("Collider", aries);
 	//transform = entity->AddComponent<Transform>();
 	//transform->position = point3d(0, 0.08, 0.1);
 	//sphereCollider = entity->AddComponent<SphereCollider>();
@@ -1315,7 +1317,7 @@ void LevelManagerClass::CreateAries(Entity* folder)
 	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
 	//sphereCollider->radius = 3;
 
-	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	//entity = entityStorage->CreateEntity("Collider", aries);
 	//transform = entity->AddComponent<Transform>();
 	//transform->position = point3d(0, -0.05, -1.5);
 	//sphereCollider = entity->AddComponent<SphereCollider>();
@@ -1323,7 +1325,7 @@ void LevelManagerClass::CreateAries(Entity* folder)
 	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
 	//sphereCollider->radius = 2.2;
 
-	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	//entity = entityStorage->CreateEntity("Collider", aries);
 	//transform = entity->AddComponent<Transform>();
 	//transform->position = point3d(0, -0.1, -0.7);
 	//sphereCollider = entity->AddComponent<SphereCollider>();
@@ -1333,7 +1335,7 @@ void LevelManagerClass::CreateAries(Entity* folder)
 
 	////Head
 
-	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	//entity = entityStorage->CreateEntity("Collider", aries);
 	//transform = entity->AddComponent<Transform>();
 	//transform->position = point3d(0, 0.9, 0.8);
 	//sphereCollider = entity->AddComponent<SphereCollider>();
@@ -1341,7 +1343,7 @@ void LevelManagerClass::CreateAries(Entity* folder)
 	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
 	//sphereCollider->radius = 2;
 
-	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	//entity = entityStorage->CreateEntity("Collider", aries);
 	//transform = entity->AddComponent<Transform>();
 	//transform->position = point3d(0, 0.7, 1.4);
 	//sphereCollider = entity->AddComponent<SphereCollider>();
@@ -1351,7 +1353,7 @@ void LevelManagerClass::CreateAries(Entity* folder)
 
 	////Horns
 
-	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	//entity = entityStorage->CreateEntity("Collider", aries);
 	//transform = entity->AddComponent<Transform>();
 	//transform->position = point3d(0.5, 1.2, 0.5);
 	//sphereCollider = entity->AddComponent<SphereCollider>();
@@ -1359,7 +1361,7 @@ void LevelManagerClass::CreateAries(Entity* folder)
 	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
 	//sphereCollider->radius = 1.6;
 
-	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	//entity = entityStorage->CreateEntity("Collider", aries);
 	//transform = entity->AddComponent<Transform>();
 	//transform->position = point3d(-0.5, 1.2, 0.5);
 	//sphereCollider = entity->AddComponent<SphereCollider>();
@@ -1371,7 +1373,7 @@ void LevelManagerClass::CreateAries(Entity* folder)
 void LevelManagerClass::CreateArenaBarrier(Entity* parent, const point3d& center, float radius, int starCount)
 {
 	// Создаём родительскую сущность для барьера
-	Entity* barrier = m_World->entityStorage->CreateEntity("ArenaBarrier", parent);
+	Entity* barrier = entityStorage->CreateEntity("ArenaBarrier", parent);
 	barrier->AddComponent<Transform>();  // Просто контейнер
 
 	// Параметры барьера
@@ -1390,7 +1392,7 @@ void LevelManagerClass::CreateArenaBarrier(Entity* parent, const point3d& center
 		float x = center.x + cos(angle) * radius;
 		float z = center.z + sin(angle) * radius;
 
-		Entity* starEntity = m_World->entityStorage->CreateEntity("BarrierStar", barrier);
+		Entity* starEntity = entityStorage->CreateEntity("BarrierStar", barrier);
 		Transform* starTransform = starEntity->AddComponent<Transform>();
 		starTransform->position = point3d(x, center.y + heightMin, z);
 
@@ -1420,7 +1422,7 @@ void LevelManagerClass::CreateArenaBarrier(Entity* parent, const point3d& center
 		float x = center.x + cos(angle) * radius;
 		float z = center.z + sin(angle) * radius;
 
-		Entity* starEntity = m_World->entityStorage->CreateEntity("BarrierStar", barrier);
+		Entity* starEntity = entityStorage->CreateEntity("BarrierStar", barrier);
 		Transform* starTransform = starEntity->AddComponent<Transform>();
 		starTransform->position = point3d(x, center.y + heightMax, z);
 
@@ -1458,7 +1460,7 @@ void LevelManagerClass::CreateArenaBarrier(Entity* parent, const point3d& center
 			float t = (float)i / starsPerColumn;  // 0..1
 			float y = center.y + heightMin + t * (heightMax - heightMin);
 
-			Entity* starEntity = m_World->entityStorage->CreateEntity("BarrierStar", barrier);
+			Entity* starEntity = entityStorage->CreateEntity("BarrierStar", barrier);
 			Transform* starTransform = starEntity->AddComponent<Transform>();
 			starTransform->position = point3d(corners[c][0], y, corners[c][1]);
 
@@ -1495,7 +1497,7 @@ void LevelManagerClass::CreateArenaBarrier(Entity* parent, const point3d& center
 	int flyingStarsCount = starCount / 3;
 	for (int i = 0; i < flyingStarsCount; i++)
 	{
-		Entity* starEntity = m_World->entityStorage->CreateEntity("FlyingBarrierStar", barrier);
+		Entity* starEntity = entityStorage->CreateEntity("FlyingBarrierStar", barrier);
 		Transform* starTransform = starEntity->AddComponent<Transform>();
 
 		// Случайная позиция на границе
@@ -1543,7 +1545,7 @@ void LevelManagerClass::CreateArenaBarrier(Entity* parent, const point3d& center
 		float x2 = center.x + cos(angle2) * radius;
 		float z2 = center.z + sin(angle2) * radius;
 
-		Entity* beamEntity = m_World->entityStorage->CreateEntity("BarrierBeam", barrier);
+		Entity* beamEntity = entityStorage->CreateEntity("BarrierBeam", barrier);
 		Transform* beamTransform = beamEntity->AddComponent<Transform>();
 
 		Beam* beam = beamEntity->AddComponent<Beam>();
@@ -1566,7 +1568,7 @@ void LevelManagerClass::CreateArenaBarrier(Entity* parent, const point3d& center
 		float x = center.x + cos(angle) * radius;
 		float z = center.z + sin(angle) * radius;
 
-		Entity* beamEntity = m_World->entityStorage->CreateEntity("VerticalBeam", barrier);
+		Entity* beamEntity = entityStorage->CreateEntity("VerticalBeam", barrier);
 		Transform* beamTransform = beamEntity->AddComponent<Transform>();
 
 		Beam* beam = beamEntity->AddComponent<Beam>();
@@ -1592,13 +1594,13 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	int pillars_cnt = 3725470 / 2 / quality;
 	int galaxy_cnt = 182361 / quality;
 
-	Entity* location = m_World->entityStorage->CreateEntity("Zenith location", folder);
+	Entity* location = entityStorage->CreateEntity("Zenith location", folder);
 
 	transform = location->AddComponent<Transform>();
 	transform->position = point3d(0, 0, 200);
 
 	// Pillars hand | point
-	entity = m_World->entityStorage->CreateEntity("PHP", folder);
+	entity = entityStorage->CreateEntity("PHP", folder);
 	transform = entity->AddComponent<Transform>();
 
 	nebula = location->AddComponent<Nebula>();
@@ -1609,7 +1611,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->frustumRadius = 40;
 
 	// Inside nebula | point
-	entity = m_World->entityStorage->CreateEntity("INP", location);
+	entity = entityStorage->CreateEntity("INP", location);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(150, 0, 0);
 
@@ -1622,7 +1624,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->frustumRadius = 40;
 
 	// Pillars hand | glow
-	entity = m_World->entityStorage->CreateEntity("PHG", location);
+	entity = entityStorage->CreateEntity("PHG", location);
 	transform = entity->AddComponent<Transform>();
 
 	nebula = entity->AddComponent<Nebula>();
@@ -1634,7 +1636,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->frustumRadius = 40;
 
 	// Inside nebula | glow
-	entity = m_World->entityStorage->CreateEntity("ING", location);
+	entity = entityStorage->CreateEntity("ING", location);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(150, 0, 0);
 
@@ -1648,7 +1650,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->frustumRadius = 40;
 
 	// 2 Nebula
-	entity = m_World->entityStorage->CreateEntity("INP1", location);
+	entity = entityStorage->CreateEntity("INP1", location);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0, 0, 0);
 
@@ -1660,7 +1662,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->scale = 10;
 	nebula->frustumRadius = 40;
 
-	entity = m_World->entityStorage->CreateEntity("ING1", location);
+	entity = entityStorage->CreateEntity("ING1", location);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0, 0, 0);
 
@@ -1678,7 +1680,7 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	m_BossArenaRadius = 60.0f;
 
 	// ========== БОСС ==========
-	Entity* BossEntity = m_World->entityStorage->CreateEntity("BossEnemy", location);
+	Entity* BossEntity = entityStorage->CreateEntity("BossEnemy", location);
 	m_CurrentBoss = BossEntity;
 
 	Transform* bossTransform = BossEntity->AddComponent<Transform>();
@@ -1808,13 +1810,13 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 	int pillars_cnt = 3725470 / 2 / quality;
 	int galaxy_cnt = 182361 / quality;
 
-	Entity* location = m_World->entityStorage->CreateEntity("Zenith location", folder);
+	Entity* location = entityStorage->CreateEntity("Zenith location", folder);
 
 	transform = location->AddComponent<Transform>();
 	transform->position = point3d(0, 50, 0);
 
 	// first nebula Heal
-	entity = m_World->entityStorage->CreateEntity("INP", location);
+	entity = entityStorage->CreateEntity("INP", location);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(-150, 50, 0);
 
@@ -1838,7 +1840,7 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 	nebula->frustumRadius = 40;
 
 	// first nebula Heal Glow
-	entity = m_World->entityStorage->CreateEntity("ING", location);
+	entity = entityStorage->CreateEntity("ING", location);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(-150, 50, 0);
 
@@ -1857,7 +1859,7 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 
 	// First Nebula DMG
 
-	entity = m_World->entityStorage->CreateEntity("INP1", location);
+	entity = entityStorage->CreateEntity("INP1", location);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(-450, 50, 0);
 
@@ -1884,7 +1886,7 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 	sphereCollider->isTouchable = false;
 
 	// First Nebula DMG Glow
-	entity = m_World->entityStorage->CreateEntity("ING1", location);
+	entity = entityStorage->CreateEntity("ING1", location);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(-450, 50, 0);
 
@@ -1900,7 +1902,7 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 
 	// Test Nebula
 
-	entity = m_World->entityStorage->CreateEntity("INP1", location);
+	entity = entityStorage->CreateEntity("INP1", location);
 	transform = entity->AddComponent<Transform>();
 	transform->position = point3d(0, 50, 0);
 
@@ -1925,7 +1927,7 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 
 
 	// СОЗДАНИЕ ПОРТАЛА
-	//Entity* portal = m_World->entityStorage->CreateEntity("CosmicPortal", folder);
+	//Entity* portal = entityStorage->CreateEntity("CosmicPortal", folder);
 	//Transform* portalTransform = portal->AddComponent<Transform>();
 	//portalTransform->position = point3d(0, 0, 0);  // Позиция портала
 
@@ -1939,7 +1941,7 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 	//portalNebula->frustumRadius = 30.0f; // Радиус отсечения
 
 	//// Добавляем свечение портала
-	//Entity* portalGlow = m_World->entityStorage->CreateEntity("PortalGlow", portal);
+	//Entity* portalGlow = entityStorage->CreateEntity("PortalGlow", portal);
 	//Nebula* glowNebula = portalGlow->AddComponent<Nebula>();
 	//glowNebula->vShader = 32;
 	////glowNebula->pShader = 24;        // Шейдер для свечения
@@ -1965,12 +1967,12 @@ void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 
 void LevelManagerClass::CreateStarQuestLoc(Entity* folder, int quality)
 {
-	Entity* location = m_World->entityStorage->CreateEntity("StarQuestLocation", folder);
+	Entity* location = entityStorage->CreateEntity("StarQuestLocation", folder);
 	Transform* transform = location->AddComponent<Transform>();
 	transform->position = point3d(0, 0, 150);
 
 	
-	Entity* m_CentralStar = m_World->entityStorage->CreateEntity("CentralStar", location);
+	Entity* m_CentralStar = entityStorage->CreateEntity("CentralStar", location);
 	transform = m_CentralStar->AddComponent<Transform>();
 	transform->position = point3d(0, 0, 0);
 
@@ -1998,7 +2000,7 @@ void LevelManagerClass::CreateStarQuestLoc(Entity* folder, int quality)
 	m_CentralStar->AddComponent<Grabbable>();
 
 
-	Entity* collectionTrigger = m_World->entityStorage->CreateEntity("CollectionTrigger", m_CentralStar);
+	Entity* collectionTrigger = entityStorage->CreateEntity("CollectionTrigger", m_CentralStar);
 	Transform* triggerTransform = collectionTrigger->AddComponent<Transform>();
 	triggerTransform->position = point3d(0, 0, 0);
 
@@ -2011,7 +2013,7 @@ void LevelManagerClass::CreateStarQuestLoc(Entity* folder, int quality)
 void LevelManagerClass::ShowGameOverMessage(const wchar_t* message, const point3d& color)
 {
 	// Создаём UI контейнер для сообщения
-	Entity* gameOverContainer = m_World->entityStorage->CreateEntity("GameOverContainer", nullptr);
+	Entity* gameOverContainer = entityStorage->CreateEntity("GameOverContainer", nullptr);
 	Transform2D* containerTransform = gameOverContainer->AddComponent<Transform2D>();
 	containerTransform->anchorPoint = point3d(0, 0, 0);
 	containerTransform->ratio = ScreenAspectRatio::XY;
@@ -2019,7 +2021,7 @@ void LevelManagerClass::ShowGameOverMessage(const wchar_t* message, const point3
 	containerTransform->scale = point3d(1, 1, 0);
 
 	// Фон
-	Entity* bg = m_World->entityStorage->CreateEntity("GameOverBG", gameOverContainer);
+	Entity* bg = entityStorage->CreateEntity("GameOverBG", gameOverContainer);
 	Transform2D* bgTransform = bg->AddComponent<Transform2D>();
 	bgTransform->anchorPoint = point3d(0, 0, 0);
 	bgTransform->ratio = ScreenAspectRatio::XY;
@@ -2030,7 +2032,7 @@ void LevelManagerClass::ShowGameOverMessage(const wchar_t* message, const point3
 	bgRect->opacity = 0.8f;
 
 	// Текст сообщения
-	Entity* text = m_World->entityStorage->CreateEntity("GameOverText", gameOverContainer);
+	Entity* text = entityStorage->CreateEntity("GameOverText", gameOverContainer);
 	Transform2D* textTransform = text->AddComponent<Transform2D>();
 	textTransform->anchorPoint = point3d(0, 0, 0);
 	textTransform->ratio = ScreenAspectRatio::XY;
@@ -2055,10 +2057,10 @@ void LevelManagerClass::ShowExecutionUI()
 	if (m_ExecutionUI) return;
 
 	// Создаём UI для QTE
-	m_ExecutionUI = m_World->entityStorage->CreateEntity("ExecutionUI", nullptr);
+	m_ExecutionUI = entityStorage->CreateEntity("ExecutionUI", nullptr);
 
 	// Фон
-	Entity* bg = m_World->entityStorage->CreateEntity("ExecutionBG", m_ExecutionUI);
+	Entity* bg = entityStorage->CreateEntity("ExecutionBG", m_ExecutionUI);
 	Transform2D* bgTransform = bg->AddComponent<Transform2D>();
 	bgTransform->anchorPoint = point3d(0, 0, 0);
 	bgTransform->ratio = ScreenAspectRatio::XY;
@@ -2070,7 +2072,7 @@ void LevelManagerClass::ShowExecutionUI()
 	bgRect->cornerRadius = 0.05f;
 
 	// Текст "НАЖМИ R!"
-	Entity* text = m_World->entityStorage->CreateEntity("ExecutionText", m_ExecutionUI);
+	Entity* text = entityStorage->CreateEntity("ExecutionText", m_ExecutionUI);
 	Transform2D* textTransform = text->AddComponent<Transform2D>();
 	textTransform->anchorPoint = point3d(0, 0, 0);
 	textTransform->ratio = ScreenAspectRatio::XY;
@@ -2085,7 +2087,7 @@ void LevelManagerClass::ShowExecutionUI()
 	label->color = point3d(1.0f, 0.8f, 0.2f);
 
 	// Текст "ДЛЯ КАЗНИ"
-	Entity* subText = m_World->entityStorage->CreateEntity("ExecutionSubText", m_ExecutionUI);
+	Entity* subText = entityStorage->CreateEntity("ExecutionSubText", m_ExecutionUI);
 	Transform2D* subTransform = subText->AddComponent<Transform2D>();
 	subTransform->anchorPoint = point3d(0, 0, 0);
 	subTransform->ratio = ScreenAspectRatio::XY;
@@ -2100,7 +2102,7 @@ void LevelManagerClass::ShowExecutionUI()
 	subLabel->color = point3d(1.0f, 1.0f, 1.0f);
 
 	// Таймер обратного отсчёта
-	Entity* timerText = m_World->entityStorage->CreateEntity("ExecutionTimer", m_ExecutionUI);
+	Entity* timerText = entityStorage->CreateEntity("ExecutionTimer", m_ExecutionUI);
 	Transform2D* timerTransform = timerText->AddComponent<Transform2D>();
 	timerTransform->anchorPoint = point3d(0, 0, 0);
 	timerTransform->ratio = ScreenAspectRatio::XY;
@@ -2139,7 +2141,7 @@ void LevelManagerClass::ExecuteBoss()
 	m_IsExecutionActive = false;
 
 	// Показываем победу
-	Entity* msg = m_World->entityStorage->CreateEntity("VictoryMsg", nullptr);
+	Entity* msg = entityStorage->CreateEntity("VictoryMsg", nullptr);
 	Transform2D* t = msg->AddComponent<Transform2D>();
 	t->anchorPoint = point3d(0, 0, 0);
 	t->ratio = ScreenAspectRatio::XY;

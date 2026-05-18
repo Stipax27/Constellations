@@ -96,6 +96,7 @@ public:
 
 private:
 	World* m_World;
+	EntityStorage* entityStorage;
 	PlayerController* playerController;
 	CollisionManagerClass* collisionManager;
 	QuestManager* questManager;
