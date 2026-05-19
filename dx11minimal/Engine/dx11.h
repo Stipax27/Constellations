@@ -18,6 +18,7 @@
 #include <wincodec.h>
 #include <wrl/client.h>
 #include <direct.h>
+#include <xaudio2.h>
 
 #include <sys/stat.h>
 #ifdef _WIN32
@@ -178,6 +179,47 @@ namespace Textures
 	DXGI_FORMAT WICToDXGIFormat(WICPixelFormatGUID& wicFormat);
 
 	std::tuple<int, int, int> GetCompressRes(RenderCompress compress);
+}
+
+namespace Audio
+{
+#define MAXCHANNELS 32
+
+	struct RIFF_HEADER {
+		char chunkId[4];
+		unsigned long chunkSize;
+		char format[4];
+	};
+
+	struct WAVE_FORMAT {
+		char subChunkId[4];
+		unsigned long subChunkSize;
+		unsigned short audioFormat;
+		unsigned short numChannels;
+		unsigned long sampleRate;
+		unsigned long byteRate;
+		unsigned short blockAlign;
+		unsigned short bitsPerSample;
+	};
+
+	struct WAVE_DATA {
+		char subChunkId[4];
+		unsigned long subChunkSize;
+	};
+
+	extern IXAudio2* pXAudio2;
+	extern IXAudio2MasteringVoice* pMasteringVoice;
+	extern IXAudio2SourceVoice* pSourceVoice;
+	extern XAUDIO2_BUFFER buffer;
+	extern BYTE* channel[MAXCHANNELS];
+
+	extern int len = 44100 * 60 * 10;
+	extern int channelLen = 44100;
+
+	void Init();
+	void Release();
+
+	bool LoadWavFile(const char* filename, std::vector<BYTE>& audioData, WAVEFORMATEX& waveFormat);
 }
 
 namespace Models

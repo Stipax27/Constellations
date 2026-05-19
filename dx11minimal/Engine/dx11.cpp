@@ -844,6 +844,138 @@ std::tuple<int, int, int> Textures::GetCompressRes(RenderCompress compress)
 
 //////////////////////////////////////////////////////////////////////////////////
 
+IXAudio2* Audio::pXAudio2;
+IXAudio2MasteringVoice* Audio::pMasteringVoice;
+IXAudio2SourceVoice* Audio::pSourceVoice;
+XAUDIO2_BUFFER Audio::buffer;
+BYTE* Audio::channel[MAXCHANNELS];
+
+int len = 44100 * 60 * 10;
+int channelLen = 44100;
+
+void Audio::Init()
+{
+	HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+	if (FAILED(hr)) { /* Обработка ошибки */ }
+
+	hr = XAudio2Create(&pXAudio2, 0);
+	if (FAILED(hr)) { /* Обработка ошибки */ }
+
+	hr = pXAudio2->CreateMasteringVoice(&pMasteringVoice);
+	if (FAILED(hr)) { /* Обработка ошибки */ }
+
+	for (int x = 0; x < MAXCHANNELS - 1; x++)
+	{
+		channel[x] = new BYTE[channelLen * 2 * 2];
+		ZeroMemory(channel[x], channelLen * 2 * 2);
+	}
+
+	channel[MAXCHANNELS - 1] = new BYTE[len * 2 * 2];
+	ZeroMemory(channel[MAXCHANNELS - 1], len * 2 * 2);
+
+	WAVEFORMATEX waveformat;
+	waveformat.wFormatTag = WAVE_FORMAT_PCM;
+	waveformat.nChannels = 2;
+	waveformat.nSamplesPerSec = 44100;
+	waveformat.nAvgBytesPerSec = 44100 * 2 * 2;
+	waveformat.nBlockAlign = 2 * 16 / 8;
+	waveformat.wBitsPerSample = 16;
+	waveformat.cbSize = 0;
+
+	hr = pXAudio2->CreateSourceVoice(&pSourceVoice, &waveformat);
+
+	ZeroMemory(&buffer, sizeof(buffer));
+	buffer.AudioBytes = 2 * 2 * len;
+	buffer.pAudioData = channel[MAXCHANNELS - 1];
+	buffer.Flags = XAUDIO2_END_OF_STREAM;
+	buffer.PlayBegin = 0;
+	buffer.PlayLength = 0;
+
+	hr = pSourceVoice->SubmitSourceBuffer(&buffer);
+	pSourceVoice->Stop(0, 0);
+}
+
+
+void Audio::Release()
+{
+	pXAudio2->StopEngine();
+	pXAudio2->Release();
+}
+
+
+bool Audio::LoadWavFile(const char* filename, std::vector<BYTE>& audioData, WAVEFORMATEX& waveFormat) {
+	std::ifstream file(filename, std::ios::binary);
+	if (!file.is_open()) {
+		return; // Ошибка открытия файла
+	}
+
+	RIFF_HEADER riffHeader;
+	WAVE_FORMAT waveFormatHeader;
+	WAVE_DATA waveDataHeader;
+
+	// 1. Читаем RIFF заголовок и проверяем, что это WAVE
+	file.read((char*)&riffHeader, sizeof(RIFF_HEADER));
+	if (riffHeader.chunkId[0] != 'R' || riffHeader.chunkId[1] != 'I' ||
+		riffHeader.chunkId[2] != 'F' || riffHeader.chunkId[3] != 'F' ||
+		riffHeader.format[0] != 'W' || riffHeader.format[1] != 'A' ||
+		riffHeader.format[2] != 'V' || riffHeader.format[3] != 'E') {
+		return; // Не WAV-файл
+	}
+
+	// 2. Ищем 'fmt ' чанк (обычно он идет сразу, но иногда нет)
+	bool fmtFound = false;
+	while (!fmtFound && !file.eof()) {
+		file.read((char*)&waveFormatHeader, sizeof(WAVE_FORMAT));
+		if (waveFormatHeader.subChunkId[0] == 'f' && waveFormatHeader.subChunkId[1] == 'm' &&
+			waveFormatHeader.subChunkId[2] == 't' && waveFormatHeader.subChunkId[3] == ' ') {
+			fmtFound = true;
+			// Если размер чанка больше нашей структуры, пропускаем лишние байты
+			if (waveFormatHeader.subChunkSize > sizeof(WAVE_FORMAT) - 8) {
+				file.seekg(waveFormatHeader.subChunkSize - (sizeof(WAVE_FORMAT) - 8), std::ios::cur);
+			}
+		}
+		else {
+			// Это не 'fmt ', пропускаем байты этого чанка
+			file.seekg(waveFormatHeader.subChunkSize, std::ios::cur);
+		}
+	}
+
+	if (!fmtFound) return;
+
+	// 3. Ищем 'data' чанк
+	bool dataFound = false;
+	while (!dataFound && !file.eof()) {
+		file.read((char*)&waveDataHeader, sizeof(WAVE_DATA));
+		if (waveDataHeader.subChunkId[0] == 'd' && waveDataHeader.subChunkId[1] == 'a' &&
+			waveDataHeader.subChunkId[2] == 't' && waveDataHeader.subChunkId[3] == 'a') {
+			dataFound = true;
+		}
+		else {
+			// Это не 'data', пропускаем его
+			file.seekg(waveDataHeader.subChunkSize, std::ios::cur);
+		}
+	}
+
+	if (!dataFound) return;
+
+	// 4. Заполняем структуру WAVEFORMATEX для XAudio2
+	waveFormat.wFormatTag = WAVE_FORMAT_PCM;
+	waveFormat.nChannels = waveFormatHeader.numChannels;
+	waveFormat.nSamplesPerSec = waveFormatHeader.sampleRate;
+	waveFormat.wBitsPerSample = waveFormatHeader.bitsPerSample;
+	waveFormat.nBlockAlign = waveFormatHeader.blockAlign;
+	waveFormat.nAvgBytesPerSec = waveFormatHeader.byteRate;
+	waveFormat.cbSize = 0; // Для PCM всегда 0
+
+	// 5. Читаем сами аудиоданные
+	audioData.resize(waveDataHeader.subChunkSize);
+	file.read((char*)audioData.data(), waveDataHeader.subChunkSize);
+
+	file.close();
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+
 D3D11_BUFFER_DESC Models::vertexBufferDesc, Models::indexBufferDesc;
 D3D11_SUBRESOURCE_DATA Models::vertexData, Models::indexData;
 
@@ -2333,6 +2465,7 @@ void InputAssembler::vBufferNull()
 
 void Dx11Init(HWND hwnd, int width, int height)
 {
+	Audio::Init();
 	Device::Init(hwnd, width, height);
 	Rasterizer::Init(width, height);
 	Depth::Init();
