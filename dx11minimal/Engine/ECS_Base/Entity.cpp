@@ -1,0 +1,223 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: Entity.cpp
+////////////////////////////////////////////////////////////////////////////////
+#include "Entity.h"
+#include "entityStorage.h"
+
+using namespace std;
+
+void NotifyEntityComponentAdded(Entity* entity, const std::type_index& componentType)
+{
+	EntityStorage* ownerStorage = entity != nullptr ? entity->GetOwnerStorage() : nullptr;
+	if (ownerStorage != nullptr) {
+		ownerStorage->OnEntityComponentAdded(entity, componentType);
+	}
+}
+
+void NotifyEntityComponentRemoved(Entity* entity, const std::type_index& componentType)
+{
+	EntityStorage* ownerStorage = entity != nullptr ? entity->GetOwnerStorage() : nullptr;
+	if (ownerStorage != nullptr) {
+		ownerStorage->OnEntityComponentRemoved(entity, componentType);
+	}
+}
+
+void NotifyEntityDestroyed(Entity* entity)
+{
+	EntityStorage* ownerStorage = entity != nullptr ? entity->GetOwnerStorage() : nullptr;
+	if (ownerStorage != nullptr) {
+		ownerStorage->OnEntityDestroyed(entity);
+	}
+}
+
+Entity::Entity()
+{
+}
+
+
+Entity::Entity(const Entity& other)
+{
+}
+
+
+Entity::~Entity()
+{
+}
+
+
+void Entity::Destroy() {
+	SetParent(nullptr);
+	ClearChildren();
+
+	deleted = true;
+	NotifyEntityDestroyed(this);
+}
+
+
+bool Entity::IsDeleting() {
+	return deleted;
+}
+
+
+void Entity::SetId(int ID) {
+	if (id == -1) {
+		id = ID;
+	}
+}
+
+
+int Entity::GetId() {
+	return id;
+}
+
+
+void Entity::SetParent(Entity* newParent) {
+	if (newParent != nullptr) {
+		newParent->AddChild(this);
+	}
+	else if (parent != nullptr) {
+		parent->RemoveChild(this);
+	}
+}
+
+
+Entity* Entity::GetParent() {
+	return parent;
+}
+
+
+void Entity::AddChild(Entity* Child) {
+	Child->parent = this;
+	children.push_back(Child);
+}
+
+
+void Entity::RemoveChild(Entity* Child) {
+	auto it = std::find(children.begin(), children.end(), Child);
+	if (it != children.end()) {
+		Child->parent = nullptr;
+		children.erase(it);
+	}
+}
+
+
+Entity* Entity::GetChildByName(string Name, bool Recursive) {
+	for (int i = 0; i < children.size(); i++) {
+		Entity* child = children[i];
+		if (child->name == Name) {
+			return child;
+		}
+		else if (Recursive) {
+			Entity* descendant = child->GetChildByName(Name, Recursive);
+			if (descendant != nullptr)
+			{
+				return descendant;
+			}
+		}
+	}
+
+	return nullptr;
+}
+
+
+vector<Entity*> Entity::GetChildrenByName(string Name, bool Recursive) {
+	vector<Entity*> array;
+	for (int i = 0; i < children.size(); i++) {
+		Entity* child = children[i];
+		if (child->name == Name) {
+			array.push_back(child);
+		}
+		else if (Recursive) {
+			vector<Entity*> descendants = child->GetChildrenByName(Name, Recursive);
+			if (descendants.size() > 0)
+			{
+				for (int i = 0; i < descendants.size(); i++) {
+					array.push_back(descendants[i]);
+				}
+			}
+		}
+	}
+
+	return array;
+}
+
+
+vector<Entity*> Entity::GetChildren(bool Recursive) {
+	vector<Entity*> array;
+
+	if (children.size() > 0) {
+		for (int i = 0; i < children.size(); i++) {
+			Entity* child = children[i];
+			array.push_back(child);
+
+			if (Recursive) {
+				vector<Entity*> descendants = child->GetChildren(Recursive);
+				if (descendants.size() > 0)
+				{
+					for (int i = 0; i < descendants.size(); i++) {
+						array.push_back(descendants[i]);
+					}
+				}
+			}
+		}
+	}
+
+	return array;
+}
+
+
+void Entity::ClearChildren() {
+	for (Entity* child : children) {
+		child->Destroy();
+	}
+}
+
+
+void Entity::SetActive(bool mode) {
+	active = mode;
+}
+
+
+bool Entity::IsActive() {
+	if (active && !deleted) {
+		if (parent != nullptr) {
+			return parent->IsActive();
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+bool Entity::IsLocalActive() {
+	return active;
+}
+
+
+void Entity::SetTimeScale(float TimeScale) {
+	timeScale = TimeScale;
+}
+
+
+float Entity::GetTimeScale() {
+	if (parent != nullptr) {
+		return timeScale * parent->GetTimeScale();
+	}
+	else {
+		return timeScale;
+	}
+}
+
+
+float Entity::GetLocalTimeScale() {
+	return timeScale;
+}
+
+void Entity::SetOwnerStorage(EntityStorage* storage) {
+	ownerStorage = storage;
+}
+
+EntityStorage* Entity::GetOwnerStorage() {
+	return ownerStorage;
+}

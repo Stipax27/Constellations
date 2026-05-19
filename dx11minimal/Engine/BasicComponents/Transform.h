@@ -1,0 +1,25 @@
+#ifndef _TRANSFORM_H_
+#define _TRANSFORM_H_
+
+#include "../ECS_Base/component.h"
+#include "../Types/Point3d.h"
+#include <DirectXMath.h>
+
+
+struct Transform : Component
+{
+    point3d position = point3d();
+    point3d scale = point3d(1.0f, 1.0f, 1.0f);
+    DirectX::XMMATRIX mRotation = DirectX::XMMatrixIdentity();
+
+    point3d GetRightVector() const;
+    point3d GetUpVector() const;
+    point3d GetLookVector() const;
+
+    Transform& operator=(const Transform&);
+    Transform operator+(const Transform&);
+    Transform& operator+=(const Transform&);
+};
+
+
+#endif

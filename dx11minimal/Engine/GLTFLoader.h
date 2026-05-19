@@ -3,7 +3,7 @@
 
 #include "Mesh/Animation.h"
 #include "Mesh/Skeleton.h"
-#include "Mesh/SkinnedMesh.h"
+#include "Render/SkinnedMesh/SkinnedMesh.h"
 
 class GLTFLoader
 {

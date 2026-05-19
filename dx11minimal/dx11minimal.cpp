@@ -1,6 +1,6 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 
-#include "framework.h"
+#include "Framework/framework.h"
 #include <stdexcept>
 //#include "math.h"
 #include <stdlib.h>
@@ -9,7 +9,7 @@
 #include <sstream>
 #include <algorithm>
 #include <deque>
-#include "timer.h"
+#include "Engine/Lib/timer.h"
 #include <mmsystem.h> 
 
 HINSTANCE hInst;
@@ -26,7 +26,7 @@ float camDist = 100;//we have this in camera state
 bool isBattleActive = false;
 DWORD battleStartTime;
 
-#include "resource.h"
+#include "Framework/resource.h"
 #include "LevelManagerClass.h"
 
 #define MAX_LOADSTRING 100
@@ -54,10 +54,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     HRESULT hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &d2dFactory);
     if (FAILED(hr)) {
 #ifdef _DEBUG
+#ifdef _WIN64
+        MessageBox(NULL, L"Failed to create D2D factory", L"Error", MB_OK);
+#else
         MessageBox(NULL, "Failed to create D2D factory", "Error", MB_OK);
+#endif
 #else
         MessageBox(NULL, L"Failed to create D2D factory", L"Error", MB_OK);
 #endif
+
         return -1;
     }
     // Initialize global strings
@@ -97,18 +102,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         if (time >= timer::nextFrameTime)
         {
+            timer::lastFrameTime = timer::currentTime;
             timer::currentTime = timer::GetCounter();
             timer::deltaTime = timer::currentTime - timer::lastFrameTime;
-            timer::lastFrameTime = timer::currentTime;
 
             //timer::CalcDeltaAverage();
             timer::frameBeginTime = timer::GetCounter();
+            timer::nextFrameTime = timer::frameBeginTime + RENDER_DT;
 
             levelManager.Frame();
 
             timer::frameEndTime = timer::GetCounter();
             timer::frameRenderingDuration = timer::frameEndTime - timer::frameBeginTime;
-            timer::nextFrameTime = timer::frameBeginTime + RENDER_DT;
         }
 
         Sleep((DWORD)min(RENDER_DT, max(RENDER_DT - timer::frameRenderingDuration, 0)));
@@ -171,13 +176,21 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, WindowClass* window)
 #ifdef _BORDERED_WINDOW
 
 #ifdef _DEBUG
+#ifdef _WIN64
+    WNDCLASSEX wcex = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0,0, hInst, NULL, LoadCursor(NULL, IDC_ARROW), brush, NULL, L"fx", NULL };
+#else
     WNDCLASSEX wcex = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0,0, hInst, NULL, LoadCursor(NULL, IDC_ARROW), brush, NULL, "fx", NULL };
+#endif
 #else
     WNDCLASSEX wcex = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0,0, hInst, NULL, LoadCursor(NULL, IDC_ARROW), brush, NULL, L"fx", NULL };
 #endif
     RegisterClassEx(&wcex);
 #ifdef _DEBUG
+#ifdef _WIN64
+    window->hWnd = CreateWindow(L"fx", L"fx", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 0, width, height, NULL, NULL, hInst, NULL);
+#else
     window->hWnd = CreateWindow("fx", "fx", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 0, width, height, NULL, NULL, hInst, NULL);
+#endif
 #else
     window->hWnd = CreateWindow(L"fx", L"fx", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 0, width, height, NULL, NULL, hInst, NULL);
 #endif
@@ -185,13 +198,21 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, WindowClass* window)
 #else
 
 #ifdef _DEBUG
+#ifdef _WIN64
+    WNDCLASSEX wcex = { sizeof(WNDCLASSEX), CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS, WndProc, 0,0, hInst, NULL, LoadCursor(NULL, IDC_ARROW), brush, NULL, L"fx", NULL };
+#else
     WNDCLASSEX wcex = { sizeof(WNDCLASSEX), CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS, WndProc, 0,0, hInst, NULL, LoadCursor(NULL, IDC_ARROW), brush, NULL, "fx", NULL };
+#endif
 #else
     WNDCLASSEX wcex = { sizeof(WNDCLASSEX), CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS, WndProc, 0,0, hInst, NULL, LoadCursor(NULL, IDC_ARROW), brush, NULL, L"fx", NULL };
 #endif
     RegisterClassEx(&wcex);
 #ifdef _DEBUG
+#ifdef _WIN64
+    window->hWnd = CreateWindow(L"fx", L"fx", WS_POPUP | WS_VISIBLE | WS_MAXIMIZE, 0, 0, width, height, NULL, NULL, hInst, NULL);
+#else
     window->hWnd = CreateWindow("fx", "fx", WS_POPUP | WS_VISIBLE | WS_MAXIMIZE, 0, 0, width, height, NULL, NULL, hInst, NULL);
+#endif
 #else
     window->hWnd = CreateWindow(L"fx", L"fx", WS_POPUP | WS_VISIBLE | WS_MAXIMIZE, 0, 0, width, height, NULL, NULL, hInst, NULL);
 #endif

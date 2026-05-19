@@ -103,51 +103,53 @@ pos_color CalcParticles(uint qid, uint iid, float4 grid)
     pos_color p;
     p.wpos = float4(pos, 1);
     
-    // Цвета для Туманности Медузы с переливами - ОСНОВНОЙ ЗЕЛЕНЫЙ
-    float angle = atan2(pos.y - medusaCenter.y, pos.x - medusaCenter.x);
+    // ПОЛУЧАЕМ ЦВЕТ ИЗВНЕ через nBase_color
+    float3 baseColor = nBase_color;
     
-    // Создаем переливы на основе шума и позиции
+    // Создаем вариации цвета на основе шума
     float colorNoise1 = fbm(pos * 0.3 + t * 0.1, 3);
     float colorNoise2 = fbm(pos * 0.5 - t * 0.15, 3);
     float colorNoise3 = fbm(pos * 0.8 + t * 0.2, 2);
     
-    // ЗЕЛЕНЫЕ базовые цвета
-    float3 greenLight = float3(0.3, 0.8, 0.3);    // Светло-зеленый
-    float3 greenMint = float3(0.2, 0.7, 0.5);    // Мятно-зеленый
-    float3 greenEmerald = float3(0.1, 0.6, 0.3); // Изумрудный
-    float3 greenForest = float3(0.0, 0.4, 0.2);   // Лесной зеленый
+    // Создаем разные оттенки на основе базового цвета
+    // Увеличиваем/уменьшаем компоненты для вариаций
+    float3 colorLight = baseColor * 1.3;      // Светлее
+    float3 colorMedium = baseColor;           // Базовый
+    float3 colorDark = baseColor * 0.7;       // Темнее
     
-    // Дополнительные цвета для акцентов
-    float3 blueAccent = float3(0.2, 0.6, 1.0);    // Голубой акцент
-    float3 redAccent = float3(1.0, 0.3, 0.2);     // Красный акцент
+    // Добавляем цветовые акценты (теплые/холодные оттенки)
+    float3 warmAccent = float3(1.0, 0.8, 0.6);    // Теплый
+    float3 coolAccent = float3(0.6, 0.8, 1.0);    // Холодный
     
-    // Смешиваем зеленые цвета в зависимости от шума
+    // Смешиваем оттенки в зависимости от шума
     float3 finalColor;
     
-    if (colorNoise1 < 0.3)
-        finalColor = lerp(greenLight, greenMint, colorNoise2);
-    else if (colorNoise1 < 0.6)
-        finalColor = lerp(greenMint, greenEmerald, colorNoise3);
+    if (colorNoise1 < 0.33)
+        finalColor = lerp(colorLight, colorMedium, colorNoise2);
+    else if (colorNoise1 < 0.66)
+        finalColor = lerp(colorMedium, colorDark, colorNoise3);
     else
-        finalColor = lerp(greenEmerald, greenForest, colorNoise2);
+        finalColor = lerp(colorDark, colorLight, colorNoise2);
     
-    // Добавляем небольшие цветные акценты
+    // Добавляем небольшие цветные акценты в зависимости от угла
+    float angle = atan2(pos.y - medusaCenter.y, pos.x - medusaCenter.x);
     float accentFactor = sin(angle * 4.0 + t) * 0.2;
+    
     if (accentFactor > 0)
-        finalColor += accentFactor * blueAccent;
+        finalColor += accentFactor * warmAccent * 0.3;
     else
-        finalColor += abs(accentFactor) * redAccent * 0.3;
+        finalColor += abs(accentFactor) * coolAccent * 0.3;
     
     // Добавляем вариации на основе угла и расстояния
-    float angleFactor = sin(angle * 3.0 + t) * 0.2;
-    float distFactor = exp(-distFromCenter * 0.1) * 0.4;
+    float angleFactor = sin(angle * 3.0 + t) * 0.15;
+    float distFactor = exp(-distFromCenter * 0.1) * 0.3;
     
-    finalColor += float3(angleFactor * 0.1, angleFactor * 0.2, angleFactor * 0.1);
-    finalColor += distFactor * float3(0.1, 0.3, 0.1);
+    finalColor += float3(angleFactor * 0.2, angleFactor * 0.1, angleFactor * 0.2);
+    finalColor += distFactor * baseColor * 0.5;
     
-    // Ядро с золотистым оттенком
-    float coreGlow = exp(-distFromCenter * 0.15) * 0.6;
-    finalColor += coreGlow * float3(0.8, 0.9, 0.3); // Золотисто-зеленый
+    // Ядро - более яркое
+    float coreGlow = exp(-distFromCenter * 0.15) * 0.5;
+    finalColor += coreGlow * baseColor * 1.5;
     
     // Плотность
     float density = fbm(pos * 0.25 + t * 0.1, 2);
