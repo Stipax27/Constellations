@@ -61,7 +61,7 @@ RaycastResult CollisionManagerClass::Raycast(const RayInfo& ray)
 		RaycastResult hit;
 
         SphereCollider* sphereCollider = entity->GetComponent<SphereCollider>();
-        if (sphereCollider != nullptr && sphereCollider->active 
+        if (sphereCollider != nullptr && sphereCollider->active
             && CollisionFilter::collisionTable[(int)sphereCollider->collisionGroup][(int)ray.collisionGroup]
             && (!ray.touchableOnly || sphereCollider->isTouchable))
         {
