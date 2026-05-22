@@ -3,51 +3,55 @@
 
 #include <vector>
 #include <functional>
-#include "../../ECS_Base/system.h"
-#include "../../UI/uiSystem.h"
-#include "../../Compute/Combat/QTE.h"
+#include "QTE.h"
 
-
-class QTESystem : public System {
+// Простой UI интерфейс (без привязки к конкретной системе)
+class IQTEUI {
 public:
-    QTESystem();
-    ~QTESystem();
+    virtual ~IQTEUI() = default;
+    virtual void ShowMashUI(int required, float duration) = 0;
+    virtual void ShowTimedUI(float duration, float perfectStart, float perfectEnd) = 0;
+    virtual void ShowSequenceUI(const std::vector<int>& keys, float duration) = 0;
+    virtual void ShowHoldUI(float duration) = 0;
+    virtual void UpdateProgress(float progress, bool isPerfect) = 0;
+    virtual void UpdateMashCount(int current, int required) = 0;
+    virtual void UpdateSequenceStep(int current, int total) = 0;
+    virtual void HideUI() = 0;
+    virtual void SetPromptKey(int keyCode) = 0;
+};
 
-    void Initialize();
-    void Shutdown();
-    void Update(EntityStorage& entityStorage, float deltaTime);
+class QTESimpleSystem {
+public:
+    QTESimpleSystem();
+    ~QTESimpleSystem();
 
-    // API для запуска QTE
-    void StartQTE(Entity* entity);
-    void StopQTE(Entity* entity);
-    bool IsQTEActive() const { return currentQTE != nullptr; }
+    // Установка UI интерфейса
+    void SetUI(IQTEUI* uiInterface) { ui = uiInterface; }
 
-    // Обработка ввода (вызывается из InputSystem)
+    // Запуск QTE
+    void StartQTE(QTESimple& qte);
+    void StopQTE();
+    bool IsActive() const { return activeQTE != nullptr; }
+
+    // Обновление каждый кадр
+    void Update(float deltaTime);
+
+    // Обработка ввода
     void OnKeyPressed(int keyCode);
+    void OnKeyReleased(int keyCode);  // Для HOLD
 
 private:
-    // Внутренние методы
-    void UpdateTiming(float deltaTime);
-    void CompleteQTE(bool success);
+    void Complete(bool success, bool isPerfect = false);
     void ProcessButtonMash(int keyCode);
     void ProcessTimedPress(int keyCode);
     void ProcessSequence(int keyCode);
-    void ProcessHold(int keyCode);
-    void ProcessRhythm(int keyCode);
-    void ProcessJoystickDirection(int keyCode);
+    void ProcessHoldPress(int keyCode);
+    void ProcessHoldRelease(int keyCode);
     bool IsInPerfectWindow() const;
-    void ApplyRewardsAndPenalties(bool success);
 
-    // Текущий активный QTE
-    Entity* currentQTE = nullptr;
-    QTE* currentQTEComp = nullptr;
-
-    // Runtime состояние
-    float currentTime = 0.0f;
-    float buttonMashResetTimer = 0.0f;
-
-    // Константы
-    static constexpr float BUTTON_MASH_RESET_TIME = 0.5f;
+    IQTEUI* ui = nullptr;
+    QTESimple* activeQTE = nullptr;
+    bool isKeyHeld = false;  // Для HOLD режима
 };
 
-#endif
+#endif 

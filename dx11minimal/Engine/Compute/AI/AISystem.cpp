@@ -77,11 +77,10 @@ void AISystem::Update(EntityStorage& entityStorage, float deltaTime)
         }
 
         // ===== ВАЖНО: босс использует ТОЛЬКО UpdateBossBehavior =====
-        if (boss || ai->isBoss)  // Если есть компонент босса или помечен как босс
+        if (boss || ai->isBoss)
         {
-
             UpdateBossBehavior(entityStorage, entity, transform, ai, boss, physicBody, deltaTime);
-            continue;  // Пропускаем старую систему!
+            continue;
         }
 
         // Старая система для обычных врагов
@@ -93,48 +92,343 @@ void AISystem::ProcessAIBehavior(EntityStorage& entityStorage, Entity* entity, T
     PhysicBody* physicBody, float deltaTime)
 {
     Star* star = entity->GetComponent<Star>();
-    if (star)
+
+    // ===== НОВОЕ: Если это миньон, используем особое поведение =====
+    if (ai->isMinion)
     {
-        switch (ai->behaviorType)
+        // Проверяем агро
+        Entity* player = GetNearestPlayer(entityStorage, entity);
+        float distanceToPlayer = GetDistanceToPlayer(entityStorage, entity);
+
+        if (!ai->isAggroed && distanceToPlayer <= ai->minionAggroRadius)
         {
-        case AIBehaviorType::PATROL: star->color1 = point3d(0.2f, 0.8f, 0.2f); break;
-        case AIBehaviorType::CHASE:  star->color1 = point3d(1.0f, 0.5f, 0.0f); break;
-        case AIBehaviorType::ATTACK: star->color1 = point3d(1.0f, 0.0f, 0.0f); break;
-        case AIBehaviorType::FLEE:   star->color1 = point3d(0.0f, 0.0f, 1.0f); break;
-        case AIBehaviorType::IDLE:   star->color1 = point3d(0.5f, 0.5f, 0.5f); break;
-        case AIBehaviorType::SEARCH: star->color1 = point3d(1.0f, 1.0f, 0.0f); break;
-        case AIBehaviorType::BOSS_PHASE_1: star->color1 = point3d(0.8f, 0.2f, 0.8f); break;
-        case AIBehaviorType::BOSS_PHASE_2: star->color1 = point3d(1.0f, 0.2f, 0.5f); break;
-        case AIBehaviorType::BOSS_PHASE_3: star->color1 = point3d(1.0f, 0.0f, 0.3f); break;
+            ai->isAggroed = true;
+            ai->behaviorType = AIBehaviorType::CHASE;
+            ai->stateTimer = 0.0f;
+        }
+        else if (ai->isAggroed && distanceToPlayer > ai->minionDeaggroRadius)
+        {
+            ai->isAggroed = false;
+            ai->behaviorType = AIBehaviorType::PATROL;
+            ai->stateTimer = 0.0f;
+        }
+
+        // Цвет в зависимости от фазы атаки
+        if (star && ai->behaviorType == AIBehaviorType::ATTACK)
+        {
+            switch (ai->minionAttackPhase)
+            {
+            case AIComponent::MinionAttackPhase::WINDUP:
+                star->color1 = point3d(1.0f, 1.0f, 0.0f);  // Желтый - замах
+                break;
+            case AIComponent::MinionAttackPhase::LUNGE:
+                star->color1 = point3d(1.0f, 0.0f, 0.0f);  // Красный - атака
+                break;
+            case AIComponent::MinionAttackPhase::RECOVERY:
+                star->color1 = point3d(0.5f, 0.5f, 1.0f);  // Синий - восстановление
+                break;
+            }
+        }
+    }
+    else
+    {
+        // Старые цвета для обычных врагов
+        if (star)
+        {
+            switch (ai->behaviorType)
+            {
+            case AIBehaviorType::PATROL: star->color1 = point3d(0.2f, 0.8f, 0.2f); break;
+            case AIBehaviorType::CHASE:  star->color1 = point3d(1.0f, 0.5f, 0.0f); break;
+            case AIBehaviorType::ATTACK: star->color1 = point3d(1.0f, 0.0f, 0.0f); break;
+            case AIBehaviorType::FLEE:   star->color1 = point3d(0.0f, 0.0f, 1.0f); break;
+            case AIBehaviorType::IDLE:   star->color1 = point3d(0.5f, 0.5f, 0.5f); break;
+            case AIBehaviorType::SEARCH: star->color1 = point3d(1.0f, 1.0f, 0.0f); break;
+            case AIBehaviorType::BOSS_PHASE_1: star->color1 = point3d(0.8f, 0.2f, 0.8f); break;
+            case AIBehaviorType::BOSS_PHASE_2: star->color1 = point3d(1.0f, 0.2f, 0.5f); break;
+            case AIBehaviorType::BOSS_PHASE_3: star->color1 = point3d(1.0f, 0.0f, 0.3f); break;
+            }
         }
     }
 
-    switch (ai->behaviorType)
+    // ===== Обработка поведения =====
+    if (ai->isMinion)
     {
-    case AIBehaviorType::PATROL:
-        UpdatePatrolBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime);
-        break;
-    case AIBehaviorType::CHASE:
-        UpdateChaseBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime);
-        break;
-    case AIBehaviorType::ATTACK:
-        UpdateAttackBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime);
-        break;
-    case AIBehaviorType::FLEE:
-        UpdateFleeBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime);
-        break;
-    case AIBehaviorType::IDLE:
-        UpdateIdleBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime);
-        break;
-    case AIBehaviorType::SEARCH:
-        UpdateSearchBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime);
-        break;
+        switch (ai->behaviorType)
+        {
+        case AIBehaviorType::PATROL:
+            UpdatePatrolBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime);
+            break;
+        case AIBehaviorType::CHASE:
+            UpdateMinionChaseBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime);
+            break;
+        case AIBehaviorType::ATTACK:
+            UpdateMinionAttackBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime);
+            break;
+        case AIBehaviorType::IDLE:
+            UpdateIdleBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime);
+            break;
+        case AIBehaviorType::SEARCH:
+            UpdateSearchBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime);
+            break;
+        default:
+            break;
+        }
+    }
+    else
+    {
+        switch (ai->behaviorType)
+        {
+        case AIBehaviorType::PATROL:
+            UpdatePatrolBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime);
+            break;
+        case AIBehaviorType::CHASE:
+            UpdateChaseBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime);
+            break;
+        case AIBehaviorType::ATTACK:
+            UpdateAttackBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime);
+            break;
+        case AIBehaviorType::FLEE:
+            UpdateFleeBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime);
+            break;
+        case AIBehaviorType::IDLE:
+            UpdateIdleBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime);
+            break;
+        case AIBehaviorType::SEARCH:
+            UpdateSearchBehavior(entityStorage, entity, transform, ai, physicBody, deltaTime);
+            break;
+        }
     }
 
     ai->stateTimer += deltaTime;
 }
 
-// ============ МЕТОДЫ БОССА ============
+// ===== НОВЫЕ МЕТОДЫ ДЛЯ МИНЬОНОВ =====
+
+void AISystem::UpdateMinionChaseBehavior(EntityStorage& entityStorage, Entity* entity, Transform* transform,
+    AIComponent* ai, PhysicBody* physicBody, float deltaTime)
+{
+    Entity* target = entityStorage.GetEntityById(ai->targetId);
+    if (!IsEntityValid(target))
+    {
+        Entity* player = GetNearestPlayer(entityStorage, entity);
+        if (player)
+        {
+            ai->targetId = player->GetId();
+            target = player;
+        }
+        else
+        {
+            ai->behaviorType = AIBehaviorType::PATROL;
+            return;
+        }
+    }
+
+    point3d targetWorldPos = GetWorldTransform(target).position;
+    point3d myWorldPos = GetWorldTransform(entity).position;
+    point3d direction = targetWorldPos - myWorldPos;
+    float distance = direction.magnitude();
+
+    // Если игрок слишком далеко - теряем интерес
+    if (distance > ai->minionDeaggroRadius)
+    {
+        ai->isAggroed = false;
+        ai->behaviorType = AIBehaviorType::PATROL;
+        return;
+    }
+
+    // Если достаточно близко - начинаем атаку
+    if (distance <= ai->attackRange + ai->minionLungeSpeed * ai->minionLungeDuration * 0.5f)
+    {
+        ai->behaviorType = AIBehaviorType::ATTACK;
+        ai->minionAttackPhase = AIComponent::MinionAttackPhase::WINDUP;
+        ai->minionWindupTimer = 0.0f;
+        ai->minionHasDealtDamage = false;
+        ai->minionLungeDirection = direction.normalized();
+
+        // Замедляемся перед замахом
+        physicBody->velocity = physicBody->velocity * 0.5f;
+        physicBody->acceleration = point3d();
+        return;
+    }
+
+    // Движение к игроку
+    direction = direction.normalized();
+    point3d targetVelocity = direction * ai->movementSpeed;
+    point3d desiredAccel = (targetVelocity - physicBody->velocity) * ai->accelerationStrength;
+
+    float accelMag = desiredAccel.magnitude();
+    if (accelMag > ai->maxAcceleration)
+        desiredAccel = desiredAccel.normalized() * ai->maxAcceleration;
+
+    physicBody->acceleration = desiredAccel;
+}
+
+void AISystem::UpdateMinionAttackBehavior(EntityStorage& entityStorage, Entity* entity, Transform* transform,
+    AIComponent* ai, PhysicBody* physicBody, float deltaTime)
+{
+    Entity* target = entityStorage.GetEntityById(ai->targetId);
+
+    switch (ai->minionAttackPhase)
+    {
+    case AIComponent::MinionAttackPhase::WINDUP:
+    {
+        ai->minionWindupTimer += deltaTime;
+
+        // Замедляемся во время замаха
+        physicBody->velocity = physicBody->velocity * 0.85f;
+        physicBody->acceleration = point3d();
+
+        point3d myPos = GetWorldTransform(entity).position;  // Получаем мировую позицию ДО эффекта
+
+        // Корректируем направление атаки на игрока
+        if (target && IsEntityValid(target))
+        {
+            point3d targetPos = GetWorldTransform(target).position;
+            ai->minionLungeDirection = (targetPos - myPos).normalized();
+        }
+
+        // Пульсация во время замаха
+        Star* star = entity->GetComponent<Star>();
+        if (star && ai->minionWindupTimer > 0)
+        {
+            float pulse = 1.0f + sin(ai->minionWindupTimer * 20.0f) * 0.2f;
+            star->radius = ai->visual.originalRadius * pulse;
+        }
+
+        // Переход к рывку
+        if (ai->minionWindupTimer >= ai->minionWindupDuration)
+        {
+            ai->minionAttackPhase = AIComponent::MinionAttackPhase::LUNGE;
+            ai->minionLungeTimer = 0.0f;
+            ai->minionHasDealtDamage = false;
+
+            // Резкий рывок
+            physicBody->velocity = ai->minionLungeDirection * ai->minionLungeSpeed;
+
+            // Эффект начала атаки - передаём МИРОВУЮ позицию
+            point3d effectPos = myPos + ai->minionLungeDirection * 1.5f;
+            SpawnMeleeAttackEffect(entityStorage, nullptr, effectPos, ai->minionLungeDirection);
+        }
+        break;
+    }
+
+    case AIComponent::MinionAttackPhase::LUNGE:
+    {
+        ai->minionLungeTimer += deltaTime;
+
+        // Поддерживаем скорость рывка с затуханием
+        float progress = ai->minionLungeTimer / ai->minionLungeDuration;
+        float speedMultiplier = 1.0f - progress;
+        physicBody->velocity = ai->minionLungeDirection * ai->minionLungeSpeed * speedMultiplier;
+        physicBody->acceleration = point3d();
+
+        // Проверка попадания по игроку
+        if (target && IsEntityValid(target) && !ai->minionHasDealtDamage)
+        {
+            point3d targetPos = GetWorldTransform(target).position;
+            point3d myPos = GetWorldTransform(entity).position;
+            float distance = (targetPos - myPos).magnitude();
+
+            if (distance <= ai->attackRange)
+            {
+                Health* playerHealth = target->GetComponent<Health>();
+                if (playerHealth)
+                {
+                    playerHealth->hp -= ai->attackDamage;
+
+                    // Отталкиваем игрока
+                    PhysicBody* playerPhysic = target->GetComponent<PhysicBody>();
+                    if (playerPhysic)
+                    {
+                        point3d pushDir = (targetPos - myPos).normalized();
+                        if (pushDir.magnitude() < 0.1f)
+                            pushDir = ai->minionLungeDirection;
+                        playerPhysic->velocity += pushDir * ai->minionPushForce;
+                    }
+
+                    // Эффект попадания
+                    SpawnImpactEffect(entityStorage, targetPos, point3d(1.0f, 0.8f, 0.0f));
+
+                    ai->minionHasDealtDamage = true;
+                }
+            }
+        }
+
+        // Завершение рывка
+        if (ai->minionLungeTimer >= ai->minionLungeDuration)
+        {
+            ai->minionAttackPhase = AIComponent::MinionAttackPhase::RECOVERY;
+            ai->minionRecoveryTimer = 0.0f;
+
+            // Резко останавливаемся
+            physicBody->velocity = point3d();
+
+            // Небольшой отскок назад
+            point3d backDir = ai->minionLungeDirection * -1.0f;
+            physicBody->velocity = backDir * 3.0f;
+        }
+        break;
+    }
+
+    case AIComponent::MinionAttackPhase::RECOVERY:
+    {
+        ai->minionRecoveryTimer += deltaTime;
+
+        // Стоим на месте, восстанавливаемся
+        physicBody->velocity = physicBody->velocity * 0.8f;
+        physicBody->acceleration = point3d();
+
+        // Завершение восстановления
+        if (ai->minionRecoveryTimer >= ai->minionRecoveryDuration)
+        {
+            if (ai->isAggroed && target && IsEntityValid(target))
+            {
+                ai->behaviorType = AIBehaviorType::CHASE;
+            }
+            else
+            {
+                ai->behaviorType = AIBehaviorType::PATROL;
+                ai->isAggroed = false;
+            }
+            ai->stateTimer = 0.0f;
+
+            // Восстанавливаем радиус звезды
+            Star* star = entity->GetComponent<Star>();
+            if (star)
+            {
+                star->radius = ai->visual.originalRadius;
+            }
+        }
+        break;
+    }
+    }
+}
+
+// Эффект атаки миньона
+void AISystem::SpawnMeleeAttackEffect(EntityStorage& entityStorage, Entity* entity, point3d& position, const point3d& direction)
+{
+    Entity* effect = entityStorage.CreateEntity("MinionSlash", nullptr);
+
+    Transform* transform = effect->AddComponent<Transform>();
+    transform->position = position + direction * 1.5f;
+
+    // Частицы
+    ParticleEmitter* particles = effect->AddComponent<ParticleEmitter>();
+    particles->rate = 600;
+    particles->lifetime = 300;
+    particles->color = point3d(1.0f, 0.7f, 0.2f);
+    particles->size = { 0.1f, 0.4f };
+    particles->opacity = { 1.0f, 0.0f };
+    particles->emitDirection = EmitDirection::Right;
+    particles->spread = { 1.0f, 1.0f };
+    particles->speed = { 10.0f, 5.0f };
+    particles->useWorldSpace = false;
+
+    DelayedDestroy* delayed = effect->AddComponent<DelayedDestroy>();
+    delayed->lifeTime = 600;
+}
+
+// ============ МЕТОДЫ БОССА (БЕЗ ИЗМЕНЕНИЙ) ============
 
 void AISystem::ExecutePendingAttack(EntityStorage& entityStorage, Entity* entity, Transform* transform,
     AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, Star* star)
@@ -143,19 +437,15 @@ void AISystem::ExecutePendingAttack(EntityStorage& entityStorage, Entity* entity
     {
     case AIComponent::AttackType::Dash:
         BossDashAttack(entityStorage, entity, transform, ai, boss, physicBody, star);
-       
         break;
     case AIComponent::AttackType::StarShot:
         BossStarShot(entityStorage, entity, transform, ai, boss, physicBody, star);
-       
         break;
     case AIComponent::AttackType::SideDash:
         BossSideDash(entityStorage, entity, transform, ai, boss, physicBody);
-       
         break;
     case AIComponent::AttackType::AOE:
-        BossAOEAttack(entityStorage,entity, transform, boss);
-       
+        BossAOEAttack(entityStorage, entity, transform, boss);
         break;
     }
 
@@ -186,15 +476,6 @@ void AISystem::UpdateBossBehavior(EntityStorage& entityStorage, Entity* entity, 
         CheckBossPhaseTransition(entityStorage, entity, health, boss, ai);
     }
 
-    // Обновляем таймеры атак (только если не в режиме зарядки)
-   /* if (!ai->isChargingAttack)
-    {
-        boss->lastSpecialAttackTime += deltaTime;
-        boss->lastDashTime += deltaTime;
-        boss->lastSideDashTime += deltaTime;
-        boss->lastStarShotTime += deltaTime;
-    }*/
-
     // Ограничение движения в пределах арены
     point3d pos = transform->position;
     if (pos.x < boss->arenaMinX) pos.x = boss->arenaMinX;
@@ -210,7 +491,7 @@ void AISystem::UpdateBossBehavior(EntityStorage& entityStorage, Entity* entity, 
         UpdateBossPhase1(entityStorage, entity, transform, ai, boss, physicBody, star, deltaTime);
         break;
     case 2:
-        UpdateBossPhase2(entityStorage, entity, transform, ai, boss, physicBody, star,deltaTime);
+        UpdateBossPhase2(entityStorage, entity, transform, ai, boss, physicBody, star, deltaTime);
         break;
     case 3:
         UpdateBossPhase3(entityStorage, entity, transform, ai, boss, physicBody, star, deltaTime);
@@ -222,28 +503,18 @@ void AISystem::UpdateBossBehavior(EntityStorage& entityStorage, Entity* entity, 
     {
         ai->chargeTimer -= deltaTime;
 
-        // Визуальный эффект зарядки (пульсация)
-       /* if (star && ai->chargeTimer > 0)
-        {
-            float pulse = 1.0f + sin(ai->chargeTimer * 15.0f) * 0.3f;
-            star->radius = ai->visual.originalRadius * pulse;
-        }*/
-
-        // Если зарядка завершена - выполняем атаку
         if (ai->chargeTimer <= 0.0f)
         {
             ExecutePendingAttack(entityStorage, entity, transform, ai, boss, physicBody, star);
             ai->isChargingAttack = false;
 
-            // Восстанавливаем размер звезды
             if (star) star->radius = ai->visual.originalRadius;
         }
         else
         {
-            // Во время зарядки босс не двигается
             physicBody->acceleration = point3d();
             physicBody->velocity = physicBody->velocity * 0.9f;
-            return;  // Пропускаем движение
+            return;
         }
     }
 
@@ -1031,12 +1302,6 @@ void AISystem::SpawnImpactEffect(EntityStorage& entityStorage, const point3d& po
     particles->speed = { 15.0f, 10.0f };
     particles->useWorldSpace = true;
 
-    Star* star = impact->AddComponent<Star>();
-    star->radius = 0.3f;
-    star->crownRadius = 0.6f;
-    star->color1 = color;
-    star->color2 = color * 0.5f;
-    star->crownColor = point3d(1, 1, 1);
 
     DelayedDestroy* delayed = impact->AddComponent<DelayedDestroy>();
     delayed->lifeTime = 400;

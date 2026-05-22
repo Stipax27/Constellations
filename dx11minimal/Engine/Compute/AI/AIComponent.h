@@ -1,132 +1,121 @@
-#ifndef _AI_COMPONENT_
-#define _AI_COMPONENT_
+#ifndef _AI_COMPONENT_H_
+#define _AI_COMPONENT_H_
 
-//////////////
-// INCLUDES //
-//////////////
 #include "../../ECS_Base/component.h"
-#include "../../Types/Point3d.h"
-#include <DirectXMath.h>
 #include <vector>
+#include <string>
 
-enum class AIBehaviorType
-{
+enum class AIBehaviorType {
     IDLE,
     PATROL,
     CHASE,
     ATTACK,
     FLEE,
     SEARCH,
-
     BOSS_PHASE_1,
     BOSS_PHASE_2,
-    BOSS_PHASE_3,
-    BOSS_SUMMON,
-    BOSS_SPECIAL_ATTACK,
-    BOSS_RAGE
+    BOSS_PHASE_3
 };
 
-struct AIComponent : Component
-{
-public:
+struct AIComponent : public Component {
     bool enabled = true;
-    AIBehaviorType behaviorType = AIBehaviorType::PATROL;
-    //PhysicBody* enemyPhysicBody;
-    // Параметры движения
-    float movementSpeed = 1.0f;
+
+    // Основные параметры
+    float detectionRange = 15.0f;
+    float attackRange = 2.5f;
+    float chaseRange = 30.0f;
+    float movementSpeed = 8.0f;
+    float accelerationStrength = 8.0f;
+    float maxAcceleration = 50.0f;
+    float attackDamage = 15.0f;
+    float attackCooldown = 1.5f;
     float arrivalDistance = 1.0f;
 
-    // Параметры обнаружения
-    float detectionRange = 10.0f;
-    float chaseRange = 15.0f;
-    float attackRange = 3.0f;
-    float timeAgr = 1.f;
+    // Состояния
+    AIBehaviorType behaviorType = AIBehaviorType::IDLE;
+    float stateTimer = 0.0f;
+    int targetId = -1;
 
-    // Параметры атаки
-    float attackCooldown = 1.0f;
-    float attackDamage = 10.0f;
-
-    // Параметры состояний
-    float idleDuration = 3.0f;
-    float fleeDuration = 5.0f;
-
-    // Патрулирование
+    // Патруль
     std::vector<point3d> patrolPoints;
     int currentPatrolIndex = 0;
 
-    // Таймеры
-    float stateTimer = 0.0f;
-
     // Поиск
-    point3d lastKnownPlayerPosition;   // последняя позиция, где видели игрока
-    bool hasLastKnownPosition = false; // флаг, есть ли сохранённая позиция
-    float searchDuration = 1.0f;       // сколько времени искать перед возвратом к патрулю
-    float searchPatrolRadius = 5.0f;   // радиус для точек патруля вокруг последней позиции
+    bool hasLastKnownPosition = false;
+    point3d lastKnownPlayerPosition;
+    float searchDuration = 5.0f;
+    float searchPatrolRadius = 5.0f;
+    float idleDuration = 3.0f;
+    float fleeDuration = 3.0f;
 
-    // Ускорение
-    float accelerationStrength = 0.25f;   // коэффициент пропорциональности (чем выше, тем быстрее разгон)
-    float maxAcceleration = 10.0f;       // ограничение, чтобы избежать рывков
+    // Визуальные эффекты атаки
+    struct AttackVisual {
+        bool isAttacking = false;
+        float attackVisualTimer = 0.0f;
+        float attackDuration = 0.3f;
+        float attackScale = 1.3f;
+        float originalRadius = 1.0f;
+        point3d originalColor = point3d(1.0f, 1.0f, 1.0f);
 
-    int targetId = -1;
+        bool isCastingSpecial = false;
+        float specialCastTimer = 0.0f;
+
+        bool isCastingAOE = false;
+        float aoeCastTimer = 0.0f;
+        float aoePulseSpeed = 3.0f;
+
+        bool isSummoning = false;
+        float summonTimer = 0.0f;
+
+        bool isTransitioning = false;
+        float transitionTimer = 0.0f;
+    } visual;
+
+    // Для босса
     bool isBoss = false;
+    bool isChargingAttack = false;
+    bool isChargeEffectSpawned = false;
+    float chargeTimer = 0.0f;
 
     enum class AttackType {
         None,
         Dash,
         StarShot,
-        SideDash,   
+        SideDash,
         AOE
     };
 
-    bool isChargingAttack = false;
-    float chargeTimer = 0.0f;
-    float chargeDuration = 1.5f;  // Время зарядки перед атакой
     AttackType pendingAttackType = AttackType::None;
-    bool isChargeEffectSpawned = false;
-    
 
-    // ============ ВИЗУАЛЬНЫЕ ЭФФЕКТЫ ДЛЯ БОССА ============
-    struct VisualFeedback
-    {
-        // Флаги состояния
-        bool isAttacking = false;           // идет ли анимация атаки
-        bool isCastingSpecial = false;      // зарядка спецатаки
-        bool isCastingAOE = false;          // зарядка АОЕ атаки
-        bool isSummoning = false;            // призыв миньонов
-        bool isTransitioning = false;        // переход между фазами
+    // ===== ПАРАМЕТРЫ ДЛЯ МИНЬОНОВ (обычных врагов) =====
+    bool isMinion = false;              // Флаг миньона
+    float minionAggroRadius = 20.0f;    // Радиус привлечения внимания
+    float minionDeaggroRadius = 40.0f;  // Радиус потери интереса
+    bool isAggroed = false;             // Находится ли в боевом режиме
 
-        // Таймеры визуальных эффектов
-        float attackVisualTimer = 0.0f;      // сколько осталось анимации атаки
-        float specialCastTimer = 0.0f;       // таймер зарядки спецатаки
-        float aoeCastTimer = 0.0f;           // таймер зарядки АОЕ
-        float summonTimer = 0.0f;            // таймер призыва
-        float transitionTimer = 0.0f;        // таймер перехода фазы
+    // Таймеры для фаз атаки миньона
+    float minionWindupTimer = 0.0f;     // Таймер замаха
+    float minionWindupDuration = 0.4f;  // Длительность замаха (сек)
+    float minionLungeTimer = 0.0f;      // Таймер рывка
+    float minionLungeDuration = 0.3f;   // Длительность рывка (сек)
+    float minionRecoveryTimer = 0.0f;   // Таймер восстановления
+    float minionRecoveryDuration = 1.0f;// Пауза после атаки (сек)
 
-        // Длительности эффектов
-        float attackDuration = 0.3f;         // длительность анимации атаки
-        float specialCastDuration = 0.5f;    // время зарядки спецатаки
-        float aoeCastDuration = 1.0f;        // время зарядки АОЕ (игрок может убежать)
-        float summonDuration = 0.8f;         // длительность призыва
-        float transitionDuration = 1.5f;     // длительность перехода фазы
+    // Параметры рывка миньона
+    float minionLungeSpeed = 20.0f;     // Скорость рывка при атаке
+    float minionPushForce = 10.0f;      // Сила отталкивания игрока
+    point3d minionLungeDirection;       // Направление рывка
+    bool minionHasDealtDamage = false;  // Нанесен ли урон в текущем рывке
 
-        // Оригинальные значения Star компонента (для восстановления)
-        float originalRadius = 1.0f;
-        point3d originalColor = point3d(1.0f, 1.0f, 1.0f);
-        float originalIntensity = 1.0f;
+    // Фазы атаки миньона (используются внутри ATTACK)
+    enum class MinionAttackPhase {
+        WINDUP,     // Замах
+        LUNGE,      // Рывок
+        RECOVERY    // Восстановление
+    };
+    MinionAttackPhase minionAttackPhase = MinionAttackPhase::WINDUP;
 
-        // Эффекты для разных типов атак
-        float attackScale = 2.5f;             // увеличение размера при атаке
-        float specialGlow = 2.0f;             // интенсивность свечения при спецатаке
-        float aoePulseSpeed = 3.0f;           // скорость пульсации при АОЕ
-
-        // Цвета для разных типов атак
-        point3d meleeAttackColor = point3d(1.0f, 0.2f, 0.2f);     // красный
-        point3d specialAttackColor = point3d(1.0f, 0.5f, 0.0f);   // оранжевый
-        point3d aoeAttackColor = point3d(1.0f, 0.0f, 1.0f);       // фиолетовый
-        point3d summonColor = point3d(0.2f, 1.0f, 0.2f);          // зеленый
-        point3d phaseTransitionColor = point3d(1.0f, 1.0f, 0.0f);  // желтый
-
-    } visual;
+    AIComponent() = default;
 };
 
 #endif

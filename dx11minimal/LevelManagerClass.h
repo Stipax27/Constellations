@@ -52,6 +52,8 @@
 #include "Engine/Render/SkinnedMesh/SkinnedMesh.h"
 
 #include "Engine/Compute/AI/AISystem.h"
+#include "Engine/Compute/Combat/QTESystem.h"
+
 
 #include "Engine/Render/BoneAnimation/SkeletalAnimationComponent.h"
 #include "Engine/Render/BoneAnimation/SkeletalAnimationSystem.h"
@@ -126,6 +128,8 @@ private:
 	void ExecuteBoss();
 	void ShowExecutionUI();
 	void HideExecutionUI();
+	void BossRecovery();
+	void UpdateExecutionTimerUI();
 
 	ID3D11Buffer* m_BoneBuffer = nullptr;
 	SkinnedMesh m_FoxMesh;
@@ -143,6 +147,10 @@ private:
 	SkinnedMesh m_TestAnimMesh;
 	Skeleton    m_TestAnimSkeleton;
 	std::vector<AnimationClip> m_TestAnimAnimations;
+
+	QTESimpleSystem m_QTESystem;
+	QTESimple m_CurrentQTE;
+
 private: // AI amogus
 	Entity* testEnemy;
 	Entity* worldFolder;

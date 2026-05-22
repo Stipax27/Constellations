@@ -406,19 +406,38 @@ void LevelManagerClass::Frame()
 		return;
 
 	mouse->Update();
-
 	UpdateTestAnimationToggle();
-
 	interp::UpdateTweens();
 
+	// ===== ВВОД ИГРОКА (ТОЛЬКО ОДИН РАЗ!) =====
 	playerController->ProcessInput();
 	playerController->ProcessMouse();
 	playerController->abilities->Update();
 	playerController->ProccessUI();
-
 	questManager->UpdateQuests();
 
-	// DEBUG
+	// ===== ОБРАБОТКА ВВОДА ДЛЯ QTE =====
+	if (m_QTESystem.IsActive())
+	{
+		// Проверяем клавишу R для QTE
+		static bool wasRPressed = false;
+		bool isRPressed = input::IsKeyPressed('R');
+
+		if (isRPressed && !wasRPressed)
+		{
+			m_QTESystem.OnKeyPressed('R');  // Нажатие
+		}
+		else if (!isRPressed && wasRPressed)
+		{
+			m_QTESystem.OnKeyReleased('R');  // Отпускание
+		}
+		wasRPressed = isRPressed;
+	}
+
+	// ===== ОБНОВЛЕНИЕ QTE =====
+	m_QTESystem.Update(1.0f / 60.0f);
+
+	// DEBUG - смерть игрока
 	Entity* player = m_World->entityStorage->GetEntityByName("Player");
 	if (IsEntityValid(player) && !m_ShowVictoryMessage)
 	{
@@ -428,7 +447,6 @@ void LevelManagerClass::Frame()
 			m_ShowGameOverMessage = true;
 			m_MessageTimer = 3.0f;
 
-			// Создаём сообщение
 			Entity* msgContainer = m_World->entityStorage->CreateEntity("GameOverMsg", nullptr);
 			Transform2D* msgTransform = msgContainer->AddComponent<Transform2D>();
 			msgTransform->anchorPoint = point3d(0, 0, 0);
@@ -444,26 +462,18 @@ void LevelManagerClass::Frame()
 			text->fontScale = 1.2f;
 			text->color = point3d(1.0f, 0.2f, 0.2f);
 
-			// Автоудаление через 3 секунды
 			DelayedDestroy* delayed = msgContainer->AddComponent<DelayedDestroy>();
 			delayed->lifeTime = 3000;
-
-			// Отключаем управление игроком
-			if (playerController)
-			{
-				//playerController->SetEnabled(false);
-			}
 		}
 	}
 
+	// ===== ПРОВЕРКА БОССА И АКТИВАЦИЯ QTE =====
 	if (m_CurrentBoss && m_CurrentBoss->IsActive() && !m_IsExecutionActive)
 	{
 		Health* bossHealth = m_CurrentBoss->GetComponent<Health>();
 		if (bossHealth)
 		{
 			float healthPercent = bossHealth->hp / bossHealth->maxHp;
-
-			// Если HP меньше 5% и ещё не в режиме казни
 			if (healthPercent <= 0.05f)
 			{
 				TriggerExecution();
@@ -471,77 +481,25 @@ void LevelManagerClass::Frame()
 		}
 	}
 
+	// ===== ЛОГИКА ВО ВРЕМЯ QTE =====
 	if (m_IsExecutionActive && m_CurrentBoss)
 	{
-		// Обновляем таймер
-		m_ExecutionTimer -= 1.0f / 60.0f;  // Приблизительно deltaTime
+		m_ExecutionTimer -= 1.0f / 60.0f;
 
-		// Обновляем UI таймера
 		if (m_ExecutionUI)
 		{
-			// Ищем дочерний Entity с таймером
-			const std::vector<Entity*>& children = m_ExecutionUI->GetChildren();
-			for (Entity* child : children)
-			{
-				if (child->name == "ExecutionTimer")
-				{
-					TextLabel* timerLabel = child->GetComponent<TextLabel>();
-					if (timerLabel)
-					{
-						wchar_t buffer[16];
-						swprintf(buffer, 16, L"%.1f", m_ExecutionTimer);
-						timerLabel->textW = buffer;
-
-						// Меняем цвет при приближении времени
-						if (m_ExecutionTimer < 2.0f)
-							timerLabel->color = point3d(1.0f, 0.0f, 0.0f);
-						else if (m_ExecutionTimer < 4.0f)
-							timerLabel->color = point3d(1.0f, 1.0f, 0.0f);
-					}
-					break;
-				}
-			}
+			UpdateExecutionTimerUI();
 		}
 
-		// Если время вышло - босс восстанавливается
-		if (m_ExecutionTimer <= 0)
+		// Если время вышло и QTE ещё активно
+		if (m_ExecutionTimer <= 0 && m_QTESystem.IsActive())
 		{
-			m_IsExecutionActive = false;
-			HideExecutionUI();
-
-			// Восстанавливаем босса
-			AIComponent* bossAI = m_CurrentBoss->GetComponent<AIComponent>();
-			if (bossAI) bossAI->enabled = true;
-
-			Star* bossStar = m_CurrentBoss->GetComponent<Star>();
-			if (bossStar)
-			{
-				bossStar->color1 = point3d(1.0f, 0.2f, 0.2f);
-				bossStar->crownColor = point3d(0.8f, 0.3f, 0.3f);
-				bossStar->radius = 5.0f;
-			}
-
-			// Сбрасываем флаг, чтобы при следующем падении HP ниже 5% QTE сработало снова
-			// Нужно добавить флаг в BossComponent
-		}
-
-		// ===== ПРОВЕРКА НАЖАТИЯ КНОПКИ R =====
-		if (input::IsKeyPressed('R'))
-		{
-			static int pressCount = 0;
-			
-			pressCount++;
-
-			if (pressCount >= 5)
-			{
-				ExecuteBoss();
-				pressCount = 0; // Сброс после казни
-			}
-			
-			
+			m_QTESystem.StopQTE();
+			BossRecovery();
 		}
 	}
 
+	// Тестовая кнопка для урона боссу (ОСТАВЛЯЕМ)
 	if (input::IsKeyDown('K'))
 	{
 		if (m_CurrentBoss && m_CurrentBoss->IsActive())
@@ -550,28 +508,12 @@ void LevelManagerClass::Frame()
 			if (bossHealth)
 			{
 				bossHealth->hp -= 100.0f;
-				//Log("Test damage! Boss HP: %.0f\n", bossHealth->hp);
-			}
-		}
-	}
-	// ===== ПРОВЕРКА ПОБЕДЫ НАД БОССОМ =====
-	if (m_CurrentBoss && m_CurrentBoss->IsActive())
-	{
-		Health* bossHealth = m_CurrentBoss->GetComponent<Health>();
-		if (bossHealth)
-		{
-			static float lastLog = 0;
-			if (timer::currentTime - lastLog > 1.0f)
-			{
-				lastLog = timer::currentTime;
-				//Log("Boss HP: %.0f / %.0f\n", bossHealth->hp, bossHealth->maxHp);
 			}
 		}
 	}
 
-	
+	// ===== ПРОВЕРКА ПОБЕДЫ =====
 	static bool victoryShown = false;
-
 	if (m_CurrentBoss && m_CurrentBoss->IsActive())
 	{
 		Health* bossHealth = m_CurrentBoss->GetComponent<Health>();
@@ -579,9 +521,6 @@ void LevelManagerClass::Frame()
 		{
 			victoryShown = true;
 
-			//Log("BOSS DEFEATED! Showing victory message...\n");
-
-			// Сообщение победы
 			Entity* msg = m_World->entityStorage->CreateEntity("VictoryMsg", nullptr);
 			Transform2D* t = msg->AddComponent<Transform2D>();
 			t->anchorPoint = point3d(0, 0, 0);
@@ -600,39 +539,35 @@ void LevelManagerClass::Frame()
 			DelayedDestroy* d = msg->AddComponent<DelayedDestroy>();
 			d->lifeTime = 3000;
 
-			// Отключаем босса
 			AIComponent* bossAI = m_CurrentBoss->GetComponent<AIComponent>();
 			if (bossAI) bossAI->enabled = false;
 		}
 	}
 
-	// Обновляем таймер сообщений
+	// Обновление таймера сообщений
 	if (m_ShowGameOverMessage || m_ShowVictoryMessage)
 	{
-		m_MessageTimer -= 1.0f / 60.0f;  // Примерно 1 кадр
+		m_MessageTimer -= 1.0f / 60.0f;
 		if (m_MessageTimer <= 0)
 		{
 			m_ShowGameOverMessage = false;
 			m_ShowVictoryMessage = false;
 		}
 	}
-	 // Обновление полоски здоровья босса
-	if (m_CurrentBoss && m_CurrentBoss->IsActive() && m_BossHealthFill) {
 
+	// ===== ОБНОВЛЕНИЕ UI БОССА =====
+	if (m_CurrentBoss && m_CurrentBoss->IsActive() && m_BossHealthFill) {
 		Health* bossHealth = m_CurrentBoss->GetComponent<Health>();
 		if (bossHealth) {
-			// Показываем контейнер
 			Entity* bossContainer = m_BossHealthFill->GetParent();
 			if (bossContainer) bossContainer->SetActive(true);
 
-			// Обновляем полоску
 			float healthPercent = bossHealth->hp / bossHealth->maxHp;
 			Transform2D* barTransform = m_BossHealthFill->GetComponent<Transform2D>();
 			if (barTransform) {
 				barTransform->scale.x = 0.5f * healthPercent;
 			}
 
-			// Меняем цвет
 			Rect* barRect = m_BossHealthFill->GetComponent<Rect>();
 			if (barRect) {
 				if (healthPercent > 0.6f) barRect->color = point3d(0.2f, 0.8f, 0.2f);
@@ -640,7 +575,6 @@ void LevelManagerClass::Frame()
 				else barRect->color = point3d(0.8f, 0.2f, 0.2f);
 			}
 
-			// Обновляем цифры (прямо по указателю)
 			if (m_BossNumbersText) {
 				wchar_t buffer[64];
 				swprintf(buffer, 64, L"%.0f / %.0f", bossHealth->hp, bossHealth->maxHp);
@@ -649,14 +583,13 @@ void LevelManagerClass::Frame()
 		}
 	}
 	else {
-		// Скрываем UI босса
 		if (m_BossHealthFill) {
 			Entity* bossContainer = m_BossHealthFill->GetParent();
 			if (bossContainer) bossContainer->SetActive(false);
 		}
 	}
 
-
+	// ===== ГРАНИЦЫ АРЕНЫ =====
 	if (m_CurrentBoss && m_CurrentBoss->IsActive())
 	{
 		Entity* player = m_World->entityStorage->GetEntityByName("Player");
@@ -665,12 +598,10 @@ void LevelManagerClass::Frame()
 			Transform* playerTransform = player->GetComponent<Transform>();
 			if (playerTransform)
 			{
-				// Используй magnitude() если есть, или sqrt
 				float dx = playerTransform->position.x - m_BossArenaCenter.x;
 				float dz = playerTransform->position.z - m_BossArenaCenter.z;
-				float dist = sqrt(dx * dx + dz * dz);  // ИЛИ playerTransform->position.distance(m_BossArenaCenter)
+				float dist = sqrt(dx * dx + dz * dz);
 
-				// Вход на арену
 				if (dist < m_BossArenaRadius && !m_IsInBossArena)
 				{
 					m_IsInBossArena = true;
@@ -680,15 +611,12 @@ void LevelManagerClass::Frame()
 					if (bossUIContainer) bossUIContainer->SetActive(true);
 				}
 
-				
-
-				// Блокируем границы
 				if (m_IsInBossArena)
 				{
 					if (playerTransform->position.x < -50.0f) playerTransform->position.x = -50.0f;
 					if (playerTransform->position.x > 50.0f) playerTransform->position.x = 50.0f;
-					if (playerTransform->position.z < 150.0f) playerTransform->position.z = 150.0f;   // min Z = центр - 50
-					if (playerTransform->position.z > 250.0f) playerTransform->position.z = 250.0f;   // max Z = центр + 50
+					if (playerTransform->position.z < 150.0f) playerTransform->position.z = 150.0f;
+					if (playerTransform->position.z > 250.0f) playerTransform->position.z = 250.0f;
 				}
 			}
 		}
@@ -697,102 +625,16 @@ void LevelManagerClass::Frame()
 	{
 		m_IsInBossArena = false;
 	}
-	//if (worldFolder->localTime - shotTime >= 500) {
-	//	shotTime = worldFolder->localTime;
-
-	//	// Physic damage
-	//	Entity* projectile = m_World->entityStorage->CreateEntity("TestProjectile", worldFolder);
-	//	Transform* transform = projectile->AddComponent<Transform>();
-	//	transform->position = point3d(0, 20, 0);
-
-	//	PhysicBody* physicBody = projectile->AddComponent<PhysicBody>();
-	//	physicBody->airFriction = 0.0f;
-	//	physicBody->velocity = point3d(0, 0, 1) * 20.0f;
-
-	//	Star* star = projectile->AddComponent<Star>();
-	//	star->radius = 0.8f;
-	//	star->color1 = point3d(0.9f, 1.0f, 0.99f);
-	//	star->color2 = point3d(0.34f, 0.8f, 0.45f);
-	//	star->crownColor = point3d(0.27f, 0.63f, 1.0f);
-
-	//	SingleDamager* singleDamager = projectile->AddComponent<SingleDamager>();
-	//	singleDamager->target = Fraction::Player;
-	//	singleDamager->damage = 5.0f;
-	//	singleDamager->destroyable = true;
-	//	singleDamager->damageType = DamageType::Physic;
-
-	//	SphereCollider* sphereCollider = projectile->AddComponent<SphereCollider>();
-	//	sphereCollider->isTouchable = false;
-	//	sphereCollider->radius = 0.8f;
-
-	//	DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
-	//	delayedDestroy->lifeTime = 2000;
-
-	//	// Magic damage
-	//	projectile = m_World->entityStorage->CreateEntity("TestProjectile", worldFolder);
-	//	transform = projectile->AddComponent<Transform>();
-	//	transform->position = point3d(10, 20, 0);
-
-	//	physicBody = projectile->AddComponent<PhysicBody>();
-	//	physicBody->airFriction = 0.0f;
-	//	physicBody->velocity = point3d(0, 0, 1) * 20.0f;
-
-	//	star = projectile->AddComponent<Star>();
-	//	star->radius = 0.8f;
-	//	star->color1 = point3d(1, 0.6, 0);
-	//	star->color2 = point3d(0.93, 0.28, 0);
-	//	star->crownColor = point3d(1, 0.87, 0.25);
-
-	//	singleDamager = projectile->AddComponent<SingleDamager>();
-	//	singleDamager->target = Fraction::Player;
-	//	singleDamager->damage = 5.0f;
-	//	singleDamager->destroyable = true;
-	//	singleDamager->damageType = DamageType::Magic;
-
-	//	sphereCollider = projectile->AddComponent<SphereCollider>();
-	//	sphereCollider->isTouchable = false;
-	//	sphereCollider->radius = 0.8f;
-
-	//	delayedDestroy = projectile->AddComponent<DelayedDestroy>();
-	//	delayedDestroy->lifeTime = 2000;
-	//}
-
-	// DEBUG
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 
 	m_World->UpdateCompute();
 	m_World->UpdatePhysic();
 
-	// Изменение цвета testStar в зависимости от состояния ИИ
-	if (testEnemy && testEnemy->IsActive()) {
-		AIComponent* ai = testEnemy->GetComponent<AIComponent>();
-		Star* star = testEnemy->GetComponent<Star>();
-		if (ai && star) {
-			switch (ai->behaviorType) {
-			case AIBehaviorType::PATROL:
-				star->color1 = point3d(0.2f, 0.8f, 0.2f); // зелёный
-				break;
-			case AIBehaviorType::CHASE:
-				star->color1 = point3d(1.0f, 0.5f, 0.0f); // оранжевый
-				break;
-			case AIBehaviorType::ATTACK:
-				star->color1 = point3d(1.0f, 0.0f, 0.0f); // красный
-				break;
-			case AIBehaviorType::FLEE:
-				star->color1 = point3d(0.0f, 0.0f, 1.0f); // синий
-				break;
-			case AIBehaviorType::IDLE:
-				star->color1 = point3d(0.5f, 0.5f, 0.5f); // серый
-				break;
-			}
-		}
-	}
+	// ... остальной код (AI, рендер) ...
 
 	playerController->ProcessCamera();
-
 	m_World->UpdateRender();
-
 	mouse->RenderCursor();
 	Draw::Present();
 }
@@ -1773,52 +1615,119 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	ai->visual.originalColor = testStar->color1;
 	ai->visual.attackScale = 1.5f;
 	ai->visual.attackDuration = 0.3f;
-	ai->visual.specialCastDuration = 0.5f;
-	ai->visual.specialAttackColor = point3d(1.0f, 0.3f, 0.8f);
+	//ai->visual.specialCastDuration = 0.5f;
+	//ai->visual.specialAttackColor = point3d(1.0f, 0.3f, 0.8f);
 	ai->visual.aoePulseSpeed = 5.0f;
 
 	// === КОМПОНЕНТ БОССА (РАСКОММЕНТИРОВАН) ===
-	BossComponent* boss = BossEntity->AddComponent<BossComponent>();
+	//BossComponent* boss = BossEntity->AddComponent<BossComponent>();
 
-	// Фазы
-	boss->currentPhase = 3;
-	boss->phaseHealthThresholds[0] = 0.7f;  // 1400 HP
-	boss->phaseHealthThresholds[1] = 0.3f;  // 600 HP
+	//// Фазы
+	//boss->currentPhase = 1;
+	//boss->phaseHealthThresholds[0] = 0.7f;  // 1400 HP
+	//boss->phaseHealthThresholds[1] = 0.3f;  // 600 HP
 
-	// АРЕНА 100x100x100 (относительно центра арены 0,0,200)
-	boss->arenaMinX = -50.0f;
-	boss->arenaMaxX = 50.0f;
-	boss->arenaMinY = -50.0f;
-	boss->arenaMaxY = 50.0f;
-	boss->arenaMinZ = -50.0f;
-	boss->arenaMaxZ = 50.0f;
+	//// АРЕНА 100x100x100 (относительно центра арены 0,0,200)
+	//boss->arenaMinX = -50.0f;
+	//boss->arenaMaxX = 50.0f;
+	//boss->arenaMinY = -50.0f;
+	//boss->arenaMaxY = 50.0f;
+	//boss->arenaMinZ = -50.0f;
+	//boss->arenaMaxZ = 50.0f;
 
-	// Атаки
-	boss->dashCooldown = 3.0f;
-	boss->dashSpeed = 100.0f;
-	boss->dashDamage = 5.0f;
+	//// Атаки
+	//boss->dashCooldown = 3.0f;
+	//boss->dashSpeed = 100.0f;
+	//boss->dashDamage = 5.0f;
 
-	boss->starShotCooldown = 5.5f;
-	boss->starShotCount = 20.f;
-	boss->starShotSpeed = 15.0f;
-	boss->starShotDamage = 0.5f;
+	//boss->starShotCooldown = 5.5f;
+	//boss->starShotCount = 20.f;
+	//boss->starShotSpeed = 15.0f;
+	//boss->starShotDamage = 0.5f;
 
-	boss->sideDashCooldown = 4.5f;
-	boss->sideDashSpeed = 10.0f;
+	//boss->sideDashCooldown = 4.5f;
+	//boss->sideDashSpeed = 10.0f;
 
-	boss->aoeAttackRange = 12.0f;
-	boss->aoeDamage = 15.0f;
+	//boss->aoeAttackRange = 12.0f;
+	//boss->aoeDamage = 15.0f;
 
-	boss->specialAttackCooldown = 10.0f;
-	boss->rageSpeedMultiplier = 1.0f;
+	//boss->specialAttackCooldown = 10.0f;
+	//boss->rageSpeedMultiplier = 1.0f;
 
-	// Обнуляем таймеры (ВАЖНО!)
-	boss->lastSpecialAttackTime = 0.0f;
-	boss->lastDashTime = 0.0f;
-	boss->lastSideDashTime = 0.0f;
-	boss->lastStarShotTime = 0.0f;
+	//// Обнуляем таймеры 
+	//boss->lastSpecialAttackTime = 0.0f;
+	//boss->lastDashTime = 0.0f;
+	//boss->lastSideDashTime = 0.0f;
+	//boss->lastStarShotTime = 0.0f;
 
+	// Где-то в Initialize() или CreateLocation()
 
+	Entity* minion = m_World->entityStorage->CreateEntity("MinionEnemy", worldFolder);
+
+	Transform* minionTransform = minion->AddComponent<Transform>();
+	minionTransform->position = point3d(10.0f, 0.0f, 15.0f);
+
+	SphereCollider* minionCollider = minion->AddComponent<SphereCollider>();
+	minionCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	minionCollider->radius = 1.0f;
+
+	PhysicBody* minionPhysic = minion->AddComponent<PhysicBody>();
+	minionPhysic->airFriction = 0.1f;
+
+	Health* minionHealth = minion->AddComponent<Health>();
+	minionHealth->fraction = Fraction::Enemy;
+	minionHealth->maxHp = 50.0f;
+	minionHealth->hp = 50.0f;
+
+	Star* minionStar = minion->AddComponent<Star>();
+	minionStar->radius = 1.0f;
+	minionStar->crownRadius = 1.2f;
+	minionStar->color1 = point3d(0.5f, 0.5f, 0.5f);
+
+	// === AIComponent для миньона ===
+	AIComponent* minionAI = minion->AddComponent<AIComponent>();
+	minionAI->enabled = true;
+	minionAI->isMinion = true;  // ВАЖНО: Помечаем как миньон
+
+	// Агро-радиусы
+	minionAI->minionAggroRadius = 20.0f;
+	minionAI->minionDeaggroRadius = 40.0f;
+
+	// Параметры атаки
+	minionAI->attackRange = 5.5f;
+	minionAI->attackDamage = 10.0f;
+	minionAI->attackCooldown = 2.0f;
+
+	// Параметры рывка
+	minionAI->minionLungeSpeed = 100.0f;
+	minionAI->minionPushForce = 100.0f;
+
+	// Таймеры фаз
+	minionAI->minionWindupDuration = 0.5f;   // Замах
+	minionAI->minionLungeDuration = 0.3f;    // Рывок
+	minionAI->minionRecoveryDuration = 2.0f; // Восстановление
+
+	// Движение
+	minionAI->movementSpeed = 8.0f;
+	minionAI->accelerationStrength = 8.0f;
+	minionAI->maxAcceleration = 50.0f;
+
+	// Патруль (если игрок далеко)
+	minionAI->patrolPoints = {
+		point3d(10.0f, 0.0f, 15.0f),
+		point3d(15.0f, 0.0f, 20.0f),
+		point3d(10.0f, 0.0f, 25.0f),
+		point3d(5.0f, 0.0f, 20.0f)
+	};
+	minionAI->currentPatrolIndex = 0;
+	minionAI->arrivalDistance = 1.0f;
+
+	minionAI->detectionRange = 15.0f;
+	minionAI->chaseRange = 30.0f;
+
+	// Визуальные эффекты
+	minionAI->visual.originalRadius = minionStar->radius;
+	minionAI->visual.originalColor = minionStar->color1;
 
 }
 
@@ -2079,7 +1988,6 @@ void LevelManagerClass::ShowExecutionUI()
 {
 	if (m_ExecutionUI) return;
 
-	// Создаём UI для QTE
 	m_ExecutionUI = m_World->entityStorage->CreateEntity("ExecutionUI", nullptr);
 
 	// Фон
@@ -2087,49 +1995,64 @@ void LevelManagerClass::ShowExecutionUI()
 	Transform2D* bgTransform = bg->AddComponent<Transform2D>();
 	bgTransform->anchorPoint = point3d(0, 0, 0);
 	bgTransform->ratio = ScreenAspectRatio::XY;
-	bgTransform->position = point3d(-0.4f, -0.15f, 0);
-	bgTransform->scale = point3d(0.8f, 0.3f, 0);
+	bgTransform->position = point3d(-0.4f, -0.2f, 0);
+	bgTransform->scale = point3d(0.8f, 0.4f, 0);
 	Rect* bgRect = bg->AddComponent<Rect>();
 	bgRect->color = point3d(0, 0, 0);
 	bgRect->opacity = 0.85f;
 	bgRect->cornerRadius = 0.05f;
 
-	// Текст "НАЖМИ R!"
-	Entity* text = m_World->entityStorage->CreateEntity("ExecutionText", m_ExecutionUI);
-	Transform2D* textTransform = text->AddComponent<Transform2D>();
-	textTransform->anchorPoint = point3d(0, 0, 0);
-	textTransform->ratio = ScreenAspectRatio::XY;
-	textTransform->position = point3d(-0.2f, -0.05f, 0);
-	TextLabel* label = text->AddComponent<TextLabel>();
-	label->textW = L"НАЖМИ  R";
-	label->fontFamilyW = L"Impact";
-	label->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
-	label->fontWeight = 900;
-	label->fontSizePx = 60;
-	label->fontScale = 1.2f;
-	label->color = point3d(1.0f, 0.8f, 0.2f);
+	// Текст "НАЖМИ"
+	Entity* text1 = m_World->entityStorage->CreateEntity("ExecutionText1", m_ExecutionUI);
+	Transform2D* t1 = text1->AddComponent<Transform2D>();
+	t1->anchorPoint = point3d(0, 0, 0);
+	t1->ratio = ScreenAspectRatio::XY;
+	t1->position = point3d(-0.3f, -0.05f, 0);
+	TextLabel* label1 = text1->AddComponent<TextLabel>();
+	label1->textW = L"НАЖМИ";
+	label1->fontFamilyW = L"Impact";
+	label1->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+	label1->fontWeight = 700;
+	label1->fontSizePx = 50;
+	label1->fontScale = 1.0f;
+	label1->color = point3d(1.0f, 1.0f, 1.0f);
+
+	// Буква R (отдельно для пульсации)
+	Entity* keyEntity = m_World->entityStorage->CreateEntity("ExecutionKey", m_ExecutionUI);
+	Transform2D* keyTransform = keyEntity->AddComponent<Transform2D>();
+	keyTransform->anchorPoint = point3d(0, 0, 0);
+	keyTransform->ratio = ScreenAspectRatio::XY;
+	keyTransform->position = point3d(-0.05f, -0.05f, 0);
+	TextLabel* keyLabel = keyEntity->AddComponent<TextLabel>();
+	keyLabel->textW = L"R";
+	keyLabel->fontFamilyW = L"Impact";
+	keyLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+	keyLabel->fontWeight = 900;
+	keyLabel->fontSizePx = 70;
+	keyLabel->fontScale = 1.5f;
+	keyLabel->color = point3d(1.0f, 0.8f, 0.2f);
 
 	// Текст "ДЛЯ КАЗНИ"
-	Entity* subText = m_World->entityStorage->CreateEntity("ExecutionSubText", m_ExecutionUI);
-	Transform2D* subTransform = subText->AddComponent<Transform2D>();
-	subTransform->anchorPoint = point3d(0, 0, 0);
-	subTransform->ratio = ScreenAspectRatio::XY;
-	subTransform->position = point3d(-0.25f, 0.05f, 0);
-	TextLabel* subLabel = subText->AddComponent<TextLabel>();
-	subLabel->textW = L"ДЛЯ КАЗНИ";
-	subLabel->fontFamilyW = L"Impact";
-	subLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
-	subLabel->fontWeight = 700;
-	subLabel->fontSizePx = 35;
-	subLabel->fontScale = 1.0f;
-	subLabel->color = point3d(1.0f, 1.0f, 1.0f);
+	Entity* text2 = m_World->entityStorage->CreateEntity("ExecutionText2", m_ExecutionUI);
+	Transform2D* t2 = text2->AddComponent<Transform2D>();
+	t2->anchorPoint = point3d(0, 0, 0);
+	t2->ratio = ScreenAspectRatio::XY;
+	t2->position = point3d(0.08f, -0.05f, 0);
+	TextLabel* label2 = text2->AddComponent<TextLabel>();
+	label2->textW = L"ДЛЯ КАЗНИ";
+	label2->fontFamilyW = L"Impact";
+	label2->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+	label2->fontWeight = 700;
+	label2->fontSizePx = 50;
+	label2->fontScale = 1.0f;
+	label2->color = point3d(1.0f, 1.0f, 1.0f);
 
-	// Таймер обратного отсчёта
+	// Таймер
 	Entity* timerText = m_World->entityStorage->CreateEntity("ExecutionTimer", m_ExecutionUI);
 	Transform2D* timerTransform = timerText->AddComponent<Transform2D>();
 	timerTransform->anchorPoint = point3d(0, 0, 0);
 	timerTransform->ratio = ScreenAspectRatio::XY;
-	timerTransform->position = point3d(-0.05f, -0.2f, 0);
+	timerTransform->position = point3d(-0.05f, -0.25f, 0);
 	TextLabel* timerLabel = timerText->AddComponent<TextLabel>();
 	timerLabel->textW = L"5.0";
 	timerLabel->fontFamilyW = L"Impact";
@@ -2137,7 +2060,7 @@ void LevelManagerClass::ShowExecutionUI()
 	timerLabel->fontWeight = 700;
 	timerLabel->fontSizePx = 40;
 	timerLabel->fontScale = 1.0f;
-	timerLabel->color = point3d(1.0f, 0.3f, 0.3f);
+	timerLabel->color = point3d(1.0f, 1.0f, 1.0f);
 }
 
 void LevelManagerClass::HideExecutionUI()
@@ -2191,25 +2114,149 @@ void LevelManagerClass::TriggerExecution()
 {
 	if (m_IsExecutionActive) return;
 
-	// Проверяем, что босс ещё жив
 	Health* bossHealth = m_CurrentBoss->GetComponent<Health>();
 	if (!bossHealth || bossHealth->hp <= 0) return;
 
 	m_IsExecutionActive = true;
-	m_ExecutionTimer = 5.0f;  // 5 секунд на казнь
+	m_ExecutionTimer = 5.0f;
 
 	// Останавливаем босса
 	AIComponent* bossAI = m_CurrentBoss->GetComponent<AIComponent>();
 	if (bossAI) bossAI->enabled = false;
 
-	// Визуальный эффект - босс становится беззащитным
+	// Визуальный эффект
 	Star* bossStar = m_CurrentBoss->GetComponent<Star>();
 	if (bossStar)
 	{
-		bossStar->color1 = point3d(0.5f, 0.5f, 0.5f);  // Серый
+		bossStar->color1 = point3d(0.5f, 0.5f, 0.5f);
 		bossStar->crownColor = point3d(0.3f, 0.3f, 0.3f);
 	}
 
 	// Показываем UI
 	ShowExecutionUI();
+
+	// ===== ЗАПУСК QTE =====
+	// Настраиваем QTE для казни
+	m_CurrentQTE.type = QTEType::BUTTON_MASH;  // Быстрое нажатие
+	m_CurrentQTE.requiredKey = 'R';            // Клавиша R
+	m_CurrentQTE.requiredPresses = 8;          // Нужно 8 нажатий
+	m_CurrentQTE.duration = 5.0f;              // 5 секунд на выполнение
+
+	// Коллбэк завершения QTE
+	m_CurrentQTE.onComplete = [this](bool success, bool isPerfect) {
+		if (success)
+		{
+			ExecuteBoss();  // Казнь успешна
+		}
+		else
+		{
+			BossRecovery();  // Провал - босс восстанавливается
+		}
+		};
+
+	// Запускаем QTE
+	m_QTESystem.StartQTE(m_CurrentQTE);
+}
+
+void LevelManagerClass::BossRecovery()
+{
+	if (!m_CurrentBoss) return;
+
+	m_IsExecutionActive = false;
+	HideExecutionUI();
+
+	// Восстанавливаем босса (частично)
+	Health* bossHealth = m_CurrentBoss->GetComponent<Health>();
+	if (bossHealth)
+	{
+		bossHealth->hp = bossHealth->maxHp * 0.2f;  // Восстанавливаем до 20%
+	}
+
+	// Включаем ИИ босса
+	AIComponent* bossAI = m_CurrentBoss->GetComponent<AIComponent>();
+	if (bossAI) bossAI->enabled = true;
+
+	// Визуальное восстановление
+	Star* bossStar = m_CurrentBoss->GetComponent<Star>();
+	if (bossStar)
+	{
+		bossStar->color1 = point3d(1.0f, 0.2f, 0.2f);  // Возвращаем цвет
+		bossStar->crownColor = point3d(0.8f, 0.3f, 0.3f);
+		bossStar->radius = 5.0f;
+	}
+}
+
+void LevelManagerClass::UpdateExecutionTimerUI()
+{
+	if (!m_ExecutionUI) return;
+
+	static float pulseTime = 0.0f;
+	pulseTime += 1.0f / 60.0f;
+
+	const std::vector<Entity*>& children = m_ExecutionUI->GetChildren();
+	for (Entity* child : children)
+	{
+		// Пульсация буквы R
+		if (child->name == "ExecutionKey")
+		{
+			Transform2D* transform = child->GetComponent<Transform2D>();
+			TextLabel* label = child->GetComponent<TextLabel>();
+
+			if (transform && label && m_QTESystem.IsActive())
+			{
+				// Базовая пульсация
+				float scale = 1.5f + 0.2f * sin(pulseTime * 10.0f);
+
+				// Ускоряем при большом прогрессе
+				float progress = (float)m_CurrentQTE.currentPresses / m_CurrentQTE.requiredPresses;
+				if (progress > 0.7f)
+				{
+					scale = 1.5f + 0.35f * sin(pulseTime * 18.0f);
+				}
+
+				transform->scale = point3d(scale, scale, 1.0f);
+
+				// Меняем цвет от золотого к зелёному
+				if (progress > 0.75f)
+					label->color = point3d(0.2f, 1.0f, 0.2f);
+				else if (progress > 0.5f)
+					label->color = point3d(1.0f, 1.0f, 0.2f);
+				else
+					label->color = point3d(1.0f, 0.8f, 0.2f);
+			}
+		}
+
+		// Обновление таймера
+		if (child->name == "ExecutionTimer")
+		{
+			TextLabel* timerLabel = child->GetComponent<TextLabel>();
+			if (timerLabel)
+			{
+				wchar_t buffer[16];
+				swprintf(buffer, 16, L"%.1f", m_ExecutionTimer);
+				timerLabel->textW = buffer;
+
+				// Пульсация таймера когда осталось мало времени
+				if (m_ExecutionTimer < 2.0f)
+				{
+					timerLabel->color = point3d(1.0f, 0.0f, 0.0f);
+
+					Transform2D* timerTransform = child->GetComponent<Transform2D>();
+					if (timerTransform)
+					{
+						float pulse = 1.0f + 0.1f * sin(pulseTime * 15.0f);
+						timerTransform->scale = point3d(pulse, pulse, 1.0f);
+					}
+				}
+				else if (m_ExecutionTimer < 4.0f)
+				{
+					timerLabel->color = point3d(1.0f, 1.0f, 0.0f);
+				}
+				else
+				{
+					timerLabel->color = point3d(1.0f, 1.0f, 1.0f);
+				}
+			}
+		}
+	}
 }

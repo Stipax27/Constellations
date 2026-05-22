@@ -15,9 +15,6 @@
 #include "../../Render/Star.h"
 #include "../../Compute/Combat/Health.h"
 
-
-
-
 class AISystem : public System
 {
 public:
@@ -56,13 +53,19 @@ private:
     void UpdateIdleBehavior(EntityStorage& entityStorage, Entity* entity, Transform* transform, AIComponent* ai,
         PhysicBody* physicBody, float deltaTime);
 
+    // ---------- Миньоны (обычные враги) ----------
+    void UpdateMinionChaseBehavior(EntityStorage& entityStorage, Entity* entity, Transform* transform, AIComponent* ai,
+        PhysicBody* physicBody, float deltaTime);
+    void UpdateMinionAttackBehavior(EntityStorage& entityStorage, Entity* entity, Transform* transform, AIComponent* ai,
+        PhysicBody* physicBody, float deltaTime);
+
     // ---------- НОВЫЕ методы для босса ----------
     void ExecutePendingAttack(EntityStorage& entityStorage, Entity* entity, Transform* transform,
         AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, Star* star);
 
     void StartChargeAttack(AIComponent* ai, BossComponent* boss,
         AIComponent::AttackType attackType, float chargeDuration);
-       
+
     void UpdateBossBehavior(EntityStorage& entityStorage, Entity* entity, Transform* transform,
         AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, float deltaTime);
 
@@ -77,15 +80,12 @@ private:
 
     // ---------- Специальные атаки босса ----------
     void BossSpecialAttack(EntityStorage& entityStorage, Entity* entity, Transform* transform,
-        AIComponent* ai,BossComponent* boss, PhysicBody* physicBody, Star* star);
-
-    //void BossSummonMinions(EntityStorage& entityStorage, Transform* transform, BossComponent* boss);
+        AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, Star* star);
 
     void BossAOEAttack(EntityStorage& entityStorage, Entity* entity, Transform* transform, BossComponent* boss);
 
     void CheckBossPhaseTransition(EntityStorage& entityStorage, Entity* entity, Health* health,
         BossComponent* boss, AIComponent* ai);
-
 
     Entity* DetectTarget(EntityStorage& entityStorage, Entity* entity, Transform* transform, AIComponent* ai);
 
@@ -97,17 +97,17 @@ private:
     float GetDistanceToPlayer(EntityStorage& entityStorage, Entity* bossEntity);
 
     // Визуальные эффекты для атак босса
-    void SpawnAttackEffect(EntityStorage& entityStorage, Entity* entity,  point3d& position, const point3d& color, float size, float timeCharge);
-    void SpawnDashEffect(EntityStorage& entityStorage, Entity* entity,    point3d& position, const point3d& color, float size, float timeCharge);
-    void SpawnSideEffect(EntityStorage& entityStorage, Entity* entity,    point3d& position, const point3d& color, float size, float timeCharge);
-    void SpawnSlashEffect(EntityStorage& entityStorage,  const point3d& position, const point3d& direction, const point3d& color);
+    void SpawnAttackEffect(EntityStorage& entityStorage, Entity* entity, point3d& position, const point3d& color, float size, float timeCharge);
+    void SpawnDashEffect(EntityStorage& entityStorage, Entity* entity, point3d& position, const point3d& color, float size, float timeCharge);
+    void SpawnSideEffect(EntityStorage& entityStorage, Entity* entity, point3d& position, const point3d& color, float size, float timeCharge);
+    void SpawnSlashEffect(EntityStorage& entityStorage, const point3d& position, const point3d& direction, const point3d& color);
     void SpawnImpactEffect(EntityStorage& entityStorage, const point3d& position, const point3d& color);
     void SpawnAuraEffect(Entity* bossEntity, const point3d& color, float duration);
     void SpawnAOEEffect(EntityStorage& entityStorage, Entity* entity, point3d& position, float radius, const point3d& color, float timeCharge);
 
     // Эффекты для разных типов атак
-    void SpawnMeleeAttackEffect(EntityStorage& entityStorage, const point3d& position, const point3d& direction);
-    void SpawnRangedAttackEffect(EntityStorage& entityStorage, const point3d& position, const point3d& direction);
+    void SpawnMeleeAttackEffect(EntityStorage& entityStorage, Entity* entity ,point3d& position, const point3d& direction);
+    void SpawnRangedAttackEffect(EntityStorage& entityStorage, Entity* entity, point3d& position, const point3d& direction);
 
     void BossSideDash(EntityStorage& entityStorage, Entity* entity, Transform* transform,
         AIComponent* ai, BossComponent* boss, PhysicBody* physicBody);
@@ -122,7 +122,6 @@ private:
         AIComponent* ai, BossComponent* boss, PhysicBody* physicBody, float deltaTime);
 
     point3d GetGlobalPosition(Entity* entity);
-
 };
 
 #endif
