@@ -118,6 +118,7 @@ private:
 	void UpdateTestAnimationToggle();
 	void CreateArenaBarrier(Entity* parent, const point3d& center, float radius, int starCount);
 	void ShowGameOverMessage(const wchar_t* message, const point3d& color);
+	Entity* CreateMinion(point3d position, float startDelay);
 
 	bool m_IsExecutionActive = false;
 	Entity* m_ExecutionUI = nullptr;

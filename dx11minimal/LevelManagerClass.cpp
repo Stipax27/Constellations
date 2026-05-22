@@ -1662,10 +1662,18 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 
 	// Где-то в Initialize() или CreateLocation()
 
+	Entity* minion1 = CreateMinion(point3d(10.0f, 0.0f, 15.0f), 0.0f);   // Атакует сразу
+	Entity* minion2 = CreateMinion(point3d(-10.0f, 0.0f, 20.0f), 0.6f);  // Задержка 0.6 сек
+	Entity* minion3 = CreateMinion(point3d(0.0f, 0.0f, 25.0f), 1.2f);    // Задержка 1.2 сек
+
+}
+
+Entity* LevelManagerClass::CreateMinion(point3d position, float startDelay)
+{
 	Entity* minion = m_World->entityStorage->CreateEntity("MinionEnemy", worldFolder);
 
 	Transform* minionTransform = minion->AddComponent<Transform>();
-	minionTransform->position = point3d(10.0f, 0.0f, 15.0f);
+	minionTransform->position = position;
 
 	SphereCollider* minionCollider = minion->AddComponent<SphereCollider>();
 	minionCollider->collisionGroup = CollisionFilter::Group::Enemy;
@@ -1687,49 +1695,44 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	// === AIComponent для миньона ===
 	AIComponent* minionAI = minion->AddComponent<AIComponent>();
 	minionAI->enabled = true;
-	minionAI->isMinion = true;  // ВАЖНО: Помечаем как миньон
+	minionAI->isMinion = true;
 
-	// Агро-радиусы
-	minionAI->minionAggroRadius = 20.0f;
+	// === РАЗНЫЕ ПАРАМЕТРЫ ДЛЯ КАЖДОГО МИНЬОНА ===
+	float randomFactor = 0.8f + (rand() % 40) / 100.0f;  // 0.8 .. 1.2
+
+	minionAI->minionAggroRadius = 20.0f * randomFactor;
 	minionAI->minionDeaggroRadius = 40.0f;
+	minionAI->attackRange = 2.5f;
+	minionAI->attackDamage = 10.0f * randomFactor;
+	minionAI->movementSpeed = 6.0f + (rand() % 40) / 10.0f;  // 6..10
 
-	// Параметры атаки
-	minionAI->attackRange = 5.5f;
-	minionAI->attackDamage = 10.0f;
-	minionAI->attackCooldown = 2.0f;
+	minionAI->minionLungeSpeed = 100.0f + (rand() % 60) / 10.0f;  // 18..24
+	minionAI->minionPushForce = 80.0f + (rand() % 40) / 10.0f;    // 8..12
 
-	// Параметры рывка
-	minionAI->minionLungeSpeed = 100.0f;
-	minionAI->minionPushForce = 100.0f;
+	// Разные тайминги атаки
+	minionAI->minionWindupDuration = 0.3f + (rand() % 20) / 100.0f;   // 0.3..0.5
+	minionAI->minionLungeDuration = 0.25f + (rand() % 10) / 100.0f;   // 0.25..0.35
+	minionAI->minionRecoveryDuration = 0.8f + (rand() % 40) / 100.0f; // 0.8..1.2
 
-	// Таймеры фаз
-	minionAI->minionWindupDuration = 0.5f;   // Замах
-	minionAI->minionLungeDuration = 0.3f;    // Рывок
-	minionAI->minionRecoveryDuration = 2.0f; // Восстановление
+	// Случайная начальная задержка
+	minionAI->minionStartDelay = startDelay;
+	minionAI->stateTimer = 0.0f;
 
-	// Движение
-	minionAI->movementSpeed = 8.0f;
 	minionAI->accelerationStrength = 8.0f;
 	minionAI->maxAcceleration = 50.0f;
 
-	// Патруль (если игрок далеко)
-	minionAI->patrolPoints = {
-		point3d(10.0f, 0.0f, 15.0f),
-		point3d(15.0f, 0.0f, 20.0f),
-		point3d(10.0f, 0.0f, 25.0f),
-		point3d(5.0f, 0.0f, 20.0f)
-	};
-	minionAI->currentPatrolIndex = 0;
-	minionAI->arrivalDistance = 1.0f;
+	// Радиус и сила отталкивания
+	minionAI->minionSeparationRadius = 3.0f;
+	minionAI->minionSeparationForce = 15.0f;
 
-	minionAI->detectionRange = 15.0f;
-	minionAI->chaseRange = 30.0f;
-
-	// Визуальные эффекты
 	minionAI->visual.originalRadius = minionStar->radius;
 	minionAI->visual.originalColor = minionStar->color1;
 
+	minionAI->behaviorType = AIBehaviorType::PATROL;
+
+	return minion;
 }
+
 
 void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
 

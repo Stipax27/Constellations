@@ -202,7 +202,7 @@ void AISystem::ProcessAIBehavior(EntityStorage& entityStorage, Entity* entity, T
     ai->stateTimer += deltaTime;
 }
 
-// ===== НОВЫЕ МЕТОДЫ ДЛЯ МИНЬОНОВ =====
+// ===== ОБНОВЛЁННЫЕ МЕТОДЫ ДЛЯ МИНЬОНОВ =====
 
 void AISystem::UpdateMinionChaseBehavior(EntityStorage& entityStorage, Entity* entity, Transform* transform,
     AIComponent* ai, PhysicBody* physicBody, float deltaTime)
@@ -236,31 +236,95 @@ void AISystem::UpdateMinionChaseBehavior(EntityStorage& entityStorage, Entity* e
         return;
     }
 
-    // Если достаточно близко - начинаем атаку
-    if (distance <= ai->attackRange + ai->minionLungeSpeed * ai->minionLungeDuration * 0.5f)
-    {
-        ai->behaviorType = AIBehaviorType::ATTACK;
-        ai->minionAttackPhase = AIComponent::MinionAttackPhase::WINDUP;
-        ai->minionWindupTimer = 0.0f;
-        ai->minionHasDealtDamage = false;
-        ai->minionLungeDirection = direction.normalized();
+    // Проверяем, не атакует ли уже другой миньон (групповая задержка)
+    float effectiveAttackRange = ai->attackRange + ai->minionLungeSpeed * ai->minionLungeDuration * 0.5f;
 
-        // Замедляемся перед замахом
-        physicBody->velocity = physicBody->velocity * 0.5f;
-        physicBody->acceleration = point3d();
-        return;
+    // Если достаточно близко И прошла случайная задержка - начинаем атаку
+    if (distance <= effectiveAttackRange && ai->stateTimer >= ai->minionStartDelay)
+    {
+        // Проверяем, есть ли другие миньоны в фазе атаки
+        bool otherIsAttacking = false;
+        const std::vector<Entity*>& allEntities = entityStorage.GetEntitiesWithComponent<AIComponent>();
+        for (Entity* other : allEntities)
+        {
+            if (other == entity || !IsEntityValid(other)) continue;
+            AIComponent* otherAI = other->GetComponent<AIComponent>();
+            if (otherAI && otherAI->isMinion && otherAI->behaviorType == AIBehaviorType::ATTACK)
+            {
+                float distToOther = (GetWorldTransform(other).position - myWorldPos).magnitude();
+                if (distToOther < 5.0f)  // Если рядом атакующий миньон
+                {
+                    otherIsAttacking = true;
+                    break;
+                }
+            }
+        }
+
+        // Атакуем только если рядом нет атакующего миньона или прошла задержка
+        if (!otherIsAttacking || ai->stateTimer >= ai->minionStartDelay + 0.5f)
+        {
+            ai->behaviorType = AIBehaviorType::ATTACK;
+            ai->minionAttackPhase = AIComponent::MinionAttackPhase::WINDUP;
+            ai->minionWindupTimer = 0.0f;
+            ai->minionHasDealtDamage = false;
+            ai->minionLungeDirection = direction.normalized();
+
+            // Замедляемся перед замахом
+            physicBody->velocity = physicBody->velocity * 0.5f;
+            physicBody->acceleration = point3d();
+            return;
+        }
     }
 
-    // Движение к игроку
+    // Движение к игроку с отталкиванием от других миньонов
     direction = direction.normalized();
     point3d targetVelocity = direction * ai->movementSpeed;
-    point3d desiredAccel = (targetVelocity - physicBody->velocity) * ai->accelerationStrength;
+
+    // ===== ОТТАЛКИВАНИЕ ОТ ДРУГИХ МИНЬОНОВ =====
+    point3d separationForce = CalculateMinionSeparation(entityStorage, entity, ai);
+
+    // Комбинируем движение к игроку и отталкивание
+    point3d combinedVelocity = targetVelocity + separationForce;
+    if (combinedVelocity.magnitude() > ai->movementSpeed * 1.2f)
+        combinedVelocity = combinedVelocity.normalized() * ai->movementSpeed * 1.2f;
+
+    point3d desiredAccel = (combinedVelocity - physicBody->velocity) * ai->accelerationStrength;
 
     float accelMag = desiredAccel.magnitude();
     if (accelMag > ai->maxAcceleration)
         desiredAccel = desiredAccel.normalized() * ai->maxAcceleration;
 
     physicBody->acceleration = desiredAccel;
+}
+
+// Новая функция для расчёта отталкивания между миньонами
+point3d AISystem::CalculateMinionSeparation(EntityStorage& entityStorage, Entity* entity, AIComponent* ai)
+{
+    point3d separationForce = point3d(0, 0, 0);
+    point3d myPos = GetWorldTransform(entity).position;
+
+    const std::vector<Entity*>& allEntities = entityStorage.GetEntitiesWithComponent<AIComponent>();
+
+    for (Entity* other : allEntities)
+    {
+        if (other == entity || !IsEntityValid(other)) continue;
+
+        AIComponent* otherAI = other->GetComponent<AIComponent>();
+        if (!otherAI || !otherAI->isMinion) continue;  // Только миньоны
+
+        point3d otherPos = GetWorldTransform(other).position;
+        point3d diff = myPos - otherPos;
+        float distance = diff.magnitude();
+
+        if (distance < ai->minionSeparationRadius && distance > 0.01f)
+        {
+            // Сила обратно пропорциональна расстоянию
+            float strength = (1.0f - distance / ai->minionSeparationRadius) * ai->minionSeparationForce;
+            separationForce = separationForce + diff.normalized() * strength;
+        }
+    }
+
+    return separationForce;
 }
 
 void AISystem::UpdateMinionAttackBehavior(EntityStorage& entityStorage, Entity* entity, Transform* transform,
@@ -278,7 +342,7 @@ void AISystem::UpdateMinionAttackBehavior(EntityStorage& entityStorage, Entity* 
         physicBody->velocity = physicBody->velocity * 0.85f;
         physicBody->acceleration = point3d();
 
-        point3d myPos = GetWorldTransform(entity).position;  // Получаем мировую позицию ДО эффекта
+        point3d myPos = GetWorldTransform(entity).position;
 
         // Корректируем направление атаки на игрока
         if (target && IsEntityValid(target))
@@ -305,7 +369,7 @@ void AISystem::UpdateMinionAttackBehavior(EntityStorage& entityStorage, Entity* 
             // Резкий рывок
             physicBody->velocity = ai->minionLungeDirection * ai->minionLungeSpeed;
 
-            // Эффект начала атаки - передаём МИРОВУЮ позицию
+            // Эффект начала атаки
             point3d effectPos = myPos + ai->minionLungeDirection * 1.5f;
             SpawnMeleeAttackEffect(entityStorage, nullptr, effectPos, ai->minionLungeDirection);
         }
@@ -366,6 +430,10 @@ void AISystem::UpdateMinionAttackBehavior(EntityStorage& entityStorage, Entity* 
             // Небольшой отскок назад
             point3d backDir = ai->minionLungeDirection * -1.0f;
             physicBody->velocity = backDir * 3.0f;
+
+            // Сбрасываем задержку и добавляем случайный разброс
+            ai->stateTimer = 0.0f;
+            ai->minionStartDelay = (rand() % 100) / 100.0f * 0.8f;  // 0..0.8 сек случайной задержки
         }
         break;
     }
@@ -374,8 +442,9 @@ void AISystem::UpdateMinionAttackBehavior(EntityStorage& entityStorage, Entity* 
     {
         ai->minionRecoveryTimer += deltaTime;
 
-        // Стоим на месте, восстанавливаемся
-        physicBody->velocity = physicBody->velocity * 0.8f;
+        // Стоим на месте, восстанавливаемся + отталкивание от других миньонов
+        point3d separationForce = CalculateMinionSeparation(entityStorage, entity, ai) * 0.5f;  // Слабее во время восстановления
+        physicBody->velocity = physicBody->velocity * 0.8f + separationForce * deltaTime;
         physicBody->acceleration = point3d();
 
         // Завершение восстановления

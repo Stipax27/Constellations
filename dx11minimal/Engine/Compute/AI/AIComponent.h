@@ -107,6 +107,11 @@ struct AIComponent : public Component {
     point3d minionLungeDirection;       // Направление рывка
     bool minionHasDealtDamage = false;  // Нанесен ли урон в текущем рывке
 
+    float minionStartDelay = 0.0f;          // Случайная задержка перед первой атакой
+    float minionAttackCooldownRandom = 0.0f; // Случайный разброс кулдауна
+    float minionSeparationRadius = 3.0f;    // Радиус отталкивания от других миньонов
+    float minionSeparationForce = 15.0f;    // Сила отталкивания
+
     // Фазы атаки миньона (используются внутри ATTACK)
     enum class MinionAttackPhase {
         WINDUP,     // Замах

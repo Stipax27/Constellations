@@ -58,6 +58,7 @@ private:
         PhysicBody* physicBody, float deltaTime);
     void UpdateMinionAttackBehavior(EntityStorage& entityStorage, Entity* entity, Transform* transform, AIComponent* ai,
         PhysicBody* physicBody, float deltaTime);
+    point3d CalculateMinionSeparation(EntityStorage& entityStorage, Entity* entity, AIComponent* ai);
 
     // ---------- НОВЫЕ методы для босса ----------
     void ExecutePendingAttack(EntityStorage& entityStorage, Entity* entity, Transform* transform,
