@@ -1043,13 +1043,7 @@ void LevelManagerClass::CreateUI()
 	textLabel->fontScale = 0.34f;
 	textLabel->letterSpacingPx = 1.0f;
 
-
-
-
 }
-
-
-
 
 void LevelManagerClass::CreateSpaceBackground(Entity* folder, int quality)
 {
@@ -1063,7 +1057,6 @@ void LevelManagerClass::CreateSpaceBackground(Entity* folder, int quality)
 	nebula->mode = pMode::point;
 	nebula->isOnBackground = true;
 }
-
 
 void LevelManagerClass::CreateAries(Entity* folder)
 {
@@ -1620,45 +1613,45 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	ai->visual.aoePulseSpeed = 5.0f;
 
 	// === КОМПОНЕНТ БОССА (РАСКОММЕНТИРОВАН) ===
-	//BossComponent* boss = BossEntity->AddComponent<BossComponent>();
+	BossComponent* boss = BossEntity->AddComponent<BossComponent>();
 
-	//// Фазы
-	//boss->currentPhase = 1;
-	//boss->phaseHealthThresholds[0] = 0.7f;  // 1400 HP
-	//boss->phaseHealthThresholds[1] = 0.3f;  // 600 HP
+	// Фазы
+	boss->currentPhase = 1;
+	boss->phaseHealthThresholds[0] = 0.7f;  // 1400 HP
+	boss->phaseHealthThresholds[1] = 0.3f;  // 600 HP
 
-	//// АРЕНА 100x100x100 (относительно центра арены 0,0,200)
-	//boss->arenaMinX = -50.0f;
-	//boss->arenaMaxX = 50.0f;
-	//boss->arenaMinY = -50.0f;
-	//boss->arenaMaxY = 50.0f;
-	//boss->arenaMinZ = -50.0f;
-	//boss->arenaMaxZ = 50.0f;
+	// АРЕНА 100x100x100 (относительно центра арены 0,0,200)
+	boss->arenaMinX = -50.0f;
+	boss->arenaMaxX = 50.0f;
+	boss->arenaMinY = -50.0f;
+	boss->arenaMaxY = 50.0f;
+	boss->arenaMinZ = -50.0f;
+	boss->arenaMaxZ = 50.0f;
 
-	//// Атаки
-	//boss->dashCooldown = 3.0f;
-	//boss->dashSpeed = 100.0f;
-	//boss->dashDamage = 5.0f;
+	// Атаки
+	boss->dashCooldown = 3.0f;
+	boss->dashSpeed = 100.0f;
+	boss->dashDamage = 5.0f;
 
-	//boss->starShotCooldown = 5.5f;
-	//boss->starShotCount = 20.f;
-	//boss->starShotSpeed = 15.0f;
-	//boss->starShotDamage = 0.5f;
+	boss->starShotCooldown = 5.5f;
+	boss->starShotCount = 20.f;
+	boss->starShotSpeed = 15.0f;
+	boss->starShotDamage = 0.5f;
 
-	//boss->sideDashCooldown = 4.5f;
-	//boss->sideDashSpeed = 10.0f;
+	boss->sideDashCooldown = 4.5f;
+	boss->sideDashSpeed = 10.0f;
 
-	//boss->aoeAttackRange = 12.0f;
-	//boss->aoeDamage = 15.0f;
+	boss->aoeAttackRange = 12.0f;
+	boss->aoeDamage = 15.0f;
 
-	//boss->specialAttackCooldown = 10.0f;
-	//boss->rageSpeedMultiplier = 1.0f;
+	boss->specialAttackCooldown = 10.0f;
+	boss->rageSpeedMultiplier = 1.0f;
 
-	//// Обнуляем таймеры 
-	//boss->lastSpecialAttackTime = 0.0f;
-	//boss->lastDashTime = 0.0f;
-	//boss->lastSideDashTime = 0.0f;
-	//boss->lastStarShotTime = 0.0f;
+	// Обнуляем таймеры 
+	boss->lastSpecialAttackTime = 0.0f;
+	boss->lastDashTime = 0.0f;
+	boss->lastSideDashTime = 0.0f;
+	boss->lastStarShotTime = 0.0f;
 
 	// Где-то в Initialize() или CreateLocation()
 
@@ -1706,8 +1699,8 @@ Entity* LevelManagerClass::CreateMinion(point3d position, float startDelay)
 	minionAI->attackDamage = 10.0f * randomFactor;
 	minionAI->movementSpeed = 6.0f + (rand() % 40) / 10.0f;  // 6..10
 
-	minionAI->minionLungeSpeed = 100.0f + (rand() % 60) / 10.0f;  // 18..24
-	minionAI->minionPushForce = 80.0f + (rand() % 40) / 10.0f;    // 8..12
+	minionAI->minionLungeSpeed = 80.0f + (rand() % 60) / 10.0f;  // 18..24
+	minionAI->minionPushForce = 100.0f + (rand() % 40) / 10.0f;    // 8..12
 
 	// Разные тайминги атаки
 	minionAI->minionWindupDuration = 0.3f + (rand() % 20) / 100.0f;   // 0.3..0.5
