@@ -184,6 +184,7 @@ namespace Textures
 namespace Audio
 {
 #define MAXCHANNELS 32
+#define max_audio 256
 
 	struct RIFF_HEADER {
 		char chunkId[4];
@@ -207,19 +208,28 @@ namespace Audio
 		unsigned long subChunkSize;
 	};
 
+	struct soundDesc {
+		std::vector<BYTE> data;
+		WAVEFORMATEX format;
+	};
+
 	extern IXAudio2* pXAudio2;
 	extern IXAudio2MasteringVoice* pMasteringVoice;
-	extern IXAudio2SourceVoice* pSourceVoice;
 	extern XAUDIO2_BUFFER buffer;
 	extern BYTE* channel[MAXCHANNELS];
 
-	extern int len = 44100 * 60 * 10;
-	extern int channelLen = 44100;
+	extern int len;
+	extern int channelLen;
+
+	extern soundDesc Sounds[max_audio];
+	extern std::unordered_map<std::string, int> SoundName;
+
+	extern int soundsCount;
 
 	void Init();
 	void Release();
 
-	bool LoadWavFile(const char* filename, std::vector<BYTE>& audioData, WAVEFORMATEX& waveFormat);
+	void LoadWavFile(const std::string name, const char* filename, std::vector<BYTE>& audioData, WAVEFORMATEX& waveFormat);
 }
 
 namespace Models

@@ -846,15 +846,21 @@ std::tuple<int, int, int> Textures::GetCompressRes(RenderCompress compress)
 
 IXAudio2* Audio::pXAudio2;
 IXAudio2MasteringVoice* Audio::pMasteringVoice;
-IXAudio2SourceVoice* Audio::pSourceVoice;
 XAUDIO2_BUFFER Audio::buffer;
 BYTE* Audio::channel[MAXCHANNELS];
 
-int len = 44100 * 60 * 10;
-int channelLen = 44100;
+int Audio::len = 44100 * 60 * 10;
+int Audio::channelLen = 44100;
+
+Audio::soundDesc Audio::Sounds[max_audio];
+std::unordered_map<std::string, int> Audio::SoundName;
+
+int Audio::soundsCount = 0;
 
 void Audio::Init()
 {
+	IXAudio2SourceVoice* pSourceVoice;
+
 	HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 	if (FAILED(hr)) { /* Обработка ошибки */ }
 
@@ -903,7 +909,20 @@ void Audio::Release()
 }
 
 
-bool Audio::LoadWavFile(const char* filename, std::vector<BYTE>& audioData, WAVEFORMATEX& waveFormat) {
+void Audio::LoadWavFile(const std::string name, const char* filename, std::vector<BYTE>& audioData, WAVEFORMATEX& waveFormat) {
+	if (soundsCount >= max_audio) {
+		Log("Cannot create texture: limit (");
+		Log(std::to_string(max_tex).c_str());
+		Log(") has reached\n");
+		return;
+	}
+
+	int curSnd = soundsCount++;
+	SoundName[name] = curSnd;
+
+	soundDesc& sound = Sounds[curSnd];
+	sound.data.clear();
+
 	std::ifstream file(filename, std::ios::binary);
 	if (!file.is_open()) {
 		return; // Ошибка открытия файла
