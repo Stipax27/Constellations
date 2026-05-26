@@ -2,21 +2,22 @@
 #pragma once
 #include "../Engine/ECS_Base/world.h"
 #include "../Engine/Window/windowclass.h"
+#include "../Engine/Mouse/mouseclass.h"
 
-class LevelManagerClass; // Предварительное объявление
+class LevelManagerClass;
 
 class MainMenuState
 {
 private:
     LevelManagerClass* m_Manager;
-    World* m_World;           // Храним указатель на мир
-    WindowClass* m_Window;    // Храним указатель на окно
+    World* m_World;
+    WindowClass* m_Window;
+    MouseClass* m_Mouse;
     Entity* m_MenuRoot;
     bool m_IsActive;
 
 public:
-    // Передаём World* и WindowClass* напрямую
-    MainMenuState(World* world, WindowClass* window);
+    MainMenuState(LevelManagerClass* manager);
     ~MainMenuState();
 
     void Enter();

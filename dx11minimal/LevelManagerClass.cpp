@@ -115,7 +115,7 @@ bool LevelManagerClass::Initialize()
     }
 
     // Создаём все состояния игры
-    m_MainMenuState = new MainMenuState(m_World,window);
+    m_MainMenuState = new MainMenuState(this);
     m_GameplayState = new GameplayState(this);
     m_PauseState = new PauseState(this);
     m_GameOverState = new GameOverState(this);
@@ -205,7 +205,7 @@ void LevelManagerClass::SwitchToMainMenu()
 void LevelManagerClass::SwitchToGameplay()
 {
     // Выходим из текущих UI состояний
-    if (m_MainMenuState && m_MainMenuState->IsActive())
+     if (m_MainMenuState && m_MainMenuState->IsActive())
         m_MainMenuState->Exit();
     if (m_GameOverState && m_GameOverState->IsActive())
         m_GameOverState->Exit();
