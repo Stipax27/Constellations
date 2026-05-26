@@ -24,7 +24,6 @@
 
 #include "Engine/Physic/Collision/CollisionManagerClass.h"
 
-
 #include "Engine/Render/spriteSystem.h"
 #include "Engine/Render/Mesh/meshSystem.h"
 #include "Engine/Render/Nebula/nebulaSystem.h"
@@ -54,7 +53,6 @@
 #include "Engine/Compute/AI/AISystem.h"
 #include "Engine/Compute/Combat/QTESystem.h"
 
-
 #include "Engine/Render/BoneAnimation/SkeletalAnimationComponent.h"
 #include "Engine/Render/BoneAnimation/SkeletalAnimationSystem.h"
 #include "Engine/Render/SkinnedMesh/SkinnedMeshSystem.h"
@@ -65,108 +63,142 @@
 /////////////
 // GLOBALS //
 /////////////
-//const bool VSYNC_ENABLED = true;
 #define SHOW_COLLIDERS true
 #define SHOW_GRAVITY false
 
+// Предварительные объявления классов состояний
+class MainMenuState;
+class GameplayState;
+class PauseState;
+class GameOverState;
+class VictoryState;
+
+// Состояния игры
+enum class GameState
+{
+    MAIN_MENU,
+    GAMEPLAY,
+    PAUSED,
+    GAME_OVER,
+    VICTORY
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: LevelManagerClass
 ////////////////////////////////////////////////////////////////////////////////
 
-
 class LevelManagerClass
 {
 public:
-	WindowClass* window;
-	MouseClass* mouse;
+    WindowClass* window;
+    MouseClass* mouse;
 
 public:
-	LevelManagerClass();
-	LevelManagerClass(const LevelManagerClass&);
-	~LevelManagerClass();
+    LevelManagerClass();
+    LevelManagerClass(const LevelManagerClass&);
+    ~LevelManagerClass();
 
-	void InitWindow();
-	bool Initialize();
-	void Shutdown();
+    void InitWindow();
+    bool Initialize();
+    void Shutdown();
+    void Frame();
+    void ProcessSound(const char* name);
 
-	void Frame();
+    // ===== МЕТОДЫ ДОСТУПА ДЛЯ СОСТОЯНИЙ =====
+    World* GetWorld() const { return m_World; }
+    WindowClass* GetWindow() const { return window; }
+    MouseClass* GetMouse() const { return mouse; }
 
-	void ProcessSound(const char* name);
+    // ===== МЕТОДЫ ПЕРЕКЛЮЧЕНИЯ СОСТОЯНИЙ =====
+    void SwitchToMainMenu();
+    void SwitchToGameplay();
+    void SwitchToPause();
+    void ResumeFromPause();
+    void SwitchToGameOver();
+    void SwitchToVictory();
+    void RestartGame();
 
 private:
-	World* m_World;
-	PlayerController* playerController;
-	CollisionManagerClass* collisionManager;
-	QuestManager* questManager;
+    World* m_World;
+    PlayerController* playerController;
+    CollisionManagerClass* collisionManager;
+    QuestManager* questManager;
 
-	Entity* m_TestAnimEntity = nullptr;
-	int m_TestAnimCycleIndex = 0;
-	bool m_WasToggleAnimationPressed = false;
+    // ===== СОСТОЯНИЯ ИГРЫ =====
+    MainMenuState* m_MainMenuState;
+    GameplayState* m_GameplayState;
+    PauseState* m_PauseState;
+    GameOverState* m_GameOverState;
+    VictoryState* m_VictoryState;
 
-	void LoadModels();
-	Entity* CreatePlayer(Entity* = nullptr);
+    GameState m_CurrentState;
+    GameState m_PreviousState;
 
-	void CreateUI();
-	void InitSystems();
+    // ===== ОСТАЛЬНЫЕ ПРИВАТНЫЕ ЧЛЕНЫ =====
+    Entity* m_TestAnimEntity = nullptr;
+    int m_TestAnimCycleIndex = 0;
+    bool m_WasToggleAnimationPressed = false;
 
-	void CreateSpaceBackground(Entity*, int);
-	void CreateAries(Entity*);
-	void CreateZenithLocation(Entity*, int);
-	void CreateNebula(Entity*, int);
-	void CreateStarQuestLoc(Entity*, int);
-	void UpdateTestAnimationToggle();
-	void CreateArenaBarrier(Entity* parent, const point3d& center, float radius, int starCount);
-	void ShowGameOverMessage(const wchar_t* message, const point3d& color);
-	Entity* CreateMinion(point3d position, float startDelay);
+    void LoadModels();
+    Entity* CreatePlayer(Entity* = nullptr);
 
-	bool m_IsExecutionActive = false;
-	Entity* m_ExecutionUI = nullptr;
-	float m_ExecutionTimer = 0.0f;
-	float m_ExecutionTimeLimit = 5.0f;
+    void CreateUI();
+    void InitSystems();
 
-	void TriggerExecution();
-	void ExecuteBoss();
-	void ShowExecutionUI();
-	void HideExecutionUI();
-	void BossRecovery();
-	void UpdateExecutionTimerUI();
+    void CreateSpaceBackground(Entity*, int);
+    void CreateAries(Entity*);
+    void CreateZenithLocation(Entity*, int);
+    void CreateNebula(Entity*, int);
+    void CreateStarQuestLoc(Entity*, int);
+    void UpdateTestAnimationToggle();
+    void CreateArenaBarrier(Entity* parent, const point3d& center, float radius, int starCount);
+    void ShowGameOverMessage(const wchar_t* message, const point3d& color);
+    Entity* CreateMinion(point3d position, float startDelay);
 
-	ID3D11Buffer* m_BoneBuffer = nullptr;
-	SkinnedMesh m_FoxMesh;
-	Skeleton    m_FoxSkeleton;
-	std::vector<AnimationClip> m_FoxAnimations;
-	SkinnedMesh m_CesiumMesh;
-	Skeleton    m_CesiumSkeleton;
-	std::vector<AnimationClip> m_CesiumAnimations;
+    bool m_IsExecutionActive = false;
+    Entity* m_ExecutionUI = nullptr;
+    float m_ExecutionTimer = 0.0f;
+    float m_ExecutionTimeLimit = 5.0f;
 
+    void TriggerExecution();
+    void ExecuteBoss();
+    void ShowExecutionUI();
+    void HideExecutionUI();
+    void BossRecovery();
+    void UpdateExecutionTimerUI();
 
-	SkinnedMesh m_PunchComboNewMesh;
-	Skeleton    m_PunchComboNewSkeleton;
-	std::vector<AnimationClip> m_PunchComboNewAnimations;
+    ID3D11Buffer* m_BoneBuffer = nullptr;
+    SkinnedMesh m_FoxMesh;
+    Skeleton    m_FoxSkeleton;
+    std::vector<AnimationClip> m_FoxAnimations;
+    SkinnedMesh m_CesiumMesh;
+    Skeleton    m_CesiumSkeleton;
+    std::vector<AnimationClip> m_CesiumAnimations;
 
-	SkinnedMesh m_TestAnimMesh;
-	Skeleton    m_TestAnimSkeleton;
-	std::vector<AnimationClip> m_TestAnimAnimations;
+    SkinnedMesh m_PunchComboNewMesh;
+    Skeleton    m_PunchComboNewSkeleton;
+    std::vector<AnimationClip> m_PunchComboNewAnimations;
 
-	QTESimpleSystem m_QTESystem;
-	QTESimple m_CurrentQTE;
+    SkinnedMesh m_TestAnimMesh;
+    Skeleton    m_TestAnimSkeleton;
+    std::vector<AnimationClip> m_TestAnimAnimations;
 
-private: // AI amogus
-	Entity* testEnemy;
-	Entity* worldFolder;
-	Entity* m_CurrentBoss;
-	Entity* m_BossHealthFill;      // Полоска здоровья
-	TextLabel* m_BossNumbersText;  // Текст с цифрами
-	TextLabel* m_BossNameText;     // Текст с именем
-	bool m_IsInBossArena = false;
-	float m_BossArenaRadius = 60.0f;
-	point3d m_BossArenaCenter = point3d(0, 0, 0);
+    QTESimpleSystem m_QTESystem;
+    QTESimple m_CurrentQTE;
 
-	bool m_ShowGameOverMessage = false;
-	bool m_ShowVictoryMessage = false;
-	float m_MessageTimer = 0.0f;
-	
+    Entity* testEnemy;
+    Entity* worldFolder;
+    Entity* m_CurrentBoss;
+    Entity* m_BossHealthFill;
+    TextLabel* m_BossNumbersText;
+    TextLabel* m_BossNameText;
+    bool m_IsInBossArena = false;
+    float m_BossArenaRadius = 60.0f;
+    point3d m_BossArenaCenter = point3d(0, 0, 0);
+
+    bool m_ShowGameOverMessage = false;
+    bool m_ShowVictoryMessage = false;
+    float m_MessageTimer = 0.0f;
 };
 
 #endif
