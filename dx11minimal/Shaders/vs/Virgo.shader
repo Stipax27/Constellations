@@ -3,16 +3,6 @@
 #include <../lib/constants.shader>
 #include <../lib/utils.shader>
 
-cbuffer params : register(b0)
-{
-    float4x4 model;
-    int gX;
-    int gY;
-    int mode;
-    int skipper;
-    float4 base_color;
-}
-
 float toRad(float a)
 {
     return a*PI/180.;
@@ -155,10 +145,10 @@ float3 pillar(uint qid,uint iid,float2 grid,float a, float t, float h)
 
 pos_color CalcParticles(uint qid,uint iid,float4 grid)
 {
-     qid *= skipper;
+     qid *= nSkipper;
      float t=time.x*.004;
      uint inStars = 1232*123;
-     if (mode==1||iid%inStars==0)
+     if (nMode==1||iid%inStars==0)
      {
         t=0;
      }
@@ -178,13 +168,13 @@ pos_color CalcParticles(uint qid,uint iid,float4 grid)
     p.color.rgb = noise3_u(pos*14*float3(122,1,112))/31+float3(6,2,3)/52;
     
     //p.color*=.5;
-//    p.color*=base_color*(pow(length(pos)/16,4)+.1);
+//    p.color*=nBase_color*(pow(length(pos)/16,4)+.1);
     //p.color*=1+sin(grid.x*PI*8);
     p.color=lerp(p.color,p.color.bgra,sin(length(pos)));
-//    p.color=lerp(p.color,base_color/144,1-saturate(pow(length(pos)/6,11)));
+//    p.color=lerp(p.color,nBase_color/144,1-saturate(pow(length(pos)/6,11)));
 
 
-    if (mode==1)
+    if (nMode==1)
     {
         float s=hash(iid)*33+11;
         s=noise(iid)*62+11;
@@ -219,14 +209,14 @@ pos_color CalcParticles(uint qid,uint iid,float4 grid)
   
    
     //density compensation
-    if (mode==0)
+    if (nMode==0)
     {
     p.color*=1*saturate(p.pos.w/27);
     //p.color*=0;
 
     }
 
-    if (mode==1)
+    if (nMode==1)
     {
     p.color*=.3*saturate(21/p.pos.w);
     //p.color=.02;

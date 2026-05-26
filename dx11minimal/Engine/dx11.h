@@ -385,9 +385,19 @@ namespace ConstBuf
 		float scale;
 	};
 
+	struct PointCloudDesc {
+		XMMATRIX model;
+		int gX;
+		int gY;
+		int mode;
+		int skipper;
+		XMFLOAT4 base_color;
+		XMFLOAT4 mesh[4000];
+	};
+
 	//----------------------------------------------------------------
 
-	extern ID3D11Buffer* buffer[12];
+	extern ID3D11Buffer* buffer[13];
 
 	//b0 - use "params" label in shader
 	extern float drawerV[constCount];//update per draw call
@@ -425,6 +435,9 @@ namespace ConstBuf
 	//b11
 	extern NebulaDesc nebulaInfo;
 
+	//bound as b0 only while drawing procedural point clouds
+	extern PointCloudDesc pointCloudInfo;
+
 	int roundUp(int, int);
 	void Create(ID3D11Buffer*&, int);
 	void CreateVertexBuffer(int);
@@ -442,6 +455,7 @@ namespace ConstBuf
 	void UpdateFactors();
 	void UpdateParticlesInfo();
 	void UpdateNebulaInfo();
+	void UpdatePointCloudInfo();
 	void ConstToVertex(int);
 	void ConstToGeometry(int);
 	void ConstToPixel(int);

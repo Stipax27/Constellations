@@ -267,6 +267,7 @@
     <ClInclude Include="Engine\Render\Nebula\pmode.h" />
     <ClInclude Include="Engine\Types\Point3d.h" />
     <ClInclude Include="Engine\Render\PointCloud.h" />
+    <ClInclude Include="Engine\Render\PointCloudSystem.h" />
     <ClInclude Include="Components\Orientation.h" />
     <ClInclude Include="Engine\Render\BoneAnimation\SkeletalAnimationComponent.h" />
     <ClInclude Include="Engine\UI\Rect.h" />
@@ -471,6 +472,24 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
     <None Include="Shaders\ps\basicLow.shader">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="Shaders\ps\ZodiacBasic.shader">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="Shaders\ps\ZodiacGlow.shader">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="Shaders\ps\ZodiacComposite.shader">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -980,6 +999,7 @@
     <ClCompile Include="Engine\Types\Point3d.cpp" />
     <ClCompile Include="Engine\Types\Point4d.cpp" />
     <ClCompile Include="Engine\Physic\Movement\PhysicSystem.cpp" />
+    <ClCompile Include="Engine\Render\PointCloudSystem.cpp" />
     <ClCompile Include="Engine\Render\SpriteSystem.cpp" />
     <ClCompile Include="Engine\Physic\Gravitation\GravitySystem.cpp" />
     <ClCompile Include="Engine\Render\BoneAnimation\SkeletalAnimationSystem.cpp" />

@@ -68,6 +68,7 @@
     <ClCompile Include="Engine\Render\SkinnedMesh\SkinnedMesh.cpp" />
     <ClCompile Include="Engine\Compute\AI\AISystem.cpp" />
     <ClCompile Include="Engine\Compute\DelayedDestroy\DelayedDestroySystem.cpp" />
+    <ClCompile Include="Engine\Render\PointCloudSystem.cpp" />
     <ClCompile Include="Engine\Render\SpriteSystem.cpp" />
     <ClCompile Include="Engine\Render\BoneAnimation\SkeletalAnimationSystem.cpp" />
     <ClCompile Include="Engine\Render\SkinnedMesh\SkinnedMeshSystem.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="Engine\Compute\Combat\MultiDamager.h" />
     <ClInclude Include="Engine\Render\ParticleEmitter.h" />
     <ClInclude Include="Engine\Render\PointCloud.h" />
+    <ClInclude Include="Engine\Render\PointCloudSystem.h" />
     <ClInclude Include="Engine\Render\BoneAnimation\SkeletalAnimationComponent.h" />
     <ClInclude Include="Engine\UI\Rect.h" />
     <ClInclude Include="Engine\Render\renderCompress.h" />
@@ -496,6 +498,15 @@
       <Filter>Shaders\PS</Filter>
     </None>
     <None Include="Shaders\ps\basicLow.shader">
+      <Filter>Shaders\PS</Filter>
+    </None>
+    <None Include="Shaders\ps\ZodiacBasic.shader">
+      <Filter>Shaders\PS</Filter>
+    </None>
+    <None Include="Shaders\ps\ZodiacGlow.shader">
+      <Filter>Shaders\PS</Filter>
+    </None>
+    <None Include="Shaders\ps\ZodiacComposite.shader">
       <Filter>Shaders\PS</Filter>
     </None>
     <None Include="Shaders\ps\cat.shader">

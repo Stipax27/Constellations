@@ -285,7 +285,7 @@ int Textures::Create(int index, tType type, tFormat format, XMFLOAT2 size, bool 
 		return -1;
 	}
 
-	texturesCount = max(index, texturesCount + 1);
+	texturesCount = max(index + 1, texturesCount);
 	std::string name = "texture_" + std::to_string(index);
 	//std::string name = index == mainRTIndex ? "MainRT" : "texture_" + std::to_string(index);
 
@@ -1800,6 +1800,16 @@ void Shaders::Init()
 	Shaders::CreateVS(32, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\vs\\PortalPS.shader"));
 	//Shaders::CreatePS(32, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ps\\Portal.shader"));
 
+	Shaders::CreatePS(33, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ps\\ZodiacBasic.shader"));
+	Shaders::CreatePS(34, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ps\\ZodiacGlow.shader"));
+	Shaders::CreatePS(35, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ps\\ZodiacComposite.shader"));
+
+	Shaders::CreateVS(33, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\vs\\blob.shader"));
+	Shaders::CreateVS(34, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\vs\\capriStar.shader"));
+	Shaders::CreateVS(37, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\vs\\leo.shader"));
+	Shaders::CreateVS(42, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\vs\\scorpBall.shader"));
+	Shaders::CreateVS(46, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\vs\\Virgo.shader"));
+
 	//-----------------------------------------------
 
 	Shaders::CreatePS(100, nameToPatchLPCWSTR("..\\dx11minimal\\Shaders\\ColorCorrection_PS.shader"));
@@ -1969,7 +1979,7 @@ void Sampler::SamplerComp(unsigned int slot)
 
 //////////////////////////////////////////////////////////////////////////////////
 
-ID3D11Buffer* ConstBuf::buffer[12];
+ID3D11Buffer* ConstBuf::buffer[13];
 
 //b0
 float ConstBuf::drawerV[constCount];
@@ -2006,6 +2016,8 @@ XMFLOAT4X4 ConstBuf::drawerFloat4x4[constCount];
 
 //b11
 ConstBuf::NebulaDesc ConstBuf::nebulaInfo;
+
+ConstBuf::PointCloudDesc ConstBuf::pointCloudInfo;
 
 
 int ConstBuf::roundUp(int n, int r)
@@ -2070,6 +2082,7 @@ void ConstBuf::Init()
 	ConstBuf::Create(ConstBuf::buffer[9], sizeof(particlesInfo));
 	ConstBuf::Create(ConstBuf::buffer[10], sizeof(drawerFloat4x4));
 	ConstBuf::Create(ConstBuf::buffer[11], sizeof(nebulaInfo));
+	ConstBuf::Create(ConstBuf::buffer[12], sizeof(pointCloudInfo));
 }
 
 void ConstBuf::UpdateFrame()
@@ -2100,6 +2113,11 @@ void ConstBuf::UpdateParticlesInfo()
 void ConstBuf::UpdateNebulaInfo()
 {
 	context->UpdateSubresource(ConstBuf::buffer[11], 0, NULL, &nebulaInfo, 0, 0);
+}
+
+void ConstBuf::UpdatePointCloudInfo()
+{
+	context->UpdateSubresource(ConstBuf::buffer[12], 0, NULL, &pointCloudInfo, 0, 0);
 }
 
 void ConstBuf::ConstToVertex(int i)
@@ -2383,6 +2401,10 @@ void Dx11Init(HWND hwnd, int width, int height)
 
 	// space background rt
 	Textures::Create("SpaceBackground", Textures::tType::flat, Textures::tFormat::u8, XMFLOAT2(width, height), true, false);
+
+	Textures::Create("ZodiacPBuf", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width, height), true, false);
+	Textures::Create("ZodiacPBufMid", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 4, height / 4), true, false);
+	Textures::Create("ZodiacPBufLow", Textures::tType::flat, Textures::tFormat::s16, XMFLOAT2(width / 16, height / 16), true, false);
 }
 
 //////////////////////////////////////////////////////////////////////////////////

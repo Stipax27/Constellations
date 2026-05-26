@@ -26,6 +26,7 @@
 
 
 #include "Engine/Render/spriteSystem.h"
+#include "Engine/Render/PointCloudSystem.h"
 #include "Engine/Render/Mesh/meshSystem.h"
 #include "Engine/Render/Nebula/nebulaSystem.h"
 #include "Engine/Render/StarClay/StarClaySystem.h"
@@ -114,6 +115,7 @@ private:
 
 	void CreateSpaceBackground(Entity*, int);
 	void CreateAries(Entity*);
+	void CreatePointCloudShowcase(Entity*);
 	void CreateZenithLocation(Entity*, int);
 	void CreateNebula(Entity*, int);
 	void CreateStarQuestLoc(Entity*, int);

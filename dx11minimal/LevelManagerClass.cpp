@@ -157,21 +157,22 @@ bool LevelManagerClass::Initialize()
 	//singleDamager = entity->AddComponent<SingleDamager>();
 	//singleDamager->damage = 1000;
 
-	entity = entityStorage->CreateEntity("TestStar", worldFolder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-200, 0, -200);
-	star = entity->AddComponent<Star>();
-	star->radius = 75;
-	star->crownRadius = 3.0f;
-	star->color1 = point3d(0.87f, 0.24f, 0.13f);
-	star->color2 = point3d(0.35f, 0.0f, 0.07f);
-	star->crownColor = point3d(0.87f, 0.25f, 0.15f);
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->radius = 75;
-	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	GravityPoint* gravityPoint = entity->AddComponent<GravityPoint>();
-	gravityPoint->mass = 500;
-	gravityPoint->radius = 150;
+	// Disabled for the imported point cloud showcase; this test star overexposes the zodiac layers.
+	//entity = entityStorage->CreateEntity("TestStar", worldFolder);
+	//transform = entity->AddComponent<Transform>();
+	//transform->position = point3d(-200, 0, -200);
+	//star = entity->AddComponent<Star>();
+	//star->radius = 75;
+	//star->crownRadius = 3.0f;
+	//star->color1 = point3d(0.87f, 0.24f, 0.13f);
+	//star->color2 = point3d(0.35f, 0.0f, 0.07f);
+	//star->crownColor = point3d(0.87f, 0.25f, 0.15f);
+	//sphereCollider = entity->AddComponent<SphereCollider>();
+	//sphereCollider->radius = 75;
+	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	//GravityPoint* gravityPoint = entity->AddComponent<GravityPoint>();
+	//gravityPoint->mass = 500;
+	//gravityPoint->radius = 150;
 
 	/*entity = entityStorage->CreateEntity("Ray", worldFolder);
 	transform = entity->AddComponent<Transform>();
@@ -188,7 +189,9 @@ bool LevelManagerClass::Initialize()
 	
 	CreateSpaceBackground(worldFolder, 1);
 	CreateAries(worldFolder);
-	CreateZenithLocation(worldFolder, 2);
+	CreatePointCloudShowcase(worldFolder);
+	// Disabled for the point cloud showcase: the boss star overexposes the imported zodiac layers.
+	//CreateZenithLocation(worldFolder, 2);
 	//CreateNebula(worldFolder,2);
 	//CreateStarQuestLoc(worldFolder, 2);
 
@@ -821,6 +824,7 @@ void LevelManagerClass::InitSystems()
 	m_World->AddRenderSystem<MeshSystem>();
 	m_World->AddRenderSystem<StarClaySystem>();
 	m_World->AddRenderSystem<SkinnedMeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera, m_BoneBuffer);
+	m_World->AddRenderSystem<PointCloudSystem>(m_World->m_Camera->frustum, m_BoneBuffer);
 
 	if (SHOW_COLLIDERS) {
 		m_World->AddRenderSystem<CollisionDrawSystem>();
@@ -1242,14 +1246,6 @@ void LevelManagerClass::CreateAries(Entity* folder)
 	transform = aries->AddComponent<Transform>();
 	transform->scale = point3d(4, 4, 4);
 	transform->position = point3d(0.0f, 20.0f, 50.0f);
-	//pointCloud = aries->AddComponent<PointCloud>();
-	//pointCloud->index = 2;
-	//pointCloud->pointSize = 1.0f;
-	//pointCloud->brightness = 0.4f;
-	////pointCloud->color = point3d(1, 0.2, 0.25);
-	//pointCloud->instances = 1;
-	//pointCloud->frustumRadius = 8;
-	//pointCloud->compress = RenderCompress::x2;
 	/*health = aries->AddComponent<Health>();
 	health->hp = 1000;
 	health->maxHp = 1000;
@@ -1368,6 +1364,73 @@ void LevelManagerClass::CreateAries(Entity* folder)
 	//sphereCollider->softness = 0.7;
 	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
 	//sphereCollider->radius = 1.6;
+}
+
+void LevelManagerClass::CreatePointCloudShowcase(Entity* folder)
+{
+	struct ShowcasePointCloud
+	{
+		const char* name;
+		int vShader;
+		point3d position;
+		point3d pointColor;
+		point3d glowColor;
+		int pointCount;
+		int glowSkipper;
+	};
+
+	const ShowcasePointCloud entries[] = {
+		{ "Zodiac_Leo", 37, point3d(-900.0f, 5.0f, 420.0f), point3d(6.0f, 2.52f, 1.0f), point3d(6.0f, 2.52f, 1.0f), 2000 * 1000, 194 },
+		{ "Zodiac_Virgo", 46, point3d(-450.0f, 5.0f, 250.0f), point3d(13.9f, 9.25f, 1.11f), point3d(0.2f, 0.3f, 0.75f), 2000 * 1000, 94 },
+		{ "Zodiac_Capri", 34, point3d(0.0f, 5.0f, 110.0f), point3d(1.0f, 2.52f, 14.0f), point3d(1.0f, 2.52f, 14.0f), 2000 * 1000, 194 },
+		{ "Zodiac_Scorpio", 42, point3d(450.0f, 5.0f, 250.0f), point3d(13.9f, 9.25f, 1.11f), point3d(0.2f, 0.3f, 0.75f), 1000 * 1000, 94 },
+		{ "Zodiac_Blob", 33, point3d(900.0f, 5.0f, 420.0f), point3d(1.0f, 2.52f, 5.0f), point3d(1.0f, 2.52f, 6.0f), 2000 * 1000, 194 },
+	};
+
+	const float pointExposure = 1.0f;
+	const float glowExposure = 1.0f;
+	auto exposure = [](const point3d& color, float scale)
+	{
+		return point3d(color.x * scale, color.y * scale, color.z * scale);
+	};
+
+	for (const ShowcasePointCloud& entry : entries)
+	{
+		Entity* root = entityStorage->CreateEntity(entry.name, folder);
+		Transform* rootTransform = root->AddComponent<Transform>();
+		rootTransform->position = entry.position;
+		rootTransform->scale = point3d(5.0f, 5.0f, 5.0f);
+
+		const struct
+		{
+			const char* suffix;
+			pMode mode;
+			int count;
+			int skipper;
+			point3d color;
+		} passes[] = {
+			{ "_Point", pMode::point, entry.pointCount, 1, exposure(entry.pointColor, pointExposure) },
+			{ "_Glow", pMode::glow, entry.pointCount, entry.glowSkipper, exposure(entry.glowColor, glowExposure) },
+		};
+
+		for (const auto& pass : passes)
+		{
+			Entity* entity = entityStorage->CreateEntity((string(entry.name) + pass.suffix).c_str(), root);
+			entity->AddComponent<Transform>();
+
+			PointCloud* pointCloud = entity->AddComponent<PointCloud>();
+			pointCloud->procedural = true;
+			pointCloud->vShader = entry.vShader;
+			pointCloud->gShader = 0;
+			pointCloud->count = pass.count;
+			pointCloud->skipper = pass.skipper;
+			pointCloud->mode = pass.mode;
+			pointCloud->color = pass.color;
+			pointCloud->brightness = 1.0f;
+			pointCloud->frustumRadius = 260.0f;
+			pointCloud->compress = RenderCompress::none;
+		}
+	}
 }
 
 void LevelManagerClass::CreateArenaBarrier(Entity* parent, const point3d& center, float radius, int starCount)

@@ -3,6 +3,7 @@
 
 #include "../ECS_Base/component.h"
 #include "../Render/renderCompress.h"
+#include "../Render/Nebula/pmode.h"
 #include "../dx11.h"
 
 
@@ -26,6 +27,13 @@ struct PointCloud : Component
 	float frustumRadius = 10.0f;
 
 	RenderCompress compress = RenderCompress::none;
+
+	bool procedural = false;
+	int count = 1;
+	int skipper = 1;
+	pMode mode = pMode::point;
+	InputAssembler::topology topology = InputAssembler::topology::triList;
+	bool isOnBackground = false;
 };
 
 #endif
