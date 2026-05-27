@@ -9,13 +9,7 @@ MainMenuState::MainMenuState(LevelManagerClass* manager)
     , m_MenuRoot(nullptr)
     , m_IsActive(false)
 {
-    // Получаем все зависимости через менеджер
-    if (m_Manager)
-    {
-        m_World = m_Manager->GetWorld();
-        m_Window = m_Manager->GetWindow();
-        m_Mouse = m_Manager->GetMouse();
-    }
+
 }
 
 MainMenuState::~MainMenuState()
@@ -127,7 +121,7 @@ void MainMenuState::Update()
     // Обработка ввода
     if (input::IsKeyPressed(VK_RETURN) || input::IsKeyPressed(VK_SPACE))
     {
-        m_Manager->SwitchToGameplay();
+        //MainMenuState::m_Manager->SwitchToGameState();
     }
     if (input::IsKeyPressed(VK_ESCAPE))
     {

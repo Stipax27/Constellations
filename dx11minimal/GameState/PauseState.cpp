@@ -8,7 +8,7 @@ PauseState::PauseState(LevelManagerClass* manager)
     , m_PauseMenu(nullptr)
     , m_IsActive(false)
 {
-    m_World = m_Manager->GetWorld();
+   
 }
 
 PauseState::~PauseState()
@@ -58,12 +58,12 @@ void PauseState::Update()
 
     if (input::IsKeyPressed(VK_ESCAPE))
     {
-        m_Manager->ResumeFromPause();
+        //m_Manager->ResumeFromPause();
     }
 
     if (input::IsKeyPressed('M'))
     {
-        m_Manager->SwitchToMainMenu();
+        //m_Manager->SwitchToMainMenu();
     }
 }
 
