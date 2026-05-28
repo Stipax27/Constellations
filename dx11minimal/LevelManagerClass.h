@@ -32,6 +32,8 @@
 
 #include "Engine/UI/uiSystem.h"
 #include "Engine/UI/Text/UITextSystem.h"
+#include "GameState/GameState.h"
+#include "GameState/MainMenuState.h"
 
 #include "Engine/Physic/Movement/physicSystem.h"
 #include "Engine/Physic/Gravitation/GravitySystem.h"
@@ -73,13 +75,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: LevelManagerClass
 ////////////////////////////////////////////////////////////////////////////////
-enum class GameState{ MainMenu,Game,PauseMenu,Dead };
-
 
 class LevelManagerClass
 {
 public:
-	GameState gameState;
+
+	std::unique_ptr<GameState> m_CurrentState;
 	WindowClass* window;
 	MouseClass* mouse;
 
@@ -96,6 +97,7 @@ public:
 
 	void ProcessSound(const char* name);
 
+	void SwitchToGameState(std::unique_ptr<GameState> newState);
 private:
 	World* m_World;
 	PlayerController* playerController;
@@ -122,7 +124,7 @@ private:
 	void ShowGameOverMessage(const wchar_t* message, const point3d& color);
 	Entity* CreateMinion(point3d position, float startDelay);
 
-	void SwitchToGameState();
+	
 
 	bool m_IsExecutionActive = false;
 	Entity* m_ExecutionUI = nullptr;

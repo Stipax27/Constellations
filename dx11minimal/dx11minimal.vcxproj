@@ -241,6 +241,7 @@
     <ClInclude Include="Engine\Compute\Quests\Queststarcollection.h" />
     <ClInclude Include="GameState\GameOverState.h" />
     <ClInclude Include="GameState\GameplayState.h" />
+    <ClInclude Include="GameState\GameState.h" />
     <ClInclude Include="GameState\MainMenuState.h" />
     <ClInclude Include="GameState\PauseState.h" />
     <ClInclude Include="Unused\Font_OLD.h" />
@@ -977,6 +978,8 @@
     <ClCompile Include="Engine\Camera\FrustumClass.cpp" />
     <ClCompile Include="GameState\GameOverState.cpp" />
     <ClCompile Include="GameState\GameplayState.cpp" />
+    <ClCompile Include="GameState\GameState.cpp" />
+    <ClCompile Include="GameState\StateMachine.cpp" />
     <ClCompile Include="GameState\MainMenuState.cpp" />
     <ClCompile Include="GameState\PauseState.cpp" />
     <ClCompile Include="LevelManagerClass.cpp" />

@@ -1,15 +1,10 @@
+// MainMenuState.cpp
 #include "MainMenuState.h"
 #include "..\\LevelManagerClass.h"
 
 MainMenuState::MainMenuState(LevelManagerClass* manager)
-    : m_Manager(manager)
-    , m_World(nullptr)
-    , m_Window(nullptr)
-    , m_Mouse(nullptr)
-    , m_MenuRoot(nullptr)
-    , m_IsActive(false)
+    : GameState(manager)  // m_MenuRoot и m_IsActive уже инициализированы в GameState
 {
-
 }
 
 MainMenuState::~MainMenuState()
@@ -19,9 +14,8 @@ MainMenuState::~MainMenuState()
 
 void MainMenuState::Enter()
 {
-    if (m_IsActive || !m_World) return;  // не входим повторно или без мира
+    if (m_IsActive || !m_World) return;
 
-    // Создаём корневой контейнер меню
     m_MenuRoot = m_World->entityStorage->CreateEntity("MainMenu");
 
     // Заголовок
@@ -104,43 +98,20 @@ void MainMenuState::Enter()
     m_IsActive = true;
 }
 
-void MainMenuState::Exit()
-{
-    if (m_MenuRoot)
-    {
-        m_MenuRoot->SetActive(false);
-        m_MenuRoot = nullptr;   // обнуляем, чтобы избежать повторного использования
-    }
-    m_IsActive = false;
-}
+// Exit() теперь наследуется из GameState, здесь не нужен
 
 void MainMenuState::Update()
 {
     if (!m_IsActive) return;
 
-    // Обработка ввода
     if (input::IsKeyPressed(VK_RETURN) || input::IsKeyPressed(VK_SPACE))
     {
-        //MainMenuState::m_Manager->SwitchToGameState();
+        // Закрываем меню, возвращаемся в игру
+        m_Manager->SwitchToGameState(nullptr);
     }
+
     if (input::IsKeyPressed(VK_ESCAPE))
     {
         PostQuitMessage(0);
     }
-}
-
-void MainMenuState::Render()
-{
-    if (!m_IsActive || !m_World) return;
-
-    ConstBuf::frame.aspect = XMFLOAT4{
-        float(m_Window->aspect),
-        float(m_Window->iaspect),
-        float(m_Window->width),
-        float(m_Window->height)
-    };
-
-    m_World->UpdateRender();
-    if (m_Mouse)
-        m_Mouse->RenderCursor();
 }

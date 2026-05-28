@@ -19,8 +19,7 @@ LevelManagerClass::LevelManagerClass()
 	m_MessageTimer = 0.0f;
 	m_IsInBossArena = false;
 
-	gameState = GameState::MainMenu;
-
+	
 }
 
 LevelManagerClass::LevelManagerClass(const LevelManagerClass& other)
@@ -62,7 +61,7 @@ bool LevelManagerClass::Initialize()
 	questManager = Singleton::GetInstance<QuestManager>();
 	questManager->Initialize();
 
-
+	
 
 	Dx11Init(window->hWnd, window->width, window->height);
 	std::thread modelsLoadingThread(&LevelManagerClass::LoadModels, this);
@@ -347,7 +346,7 @@ bool LevelManagerClass::Initialize()
 		}
 	}
 
-
+	SwitchToGameState(std::make_unique<MainMenuState>(this));
 
 	return true;
 }
@@ -413,6 +412,20 @@ void LevelManagerClass::Frame()
 	mouse->Update();
 	UpdateTestAnimationToggle();
 	interp::UpdateTweens();
+
+	if (m_CurrentState && m_CurrentState->IsActive())
+	{
+		// Если активное состояние - обновляем только его
+		m_CurrentState->Update();
+
+
+		// Рендерим UI состояния (если нужно)
+		m_World->UpdateRender();
+		mouse->RenderCursor();
+		Draw::Present();
+		return; // Выходим, не обрабатываем игровую логику
+	}
+
 
 	// ===== ВВОД ИГРОКА (ТОЛЬКО ОДИН РАЗ!) =====
 	playerController->ProcessInput();
@@ -642,6 +655,7 @@ void LevelManagerClass::Frame()
 	m_World->UpdateRender();
 	mouse->RenderCursor();
 	Draw::Present();
+
 }
 
 
@@ -1088,14 +1102,14 @@ void LevelManagerClass::CreateAries(Entity* folder)
 	transform = aries->AddComponent<Transform>();
 	transform->scale = point3d(4, 4, 4);
 	transform->position = point3d(0.0f, 20.0f, 50.0f);
-	//pointCloud = aries->AddComponent<PointCloud>();
-	//pointCloud->index = 2;
-	//pointCloud->pointSize = 1.0f;
-	//pointCloud->brightness = 0.4f;
-	////pointCloud->color = point3d(1, 0.2, 0.25);
-	//pointCloud->instances = 1;
-	//pointCloud->frustumRadius = 8;
-	//pointCloud->compress = RenderCompress::x2;
+	pointCloud = aries->AddComponent<PointCloud>();
+	pointCloud->index = 2;
+	pointCloud->pointSize = 1.0f;
+	pointCloud->brightness = 0.4f;
+	//pointCloud->color = point3d(1, 0.2, 0.25);
+	pointCloud->instances = 1;
+	pointCloud->frustumRadius = 8;
+	pointCloud->compress = RenderCompress::x2;
 	/*health = aries->AddComponent<Health>();
 	health->hp = 1000;
 	health->maxHp = 1000;
@@ -1143,77 +1157,77 @@ void LevelManagerClass::CreateAries(Entity* folder)
 		{13,15},
 	};*/
 
-	//entity = m_World->entityStorage->CreateEntity("Armor", aries);
-	//transform = entity->AddComponent<Transform>();
-	//pointCloud = entity->AddComponent<PointCloud>();
-	//pointCloud->index = 3;
-	//pointCloud->pointSize = 0.75f;
-	//pointCloud->brightness = 0.2f;
-	//pointCloud->color = point3d(1, 0.9f, 0.2f);
-	//pointCloud->frustumRadius = 8;
-	////pointCloud->compress = RenderCompress::x2;
+	entity = m_World->entityStorage->CreateEntity("Armor", aries);
+	transform = entity->AddComponent<Transform>();
+	pointCloud = entity->AddComponent<PointCloud>();
+	pointCloud->index = 3;
+	pointCloud->pointSize = 0.75f;
+	pointCloud->brightness = 0.2f;
+	pointCloud->color = point3d(1, 0.9f, 0.2f);
+	pointCloud->frustumRadius = 8;
+	//pointCloud->compress = RenderCompress::x2;
 
-	////Body
+	//Body
 
-	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(0, 0.08, 0.1);
-	//sphereCollider = entity->AddComponent<SphereCollider>();
-	//sphereCollider->softness = 0.7;
-	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	//sphereCollider->radius = 3;
+	entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(0, 0.08, 0.1);
+	sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider->softness = 0.7;
+	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	sphereCollider->radius = 3;
 
-	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(0, -0.05, -1.5);
-	//sphereCollider = entity->AddComponent<SphereCollider>();
-	//sphereCollider->softness = 0.7;
-	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	//sphereCollider->radius = 2.2;
+	entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(0, -0.05, -1.5);
+	sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider->softness = 0.7;
+	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	sphereCollider->radius = 2.2;
 
-	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(0, -0.1, -0.7);
-	//sphereCollider = entity->AddComponent<SphereCollider>();
-	//sphereCollider->softness = 0.7;
-	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	//sphereCollider->radius = 2.7;
+	entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(0, -0.1, -0.7);
+	sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider->softness = 0.7;
+	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	sphereCollider->radius = 2.7;
 
-	////Head
+	//Head
 
-	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(0, 0.9, 0.8);
-	//sphereCollider = entity->AddComponent<SphereCollider>();
-	//sphereCollider->softness = 0.7;
-	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	//sphereCollider->radius = 2;
+	entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(0, 0.9, 0.8);
+	sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider->softness = 0.7;
+	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	sphereCollider->radius = 2;
 
-	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(0, 0.7, 1.4);
-	//sphereCollider = entity->AddComponent<SphereCollider>();
-	//sphereCollider->softness = 0.7;
-	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	//sphereCollider->radius = 1.1;
+	entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(0, 0.7, 1.4);
+	sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider->softness = 0.7;
+	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	sphereCollider->radius = 1.1;
 
-	////Horns
+	//Horns
 
-	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(0.5, 1.2, 0.5);
-	//sphereCollider = entity->AddComponent<SphereCollider>();
-	//sphereCollider->softness = 0.7;
-	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	//sphereCollider->radius = 1.6;
+	entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(0.5, 1.2, 0.5);
+	sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider->softness = 0.7;
+	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	sphereCollider->radius = 1.6;
 
-	//entity = m_World->entityStorage->CreateEntity("Collider", aries);
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(-0.5, 1.2, 0.5);
-	//sphereCollider = entity->AddComponent<SphereCollider>();
-	//sphereCollider->softness = 0.7;
-	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	//sphereCollider->radius = 1.6;
+	entity = m_World->entityStorage->CreateEntity("Collider", aries);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(-0.5, 1.2, 0.5);
+	sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider->softness = 0.7;
+	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	sphereCollider->radius = 1.6;
 }
 
 void LevelManagerClass::CreateArenaBarrier(Entity* parent, const point3d& center, float radius, int starCount)
@@ -2269,8 +2283,29 @@ void LevelManagerClass::UpdateExecutionTimerUI()
 	}
 }
 
-void SwitchToGameState() {
+// LevelManagerClass.cpp
+void LevelManagerClass::SwitchToGameState(std::unique_ptr<GameState> newState)
+{
+	// Выходим из текущего состояния
+	if (m_CurrentState)
+	{
+		m_CurrentState->Exit();
+	}
 
+	// Устанавливаем новое состояние
+	m_CurrentState = std::move(newState);
 
+	// Если передали nullptr - просто выходим из состояния
+	if (!m_CurrentState)
+	{
+		return;
+	}
 
+	// Инъекция зависимостей ДО вызова Enter()
+	m_CurrentState->SetWorld(m_World);
+	m_CurrentState->SetWindow(window);
+	m_CurrentState->SetMouse(mouse);
+
+	// Теперь безопасно вызываем Enter()
+	m_CurrentState->Enter();
 }
