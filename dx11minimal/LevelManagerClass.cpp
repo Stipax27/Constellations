@@ -157,22 +157,21 @@ bool LevelManagerClass::Initialize()
 	//singleDamager = entity->AddComponent<SingleDamager>();
 	//singleDamager->damage = 1000;
 
-	// Disabled for the imported point cloud showcase; this test star overexposes the zodiac layers.
-	//entity = entityStorage->CreateEntity("TestStar", worldFolder);
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(-200, 0, -200);
-	//star = entity->AddComponent<Star>();
-	//star->radius = 75;
-	//star->crownRadius = 3.0f;
-	//star->color1 = point3d(0.87f, 0.24f, 0.13f);
-	//star->color2 = point3d(0.35f, 0.0f, 0.07f);
-	//star->crownColor = point3d(0.87f, 0.25f, 0.15f);
-	//sphereCollider = entity->AddComponent<SphereCollider>();
-	//sphereCollider->radius = 75;
-	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	//GravityPoint* gravityPoint = entity->AddComponent<GravityPoint>();
-	//gravityPoint->mass = 500;
-	//gravityPoint->radius = 150;
+	entity = entityStorage->CreateEntity("TestStar", worldFolder);
+	transform = entity->AddComponent<Transform>();
+	transform->position = point3d(-200, 0, -200);
+	star = entity->AddComponent<Star>();
+	star->radius = 75;
+	star->crownRadius = 3.0f;
+	star->color1 = point3d(0.87f, 0.24f, 0.13f);
+	star->color2 = point3d(0.35f, 0.0f, 0.07f);
+	star->crownColor = point3d(0.87f, 0.25f, 0.15f);
+	sphereCollider = entity->AddComponent<SphereCollider>();
+	sphereCollider->radius = 75;
+	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
+	GravityPoint* gravityPoint = entity->AddComponent<GravityPoint>();
+	gravityPoint->mass = 500;
+	gravityPoint->radius = 150;
 
 	/*entity = entityStorage->CreateEntity("Ray", worldFolder);
 	transform = entity->AddComponent<Transform>();
@@ -190,8 +189,7 @@ bool LevelManagerClass::Initialize()
 	CreateSpaceBackground(worldFolder, 1);
 	CreateAries(worldFolder);
 	CreatePointCloudShowcase(worldFolder);
-	// Disabled for the point cloud showcase: the boss star overexposes the imported zodiac layers.
-	//CreateZenithLocation(worldFolder, 2);
+	CreateZenithLocation(worldFolder, 2);
 	//CreateNebula(worldFolder,2);
 	//CreateStarQuestLoc(worldFolder, 2);
 
@@ -1382,7 +1380,7 @@ void LevelManagerClass::CreatePointCloudShowcase(Entity* folder)
 	const ShowcasePointCloud entries[] = {
 		{ "Zodiac_Leo", 37, point3d(-900.0f, 5.0f, 420.0f), point3d(6.0f, 2.52f, 1.0f), point3d(6.0f, 2.52f, 1.0f), 2000 * 1000, 194 },
 		{ "Zodiac_Virgo", 46, point3d(-450.0f, 5.0f, 250.0f), point3d(13.9f, 9.25f, 1.11f), point3d(0.2f, 0.3f, 0.75f), 2000 * 1000, 94 },
-		{ "Zodiac_Capri", 34, point3d(0.0f, 5.0f, 110.0f), point3d(1.0f, 2.52f, 14.0f), point3d(1.0f, 2.52f, 14.0f), 2000 * 1000, 194 },
+		{ "Zodiac_Capri", 34, point3d(0.0f, 5.0f, 620.0f), point3d(1.0f, 2.52f, 14.0f), point3d(1.0f, 2.52f, 14.0f), 2000 * 1000, 194 },
 		{ "Zodiac_Scorpio", 42, point3d(450.0f, 5.0f, 250.0f), point3d(13.9f, 9.25f, 1.11f), point3d(0.2f, 0.3f, 0.75f), 1000 * 1000, 94 },
 		{ "Zodiac_Blob", 33, point3d(900.0f, 5.0f, 420.0f), point3d(1.0f, 2.52f, 5.0f), point3d(1.0f, 2.52f, 6.0f), 2000 * 1000, 194 },
 	};
