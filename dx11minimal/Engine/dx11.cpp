@@ -855,6 +855,8 @@ int Audio::channelLen = 44100;
 Audio::soundDesc Audio::Sounds[max_audio];
 std::unordered_map<std::string, int> Audio::SoundName;
 
+std::list<IXAudio2SourceVoice*> Audio::activeVoices;
+
 int Audio::soundsCount = 0;
 
 void Audio::Init()
@@ -902,17 +904,87 @@ void Audio::Init()
 }
 
 
-void Audio::Release()
-{
-	pXAudio2->StopEngine();
-	pXAudio2->Release();
+void Audio::Release() {
+	// Сначала уничтожаем все активные голоса
+	for (auto& voice : activeVoices) {
+		if (voice) {
+			voice->DestroyVoice();
+		}
+	}
+	activeVoices.clear();
+
+	// Затем освобождаем буферы каналов
+	for (int x = 0; x < MAXCHANNELS; x++) {
+		if (channel[x]) {
+			delete[] channel[x];
+			channel[x] = nullptr;
+		}
+	}
+
+	if (pMasteringVoice) {
+		pMasteringVoice->DestroyVoice();
+	}
+	if (pXAudio2) {
+		pXAudio2->StopEngine();
+		pXAudio2->Release();
+	}
 }
 
 
-void Audio::LoadWavFile(const std::string name, const char* filename, std::vector<BYTE>& audioData, WAVEFORMATEX& waveFormat) {
+void Audio::Play(int soundIndex) {
+	if (soundIndex < 0 || soundIndex >= soundsCount) return;
+
+	soundDesc& sound = Sounds[soundIndex];
+	if (sound.data.empty()) return;
+
+	IXAudio2SourceVoice* pVoice = nullptr;
+	HRESULT hr = pXAudio2->CreateSourceVoice(&pVoice, &sound.format);
+	if (FAILED(hr)) return;
+
+	XAUDIO2_BUFFER voiceBuffer = {};
+	voiceBuffer.pAudioData = sound.data.data();   // указатель на данные в массиве
+	voiceBuffer.AudioBytes = (UINT32)sound.data.size();
+	voiceBuffer.Flags = XAUDIO2_END_OF_STREAM;
+
+	hr = pVoice->SubmitSourceBuffer(&voiceBuffer);
+	if (FAILED(hr)) {
+		pVoice->DestroyVoice();
+		return;
+	}
+
+	pVoice->Start(0);
+	activeVoices.push_back(pVoice);
+}
+
+// Воспроизведение по имени (использует SoundName)
+void Audio::Play(const std::string& name) {
+	auto it = SoundName.find(name);
+	if (it != SoundName.end()) {
+		Play(it->second);
+	}
+}
+
+
+// Очистка отработавших голосов — вызывайте каждый кадр
+void Audio::UpdateVoices() {
+	for (auto it = activeVoices.begin(); it != activeVoices.end(); ) {
+		XAUDIO2_VOICE_STATE state;
+		(*it)->GetState(&state);
+		if (state.BuffersQueued == 0) {
+			(*it)->DestroyVoice();
+			it = activeVoices.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
+}
+
+
+void Audio::LoadWavFile(const std::string name, const char* filename) {
 	if (soundsCount >= max_audio) {
-		Log("Cannot create texture: limit (");
-		Log(std::to_string(max_tex).c_str());
+		Log("Cannot load sound: limit (");
+		Log(std::to_string(max_audio).c_str());
 		Log(") has reached\n");
 		return;
 	}
@@ -921,47 +993,43 @@ void Audio::LoadWavFile(const std::string name, const char* filename, std::vecto
 	SoundName[name] = curSnd;
 
 	soundDesc& sound = Sounds[curSnd];
-	sound.data.clear();
 
 	std::ifstream file(filename, std::ios::binary);
 	if (!file.is_open()) {
-		return; // Ошибка открытия файла
+		soundsCount--; // откатываем счётчик
+		return;
 	}
 
 	RIFF_HEADER riffHeader;
 	WAVE_FORMAT waveFormatHeader;
 	WAVE_DATA waveDataHeader;
 
-	// 1. Читаем RIFF заголовок и проверяем, что это WAVE
 	file.read((char*)&riffHeader, sizeof(RIFF_HEADER));
 	if (riffHeader.chunkId[0] != 'R' || riffHeader.chunkId[1] != 'I' ||
 		riffHeader.chunkId[2] != 'F' || riffHeader.chunkId[3] != 'F' ||
 		riffHeader.format[0] != 'W' || riffHeader.format[1] != 'A' ||
 		riffHeader.format[2] != 'V' || riffHeader.format[3] != 'E') {
-		return; // Не WAV-файл
+		soundsCount--;
+		return;
 	}
 
-	// 2. Ищем 'fmt ' чанк (обычно он идет сразу, но иногда нет)
 	bool fmtFound = false;
 	while (!fmtFound && !file.eof()) {
 		file.read((char*)&waveFormatHeader, sizeof(WAVE_FORMAT));
 		if (waveFormatHeader.subChunkId[0] == 'f' && waveFormatHeader.subChunkId[1] == 'm' &&
 			waveFormatHeader.subChunkId[2] == 't' && waveFormatHeader.subChunkId[3] == ' ') {
 			fmtFound = true;
-			// Если размер чанка больше нашей структуры, пропускаем лишние байты
 			if (waveFormatHeader.subChunkSize > sizeof(WAVE_FORMAT) - 8) {
 				file.seekg(waveFormatHeader.subChunkSize - (sizeof(WAVE_FORMAT) - 8), std::ios::cur);
 			}
 		}
 		else {
-			// Это не 'fmt ', пропускаем байты этого чанка
 			file.seekg(waveFormatHeader.subChunkSize, std::ios::cur);
 		}
 	}
 
-	if (!fmtFound) return;
+	if (!fmtFound) { soundsCount--; return; }
 
-	// 3. Ищем 'data' чанк
 	bool dataFound = false;
 	while (!dataFound && !file.eof()) {
 		file.read((char*)&waveDataHeader, sizeof(WAVE_DATA));
@@ -970,25 +1038,24 @@ void Audio::LoadWavFile(const std::string name, const char* filename, std::vecto
 			dataFound = true;
 		}
 		else {
-			// Это не 'data', пропускаем его
 			file.seekg(waveDataHeader.subChunkSize, std::ios::cur);
 		}
 	}
 
-	if (!dataFound) return;
+	if (!dataFound) { soundsCount--; return; }
 
-	// 4. Заполняем структуру WAVEFORMATEX для XAudio2
-	waveFormat.wFormatTag = WAVE_FORMAT_PCM;
-	waveFormat.nChannels = waveFormatHeader.numChannels;
-	waveFormat.nSamplesPerSec = waveFormatHeader.sampleRate;
-	waveFormat.wBitsPerSample = waveFormatHeader.bitsPerSample;
-	waveFormat.nBlockAlign = waveFormatHeader.blockAlign;
-	waveFormat.nAvgBytesPerSec = waveFormatHeader.byteRate;
-	waveFormat.cbSize = 0; // Для PCM всегда 0
+	// Заполняем формат в структуре sound
+	sound.format.wFormatTag = WAVE_FORMAT_PCM;
+	sound.format.nChannels = waveFormatHeader.numChannels;
+	sound.format.nSamplesPerSec = waveFormatHeader.sampleRate;
+	sound.format.wBitsPerSample = waveFormatHeader.bitsPerSample;
+	sound.format.nBlockAlign = waveFormatHeader.blockAlign;
+	sound.format.nAvgBytesPerSec = waveFormatHeader.byteRate;
+	sound.format.cbSize = 0;
 
-	// 5. Читаем сами аудиоданные
-	audioData.resize(waveDataHeader.subChunkSize);
-	file.read((char*)audioData.data(), waveDataHeader.subChunkSize);
+	// Читаем данные прямо в sound.data
+	sound.data.resize(waveDataHeader.subChunkSize);
+	file.read((char*)sound.data.data(), waveDataHeader.subChunkSize);
 
 	file.close();
 }

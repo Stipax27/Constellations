@@ -82,6 +82,9 @@ bool LevelManagerClass::Initialize()
 	Textures::LoadDDSTexture("aperture", L"..\\dx11minimal\\Resourses\\Textures\\aperture.dds");
 	Textures::LoadPNGTexture("comicsSpot", L"..\\dx11minimal\\Resourses\\Textures\\comicsSpot.png");
 
+	Audio::LoadWavFile("lucky", "..\\dx11minimal\\Resourses\\Sounds\\lucky.wav");
+	Audio::LoadWavFile("bow", "..\\dx11minimal\\Resourses\\Sounds\\penetration.wav");
+
 	if (modelsLoadingThread.joinable()) {
 		modelsLoadingThread.join();
 	}
@@ -344,7 +347,8 @@ bool LevelManagerClass::Initialize()
 		}
 	}
 	
-
+	Audio::Play("lucky");
+	Audio::Play("bow");
 
 	return true;
 }
@@ -412,6 +416,7 @@ void LevelManagerClass::Frame()
 	UpdateTestAnimationToggle();
 
 	interp::UpdateTweens();
+	Audio::UpdateVoices();
 
 	m_Transform2DDebugUI.UpdateToggle();
 	playerController->ProcessInput();

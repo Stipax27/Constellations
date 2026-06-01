@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <deque>
 #include <vector>
+#include <list>
 #include <utility>
 #include <stdio.h>
 #include <fstream>
@@ -224,12 +225,18 @@ namespace Audio
 	extern soundDesc Sounds[max_audio];
 	extern std::unordered_map<std::string, int> SoundName;
 
+	extern std::list<IXAudio2SourceVoice*> activeVoices;
+
 	extern int soundsCount;
 
 	void Init();
 	void Release();
 
-	void LoadWavFile(const std::string name, const char* filename, std::vector<BYTE>& audioData, WAVEFORMATEX& waveFormat);
+	void Play(int soundIndex);
+	void Play(const std::string& name);
+	void UpdateVoices();
+
+	void LoadWavFile(const std::string name, const char* filename);
 }
 
 namespace Models
