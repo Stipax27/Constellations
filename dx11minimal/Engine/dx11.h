@@ -20,6 +20,9 @@
 #include <wrl/client.h>
 #include <direct.h>
 #include <xaudio2.h>
+#include <ogg/ogg.h>
+#include <vorbis/codec.h>
+#include <vorbis/vorbisfile.h>
 
 #include <sys/stat.h>
 #ifdef _WIN32
@@ -33,6 +36,9 @@
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "xaudio2.lib")
 #pragma comment(lib, "d2d1.lib")
+#pragma comment(lib, "ogg.lib")
+#pragma comment(lib, "vorbis.lib")
+#pragma comment(lib, "vorbisfile.lib")
 
 #include "Utils/utils.h"
 #include "Lib/timer.h"
