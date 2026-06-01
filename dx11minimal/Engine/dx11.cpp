@@ -19,7 +19,7 @@ static inline int32 _log2(float x)
 }
 
 
-void EnsureCacheDirectoryExists(LPCWSTR directoryPath) {
+static void EnsureCacheDirectoryExists(LPCWSTR directoryPath) {
 	char cachePathA[MAX_PATH];
 	WideCharToMultiByte(CP_ACP, 0, directoryPath, -1, cachePathA, MAX_PATH, NULL, NULL);
 
@@ -859,6 +859,7 @@ std::list<IXAudio2SourceVoice*> Audio::activeVoices;
 
 int Audio::soundsCount = 0;
 
+
 void Audio::Init()
 {
 	IXAudio2SourceVoice* pSourceVoice;
@@ -1058,6 +1059,96 @@ void Audio::LoadWavFile(const std::string name, const char* filename) {
 	file.read((char*)sound.data.data(), waveDataHeader.subChunkSize);
 
 	file.close();
+}
+
+
+void Audio::LoadOggFile(const std::string& name, const char* filename) {
+	if (soundsCount >= max_audio) {
+		Log("Cannot load sound: limit (");
+		Log(std::to_string(max_audio).c_str());
+		Log(") has reached\n");
+		return;
+	}
+
+	// Читаем весь файл в память
+	std::ifstream file(filename, std::ios::binary | std::ios::ate);
+	if (!file.is_open()) {
+		Log("Cannot open OGG file\n");
+		return;
+	}
+
+	std::streamsize fileSize = file.tellg();
+	file.seekg(0, std::ios::beg);
+
+	std::vector<BYTE> fileData(fileSize);
+	file.read((char*)fileData.data(), fileSize);
+	file.close();
+
+	// Настройка для чтения из памяти
+	OggMemoryFile memFile;
+	memFile.data = fileData.data();
+	memFile.size = fileSize;
+	memFile.pos = 0;
+
+	OggVorbis_File vf;
+	int result = ov_open_callbacks(&memFile, &vf, nullptr, 0, OV_CALLBACKS_MEMORY);
+	if (result != 0) {
+		Log("Not a valid Ogg Vorbis file\n");
+		return;
+	}
+
+	// Получаем информацию о потоке
+	vorbis_info* vi = ov_info(&vf, -1);
+	if (!vi) {
+		ov_clear(&vf);
+		return;
+	}
+
+	int numChannels = vi->channels;
+	int sampleRate = (int)vi->rate;
+	int bitsPerSample = 16; // Будем декодировать в 16 бит
+
+	// Выделяем буфер для PCM данных (максимум 1 секунда за раз)
+	const size_t bufferSize = sampleRate * numChannels * (bitsPerSample / 8); // 1 сек
+	std::vector<short> pcmBuffer(bufferSize);
+
+	std::vector<BYTE> pcmData; // Сюда соберём весь PCM
+	int bitstream = 0;
+	long bytesRead = 0;
+
+	// Декодируем весь файл
+	while (true) {
+		bytesRead = ov_read(&vf, (char*)pcmBuffer.data(),
+			(int)(bufferSize * sizeof(short)), 0, 2, 1, &bitstream);
+		if (bytesRead <= 0) break; // EOF или ошибка
+
+		size_t oldSize = pcmData.size();
+		pcmData.resize(oldSize + bytesRead);
+		memcpy(pcmData.data() + oldSize, pcmBuffer.data(), bytesRead);
+	}
+
+	ov_clear(&vf);
+
+	if (pcmData.empty()) {
+		Log("No audio data decoded\n");
+		return;
+	}
+
+	// Сохраняем в наш массив звуков
+	int curSnd = soundsCount++;
+	SoundName[name] = curSnd;
+
+	soundDesc& sound = Sounds[curSnd];
+	sound.data = std::move(pcmData);
+
+	// Заполняем WAVEFORMATEX
+	sound.format.wFormatTag = WAVE_FORMAT_PCM;
+	sound.format.nChannels = numChannels;
+	sound.format.nSamplesPerSec = sampleRate;
+	sound.format.wBitsPerSample = bitsPerSample;
+	sound.format.nBlockAlign = numChannels * bitsPerSample / 8;
+	sound.format.nAvgBytesPerSec = sampleRate * sound.format.nBlockAlign;
+	sound.format.cbSize = 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////

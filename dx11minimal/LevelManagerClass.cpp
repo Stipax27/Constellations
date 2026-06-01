@@ -83,7 +83,7 @@ bool LevelManagerClass::Initialize()
 	Textures::LoadPNGTexture("comicsSpot", L"..\\dx11minimal\\Resourses\\Textures\\comicsSpot.png");
 
 	Audio::LoadWavFile("lucky", "..\\dx11minimal\\Resourses\\Sounds\\lucky.wav");
-	Audio::LoadWavFile("bow", "..\\dx11minimal\\Resourses\\Sounds\\penetration.wav");
+	Audio::LoadOggFile("demotivation", "..\\dx11minimal\\Resourses\\Sounds\\demotivation.ogg");
 
 	if (modelsLoadingThread.joinable()) {
 		modelsLoadingThread.join();
@@ -348,7 +348,7 @@ bool LevelManagerClass::Initialize()
 	}
 	
 	Audio::Play("lucky");
-	Audio::Play("bow");
+	Audio::Play("demotivation");
 
 	return true;
 }
