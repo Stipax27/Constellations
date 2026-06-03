@@ -92,8 +92,6 @@ public:
 
 	void Frame();
 
-	void ProcessSound(const char* name);
-
 private:
 	World* m_World;
 	EntityStorage* entityStorage;
@@ -107,6 +105,9 @@ private:
 	bool m_WasToggleAnimationPressed = false;
 
 	void LoadModels();
+	void LoadTextures();
+	void LoadSounds();
+
 	Entity* CreatePlayer(Entity* = nullptr);
 
 	void CreateUI();

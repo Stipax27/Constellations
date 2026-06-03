@@ -932,15 +932,15 @@ void Audio::Release() {
 }
 
 
-void Audio::Play(int soundIndex) {
-	if (soundIndex < 0 || soundIndex >= soundsCount) return;
+IXAudio2SourceVoice* Audio::Play(int soundIndex) {
+	if (soundIndex < 0 || soundIndex >= soundsCount) return nullptr;
 
 	soundDesc& sound = Sounds[soundIndex];
-	if (sound.data.empty()) return;
+	if (sound.data.empty()) return nullptr;
 
 	IXAudio2SourceVoice* pVoice = nullptr;
 	HRESULT hr = pXAudio2->CreateSourceVoice(&pVoice, &sound.format);
-	if (FAILED(hr)) return;
+	if (FAILED(hr)) return nullptr;
 
 	XAUDIO2_BUFFER voiceBuffer = {};
 	voiceBuffer.pAudioData = sound.data.data();   // указатель на данные в массиве
@@ -950,35 +950,50 @@ void Audio::Play(int soundIndex) {
 	hr = pVoice->SubmitSourceBuffer(&voiceBuffer);
 	if (FAILED(hr)) {
 		pVoice->DestroyVoice();
-		return;
+		return nullptr;
 	}
 
 	pVoice->Start(0);
 	activeVoices.push_back(pVoice);
+
+	return pVoice;
 }
 
 // Воспроизведение по имени (использует SoundName)
-void Audio::Play(const std::string& name) {
+IXAudio2SourceVoice* Audio::Play(const std::string& name) {
 	auto it = SoundName.find(name);
 	if (it != SoundName.end()) {
-		Play(it->second);
+		return Play(it->second);
 	}
+
+	return nullptr;
 }
 
 
 // Очистка отработавших голосов — вызывайте каждый кадр
 void Audio::UpdateVoices() {
 	for (auto it = activeVoices.begin(); it != activeVoices.end(); ) {
-		XAUDIO2_VOICE_STATE state;
-		(*it)->GetState(&state);
-		if (state.BuffersQueued == 0) {
-			(*it)->DestroyVoice();
+		if (!IsPlaying(*it)) {
+			DeleteVoice(*it);
 			it = activeVoices.erase(it);
 		}
 		else {
 			++it;
 		}
 	}
+}
+
+
+void Audio::DeleteVoice(IXAudio2SourceVoice* pVoice) {
+	pVoice->DestroyVoice();
+	delete pVoice;
+}
+
+
+bool Audio::IsPlaying(IXAudio2SourceVoice* pVoice) {
+	XAUDIO2_VOICE_STATE state;
+	pVoice->GetState(&state);
+	return state.BuffersQueued > 0;
 }
 
 

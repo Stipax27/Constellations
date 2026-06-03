@@ -207,6 +207,8 @@
     <ClInclude Include="Engine\Render\Beam.h" />
     <ClInclude Include="Engine\Render\StarClay\StarClay.h" />
     <ClInclude Include="Engine\Render\StarClay\StarClaySystem.h" />
+    <ClInclude Include="Engine\Sound\SoundPlayer.h" />
+    <ClInclude Include="Engine\Sound\SoundSystem.h" />
     <ClInclude Include="Engine\UI\Button.h" />
     <ClInclude Include="Engine\Camera\cameraclass.h" />
     <ClInclude Include="Engine\BasicComponents\collider.h" />
@@ -954,6 +956,7 @@
     <ClCompile Include="Engine\Player\Combo\Combo.cpp" />
     <ClCompile Include="Engine\Player\Combo\comboManager.cpp" />
     <ClCompile Include="Engine\Render\StarClay\StarClaySystem.cpp" />
+    <ClCompile Include="Engine\Sound\SoundSystem.cpp" />
     <ClCompile Include="Engine\Utils\ComponentUtils.cpp" />
     <ClCompile Include="Engine\GLTFLoader.cpp" />
     <ClCompile Include="Engine\Mesh\Animation.cpp" />

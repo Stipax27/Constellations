@@ -280,8 +280,12 @@ namespace Audio
 	void Init();
 	void Release();
 
-	void Play(int soundIndex);
-	void Play(const std::string& name);
+	IXAudio2SourceVoice* Play(int soundIndex);
+	IXAudio2SourceVoice* Play(const std::string& name);
+	void DeleteVoice(IXAudio2SourceVoice* pVoice);
+
+	bool IsPlaying(IXAudio2SourceVoice* pVoice);
+
 	void UpdateVoices();
 
 	void LoadWavFile(const std::string name, const char* filename);

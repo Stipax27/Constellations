@@ -37,11 +37,6 @@ void LevelManagerClass::InitWindow()
 	}
 }
 
-void LevelManagerClass::ProcessSound(const char* name)
-{
-	//PlaySound(TEXT(name), NULL, SND_FILENAME | SND_ASYNC);
-}
-
 
 bool LevelManagerClass::Initialize()
 {
@@ -77,20 +72,15 @@ bool LevelManagerClass::Initialize()
 	ConstBuf::factors.AriesNebulaLerpFactor = 0;
 	ConstBuf::UpdateFactors();
 
-	//Textures::LoadTexture("..\\dx11minimal\\Resourses\\Textures\\testTexture.tga");
-	Textures::LoadDDSTexture("gta", L"..\\dx11minimal\\Resourses\\Textures\\gta.dds");
-	Textures::LoadDDSTexture("aperture", L"..\\dx11minimal\\Resourses\\Textures\\aperture.dds");
-	Textures::LoadPNGTexture("comicsSpot", L"..\\dx11minimal\\Resourses\\Textures\\comicsSpot.png");
-
-	Audio::LoadWavFile("lucky", "..\\dx11minimal\\Resourses\\Sounds\\lucky.wav");
-	Audio::LoadOggFile("demotivation", "..\\dx11minimal\\Resourses\\Sounds\\demotivation.ogg");
-
 	if (modelsLoadingThread.joinable()) {
 		modelsLoadingThread.join();
 	}
 	else {
 		modelsLoadingThread.detach();
 	}
+
+	LoadTextures();
+	LoadSounds();
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING START //
@@ -346,9 +336,6 @@ bool LevelManagerClass::Initialize()
 			animComp->currentTime = 0.0f;
 		}
 	}
-	
-	Audio::Play("lucky");
-	Audio::Play("demotivation");
 
 	return true;
 }
@@ -416,7 +403,6 @@ void LevelManagerClass::Frame()
 	UpdateTestAnimationToggle();
 
 	interp::UpdateTweens();
-	Audio::UpdateVoices();
 
 	m_Transform2DDebugUI.UpdateToggle();
 	playerController->ProcessInput();
@@ -861,6 +847,21 @@ void LevelManagerClass::LoadModels()
 
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\SnakeModel.obj");
 }
+
+void LevelManagerClass::LoadTextures()
+{
+	//Textures::LoadTexture("..\\dx11minimal\\Resourses\\Textures\\testTexture.tga");
+	Textures::LoadDDSTexture("gta", L"..\\dx11minimal\\Resourses\\Textures\\gta.dds");
+	Textures::LoadDDSTexture("aperture", L"..\\dx11minimal\\Resourses\\Textures\\aperture.dds");
+	Textures::LoadPNGTexture("comicsSpot", L"..\\dx11minimal\\Resourses\\Textures\\comicsSpot.png");
+}
+
+void LevelManagerClass::LoadSounds()
+{
+	Audio::LoadWavFile("lucky", "..\\dx11minimal\\Resourses\\Sounds\\lucky.wav");
+	Audio::LoadOggFile("demotivation", "..\\dx11minimal\\Resourses\\Sounds\\demotivation.ogg");
+}
+
 
 // TODO: Remove, only for test animation change
 void LevelManagerClass::UpdateTestAnimationToggle()
