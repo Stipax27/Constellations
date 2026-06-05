@@ -19,6 +19,7 @@ namespace timer
 	extern double currentTime;
 	extern double lastFrameTime;
 	extern double deltaTime;
+	extern double deltaTimeS; // in seconds
 
 	extern std::vector<double> deltaList;
 	extern double deltaAverage;
