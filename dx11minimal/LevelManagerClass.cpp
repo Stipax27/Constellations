@@ -698,6 +698,9 @@ void LevelManagerClass::Frame()
 
 	m_World->UpdateCompute();
 	m_World->UpdatePhysic();
+	m_World->UpdateAudio();
+
+	entityStorage->CleanMem();
 
 	// Изменение цвета testStar в зависимости от состояния ИИ
 	if (testEnemy && testEnemy->IsActive()) {
@@ -744,14 +747,13 @@ void LevelManagerClass::InitSystems()
 	m_World->AddComputeSystem<QuestSystem>();
 	m_World->AddComputeSystem<RayDamageSystem>();
 
-	m_World->AddComputeSystem<SoundSystem>();
-
 	m_World->AddPhysicSystem<GravitySystem>();
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
 	m_World->AddPhysicSystem<CombatSystem>();
 	m_World->AddPhysicSystem<SkeletalAnimationSystem>(context, m_BoneBuffer);
 
+	m_World->AddAudioSystem<SoundSystem>();
 
 	m_World->AddRenderSystem<MeshSystem>();
 	m_World->AddRenderSystem<StarClaySystem>();

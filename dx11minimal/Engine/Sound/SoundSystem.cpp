@@ -26,14 +26,26 @@ void SoundSystem::Update(EntityStorage& entityStorage, float deltaTime)
 	for (int i = 0; i < size; i++)
 	{
 		Entity* entity = entities[i];
-		if (!IsEntityValid(entity))
+		if (!IsEntityValid(entity)) {
+			if (entity && !entity->IsActive()) {
+				SoundPlayer* soundPlayer = entity->GetComponent<SoundPlayer>();
+				if (!soundPlayer)
+					continue;
+
+				if (soundPlayer->pVoice != nullptr) {
+					Audio::DeleteVoice(soundPlayer->pVoice);
+					soundPlayer->pVoice = nullptr;
+				}
+			}
+
 			continue;
+		}
 
 		SoundPlayer* soundPlayer = entity->GetComponent<SoundPlayer>();
-		if (!soundPlayer || !soundPlayer->active)
+		if (!soundPlayer)
 			continue;
 
-		if (soundPlayer->playing) {
+		if (soundPlayer->active && soundPlayer->playing) {
 			if (soundPlayer->pVoice == nullptr) {
 				IXAudio2SourceVoice* pVoice = Audio::Play(soundPlayer->soundName);
 				if (pVoice) {

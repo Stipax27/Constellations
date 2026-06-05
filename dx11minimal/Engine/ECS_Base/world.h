@@ -59,6 +59,17 @@ public:
 	}
 
 	template <typename T, typename... Args>
+	T* AddAudioSystem(Args&&... args)
+	{
+		auto system = std::make_unique<T>(std::forward<Args>(args)...);
+		T* raw_ptr = system.get();
+		system->Initialize();
+		audioSystems.push_back(move(system));
+
+		return raw_ptr;
+	}
+
+	template <typename T, typename... Args>
 	T* AddRenderSystem(Args&&... args)
 	{
 		auto system = std::make_unique<T>(std::forward<Args>(args)...);
@@ -76,11 +87,13 @@ public:
 
 	void UpdateCompute();
 	void UpdatePhysic();
+	void UpdateAudio();
 	void UpdateRender();
 
 private:
 	std::vector<std::unique_ptr<System>> computeSystems;
 	std::vector<std::unique_ptr<System>> physicSystems;
+	std::vector<std::unique_ptr<System>> audioSystems;
 	std::vector<std::unique_ptr<System>> renderSystems;
 
 	bool firstFrame = true;

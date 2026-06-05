@@ -93,7 +93,17 @@ void World::UpdatePhysic()
 	{
 		physicSystems[i]->Update(*entityStorage, deltaTime);
 	}
-	entityStorage->CleanMem();
+}
+
+
+void World::UpdateAudio()
+{
+	double deltaTime = timer::deltaTime / 1000;
+	size_t size = audioSystems.size();
+	for (int i = 0; i < size; i++)
+	{
+		audioSystems[i]->Update(*entityStorage, deltaTime);
+	}
 }
 
 
