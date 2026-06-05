@@ -237,7 +237,7 @@ namespace Audio
 	extern soundDesc Sounds[max_audio];
 	extern std::unordered_map<std::string, int> SoundName;
 
-	extern std::list<IXAudio2SourceVoice*> activeVoices;
+	//extern std::list<IXAudio2SourceVoice*> activeVoices;
 
 	extern int soundsCount;
 
@@ -286,7 +286,7 @@ namespace Audio
 
 	bool IsPlaying(IXAudio2SourceVoice* pVoice);
 
-	void UpdateVoices();
+	//void UpdateVoices();
 
 	void LoadWavFile(const std::string name, const char* filename);
 	void LoadOggFile(const std::string& name, const char* filename);

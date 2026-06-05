@@ -16,6 +16,9 @@
 #include "../Lib/class_name.h"
 #include "../Lib/logging.h"
 
+#include "../dx11.h"
+#include "../Sound/SoundPlayer.h"
+
 using namespace std;
 using namespace rapidjson;
 
@@ -298,6 +301,8 @@ void EntityStorage::CleanMem()
 		if (entity->IsDeleting())
 		{
 			OnEntityDestroyed(entity);
+            ClearSounds(entity);
+
 			delete entity;
 
 			entities[i] = entities.back();
@@ -337,4 +342,17 @@ void EntityStorage::OnEntityDestroyed(Entity* entity)
 			cachePair.second.isBuilt = false;
 		}
 	}
+}
+
+
+void EntityStorage::ClearSounds(Entity* entity)
+{
+    SoundPlayer* soundPlayer = entity->GetComponent<SoundPlayer>();
+    if (!soundPlayer)
+        return;
+
+    if (soundPlayer->pVoice != nullptr) {
+        Audio::DeleteVoice(soundPlayer->pVoice);
+        soundPlayer->pVoice = nullptr;
+    }
 }

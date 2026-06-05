@@ -9,7 +9,7 @@ struct SoundPlayer : Component
 	std::string soundName = "";
 	float volume = 1.0f;
 
-	bool looped = false;
+	//bool looped = false;
 	bool playing = false;
 
 	// Technical fields //

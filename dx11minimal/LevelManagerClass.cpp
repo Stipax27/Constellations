@@ -691,65 +691,6 @@ void LevelManagerClass::Frame()
 	{
 		m_IsInBossArena = false;
 	}
-	//if (worldFolder->localTime - shotTime >= 500) {
-	//	shotTime = worldFolder->localTime;
-
-	//	// Physic damage
-	//	Entity* projectile = entityStorage->CreateEntity("TestProjectile", worldFolder);
-	//	Transform* transform = projectile->AddComponent<Transform>();
-	//	transform->position = point3d(0, 20, 0);
-
-	//	PhysicBody* physicBody = projectile->AddComponent<PhysicBody>();
-	//	physicBody->airFriction = 0.0f;
-	//	physicBody->velocity = point3d(0, 0, 1) * 20.0f;
-
-	//	Star* star = projectile->AddComponent<Star>();
-	//	star->radius = 0.8f;
-	//	star->color1 = point3d(0.9f, 1.0f, 0.99f);
-	//	star->color2 = point3d(0.34f, 0.8f, 0.45f);
-	//	star->crownColor = point3d(0.27f, 0.63f, 1.0f);
-
-	//	SingleDamager* singleDamager = projectile->AddComponent<SingleDamager>();
-	//	singleDamager->target = Fraction::Player;
-	//	singleDamager->damage = 5.0f;
-	//	singleDamager->destroyable = true;
-	//	singleDamager->damageType = DamageType::Physic;
-
-	//	SphereCollider* sphereCollider = projectile->AddComponent<SphereCollider>();
-	//	sphereCollider->isTouchable = false;
-	//	sphereCollider->radius = 0.8f;
-
-	//	DelayedDestroy* delayedDestroy = projectile->AddComponent<DelayedDestroy>();
-	//	delayedDestroy->lifeTime = 2000;
-
-	//	// Magic damage
-	//	projectile = entityStorage->CreateEntity("TestProjectile", worldFolder);
-	//	transform = projectile->AddComponent<Transform>();
-	//	transform->position = point3d(10, 20, 0);
-
-	//	physicBody = projectile->AddComponent<PhysicBody>();
-	//	physicBody->airFriction = 0.0f;
-	//	physicBody->velocity = point3d(0, 0, 1) * 20.0f;
-
-	//	star = projectile->AddComponent<Star>();
-	//	star->radius = 0.8f;
-	//	star->color1 = point3d(1, 0.6, 0);
-	//	star->color2 = point3d(0.93, 0.28, 0);
-	//	star->crownColor = point3d(1, 0.87, 0.25);
-
-	//	singleDamager = projectile->AddComponent<SingleDamager>();
-	//	singleDamager->target = Fraction::Player;
-	//	singleDamager->damage = 5.0f;
-	//	singleDamager->destroyable = true;
-	//	singleDamager->damageType = DamageType::Magic;
-
-	//	sphereCollider = projectile->AddComponent<SphereCollider>();
-	//	sphereCollider->isTouchable = false;
-	//	sphereCollider->radius = 0.8f;
-
-	//	delayedDestroy = projectile->AddComponent<DelayedDestroy>();
-	//	delayedDestroy->lifeTime = 2000;
-	//}
 
 	// DEBUG
 
@@ -803,11 +744,14 @@ void LevelManagerClass::InitSystems()
 	m_World->AddComputeSystem<QuestSystem>();
 	m_World->AddComputeSystem<RayDamageSystem>();
 
+	m_World->AddComputeSystem<SoundSystem>();
+
 	m_World->AddPhysicSystem<GravitySystem>();
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
 	m_World->AddPhysicSystem<CombatSystem>();
 	m_World->AddPhysicSystem<SkeletalAnimationSystem>(context, m_BoneBuffer);
+
 
 	m_World->AddRenderSystem<MeshSystem>();
 	m_World->AddRenderSystem<StarClaySystem>();
@@ -860,6 +804,8 @@ void LevelManagerClass::LoadSounds()
 {
 	Audio::LoadWavFile("lucky", "..\\dx11minimal\\Resourses\\Sounds\\lucky.wav");
 	Audio::LoadOggFile("demotivation", "..\\dx11minimal\\Resourses\\Sounds\\demotivation.ogg");
+
+	Audio::LoadWavFile("punch-swing", "..\\dx11minimal\\Resourses\\Sounds\\punch-swing.wav");
 }
 
 

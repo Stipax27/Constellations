@@ -855,7 +855,7 @@ int Audio::channelLen = 44100;
 Audio::soundDesc Audio::Sounds[max_audio];
 std::unordered_map<std::string, int> Audio::SoundName;
 
-std::list<IXAudio2SourceVoice*> Audio::activeVoices;
+//std::list<IXAudio2SourceVoice*> Audio::activeVoices;
 
 int Audio::soundsCount = 0;
 
@@ -906,13 +906,13 @@ void Audio::Init()
 
 
 void Audio::Release() {
-	// Сначала уничтожаем все активные голоса
-	for (auto& voice : activeVoices) {
-		if (voice) {
-			voice->DestroyVoice();
-		}
-	}
-	activeVoices.clear();
+	//// Сначала уничтожаем все активные голоса
+	//for (auto& voice : activeVoices) {
+	//	if (voice) {
+	//		voice->DestroyVoice();
+	//	}
+	//}
+	//activeVoices.clear();
 
 	// Затем освобождаем буферы каналов
 	for (int x = 0; x < MAXCHANNELS; x++) {
@@ -954,7 +954,7 @@ IXAudio2SourceVoice* Audio::Play(int soundIndex) {
 	}
 
 	pVoice->Start(0);
-	activeVoices.push_back(pVoice);
+	//activeVoices.push_back(pVoice);
 
 	return pVoice;
 }
@@ -970,23 +970,22 @@ IXAudio2SourceVoice* Audio::Play(const std::string& name) {
 }
 
 
-// Очистка отработавших голосов — вызывайте каждый кадр
-void Audio::UpdateVoices() {
-	for (auto it = activeVoices.begin(); it != activeVoices.end(); ) {
-		if (!IsPlaying(*it)) {
-			DeleteVoice(*it);
-			it = activeVoices.erase(it);
-		}
-		else {
-			++it;
-		}
-	}
-}
+//// Очистка отработавших голосов — вызывайте каждый кадр
+//void Audio::UpdateVoices() {
+//	for (auto it = activeVoices.begin(); it != activeVoices.end(); ) {
+//		if (!IsPlaying(*it)) {
+//			DeleteVoice(*it);
+//			it = activeVoices.erase(it);
+//		}
+//		else {
+//			++it;
+//		}
+//	}
+//}
 
 
 void Audio::DeleteVoice(IXAudio2SourceVoice* pVoice) {
 	pVoice->DestroyVoice();
-	delete pVoice;
 }
 
 

@@ -8,6 +8,7 @@
 #include "../../Physic/Collision/SphereCollider.h"
 #include "../../Render/ParticleEmitter.h"
 #include "../../Compute/DelayedDestroy/DelayedDestroy.h"
+#include "../../Sound/SoundPlayer.h"
 
 
 namespace fistsCombos
@@ -58,8 +59,12 @@ namespace fistsCombos
 		particleEmitter->lastEmitTime = timer::currentTime - particleEmitter->heapEmitInterval;
 		particleEmitter->emitDirection = EmitDirection::Right;
 
+		SoundPlayer* soundPlayer = effect->AddComponent<SoundPlayer>();
+		soundPlayer->soundName = "punch-swing";
+		soundPlayer->playing = true;
+
 		delayedDestroy = effect->AddComponent<DelayedDestroy>();
-		delayedDestroy->lifeTime = 500;
+		delayedDestroy->lifeTime = 1000;
 	}
 
 
@@ -108,8 +113,12 @@ namespace fistsCombos
 		particleEmitter->lastEmitTime = timer::currentTime - particleEmitter->heapEmitInterval;
 		particleEmitter->emitDirection = EmitDirection::Right;
 
+		SoundPlayer* soundPlayer = effect->AddComponent<SoundPlayer>();
+		soundPlayer->soundName = "punch-swing";
+		soundPlayer->playing = true;
+
 		delayedDestroy = effect->AddComponent<DelayedDestroy>();
-		delayedDestroy->lifeTime = 500;
+		delayedDestroy->lifeTime = 1000;
 	}
 }
 

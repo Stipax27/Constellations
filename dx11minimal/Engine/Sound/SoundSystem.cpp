@@ -46,13 +46,19 @@ void SoundSystem::Update(EntityStorage& entityStorage, float deltaTime)
 					soundPlayer->active = false;
 				}
 			}
+			else if (!Audio::IsPlaying(soundPlayer->pVoice)) {
+				Audio::DeleteVoice(soundPlayer->pVoice);
+				soundPlayer->pVoice = nullptr;
+				soundPlayer->playing = false;
+			}
 		}
 		else {
 			if (soundPlayer->pVoice != nullptr) {
-
+				Audio::DeleteVoice(soundPlayer->pVoice);
+				soundPlayer->pVoice = nullptr;
 			}
 		}
 	}
 
-	Audio::UpdateVoices();
+	//Audio::UpdateVoices();
 }

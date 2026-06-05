@@ -63,6 +63,9 @@ public:
 private:
 	int entityCount = 0;
 	std::unordered_map<std::type_index, ComponentEntityCache> componentEntityCaches;
+
+private:
+	void ClearSounds(Entity*);
 };
 
 #endif
