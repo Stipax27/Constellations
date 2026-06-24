@@ -1378,11 +1378,11 @@ void LevelManagerClass::CreatePointCloudShowcase(Entity* folder)
 	};
 
 	const ShowcasePointCloud entries[] = {
-		{ "Zodiac_Leo", 37, point3d(-900.0f, 5.0f, 420.0f), point3d(6.0f, 2.52f, 1.0f), point3d(6.0f, 2.52f, 1.0f), 2000 * 1000, 194 },
-		{ "Zodiac_Virgo", 46, point3d(-450.0f, 5.0f, 250.0f), point3d(13.9f, 9.25f, 1.11f), point3d(0.2f, 0.3f, 0.75f), 2000 * 1000, 94 },
-		{ "Zodiac_Capri", 34, point3d(0.0f, 5.0f, 620.0f), point3d(1.0f, 2.52f, 14.0f), point3d(1.0f, 2.52f, 14.0f), 2000 * 1000, 194 },
-		{ "Zodiac_Scorpio", 42, point3d(450.0f, 5.0f, 250.0f), point3d(13.9f, 9.25f, 1.11f), point3d(0.2f, 0.3f, 0.75f), 1000 * 1000, 94 },
-		{ "Zodiac_Blob", 33, point3d(900.0f, 5.0f, 420.0f), point3d(1.0f, 2.52f, 5.0f), point3d(1.0f, 2.52f, 6.0f), 2000 * 1000, 194 },
+		{ "Zodiac_Leo", 37, point3d(-900.0f, 5.0f, 420.0f), point3d(6.0f, 2.52f, 1.0f), point3d(6.0f, 2.52f, 1.0f), 4000 * 2000, 194 },
+		{ "Zodiac_Virgo", 46, point3d(-450.0f, 5.0f, 250.0f), point3d(13.9f, 9.25f, 1.11f), point3d(0.2f, 0.3f, 0.75f), 4000 * 2000, 94 },
+		{ "Zodiac_Capri", 34, point3d(0.0f, 5.0f, 620.0f), point3d(1.0f, 2.52f, 14.0f), point3d(1.0f, 2.52f, 14.0f), 4000 * 2000, 194 },
+		{ "Zodiac_Scorpio", 42, point3d(450.0f, 5.0f, 250.0f), point3d(13.9f, 9.25f, 1.11f), point3d(0.2f, 0.3f, 0.75f), 4000 * 2000, 94 },
+		{ "Zodiac_Blob", 33, point3d(900.0f, 5.0f, 420.0f), point3d(1.0f, 2.52f, 5.0f), point3d(1.0f, 2.52f, 6.0f), 4000 * 2000, 194 },
 	};
 
 	const float pointExposure = 1.0f;
