@@ -2,7 +2,7 @@
 
 using namespace std;
 
-
+//?
 
 LevelManagerClass::LevelManagerClass()
 {
@@ -401,8 +401,15 @@ void LevelManagerClass::Shutdown()
 
 double shotTime = 0;
 
+Entity* m_UIRoot = nullptr;
+bool m_UIEnabled = true;
+bool m_UIWasTogglePressed = false;
+
 void LevelManagerClass::Frame()
 {
+
+	//m_BossNameText
+
 	mouse->UpdateSystemCursorVisibility();
 	if (!window->IsActive())
 		return;
@@ -532,7 +539,7 @@ void LevelManagerClass::Frame()
 		if (input::IsKeyPressed('R'))
 		{
 			static int pressCount = 0;
-			
+
 			pressCount++;
 
 			if (pressCount >= 5)
@@ -540,8 +547,8 @@ void LevelManagerClass::Frame()
 				ExecuteBoss();
 				pressCount = 0; // Сброс после казни
 			}
-			
-			
+
+
 		}
 	}
 
@@ -572,7 +579,7 @@ void LevelManagerClass::Frame()
 		}
 	}
 
-	
+
 	static bool victoryShown = false;
 
 	if (m_CurrentBoss && m_CurrentBoss->IsActive())
@@ -619,7 +626,7 @@ void LevelManagerClass::Frame()
 			m_ShowVictoryMessage = false;
 		}
 	}
-	 // Обновление полоски здоровья босса
+	// Обновление полоски здоровья босса
 	if (m_CurrentBoss && m_CurrentBoss->IsActive() && m_BossHealthFill) {
 
 		Health* bossHealth = m_CurrentBoss->GetComponent<Health>();
@@ -657,8 +664,8 @@ void LevelManagerClass::Frame()
 			Entity* bossContainer = m_BossHealthFill->GetParent();
 			if (bossContainer) bossContainer->SetActive(false);
 		}
-	}
 
+	}
 
 	if (m_CurrentBoss && m_CurrentBoss->IsActive())
 	{
@@ -761,6 +768,54 @@ void LevelManagerClass::Frame()
 	//}
 
 	// DEBUG
+
+
+
+	/////////////////
+	/////////////////
+	/////////////////
+	//const bool isTogglePressed = input::IsKeyPressed('M');
+
+	//if (!isTogglePressed)
+	//{
+	//	m_UIWasTogglePressed = false;
+	//}
+	//else if (!m_UIWasTogglePressed)
+	//{
+	//	m_UIWasTogglePressed = true;
+	//	m_UIEnabled = !m_UIEnabled;
+	//}
+
+	//if (m_BossHealthFill)
+	//{
+	//	Entity* uiContainer = m_BossHealthFill->GetParent();
+	//	if (uiContainer)
+	//	{
+	//		uiContainer->SetActive(m_UIEnabled);
+	//	}
+	//}
+	/////////////////
+	/////////////////
+	/////////////////
+	const bool isTogglePressed = input::IsKeyPressed('M');
+
+	if (!isTogglePressed)
+	{
+		m_UIWasTogglePressed = false;
+	}
+	else if (!m_UIWasTogglePressed)
+	{
+		m_UIWasTogglePressed = true;
+		m_UIEnabled = !m_UIEnabled;
+	}
+
+	if (m_UIRoot)
+	{
+		m_UIRoot->SetActive(m_UIEnabled);
+	}
+
+
+
 
 	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
 
@@ -979,8 +1034,7 @@ void LevelManagerClass::CreateUI()
 	TextLabel* textLabel;
 
 	Entity* uiFolder = entityStorage->CreateEntity("UI");
-
-
+	m_UIRoot = uiFolder;
 
 	entity = entityStorage->CreateEntity("HealthHolder", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
@@ -1205,6 +1259,35 @@ void LevelManagerClass::CreateUI()
 	textLabel->fontSizePx = 38;
 	textLabel->fontScale = 0.34f;
 	textLabel->letterSpacingPx = 1.0f;
+
+	//
+
+	Entity* MainMenuUIFolder = entityStorage->CreateEntity("MainMenuUI");
+	//m_UIRoot = MainMenuUIFolder;
+
+	entity = entityStorage->CreateEntity("HealthHolder", MainMenuUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(-1, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.9f, -0.6f, 0.0f);
+	transform2D->scale = point3d(0.18f, 0.04f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.5f, 0.5f, 0.5f);
+	rect->opacity = 0.5f;
+
+	entity = entityStorage->CreateEntity("HealthLabel", MainMenuUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.9f, -0.64f, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"ЗДОРОВЬЕ";
+	textLabel->fontFamilyW = L"Impact";
+	textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+	textLabel->fontWeight = 900;
+	textLabel->fontSizePx = 44;
+	textLabel->fontScale = 0.40f;
+	textLabel->letterSpacingPx = 1.0f;
+
 }
 
 
