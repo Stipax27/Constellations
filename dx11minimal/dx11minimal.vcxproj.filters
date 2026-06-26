@@ -244,6 +244,10 @@
     <Image Include="small.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Resourses\Textures\Star.png" />
+    <Image Include="Resourses\Textures\testTexture.tga" />
+    <Image Include="Resourses\Textures\comicsSpot.png" />
+    <Image Include="Resourses\Textures\mrbretten.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\GalaxyFog_PS.shader">
@@ -708,5 +712,13 @@
     <Content Include="Resourses\Fonts\Impact.ttf">
       <Filter>Resource Files</Filter>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Resourses\Fonts\GFSNeohellenic-Regular.ttf" />
+    <Font Include="Resourses\Fonts\CormorantInfant-Regular.ttf" />
+    <Font Include="Resourses\Fonts\Forum-Regular.ttf" />
+    <Font Include="Resourses\Fonts\Spectral-Regular.ttf" />
+    <Font Include="Resourses\Fonts\Spectral-SemiBold.ttf" />
+    <Font Include="Resourses\Fonts\Spectral-ExtraLight.ttf" />
   </ItemGroup>
 </Project>

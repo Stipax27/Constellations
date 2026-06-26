@@ -81,6 +81,8 @@ bool LevelManagerClass::Initialize()
 	Textures::LoadDDSTexture("gta", L"..\\dx11minimal\\Resourses\\Textures\\gta.dds");
 	Textures::LoadDDSTexture("aperture", L"..\\dx11minimal\\Resourses\\Textures\\aperture.dds");
 	Textures::LoadPNGTexture("comicsSpot", L"..\\dx11minimal\\Resourses\\Textures\\comicsSpot.png");
+	Textures::LoadPNGTexture("Star", L"..\\dx11minimal\\Resourses\\Textures\\Star.png");
+
 
 	if (modelsLoadingThread.joinable()) {
 		modelsLoadingThread.join();
@@ -401,9 +403,20 @@ void LevelManagerClass::Shutdown()
 
 double shotTime = 0;
 
-Entity* m_UIRoot = nullptr;
-bool m_UIEnabled = true;
-bool m_UIWasTogglePressed = false;
+//Entity* m_UIRoot = nullptr;
+//bool m_UIEnabled = true;
+//bool m_UIWasTogglePressed = false;
+
+enum class UIState
+{
+	Game,
+	Menu,
+	Settings
+};
+
+UIState m_UIState = UIState::Game;
+bool m_WasMenuToggle = false;
+bool m_WasSettingsToggle = false;
 
 void LevelManagerClass::Frame()
 {
@@ -797,21 +810,33 @@ void LevelManagerClass::Frame()
 	/////////////////
 	/////////////////
 	/////////////////
-	const bool isTogglePressed = input::IsKeyPressed('M');
+	if (input::IsKeyPressed('M') && !m_WasMenuToggle)
+	{
+		m_WasMenuToggle = true;
 
-	if (!isTogglePressed)
-	{
-		m_UIWasTogglePressed = false;
+		m_UIState = (m_UIState == UIState::Menu) ? UIState::Game : UIState::Menu;
 	}
-	else if (!m_UIWasTogglePressed)
+	else if (!input::IsKeyPressed('M'))
 	{
-		m_UIWasTogglePressed = true;
-		m_UIEnabled = !m_UIEnabled;
+		m_WasMenuToggle = false;
+	}
+
+	if (input::IsKeyPressed('N') && !m_WasSettingsToggle)
+	{
+		m_WasSettingsToggle = true;
+
+		m_UIState = (m_UIState == UIState::Settings) ? UIState::Game : UIState::Settings;
+	}
+	else if (!input::IsKeyPressed('N'))
+	{
+		m_WasSettingsToggle = false;
 	}
 
 	if (m_UIRoot)
 	{
-		m_UIRoot->SetActive(m_UIEnabled);
+		m_UIRoot->SetActive(m_UIState == UIState::Game);
+		m_Menu->SetActive(m_UIState == UIState::Menu);
+		m_Settings->SetActive(m_UIState == UIState::Settings);
 	}
 
 
@@ -1032,6 +1057,7 @@ void LevelManagerClass::CreateUI()
 	Rect* rect;
 	Button* button;
 	TextLabel* textLabel;
+	//ImageLabel* imageLabel;
 
 	Entity* uiFolder = entityStorage->CreateEntity("UI");
 	m_UIRoot = uiFolder;
@@ -1156,14 +1182,14 @@ void LevelManagerClass::CreateUI()
 	rect->color = point3d(0.75f, 0.0f, 0.0f);
 
 	// Enemy name - text
-	entity = entityStorage->CreateEntity("Rect", uiFolder);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(0, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::XX;
-	transform2D->position = point3d(0, 0.85f, 0.0f);
-	transform2D->scale = point3d(0.2f, 0.05f, 0.0f);
-	rect = entity->AddComponent<Rect>();
-	rect->color = point3d(0.75f, 0.0f, 0.0f);
+	//entity = entityStorage->CreateEntity("Rect", uiFolder);
+	//transform2D = entity->AddComponent<Transform2D>();
+	//transform2D->anchorPoint = point3d(0, 0, 0);
+	//transform2D->ratio = ScreenAspectRatio::XX;
+	//transform2D->position = point3d(0, 0.85f, 0.0f);
+	//transform2D->scale = point3d(0.2f, 0.05f, 0.0f);
+	//rect = entity->AddComponent<Rect>();
+	//rect->color = point3d(0.75f, 0.0f, 0.0f);
 
 	// Enemy HP bar - rectangle
 	entity = entityStorage->CreateEntity("BossHealth", uiFolder);
@@ -1178,15 +1204,15 @@ void LevelManagerClass::CreateUI()
 	m_Transform2DDebugUI.Create(entityStorage, uiFolder);
 
 
-	/*entity = entityStorage->CreateEntity("BossHealth", uiFolder);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(1, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::YY;
-	transform2D->position = point3d(0.75f, 0.0f, 0.0f);
-	transform2D->scale = point3d(0.2f, 0.2f, 0.0f);
-	ImageLabel* imageLabel = entity->AddComponent<ImageLabel>();
-	imageLabel->textureName = "comicsSpot";
-	imageLabel->color = point3d(0.12, 0.91, 0.62);*/
+	//entity = entityStorage->CreateEntity("BossHealth", uiFolder);
+	//transform2D = entity->AddComponent<Transform2D>();
+	//transform2D->anchorPoint = point3d(1, 0, 0);
+	//transform2D->ratio = ScreenAspectRatio::YY;
+	//transform2D->position = point3d(0.75f, 0.0f, 0.0f);
+	//transform2D->scale = point3d(0.2f, 0.2f, 0.0f);
+	//ImageLabel* imageLabel = entity->AddComponent<ImageLabel>();
+	//imageLabel->textureName = "Star";
+	//imageLabel->color = point3d(0.12, 0.91, 0.62);
 	//////////////////////////////////////////////////////////////////////
 	Entity* bossUIContainer = entityStorage->CreateEntity("BossUIContainer", uiFolder);
 
@@ -1260,33 +1286,362 @@ void LevelManagerClass::CreateUI()
 	textLabel->fontScale = 0.34f;
 	textLabel->letterSpacingPx = 1.0f;
 
-	//
+
+// Menu UI
 
 	Entity* MainMenuUIFolder = entityStorage->CreateEntity("MainMenuUI");
-	//m_UIRoot = MainMenuUIFolder;
+	m_Menu = MainMenuUIFolder;
 
-	entity = entityStorage->CreateEntity("HealthHolder", MainMenuUIFolder);
+	wstring fontFamilyW_1 = L"Spectral ExtraLight";
+	wstring fontFilePathW_1 = L"..\\dx11minimal\\Resourses\\Fonts\\Spectral-ExtraLight.ttf";
+
+	entity = entityStorage->CreateEntity("Background", MainMenuUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::XX;
+	transform2D->position = point3d(0, 0.0f, 0.0f);
+	transform2D->scale = point3d(1.0f, 1.0f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.0f, 0.0588f, 0.1176f);
+
+	// TITLE
+	entity = entityStorage->CreateEntity("Label", MainMenuUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.f, 0.f, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.25f, 0.65f, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"13-th Sign";
+	textLabel->fontFamilyW = fontFamilyW_1;
+	textLabel->fontFilePathW = fontFilePathW_1;
+	textLabel->fontWeight = 300;
+	textLabel->fontSizePx = 120;
+	textLabel->fontScale = 1.0f;
+	textLabel->color = point3d(1.0f, 1.f, 1.f);
+	textLabel->opacity = 1.0f;
+
+	// PLAY
+	entity = entityStorage->CreateEntity("Label", MainMenuUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.f, 0.f, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.05f, 0.2f, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"Play";
+	textLabel->fontFamilyW = fontFamilyW_1;
+	textLabel->fontFilePathW = fontFilePathW_1;
+	textLabel->fontWeight = 300;
+	textLabel->fontSizePx = 48;
+	textLabel->fontScale = 1.0f;
+	textLabel->color = point3d(1.0f, 1.f, 1.f);
+	textLabel->opacity = 1.0f;
+
+	// INDICATOR
+	entity = entityStorage->CreateEntity("MenuIndicator", MainMenuUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.f, 0.f, 0);
+	transform2D->ratio = ScreenAspectRatio::XX;
+	transform2D->position = point3d(0.15f, 0.13f, 0.0f);
+	transform2D->scale = point3d(0.05f, 0.05f, 0.0f);
+	ImageLabel* imageLabel = entity->AddComponent<ImageLabel>();
+	imageLabel->textureName = "Star";
+	imageLabel->color = point3d(1, 1, 1);
+
+	// SETTINGS
+	entity = entityStorage->CreateEntity("Label", MainMenuUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.f, 0.f, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.05f, 0.05f, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"Settings";
+	textLabel->fontFamilyW = fontFamilyW_1;
+	textLabel->fontFilePathW = fontFilePathW_1;
+	textLabel->fontWeight = 300;
+	textLabel->fontSizePx = 48;
+	textLabel->fontScale = 1.0f;
+	textLabel->color = point3d(1.0f, 1.f, 1.f);
+	textLabel->opacity = 0.5f;
+
+	// AUTHORS
+	entity = entityStorage->CreateEntity("Label", MainMenuUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.f, 0.f, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.05f, -0.1f, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"Authors";
+	textLabel->fontFamilyW = fontFamilyW_1;
+	textLabel->fontFilePathW = fontFilePathW_1;
+	textLabel->fontWeight = 300;
+	textLabel->fontSizePx = 48;
+	textLabel->fontScale = 1.0f;
+	textLabel->color = point3d(1.0f, 1.f, 1.f);
+	textLabel->opacity = 0.5f;
+
+	// EXIT
+	entity = entityStorage->CreateEntity("Label", MainMenuUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.f, 0.f, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.05f, -0.25f, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"Exit";
+	textLabel->fontFamilyW = fontFamilyW_1;
+	textLabel->fontFilePathW = fontFilePathW_1;
+	textLabel->fontWeight = 300;
+	textLabel->fontSizePx = 48;
+	textLabel->fontScale = 1.0f;
+	textLabel->color = point3d(1.0f, 1.f, 1.f);
+	textLabel->opacity = 0.5f;
+
+	//
+
+	// Settings UI
+
+	wstring fontFamilyW_2 = L"Spectral";
+	wstring fontFilePathW_2 = L"..\\dx11minimal\\Resourses\\Fonts\\Spectral-Regular.ttf";
+
+	int fontSize = 36;
+
+	Entity* SettingsUIFolder = entityStorage->CreateEntity("SettingsUI");
+	m_Settings = SettingsUIFolder;
+
+	entity = entityStorage->CreateEntity("Background", SettingsUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::XX;
+	transform2D->position = point3d(0, 0.0f, 0.0f);
+	transform2D->scale = point3d(1.0f, 1.0f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(0.0f, 0.0588f, 0.1176f);
+
+	//
+
+	//HEADER
+	entity = entityStorage->CreateEntity("Label", SettingsUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.f, 0.f, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.75f, 0.75f, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"Settings";
+	textLabel->fontFamilyW = fontFamilyW_1;
+	textLabel->fontFilePathW = fontFilePathW_1;
+	textLabel->fontWeight = 300;
+	textLabel->fontSizePx = 64;
+	textLabel->fontScale = 1.0f;
+	textLabel->color = point3d(1.0f, 1.f, 1.f);
+	textLabel->opacity = 1.f;
+
+	// SETTINGS TABS
+	float optionsY = 0.575f;
+
+	entity = entityStorage->CreateEntity("Label", SettingsUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.f, 0.f, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.75f, optionsY, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"game";
+	textLabel->fontFamilyW = fontFamilyW_1;
+	textLabel->fontFilePathW = fontFilePathW_1;
+	textLabel->fontWeight = 300;
+	textLabel->fontSizePx = fontSize;
+	textLabel->fontScale = 1.0f;
+	textLabel->color = point3d(1.0f, 1.f, 1.f);
+	textLabel->opacity = 0.5f;
+
+	entity = entityStorage->CreateEntity("Label", SettingsUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.f, 0.f, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.6f, optionsY, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"video";
+	textLabel->fontFamilyW = fontFamilyW_1;
+	textLabel->fontFilePathW = fontFilePathW_1;
+	textLabel->fontWeight = 300;
+	textLabel->fontSizePx = fontSize;
+	textLabel->fontScale = 1.0f;
+	textLabel->color = point3d(1.0f, 1.f, 1.f);
+	textLabel->opacity = 0.5f;
+
+	entity = entityStorage->CreateEntity("Label", SettingsUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.f, 0.f, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.45f, optionsY, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"audio";
+	textLabel->fontFamilyW = fontFamilyW_2;
+	textLabel->fontFilePathW = fontFilePathW_2;
+	textLabel->fontWeight = 300;
+	textLabel->fontSizePx = fontSize;
+	textLabel->fontScale = 1.0f;
+	textLabel->color = point3d(1.0f, 1.f, 1.f);
+	textLabel->opacity = 1.f;
+
+	entity = entityStorage->CreateEntity("Label", SettingsUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.f, 0.f, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.3f, optionsY, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"controls";
+	textLabel->fontFamilyW = fontFamilyW_1;
+	textLabel->fontFilePathW = fontFilePathW_1;
+	textLabel->fontWeight = 300;
+	textLabel->fontSizePx = fontSize;
+	textLabel->fontScale = 1.0f;
+	textLabel->color = point3d(1.0f, 1.f, 1.f);
+	textLabel->opacity = 0.5f;
+
+	entity = entityStorage->CreateEntity("Label", SettingsUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.f, 0.f, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.1f, optionsY, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"interface";
+	textLabel->fontFamilyW = fontFamilyW_1;
+	textLabel->fontFilePathW = fontFilePathW_1;
+	textLabel->fontWeight = 300;
+	textLabel->fontSizePx = fontSize;
+	textLabel->fontScale = 1.0f;
+	textLabel->color = point3d(1.0f, 1.f, 1.f);
+	textLabel->opacity = 0.5f;
+
+	entity = entityStorage->CreateEntity("Rect", SettingsUIFolder);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(-1, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::XY;
-	transform2D->position = point3d(-0.9f, -0.6f, 0.0f);
-	transform2D->scale = point3d(0.18f, 0.04f, 0.0f);
+	transform2D->ratio = ScreenAspectRatio::XX;
+	transform2D->position = point3d(-0.75f, 0.475f, 0.0f);
+	transform2D->scale = point3d(0.45f, 0.00135f, 0.0f);
 	rect = entity->AddComponent<Rect>();
-	rect->color = point3d(0.5f, 0.5f, 0.5f);
-	rect->opacity = 0.5f;
+	rect->color = point3d(0.75f, 0.75f, 0.75);
+	//rect->opacity = 0.5f;
 
-	entity = entityStorage->CreateEntity("HealthLabel", MainMenuUIFolder);
+	// SETTINGS CONTENT
+	int fontSizeSC = 36;
+
+	entity = entityStorage->CreateEntity("Label", SettingsUIFolder);
 	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.f, 0.f, 0);
 	transform2D->ratio = ScreenAspectRatio::XY;
-	transform2D->position = point3d(-0.9f, -0.64f, 0.0f);
+	transform2D->position = point3d(-0.75f, 0.35f, 0.0f);
 	textLabel = entity->AddComponent<TextLabel>();
-	textLabel->textW = L"ЗДОРОВЬЕ";
-	textLabel->fontFamilyW = L"Impact";
-	textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
-	textLabel->fontWeight = 900;
-	textLabel->fontSizePx = 44;
-	textLabel->fontScale = 0.40f;
-	textLabel->letterSpacingPx = 1.0f;
+	textLabel->textW = L"Master";
+	textLabel->fontFamilyW = fontFamilyW_1;
+	textLabel->fontFilePathW = fontFilePathW_1;
+	textLabel->fontWeight = 300;
+	textLabel->fontSizePx = fontSize;
+	textLabel->fontScale = 1.0f;
+	textLabel->color = point3d(1.0f, 1.f, 1.f);
+	textLabel->opacity = 1.f;
+
+	entity = entityStorage->CreateEntity("Label", SettingsUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.f, 0.f, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.525f, 0.35f, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"100";
+	textLabel->fontFamilyW = fontFamilyW_1;
+	textLabel->fontFilePathW = fontFilePathW_1;
+	textLabel->fontWeight = 300;
+	textLabel->fontSizePx = fontSize;
+	textLabel->fontScale = 1.0f;
+	textLabel->color = point3d(1.0f, 1.f, 1.f);
+	textLabel->opacity = 1.f;
+
+	entity = entityStorage->CreateEntity("Rect", SettingsUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(-1, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::XX;
+	transform2D->position = point3d(-0.35f, 0.31f, 0.0f);
+	transform2D->scale = point3d(0.25f, 0.0175f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	textLabel->color = point3d(1.f, 1.f, 1.f);
+
+	entity = entityStorage->CreateEntity("Label", SettingsUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.f, 0.f, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.75f, 0.20f, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"Music";
+	textLabel->fontFamilyW = fontFamilyW_1;
+	textLabel->fontFilePathW = fontFilePathW_1;
+	textLabel->fontWeight = 300;
+	textLabel->fontSizePx = fontSize;
+	textLabel->fontScale = 1.0f;
+	textLabel->color = point3d(1.0f, 1.f, 1.f);
+	textLabel->opacity = 1.f;
+
+	entity = entityStorage->CreateEntity("Label", SettingsUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.f, 0.f, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.525f, 0.20f, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"50";
+	textLabel->fontFamilyW = fontFamilyW_1;
+	textLabel->fontFilePathW = fontFilePathW_1;
+	textLabel->fontWeight = 300;
+	textLabel->fontSizePx = fontSize;
+	textLabel->fontScale = 1.0f;
+	textLabel->color = point3d(1.0f, 1.f, 1.f);
+	textLabel->opacity = 1.f;
+
+	entity = entityStorage->CreateEntity("Rect", SettingsUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(-1, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::XX;
+	transform2D->position = point3d(-0.35f, 0.16f, 0.0f);
+	transform2D->scale = point3d(0.25f, 0.0175f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	textLabel->color = point3d(1.f, 1.f, 1.f);
+
+	entity = entityStorage->CreateEntity("Label", SettingsUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.f, 0.f, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.75f, 0.05f, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"Effects";
+	textLabel->fontFamilyW = fontFamilyW_1;
+	textLabel->fontFilePathW = fontFilePathW_1;
+	textLabel->fontWeight = 300;
+	textLabel->fontSizePx = fontSize;
+	textLabel->fontScale = 1.0f;
+	textLabel->color = point3d(1.0f, 1.f, 1.f);
+	textLabel->opacity = 1.f;
+
+	entity = entityStorage->CreateEntity("Label", SettingsUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0.f, 0.f, 0);
+	transform2D->ratio = ScreenAspectRatio::XY;
+	transform2D->position = point3d(-0.525f, 0.05f, 0.0f);
+	textLabel = entity->AddComponent<TextLabel>();
+	textLabel->textW = L"50";
+	textLabel->fontFamilyW = fontFamilyW_1;
+	textLabel->fontFilePathW = fontFilePathW_1;
+	textLabel->fontWeight = 300;
+	textLabel->fontSizePx = fontSize;
+	textLabel->fontScale = 1.0f;
+	textLabel->color = point3d(1.0f, 1.f, 1.f);
+	textLabel->opacity = 1.f;
+
+	entity = entityStorage->CreateEntity("Rect", SettingsUIFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(-1, 0, 0);
+	transform2D->ratio = ScreenAspectRatio::XX;
+	transform2D->position = point3d(-0.35f, 0.01f, 0.0f);
+	transform2D->scale = point3d(0.25f, 0.0175f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	textLabel->color = point3d(1.f, 1.f, 1.f);
+
 
 }
 
