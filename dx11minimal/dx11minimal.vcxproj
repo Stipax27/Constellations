@@ -207,6 +207,8 @@
     <ClInclude Include="Engine\Render\Beam.h" />
     <ClInclude Include="Engine\Render\StarClay\StarClay.h" />
     <ClInclude Include="Engine\Render\StarClay\StarClaySystem.h" />
+    <ClInclude Include="Engine\Sound\SoundPlayer.h" />
+    <ClInclude Include="Engine\Sound\SoundSystem.h" />
     <ClInclude Include="Engine\UI\Button.h" />
     <ClInclude Include="Engine\Camera\cameraclass.h" />
     <ClInclude Include="Engine\BasicComponents\collider.h" />
@@ -954,6 +956,7 @@
     <ClCompile Include="Engine\Player\Combo\Combo.cpp" />
     <ClCompile Include="Engine\Player\Combo\comboManager.cpp" />
     <ClCompile Include="Engine\Render\StarClay\StarClaySystem.cpp" />
+    <ClCompile Include="Engine\Sound\SoundSystem.cpp" />
     <ClCompile Include="Engine\Utils\ComponentUtils.cpp" />
     <ClCompile Include="Engine\GLTFLoader.cpp" />
     <ClCompile Include="Engine\Mesh\Animation.cpp" />
@@ -1061,14 +1064,26 @@
     <Content Include="Resourses\Models\TestAnims\4.glb" />
     <Content Include="Shaders\SkinnedPointCloud_VS.shader" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="Resourses\Sounds\lucky.wav">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Media>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\directxtex_desktop_win10.2026.4.1.1\build\native\directxtex_desktop_win10.targets" Condition="Exists('..\packages\directxtex_desktop_win10.2026.4.1.1\build\native\directxtex_desktop_win10.targets')" />
+    <Import Project="..\packages\ImeSense.Packages.LibOgg.1.3.5.5\build\native\ImeSense.Packages.LibOgg.targets" Condition="Exists('..\packages\ImeSense.Packages.LibOgg.1.3.5.5\build\native\ImeSense.Packages.LibOgg.targets')" />
+    <Import Project="..\packages\ImeSense.Packages.LibVorbis.1.3.7.5\build\native\ImeSense.Packages.LibVorbis.targets" Condition="Exists('..\packages\ImeSense.Packages.LibVorbis.1.3.7.5\build\native\ImeSense.Packages.LibVorbis.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\directxtex_desktop_win10.2026.4.1.1\build\native\directxtex_desktop_win10.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\directxtex_desktop_win10.2026.4.1.1\build\native\directxtex_desktop_win10.targets'))" />
+    <Error Condition="!Exists('..\packages\ImeSense.Packages.LibOgg.1.3.5.5\build\native\ImeSense.Packages.LibOgg.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ImeSense.Packages.LibOgg.1.3.5.5\build\native\ImeSense.Packages.LibOgg.targets'))" />
+    <Error Condition="!Exists('..\packages\ImeSense.Packages.LibVorbis.1.3.7.5\build\native\ImeSense.Packages.LibVorbis.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ImeSense.Packages.LibVorbis.1.3.7.5\build\native\ImeSense.Packages.LibVorbis.targets'))" />
   </Target>
 </Project>

@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <deque>
 #include <vector>
+#include <list>
 #include <utility>
 #include <stdio.h>
 #include <fstream>
@@ -18,6 +19,10 @@
 #include <wincodec.h>
 #include <wrl/client.h>
 #include <direct.h>
+#include <xaudio2.h>
+#include <ogg/ogg.h>
+#include <vorbis/codec.h>
+#include <vorbis/vorbisfile.h>
 
 #include <sys/stat.h>
 #ifdef _WIN32
@@ -31,6 +36,9 @@
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "xaudio2.lib")
 #pragma comment(lib, "d2d1.lib")
+#pragma comment(lib, "ogg.lib")
+#pragma comment(lib, "vorbis.lib")
+#pragma comment(lib, "vorbisfile.lib")
 
 #include "Utils/utils.h"
 #include "Lib/timer.h"
@@ -178,6 +186,110 @@ namespace Textures
 	DXGI_FORMAT WICToDXGIFormat(WICPixelFormatGUID& wicFormat);
 
 	std::tuple<int, int, int> GetCompressRes(RenderCompress compress);
+}
+
+namespace Audio
+{
+#define MAXCHANNELS 32
+#define max_audio 256
+
+	struct RIFF_HEADER {
+		char chunkId[4];
+		unsigned long chunkSize;
+		char format[4];
+	};
+
+	struct WAVE_FORMAT {
+		char subChunkId[4];
+		unsigned long subChunkSize;
+		unsigned short audioFormat;
+		unsigned short numChannels;
+		unsigned long sampleRate;
+		unsigned long byteRate;
+		unsigned short blockAlign;
+		unsigned short bitsPerSample;
+	};
+
+	struct WAVE_DATA {
+		char subChunkId[4];
+		unsigned long subChunkSize;
+	};
+
+	struct soundDesc {
+		std::vector<BYTE> data;
+		WAVEFORMATEX format;
+	};
+
+	struct OggMemoryFile {
+		const BYTE* data;
+		size_t size;
+		size_t pos;
+	};
+
+	extern IXAudio2* pXAudio2;
+	extern IXAudio2MasteringVoice* pMasteringVoice;
+	extern XAUDIO2_BUFFER buffer;
+	extern BYTE* channel[MAXCHANNELS];
+
+	extern int len;
+	extern int channelLen;
+
+	extern soundDesc Sounds[max_audio];
+	extern std::unordered_map<std::string, int> SoundName;
+
+	//extern std::list<IXAudio2SourceVoice*> activeVoices;
+
+	extern int soundsCount;
+
+	// Колбэки чтения для ov_open_callbacks
+	static size_t OggMemoryRead(void* ptr, size_t size, size_t nmemb, void* datasource) {
+		OggMemoryFile* mem = (OggMemoryFile*)datasource;
+		size_t bytesToRead = size * nmemb;
+		if (mem->pos + bytesToRead > mem->size) {
+			bytesToRead = mem->size - mem->pos;
+		}
+		memcpy(ptr, mem->data + mem->pos, bytesToRead);
+		mem->pos += bytesToRead;
+		return bytesToRead / size;
+	}
+
+	static int OggMemorySeek(void* datasource, ogg_int64_t offset, int whence) {
+		OggMemoryFile* mem = (OggMemoryFile*)datasource;
+		switch (whence) {
+		case SEEK_SET: mem->pos = (size_t)offset; break;
+		case SEEK_CUR: mem->pos = (size_t)(mem->pos + offset); break;
+		case SEEK_END: mem->pos = (size_t)(mem->size + offset); break;
+		}
+		if (mem->pos > mem->size) mem->pos = mem->size;
+		return 0;
+	}
+
+	static long OggMemoryTell(void* datasource) {
+		OggMemoryFile* mem = (OggMemoryFile*)datasource;
+		return (long)mem->pos;
+	}
+
+	// Статический набор колбэков
+	static ov_callbacks OV_CALLBACKS_MEMORY = {
+		OggMemoryRead,
+		OggMemorySeek,
+		nullptr, // close (нам не нужно)
+		OggMemoryTell
+	};
+
+	void Init();
+	void Release();
+
+	IXAudio2SourceVoice* Play(int soundIndex);
+	IXAudio2SourceVoice* Play(const std::string& name);
+	void DeleteVoice(IXAudio2SourceVoice* pVoice);
+
+	bool IsPlaying(IXAudio2SourceVoice* pVoice);
+
+	//void UpdateVoices();
+
+	void LoadWavFile(const std::string name, const char* filename);
+	void LoadOggFile(const std::string& name, const char* filename);
 }
 
 namespace Models

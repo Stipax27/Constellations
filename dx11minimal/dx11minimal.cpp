@@ -105,6 +105,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             timer::lastFrameTime = timer::currentTime;
             timer::currentTime = timer::GetCounter();
             timer::deltaTime = timer::currentTime - timer::lastFrameTime;
+            timer::deltaTimeS = timer::deltaTime / 1000;
 
             //timer::CalcDeltaAverage();
             timer::frameBeginTime = timer::GetCounter();

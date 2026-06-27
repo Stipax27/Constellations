@@ -709,4 +709,7 @@
       <Filter>Resource Files</Filter>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="Resourses\Sounds\lucky.wav" />
+  </ItemGroup>
 </Project>

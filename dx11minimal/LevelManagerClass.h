@@ -60,13 +60,15 @@
 #include "Engine/Compute/Quests/questmanager.h"
 #include "Engine/Compute/Quests/QuestSystem.h"
 
+#include "Engine/Sound/SoundSystem.h"
+
 #include "Systems/Transform2DDebugUI.h"
 
 /////////////
 // GLOBALS //
 /////////////
 //const bool VSYNC_ENABLED = true;
-#define SHOW_COLLIDERS true
+#define SHOW_COLLIDERS false
 #define SHOW_GRAVITY false
 
 
@@ -92,8 +94,6 @@ public:
 
 	void Frame();
 
-	void ProcessSound(const char* name);
-
 private:
 	World* m_World;
 	EntityStorage* entityStorage;
@@ -107,6 +107,9 @@ private:
 	bool m_WasToggleAnimationPressed = false;
 
 	void LoadModels();
+	void LoadTextures();
+	void LoadSounds();
+
 	Entity* CreatePlayer(Entity* = nullptr);
 
 	void CreateUI();

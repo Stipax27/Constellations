@@ -12,6 +12,7 @@ double timer::frameRenderingDuration = 0.0;
 double timer::currentTime = 0;
 double timer::lastFrameTime = 0;
 double timer::deltaTime = 0;
+double timer::deltaTimeS = 0;
 
 std::vector<double> timer::deltaList;
 double timer::deltaAverage = 0;

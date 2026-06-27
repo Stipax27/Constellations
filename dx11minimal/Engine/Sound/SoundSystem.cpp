@@ -1,0 +1,76 @@
+#include "SoundSystem.h"
+#include "../Lib/logging.h"
+
+using namespace std;
+
+
+SoundSystem::SoundSystem()
+{
+}
+
+
+void SoundSystem::Initialize()
+{
+}
+
+
+void SoundSystem::Shutdown()
+{
+}
+
+
+void SoundSystem::Update(EntityStorage& entityStorage, float deltaTime)
+{
+	const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<SoundPlayer>();
+	size_t size = entities.size();
+	for (int i = 0; i < size; i++)
+	{
+		Entity* entity = entities[i];
+		if (!IsEntityValid(entity)) {
+			if (entity && !entity->IsActive()) {
+				SoundPlayer* soundPlayer = entity->GetComponent<SoundPlayer>();
+				if (!soundPlayer)
+					continue;
+
+				if (soundPlayer->pVoice != nullptr) {
+					Audio::DeleteVoice(soundPlayer->pVoice);
+					soundPlayer->pVoice = nullptr;
+				}
+			}
+
+			continue;
+		}
+
+		SoundPlayer* soundPlayer = entity->GetComponent<SoundPlayer>();
+		if (!soundPlayer)
+			continue;
+
+		if (soundPlayer->active && soundPlayer->playing) {
+			if (soundPlayer->pVoice == nullptr) {
+				IXAudio2SourceVoice* pVoice = Audio::Play(soundPlayer->soundName);
+				if (pVoice) {
+					soundPlayer->pVoice = pVoice;
+				}
+				else {
+					Log("Missing file for sound with name ");
+					Log(soundPlayer->soundName.c_str());
+					Log("\n");
+					soundPlayer->active = false;
+				}
+			}
+			else if (!Audio::IsPlaying(soundPlayer->pVoice)) {
+				Audio::DeleteVoice(soundPlayer->pVoice);
+				soundPlayer->pVoice = nullptr;
+				soundPlayer->playing = false;
+			}
+		}
+		else {
+			if (soundPlayer->pVoice != nullptr) {
+				Audio::DeleteVoice(soundPlayer->pVoice);
+				soundPlayer->pVoice = nullptr;
+			}
+		}
+	}
+
+	//Audio::UpdateVoices();
+}

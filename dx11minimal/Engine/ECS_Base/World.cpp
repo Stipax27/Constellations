@@ -76,24 +76,31 @@ void World::PreCalculations()
 
 void World::UpdateCompute()
 {
-	double deltaTime = timer::deltaTime / 1000;
 	size_t size = computeSystems.size();
 	for (int i = 0; i < size; i++)
 	{
-		computeSystems[i]->Update(*entityStorage, deltaTime);
+		computeSystems[i]->Update(*entityStorage, timer::deltaTimeS);
 	}
 }
 
 
 void World::UpdatePhysic()
 {
-	double deltaTime = timer::deltaTime / 1000;
 	size_t size = physicSystems.size();
 	for (int i = 0; i < size; i++)
 	{
-		physicSystems[i]->Update(*entityStorage, deltaTime);
+		physicSystems[i]->Update(*entityStorage, timer::deltaTimeS);
 	}
-	entityStorage->CleanMem();
+}
+
+
+void World::UpdateAudio()
+{
+	size_t size = audioSystems.size();
+	for (int i = 0; i < size; i++)
+	{
+		audioSystems[i]->Update(*entityStorage, timer::deltaTimeS);
+	}
 }
 
 
@@ -124,11 +131,10 @@ void World::UpdateRender()
 
 	m_Camera->Render();
 
-	double deltaTime = timer::deltaTime / 1000;
 	size_t size = renderSystems.size();
 	for (int i = 0; i < size; i++)
 	{
-		renderSystems[i]->Update(*entityStorage, deltaTime);
+		renderSystems[i]->Update(*entityStorage, timer::deltaTimeS);
 	}
 
 	Textures::CreateMipMap();
