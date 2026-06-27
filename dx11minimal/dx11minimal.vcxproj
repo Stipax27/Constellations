@@ -1247,6 +1247,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EditorTools\EditCameraController.cpp" />
+    <ClCompile Include="EditorTools\Render\PivotDrawSystem.cpp" />
     <ClCompile Include="Engine\Camera\cameraclass.cpp" />
     <ClCompile Include="Engine\Compute\Combat\DamageBlocker.cpp" />
     <ClCompile Include="Engine\Compute\Combat\Health.cpp" />

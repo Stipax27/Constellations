@@ -5,11 +5,10 @@
 // INCLUDES //
 //////////////
 #include<cmath>
-#include "../Engine/ECS_Base/system.h"
-#include "../../BasicComponents/Transform.h"
-#include "Nebula.h"
+#include "../../Engine/ECS_Base/system.h"
+#include "../../Engine/BasicComponents/Transform.h"
 
-#include "../../Camera/frustumclass.h"
+#include "../../Engine/Camera/frustumclass.h"
 
 
 class PivotDrawSystem : public System
@@ -23,9 +22,6 @@ public:
 
 private:
 	FrustumClass* frustum;
-
-private:
-	void PSModeSet(pMode, bool);
 };
 
 #endif

@@ -89,6 +89,7 @@
     <ClCompile Include="Systems\Transform2DDebugUI.cpp" />
     <ClCompile Include="Engine\Sound\SoundSystem.cpp" />
     <ClCompile Include="EditorTools\EditCameraController.cpp" />
+    <ClCompile Include="EditorTools\Render\PivotDrawSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LevelManagerClass.h">

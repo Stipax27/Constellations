@@ -793,6 +793,10 @@ void LevelManagerClass::InitSystems()
 	m_World->AddRenderSystem<NebulaSystem>();
 	m_World->AddRenderSystem<UISystem>();
 	m_World->AddRenderSystem<UITextSystem>();
+
+#ifdef _EDITOR
+	m_World->AddRenderSystem<PivotDrawSystem>();
+#endif
 }
 
 

@@ -70,6 +70,10 @@
 
 #include "Systems/Transform2DDebugUI.h"
 
+#ifdef _EDITOR
+#include "EditorTools/Render/PivotDrawSystem.h"
+#endif
+
 /////////////
 // GLOBALS //
 /////////////
