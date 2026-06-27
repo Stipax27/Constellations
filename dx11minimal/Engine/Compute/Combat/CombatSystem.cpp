@@ -1,0 +1,56 @@
+#include "combatSystem.h"
+
+using namespace std;
+
+
+
+CombatSystem::CombatSystem()
+{
+}
+
+
+void CombatSystem::Initialize()
+{
+}
+
+
+void CombatSystem::Shutdown()
+{
+}
+
+
+void CombatSystem::Update(EntityStorage& entityStorage, float deltaTime)
+{
+	const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<Health>();
+	for (Entity* entity : entities)
+	{
+		if (!IsEntityValid(entity) || entity->GetTimeScale() == 0.0f)
+			continue;
+				
+		Health* health = entity->GetComponent<Health>();
+		if (health == nullptr || !health->active)
+			continue;
+
+		if (!health->immortal) {
+			DamageBlocker* damageBlocker = entity->GetComponent<DamageBlocker>();
+
+			if (damageBlocker != nullptr) {
+				for (DamageUnit damageUnit : health->damageQueue) {
+					health->hp -= damageBlocker->CalcDamage(damageUnit);
+				}
+			}
+			else {
+				for (DamageUnit damageUnit : health->damageQueue) {
+					health->hp -= damageUnit.damage;
+				}
+			}
+
+		}
+		health->damageQueue.clear();
+
+		health->hp = clamp(health->hp, 0.0f, health->maxHp);
+		if (health->hp == 0.0f && health->destroyOnDeath) {
+			entity->Destroy();
+		}
+	}
+}

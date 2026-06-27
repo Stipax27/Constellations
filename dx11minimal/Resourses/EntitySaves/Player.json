@@ -1,0 +1,41 @@
+{
+    "name": "Player",
+    "active": true,
+    "timeScale": 1.0,
+    "components": [
+        {
+            "type": "Component"
+        },
+        {
+            "type": "Component"
+        },
+        {
+            "type": "Component"
+        },
+        {
+            "type": "Component"
+        },
+        {
+            "type": "Component"
+        },
+        {
+            "type": "Component"
+        }
+    ],
+    "children": [
+        {
+            "name": "GrabHitbox",
+            "active": true,
+            "timeScale": 1.0,
+            "components": [
+                {
+                    "type": "Component"
+                },
+                {
+                    "type": "Component"
+                }
+            ],
+            "children": []
+        }
+    ]
+}

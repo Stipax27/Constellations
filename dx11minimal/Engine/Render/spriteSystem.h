@@ -1,0 +1,60 @@
+#ifndef _SPRITE_SYSTEM_H_
+#define _SPRITE_SYSTEM_H_
+
+//////////////
+// INCLUDES //
+//////////////
+#include<cmath>
+#include "../ECS_Base/system.h"
+#include "../BasicComponents/Transform.h"
+#include "SpriteCluster.h"
+#include "Constellation.h"
+#include "Star.h"
+#include "PointCloud.h"
+#include "ParticleEmitter.h"
+#include "Beam.h"
+#include "../Render/BoneAnimation/SkeletalAnimationComponent.h"
+#include "../../Components/Orientation.h"
+
+#include "../Camera/frustumclass.h"
+
+
+class SpriteSystem : public System
+{
+public:
+	SpriteSystem();
+	SpriteSystem(FrustumClass*, ID3D11Buffer* boneBuf = nullptr);
+	void Initialize();
+	void Shutdown();
+
+	void Update(EntityStorage&, float);
+
+private:
+	FrustumClass* frustum;
+	ID3D11Buffer* boneBuffer = nullptr;
+
+private:
+	void UpdateWorldMatrix(Transform);
+
+	void ProcessParticle(Entity*, Transform&);
+	void AddEmitterOrientation(Entity*, Transform&);
+	void EmitNewParticles(Entity*, const Transform&, ParticleEmitter*);
+	double CalculateEmitDelta(const ParticleEmitter&);
+	int CalculateEmitCount(const ParticleEmitter&, double, double);
+	Orientation ApplySpread(Orientation, const ParticleEmitter&);
+	float GenerateRandomAngle(float spread);
+	double CalculateParticleStartTime(Entity*, const ParticleEmitter&, double, int);
+	void CreateParticle(Entity*, const Transform&, ParticleEmitter*, const Orientation&, double);
+	void CreateReversedParticle(const Transform&, ParticleEmitter*, const Orientation&, double);
+	void CreateNormalParticle(const Transform&, ParticleEmitter*, const Orientation&, double);
+	void UpdateEmitTiming(Entity*, ParticleEmitter*, double, int);
+	void UpdateExistingParticles(Entity*, ParticleEmitter*, Transform&);
+	void RenderParticles(Entity*, const ParticleEmitter*);
+	void SetupShaders(const ParticleEmitter*);
+	void SetupConstantBuffers(Entity*);
+	void SetupParticleInfo(Entity*, const ParticleEmitter*);
+	void SetupInputAssembler(const ParticleEmitter*);
+	Orientation CalculateEmitOrientation(const Orientation&, EmitDirection);
+};
+
+#endif

@@ -42,9 +42,9 @@ pos_color CalcParticles(uint qid, float4 grid)
 {
     qid *= nSkipper;
 
-    float3 pos=shp(grid.xy);
-    pos+=.7*rot3(pos,31/pos+.1*noise3(pos*3));
-    pos=lerp(normalize(pos)*33,pos,.45);;
+    float3 pos = shp(grid.xy);
+    pos += 0.7 * rot3(pos, 31 / pos + 0.1 * noise3(pos * 3));
+    pos = lerp(normalize(pos) * 33, pos, 0.45);
     
 
 

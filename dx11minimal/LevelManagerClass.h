@@ -10,46 +10,64 @@
 #include <thread>
 #include <vector>
 
-#include "windowclass.h"
-#include "mouseclass.h"
+#include "Engine/Lib/interp.h"
 
-#include "PlayerController.h"
+#include "Engine/Window/windowclass.h"
+#include "Engine/Mouse/mouseclass.h"
 
-#include "world.h"
-#include "system.h"
-#include "entity.h"
-#include "component.h"
-#include "Enemy_Patern.h"
+#include "Engine/Player/PlayerController.h"
 
-#include "CollisionManagerClass.h"
+#include "Engine/ECS_Base/world.h"
+#include "Engine/ECS_Base/system.h"
+#include "Engine/ECS_Base/entity.h"
+#include "Engine/ECS_Base/component.h"
 
-#include "SplinePath.cpp"
+#include "Engine/Physic/Collision/CollisionManagerClass.h"
 
 
-#include "spriteSystem.h"
-#include "meshSystem.h"
-#include "uiSystem.h"
-#include "Systems/UITextSystem.h"
-#include "nebulaSystem.h"
+#include "Engine/Render/spriteSystem.h"
+#include "Engine/Render/Mesh/meshSystem.h"
+#include "Engine/Render/Nebula/nebulaSystem.h"
+#include "Engine/Render/StarClay/StarClaySystem.h"
 
-#include "physicSystem.h"
-#include "collisionSystem.h"
-#include "combatSystem.h"
+#include "Engine/UI/uiSystem.h"
+#include "Engine/UI/Text/UITextSystem.h"
 
-#include "entityManagerSystem.h"
-#include "timeSystem.h"
+#include "Engine/Physic/Movement/physicSystem.h"
+#include "Engine/Physic/Gravitation/GravitySystem.h"
+#include "Engine/Physic/Collision/collisionSystem.h"
 
-#include "collisionDrawSystem.h"
+#include "Engine/Compute/Combat/combatSystem.h"
+#include "Engine/Compute/Combat/RayDamage/RayDamageSystem.h"
+
+#include "Engine/Compute/DelayedDestroy/DelayedDestroySystem.h"
+#include "Engine/Compute/Time/timeSystem.h"
+
+#include "Engine/DebugTools/collisionDrawSystem.h"
+#include "Engine/DebugTools/GravityDrawSystem.h"
+
 #include "Engine/Mesh/Animation.h"
 #include "Engine/Mesh/Animator.h"
 #include "Engine/Mesh/Skeleton.h"
-#include "Engine/Mesh/SkinnedMesh.h"
+#include "Engine/Render/SkinnedMesh/SkinnedMesh.h"
+
+#include "Engine/Compute/AI/AISystem.h"
+
+#include "Engine/Render/BoneAnimation/SkeletalAnimationComponent.h"
+#include "Engine/Render/BoneAnimation/SkeletalAnimationSystem.h"
+#include "Engine/Render/SkinnedMesh/SkinnedMeshSystem.h"
+
+#include "Engine/Compute/Quests/questmanager.h"
+#include "Engine/Compute/Quests/QuestSystem.h"
+
+#include "Systems/Transform2DDebugUI.h"
 
 /////////////
 // GLOBALS //
 /////////////
 //const bool VSYNC_ENABLED = true;
-const bool SHOW_COLLIDERS = false;
+#define SHOW_COLLIDERS true
+#define SHOW_GRAVITY false
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -78,9 +96,13 @@ public:
 
 private:
 	World* m_World;
+	EntityStorage* entityStorage;
 	PlayerController* playerController;
 	CollisionManagerClass* collisionManager;
+	QuestManager* questManager;
+
 	Entity* m_TestAnimEntity = nullptr;
+	Transform2DDebugUI m_Transform2DDebugUI;
 	int m_TestAnimCycleIndex = 0;
 	bool m_WasToggleAnimationPressed = false;
 
@@ -93,7 +115,21 @@ private:
 	void CreateSpaceBackground(Entity*, int);
 	void CreateAries(Entity*);
 	void CreateZenithLocation(Entity*, int);
+	void CreateNebula(Entity*, int);
+	void CreateStarQuestLoc(Entity*, int);
 	void UpdateTestAnimationToggle();
+	void CreateArenaBarrier(Entity* parent, const point3d& center, float radius, int starCount);
+	void ShowGameOverMessage(const wchar_t* message, const point3d& color);
+
+	bool m_IsExecutionActive = false;
+	Entity* m_ExecutionUI = nullptr;
+	float m_ExecutionTimer = 0.0f;
+	float m_ExecutionTimeLimit = 5.0f;
+
+	void TriggerExecution();
+	void ExecuteBoss();
+	void ShowExecutionUI();
+	void HideExecutionUI();
 
 	ID3D11Buffer* m_BoneBuffer = nullptr;
 	SkinnedMesh m_FoxMesh;
@@ -102,9 +138,30 @@ private:
 	SkinnedMesh m_CesiumMesh;
 	Skeleton    m_CesiumSkeleton;
 	std::vector<AnimationClip> m_CesiumAnimations;
+
+
+	SkinnedMesh m_PunchComboNewMesh;
+	Skeleton    m_PunchComboNewSkeleton;
+	std::vector<AnimationClip> m_PunchComboNewAnimations;
+
 	SkinnedMesh m_TestAnimMesh;
 	Skeleton    m_TestAnimSkeleton;
 	std::vector<AnimationClip> m_TestAnimAnimations;
+private: // AI amogus
+	Entity* testEnemy;
+	Entity* worldFolder;
+	Entity* m_CurrentBoss;
+	Entity* m_BossHealthFill;      // Полоска здоровья
+	TextLabel* m_BossNumbersText;  // Текст с цифрами
+	TextLabel* m_BossNameText;     // Текст с именем
+	bool m_IsInBossArena = false;
+	float m_BossArenaRadius = 60.0f;
+	point3d m_BossArenaCenter = point3d(0, 0, 0);
+
+	bool m_ShowGameOverMessage = false;
+	bool m_ShowVictoryMessage = false;
+	float m_MessageTimer = 0.0f;
+	
 };
 
 #endif
