@@ -89,7 +89,7 @@
     <ClCompile Include="Systems\Transform2DDebugUI.cpp" />
     <ClCompile Include="Engine\Sound\SoundSystem.cpp" />
     <ClCompile Include="EditorTools\EditCameraController.cpp" />
-    <ClCompile Include="EditorTools\Render\PivotDrawSystem.cpp" />
+    <ClCompile Include="Engine\DebugTools\PivotDrawSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LevelManagerClass.h">
@@ -243,7 +243,7 @@
     <ClInclude Include="Engine\Sound\SoundSystem.h" />
     <ClInclude Include="EditorTools\EditCameraController.h" />
     <ClInclude Include="EditorTools\PivotDrawSystem.h" />
-    <ClInclude Include="EditorTools\Render\PivotDrawSystem.h" />
+    <ClInclude Include="Engine\DebugTools\PivotDrawSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">

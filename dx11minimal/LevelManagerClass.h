@@ -51,6 +51,7 @@
 
 #include "Engine/DebugTools/collisionDrawSystem.h"
 #include "Engine/DebugTools/GravityDrawSystem.h"
+#include "Engine/DebugTools/PivotDrawSystem.h"
 
 #include "Engine/Mesh/Animation.h"
 #include "Engine/Mesh/Animator.h"
@@ -70,16 +71,13 @@
 
 #include "Systems/Transform2DDebugUI.h"
 
-#ifdef _EDITOR
-#include "EditorTools/Render/PivotDrawSystem.h"
-#endif
-
 /////////////
 // GLOBALS //
 /////////////
 //const bool VSYNC_ENABLED = true;
 #define SHOW_COLLIDERS false
 #define SHOW_GRAVITY false
+#define SHOW_PIVOTS false
 
 
 ////////////////////////////////////////////////////////////////////////////////
