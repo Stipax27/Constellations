@@ -202,8 +202,13 @@ bool LevelManagerClass::Initialize()
 
 	InitSystems();
 
+#ifdef _EDITOR
+	editCameraController = new EditCameraController();
+	editCameraController->Initialize();
+#else
 	playerController = new PlayerController();
 	playerController->Initialize(player);
+#endif
 
 	
 
@@ -343,12 +348,21 @@ bool LevelManagerClass::Initialize()
 
 void LevelManagerClass::Shutdown()
 {
+#ifdef _EDITOR
+	if (editCameraController)
+	{
+		editCameraController->Shutdown();
+		delete editCameraController;
+		editCameraController = 0;
+	}
+#else
 	if (playerController)
 	{
 		playerController->Shutdown();
 		delete playerController;
 		playerController = 0;
 	}
+#endif
 
 	if (m_World)
 	{
@@ -405,6 +419,10 @@ void LevelManagerClass::Frame()
 	interp::UpdateTweens();
 
 	m_Transform2DDebugUI.UpdateToggle();
+
+#ifdef _EDITOR
+	editCameraController->Update();
+#else
 	playerController->ProcessInput();
 	playerController->ProcessMouse();
 	playerController->abilities->Update();
@@ -692,16 +710,6 @@ void LevelManagerClass::Frame()
 		m_IsInBossArena = false;
 	}
 
-	// DEBUG
-
-	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
-
-	m_World->UpdateCompute();
-	m_World->UpdatePhysic();
-	m_World->UpdateAudio();
-
-	entityStorage->CleanMem();
-
 	// Изменение цвета testStar в зависимости от состояния ИИ
 	if (testEnemy && testEnemy->IsActive()) {
 		AIComponent* ai = testEnemy->GetComponent<AIComponent>();
@@ -726,8 +734,23 @@ void LevelManagerClass::Frame()
 			}
 		}
 	}
+#endif
 
+	// DEBUG
+
+	ConstBuf::frame.aspect = XMFLOAT4{ float(window->aspect), float(window->iaspect), float(window->width), float(window->height) };
+
+	m_World->UpdateCompute();
+#ifndef _EDITOR
+	m_World->UpdatePhysic();
+	m_World->UpdateAudio();
+#endif
+
+	entityStorage->CleanMem();
+
+#ifndef _EDITOR
 	playerController->ProcessCamera();
+#endif
 
 	m_World->UpdateRender();
 
@@ -1937,7 +1960,7 @@ void LevelManagerClass::CreateStarQuestLoc(Entity* folder, int quality)
 	Star* star = m_CentralStar->AddComponent<Star>();
 	star->radius = 20.0f;
 	star->crownRadius = 25.0f;
-	star->color1 = point3d(0.99, 1, 0.51);
+	star->color1 = point3d(0.99f, 1.0f, 0.51f);
 	star->color2 = point3d(0.75f, 0.2f, 0.37f);
 	star->crownColor = point3d(0.87f, 0.25f, 0.15f);
 

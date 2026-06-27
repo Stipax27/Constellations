@@ -15,7 +15,13 @@
 #include "Engine/Window/windowclass.h"
 #include "Engine/Mouse/mouseclass.h"
 
+#ifdef _EDITOR
+#include "EditorTools/EditCameraController.h"
+#else
 #include "Engine/Player/PlayerController.h"
+#endif
+
+#include "Engine/Player/CameraTarget.h"
 
 #include "Engine/ECS_Base/world.h"
 #include "Engine/ECS_Base/system.h"
@@ -97,7 +103,13 @@ public:
 private:
 	World* m_World;
 	EntityStorage* entityStorage;
+
+#ifdef _EDITOR
+	EditCameraController* editCameraController;
+#else
 	PlayerController* playerController;
+#endif
+
 	CollisionManagerClass* collisionManager;
 	QuestManager* questManager;
 

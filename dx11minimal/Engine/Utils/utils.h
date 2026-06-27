@@ -61,4 +61,8 @@ point3d rotateInPlane(const point3d&, const point3d&, float);
 
 DirectX::XMMATRIX LerpMatrix(const DirectX::XMMATRIX& from, const DirectX::XMMATRIX& to, float t);
 
+point3d GetLookVectorFromMatrix(const DirectX::XMMATRIX& matrix);
+point3d GetUpVectorFromMatrix(const DirectX::XMMATRIX& matrix);
+point3d GetRightVectorFromMatrix(const DirectX::XMMATRIX& matrix);
+
 #endif

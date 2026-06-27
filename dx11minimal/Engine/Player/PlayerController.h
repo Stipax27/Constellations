@@ -28,12 +28,12 @@
 #include "PlayerAbilities.h"
 #include "Combo/comboManager.h"
 
+#include "../../GlobalConfigs.h"
+
 
 /////////////
 // GLOBALS //
 /////////////
-#define SENSIVITY 3.5f
-
 const float CURSOR_IGNORE_ZONE = 0.05f;
 const float MAX_CURSOR_DEVIATION = 0.45f;
 const float CURSOR_ZONE_DELTA = MAX_CURSOR_DEVIATION - CURSOR_IGNORE_ZONE;

@@ -87,6 +87,8 @@
     <ClCompile Include="Engine\Player\Combo\Combo.cpp" />
     <ClCompile Include="Engine\Player\Combo\comboManager.cpp" />
     <ClCompile Include="Systems\Transform2DDebugUI.cpp" />
+    <ClCompile Include="Engine\Sound\SoundSystem.cpp" />
+    <ClCompile Include="EditorTools\EditCameraController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LevelManagerClass.h">
@@ -236,6 +238,9 @@
     <ClInclude Include="Engine\Compute\AI\BossComponent.h" />
     <ClInclude Include="Engine\Player\Combo\fistsCombos.h" />
     <ClInclude Include="Systems\Transform2DDebugUI.h" />
+    <ClInclude Include="Engine\Sound\SoundPlayer.h" />
+    <ClInclude Include="Engine\Sound\SoundSystem.h" />
+    <ClInclude Include="EditorTools\EditCameraController.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">
