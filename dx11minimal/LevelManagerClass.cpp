@@ -194,7 +194,9 @@ bool LevelManagerClass::Initialize()
 	mesh = holder->AddComponent<Mesh>();
 	mesh->index = 1;*/
 
+#ifndef _EDITOR
 	CreateUI();
+#endif
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// WORLD CREATING END //
