@@ -77,7 +77,15 @@ void EditCameraController::ProcessPosition()
 	}
 
 	if (velocity.magnitude() > 0) {
-		float flySpeed = input::IsKeyDown(VK_LSHIFT) ? CAMERA_FAST_FLY_SPEED : CAMERA_FLY_SPEED;
+		float flySpeed = CAMERA_FLY_SPEED;
+
+		if (input::IsKeyDown(VK_LSHIFT)) {
+			flySpeed = CAMERA_FAST_FLY_SPEED;
+		}
+		else if (input::IsKeyDown(VK_LCONTROL)) {
+			flySpeed = CAMERA_SLOW_FLY_SPEED;
+		}
+
 		camera->position += velocity.normalized() * flySpeed * timer::deltaTimeS;
 	}
 }

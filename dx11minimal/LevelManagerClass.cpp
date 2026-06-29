@@ -43,18 +43,11 @@ bool LevelManagerClass::Initialize()
 	InitWindow();
 
 	m_World = Singleton::GetInstance<World>();
-	m_World->Initialize();
-
 	entityStorage = m_World->entityStorage;
 
 	collisionManager = Singleton::GetInstance<CollisionManagerClass>();
-	collisionManager->Initialize(*entityStorage);
-
 	mouse = Singleton::GetInstance<MouseClass>();
-	mouse->Initialize();
-
 	questManager = Singleton::GetInstance<QuestManager>();
-	questManager->Initialize();
 
 	Dx11Init(window->hWnd, window->width, window->height);
 	std::thread modelsLoadingThread(&LevelManagerClass::LoadModels, this);

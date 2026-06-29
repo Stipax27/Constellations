@@ -52,7 +52,7 @@ public:
 	void SaveEntityToFile(Entity* entity, const std::string& filename);
 	Entity* LoadEntityFromFile(const std::string& filename);
 
-	void Initialize();
+	void Initialize() override;
 	void Shutdown();
 	void CleanMem();
 

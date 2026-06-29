@@ -14,7 +14,7 @@ WindowClass::~WindowClass()
 }
 
 
-void WindowClass::Initialize()
+void WindowClass::InitWindow()
 {
 	RECT rect;
 	GetClientRect(hWnd, &rect);

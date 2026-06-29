@@ -225,7 +225,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, WindowClass* window)
     ShowWindow(window->hWnd, SW_SHOW);
     UpdateWindow(window->hWnd);
 
-    window->Initialize();
+    window->InitWindow();
 
     return TRUE;
 }

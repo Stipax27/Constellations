@@ -38,7 +38,7 @@ public:
 	CameraClass(const CameraClass&);
 	~CameraClass();
 
-	void Initialize();
+	void Initialize() override;
 
 	void SetMatrixRotation(XMMATRIX);
 	void SetFov(float);

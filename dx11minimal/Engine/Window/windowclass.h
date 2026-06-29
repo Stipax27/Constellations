@@ -19,7 +19,7 @@ public:
 	WindowClass(const WindowClass&);
 	~WindowClass();
 
-	void Initialize();
+	void InitWindow();
 	bool IsActive();
 	bool IsFocused();
 

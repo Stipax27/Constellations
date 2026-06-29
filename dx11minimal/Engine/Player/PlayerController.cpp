@@ -54,10 +54,7 @@ void PlayerController::Initialize(Entity* Player)
 	collisionManager = Singleton::GetInstance<CollisionManagerClass>();
 
 	abilities = Singleton::GetInstance<PlayerAbilities>();
-	abilities->Initialize(playerEntity, entityStorage);
-
 	comboManager = Singleton::GetInstance<ComboManager>();
-	comboManager->Initialize();
 
 	currentMaxSpeed = PLAYER_MOVE_SPEED;
 	isRunning = false;

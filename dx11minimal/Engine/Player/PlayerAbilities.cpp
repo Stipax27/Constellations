@@ -18,17 +18,17 @@ PlayerAbilities::~PlayerAbilities()
 }
 
 
-void PlayerAbilities::Initialize(Entity* PlayerEntity, EntityStorage* storage)
+void PlayerAbilities::Initialize()
 {
 	weapon = PlayerWeapons::Fists;
 	element = Elements::None;
 
 	world = Singleton::GetInstance<World>();
-	entityStorage = storage;
+	entityStorage = Singleton::GetInstance<EntityStorage>();
 	camera = Singleton::GetInstance<CameraClass>();
 	collisionManager = Singleton::GetInstance<CollisionManagerClass>();
 
-	playerEntity = PlayerEntity;
+	playerEntity = entityStorage->GetEntityByName("Player");
 	worldFolder = entityStorage->GetEntityByName("World");
 
 	maxStamina = 1000;

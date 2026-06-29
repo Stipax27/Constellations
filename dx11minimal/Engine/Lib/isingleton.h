@@ -3,6 +3,8 @@
 
 class ISingleton
 {
+public:
+	virtual void Initialize() {};
 };
 
 #endif

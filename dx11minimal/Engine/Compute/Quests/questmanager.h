@@ -43,7 +43,7 @@ public:
 
 	void CreateQuest(const std::string& questType);
 
-	void Initialize();
+	void Initialize() override;
 	void Shutdown();
 
 	void UpdateQuests();

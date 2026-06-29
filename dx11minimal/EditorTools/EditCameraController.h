@@ -8,12 +8,13 @@
 
 #define CAMERA_FLY_SPEED 15.0f
 #define CAMERA_FAST_FLY_SPEED 60.0f
+#define CAMERA_SLOW_FLY_SPEED 3.0f
 
 
-class EditCameraController : ISingleton
+class EditCameraController : public ISingleton
 {
 public:
-	void Initialize();
+	void Initialize() override;
 	void Shutdown();
 	void Update();
 

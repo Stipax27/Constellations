@@ -15,7 +15,7 @@
 #include <memory>
 #include <mutex>
 
-#include "../../Lib/isingleton.h"
+#include "../../Lib/singleton.h"
 #include "../../Utils/utils.h"
 
 #include "../../BasicComponents/Transform.h"
@@ -85,7 +85,7 @@ public:
 	~CollisionManagerClass();
 	CollisionManagerClass(const CollisionManagerClass&);
 
-	void Initialize(EntityStorage& entityStorage);
+	void Initialize() override;
 	void Shutdown();
 
 	static CollisionResult sphere_vs_sphere(

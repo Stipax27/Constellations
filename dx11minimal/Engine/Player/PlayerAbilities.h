@@ -7,7 +7,7 @@
 //////////////
 // INCLUDES //
 //////////////
-#include "../Lib/isingleton.h"
+#include "../Lib/singleton.h"
 #include "../Camera/cameraclass.h"
 
 #include "../ECS_Base/world.h"
@@ -93,14 +93,11 @@ public:
 
 	void StartRadar();
 	
-
-
-public:
 	PlayerAbilities();
 	PlayerAbilities(const PlayerAbilities&);
 	~PlayerAbilities();
 
-	void Initialize(Entity*, EntityStorage*);
+	void Initialize() override;
 	void Shutdown();
 	void Update();
 

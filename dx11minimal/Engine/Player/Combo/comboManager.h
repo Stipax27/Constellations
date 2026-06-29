@@ -22,7 +22,7 @@
 class ComboManager : public ISingleton
 {
 public:
-	void Initialize();
+	void Initialize() override;
 	void Update();
 
 	void SaveInput(ComboInputType input);
