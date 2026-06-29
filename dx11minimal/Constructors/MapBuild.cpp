@@ -18,7 +18,7 @@ void MapBuild::BuildMaze() {
 
 	CreateRotatingStar(t, 25.0f, entityStorage->GetEntityByName("World"));
 
-	t.mRotation = t.mRotation * XMMatrixRotationAxis(XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), PI / 2);
+	t.mRotation = XMMatrixRotationAxis(XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), PI / 2);
 
 	CreateRotatingStar(t, 40.0f, entityStorage->GetEntityByName("World"));
 }
