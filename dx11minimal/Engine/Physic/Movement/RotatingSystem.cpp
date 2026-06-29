@@ -35,9 +35,8 @@ void RotatingSystem::Update(EntityStorage& entityStorage, float deltaTime)
 		if (transform == nullptr || rotatingBody == nullptr || !rotatingBody->active)
 			continue;
 
-		rotatingBody->angle += rotatingBody->rotateSpeed * timer::deltaTimeS;
-
-		XMVECTOR quaternion = XMQuaternionRotationAxis(XMVectorSet(rotatingBody->axis.x, rotatingBody->axis.y, rotatingBody->axis.z, 0.0f), rotatingBody->angle);
+		float angle = degreesToRadians(rotatingBody->rotateSpeed) * timer::deltaTimeS * entity->GetTimeScale();
+		XMVECTOR quaternion = XMQuaternionRotationAxis(XMVectorSet(rotatingBody->axis.x, rotatingBody->axis.y, rotatingBody->axis.z, 0.0f), angle);
 		XMMATRIX rotMatrix = XMMatrixRotationQuaternion(quaternion);
 
 		transform->mRotation = rotMatrix * transform->mRotation;

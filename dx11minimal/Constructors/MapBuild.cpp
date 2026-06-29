@@ -5,28 +5,46 @@
 
 #include "../Engine/Render/Star.h"
 #include "../Engine/Physic/Collision/SphereCollider.h"
+#include "../Engine/Physic/Gravitation/GravityPoint.h"
 #include "../Engine/Physic/Movement/RotatingSystem.h"
 
 
 void MapBuild::BuildMaze() {
+	EntityStorage* entityStorage = Singleton::GetInstance<EntityStorage>();
+
 	Transform t = Transform();
 	t.position = point3d(0, 10, 0);
+	t.scale = point3d(5);
 
-	CreateRotatingStar(t, nullptr);
+	CreateRotatingStar(t, entityStorage->GetEntityByName("World"));
 }
 
 
 void MapBuild::CreateRotatingStar(const Transform& onTransform, Entity* parent) {
 	EntityStorage* entityStorage = Singleton::GetInstance<EntityStorage>();
 
-	Entity* entity = entityStorage->CreateEntity("RotatingStar", parent);
+	///////////////////////////////////
 
-	Transform* transform = entity->AddComponent<Transform>();
+	Entity* starHolder = entityStorage->CreateEntity("StarHolder", parent);
+
+	Transform* transform = starHolder->AddComponent<Transform>();
 	*transform = onTransform;
 
-	Star* star = entity->AddComponent<Star>();
+	RotatingBody* rotatingBody = starHolder->AddComponent<RotatingBody>();
 
-	SphereCollider* sphereCollider = entity->AddComponent<SphereCollider>();
+	///////////////////////////////////
 
-	RotatingBody* rotatingBody = entity->AddComponent<RotatingBody>();
+	Entity* starEntity = entityStorage->CreateEntity("RotatingStar", starHolder);
+
+	transform = starEntity->AddComponent<Transform>();
+	transform->position = point3d(0, 0, 10);
+
+	Star* star = starEntity->AddComponent<Star>();
+
+	SphereCollider* sphereCollider = starEntity->AddComponent<SphereCollider>();
+	sphereCollider->radius = onTransform.scale.x / 2;
+
+	GravityPoint* gravityPoint = starEntity->AddComponent<GravityPoint>();
+	gravityPoint->radius = 25.0f;
+	gravityPoint->mass = 50.0f;
 }

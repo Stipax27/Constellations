@@ -54,12 +54,12 @@ float fract(float a) {
 
 
 float degreesToRadians(float degrees) {
-    return degrees * RAD;
+    return DirectX::XMConvertToRadians(degrees);
 }
 
 
 float radiansToDegrees(float radians) {
-    return radians * PI;
+    return DirectX::XMConvertToDegrees(radians);
 }
 
 

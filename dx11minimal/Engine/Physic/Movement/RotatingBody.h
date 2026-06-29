@@ -8,11 +8,7 @@
 struct RotatingBody : Component
 {
 	point3d axis = point3d(0.0f, 1.0f, 0.0f);
-	float rotateSpeed = 1.0f;
-
-	// Technical fields //
-
-	float angle = 0.0f;
+	float rotateSpeed = 25.0f;
 };
 
 #endif

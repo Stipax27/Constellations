@@ -53,6 +53,7 @@ void MeshSystem::Update(EntityStorage& entityStorage, float deltaTime)
 			if (transform != nullptr)
 			{
 				Transform worldTransform = GetWorldTransform(entity);
+				float scaler = worldTransform.scale.magnitude();
 
 				Mesh* mesh = entity->GetComponent<Mesh>();
 				if (mesh != nullptr && mesh->active) {
@@ -68,7 +69,7 @@ void MeshSystem::Update(EntityStorage& entityStorage, float deltaTime)
 					meshTransform.scale *= mesh->scale;
 					meshTransform.mRotation = mesh->mRotation * meshTransform.mRotation;
 
-					if (frustum->CheckSphere(meshTransform.position, meshTransform.scale.magnitude())) {
+					if (frustum->CheckSphere(meshTransform.position, meshTransform.scale.magnitude() * scaler)) {
 						//ConstBuf::CreateVertexBuffer(15);
 
 						UpdateWorldMatrix(meshTransform);
@@ -149,7 +150,7 @@ void MeshSystem::Update(EntityStorage& entityStorage, float deltaTime)
 					int count = 0;
 					for (int a = 0; a < transformedStars.size() && count < constCount; a++) {
 						point3d star = transformedStars[a];
-						if (frustum->CheckSphere(star, constellation->starSize)) {
+						if (frustum->CheckSphere(star, constellation->starSize * scaler)) {
 							worldTransform.position = star;
 
 							ConstBuf::global[0] = XMFLOAT4(constellation->starColor1.x, constellation->starColor1.y, constellation->starColor1.z, 0);
@@ -172,7 +173,7 @@ void MeshSystem::Update(EntityStorage& entityStorage, float deltaTime)
 
 				Star* star = entity->GetComponent<Star>();
 				if (star != nullptr && star->active) {
-					if (frustum->CheckSphere(worldTransform.position, star->radius)) {
+					if (frustum->CheckSphere(worldTransform.position, star->radius * scaler)) {
 						ConstBuf::drawerMatrix[0] = GetWorldMatrix(worldTransform);
 						ConstBuf::Update(8, ConstBuf::drawerMatrix);
 						ConstBuf::ConstToVertex(8);
