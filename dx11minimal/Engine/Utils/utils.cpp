@@ -54,7 +54,12 @@ float fract(float a) {
 
 
 float degreesToRadians(float degrees) {
-    return degrees * PI / 180.0f;
+    return degrees * RAD;
+}
+
+
+float radiansToDegrees(float radians) {
+    return radians * PI;
 }
 
 

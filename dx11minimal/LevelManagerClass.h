@@ -40,6 +40,8 @@
 #include "Engine/UI/Text/UITextSystem.h"
 
 #include "Engine/Physic/Movement/physicSystem.h"
+#include "Engine/Physic/Movement/RotatingSystem.h"
+
 #include "Engine/Physic/Gravitation/GravitySystem.h"
 #include "Engine/Physic/Collision/collisionSystem.h"
 

@@ -1,5 +1,7 @@
 ﻿#include "LevelManagerClass.h"
 
+#include "Constructors/MapBuild.h"
+
 using namespace std;
 
 
@@ -102,6 +104,8 @@ bool LevelManagerClass::Initialize()
 	worldFolder = entityStorage->CreateEntity("World");
 
 	Entity* player = CreatePlayer();
+
+	MapBuild::BuildMaze();
 
 
 	
@@ -766,6 +770,7 @@ void LevelManagerClass::InitSystems()
 	m_World->AddComputeSystem<RayDamageSystem>();
 
 	m_World->AddPhysicSystem<GravitySystem>();
+	m_World->AddPhysicSystem<RotatingSystem>();
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
 	m_World->AddPhysicSystem<CombatSystem>();

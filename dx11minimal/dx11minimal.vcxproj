@@ -277,7 +277,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Constructors\MapBuilder.h" />
+    <ClInclude Include="Constructors\MapBuild.h" />
     <ClInclude Include="EditorTools\EditCameraController.h" />
     <ClInclude Include="EditorTools\PivotDrawSystem.h" />
     <ClInclude Include="Engine\DebugTools\PivotDrawSystem.h" />
@@ -292,6 +292,8 @@
     <ClInclude Include="Engine\Lib\class_name.h" />
     <ClInclude Include="Engine\Lib\logging.h" />
     <ClInclude Include="Engine\Lib\SerializationMacros.h" />
+    <ClInclude Include="Engine\Physic\Movement\RotatingBody.h" />
+    <ClInclude Include="Engine\Physic\Movement\RotatingSystem.h" />
     <ClInclude Include="Engine\Player\attackTable.h" />
     <ClInclude Include="Engine\Compute\Combat\elements.h" />
     <ClInclude Include="Engine\Player\Combo\combo.h" />
@@ -1247,6 +1249,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Constructors\MapBuild.cpp" />
     <ClCompile Include="EditorTools\EditCameraController.cpp" />
     <ClCompile Include="Engine\DebugTools\PivotDrawSystem.cpp" />
     <ClCompile Include="Engine\Camera\cameraclass.cpp" />
@@ -1260,6 +1263,7 @@
     <ClCompile Include="Engine\Physic\Collision\CollisionSystem.cpp" />
     <ClCompile Include="Engine\Compute\Combat\CombatSystem.cpp" />
     <ClCompile Include="Engine\DebugTools\CollisionDrawSystem.cpp" />
+    <ClCompile Include="Engine\Physic\Movement\RotatingSystem.cpp" />
     <ClCompile Include="Engine\Player\AttackTable.cpp" />
     <ClCompile Include="Engine\Player\Combo\Combo.cpp" />
     <ClCompile Include="Engine\Player\Combo\comboManager.cpp" />

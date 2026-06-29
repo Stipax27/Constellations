@@ -24,6 +24,7 @@ float fract(float);
 //float lerp(float x1, float x2, float a);
 
 float degreesToRadians(float);
+float radiansToDegrees(float);
 
 DirectX::XMMATRIX GetMatrixBetweenLookVector(Transform& transform, point3d direction);
 DirectX::XMMATRIX GetMatrixFromDirection(const point3d& direction, point3d upVector = point3d(0.0f, 1.0f, 0.0f));
