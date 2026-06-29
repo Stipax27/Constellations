@@ -131,7 +131,7 @@ void MeshSystem::Update(EntityStorage& entityStorage, float deltaTime)
 
 					Rasterizer::Cull(SHOW_GRID ? Rasterizer::cullmode::wireframe : Rasterizer::cullmode::front);
 
-					int n = GetVertexCount(worldTransform.position, 5, 33, constellation->starSize);
+					int n = GetVertexCount(worldTransform.position, 5, 33, constellation->starSize * scaler);
 
 					float shaderId = n > 8 ? 19 : 30;
 					Shaders::vShader(shaderId);
@@ -187,7 +187,7 @@ void MeshSystem::Update(EntityStorage& entityStorage, float deltaTime)
 
 						Rasterizer::Cull(SHOW_GRID ? Rasterizer::cullmode::wireframe : Rasterizer::cullmode::front);
 
-						int n = GetVertexCount(worldTransform.position, 5, 255, star->radius);
+						int n = GetVertexCount(worldTransform.position, 5, 255, star->radius * scaler);
 
 						float shaderId = n > 20 ? 19 : 30;
 						Shaders::vShader(shaderId);

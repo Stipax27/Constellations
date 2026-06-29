@@ -6,5 +6,5 @@
 namespace MapBuild
 {
 	void BuildMaze();
-	void CreateRotatingStar(const Transform& onTransform, Entity* parent);
+	void CreateRotatingStar(const Transform& onTransform, float rotateSpeed, Entity* parent);
 }
