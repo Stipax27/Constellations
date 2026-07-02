@@ -769,6 +769,8 @@ void LevelManagerClass::InitSystems()
 	m_World->AddComputeSystem<QuestSystem>();
 	m_World->AddComputeSystem<RayDamageSystem>();
 
+	m_World->AddComputeSystem<MazeLinkSystem>();
+
 	m_World->AddPhysicSystem<GravitySystem>();
 	m_World->AddPhysicSystem<RotatingSystem>();
 	m_World->AddPhysicSystem<PhysicSystem>();

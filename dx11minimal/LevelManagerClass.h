@@ -71,6 +71,8 @@
 
 #include "Engine/Sound/SoundSystem.h"
 
+#include "Gameplay/MazeLinkSystem.h"
+
 #include "Systems/Transform2DDebugUI.h"
 
 /////////////
