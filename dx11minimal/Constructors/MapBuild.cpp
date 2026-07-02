@@ -29,7 +29,7 @@ void MapBuild::CreateRotatingStar(const Transform& onTransform, float rotateSpee
 
 	///////////////////////////////////
 
-	Entity* starHolder = entityStorage->CreateEntity("StarHolder", parent);
+	Entity* starHolder = entityStorage->CreateEntity("RotatingStarHolder", parent);
 
 	Transform* transform = starHolder->AddComponent<Transform>();
 	*transform = onTransform;

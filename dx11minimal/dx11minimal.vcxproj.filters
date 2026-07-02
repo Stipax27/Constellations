@@ -92,6 +92,7 @@
     <ClCompile Include="Engine\DebugTools\PivotDrawSystem.cpp" />
     <ClCompile Include="Constructors\MapBuild.cpp" />
     <ClCompile Include="Engine\Physic\Movement\RotatingSystem.cpp" />
+    <ClCompile Include="Gameplay\MazeLinkSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LevelManagerClass.h">
@@ -249,6 +250,7 @@
     <ClInclude Include="Constructors\MapBuild.h" />
     <ClInclude Include="Engine\Physic\Movement\RotatingBody.h" />
     <ClInclude Include="Engine\Physic\Movement\RotatingSystem.h" />
+    <ClInclude Include="Gameplay\MazeLinkSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">
