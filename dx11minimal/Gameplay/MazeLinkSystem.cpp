@@ -31,7 +31,7 @@ void MazeLinkSystem::Update(EntityStorage& entityStorage, float deltaTime)
 		if (!IsEntityValid(entity1))
 			continue;
 
-		point3d worldPos1 = GetWorldTransform(entity1).position;
+		Transform worldTransform1 = GetWorldTransform(entity1);
 
 		for (int j = 0; j < size; j++) {
 			Entity* entity2 = entities[j];
@@ -39,9 +39,9 @@ void MazeLinkSystem::Update(EntityStorage& entityStorage, float deltaTime)
 			if (!IsEntityValid(entity2) || entity2 == entity1)
 				continue;
 
-			point3d worldPos2 = GetWorldTransform(entity2).position;
+			Transform worldTransform2 = GetWorldTransform(entity2);
 
-			if ((worldPos1 - worldPos2).magnitude() <= 5000) {
+			if ((worldTransform1.position - worldTransform2.position).magnitude() <= 75) {
 				Beam* beam = entity1->GetComponent<Beam>();
 				if (!beam) {
 					beam = entity1->AddComponent<Beam>();
@@ -50,7 +50,9 @@ void MazeLinkSystem::Update(EntityStorage& entityStorage, float deltaTime)
 					beam->size2 = 1;
 				}
 				//beam->point1 = worldPos1;
-				beam->point2 = worldPos2;
+
+				Transform relative = GetRelativeTransform(worldTransform1, worldTransform2);
+				beam->point2 = relative.position / worldTransform1.scale;
 			}
 			else {
 				entity1->RemoveComponent<Beam>();
