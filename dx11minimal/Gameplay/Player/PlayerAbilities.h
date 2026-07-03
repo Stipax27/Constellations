@@ -9,6 +9,7 @@
 //////////////
 #include "../../Engine/Lib/singleton.h"
 #include "../../Engine/Camera/cameraclass.h"
+#include "../../Engine/Mouse/mouseclass.h"
 
 #include "../../Engine/ECS_Base/world.h"
 #include "../../Engine/ECS_Base/entity.h"
@@ -116,6 +117,7 @@ private:
 	World* world;
 	EntityStorage* entityStorage;
 	CameraClass* camera;
+	MouseClass* mouse;
 	CollisionManagerClass* collisionManager;
 
 	Entity* playerEntity;

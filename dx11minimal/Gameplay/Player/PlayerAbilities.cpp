@@ -1,6 +1,7 @@
 #include "PlayerAbilities.h"
 
 #include "../../Engine/Lib/timer.h"
+#include "../../Engine/Lib/interp.h"
 
 using namespace std;
 
@@ -26,6 +27,7 @@ void PlayerAbilities::Initialize()
 	world = Singleton::GetInstance<World>();
 	entityStorage = Singleton::GetInstance<EntityStorage>();
 	camera = Singleton::GetInstance<CameraClass>();
+	mouse = Singleton::GetInstance<MouseClass>();
 	collisionManager = Singleton::GetInstance<CollisionManagerClass>();
 
 	playerEntity = entityStorage->GetEntityByName("Player");
@@ -1008,5 +1010,14 @@ Nebula* PlayerAbilities::FindNearestNebula()
 
 void PlayerAbilities::Grap()
 {
+	point3d mouseDirection = mouse->GetMouseDirection();
+	RayInfo rayInfo = RayInfo(camera->position, mouseDirection * RAY_DISTANCE, CollisionFilter::Group::PlayerRay, false);
+	RaycastResult result = collisionManager->Raycast(rayInfo);
 
+	if (result.hit) {
+		Transform* playerTransform = playerEntity->GetComponent<Transform>();
+		float time = (playerTransform->position - result.position).magnitude() / 100.0f;
+
+		interp::Animate(playerTransform->position, result.position, time, interp::Curve::EaseOutQuad, playerEntity);
+	}
 }

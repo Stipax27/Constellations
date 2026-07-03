@@ -217,20 +217,6 @@ void PlayerController::ProcessInput()
 	if (input::IsKeyDown('C')) {
 		Dash();
 	}
-	
-	float roll = 0.0f;
-	if (mouse->state != MouseState::Locked) {
-		if (input::IsKeyDown('E')) {
-			roll = -ROLL_SPEED;
-		}
-		if (input::IsKeyDown('Q')) {
-			roll = ROLL_SPEED;
-		}
-	}
-
-	if (roll != 0) {
-		playerPhysicBody->mAngVelocity = playerPhysicBody->mAngVelocity * XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), roll * RAD);
-	}
 
 	if (input::IsKeyPressed('1') && abilities->weapon != PlayerWeapons::Fists) {
 		abilities->weapon = PlayerWeapons::Fists;
@@ -277,6 +263,10 @@ void PlayerController::ProcessInput()
 	if (input::IsKeyDown('K'))
 	{
 		abilities->StartRadar();
+	}
+
+	if (input::IsKeyPressed('E')) {
+		abilities->Grap();
 	}
 
 	if (input::IsKeyPressed(VK_MBUTTON)) {

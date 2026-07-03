@@ -65,6 +65,7 @@ void MapBuild::CreateRotatingStar(const Transform& onTransform, float rotateSpee
 
 	SphereCollider* sphereCollider = starEntity->AddComponent<SphereCollider>();
 	sphereCollider->radius = 2.0f;
+	sphereCollider->collisionGroup = CollisionFilter::Group::HardBody;
 
 	/*GravityPoint* gravityPoint = starEntity->AddComponent<GravityPoint>();
 	gravityPoint->radius = 25.0f;
