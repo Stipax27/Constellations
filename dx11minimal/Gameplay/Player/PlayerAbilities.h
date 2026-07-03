@@ -58,10 +58,6 @@
 #define RADAR_START_RADIUS 1.f
 #define RADAR_FINAL_RADIUS 150.f
 
-// Данные шкалы змеинной прыти
-
-#define SNAKE_FORM_MAX_VALUE 100
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: PlayerAbilities
@@ -111,6 +107,8 @@ public:
 
 	void Grab();
 	void Execution();
+
+	void Grap();
 
 	
 

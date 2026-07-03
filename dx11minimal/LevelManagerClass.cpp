@@ -969,6 +969,16 @@ void LevelManagerClass::CreateUI()
 
 
 
+	entity = entityStorage->CreateEntity("CenterPoint", uiFolder);
+	transform2D = entity->AddComponent<Transform2D>();
+	transform2D->ratio = ScreenAspectRatio::YY;
+	transform2D->scale = point3d(0.005f, 0.005f, 0.0f);
+	rect = entity->AddComponent<Rect>();
+	rect->color = point3d(1.0f, 0.0f, 0.0f);
+	rect->cornerRadius = 1.0f;
+
+
+
 	entity = entityStorage->CreateEntity("HealthHolder", uiFolder);
 	transform2D = entity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(-1, 0, 0);

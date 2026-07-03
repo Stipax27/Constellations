@@ -1004,3 +1004,9 @@ Nebula* PlayerAbilities::FindNearestNebula()
 
 	return nullptr;
 }
+
+
+void PlayerAbilities::Grap()
+{
+
+}
