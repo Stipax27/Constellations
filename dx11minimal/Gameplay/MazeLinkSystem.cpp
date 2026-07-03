@@ -1,6 +1,7 @@
 #include "MazeLinkSystem.h"
 
 #include "../Engine/Render/Beam.h"
+#include "../GlobalConfigs.h"
 
 using namespace std;
 
@@ -42,7 +43,7 @@ void MazeLinkSystem::Update(EntityStorage& entityStorage, float deltaTime)
 			Transform worldTransform2 = GetWorldTransform(entity2);
 
 			int index = FindStarPair(entity1, entity2);
-			if ((worldTransform1.position - worldTransform2.position).magnitude() <= 75) {
+			if ((worldTransform1.position - worldTransform2.position).magnitude() <= STAR_LINKING_RADIUS) {
 
 				if (index == -1) {
 					starPairs.push_back({ entity1, entity2 });

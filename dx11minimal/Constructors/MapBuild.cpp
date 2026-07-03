@@ -11,28 +11,33 @@
 
 void MapBuild::BuildMaze() {
 	EntityStorage* entityStorage = Singleton::GetInstance<EntityStorage>();
+	Entity* worldFolder = entityStorage->GetEntityByName("World");
 
 	Transform t = Transform();
 	t.position = point3d(0, 10, 0);
 	t.scale = point3d(5);
 
-	CreateRotatingStar(t, 25.0f, entityStorage->GetEntityByName("World"));
+	CreateRotatingStar(t, 25.0f, worldFolder);
 
 	t.mRotation = XMMatrixRotationAxis(XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), PI / 2);
 
-	CreateRotatingStar(t, 40.0f, entityStorage->GetEntityByName("World"));
+	CreateRotatingStar(t, 40.0f, worldFolder);
 
 	t.position = point3d(10, 10, 0);
 
-	CreateRotatingStar(t, 10.0f, entityStorage->GetEntityByName("World"));
+	CreateRotatingStar(t, 10.0f, worldFolder);
 
 	t.position = point3d(20, 10, 0);
 
-	CreateRotatingStar(t, 50.0f, entityStorage->GetEntityByName("World"));
+	CreateRotatingStar(t, 50.0f, worldFolder);
 
 	t.position = point3d(30, 10, 0);
 
-	CreateRotatingStar(t, 15.0f, entityStorage->GetEntityByName("World"));
+	CreateRotatingStar(t, 15.0f, worldFolder);
+
+	t.position = point3d(40, 10, 0);
+
+	CreateRotatingStar(t, 0.0f, worldFolder);
 }
 
 
@@ -61,7 +66,7 @@ void MapBuild::CreateRotatingStar(const Transform& onTransform, float rotateSpee
 	SphereCollider* sphereCollider = starEntity->AddComponent<SphereCollider>();
 	sphereCollider->radius = onTransform.scale.x / 2;
 
-	GravityPoint* gravityPoint = starEntity->AddComponent<GravityPoint>();
+	/*GravityPoint* gravityPoint = starEntity->AddComponent<GravityPoint>();
 	gravityPoint->radius = 25.0f;
-	gravityPoint->mass = 50.0f;
+	gravityPoint->mass = 50.0f;*/
 }
