@@ -425,7 +425,7 @@ void LevelManagerClass::Frame()
 	playerController->ProcessInput();
 	playerController->ProcessMouse();
 	playerController->abilities->Update();
-	playerController->ProccessUI();
+	playerController->ProcessUI();
 
 	questManager->UpdateQuests();
 

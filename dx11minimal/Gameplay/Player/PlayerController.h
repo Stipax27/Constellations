@@ -68,7 +68,9 @@ public:
 	void ProcessInput();
 	void ProcessCamera();
 	void ProcessMouse();
-	void ProccessUI();
+	void ProcessUI();
+
+	void ProcessMovement();
 
 private:
 	ComboManager* comboManager;
@@ -102,6 +104,8 @@ private:
 
 	Entity* cameraTarget;
 	bool lockMovementOnTarget;
+
+	Entity* floor;
 
 private:
 	void Dash();

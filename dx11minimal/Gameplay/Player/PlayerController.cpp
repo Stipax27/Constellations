@@ -285,6 +285,7 @@ void PlayerController::ProcessInput()
 		abilities->element = (Elements)i;
 	}
 
+	ProcessMovement();
 	abilities->Execution();
 }
 		
@@ -475,7 +476,7 @@ void PlayerController::ProcessMouse()
 }
 
 
-void PlayerController::ProccessUI()
+void PlayerController::ProcessUI()
 {
 	Transform2D* healthTransform = healthBar->GetComponent<Transform2D>();
 	healthTransform->scale = point3d(playerHealth->GetHealthRatio(), 1, 0);
@@ -582,5 +583,14 @@ void PlayerController::CheckTargetValid()
 	if (!IsEntityValid(cameraTarget)) {
 		lockMovementOnTarget = false;
 		cameraTarget = nullptr;
+	}
+}
+
+
+void PlayerController::ProcessMovement()
+{
+	if (floor != nullptr) {
+		Transform wt = GetWorldTransform(floor);
+		playerTransform->position = wt.position + point3d(0, 3, 0);
 	}
 }
