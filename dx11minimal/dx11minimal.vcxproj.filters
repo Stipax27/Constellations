@@ -15,10 +15,10 @@
     <ClCompile Include="Engine\Camera\FrustumClass.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Player\PlayerAbilities.cpp">
+    <ClCompile Include="Gameplay\Player\PlayerAbilities.cpp">
       <Filter>Source Files\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Player\PlayerController.cpp">
+    <ClCompile Include="Gameplay\Player\PlayerController.cpp">
       <Filter>Source Files\Player</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Mesh\AnimationRetarget.cpp">
@@ -83,9 +83,9 @@
     <ClCompile Include="Engine\Compute\Quests\Queststarcollection.cpp" />
     <ClCompile Include="Engine\Render\StarClay\StarClaySystem.cpp" />
     <ClCompile Include="Engine\Compute\Combat\RayDamage\RayDamageSystem.cpp" />
-    <ClCompile Include="Engine\Player\AttackTable.cpp" />
-    <ClCompile Include="Engine\Player\Combo\Combo.cpp" />
-    <ClCompile Include="Engine\Player\Combo\comboManager.cpp" />
+    <ClCompile Include="Gameplay\Player\AttackTable.cpp" />
+    <ClCompile Include="Gameplay\Player\Combo\Combo.cpp" />
+    <ClCompile Include="Gameplay\Player\Combo\comboManager.cpp" />
     <ClCompile Include="Systems\Transform2DDebugUI.cpp" />
     <ClCompile Include="Engine\Sound\SoundSystem.cpp" />
     <ClCompile Include="EditorTools\EditCameraController.cpp" />
@@ -104,10 +104,10 @@
     <ClInclude Include="Components\Orientation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Player\PlayerAbilities.h">
+    <ClInclude Include="Gameplay\Player\PlayerAbilities.h">
       <Filter>Header Files\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Player\PlayerController.h">
+    <ClInclude Include="Gameplay\Player\PlayerController.h">
       <Filter>Header Files\Player</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Mesh\AnimationRetarget.h">
@@ -140,10 +140,10 @@
     <ClInclude Include="Engine\Mesh\Animation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Player\Grabbable.h">
+    <ClInclude Include="Gameplay\Player\Grabbable.h">
       <Filter>Header Files\ECS\Components\Gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Player\CameraTarget.h">
+    <ClInclude Include="Gameplay\Player\CameraTarget.h">
       <Filter>Header Files\ECS\Components\Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="Engine\DebugTools\GravityDrawSystem.h" />
@@ -235,12 +235,12 @@
     <ClInclude Include="Engine\Compute\Combat\RayDamage\RayDamageSystem.h" />
     <ClInclude Include="Engine\UI\ImageLabel.h" />
     <ClInclude Include="Engine\Compute\Combat\elements.h" />
-    <ClInclude Include="Engine\Player\attackTable.h" />
-    <ClInclude Include="Engine\Player\weapons.h" />
-    <ClInclude Include="Engine\Player\Combo\combo.h" />
-    <ClInclude Include="Engine\Player\Combo\comboManager.h" />
+    <ClInclude Include="Gameplay\Player\attackTable.h" />
+    <ClInclude Include="Gameplay\Player\weapons.h" />
+    <ClInclude Include="Gameplay\Player\Combo\combo.h" />
+    <ClInclude Include="Gameplay\Player\Combo\comboManager.h" />
     <ClInclude Include="Engine\Compute\AI\BossComponent.h" />
-    <ClInclude Include="Engine\Player\Combo\fistsCombos.h" />
+    <ClInclude Include="Gameplay\Player\Combo\fistsCombos.h" />
     <ClInclude Include="Systems\Transform2DDebugUI.h" />
     <ClInclude Include="Engine\Sound\SoundPlayer.h" />
     <ClInclude Include="Engine\Sound\SoundSystem.h" />

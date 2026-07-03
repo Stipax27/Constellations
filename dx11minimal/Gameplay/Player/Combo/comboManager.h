@@ -2,7 +2,7 @@
 #define _COMBO_MANAGER_H_
 
 #include "combo.h"
-#include "../../Lib/singleton.h"
+#include "../../../Engine/Lib/singleton.h"
 #include "../PlayerAbilities.h"
 
 /////////////

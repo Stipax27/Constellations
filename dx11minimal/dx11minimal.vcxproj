@@ -294,12 +294,12 @@
     <ClInclude Include="Engine\Lib\SerializationMacros.h" />
     <ClInclude Include="Engine\Physic\Movement\RotatingBody.h" />
     <ClInclude Include="Engine\Physic\Movement\RotatingSystem.h" />
-    <ClInclude Include="Engine\Player\attackTable.h" />
+    <ClInclude Include="Gameplay\Player\attackTable.h" />
     <ClInclude Include="Engine\Compute\Combat\elements.h" />
-    <ClInclude Include="Engine\Player\Combo\combo.h" />
-    <ClInclude Include="Engine\Player\Combo\comboManager.h" />
-    <ClInclude Include="Engine\Player\Combo\fistsCombos.h" />
-    <ClInclude Include="Engine\Player\weapons.h" />
+    <ClInclude Include="Gameplay\Player\Combo\combo.h" />
+    <ClInclude Include="Gameplay\Player\Combo\comboManager.h" />
+    <ClInclude Include="Gameplay\Player\Combo\fistsCombos.h" />
+    <ClInclude Include="Gameplay\Player\weapons.h" />
     <ClInclude Include="Engine\Render\Beam.h" />
     <ClInclude Include="Engine\Render\StarClay\StarClay.h" />
     <ClInclude Include="Engine\Render\StarClay\StarClaySystem.h" />
@@ -314,7 +314,7 @@
     <ClInclude Include="Engine\Physic\Collision\collisionSystem.h" />
     <ClInclude Include="Engine\Compute\Combat\combatSystem.h" />
     <ClInclude Include="Engine\ECS_Base\component.h" />
-    <ClInclude Include="Engine\Player\CameraTarget.h" />
+    <ClInclude Include="Gameplay\Player\CameraTarget.h" />
     <ClInclude Include="Engine\UI\ImageLabel.h" />
     <ClInclude Include="Engine\Utils\componentutils.h" />
     <ClInclude Include="Engine\Utils\constants.h" />
@@ -343,7 +343,7 @@
     <ClInclude Include="Unused\Font_OLD.h" />
     <ClInclude Include="Framework\framework.h" />
     <ClInclude Include="Engine\Camera\frustumclass.h" />
-    <ClInclude Include="Engine\Player\Grabbable.h" />
+    <ClInclude Include="Gameplay\Player\Grabbable.h" />
     <ClInclude Include="Engine\Physic\Gravitation\GravityPoint.h" />
     <ClInclude Include="Engine\Compute\Combat\Health.h" />
     <ClInclude Include="Unused\HpIndicator.h" />
@@ -361,8 +361,8 @@
     <ClInclude Include="Engine\Physic\Movement\PhysicBody.h" />
     <ClInclude Include="Engine\Physic\Movement\physicSystem.h" />
     <ClInclude Include="Engine\Physic\Collision\PlaneCollider.h" />
-    <ClInclude Include="Engine\Player\PlayerAbilities.h" />
-    <ClInclude Include="Engine\Player\PlayerController.h" />
+    <ClInclude Include="Gameplay\Player\PlayerAbilities.h" />
+    <ClInclude Include="Gameplay\Player\PlayerController.h" />
     <ClInclude Include="Engine\Render\Nebula\pmode.h" />
     <ClInclude Include="Engine\Types\Point3d.h" />
     <ClInclude Include="Engine\Render\PointCloud.h" />
@@ -1265,9 +1265,9 @@
     <ClCompile Include="Engine\Compute\Combat\CombatSystem.cpp" />
     <ClCompile Include="Engine\DebugTools\CollisionDrawSystem.cpp" />
     <ClCompile Include="Engine\Physic\Movement\RotatingSystem.cpp" />
-    <ClCompile Include="Engine\Player\AttackTable.cpp" />
-    <ClCompile Include="Engine\Player\Combo\Combo.cpp" />
-    <ClCompile Include="Engine\Player\Combo\comboManager.cpp" />
+    <ClCompile Include="Gameplay\Player\AttackTable.cpp" />
+    <ClCompile Include="Gameplay\Player\Combo\Combo.cpp" />
+    <ClCompile Include="Gameplay\Player\Combo\comboManager.cpp" />
     <ClCompile Include="Engine\Render\StarClay\StarClaySystem.cpp" />
     <ClCompile Include="Engine\Sound\SoundSystem.cpp" />
     <ClCompile Include="Engine\Utils\ComponentUtils.cpp" />
@@ -1282,7 +1282,7 @@
     <ClCompile Include="Engine\Lib\input.cpp" />
     <ClCompile Include="Engine\Render\Nebula\NebulaSystem.cpp" />
     <ClCompile Include="Engine\Compute\AI\AISystem.cpp" />
-    <ClCompile Include="Engine\Player\PlayerAbilities.cpp" />
+    <ClCompile Include="Gameplay\Player\PlayerAbilities.cpp" />
     <ClCompile Include="Engine\dx11.cpp" />
     <ClCompile Include="dx11minimal.cpp" />
     <ClCompile Include="Engine\ECS_Base\Entity.cpp" />
@@ -1293,7 +1293,7 @@
     <ClCompile Include="Engine\Render\Mesh\MeshSystem.cpp" />
     <ClCompile Include="Engine\Physic\Collision\MethodOfClosest.cpp" />
     <ClCompile Include="Engine\Mouse\MouseClass.cpp" />
-    <ClCompile Include="Engine\Player\PlayerController.cpp" />
+    <ClCompile Include="Gameplay\Player\PlayerController.cpp" />
     <ClCompile Include="Engine\Types\Point3d.cpp" />
     <ClCompile Include="Engine\Types\Point4d.cpp" />
     <ClCompile Include="Engine\Physic\Movement\PhysicSystem.cpp" />

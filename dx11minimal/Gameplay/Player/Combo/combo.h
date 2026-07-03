@@ -1,8 +1,8 @@
 #ifndef _COMBO_STRUCT_H_
 #define _COMBO_STRUCT_H_
 
-#include "../../ECS_Base/entityStorage.h"
-#include "../../ECS_Base/entity.h"
+#include "../../../Engine/ECS_Base/entityStorage.h"
+#include "../../../Engine/ECS_Base/entity.h"
 
 #include <vector>
 

@@ -10,6 +10,9 @@
 class MazeLinkSystem : public System
 {
 public:
+	std::vector<std::pair<Entity*, Entity*>> starPairs;
+
+public:
 	MazeLinkSystem();
 	void Initialize() override;
 	void Shutdown() override;
@@ -17,7 +20,6 @@ public:
 	void Update(EntityStorage&, float) override;
 
 private:
-	std::vector<std::pair<Entity*, Entity*>> starPairs;
 	std::vector<Entity*> mazeLinks;
 
 private:

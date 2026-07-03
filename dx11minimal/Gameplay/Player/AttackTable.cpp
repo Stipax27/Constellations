@@ -1,21 +1,21 @@
 #include "attackTable.h"
 
-#include "../ECS_Base/entityStorage.h"
+#include "../../Engine/ECS_Base/entityStorage.h"
 
-#include "../Render/Star.h"
-#include "../Render/Beam.h"
-#include "../Render/ParticleEmitter.h"
-#include "../Render/Mesh/Mesh.h"
+#include "../../Engine/Render/Star.h"
+#include "../../Engine/Render/Beam.h"
+#include "../../Engine/Render/ParticleEmitter.h"
+#include "../../Engine/Render/Mesh/Mesh.h"
 
-#include "../Physic/Movement/PhysicBody.h"
-#include "../Physic/Collision/SphereCollider.h"
+#include "../../Engine/Physic/Movement/PhysicBody.h"
+#include "../../Engine/Physic/Collision/SphereCollider.h"
 
-#include "../Compute/Combat/SingleDamager.h"
-#include "../Compute/Combat/Health.h"
-#include "../Compute/DelayedDestroy/DelayedDestroy.h"
+#include "../../Engine/Compute/Combat/SingleDamager.h"
+#include "../../Engine/Compute/Combat/Health.h"
+#include "../../Engine/Compute/DelayedDestroy/DelayedDestroy.h"
 
-#include "../Utils/componentutils.h"
-#include "../Lib/interp.h"
+#include "../../Engine/Utils/componentutils.h"
+#include "../../Engine/Lib/interp.h"
 
 
 // FUNCTIONS //

@@ -12,12 +12,12 @@
 // INCLUDES //
 //////////////
 
-#include "../ECS_Base/entityStorage.h"
-#include "../ECS_Base/entity.h"
-#include "../BasicComponents/Transform.h"
+#include "../../Engine/ECS_Base/entityStorage.h"
+#include "../../Engine/ECS_Base/entity.h"
+#include "../../Engine/BasicComponents/Transform.h"
 
 #include "weapons.h"
-#include "../Compute/Combat/elements.h"
+#include "../../Engine/Compute/Combat/elements.h"
 
 
 /////////////

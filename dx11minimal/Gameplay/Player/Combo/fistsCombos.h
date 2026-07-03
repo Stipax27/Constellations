@@ -1,14 +1,14 @@
 #ifndef _FISTS_COMBOS_H_
 #define _FISTS_COMBOS_H_
 
-#include "../../ECS_Base/entity.h"
-#include "../../ECS_Base/entityStorage.h"
-#include "../../BasicComponents/Transform.h"
-#include "../../Compute/Combat/SingleDamager.h"
-#include "../../Physic/Collision/SphereCollider.h"
-#include "../../Render/ParticleEmitter.h"
-#include "../../Compute/DelayedDestroy/DelayedDestroy.h"
-#include "../../Sound/SoundPlayer.h"
+#include "../../../Engine/ECS_Base/entity.h"
+#include "../../../Engine/ECS_Base/entityStorage.h"
+#include "../../../Engine/BasicComponents/Transform.h"
+#include "../../../Engine/Compute/Combat/SingleDamager.h"
+#include "../../../Engine/Physic/Collision/SphereCollider.h"
+#include "../../../Engine/Render/ParticleEmitter.h"
+#include "../../../Engine/Compute/DelayedDestroy/DelayedDestroy.h"
+#include "../../../Engine/Sound/SoundPlayer.h"
 
 
 namespace fistsCombos

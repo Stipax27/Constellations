@@ -15,7 +15,6 @@ void MapBuild::BuildMaze() {
 
 	Transform t = Transform();
 	t.position = point3d(0, 10, 0);
-	t.scale = point3d(5);
 
 	CreateRotatingStar(t, 25.0f, worldFolder);
 
@@ -59,12 +58,13 @@ void MapBuild::CreateRotatingStar(const Transform& onTransform, float rotateSpee
 	Entity* starEntity = entityStorage->CreateEntity("RotatingStar", starHolder);
 
 	transform = starEntity->AddComponent<Transform>();
-	transform->position = point3d(0, 0, 10);
+	transform->position = point3d(0, 0, 50);
 
 	Star* star = starEntity->AddComponent<Star>();
+	star->radius = 2.0f;
 
 	SphereCollider* sphereCollider = starEntity->AddComponent<SphereCollider>();
-	sphereCollider->radius = onTransform.scale.x / 2;
+	sphereCollider->radius = 2.0f;
 
 	/*GravityPoint* gravityPoint = starEntity->AddComponent<GravityPoint>();
 	gravityPoint->radius = 25.0f;

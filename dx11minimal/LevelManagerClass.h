@@ -18,10 +18,10 @@
 #ifdef _EDITOR
 #include "EditorTools/EditCameraController.h"
 #else
-#include "Engine/Player/PlayerController.h"
+#include "Gameplay/Player/PlayerController.h"
 #endif
 
-#include "Engine/Player/CameraTarget.h"
+#include "Gameplay/Player/CameraTarget.h"
 
 #include "Engine/ECS_Base/world.h"
 #include "Engine/ECS_Base/system.h"
