@@ -17,7 +17,11 @@ public:
 	void Update(EntityStorage&, float) override;
 
 private:
+	std::vector<std::pair<Entity*, Entity*>> starPairs;
 	std::vector<Entity*> mazeLinks;
+
+private:
+	int FindStarPair(Entity* star1, Entity* star2);
 };
 
 #endif
