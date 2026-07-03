@@ -15,6 +15,9 @@ public:
 	void Shutdown() override;
 
 	void Update(EntityStorage&, float) override;
+
+private:
+	std::vector<Entity*> mazeLinks;
 };
 
 #endif

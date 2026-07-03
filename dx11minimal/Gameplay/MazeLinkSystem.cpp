@@ -42,17 +42,14 @@ void MazeLinkSystem::Update(EntityStorage& entityStorage, float deltaTime)
 			Transform worldTransform2 = GetWorldTransform(entity2);
 
 			if ((worldTransform1.position - worldTransform2.position).magnitude() <= 75) {
-				Beam* beam = entity1->GetComponent<Beam>();
-				if (!beam) {
-					beam = entity1->AddComponent<Beam>();
 
-					beam->size1 = 1;
-					beam->size2 = 1;
-				}
-				//beam->point1 = worldPos1;
+				Entity* link = entityStorage.CreateEntity("MazeLink");
 
-				Transform relative = GetRelativeTransform(worldTransform1, worldTransform2);
-				beam->point2 = relative.position / worldTransform1.scale;
+				Beam* beam = link->GetComponent<Beam>();
+				beam->size1 = 1;
+				beam->size2 = 1;
+				beam->point1 = worldTransform1.position;
+				beam->point2 = worldTransform2.position;
 			}
 			else {
 				entity1->RemoveComponent<Beam>();
