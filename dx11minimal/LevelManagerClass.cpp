@@ -796,6 +796,7 @@ void LevelManagerClass::InitSystems()
 
 #ifdef _EDITOR
 	m_World->AddRenderSystem<PivotDrawSystem>();
+	m_World->AddRenderSystem<WayDrawSystem>();
 #else
 	if (SHOW_PIVOTS) {
 		m_World->AddRenderSystem<PivotDrawSystem>();
