@@ -3,6 +3,8 @@
 #include "../../Engine/Lib/timer.h"
 #include "../../Engine/Lib/interp.h"
 
+#include "../MazeLinks.h"
+
 using namespace std;
 
 
@@ -1015,6 +1017,10 @@ void PlayerAbilities::Grap()
 	RaycastResult result = collisionManager->Raycast(rayInfo);
 
 	if (result.hit) {
+		Entity* parent = playerEntity->GetParent();
+		if (parent && parent->name == "RotatingStar" && MazeLink::FindStarPair(parent, result.entity) == -1)
+			return;
+
 		Transform* playerTransform = playerEntity->GetComponent<Transform>();
 
 		Transform relativeTransform = GetRelativeTransform(GetWorldTransform(result.entity), GetWorldTransform(playerEntity));

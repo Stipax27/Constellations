@@ -5,13 +5,11 @@
 // INCLUDES //
 //////////////
 #include "../Engine/ECS_Base/system.h"
+#include "MazeLinks.h"
 
 
 class MazeLinkSystem : public System
 {
-public:
-	std::vector<std::pair<Entity*, Entity*>> starPairs;
-
 public:
 	MazeLinkSystem();
 	void Initialize() override;
@@ -21,9 +19,6 @@ public:
 
 private:
 	std::vector<Entity*> mazeLinks;
-
-private:
-	int FindStarPair(Entity* star1, Entity* star2);
 };
 
 #endif

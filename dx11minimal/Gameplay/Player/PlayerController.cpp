@@ -602,9 +602,4 @@ void PlayerController::ProcessMovement()
 	case MovementType::Stopped:
 		break;
 	}
-
-	if (floor != nullptr) {
-		Transform wt = GetWorldTransform(floor);
-		playerTransform->position = wt.position + point3d(0, 3, 0);
-	}
 }

@@ -42,11 +42,11 @@ void MazeLinkSystem::Update(EntityStorage& entityStorage, float deltaTime)
 
 			Transform worldTransform2 = GetWorldTransform(entity2);
 
-			int index = FindStarPair(entity1, entity2);
+			int index = MazeLink::FindStarPair(entity1, entity2);
 			if ((worldTransform1.position - worldTransform2.position).magnitude() <= STAR_LINKING_RADIUS) {
 
 				if (index == -1) {
-					starPairs.push_back({ entity1, entity2 });
+					MazeLink::starPairs.push_back({ entity1, entity2 });
 
 					Entity* link = entityStorage.CreateEntity("MazeLink");
 					link->AddComponent<Transform>();
@@ -73,7 +73,7 @@ void MazeLinkSystem::Update(EntityStorage& entityStorage, float deltaTime)
 					Entity* link = mazeLinks[index];
 					link->Destroy();
 
-					starPairs.erase(starPairs.begin() + index);
+					MazeLink::starPairs.erase(MazeLink::starPairs.begin() + index);
 					mazeLinks.erase(mazeLinks.begin() + index);
 				}
 
@@ -81,16 +81,4 @@ void MazeLinkSystem::Update(EntityStorage& entityStorage, float deltaTime)
 		}
 
 	}
-}
-
-
-int MazeLinkSystem::FindStarPair(Entity* star1, Entity* star2)
-{
-	for (int i = 0; i < starPairs.size(); i++) {
-		if (starPairs[i].first == star1 && starPairs[i].second == star2) {
-			return i;
-		}
-	}
-
-	return -1;
 }

@@ -107,8 +107,6 @@ private:
 	Entity* cameraTarget;
 	bool lockMovementOnTarget;
 
-	Entity* floor;
-
 private:
 	void Dash();
 	void LockOnTarget();

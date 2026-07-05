@@ -93,6 +93,7 @@
     <ClCompile Include="Constructors\MapBuild.cpp" />
     <ClCompile Include="Engine\Physic\Movement\RotatingSystem.cpp" />
     <ClCompile Include="Gameplay\MazeLinkSystem.cpp" />
+    <ClCompile Include="Gameplay\MazeLinks.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LevelManagerClass.h">
@@ -253,6 +254,7 @@
     <ClInclude Include="Gameplay\MazeLinkSystem.h" />
     <ClInclude Include="Gameplay\Player\MovementTypes.h" />
     <ClInclude Include="ecsHeaders.h" />
+    <ClInclude Include="Gameplay\MazeLinks.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">
