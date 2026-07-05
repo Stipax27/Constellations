@@ -762,19 +762,23 @@ void LevelManagerClass::Frame()
 void LevelManagerClass::InitSystems()
 {
 	m_World->AddComputeSystem<TimeSystem>();
+#ifndef _EDITOR
 	m_World->AddComputeSystem<DelayedDestroySystem>();
 	m_World->AddComputeSystem<AISystem>();
 	m_World->AddComputeSystem<QuestSystem>();
 	m_World->AddComputeSystem<RayDamageSystem>();
+#endif
 
 	m_World->AddComputeSystem<MazeLinkSystem>();
 
+#ifndef _EDITOR
 	m_World->AddPhysicSystem<GravitySystem>();
 	m_World->AddPhysicSystem<RotatingSystem>();
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
 	m_World->AddPhysicSystem<CombatSystem>();
 	m_World->AddPhysicSystem<SkeletalAnimationSystem>(context, m_BoneBuffer);
+#endif
 
 	m_World->AddAudioSystem<SoundSystem>();
 
