@@ -41,7 +41,7 @@ void LinkRadiusDrawSystem::Update(EntityStorage& entityStorage, float deltaTime)
 		ConstBuf::global[0] = XMFLOAT4(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, 0);
 		ConstBuf::global[0].w = STAR_LINKING_RADIUS;
 
-		ConstBuf::global[1] = XMFLOAT4(0.471f, 0.922f, 1.0f, 0.25f);
+		ConstBuf::global[1] = XMFLOAT4(0.12f, 0.97f, 0.26f, 0.25f);
 
 		ConstBuf::Update(5, ConstBuf::global);
 		ConstBuf::ConstToVertex(5);
