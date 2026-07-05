@@ -1016,8 +1016,14 @@ void PlayerAbilities::Grap()
 
 	if (result.hit) {
 		Transform* playerTransform = playerEntity->GetComponent<Transform>();
-		float time = (playerTransform->position - result.position).magnitude() / 100.0f;
 
-		interp::Animate(playerTransform->position, result.position, time, interp::Curve::EaseOutQuad, playerEntity);
+		Transform relativeTransform = GetRelativeTransform(GetWorldTransform(result.entity), GetWorldTransform(playerEntity));
+		float time = relativeTransform.position.magnitude() / 100.0f;
+
+		playerEntity->SetParent(result.entity);
+		playerTransform->position = relativeTransform.position;
+		playerTransform->mRotation = XMMatrixIdentity();
+
+		interp::Animate(playerTransform->position, point3d(0, 3, 0), time, interp::Curve::EaseOutQuad);
 	}
 }

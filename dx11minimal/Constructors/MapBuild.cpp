@@ -16,31 +16,29 @@ void MapBuild::BuildMaze() {
 	Transform t = Transform();
 	t.position = point3d(0, 10, 0);
 
-	CreateRotatingStar(t, 25.0f, worldFolder);
+	CreateRotatingStar(t, 6.0f, point3d(0, 1, 0), worldFolder);
 
-	t.mRotation = XMMatrixRotationAxis(XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), PI / 2);
-
-	CreateRotatingStar(t, 40.0f, worldFolder);
+	CreateRotatingStar(t, 10.0f, point3d(1, 0, 0), worldFolder);
 
 	t.position = point3d(10, 10, 0);
 
-	CreateRotatingStar(t, 10.0f, worldFolder);
+	CreateRotatingStar(t, 2.0f, point3d(1, 0, 0), worldFolder);
 
 	t.position = point3d(20, 10, 0);
 
-	CreateRotatingStar(t, 50.0f, worldFolder);
+	CreateRotatingStar(t, 12.0f, point3d(1, 0, 0), worldFolder);
 
 	t.position = point3d(30, 10, 0);
 
-	CreateRotatingStar(t, 15.0f, worldFolder);
+	CreateRotatingStar(t, 4.0f, point3d(1, 0, 0), worldFolder);
 
 	t.position = point3d(40, 10, 0);
 
-	CreateRotatingStar(t, 0.0f, worldFolder);
+	CreateRotatingStar(t, 0.0f, point3d(1, 0, 0), worldFolder);
 }
 
 
-void MapBuild::CreateRotatingStar(const Transform& onTransform, float rotateSpeed, Entity* parent) {
+void MapBuild::CreateRotatingStar(const Transform& onTransform, float rotateSpeed, const point3d& axis, Entity* parent) {
 	EntityStorage* entityStorage = Singleton::GetInstance<EntityStorage>();
 
 	///////////////////////////////////
@@ -51,6 +49,7 @@ void MapBuild::CreateRotatingStar(const Transform& onTransform, float rotateSpee
 	*transform = onTransform;
 
 	RotatingBody* rotatingBody = starHolder->AddComponent<RotatingBody>();
+	rotatingBody->axis = axis;
 	rotatingBody->rotateSpeed = rotateSpeed;
 
 	///////////////////////////////////

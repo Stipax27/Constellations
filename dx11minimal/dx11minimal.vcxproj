@@ -299,6 +299,8 @@
     <ClInclude Include="Gameplay\Player\Combo\combo.h" />
     <ClInclude Include="Gameplay\Player\Combo\comboManager.h" />
     <ClInclude Include="Gameplay\Player\Combo\fistsCombos.h" />
+    <ClInclude Include="ecsHeaders.h" />
+    <ClInclude Include="Gameplay\Player\MovementTypes.h" />
     <ClInclude Include="Gameplay\Player\weapons.h" />
     <ClInclude Include="Engine\Render\Beam.h" />
     <ClInclude Include="Engine\Render\StarClay\StarClay.h" />

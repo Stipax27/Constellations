@@ -26,6 +26,7 @@
 #include "CameraTarget.h"
 
 #include "PlayerAbilities.h"
+#include "MovementTypes.h"
 #include "Combo/comboManager.h"
 
 #include "../../GlobalConfigs.h"
@@ -74,6 +75,7 @@ public:
 
 private:
 	ComboManager* comboManager;
+	MovementType movementType;
 
 	EntityStorage* entityStorage;
 	CollisionManagerClass* collisionManager;

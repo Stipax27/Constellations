@@ -62,6 +62,8 @@ void PlayerController::Initialize(Entity* Player)
 	cameraTarget = nullptr;
 	lockMovementOnTarget = false;
 
+	movementType = MovementType::Classic;
+
 	SetCursorPos(window->width / 2, window->height / 2);
 }
 
@@ -114,93 +116,7 @@ void PlayerController::ProcessInput()
 	if (playerEntity == nullptr || !playerEntity->IsActive())
 		return;
 
-	isRunning = false;
-
-	// Проверяем Shift и наличие выносливости
-	if (input::IsKeyDown(VK_SHIFT) && abilities->stamina > 0) {
-		isRunning = true;
-		currentMaxSpeed = PLAYER_MOVE_SPEED * 10.0f;
-
-		// Тратим выносливость только если двигаемся
-		if (input::IsKeyDown('W') || input::IsKeyDown('S') || input::IsKeyDown('A') || input::IsKeyDown('D')) {
-			abilities->stamina = max(0.0f, abilities->stamina - 0.5f); 
-		}
-	}
-	else {
-	// Если Shift не нажат - возвращаем обычную скорость
-	currentMaxSpeed = PLAYER_MOVE_SPEED;
-	}
-
-	// Восстанавливаем выносливость, если не бежим
-	if (!isRunning && abilities->stamina < abilities->maxStamina) {
-		abilities->stamina = min(abilities->maxStamina, abilities->stamina + 0.2f);
-	}
-
-
-	if (movementLocked && playerPhysicBody->velocity.magnitude() < PLAYER_MOVE_SPEED) {
-		movementLocked = false;
-		playerPhysicBody->airFriction = 1;
-	}
-
-	CheckTargetValid();
-	if (lockMovementOnTarget && cameraTarget != nullptr) {
-		point3d targetPos = GetWorldTransform(cameraTarget).position;
-		point3d playerPos = GetWorldTransform(playerEntity).position;
-
-		point3d direction = targetPos - playerPos;
-		playerTransform->mRotation = LerpMatrix(playerTransform->mRotation, GetMatrixFromDirection(direction, playerTransform->GetUpVector()), 0.25f);
-	}
-
-	if (!movementLocked)
-	{
-		point3d velocity = point3d();
-		point3d upVector = playerTransform->GetUpVector();
-		XMMATRIX cameraMatrix = camera->GetMatrixRotation();
-
-		point3d lookVector = point3d(cameraMatrix.r[2].m128_f32[0], cameraMatrix.r[2].m128_f32[1], cameraMatrix.r[2].m128_f32[2]).normalized();
-		lookVector = (lookVector - upVector * lookVector.dot(upVector)).normalized();
-
-		point3d rightVecttor = point3d(cameraMatrix.r[0].m128_f32[0], cameraMatrix.r[0].m128_f32[1], cameraMatrix.r[0].m128_f32[2]).normalized();
-		rightVecttor = (rightVecttor - upVector * rightVecttor.dot(upVector)).normalized();
-
-		if (input::IsKeyDown('W')) {
-			velocity += lookVector;
-		}
-		if (input::IsKeyDown('S')) {
-			velocity += lookVector * -1;
-		}
-		if (input::IsKeyDown('A')) {
-			velocity += rightVecttor * -1;
-		}
-		if (input::IsKeyDown('D')) {
-			velocity += rightVecttor;
-		}
-		if (input::IsKeyDown(VK_SPACE)) {
-			velocity += upVector;
-		}
-		if (input::IsKeyDown(VK_CONTROL)) {
-			velocity += upVector * -1;
-		}
-
-		if (velocity.magnitude() > 0) {
-			/*point3d newVelocity = playerPhysicBody->velocity + velocity.normalized();
-			if (newVelocity.magnitude() > currentMaxSpeed) {
-				playerPhysicBody->velocity = newVelocity.normalized() * currentMaxSpeed;
-			}
-			else {
-				playerPhysicBody->velocity = newVelocity;
-			}*/
-
-			velocity = velocity.normalized();
-
-			playerPhysicBody->acceleration += velocity * currentMaxSpeed;
-
-			float factor = velocity.dot(upVector);
-			if (factor > -1 && factor < 1) {
-				playerTransform->mRotation = GetMatrixFromDirection((velocity - upVector * factor).normalized(), upVector);
-			}
-		}
-	}
+	ProcessMovement();
 
 		// Обработка кнопки F для щита
 	static bool fKeyPressed = false;
@@ -266,6 +182,7 @@ void PlayerController::ProcessInput()
 	}
 
 	if (input::IsKeyPressed('E')) {
+		movementType = MovementType::Stopped;
 		abilities->Grap();
 	}
 
@@ -285,7 +202,6 @@ void PlayerController::ProcessInput()
 		abilities->element = (Elements)i;
 	}
 
-	ProcessMovement();
 	abilities->Execution();
 }
 		
@@ -296,16 +212,17 @@ void PlayerController::ProcessCamera()
 	if (mouse->state == MouseState::Locked)
 		return;
 
-	camera->position = camera->position.lerp(playerTransform->position - playerTransform->GetLookVector() * camera->distance + playerTransform->GetUpVector() * 2, 0.4f);
+	Transform wt = GetWorldTransform(playerEntity);
+	camera->position = camera->position.lerp(wt.position - wt.GetLookVector() * camera->distance + wt.GetUpVector() * 2, 0.4f);
 
 	XMMATRIX matrixRotation;
 	CheckTargetValid();
 	if (cameraTarget == nullptr) {
-		matrixRotation = playerTransform->mRotation;
+		matrixRotation = wt.mRotation;
 	}
 	else {
 		point3d direction = GetWorldTransform(cameraTarget).position - camera->position;
-		matrixRotation = GetMatrixFromDirection(direction, playerTransform->GetUpVector());
+		matrixRotation = GetMatrixFromDirection(direction, wt.GetUpVector());
 	}
 
 	camera->SetMatrixRotation(LerpMatrix(camera->GetMatrixRotation(), matrixRotation, 0.15f));
@@ -412,8 +329,10 @@ void PlayerController::ProcessMouse()
 			if (!lockMovementOnTarget || cameraTarget == nullptr) {
 				mPos *= MOUSE_SENSIVITY * 10;
 
+				Transform wt = GetWorldTransform(playerEntity);
+
 				XMMATRIX additionalRotation = XMMatrixRotationRollPitchYaw(XMConvertToRadians(mPos.y), XMConvertToRadians(mPos.x), 0);
-				point3d upVector = playerTransform->GetUpVector();
+				point3d upVector = wt.GetUpVector();
 
 
 				XMMATRIX cameraMatrix = camera->GetMatrixRotation();
@@ -432,7 +351,7 @@ void PlayerController::ProcessMouse()
 				point3d cameraLookVector = point3d(cameraMatrix.r[2].m128_f32[0], cameraMatrix.r[2].m128_f32[1], cameraMatrix.r[2].m128_f32[2]).normalized();
 
 				camera->SetMatrixRotation(cameraMatrix);
-				camera->position = playerTransform->position - cameraLookVector * camera->distance + cameraUpVector * 2;
+				camera->position = wt.position - cameraLookVector * camera->distance + cameraUpVector * 2;
 			}
 
 			// Обработка атак мышью - проверяем что щит не активен
@@ -589,6 +508,101 @@ void PlayerController::CheckTargetValid()
 
 void PlayerController::ProcessMovement()
 {
+	switch (movementType)
+	{
+	case MovementType::Classic:
+		isRunning = false;
+
+		// Проверяем Shift и наличие выносливости
+		if (input::IsKeyDown(VK_SHIFT) && abilities->stamina > 0) {
+			isRunning = true;
+			currentMaxSpeed = PLAYER_MOVE_SPEED * 10.0f;
+
+			// Тратим выносливость только если двигаемся
+			if (input::IsKeyDown('W') || input::IsKeyDown('S') || input::IsKeyDown('A') || input::IsKeyDown('D')) {
+				abilities->stamina = max(0.0f, abilities->stamina - 0.5f);
+			}
+		}
+		else {
+			// Если Shift не нажат - возвращаем обычную скорость
+			currentMaxSpeed = PLAYER_MOVE_SPEED;
+		}
+
+		// Восстанавливаем выносливость, если не бежим
+		if (!isRunning && abilities->stamina < abilities->maxStamina) {
+			abilities->stamina = min(abilities->maxStamina, abilities->stamina + 0.2f);
+		}
+
+
+		if (movementLocked && playerPhysicBody->velocity.magnitude() < PLAYER_MOVE_SPEED) {
+			movementLocked = false;
+			playerPhysicBody->airFriction = 1;
+		}
+
+		CheckTargetValid();
+		if (lockMovementOnTarget && cameraTarget != nullptr) {
+			point3d targetPos = GetWorldTransform(cameraTarget).position;
+			point3d playerPos = GetWorldTransform(playerEntity).position;
+
+			point3d direction = targetPos - playerPos;
+			playerTransform->mRotation = LerpMatrix(playerTransform->mRotation, GetMatrixFromDirection(direction, playerTransform->GetUpVector()), 0.25f);
+		}
+
+		if (!movementLocked)
+		{
+			point3d velocity = point3d();
+			point3d upVector = playerTransform->GetUpVector();
+			XMMATRIX cameraMatrix = camera->GetMatrixRotation();
+
+			point3d lookVector = point3d(cameraMatrix.r[2].m128_f32[0], cameraMatrix.r[2].m128_f32[1], cameraMatrix.r[2].m128_f32[2]).normalized();
+			lookVector = (lookVector - upVector * lookVector.dot(upVector)).normalized();
+
+			point3d rightVecttor = point3d(cameraMatrix.r[0].m128_f32[0], cameraMatrix.r[0].m128_f32[1], cameraMatrix.r[0].m128_f32[2]).normalized();
+			rightVecttor = (rightVecttor - upVector * rightVecttor.dot(upVector)).normalized();
+
+			if (input::IsKeyDown('W')) {
+				velocity += lookVector;
+			}
+			if (input::IsKeyDown('S')) {
+				velocity += lookVector * -1;
+			}
+			if (input::IsKeyDown('A')) {
+				velocity += rightVecttor * -1;
+			}
+			if (input::IsKeyDown('D')) {
+				velocity += rightVecttor;
+			}
+			if (input::IsKeyDown(VK_SPACE)) {
+				velocity += upVector;
+			}
+			if (input::IsKeyDown(VK_CONTROL)) {
+				velocity += upVector * -1;
+			}
+
+			if (velocity.magnitude() > 0) {
+				/*point3d newVelocity = playerPhysicBody->velocity + velocity.normalized();
+				if (newVelocity.magnitude() > currentMaxSpeed) {
+					playerPhysicBody->velocity = newVelocity.normalized() * currentMaxSpeed;
+				}
+				else {
+					playerPhysicBody->velocity = newVelocity;
+				}*/
+
+				velocity = velocity.normalized();
+
+				playerPhysicBody->acceleration += velocity * currentMaxSpeed;
+
+				float factor = velocity.dot(upVector);
+				if (factor > -1 && factor < 1) {
+					playerTransform->mRotation = GetMatrixFromDirection((velocity - upVector * factor).normalized(), upVector);
+				}
+			}
+		}
+		break;
+	case MovementType::Stopped:
+		break;
+	}
+
 	if (floor != nullptr) {
 		Transform wt = GetWorldTransform(floor);
 		playerTransform->position = wt.position + point3d(0, 3, 0);

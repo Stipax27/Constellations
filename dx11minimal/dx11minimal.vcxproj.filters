@@ -251,6 +251,8 @@
     <ClInclude Include="Engine\Physic\Movement\RotatingBody.h" />
     <ClInclude Include="Engine\Physic\Movement\RotatingSystem.h" />
     <ClInclude Include="Gameplay\MazeLinkSystem.h" />
+    <ClInclude Include="Gameplay\Player\MovementTypes.h" />
+    <ClInclude Include="ecsHeaders.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">
