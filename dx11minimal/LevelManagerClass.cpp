@@ -403,8 +403,6 @@ void LevelManagerClass::Shutdown()
 	}
 }
 
-double shotTime = 0;
-
 void LevelManagerClass::Frame()
 {
 	mouse->UpdateSystemCursorVisibility();
