@@ -280,6 +280,7 @@
     <ClInclude Include="Constructors\MapBuild.h" />
     <ClInclude Include="EditorTools\EditCameraController.h" />
     <ClInclude Include="EditorTools\PivotDrawSystem.h" />
+    <ClInclude Include="Engine\DebugTools\LinkRadiusDrawSystem.h" />
     <ClInclude Include="Engine\DebugTools\WayDrawSystem.h" />
     <ClInclude Include="Engine\DebugTools\PivotDrawSystem.h" />
     <ClInclude Include="Engine\Compute\AI\BossComponent.h" />
@@ -1256,6 +1257,7 @@
   <ItemGroup>
     <ClCompile Include="Constructors\MapBuild.cpp" />
     <ClCompile Include="EditorTools\EditCameraController.cpp" />
+    <ClCompile Include="Engine\DebugTools\LinkRadiusDrawSystem.cpp" />
     <ClCompile Include="Engine\DebugTools\WayDrawSystem.cpp" />
     <ClCompile Include="Engine\DebugTools\PivotDrawSystem.cpp" />
     <ClCompile Include="Engine\Camera\cameraclass.cpp" />

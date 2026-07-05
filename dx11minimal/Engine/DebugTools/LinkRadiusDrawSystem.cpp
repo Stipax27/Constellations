@@ -1,4 +1,4 @@
-#include "WayDrawSystem.h"
+#include "LinkRadiusDrawSystem.h"
 
 #include "../../GlobalConfigs.h"
 
@@ -6,28 +6,28 @@ using namespace std;
 
 
 
-WayDrawSystem::WayDrawSystem()
+LinkRadiusDrawSystem::LinkRadiusDrawSystem()
 {
 }
 
 
-void WayDrawSystem::Initialize()
+void LinkRadiusDrawSystem::Initialize()
 {
 }
 
 
-void WayDrawSystem::Shutdown()
+void LinkRadiusDrawSystem::Shutdown()
 {
 }
 
 
-void WayDrawSystem::Update(EntityStorage& entityStorage, float deltaTime)
+void LinkRadiusDrawSystem::Update(EntityStorage& entityStorage, float deltaTime)
 {
-	/*Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
+	Blend::Blending(Blend::blendmode::alpha, Blend::blendop::add);
 	Rasterizer::Cull(Rasterizer::cullmode::back);
 	Depth::Depth(Depth::depthmode::readonly);
 
-	const std::vector<Entity*>& entities = entityStorage.GetEntitiesWithComponent<RotatingBody>();
+	const std::vector<Entity*>& entities = entityStorage.GetAllEntitiesByName("RotatingStar");
 	for (Entity* entity : entities)
 	{
 		if (!IsEntityValid(entity))
@@ -35,10 +35,6 @@ void WayDrawSystem::Update(EntityStorage& entityStorage, float deltaTime)
 
 		Transform* transform = entity->GetComponent<Transform>();
 		if (transform == nullptr)
-			continue;
-
-		RotatingBody* rotatingBody = entity->GetComponent<RotatingBody>();
-		if (rotatingBody == nullptr)
 			continue;
 
 		Transform worldTransform = GetWorldTransform(entity);
@@ -57,5 +53,5 @@ void WayDrawSystem::Update(EntityStorage& entityStorage, float deltaTime)
 		int n = 11 * sqrt(STAR_LINKING_RADIUS);
 		ConstBuf::drawerV[0] = n;
 		Draw::Drawer(n * n);
-	}*/
+	}
 }

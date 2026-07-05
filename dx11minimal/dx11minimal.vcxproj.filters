@@ -95,6 +95,7 @@
     <ClCompile Include="Gameplay\MazeLinkSystem.cpp" />
     <ClCompile Include="Gameplay\MazeLinks.cpp" />
     <ClCompile Include="Engine\DebugTools\WayDrawSystem.cpp" />
+    <ClCompile Include="Engine\DebugTools\LinkRadiusDrawSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LevelManagerClass.h">
@@ -257,6 +258,7 @@
     <ClInclude Include="ecsHeaders.h" />
     <ClInclude Include="Gameplay\MazeLinks.h" />
     <ClInclude Include="Engine\DebugTools\WayDrawSystem.h" />
+    <ClInclude Include="Engine\DebugTools\LinkRadiusDrawSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">

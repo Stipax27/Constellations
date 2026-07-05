@@ -31,6 +31,7 @@
 #include "Engine/DebugTools/GravityDrawSystem.h"
 #include "Engine/DebugTools/PivotDrawSystem.h"
 #include "Engine/DebugTools/WayDrawSystem.h"
+#include "Engine/DebugTools/LinkRadiusDrawSystem.h"
 
 #include "Engine/Mesh/Animation.h"
 #include "Engine/Mesh/Animator.h"
