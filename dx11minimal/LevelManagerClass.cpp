@@ -13,13 +13,9 @@ LevelManagerClass::LevelManagerClass()
 
 	m_World = 0;
 
-	m_IsExecutionActive = false;
-	m_ExecutionUI = nullptr;
-	m_ExecutionTimer = 0.0f;
 	m_ShowGameOverMessage = false;
 	m_ShowVictoryMessage = false;
 	m_MessageTimer = 0.0f;
-	m_IsInBossArena = false;
 }
 
 LevelManagerClass::LevelManagerClass(const LevelManagerClass& other)
@@ -108,60 +104,29 @@ bool LevelManagerClass::Initialize()
 	MapBuild::BuildMaze();
 
 
-	
-	/*entity = entityStorage->CreateEntity("AriesNebulaLocation", folder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(0.0f, 0.0f, 50.0f);
-	transform->scale = point3d(1, 0, 0);
-	spriteCluster = entity->AddComponent<SpriteCluster>();
-	spriteCluster->vShader = 7;
-	spriteCluster->gShader = 7;
-	spriteCluster->pShader = 7;
-	spriteCluster->pointsNum = 900000;
-	spriteCluster->vertexNum = 1;
-	spriteCluster->frustumRadius = 60;
-	spriteCluster->topology = InputAssembler::topology::pointList;
-	spriteCluster->compress = RenderCompress::x2;*/
-	/*sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->radius = 25.0f;
-	sphereCollider->softness = 0.5f;*/
-	//entity->AddComponent<SurfaceCollider>();
 
-	/*entity = entityStorage->CreateEntity("StarsBackground", folder);
-	spriteCluster = entity->AddComponent<SpriteCluster>();
-	spriteCluster->vShader = 2;
-	spriteCluster->pShader = 2;
-	spriteCluster->pointsNum = 10000;*/
+	Entity* dragger = entityStorage->CreateEntity("Dragger");
+	transform = dragger->AddComponent<Transform>();
+
+	entity = entityStorage->CreateEntity("arrow", dragger);
+	transform = entity->AddComponent<Transform>();
+	mesh = entity->AddComponent<Mesh>();
+	mesh->index = 9;
+
+	entity = entityStorage->CreateEntity("arrow", dragger);
+	transform = entity->AddComponent<Transform>();
+	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(1, 0, 0, 0), PI / 2);
+	mesh = entity->AddComponent<Mesh>();
+	mesh->index = 9;
+
+	entity = entityStorage->CreateEntity("arrow", dragger);
+	transform = entity->AddComponent<Transform>();
+	transform->mRotation = XMMatrixRotationAxis(XMVectorSet(0, 0, 1, 0), PI / 2);
+	mesh = entity->AddComponent<Mesh>();
+	mesh->index = 9;
+
 
 	/////////////////////////
-
-	//entity = entityStorage->CreateEntity("Star", folder);
-	//transform = entity->AddComponent<Transform>();
-	//transform->position = point3d(0.0f, 0.0f, -20.0f);
-	//star = entity->AddComponent<Star>();
-	//sphereCollider = entity->AddComponent<SphereCollider>();
-	//sphereCollider->radius = 0.5f;
-	//sphereCollider->active = false;
-	//sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	////sphereCollider->softness = 0.5f;
-	//singleDamager = entity->AddComponent<SingleDamager>();
-	//singleDamager->damage = 1000;
-
-	entity = entityStorage->CreateEntity("TestStar", worldFolder);
-	transform = entity->AddComponent<Transform>();
-	transform->position = point3d(-200, 0, -200);
-	star = entity->AddComponent<Star>();
-	star->radius = 75;
-	star->crownRadius = 3.0f;
-	star->color1 = point3d(0.87f, 0.24f, 0.13f);
-	star->color2 = point3d(0.35f, 0.0f, 0.07f);
-	star->crownColor = point3d(0.87f, 0.25f, 0.15f);
-	sphereCollider = entity->AddComponent<SphereCollider>();
-	sphereCollider->radius = 75;
-	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	GravityPoint* gravityPoint = entity->AddComponent<GravityPoint>();
-	gravityPoint->mass = 500;
-	gravityPoint->radius = 150;
 
 	/*entity = entityStorage->CreateEntity("Ray", worldFolder);
 	transform = entity->AddComponent<Transform>();
@@ -465,156 +430,6 @@ void LevelManagerClass::Frame()
 		}
 	}
 
-	if (m_CurrentBoss && m_CurrentBoss->IsActive() && !m_IsExecutionActive)
-	{
-		Health* bossHealth = m_CurrentBoss->GetComponent<Health>();
-		if (bossHealth)
-		{
-			float healthPercent = bossHealth->hp / bossHealth->maxHp;
-
-			// Если HP меньше 5% и ещё не в режиме казни
-			if (healthPercent <= 0.05f)
-			{
-				TriggerExecution();
-			}
-		}
-	}
-
-	if (m_IsExecutionActive && m_CurrentBoss)
-	{
-		// Обновляем таймер
-		m_ExecutionTimer -= 1.0f / 60.0f;  // Приблизительно deltaTime
-
-		// Обновляем UI таймера
-		if (m_ExecutionUI)
-		{
-			// Ищем дочерний Entity с таймером
-			const std::vector<Entity*>& children = m_ExecutionUI->GetChildren();
-			for (Entity* child : children)
-			{
-				if (child->name == "ExecutionTimer")
-				{
-					TextLabel* timerLabel = child->GetComponent<TextLabel>();
-					if (timerLabel)
-					{
-						wchar_t buffer[16];
-						swprintf(buffer, 16, L"%.1f", m_ExecutionTimer);
-						timerLabel->textW = buffer;
-
-						// Меняем цвет при приближении времени
-						if (m_ExecutionTimer < 2.0f)
-							timerLabel->color = point3d(1.0f, 0.0f, 0.0f);
-						else if (m_ExecutionTimer < 4.0f)
-							timerLabel->color = point3d(1.0f, 1.0f, 0.0f);
-					}
-					break;
-				}
-			}
-		}
-
-		// Если время вышло - босс восстанавливается
-		if (m_ExecutionTimer <= 0)
-		{
-			m_IsExecutionActive = false;
-			HideExecutionUI();
-
-			// Восстанавливаем босса
-			AIComponent* bossAI = m_CurrentBoss->GetComponent<AIComponent>();
-			if (bossAI) bossAI->enabled = true;
-
-			Star* bossStar = m_CurrentBoss->GetComponent<Star>();
-			if (bossStar)
-			{
-				bossStar->color1 = point3d(1.0f, 0.2f, 0.2f);
-				bossStar->crownColor = point3d(0.8f, 0.3f, 0.3f);
-				bossStar->radius = 5.0f;
-			}
-
-			// Сбрасываем флаг, чтобы при следующем падении HP ниже 5% QTE сработало снова
-			// Нужно добавить флаг в BossComponent
-		}
-
-		// ===== ПРОВЕРКА НАЖАТИЯ КНОПКИ R =====
-		if (input::IsKeyPressed('R'))
-		{
-			static int pressCount = 0;
-			
-			pressCount++;
-
-			if (pressCount >= 5)
-			{
-				ExecuteBoss();
-				pressCount = 0; // Сброс после казни
-			}
-			
-			
-		}
-	}
-
-	if (input::IsKeyDown('K'))
-	{
-		if (m_CurrentBoss && m_CurrentBoss->IsActive())
-		{
-			Health* bossHealth = m_CurrentBoss->GetComponent<Health>();
-			if (bossHealth)
-			{
-				bossHealth->hp -= 100.0f;
-				//Log("Test damage! Boss HP: %.0f\n", bossHealth->hp);
-			}
-		}
-	}
-	// ===== ПРОВЕРКА ПОБЕДЫ НАД БОССОМ =====
-	if (m_CurrentBoss && m_CurrentBoss->IsActive())
-	{
-		Health* bossHealth = m_CurrentBoss->GetComponent<Health>();
-		if (bossHealth)
-		{
-			static float lastLog = 0;
-			if (timer::currentTime - lastLog > 1.0f)
-			{
-				lastLog = timer::currentTime;
-				//Log("Boss HP: %.0f / %.0f\n", bossHealth->hp, bossHealth->maxHp);
-			}
-		}
-	}
-
-	
-	static bool victoryShown = false;
-
-	if (m_CurrentBoss && m_CurrentBoss->IsActive())
-	{
-		Health* bossHealth = m_CurrentBoss->GetComponent<Health>();
-		if (bossHealth && bossHealth->hp <= 0 && !victoryShown)
-		{
-			victoryShown = true;
-
-			//Log("BOSS DEFEATED! Showing victory message...\n");
-
-			// Сообщение победы
-			Entity* msg = entityStorage->CreateEntity("VictoryMsg", nullptr);
-			Transform2D* t = msg->AddComponent<Transform2D>();
-			t->anchorPoint = point3d(0, 0, 0);
-			t->ratio = ScreenAspectRatio::XY;
-			t->position = point3d(-0.25f, -0.1f, 0);
-
-			TextLabel* text = msg->AddComponent<TextLabel>();
-			text->textW = L"ПОБЕДА!";
-			text->fontFamilyW = L"Impact";
-			text->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
-			text->fontWeight = 900;
-			text->fontSizePx = 80;
-			text->fontScale = 1.5f;
-			text->color = point3d(0.2f, 0.8f, 0.2f);
-
-			DelayedDestroy* d = msg->AddComponent<DelayedDestroy>();
-			d->lifeTime = 3000;
-
-			// Отключаем босса
-			AIComponent* bossAI = m_CurrentBoss->GetComponent<AIComponent>();
-			if (bossAI) bossAI->enabled = false;
-		}
-	}
-
 	// Обновляем таймер сообщений
 	if (m_ShowGameOverMessage || m_ShowVictoryMessage)
 	{
@@ -623,112 +438,6 @@ void LevelManagerClass::Frame()
 		{
 			m_ShowGameOverMessage = false;
 			m_ShowVictoryMessage = false;
-		}
-	}
-	 // Обновление полоски здоровья босса
-	if (m_CurrentBoss && m_CurrentBoss->IsActive() && m_BossHealthFill) {
-
-		Health* bossHealth = m_CurrentBoss->GetComponent<Health>();
-		if (bossHealth) {
-			// Показываем контейнер
-			Entity* bossContainer = m_BossHealthFill->GetParent();
-			if (bossContainer) bossContainer->SetActive(true);
-
-			// Обновляем полоску
-			float healthPercent = bossHealth->hp / bossHealth->maxHp;
-			Transform2D* barTransform = m_BossHealthFill->GetComponent<Transform2D>();
-			if (barTransform) {
-				barTransform->scale.x = 0.5f * healthPercent;
-			}
-
-			// Меняем цвет
-			Rect* barRect = m_BossHealthFill->GetComponent<Rect>();
-			if (barRect) {
-				if (healthPercent > 0.6f) barRect->color = point3d(0.2f, 0.8f, 0.2f);
-				else if (healthPercent > 0.3f) barRect->color = point3d(0.8f, 0.8f, 0.2f);
-				else barRect->color = point3d(0.8f, 0.2f, 0.2f);
-			}
-
-			// Обновляем цифры (прямо по указателю)
-			if (m_BossNumbersText) {
-				wchar_t buffer[64];
-				swprintf(buffer, 64, L"%.0f / %.0f", bossHealth->hp, bossHealth->maxHp);
-				m_BossNumbersText->textW = buffer;
-			}
-		}
-	}
-	else {
-		// Скрываем UI босса
-		if (m_BossHealthFill) {
-			Entity* bossContainer = m_BossHealthFill->GetParent();
-			if (bossContainer) bossContainer->SetActive(false);
-		}
-	}
-
-
-	if (m_CurrentBoss && m_CurrentBoss->IsActive())
-	{
-		Entity* player = entityStorage->GetEntityByName("Player");
-		if (player)
-		{
-			Transform* playerTransform = player->GetComponent<Transform>();
-			if (playerTransform)
-			{
-				// Используй magnitude() если есть, или sqrt
-				float dx = playerTransform->position.x - m_BossArenaCenter.x;
-				float dz = playerTransform->position.z - m_BossArenaCenter.z;
-				float dist = sqrt(dx * dx + dz * dz);  // ИЛИ playerTransform->position.distance(m_BossArenaCenter)
-
-				// Вход на арену
-				if (dist < m_BossArenaRadius && !m_IsInBossArena)
-				{
-					m_IsInBossArena = true;
-					AIComponent* bossAI = m_CurrentBoss->GetComponent<AIComponent>();
-					if (bossAI) bossAI->enabled = true;
-					Entity* bossUIContainer = entityStorage->GetEntityByName("BossUIContainer");
-					if (bossUIContainer) bossUIContainer->SetActive(true);
-				}
-
-				
-
-				// Блокируем границы
-				if (m_IsInBossArena)
-				{
-					if (playerTransform->position.x < -50.0f) playerTransform->position.x = -50.0f;
-					if (playerTransform->position.x > 50.0f) playerTransform->position.x = 50.0f;
-					if (playerTransform->position.z < 150.0f) playerTransform->position.z = 150.0f;   // min Z = центр - 50
-					if (playerTransform->position.z > 250.0f) playerTransform->position.z = 250.0f;   // max Z = центр + 50
-				}
-			}
-		}
-	}
-	else
-	{
-		m_IsInBossArena = false;
-	}
-
-	// Изменение цвета testStar в зависимости от состояния ИИ
-	if (testEnemy && testEnemy->IsActive()) {
-		AIComponent* ai = testEnemy->GetComponent<AIComponent>();
-		Star* star = testEnemy->GetComponent<Star>();
-		if (ai && star) {
-			switch (ai->behaviorType) {
-			case AIBehaviorType::PATROL:
-				star->color1 = point3d(0.2f, 0.8f, 0.2f); // зелёный
-				break;
-			case AIBehaviorType::CHASE:
-				star->color1 = point3d(1.0f, 0.5f, 0.0f); // оранжевый
-				break;
-			case AIBehaviorType::ATTACK:
-				star->color1 = point3d(1.0f, 0.0f, 0.0f); // красный
-				break;
-			case AIBehaviorType::FLEE:
-				star->color1 = point3d(0.0f, 0.0f, 1.0f); // синий
-				break;
-			case AIBehaviorType::IDLE:
-				star->color1 = point3d(0.5f, 0.5f, 0.5f); // серый
-				break;
-			}
 		}
 	}
 #endif
@@ -795,8 +504,6 @@ void LevelManagerClass::InitSystems()
 
 	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum, m_BoneBuffer);
 	m_World->AddRenderSystem<NebulaSystem>();
-	m_World->AddRenderSystem<UISystem>();
-	m_World->AddRenderSystem<UITextSystem>();
 
 #ifdef _EDITOR
 	m_World->AddRenderSystem<PivotDrawSystem>();
@@ -810,6 +517,9 @@ void LevelManagerClass::InitSystems()
 		m_World->AddRenderSystem<LinkRadiusDrawSystem>();
 	}
 #endif
+
+	m_World->AddRenderSystem<UISystem>();
+	m_World->AddRenderSystem<UITextSystem>();
 }
 
 
@@ -832,6 +542,8 @@ void LevelManagerClass::LoadModels()
 	}
 
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\SnakeModel.obj");
+
+	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\drag_arrow.obj");
 }
 
 void LevelManagerClass::LoadTextures()
@@ -1126,89 +838,6 @@ void LevelManagerClass::CreateUI()
 	rect->color = point3d(0.75f, 0.0f, 0.0f);
 
 	m_Transform2DDebugUI.Create(entityStorage, uiFolder);
-
-
-	/*entity = entityStorage->CreateEntity("BossHealth", uiFolder);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(1, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::YY;
-	transform2D->position = point3d(0.75f, 0.0f, 0.0f);
-	transform2D->scale = point3d(0.2f, 0.2f, 0.0f);
-	ImageLabel* imageLabel = entity->AddComponent<ImageLabel>();
-	imageLabel->textureName = "comicsSpot";
-	imageLabel->color = point3d(0.12, 0.91, 0.62);*/
-	//////////////////////////////////////////////////////////////////////
-	Entity* bossUIContainer = entityStorage->CreateEntity("BossUIContainer", uiFolder);
-
-	// Фон полоски здоровья босса
-	entity = entityStorage->CreateEntity("BossHealthBg", bossUIContainer);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(0, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::XY;
-	transform2D->position = point3d(0, 0.7f, 0.0f);
-	transform2D->scale = point3d(0.5f, 0.035f, 0.0f);
-	rect = entity->AddComponent<Rect>();
-	rect->color = point3d(0.2f, 0.2f, 0.2f);
-	rect->opacity = 0.7f;
-
-	// Сама полоска здоровья (будет менять ширину)
-	entity = entityStorage->CreateEntity("BossHealthBar", bossUIContainer);
-	m_BossHealthFill = entity;  // Сохраняем указатель на полоску
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(-1, 0, 0);  // Привязка к левому краю
-	transform2D->ratio = ScreenAspectRatio::XY;
-	transform2D->position = point3d(-0.5f, 0.7f, 0.0f);
-	transform2D->scale = point3d(0.5f, 0.035f, 0.0f);
-	rect = entity->AddComponent<Rect>();
-	rect->color = point3d(0.8f, 0.2f, 0.2f);
-
-	// Имя босса
-	entity = entityStorage->CreateEntity("BossName", bossUIContainer);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(0, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::XY;
-	transform2D->position = point3d(-0.16f, 0.91f, 0.0f);
-	textLabel = entity->AddComponent<TextLabel>();
-	textLabel->textW = L"ГИПЕРЗВЕЗДА";
-	textLabel->fontFamilyW = L"Impact";
-	textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
-	textLabel->fontWeight = 900;
-	textLabel->fontSizePx = 52;
-	textLabel->fontScale = 1.0f;
-	textLabel->color = point3d(1.0f, 0.85f, 0.2f);
-	textLabel->opacity = 1.0f;
-
-	// Цифры здоровья (текущее / максимальное)
-	entity = entityStorage->CreateEntity("BossHealthNumbers", bossUIContainer);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->anchorPoint = point3d(0, 0, 0);
-	transform2D->ratio = ScreenAspectRatio::XY;
-	transform2D->position = point3d(-0.1f, 0.74f, 0.0f);
-	m_BossNumbersText = entity->AddComponent<TextLabel>();  // Сохраняем указатель
-	m_BossNumbersText->textW = L"2000 / 2000";
-	m_BossNumbersText->fontFamilyW = L"Impact";
-	m_BossNumbersText->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
-	m_BossNumbersText->fontWeight = 700;
-	m_BossNumbersText->fontSizePx = 36;
-	m_BossNumbersText->fontScale = 1.0f;
-	m_BossNumbersText->color = point3d(1.0f, 1.0f, 1.0f);
-	m_BossNumbersText->opacity = 0.9f;
-
-	// Изначально скрываем весь UI босса
-	bossUIContainer->SetActive(false);
-
-	entity = entityStorage->CreateEntity("ExecutionLabel", uiFolder);
-	transform2D = entity->AddComponent<Transform2D>();
-	transform2D->ratio = ScreenAspectRatio::XY;
-	transform2D->position = point3d(0.9f, -0.74f, 0.0f);
-	textLabel = entity->AddComponent<TextLabel>();
-	textLabel->textW = L"НИЧЕГО";
-	textLabel->fontFamilyW = L"Impact";
-	textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
-	textLabel->fontWeight = 900;
-	textLabel->fontSizePx = 38;
-	textLabel->fontScale = 0.34f;
-	textLabel->letterSpacingPx = 1.0f;
 }
 
 
@@ -1374,219 +1003,6 @@ void LevelManagerClass::CreateAries(Entity* folder)
 	//sphereCollider->radius = 1.6;
 }
 
-void LevelManagerClass::CreateArenaBarrier(Entity* parent, const point3d& center, float radius, int starCount)
-{
-	// Создаём родительскую сущность для барьера
-	Entity* barrier = entityStorage->CreateEntity("ArenaBarrier", parent);
-	barrier->AddComponent<Transform>();  // Просто контейнер
-
-	// Параметры барьера
-	float heightMin = -40.0f;
-	float heightMax = 40.0f;
-	float radiusInner = radius - 2.0f;
-	float radiusOuter = radius + 2.0f;
-
-	// Количество звёзд в окружности (на каждый градус примерно)
-	int starsPerCircle = starCount / 4;
-
-	// ===== 1. НИЖНЯЯ ОКРУЖНОСТЬ (на земле) =====
-	for (int i = 0; i < starsPerCircle; i++)
-	{
-		float angle = (i * 2.0f * PI / starsPerCircle);
-		float x = center.x + cos(angle) * radius;
-		float z = center.z + sin(angle) * radius;
-
-		Entity* starEntity = entityStorage->CreateEntity("BarrierStar", barrier);
-		Transform* starTransform = starEntity->AddComponent<Transform>();
-		starTransform->position = point3d(x, center.y + heightMin, z);
-
-		Star* star = starEntity->AddComponent<Star>();
-		star->radius = 0.6f;
-		star->crownRadius = 0.9f;
-		star->color1 = point3d(0.3f, 0.6f, 1.0f);  // Голубой
-		star->color2 = point3d(0.1f, 0.3f, 0.8f);
-		star->crownColor = point3d(0.5f, 0.8f, 1.0f);
-
-		// Добавляем мерцание (через ParticleEmitter)
-		ParticleEmitter* particles = starEntity->AddComponent<ParticleEmitter>();
-		particles->rate = 30;
-		particles->lifetime = 500;
-		particles->color = point3d(0.3f, 0.6f, 1.0f);
-		particles->size = { 0.1f, 0.3f };
-		particles->opacity = { 0.8f, 0.0f };
-		particles->emitDirection = EmitDirection::Up;
-		particles->spread = { 1.57f, 1.57f };
-		particles->speed = { 2.0f, 1.0f };
-	}
-
-	// ===== 2. ВЕРХНЯЯ ОКРУЖНОСТЬ =====
-	for (int i = 0; i < starsPerCircle; i++)
-	{
-		float angle = (i * 2.0f * PI / starsPerCircle);
-		float x = center.x + cos(angle) * radius;
-		float z = center.z + sin(angle) * radius;
-
-		Entity* starEntity = entityStorage->CreateEntity("BarrierStar", barrier);
-		Transform* starTransform = starEntity->AddComponent<Transform>();
-		starTransform->position = point3d(x, center.y + heightMax, z);
-
-		Star* star = starEntity->AddComponent<Star>();
-		star->radius = 0.6f;
-		star->crownRadius = 0.9f;
-		star->color1 = point3d(1.0f, 0.4f, 0.8f);  // Розовый
-		star->color2 = point3d(0.8f, 0.2f, 0.5f);
-		star->crownColor = point3d(1.0f, 0.6f, 1.0f);
-
-		ParticleEmitter* particles = starEntity->AddComponent<ParticleEmitter>();
-		particles->rate = 30;
-		particles->lifetime = 500;
-		particles->color = point3d(1.0f, 0.4f, 0.8f);
-		particles->size = { 0.1f, 0.3f };
-		particles->opacity = { 0.8f, 0.0f };
-		particles->emitDirection = EmitDirection::Up;
-		particles->spread = { 1.57f, 1.57f };
-		particles->speed = { 2.0f, 1.0f };
-	}
-
-	// ===== 3. ВЕРТИКАЛЬНЫЕ СТОЛБЫ ПО УГЛАМ (4 угла) =====
-	int starsPerColumn = starCount / 8;
-	float corners[4][2] = {
-		{center.x + radius, center.z + radius},
-		{center.x + radius, center.z - radius},
-		{center.x - radius, center.z + radius},
-		{center.x - radius, center.z - radius}
-	};
-
-	for (int c = 0; c < 4; c++)
-	{
-		for (int i = 0; i <= starsPerColumn; i++)
-		{
-			float t = (float)i / starsPerColumn;  // 0..1
-			float y = center.y + heightMin + t * (heightMax - heightMin);
-
-			Entity* starEntity = entityStorage->CreateEntity("BarrierStar", barrier);
-			Transform* starTransform = starEntity->AddComponent<Transform>();
-			starTransform->position = point3d(corners[c][0], y, corners[c][1]);
-
-			Star* star = starEntity->AddComponent<Star>();
-			star->radius = 0.5f;
-			star->crownRadius = 0.7f;
-
-			// Градиент цвета от низа к верху
-			if (t < 0.5f)
-			{
-				star->color1 = point3d(0.3f, 0.6f, 1.0f);
-				star->crownColor = point3d(0.5f, 0.8f, 1.0f);
-			}
-			else
-			{
-				star->color1 = point3d(1.0f, 0.4f, 0.8f);
-				star->crownColor = point3d(1.0f, 0.6f, 1.0f);
-			}
-			star->color2 = star->color1 * 0.5f;
-
-			ParticleEmitter* particles = starEntity->AddComponent<ParticleEmitter>();
-			particles->rate = 20;
-			particles->lifetime = 400;
-			particles->color = star->color1;
-			particles->size = { 0.05f, 0.2f };
-			particles->opacity = { 0.6f, 0.0f };
-			particles->emitDirection = EmitDirection::Up;
-			particles->spread = { 1.57f, 1.57f };
-			particles->speed = { 1.0f, 0.5f };
-		}
-	}
-
-	// ===== 4. ЛЕТАЮЩИЕ ЗВЁЗДЫ ВДОЛЬ ГРАНИЦ (эффект барьера) =====
-	int flyingStarsCount = starCount / 3;
-	for (int i = 0; i < flyingStarsCount; i++)
-	{
-		Entity* starEntity = entityStorage->CreateEntity("FlyingBarrierStar", barrier);
-		Transform* starTransform = starEntity->AddComponent<Transform>();
-
-		// Случайная позиция на границе
-		float angle = (rand() % 360) * PI / 180.0f;
-		float x = center.x + cos(angle) * radius;
-		float z = center.z + sin(angle) * radius;
-		float y = center.y + heightMin + (rand() % (int)(heightMax - heightMin));
-
-		starTransform->position = point3d(x, y, z);
-
-		Star* star = starEntity->AddComponent<Star>();
-		star->radius = 0.4f;
-		star->crownRadius = 0.6f;
-		star->color1 = point3d(0.5f, 0.7f, 1.0f);
-		star->color2 = point3d(0.3f, 0.4f, 0.8f);
-		star->crownColor = point3d(0.7f, 0.9f, 1.0f);
-
-		// Движение по кругу
-		PhysicBody* physicBody = starEntity->AddComponent<PhysicBody>();
-		float speed = 5.0f + (rand() % 50) / 10.0f;
-		point3d tangent = point3d(-sin(angle), 0, cos(angle));
-		physicBody->velocity = tangent * speed;
-
-		// Ограничитель для кругового движения
-		struct CircleMover {
-			point3d center;
-			float radius;
-			float speed;
-			float angle;
-		};
-
-		// Сохраняем параметры в userData (или создаём отдельный компонент для движения по кругу)
-		// Для простоты - пусть летят по прямой, будут сталкиваться с углами
-	}
-
-	// ===== 5. ДОПОЛНИТЕЛЬНО: ЛУЧИ МЕЖДУ ЗВЁЗДАМИ (опционально, через Beam) =====
-	// Соединяем соседние звёзды в нижней окружности лучами
-	for (int i = 0; i < starsPerCircle; i++)
-	{
-		float angle1 = (i * 2.0f * PI / starsPerCircle);
-		float angle2 = ((i + 1) * 2.0f * PI / starsPerCircle);
-
-		float x1 = center.x + cos(angle1) * radius;
-		float z1 = center.z + sin(angle1) * radius;
-		float x2 = center.x + cos(angle2) * radius;
-		float z2 = center.z + sin(angle2) * radius;
-
-		Entity* beamEntity = entityStorage->CreateEntity("BarrierBeam", barrier);
-		Transform* beamTransform = beamEntity->AddComponent<Transform>();
-
-		Beam* beam = beamEntity->AddComponent<Beam>();
-		beam->point1 = point3d(x1, center.y + heightMin, z1);
-		beam->point2 = point3d(x2, center.y + heightMin, z2);
-		beam->size1 = 0.1f;
-		beam->size2 = 0.1f;
-		beam->color1 = point3d(0.3f, 0.5f, 0.9f);
-		beam->color2 = point3d(0.3f, 0.5f, 0.9f);
-		beam->opacity1 = 0.5f;
-		beam->opacity2 = 0.5f;
-
-		// Автоудаление не нужно, пусть висит
-	}
-
-	// Соединяем нижнюю и верхнюю окружность вертикальными лучами
-	for (int i = 0; i < starsPerCircle; i += 5)  // Каждую 5-ю звезду, чтобы не перегружать
-	{
-		float angle = (i * 2.0f * PI / starsPerCircle);
-		float x = center.x + cos(angle) * radius;
-		float z = center.z + sin(angle) * radius;
-
-		Entity* beamEntity = entityStorage->CreateEntity("VerticalBeam", barrier);
-		Transform* beamTransform = beamEntity->AddComponent<Transform>();
-
-		Beam* beam = beamEntity->AddComponent<Beam>();
-		beam->point1 = point3d(x, center.y + heightMin, z);
-		beam->point2 = point3d(x, center.y + heightMax, z);
-		beam->size1 = 0.08f;
-		beam->size2 = 0.08f;
-		beam->color1 = point3d(0.4f, 0.6f, 1.0f);
-		beam->color2 = point3d(0.6f, 0.4f, 1.0f);
-		beam->opacity1 = 0.4f;
-		beam->opacity2 = 0.4f;
-	}
-}
-
 void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 {
 	Entity* entity;
@@ -1678,129 +1094,6 @@ void LevelManagerClass::CreateZenithLocation(Entity* folder, int quality)
 	nebula->color = point3d(0.8, 0.4, 0.2);
 	nebula->scale = 10;
 	nebula->frustumRadius = 40;
-
-	CreateArenaBarrier(location, point3d(0, 0, 0), 52.0f, 200);
-	m_BossArenaCenter = point3d(0, 0, 200);
-	m_BossArenaRadius = 60.0f;
-
-	// ========== БОСС ==========
-	Entity* BossEntity = entityStorage->CreateEntity("BossEnemy", location);
-	m_CurrentBoss = BossEntity;
-
-	Transform* bossTransform = BossEntity->AddComponent<Transform>();
-	bossTransform->position = point3d(0.0f, 0.0f, 0.0f); 
-
-	// === КОЛЛАЙДЕР ===
-	sphereCollider = BossEntity->AddComponent<SphereCollider>();
-	sphereCollider->collisionGroup = CollisionFilter::Group::Enemy;
-	sphereCollider->radius = 3.5f;
-	BossEntity->AddComponent<CameraTarget>();
-
-	// === ЗДОРОВЬЕ ===
-	Health* health = BossEntity->AddComponent<Health>();
-	health->fraction = Fraction::Enemy;
-	health->maxHp = 2000.0f;
-	health->hp = 2000.0f;
-
-	// === ФИЗИКА ===
-	PhysicBody* testPhysic = BossEntity->AddComponent<PhysicBody>();
-	testPhysic->airFriction = 0.95f;
-	testPhysic->mass = 100.0f;
-	testPhysic->velocity = point3d(0.0f, 0.0f, 0.0f);
-
-	/*GravityPoint* gravityP = BossEntity->AddComponent<GravityPoint>();
-	gravityP->radius = 50;
-	gravityP->mass = 100;*/
-
-	// === ВИЗУАЛ ===
-	Star* testStar = BossEntity->AddComponent<Star>();
-	testStar->radius = 3.0f;
-	testStar->crownRadius = 3.5f;
-	testStar->color1 = point3d(0.8f, 0.2f, 0.8f);
-	testStar->color2 = point3d(0.5f, 0.1f, 0.5f);
-	testStar->crownColor = point3d(0.3f, 0.6f, 0.8f);
-
-	// === КОМПОНЕНТ ИИ ===
-	AIComponent* ai = BossEntity->AddComponent<AIComponent>();
-	ai->enabled = true;
-	ai->behaviorType = AIBehaviorType::BOSS_PHASE_1;
-
-	ai->detectionRange = 50.0f;      // Большой радиус обнаружения
-	ai->chaseRange = 80.0f;
-	ai->attackRange = 4.0f;
-
-	ai->movementSpeed = 8.0f;
-	ai->arrivalDistance = 2.0f;
-	ai->accelerationStrength = 5.0f;
-	ai->maxAcceleration = 20.0f;
-
-	ai->attackCooldown = 1.2f;
-	ai->attackDamage = 20.0f;
-
-	ai->stateTimer = 0.0f;
-	ai->searchDuration = 5.0f;
-	ai->searchPatrolRadius = 15.0f;
-	ai->targetId = -1;
-
-	ai->patrolPoints = {
-		point3d(-5.0f, 0.0f, -5.0f),
-		point3d(5.0f, 0.0f, -5.0f),
-		point3d(5.0f, 0.0f, 5.0f),
-		point3d(-5.0f, 0.0f, 5.0f)
-	};
-	ai->currentPatrolIndex = 0;
-
-	ai->visual.originalRadius = testStar->radius;
-	ai->visual.originalColor = testStar->color1;
-	ai->visual.attackScale = 1.5f;
-	ai->visual.attackDuration = 0.3f;
-	ai->visual.specialCastDuration = 0.5f;
-	ai->visual.specialAttackColor = point3d(1.0f, 0.3f, 0.8f);
-	ai->visual.aoePulseSpeed = 5.0f;
-
-	// === КОМПОНЕНТ БОССА (РАСКОММЕНТИРОВАН) ===
-	BossComponent* boss = BossEntity->AddComponent<BossComponent>();
-
-	// Фазы
-	boss->currentPhase = 1;
-	boss->phaseHealthThresholds[0] = 0.7f;  // 1400 HP
-	boss->phaseHealthThresholds[1] = 0.3f;  // 600 HP
-
-	// АРЕНА 100x100x100 (относительно центра арены 0,0,200)
-	boss->arenaMinX = -50.0f;
-	boss->arenaMaxX = 50.0f;
-	boss->arenaMinY = -50.0f;
-	boss->arenaMaxY = 50.0f;
-	boss->arenaMinZ = -50.0f;
-	boss->arenaMaxZ = 50.0f;
-
-	// Атаки
-	boss->dashCooldown = 2.0f;
-	boss->dashSpeed = 10.0f;
-	boss->dashDamage = 5.0f;
-
-	boss->starShotCooldown = 3.5f;
-	boss->starShotCount = 20.f;
-	boss->starShotSpeed = 15.0f;
-	boss->starShotDamage = 0.5f;
-
-	boss->sideDashCooldown = 2.5f;
-	boss->sideDashSpeed = 10.0f;
-
-	boss->aoeAttackRange = 12.0f;
-	boss->aoeDamage = 15.0f;
-
-	boss->specialAttackCooldown = 10.0f;
-	boss->rageSpeedMultiplier = 1.0f;
-
-	// Обнуляем таймеры (ВАЖНО!)
-	boss->lastSpecialAttackTime = 0.0f;
-	boss->lastDashTime = 0.0f;
-	boss->lastSideDashTime = 0.0f;
-	boss->lastStarShotTime = 0.0f;
-
-
-
 }
 
 void LevelManagerClass::CreateNebula(Entity* folder, int quality) {
@@ -2054,143 +1347,4 @@ void LevelManagerClass::ShowGameOverMessage(const wchar_t* message, const point3
 	// Автоудаление через 3 секунды
 	DelayedDestroy* delayed = gameOverContainer->AddComponent<DelayedDestroy>();
 	delayed->lifeTime = 3000;
-}
-
-void LevelManagerClass::ShowExecutionUI()
-{
-	if (m_ExecutionUI) return;
-
-	// Создаём UI для QTE
-	m_ExecutionUI = entityStorage->CreateEntity("ExecutionUI", nullptr);
-
-	// Фон
-	Entity* bg = entityStorage->CreateEntity("ExecutionBG", m_ExecutionUI);
-	Transform2D* bgTransform = bg->AddComponent<Transform2D>();
-	bgTransform->anchorPoint = point3d(0, 0, 0);
-	bgTransform->ratio = ScreenAspectRatio::XY;
-	bgTransform->position = point3d(-0.4f, -0.15f, 0);
-	bgTransform->scale = point3d(0.8f, 0.3f, 0);
-	Rect* bgRect = bg->AddComponent<Rect>();
-	bgRect->color = point3d(0, 0, 0);
-	bgRect->opacity = 0.85f;
-	bgRect->cornerRadius = 0.05f;
-
-	// Текст "НАЖМИ R!"
-	Entity* text = entityStorage->CreateEntity("ExecutionText", m_ExecutionUI);
-	Transform2D* textTransform = text->AddComponent<Transform2D>();
-	textTransform->anchorPoint = point3d(0, 0, 0);
-	textTransform->ratio = ScreenAspectRatio::XY;
-	textTransform->position = point3d(-0.2f, -0.05f, 0);
-	TextLabel* label = text->AddComponent<TextLabel>();
-	label->textW = L"НАЖМИ  R";
-	label->fontFamilyW = L"Impact";
-	label->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
-	label->fontWeight = 900;
-	label->fontSizePx = 60;
-	label->fontScale = 1.2f;
-	label->color = point3d(1.0f, 0.8f, 0.2f);
-
-	// Текст "ДЛЯ КАЗНИ"
-	Entity* subText = entityStorage->CreateEntity("ExecutionSubText", m_ExecutionUI);
-	Transform2D* subTransform = subText->AddComponent<Transform2D>();
-	subTransform->anchorPoint = point3d(0, 0, 0);
-	subTransform->ratio = ScreenAspectRatio::XY;
-	subTransform->position = point3d(-0.25f, 0.05f, 0);
-	TextLabel* subLabel = subText->AddComponent<TextLabel>();
-	subLabel->textW = L"ДЛЯ КАЗНИ";
-	subLabel->fontFamilyW = L"Impact";
-	subLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
-	subLabel->fontWeight = 700;
-	subLabel->fontSizePx = 35;
-	subLabel->fontScale = 1.0f;
-	subLabel->color = point3d(1.0f, 1.0f, 1.0f);
-
-	// Таймер обратного отсчёта
-	Entity* timerText = entityStorage->CreateEntity("ExecutionTimer", m_ExecutionUI);
-	Transform2D* timerTransform = timerText->AddComponent<Transform2D>();
-	timerTransform->anchorPoint = point3d(0, 0, 0);
-	timerTransform->ratio = ScreenAspectRatio::XY;
-	timerTransform->position = point3d(-0.05f, -0.2f, 0);
-	TextLabel* timerLabel = timerText->AddComponent<TextLabel>();
-	timerLabel->textW = L"5.0";
-	timerLabel->fontFamilyW = L"Impact";
-	timerLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
-	timerLabel->fontWeight = 700;
-	timerLabel->fontSizePx = 40;
-	timerLabel->fontScale = 1.0f;
-	timerLabel->color = point3d(1.0f, 0.3f, 0.3f);
-}
-
-void LevelManagerClass::HideExecutionUI()
-{
-	if (m_ExecutionUI)
-	{
-		m_ExecutionUI->SetActive(false);
-		m_ExecutionUI = nullptr;
-	}
-}
-
-void LevelManagerClass::ExecuteBoss()
-{
-	if (!m_CurrentBoss) return;
-
-	Health* bossHealth = m_CurrentBoss->GetComponent<Health>();
-	if (bossHealth)
-	{
-		bossHealth->hp = 0;  // Убиваем босса
-		//Log("BOSS EXECUTED!\n");
-	}
-
-	HideExecutionUI();
-	m_IsExecutionActive = false;
-
-	// Показываем победу
-	Entity* msg = entityStorage->CreateEntity("VictoryMsg", nullptr);
-	Transform2D* t = msg->AddComponent<Transform2D>();
-	t->anchorPoint = point3d(0, 0, 0);
-	t->ratio = ScreenAspectRatio::XY;
-	t->position = point3d(-0.25f, -0.1f, 0);
-
-	TextLabel* text = msg->AddComponent<TextLabel>();
-	text->textW = L"ПОБЕДА!";
-	text->fontFamilyW = L"Impact";
-	text->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
-	text->fontWeight = 900;
-	text->fontSizePx = 80;
-	text->fontScale = 1.5f;
-	text->color = point3d(0.2f, 0.8f, 0.2f);
-
-	DelayedDestroy* d = msg->AddComponent<DelayedDestroy>();
-	d->lifeTime = 3000;
-
-	// Отключаем босса
-	AIComponent* bossAI = m_CurrentBoss->GetComponent<AIComponent>();
-	if (bossAI) bossAI->enabled = false;
-}
-
-void LevelManagerClass::TriggerExecution()
-{
-	if (m_IsExecutionActive) return;
-
-	// Проверяем, что босс ещё жив
-	Health* bossHealth = m_CurrentBoss->GetComponent<Health>();
-	if (!bossHealth || bossHealth->hp <= 0) return;
-
-	m_IsExecutionActive = true;
-	m_ExecutionTimer = 5.0f;  // 5 секунд на казнь
-
-	// Останавливаем босса
-	AIComponent* bossAI = m_CurrentBoss->GetComponent<AIComponent>();
-	if (bossAI) bossAI->enabled = false;
-
-	// Визуальный эффект - босс становится беззащитным
-	Star* bossStar = m_CurrentBoss->GetComponent<Star>();
-	if (bossStar)
-	{
-		bossStar->color1 = point3d(0.5f, 0.5f, 0.5f);  // Серый
-		bossStar->crownColor = point3d(0.3f, 0.3f, 0.3f);
-	}
-
-	// Показываем UI
-	ShowExecutionUI();
 }

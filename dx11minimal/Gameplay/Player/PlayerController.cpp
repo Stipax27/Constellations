@@ -45,8 +45,6 @@ void PlayerController::Initialize(Entity* Player)
 	bossHealthBar = ui->GetChildByName("BossHealth", true);
 	elementLabel = ui->GetChildByName("ElementLabel", true);
 
-	bossHealth = world->entityStorage->GetEntityByName("Aries")->GetComponent<Health>();
-
 	camera = world->m_Camera;
 	mouse = Singleton::GetInstance<MouseClass>();
 	window = Singleton::GetInstance<WindowClass>();
@@ -402,29 +400,6 @@ void PlayerController::ProcessUI()
 
 	Transform2D* staminaTransform = staminaBar->GetComponent<Transform2D>();
 	staminaTransform->scale = point3d(abilities->stamina / abilities->maxStamina, 1, 0);
-
-	Entity* entity = entityStorage->GetEntityByName("ExecutionLabel");
-	TextLabel* executionLabel = entity->GetComponent<TextLabel>();
-
-	if (abilities->ExecutionObject != nullptr) {
-		std::string narrow_str = abilities->ExecutionObject->name;
-		int size_needed = MultiByteToWideChar(CP_ACP, 0,
-			narrow_str.c_str(), -1, nullptr, 0);
-		std::wstring wide_str(size_needed, 0);
-		MultiByteToWideChar(CP_ACP, 0, narrow_str.c_str(), -1,
-			&wide_str[0], size_needed);
-		wide_str.pop_back();
-
-		executionLabel->textW = wide_str;
-	}
-	else {
-		executionLabel->textW = L"НИЧЕГО";
-	}
-
-	if (bossHealth != nullptr) {
-		Transform2D* bossHealthBarTransform = bossHealthBar->GetComponent<Transform2D>();
-		bossHealthBarTransform->scale = point3d(bossHealth->GetHealthRatio() * 0.5f, bossHealthBarTransform->scale.y, 0);
-	}
 
 	TextLabel* elementText = elementLabel->GetComponent<TextLabel>();
 	switch (abilities->element)
