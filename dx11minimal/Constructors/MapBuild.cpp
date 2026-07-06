@@ -59,6 +59,10 @@ void MapBuild::CreateRotatingStar(const Transform& onTransform, float rotateSpee
 	transform = starEntity->AddComponent<Transform>();
 	transform->position = point3d(0, 0, 50);
 
+	rotatingBody = starEntity->AddComponent<RotatingBody>();
+	rotatingBody->axis = axis;
+	rotatingBody->rotateSpeed = -rotateSpeed;
+
 	Star* star = starEntity->AddComponent<Star>();
 	star->radius = 2.0f;
 
