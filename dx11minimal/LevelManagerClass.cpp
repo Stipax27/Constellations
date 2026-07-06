@@ -636,23 +636,7 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 	health->fraction = Fraction::Player;
 	health->destroyOnDeath = false;
 
-	/*Constellation* constellation = player->AddComponent<Constellation>();
-	constellation->stars = {
-		point3d(-0.09, -0.7, 0),
-		point3d(-0.05, -0.15, 0),
-		point3d(0, 0, 0),
-		point3d(-0.4, 0.5, 0),
-		point3d(0, 0, 0),
-		point3d(0.4, 0.3, 0)
-	};
-	constellation->links = {
-		{0,1},
-		{1,2},
-		{2,3},
-		{2,5}
-	};*/
-
-	StarClay* starClay = player->AddComponent<StarClay>();
+	/*StarClay* starClay = player->AddComponent<StarClay>();
 	starClay->blobsRadius = { 0.2f, 0.4f };
 	starClay->rate = 20;
 
@@ -661,7 +645,7 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 	pointCloud->scale = point3d(0.3f, 0.3f, 0.3f);
 	pointCloud->pointSize = 0.01f;
 	pointCloud->brightness = 0.2f;
-	pointCloud->color = point3d(1, 0.6f, 0.9f);
+	pointCloud->color = point3d(1, 0.6f, 0.9f);*/
 
 	Entity* grabHitbox = entityStorage->CreateEntity("GrabHitbox", player);
 	transform = grabHitbox->AddComponent<Transform>();
