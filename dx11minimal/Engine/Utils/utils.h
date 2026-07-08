@@ -23,7 +23,8 @@ float clamp(float x, float a, float b);
 float fract(float);
 //float lerp(float x1, float x2, float a);
 
-float degreesToRadians(float);
+float degreesToRadians(float degrees);
+float radiansToDegrees(float radians);
 
 DirectX::XMMATRIX GetMatrixBetweenLookVector(Transform& transform, point3d direction);
 DirectX::XMMATRIX GetMatrixFromDirection(const point3d& direction, point3d upVector = point3d(0.0f, 1.0f, 0.0f));
@@ -60,5 +61,9 @@ point3d rgbToHsl(const point3d&);
 point3d rotateInPlane(const point3d&, const point3d&, float);
 
 DirectX::XMMATRIX LerpMatrix(const DirectX::XMMATRIX& from, const DirectX::XMMATRIX& to, float t);
+
+point3d GetLookVectorFromMatrix(const DirectX::XMMATRIX& matrix);
+point3d GetUpVectorFromMatrix(const DirectX::XMMATRIX& matrix);
+point3d GetRightVectorFromMatrix(const DirectX::XMMATRIX& matrix);
 
 #endif

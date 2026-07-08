@@ -80,7 +80,7 @@ public:
 		return raw_ptr;
 	}
 
-	void Initialize();
+	void Initialize() override;
 	void Shutdown();
 
 	void PreCalculations();

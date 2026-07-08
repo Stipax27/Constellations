@@ -2,7 +2,7 @@
 #define _COMBO_MANAGER_H_
 
 #include "combo.h"
-#include "../../Lib/singleton.h"
+#include "../../../Engine/Lib/singleton.h"
 #include "../PlayerAbilities.h"
 
 /////////////
@@ -22,7 +22,7 @@
 class ComboManager : public ISingleton
 {
 public:
-	void Initialize();
+	void Initialize() override;
 	void Update();
 
 	void SaveInput(ComboInputType input);

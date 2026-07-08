@@ -1,6 +1,9 @@
 #include "PlayerAbilities.h"
 
-#include "../Lib/timer.h"
+#include "../../Engine/Lib/timer.h"
+#include "../../Engine/Lib/interp.h"
+
+#include "../MazeLinks.h"
 
 using namespace std;
 
@@ -18,17 +21,18 @@ PlayerAbilities::~PlayerAbilities()
 }
 
 
-void PlayerAbilities::Initialize(Entity* PlayerEntity, EntityStorage* storage)
+void PlayerAbilities::Initialize()
 {
 	weapon = PlayerWeapons::Fists;
 	element = Elements::None;
 
 	world = Singleton::GetInstance<World>();
-	entityStorage = storage;
+	entityStorage = Singleton::GetInstance<EntityStorage>();
 	camera = Singleton::GetInstance<CameraClass>();
+	mouse = Singleton::GetInstance<MouseClass>();
 	collisionManager = Singleton::GetInstance<CollisionManagerClass>();
 
-	playerEntity = PlayerEntity;
+	playerEntity = entityStorage->GetEntityByName("Player");
 	worldFolder = entityStorage->GetEntityByName("World");
 
 	maxStamina = 1000;
@@ -1003,4 +1007,29 @@ Nebula* PlayerAbilities::FindNearestNebula()
 	}
 
 	return nullptr;
+}
+
+
+void PlayerAbilities::Grap()
+{
+	point3d mouseDirection = mouse->GetMouseDirection();
+	RayInfo rayInfo = RayInfo(camera->position, mouseDirection * RAY_DISTANCE, CollisionFilter::Group::PlayerRay, false);
+	RaycastResult result = collisionManager->Raycast(rayInfo);
+
+	if (result.hit) {
+		Entity* parent = playerEntity->GetParent();
+		if (parent && parent->name == "RotatingStar" && MazeLink::FindStarPair(parent, result.entity) == -1)
+			return;
+
+		Transform* playerTransform = playerEntity->GetComponent<Transform>();
+
+		Transform relativeTransform = GetRelativeTransform(GetWorldTransform(result.entity), GetWorldTransform(playerEntity));
+		float time = relativeTransform.position.magnitude() / 100.0f;
+
+		playerEntity->SetParent(result.entity);
+		playerTransform->position = relativeTransform.position;
+		playerTransform->mRotation = XMMatrixIdentity();
+
+		interp::Animate(playerTransform->position, point3d(0, 3, 0), time, interp::Curve::EaseOutQuad);
+	}
 }

@@ -8,32 +8,33 @@
 //////////////
 // INCLUDES //
 //////////////
-#include "../Lib/isingleton.h"
-#include "../Lib/input.h"
+#include "../../Engine/Lib/isingleton.h"
+#include "../../Engine/Lib/input.h"
 
-#include "../Camera/cameraclass.h"
-#include "../Mouse/mouseclass.h"
-#include "../Window/windowclass.h"
+#include "../../Engine/Camera/cameraclass.h"
+#include "../../Engine/Mouse/mouseclass.h"
+#include "../../Engine/Window/windowclass.h"
 
-#include "../Lib/timer.h"
-#include "../ECS_Base/world.h"
-#include "../ECS_Base/entity.h"
+#include "../../Engine/Lib/timer.h"
+#include "../../Engine/ECS_Base/world.h"
+#include "../../Engine/ECS_Base/entity.h"
 
-#include "../BasicComponents/Transform.h"
-#include "../Physic/Movement/PhysicBody.h"
-#include "../Render/PointCloud.h"
-#include "../Compute/Combat/Health.h"
+#include "../../Engine/BasicComponents/Transform.h"
+#include "../../Engine/Physic/Movement/PhysicBody.h"
+#include "../../Engine/Render/PointCloud.h"
+#include "../../Engine/Compute/Combat/Health.h"
 #include "CameraTarget.h"
 
 #include "PlayerAbilities.h"
+#include "MovementTypes.h"
 #include "Combo/comboManager.h"
+
+#include "../../GlobalConfigs.h"
 
 
 /////////////
 // GLOBALS //
 /////////////
-#define SENSIVITY 3.5f
-
 const float CURSOR_IGNORE_ZONE = 0.05f;
 const float MAX_CURSOR_DEVIATION = 0.45f;
 const float CURSOR_ZONE_DELTA = MAX_CURSOR_DEVIATION - CURSOR_IGNORE_ZONE;
@@ -55,7 +56,6 @@ class PlayerController
 {
 public:
 	PlayerAbilities* abilities;
-	Health* bossHealth;
 
 public:
 	PlayerController();
@@ -68,10 +68,13 @@ public:
 	void ProcessInput();
 	void ProcessCamera();
 	void ProcessMouse();
-	void ProccessUI();
+	void ProcessUI();
+
+	void ProcessMovement();
 
 private:
 	ComboManager* comboManager;
+	MovementType movementType;
 
 	EntityStorage* entityStorage;
 	CollisionManagerClass* collisionManager;

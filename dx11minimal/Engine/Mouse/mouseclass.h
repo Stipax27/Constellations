@@ -52,7 +52,7 @@ public:
 	MouseClass(const MouseClass&);
 	~MouseClass();
 
-	void Initialize();
+	void Initialize() override;
 	void Shutdown();
 	void Update();
 

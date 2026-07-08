@@ -54,7 +54,12 @@ float fract(float a) {
 
 
 float degreesToRadians(float degrees) {
-    return degrees * PI / 180.0f;
+    return DirectX::XMConvertToRadians(degrees);
+}
+
+
+float radiansToDegrees(float radians) {
+    return DirectX::XMConvertToDegrees(radians);
 }
 
 
@@ -492,4 +497,17 @@ DirectX::XMMATRIX LerpMatrix(const DirectX::XMMATRIX& from, const DirectX::XMMAT
     DirectX::XMVECTOR resultQuat = XMQuaternionSlerp(fromQuat, toQuat, t);
 
     return XMMatrixRotationQuaternion(resultQuat);
+}
+
+
+point3d GetLookVectorFromMatrix(const DirectX::XMMATRIX& matrix) {
+    return point3d(matrix.r[2].m128_f32[0], matrix.r[2].m128_f32[1], matrix.r[2].m128_f32[2]).normalized();
+}
+
+point3d GetUpVectorFromMatrix(const DirectX::XMMATRIX& matrix) {
+    return point3d(matrix.r[1].m128_f32[0], matrix.r[1].m128_f32[1], matrix.r[1].m128_f32[2]).normalized();
+}
+
+point3d GetRightVectorFromMatrix(const DirectX::XMMATRIX& matrix) {
+    return point3d(matrix.r[0].m128_f32[0], matrix.r[0].m128_f32[1], matrix.r[0].m128_f32[2]).normalized();
 }

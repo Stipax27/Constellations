@@ -1,9 +1,9 @@
 #include "comboManager.h"
-#include "../../Lib/timer.h"
+#include "../../../Engine/Lib/timer.h"
 
-#include "../../BasicComponents/Transform2D.h"
-#include "../../UI/Text/TextLabel.h"
-#include "../../Compute/DelayedDestroy/DelayedDestroy.h"
+#include "../../../Engine/BasicComponents/Transform2D.h"
+#include "../../../Engine/UI/Text/TextLabel.h"
+#include "../../../Engine/Compute/DelayedDestroy/DelayedDestroy.h"
 
 #include "fistsCombos.h"
 

@@ -21,6 +21,7 @@ namespace Singleton
 
 		if (instance == nullptr) {
 			instance = new T;
+			instance->Initialize();
 			_instances[typeid(T)] = instance;
 		}
 

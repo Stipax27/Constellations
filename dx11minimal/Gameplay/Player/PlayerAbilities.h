@@ -1,38 +1,38 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Filename: PlayerAbilities.h
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _PLAYER_ABILITIES_H_
-#define _PLAYER_ABILITIES_H_
+#pragma once
 
 //////////////
 // INCLUDES //
 //////////////
-#include "../Lib/isingleton.h"
-#include "../Camera/cameraclass.h"
+#include "../../Engine/Lib/singleton.h"
+#include "../../Engine/Camera/cameraclass.h"
+#include "../../Engine/Mouse/mouseclass.h"
 
-#include "../ECS_Base/world.h"
-#include "../ECS_Base/entity.h"
+#include "../../Engine/ECS_Base/world.h"
+#include "../../Engine/ECS_Base/entity.h"
 
-#include "../Types/Point3d.h"
-#include "../Utils/componentutils.h"
+#include "../../Engine/Types/Point3d.h"
+#include "../../Engine/Utils/componentutils.h"
 
-#include "../BasicComponents/Transform.h"
-#include "../Physic/Movement/PhysicBody.h"
-#include "../Physic/Collision/SphereCollider.h"
-#include "../Render/Star.h"
-#include "../Compute/DelayedDestroy/DelayedDestroy.h"
-#include "../Compute/Combat/SingleDamager.h"
-#include "../Render/ParticleEmitter.h"
-#include "../Render/Beam.h"
-#include "../Render/PointCloud.h"
-#include "../Compute/Combat/Health.h"
-#include "../Compute/Combat/DamageBlocker.h"
-#include "../Render/Mesh/Mesh.h"
+#include "../../Engine/BasicComponents/Transform.h"
+#include "../../Engine/Physic/Movement/PhysicBody.h"
+#include "../../Engine/Physic/Collision/SphereCollider.h"
+#include "../../Engine/Render/Star.h"
+#include "../../Engine/Compute/DelayedDestroy/DelayedDestroy.h"
+#include "../../Engine/Compute/Combat/SingleDamager.h"
+#include "../../Engine/Render/ParticleEmitter.h"
+#include "../../Engine/Render/Beam.h"
+#include "../../Engine/Render/PointCloud.h"
+#include "../../Engine/Compute/Combat/Health.h"
+#include "../../Engine/Compute/Combat/DamageBlocker.h"
+#include "../../Engine/Render/Mesh/Mesh.h"
 
-#include "../Render/Nebula/Nebula.h"
+#include "../../Engine/Render/Nebula/Nebula.h"
 
-#include "../BasicComponents/Transform2D.h"
-#include "../Physic/Collision/CollisionManagerClass.h"
+#include "../../Engine/BasicComponents/Transform2D.h"
+#include "../../Engine/Physic/Collision/CollisionManagerClass.h"
 
 #include "Grabbable.h"
 #include "attackTable.h"
@@ -57,10 +57,6 @@
 
 #define RADAR_START_RADIUS 1.f
 #define RADAR_FINAL_RADIUS 150.f
-
-// Данные шкалы змеинной прыти
-
-#define SNAKE_FORM_MAX_VALUE 100
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -93,14 +89,11 @@ public:
 
 	void StartRadar();
 	
-
-
-public:
 	PlayerAbilities();
 	PlayerAbilities(const PlayerAbilities&);
 	~PlayerAbilities();
 
-	void Initialize(Entity*, EntityStorage*);
+	void Initialize() override;
 	void Shutdown();
 	void Update();
 
@@ -115,12 +108,15 @@ public:
 	void Grab();
 	void Execution();
 
+	void Grap();
+
 	
 
 private:
 	World* world;
 	EntityStorage* entityStorage;
 	CameraClass* camera;
+	MouseClass* mouse;
 	CollisionManagerClass* collisionManager;
 
 	Entity* playerEntity;
@@ -187,5 +183,3 @@ private:
 
 	Nebula* FindNearestNebula();
 };
-
-#endif

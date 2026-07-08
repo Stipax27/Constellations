@@ -18,9 +18,9 @@ CollisionManagerClass::~CollisionManagerClass()
 }
 
 
-void CollisionManagerClass::Initialize(EntityStorage& entityStorage)
+void CollisionManagerClass::Initialize()
 {
-    this->entityStorage = &entityStorage;
+    entityStorage = Singleton::GetInstance<EntityStorage>();
 }
 
 

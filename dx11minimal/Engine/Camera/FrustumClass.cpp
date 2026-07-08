@@ -19,6 +19,7 @@ FrustumClass::~FrustumClass()
 }
 
 
+
 void FrustumClass::ConstructFrustum(XMMATRIX viewMatrix, XMMATRIX projectionMatrix, float screenDepth) {
     XMMATRIX finalMatrix;
     XMFLOAT4X4 projMatrix, matrix;
