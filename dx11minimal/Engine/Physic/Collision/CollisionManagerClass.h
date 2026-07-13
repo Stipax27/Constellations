@@ -50,6 +50,32 @@ struct RayInfo {
 	{}
 };
 
+struct SphereCastInfo {
+	point3d origin;
+	point3d direction;
+	float radius;           // Радиус сферы для SphereCast
+	float maxDistance;      // Максимальная дистанция
+	CollisionFilter::Group collisionGroup;
+	bool touchableOnly;
+
+	SphereCastInfo()
+	{
+		origin = point3d();
+		direction = point3d();
+		radius = 0.5f;
+		maxDistance = 100.0f;
+		collisionGroup = CollisionFilter::Group::Projectile;
+		touchableOnly = false;
+	}
+
+	SphereCastInfo(point3d Origin, point3d Direction, float Radius, float MaxDistance,
+		CollisionFilter::Group CollisionGroup, bool TouchableOnly = false)
+		: origin(Origin), direction(Direction), radius(Radius), maxDistance(MaxDistance),
+		collisionGroup(CollisionGroup), touchableOnly(TouchableOnly)
+	{
+	}
+};
+
 struct RaycastResult {
 	bool hit = false;
 	float distance = INFINITY;
