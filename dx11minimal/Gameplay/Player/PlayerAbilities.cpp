@@ -1014,15 +1014,16 @@ void PlayerAbilities::Grap()
 {
 	point3d mouseDirection = mouse->GetMouseDirection();
 	RayInfo rayInfo = RayInfo(camera->position, mouseDirection * RAY_DISTANCE, CollisionFilter::Group::PlayerRay, false);
-	RaycastResult result = collisionManager->Raycast(rayInfo);
+	SphereCastInfo sphereCastInfo(camera->position, mouseDirection, 1.8f, /*radius(радиус сферы)*/RAY_DISTANCE, CollisionFilter::Group::PlayerRay,false);
+	//Выбрать рейкаст или сферкаст
+	RaycastResult result = collisionManager->Spherecast(sphereCastInfo);//Raycast(rayInfo) или Spherecast(sphereCastInfo)
 
-	if (result.hit) {
+	if (result.hit && result.entity != nullptr) {
 		Entity* parent = playerEntity->GetParent();
 		if (parent && parent->name == "RotatingStar" && MazeLink::FindStarPair(parent, result.entity) == -1)
 			return;
 
 		Transform* playerTransform = playerEntity->GetComponent<Transform>();
-
 		Transform relativeTransform = GetRelativeTransform(GetWorldTransform(result.entity), GetWorldTransform(playerEntity));
 		float time = relativeTransform.position.magnitude() / 100.0f;
 
