@@ -81,6 +81,9 @@ struct TypePair {
 class CollisionManagerClass : public ISingleton
 {
 public:
+	static std::map<TypePair, CollisionFn> collisionMap;
+
+public:
 	CollisionManagerClass();
 	~CollisionManagerClass();
 	CollisionManagerClass(const CollisionManagerClass&);
@@ -93,11 +96,12 @@ public:
 		const Transform t2, const SphereCollider* c2);
 
 	RaycastResult Raycast(const RayInfo& ray);
-	static std::map<TypePair, CollisionFn> collisionMap;
+	RaycastResult Spherecast(const SphereCastInfo& sphereCast);
 
 private:
 	EntityStorage* entityStorage = nullptr;
 	bool raycast_sphere(const RayInfo&, const Transform, const SphereCollider*, RaycastResult&);
+	bool spherecast_sphere(const SphereCastInfo&, const Transform&, const SphereCollider*, RaycastResult&);
 };
 
 #endif
