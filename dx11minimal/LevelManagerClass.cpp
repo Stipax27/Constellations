@@ -99,6 +99,14 @@ bool LevelManagerClass::Initialize()
 
 	worldFolder = entityStorage->CreateEntity("World");
 
+	Transform test = Transform();
+	test.position = point3d(1, 2, 3);
+	test.scale = point3d(4, 5, 6);
+	test.mRotation = XMMatrixIdentity();
+
+	nlohmann::json j = test;
+	std::ofstream("..\\dx11minimal\\Resourses\\EntitySaves\\TEST.json") << j.dump(4);
+
 	Entity* player = CreatePlayer();
 
 	MapBuild::BuildMaze();

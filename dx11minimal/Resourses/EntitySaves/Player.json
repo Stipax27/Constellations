@@ -1,35 +1,37 @@
 {
-    "name": "Player",
     "active": true,
-    "timeScale": 1.0,
-    "components": [
-        {
-            "type": "Component"
-        },
-        {
-            "type": "Component"
-        },
-        {
-            "type": "Component"
-        },
-        {
-            "type": "Component"
-        }
-    ],
     "children": [
         {
-            "name": "GrabHitbox",
             "active": true,
-            "timeScale": 1.0,
+            "children": [],
             "components": [
                 {
-                    "type": "Component"
+                    "active": true
                 },
                 {
-                    "type": "Component"
+                    "active": true
                 }
             ],
-            "children": []
+            "id": 2,
+            "name": "GrabHitbox",
+            "timeScale": 1.0
         }
-    ]
+    ],
+    "components": [
+        {
+            "active": true
+        },
+        {
+            "active": true
+        },
+        {
+            "active": true
+        },
+        {
+            "active": true
+        }
+    ],
+    "id": 1,
+    "name": "Player",
+    "timeScale": 1.0
 }

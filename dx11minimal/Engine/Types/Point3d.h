@@ -5,6 +5,8 @@
 #include <corecrt_math.h>
 #include "DirectXMath.h"
 
+#include <nlohmann/json.hpp>
+
 struct point3d {
     float x = 0.0f;
     float y = 0.0f;
@@ -53,5 +55,10 @@ struct point3d {
 inline point3d operator*(float scalar, const point3d& p) {
     return p * scalar;
 }
+
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(point3d,
+    x,
+    y,
+    z)
 
 #endif

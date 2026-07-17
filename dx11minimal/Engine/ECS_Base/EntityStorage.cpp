@@ -13,11 +13,14 @@
 #include "../../Vendors/rapidjson-1.1.0/include/rapidjson/stringbuffer.h"
 #include "../../Vendors/rapidjson-1.1.0/include/rapidjson/prettywriter.h"
 
+#include <nlohmann/json.hpp>
+
 #include "../Lib/class_name.h"
 #include "../Lib/logging.h"
 
 using namespace std;
 using namespace rapidjson;
+using json = nlohmann::json;
 
 #define SAVE_DIRECTORY "..\\dx11minimal\\Resourses\\EntitySaves\\"
 #define EXTENSION ".json"
@@ -41,82 +44,83 @@ static void WriteStringToFile(const string& filepath, const string& content) {
     }
 }
 
-static Value Serialize(Entity* entity, Document::AllocatorType& allocator) {
-    Value obj(kObjectType);
+template<typename T>
+static json SerializeComponent(T* component) {
+    json j;
+    to_json(j, *component);
+    return j;
+}
 
-    obj.AddMember("name", Value(entity->name.c_str(), allocator), allocator);
-    obj.AddMember("active", entity->IsLocalActive(), allocator);
-    obj.AddMember("timeScale", entity->GetLocalTimeScale(), allocator);
+// Десериализация компонента (универсальная)
+template<typename T>
+static void DeserializeComponent(T* component, const json& j) {
+    from_json(j, *component);
+}
 
-    Value componentsArray(kArrayType);
+static json SerializeEntity(Entity* entity) {
+    json obj;
 
+    obj["name"] = entity->name;
+    obj["active"] = entity->IsLocalActive();
+    obj["timeScale"] = entity->GetLocalTimeScale();
+    obj["id"] = entity->GetId();
+
+    // Сериализуем компоненты
+    json componentsArray = json::array();
     for (const auto& pair : entity->GetComponents()) {
         auto* component = pair.second;
 
-        Value componentObj(kObjectType);
-        componentObj.AddMember("type", Value(class_name<decltype(component)>().c_str(), allocator), allocator);
+        json data = *component;
 
-        //// Получаем данные компонента в виде JSON
-        //Value componentData = component->Serialize(allocator);
-        //componentObj.AddMember("data", componentData, allocator);
+        //const std::type_info& type = typeid(*component);
+        //componentObj["type"] = type.name(); // или class_name<decltype(component)>().c_str()
 
-        componentsArray.PushBack(componentObj, allocator);
+        componentsArray.push_back(data);
     }
+    obj["components"] = componentsArray;
 
-    obj.AddMember("components", componentsArray, allocator);
-
-    Value childrenArray(kArrayType);
+    // Рекурсивно сериализуем детей
+    json childrenArray = json::array();
     for (Entity* child : entity->GetChildren()) {
-        childrenArray.PushBack(Serialize(child, allocator), allocator);
+        childrenArray.push_back(SerializeEntity(child));
     }
-    obj.AddMember("children", childrenArray, allocator);
+    obj["children"] = childrenArray;
 
     return obj;
 }
 
-static void Deserialize(Entity* entity, const Value& jsonObj) {
-    if (!jsonObj.IsObject()) return;
+static void DeserializeEntity(Entity* entity, const json& j, EntityStorage* storage) {
+    if (!j.is_object()) return;
 
-    if (jsonObj.HasMember("name") && jsonObj["name"].IsString()) {
-        entity->name = jsonObj["name"].GetString();
+    // Базовые свойства
+    if (j.contains("name") && j["name"].is_string()) {
+        entity->name = j["name"].get<string>();
     }
 
-    if (jsonObj.HasMember("active") && jsonObj["active"].IsBool()) {
-        entity->SetActive(jsonObj["active"].GetBool());
+    if (j.contains("active") && j["active"].is_boolean()) {
+        entity->SetActive(j["active"].get<bool>());
     }
 
-    if (jsonObj.HasMember("timeScale") && jsonObj["timeScale"].IsDouble()) {
-        entity->SetTimeScale(jsonObj["timeScale"].GetFloat());
+    if (j.contains("timeScale") && j["timeScale"].is_number()) {
+        entity->SetTimeScale(j["timeScale"].get<float>());
     }
 
     // Загружаем компоненты
-    if (jsonObj.HasMember("components") && jsonObj["components"].IsArray()) {
-        const Value& componentsArray = jsonObj["components"];
+    if (j.contains("components") && j["components"].is_array()) {
+        const auto& componentsArray = j["components"];
 
-        for (SizeType i = 0; i < componentsArray.Size(); i++) {
-            const Value& compObj = componentsArray[i];
+        for (const json& compObj : componentsArray) {
 
-            if (compObj.HasMember("type") && compObj["type"].IsString()) {
-                string componentType = compObj["type"].GetString();
-
-                // Здесь нужно создать компонент нужного типа через фабрику
-                // Component* newComponent = ComponentFactory::Create(componentType);
-                // if (newComponent != nullptr) {
-                //     newComponent->Deserialize(compObj["data"]);
-                //     components[type_index(typeid(*newComponent))] = newComponent;
-                // }
-            }
         }
     }
 
     // Загружаем дочерние Entity
-    if (jsonObj.HasMember("children") && jsonObj["children"].IsArray()) {
-        const Value& childrenArray = jsonObj["children"];
+    if (j.contains("children") && j["children"].is_array()) {
+        const auto& childrenArray = j["children"];
 
-        for (SizeType i = 0; i < childrenArray.Size(); i++) {
-            Entity* child = new Entity();
-            Deserialize(child, childrenArray[i]);
-            child->SetParent(entity);
+        for (const auto& childJson : childrenArray) {
+            Entity* child = storage->CreateEntity("Child", entity);
+            DeserializeEntity(child, childJson, storage);
         }
     }
 }
@@ -251,42 +255,77 @@ const vector<Entity*>& EntityStorage::GetEntitiesWithComponent(const type_index&
 
 
 void EntityStorage::SaveEntityToFile(Entity* entity, const string& filename) {
-    Document doc;
-    doc.SetObject();
-    Document::AllocatorType& allocator = doc.GetAllocator();
+    if (!entity) {
+        Log("ERROR: Cannot save null entity\n");
+        return;
+    }
 
-    Value serialized = Serialize(entity, allocator);
+    try {
+        // Создаем директорию, если её нет
+        filesystem::create_directories(SAVE_DIRECTORY);
 
-    StringBuffer buffer;
-    PrettyWriter<StringBuffer> writer(buffer);
-    serialized.Accept(writer);
+        json j = SerializeEntity(entity);
 
-    string fullPath = SAVE_DIRECTORY + filename + EXTENSION;
-    WriteStringToFile(fullPath, buffer.GetString());
+        string fullPath = string(SAVE_DIRECTORY) + filename + EXTENSION;
+
+        ofstream file(fullPath);
+        if (!file.is_open()) {
+            Log(("ERROR: Cannot open file for writing: " + fullPath + "\n").c_str());
+            return;
+        }
+
+        file << j.dump(4);
+        file.close();
+
+        Log(("Entity saved to: " + fullPath + "\n").c_str());
+    }
+    catch (const json::exception& e) {
+        Log(("JSON serialization error: " + string(e.what()) + "\n").c_str());
+    }
+    catch (const exception& e) {
+        Log(("Error saving entity: " + string(e.what()) + "\n").c_str());
+    }
 }
 
 Entity* EntityStorage::LoadEntityFromFile(const string& filename) {
-    Entity* entity = CreateEntity();
+    string fullPath = string(SAVE_DIRECTORY) + filename + EXTENSION;
 
-    string fullPath = SAVE_DIRECTORY + filename + EXTENSION;
-    string jsonStr = ReadFileToString(fullPath);
+    try {
+        if (!filesystem::exists(fullPath)) {
+            Log(("ERROR: File not found: " + fullPath + "\n").c_str());
+            return nullptr;
+        }
 
-    if (jsonStr.empty()) {
-        Log("Attempt to read an empty file. Filename: ");
-        Log(fullPath.c_str());
-        Log("\n");
+        ifstream file(fullPath);
+        if (!file.is_open()) {
+            Log(("ERROR: Cannot open file for reading: " + fullPath + "\n").c_str());
+            return nullptr;
+        }
 
+        json j;
+        file >> j;
+        file.close();
+
+        if (!j.is_object()) {
+            Log("ERROR: Invalid JSON format\n");
+            return nullptr;
+        }
+
+        Entity* entity = CreateEntity();
+        DeserializeEntity(entity, j, this);
+
+        Log(("Entity loaded from: " + fullPath + "\n").c_str());
+        return entity;
+
+    }
+    catch (const json::parse_error& e) {
+        Log(("JSON parse error: " + string(e.what()) + "\n").c_str());
         return nullptr;
     }
-
-    Document doc;
-    doc.Parse(jsonStr.c_str());
-
-    if (!doc.HasParseError() && doc.IsObject()) {
-        Deserialize(entity, doc);
+    catch (const exception& e) {
+        Log(("Error loading entity: " + string(e.what()) + "\n").c_str());
+        return nullptr;
     }
-
-    return entity;
 }
 
 

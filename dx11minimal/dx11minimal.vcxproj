@@ -296,6 +296,7 @@
     <ClInclude Include="Engine\Lib\SerializationMacros.h" />
     <ClInclude Include="Engine\Physic\Movement\RotatingBody.h" />
     <ClInclude Include="Engine\Physic\Movement\RotatingSystem.h" />
+    <ClInclude Include="Engine\Serialization\componentSerializers.h" />
     <ClInclude Include="Gameplay\MazeLinks.h" />
     <ClInclude Include="Gameplay\Player\attackTable.h" />
     <ClInclude Include="Engine\Compute\Combat\elements.h" />
@@ -1272,6 +1273,7 @@
     <ClCompile Include="Engine\Compute\Combat\CombatSystem.cpp" />
     <ClCompile Include="Engine\DebugTools\CollisionDrawSystem.cpp" />
     <ClCompile Include="Engine\Physic\Movement\RotatingSystem.cpp" />
+    <ClCompile Include="Engine\Serialization\componentSerializers.cpp" />
     <ClCompile Include="Gameplay\MazeLinks.cpp" />
     <ClCompile Include="Gameplay\Player\AttackTable.cpp" />
     <ClCompile Include="Gameplay\Player\Combo\Combo.cpp" />
@@ -1413,6 +1415,7 @@
     <Import Project="..\packages\directxtex_desktop_win10.2026.4.1.1\build\native\directxtex_desktop_win10.targets" Condition="Exists('..\packages\directxtex_desktop_win10.2026.4.1.1\build\native\directxtex_desktop_win10.targets')" />
     <Import Project="..\packages\ImeSense.Packages.LibOgg.1.3.5.5\build\native\ImeSense.Packages.LibOgg.targets" Condition="Exists('..\packages\ImeSense.Packages.LibOgg.1.3.5.5\build\native\ImeSense.Packages.LibOgg.targets')" />
     <Import Project="..\packages\ImeSense.Packages.LibVorbis.1.3.7.5\build\native\ImeSense.Packages.LibVorbis.targets" Condition="Exists('..\packages\ImeSense.Packages.LibVorbis.1.3.7.5\build\native\ImeSense.Packages.LibVorbis.targets')" />
+    <Import Project="..\packages\nlohmann.json.3.12.0\build\native\nlohmann.json.targets" Condition="Exists('..\packages\nlohmann.json.3.12.0\build\native\nlohmann.json.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -1421,5 +1424,6 @@
     <Error Condition="!Exists('..\packages\directxtex_desktop_win10.2026.4.1.1\build\native\directxtex_desktop_win10.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\directxtex_desktop_win10.2026.4.1.1\build\native\directxtex_desktop_win10.targets'))" />
     <Error Condition="!Exists('..\packages\ImeSense.Packages.LibOgg.1.3.5.5\build\native\ImeSense.Packages.LibOgg.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ImeSense.Packages.LibOgg.1.3.5.5\build\native\ImeSense.Packages.LibOgg.targets'))" />
     <Error Condition="!Exists('..\packages\ImeSense.Packages.LibVorbis.1.3.7.5\build\native\ImeSense.Packages.LibVorbis.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ImeSense.Packages.LibVorbis.1.3.7.5\build\native\ImeSense.Packages.LibVorbis.targets'))" />
+    <Error Condition="!Exists('..\packages\nlohmann.json.3.12.0\build\native\nlohmann.json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\nlohmann.json.3.12.0\build\native\nlohmann.json.targets'))" />
   </Target>
 </Project>
