@@ -20,4 +20,15 @@ struct MultiDamager : Component
 	int repeatCount = 0;
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(MultiDamager,
+	active,
+	target,
+	damageType,
+	destroyable,
+	damage,
+	repeats,
+	interval,
+	lastDamageTime,
+	repeatCount)
+
 #endif

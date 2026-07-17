@@ -30,6 +30,12 @@ struct CollisionInfo {
 	int entityId = -1;
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(CollisionInfo,
+	position,
+	normal,
+	distance,
+	entityId)
+
 ////////////////////////////////////////////////////////////////////////////////
 // Struct name: Collider
 ////////////////////////////////////////////////////////////////////////////////
@@ -44,5 +50,14 @@ struct Collider : Component
 
 	std::vector<CollisionInfo> collisions;
 };
+
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Collider,
+	active,
+	friction,
+	softness,
+	isTouchable,
+	anti,
+	collisionGroup,
+	collisions)
 
 #endif

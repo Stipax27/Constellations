@@ -22,4 +22,13 @@ struct Health : Component
 	float GetHealthRatio();
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Health,
+	active,
+	hp,
+	maxHp,
+	fraction,
+	destroyOnDeath,
+	immortal,
+	damageQueue)
+
 #endif

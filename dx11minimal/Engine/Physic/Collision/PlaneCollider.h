@@ -8,9 +8,17 @@ struct PlaneCollider : Collider
 {
 	point3d normal = point3d(0, 1, 0);
 	float radius = 1.0f;
-
-	float gravitySpeed = 9.8f;
-	float gravityDistance = 50.0f;
 };
+
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(PlaneCollider,
+	active,
+	friction,
+	softness,
+	isTouchable,
+	anti,
+	collisionGroup,
+	collisions,
+	normal,
+	radius)
 
 #endif

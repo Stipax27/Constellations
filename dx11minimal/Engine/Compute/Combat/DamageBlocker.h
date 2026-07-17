@@ -14,4 +14,8 @@ struct DamageBlocker : Component
     float CalcDamage(const DamageUnit& damageUnit) const;
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(DamageBlocker,
+	active,
+	blockFactors)
+
 #endif

@@ -8,4 +8,14 @@ struct SphereCollider : Collider
 	float radius = 1.0f;
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SphereCollider,
+	active,
+	friction,
+	softness,
+	isTouchable,
+	anti,
+	collisionGroup,
+	collisions,
+	radius)
+
 #endif

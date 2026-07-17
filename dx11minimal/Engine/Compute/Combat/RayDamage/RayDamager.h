@@ -24,4 +24,17 @@ struct RayDamager : Component
 	int repeatCount = 0;
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(RayDamager,
+	active,
+	direction,
+	target,
+	damageType,
+	collisionGroup,
+	touchableOnly,
+	damage,
+	repeats,
+	interval,
+	lastDamageTime,
+	repeatCount)
+
 #endif

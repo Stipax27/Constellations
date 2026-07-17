@@ -30,7 +30,7 @@
 // GLOBALS //
 /////////////
 //const bool VSYNC_ENABLED = true;
-#define SHOW_COLLIDERS false
+#define SHOW_COLLIDERS true
 #define SHOW_GRAVITY false
 #define SHOW_PIVOTS false
 #define SHOW_LINK_RADIUS false

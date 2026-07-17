@@ -16,4 +16,10 @@ struct SoundPlayer : Component
 	IXAudio2SourceVoice* pVoice = nullptr;
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SoundPlayer,
+	active,
+	soundName,
+	volume,
+	playing)
+
 #endif

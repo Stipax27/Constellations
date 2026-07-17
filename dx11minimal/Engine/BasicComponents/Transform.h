@@ -33,7 +33,7 @@ inline void to_json(nlohmann::json& j, const Transform& t) {
         {"active", t.active},
         {"position", nlohmann::json{{"x", t.position.x}, {"y", t.position.y}, {"z", t.position.z}}},
         {"scale", nlohmann::json{{"x", t.scale.x}, {"y", t.scale.y}, {"z", t.scale.z}}},
-        {"rotation", nlohmann::json{
+        {"mRotation", nlohmann::json{
             {"m11", tempMatrix.m[0][0]}, {"m12", tempMatrix.m[0][1]}, {"m13", tempMatrix.m[0][2]}, {"m14", tempMatrix.m[0][3]},
             {"m21", tempMatrix.m[1][0]}, {"m22", tempMatrix.m[1][1]}, {"m23", tempMatrix.m[1][2]}, {"m24", tempMatrix.m[1][3]},
             {"m31", tempMatrix.m[2][0]}, {"m32", tempMatrix.m[2][1]}, {"m33", tempMatrix.m[2][2]}, {"m34", tempMatrix.m[2][3]},
@@ -55,7 +55,7 @@ inline void from_json(const nlohmann::json& j, Transform& t) {
     sc.at("y").get_to(t.scale.y);
     sc.at("z").get_to(t.scale.z);
 
-    const auto& rot = j.at("rotation");
+    const auto& rot = j.at("mRotation");
     DirectX::XMFLOAT4X4 tempMatrix;
 
     rot.at("m11").get_to(tempMatrix.m[0][0]);

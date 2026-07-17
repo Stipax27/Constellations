@@ -18,4 +18,13 @@ struct SingleDamager : Component
 	std::vector<int> entityFilter;
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SingleDamager,
+	active,
+	target,
+	damageType,
+	destroyable,
+	damage,
+	maxHitCount,
+	entityFilter)
+
 #endif

@@ -6,32 +6,144 @@
             "children": [],
             "components": [
                 {
-                    "active": true
+                    "active": true,
+                    "mRotation": {
+                        "m11": 1.0,
+                        "m12": 0.0,
+                        "m13": 0.0,
+                        "m14": 0.0,
+                        "m21": 0.0,
+                        "m22": 1.0,
+                        "m23": 0.0,
+                        "m24": 0.0,
+                        "m31": 0.0,
+                        "m32": 0.0,
+                        "m33": 1.0,
+                        "m34": 0.0,
+                        "m41": 0.0,
+                        "m42": 0.0,
+                        "m43": 0.0,
+                        "m44": 1.0
+                    },
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 4.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "type": "struct Transform"
                 },
                 {
-                    "active": true
+                    "active": true,
+                    "anti": false,
+                    "collisionGroup": 0,
+                    "collisions": [],
+                    "friction": 1.0,
+                    "isTouchable": false,
+                    "radius": 4.0,
+                    "softness": 0.0,
+                    "type": "struct SphereCollider"
                 }
             ],
-            "id": 2,
             "name": "GrabHitbox",
             "timeScale": 1.0
         }
     ],
     "components": [
         {
-            "active": true
+            "active": true,
+            "mRotation": {
+                "m11": 1.0,
+                "m12": 0.0,
+                "m13": 0.0,
+                "m14": 0.0,
+                "m21": 0.0,
+                "m22": 1.0,
+                "m23": 0.0,
+                "m24": 0.0,
+                "m31": 0.0,
+                "m32": 0.0,
+                "m33": 1.0,
+                "m34": 0.0,
+                "m41": 0.0,
+                "m42": 0.0,
+                "m43": 0.0,
+                "m44": 1.0
+            },
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "struct Transform"
         },
         {
-            "active": true
+            "acceleration": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "active": true,
+            "airFriction": 1.0,
+            "mAngVelocity": {
+                "m11": 1.0,
+                "m12": 0.0,
+                "m13": 0.0,
+                "m14": 0.0,
+                "m21": 0.0,
+                "m22": 1.0,
+                "m23": 0.0,
+                "m24": 0.0,
+                "m31": 0.0,
+                "m32": 0.0,
+                "m33": 1.0,
+                "m34": 0.0,
+                "m41": 0.0,
+                "m42": 0.0,
+                "m43": 0.0,
+                "m44": 1.0
+            },
+            "mass": 1.0,
+            "preciseMovement": true,
+            "type": "struct PhysicBody",
+            "useGravity": true,
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
         },
         {
-            "active": true
+            "active": true,
+            "anti": false,
+            "collisionGroup": 1,
+            "collisions": [],
+            "friction": 1.0,
+            "isTouchable": true,
+            "radius": 0.75,
+            "softness": 0.0,
+            "type": "struct SphereCollider"
         },
         {
-            "active": true
+            "active": true,
+            "damageQueue": [],
+            "destroyOnDeath": false,
+            "fraction": 0,
+            "hp": 100.0,
+            "immortal": false,
+            "maxHp": 100.0,
+            "type": "struct Health"
         }
     ],
-    "id": 1,
     "name": "Player",
     "timeScale": 1.0
 }

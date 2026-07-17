@@ -13,4 +13,8 @@ struct DamageUnit {
 	}
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(DamageUnit,
+	damageType,
+	damage)
+
 #endif

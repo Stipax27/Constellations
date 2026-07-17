@@ -29,4 +29,13 @@ struct Transform2D : Component
 	Transform2D& operator+=(const Transform2D&);
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Transform2D,
+	active,
+	position,
+	anchorPoint,
+	parentAnchor,
+	scale,
+	rotation,
+	ratio)
+
 #endif

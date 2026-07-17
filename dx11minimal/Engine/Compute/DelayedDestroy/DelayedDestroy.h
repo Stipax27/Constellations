@@ -10,4 +10,9 @@ struct DelayedDestroy : Component
 	double startTime = -1;
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(DelayedDestroy,
+	active,
+	lifeTime,
+	startTime)
+
 #endif

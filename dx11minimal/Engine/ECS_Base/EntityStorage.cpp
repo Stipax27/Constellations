@@ -16,6 +16,7 @@
 #include <nlohmann/json.hpp>
 
 #include "../Lib/class_name.h"
+#include "../Lib/serializer.h"
 #include "../Lib/logging.h"
 
 using namespace std;
@@ -63,23 +64,30 @@ static json SerializeEntity(Entity* entity) {
     obj["name"] = entity->name;
     obj["active"] = entity->IsLocalActive();
     obj["timeScale"] = entity->GetLocalTimeScale();
-    obj["id"] = entity->GetId();
 
-    // Сериализуем компоненты
+    // Component serialization
     json componentsArray = json::array();
     for (const auto& pair : entity->GetComponents()) {
-        auto* component = pair.second;
-
-        json data = *component;
+        Component* component = pair.second;
 
         //const std::type_info& type = typeid(*component);
         //componentObj["type"] = type.name(); // или class_name<decltype(component)>().c_str()
 
-        componentsArray.push_back(data);
+        const std::string& typeName = typeid(*component).name();
+        auto it = serializer::components.find(typeName);
+
+        if (it != serializer::components.end()) {
+            componentsArray.push_back(it->second(component));
+        }
+        else {
+            Log("Missing component serializer in fabrica. Name: ");
+            Log(typeName.c_str());
+            Log("\n");
+        }
     }
     obj["components"] = componentsArray;
 
-    // Рекурсивно сериализуем детей
+    // Children serialization
     json childrenArray = json::array();
     for (Entity* child : entity->GetChildren()) {
         childrenArray.push_back(SerializeEntity(child));
@@ -146,6 +154,7 @@ EntityStorage::~EntityStorage()
 
 void EntityStorage::Initialize()
 {
+    serializer::Initialize();
 }
 
 

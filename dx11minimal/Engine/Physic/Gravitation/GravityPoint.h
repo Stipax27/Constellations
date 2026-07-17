@@ -9,4 +9,9 @@ struct GravityPoint : Component
 	float mass = 1.0f;
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(GravityPoint,
+	active,
+	radius,
+	mass)
+
 #endif

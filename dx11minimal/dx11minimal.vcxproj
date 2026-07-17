@@ -296,7 +296,7 @@
     <ClInclude Include="Engine\Lib\SerializationMacros.h" />
     <ClInclude Include="Engine\Physic\Movement\RotatingBody.h" />
     <ClInclude Include="Engine\Physic\Movement\RotatingSystem.h" />
-    <ClInclude Include="Engine\Serialization\componentSerializers.h" />
+    <ClInclude Include="Engine\Lib\serializer.h" />
     <ClInclude Include="Gameplay\MazeLinks.h" />
     <ClInclude Include="Gameplay\Player\attackTable.h" />
     <ClInclude Include="Engine\Compute\Combat\elements.h" />
@@ -1273,7 +1273,7 @@
     <ClCompile Include="Engine\Compute\Combat\CombatSystem.cpp" />
     <ClCompile Include="Engine\DebugTools\CollisionDrawSystem.cpp" />
     <ClCompile Include="Engine\Physic\Movement\RotatingSystem.cpp" />
-    <ClCompile Include="Engine\Serialization\componentSerializers.cpp" />
+    <ClCompile Include="Engine\Lib\serializer.cpp" />
     <ClCompile Include="Gameplay\MazeLinks.cpp" />
     <ClCompile Include="Gameplay\Player\AttackTable.cpp" />
     <ClCompile Include="Gameplay\Player\Combo\Combo.cpp" />

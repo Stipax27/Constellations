@@ -96,7 +96,7 @@
     <ClCompile Include="Gameplay\MazeLinks.cpp" />
     <ClCompile Include="Engine\DebugTools\WayDrawSystem.cpp" />
     <ClCompile Include="Engine\DebugTools\LinkRadiusDrawSystem.cpp" />
-    <ClCompile Include="Engine\Serialization\componentSerializers.cpp" />
+    <ClCompile Include="Engine\Lib\serializer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LevelManagerClass.h">
@@ -260,7 +260,7 @@
     <ClInclude Include="Gameplay\MazeLinks.h" />
     <ClInclude Include="Engine\DebugTools\WayDrawSystem.h" />
     <ClInclude Include="Engine\DebugTools\LinkRadiusDrawSystem.h" />
-    <ClInclude Include="Engine\Serialization\componentSerializers.h" />
+    <ClInclude Include="Engine\Lib\serializer.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resourses\Images\dx11minimal.ico">

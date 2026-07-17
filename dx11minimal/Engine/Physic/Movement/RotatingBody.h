@@ -11,4 +11,9 @@ struct RotatingBody : Component
 	float rotateSpeed = 25.0f;
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(RotatingBody,
+	active,
+	axis,
+	rotateSpeed)
+
 #endif
