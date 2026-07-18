@@ -75,9 +75,9 @@
                 "m44": 1.0
             },
             "position": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 8.423310279846191,
+                "y": 0.04779915139079094,
+                "z": -0.02609729766845703
             },
             "scale": {
                 "x": 1.0,
@@ -113,7 +113,7 @@
                 "m44": 1.0
             },
             "mass": 1.0,
-            "preciseMovement": true,
+            "preciseMovement": false,
             "type": "struct PhysicBody",
             "useGravity": true,
             "velocity": {
@@ -142,6 +142,24 @@
             "immortal": false,
             "maxHp": 100.0,
             "type": "struct Health"
+        },
+        {
+            "active": true,
+            "blobsRadius": [
+                0.20000000298023224,
+                0.4000000059604645
+            ],
+            "coreRadius": 0.5,
+            "lifetime": 5000.0,
+            "out_blobsRadius": [
+                0.10000000149011612,
+                0.25
+            ],
+            "out_blobsRate": 5.0,
+            "pShader": 31,
+            "rate": 20.0,
+            "type": "struct StarClay",
+            "vShader": 31
         },
         {
             "active": true,
@@ -188,24 +206,6 @@
             },
             "type": "struct PointCloud",
             "vShader": 17
-        },
-        {
-            "active": true,
-            "blobsRadius": [
-                0.20000000298023224,
-                0.4000000059604645
-            ],
-            "coreRadius": 0.5,
-            "lifetime": 5000.0,
-            "out_blobsRadius": [
-                0.10000000149011612,
-                0.25
-            ],
-            "out_blobsRate": 5.0,
-            "pShader": 31,
-            "rate": 20.0,
-            "type": "struct StarClay",
-            "vShader": 31
         }
     ],
     "name": "Player",

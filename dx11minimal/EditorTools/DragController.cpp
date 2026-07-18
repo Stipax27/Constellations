@@ -42,6 +42,7 @@ void DragController::Shutdown()
 void DragController::Update()
 {
 	ProcessPivotDrag();
+	ProcessSave();
 }
 
 
