@@ -190,4 +190,16 @@ void deserializer::Initialize() {
         *c = data.get<Transform>();
         };
 
+    components[typeid(Transform2D).name()] = [](Entity* entity, const json& data) {
+        Transform2D* c = entity->AddComponent<Transform2D>();
+        *c = data.get<Transform2D>();
+        };
+
+    //PHYSIC
+
+    components[typeid(PhysicBody).name()] = [](Entity* entity, const json& data) {
+        PhysicBody* c = entity->AddComponent<PhysicBody>();
+        *c = data.get<PhysicBody>();
+        };
+
 }
