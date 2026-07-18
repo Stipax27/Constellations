@@ -278,6 +278,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Constructors\MapBuild.h" />
+    <ClInclude Include="EditorTools\DragController.h" />
     <ClInclude Include="EditorTools\EditCameraController.h" />
     <ClInclude Include="EditorTools\PivotDrawSystem.h" />
     <ClInclude Include="Engine\DebugTools\LinkRadiusDrawSystem.h" />
@@ -1256,6 +1257,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Constructors\MapBuild.cpp" />
+    <ClCompile Include="EditorTools\DragController.cpp" />
     <ClCompile Include="EditorTools\EditCameraController.cpp" />
     <ClCompile Include="Engine\DebugTools\LinkRadiusDrawSystem.cpp" />
     <ClCompile Include="Engine\DebugTools\WayDrawSystem.cpp" />

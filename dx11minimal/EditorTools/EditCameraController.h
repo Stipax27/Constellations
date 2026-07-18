@@ -1,5 +1,5 @@
-#ifndef _EDITOR_CAMERA_CONTROLLER_
-#define _EDITOR_CAMERA_CONTROLLER_
+#ifndef _EDITOR_CAMERA_CONTROLLER_H_
+#define _EDITOR_CAMERA_CONTROLLER_H_
 
 #include "../Engine/Camera/cameraclass.h"
 #include "../Engine/Mouse/mouseclass.h"
@@ -31,4 +31,4 @@ private:
 	void ProcessRotation();
 };
 
-#endif // !_EDITOR_CAMERA_CONTROLLER_
+#endif
