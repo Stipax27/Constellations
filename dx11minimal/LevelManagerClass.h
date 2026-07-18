@@ -18,7 +18,7 @@
 #include "ecsHeaders.h"
 
 #ifdef _EDITOR
-#include "EditorTools/EditCameraController.h"
+#include "EditorTools/editorclass.h"
 #else
 #include "Gameplay/Player/PlayerController.h"
 #endif
@@ -63,7 +63,7 @@ private:
 	EntityStorage* entityStorage;
 
 #ifdef _EDITOR
-	EditCameraController* editCameraController;
+	EditorClass* editor;
 #else
 	PlayerController* playerController;
 #endif

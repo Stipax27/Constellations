@@ -25,9 +25,6 @@ struct Component
 	bool active = true;
 
 	virtual ~Component() = default;
-
-	virtual void to_json(rapidjson::Value& componentObj, rapidjson::Document::AllocatorType& allocator) { Log("WARNING! Empty component serialize realization!\n"); };
-	virtual void from_json(rapidjson::Value& componentObj, rapidjson::Document::AllocatorType& allocator) { Log("WARNING! Empty component deserialize realization!\n"); };
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Component, active)

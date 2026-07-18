@@ -13,14 +13,17 @@ namespace CollisionFilter
 		Enemy,
 		PlayerRay,
 		HardBody,
+
+		_editorSelect,
 	};
 
-	const bool collisionTable[5][5] = {
-		{T, T, T, F, T}, // Projectile
-		{T, F, T, F, T}, // Player
-		{T, T, F, T, T}, // Enemy
-		{F, F, T, F, T}, // PlayerRay
-		{T, T, T, T, T}, // HardBody
+	const bool collisionTable[6][6] = {
+		{T, T, T, F, T, T}, // Projectile
+		{T, F, T, F, T, T}, // Player
+		{T, T, F, T, T, T}, // Enemy
+		{F, F, T, F, T, T}, // PlayerRay
+		{T, T, T, T, T, T}, // HardBody
+		{T, T, T, T, T, T}, // _editorSelect
 	};
 }
 

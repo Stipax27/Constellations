@@ -117,6 +117,25 @@ public:
 		return it;
 	}
 
+	template <typename T>
+	std::pair<Entity*, T*> GetUpperAncestorWithComponent()
+	{
+		T* it = GetComponent<T>();
+		if (it != nullptr && parent != nullptr) {
+			std::pair<Entity*, T*> upperIt = parent->GetUpperAncestorWithComponent<T>();
+			if (upperIt.first != nullptr) {
+				return upperIt;
+			}
+		}
+
+		if (it != nullptr) {
+			return { this, it };
+		}
+		else {
+			return { nullptr, nullptr };
+		}
+	}
+
 	const std::unordered_map<std::type_index, Component*>& GetComponents()
 	{
 		return components;

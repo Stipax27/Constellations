@@ -46,12 +46,3 @@ Transform& Transform::operator+=(const Transform& other) {
 
     return *this;
 }
-
-
-void Transform::to_json(Value& componentObj, Document::AllocatorType& allocator) {
-
-};
-
-void Transform::from_json(Value& componentObj, Document::AllocatorType& allocator) {
-
-};

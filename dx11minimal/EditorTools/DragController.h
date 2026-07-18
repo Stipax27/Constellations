@@ -5,6 +5,12 @@
 #include "../Engine/Mouse/mouseclass.h"
 #include "../Engine/Window/windowclass.h"
 
+#include "../Engine/Physic/Collision/CollisionManagerClass.h"
+#include "../Engine/ECS_Base/entityStorage.h"
+
+
+#define SELECT_DISTANCE 10000.0f
+
 
 
 class DragController : public ISingleton
@@ -17,9 +23,20 @@ public:
 private:
 	CameraClass* camera;
 	MouseClass* mouse;
+	CollisionManagerClass* collisionManager;
+	EntityStorage* entityStorage;
+
+	Entity* dragEntity;
+	Transform* dragTransform;
+
+	float dragDistance;
+	point3d dragOffset;
 
 private:
 	void ProcessPivotDrag();
+	void DragByPivot();
+
+	void ProcessSave();
 };
 
 #endif

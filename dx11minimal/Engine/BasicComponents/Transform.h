@@ -19,9 +19,6 @@ struct Transform : Component
     Transform& operator=(const Transform&);
     Transform operator+(const Transform&);
     Transform& operator+=(const Transform&);
-
-    void to_json(rapidjson::Value& componentObj, rapidjson::Document::AllocatorType& allocator) override;
-    void from_json(rapidjson::Value& componentObj, rapidjson::Document::AllocatorType& allocator) override;
 };
 
 // Custom serialization for Transform (Without using NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE)

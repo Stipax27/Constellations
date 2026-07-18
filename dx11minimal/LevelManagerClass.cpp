@@ -169,8 +169,7 @@ bool LevelManagerClass::Initialize()
 	InitSystems();
 
 #ifdef _EDITOR
-	editCameraController = new EditCameraController();
-	editCameraController->Initialize();
+	editor = Singleton::GetInstance<EditorClass>();
 #else
 	playerController = new PlayerController();
 	playerController->Initialize(player);
@@ -250,11 +249,11 @@ bool LevelManagerClass::Initialize()
 void LevelManagerClass::Shutdown()
 {
 #ifdef _EDITOR
-	if (editCameraController)
+	if (editor)
 	{
-		editCameraController->Shutdown();
-		delete editCameraController;
-		editCameraController = 0;
+		editor->Shutdown();
+		delete editor;
+		editor = 0;
 	}
 #else
 	if (playerController)
@@ -320,7 +319,7 @@ void LevelManagerClass::Frame()
 	m_Transform2DDebugUI.UpdateToggle();
 
 #ifdef _EDITOR
-	editCameraController->Update();
+	editor->Update();
 #else
 	playerController->ProcessInput();
 	playerController->ProcessMouse();
