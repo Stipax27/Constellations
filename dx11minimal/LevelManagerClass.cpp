@@ -101,7 +101,8 @@ bool LevelManagerClass::Initialize()
 
 	Entity* player = CreatePlayer();
 
-	MapBuild::BuildMaze();
+	worldFolder = entityStorage->LoadEntityFromFile("World");
+	//MapBuild::BuildMaze(); // COMMENTED RECENTLY
 
 
 
@@ -125,8 +126,6 @@ bool LevelManagerClass::Initialize()
 	mesh = entity->AddComponent<Mesh>();
 	mesh->index = 9;
 
-	entityStorage->SaveEntityToFile(worldFolder, "World");
-
 
 	/////////////////////////
 
@@ -143,9 +142,10 @@ bool LevelManagerClass::Initialize()
 
 	/////////////////////////
 	
-	CreateSpaceBackground(worldFolder, 1);
+	/*CreateSpaceBackground(worldFolder, 1); // COMMENTED RECENTLY
 	CreateAries(worldFolder);
-	CreateZenithLocation(worldFolder, 2);
+	CreateZenithLocation(worldFolder, 2);*/
+
 	//CreateNebula(worldFolder,2);
 	//CreateStarQuestLoc(worldFolder, 2);
 
