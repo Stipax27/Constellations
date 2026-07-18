@@ -557,7 +557,7 @@ void LevelManagerClass::UpdateTestAnimationToggle()
 
 Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 {
-	Entity* player = entityStorage->CreateEntity("Player", folder);
+	/*Entity* player = entityStorage->CreateEntity("Player", folder);
 
 	Transform* transform = player->AddComponent<Transform>();
 	transform->position = point3d(0.0f, 0.0f, 0.0f);
@@ -591,7 +591,9 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 	sphereCollider->radius = 4;
 	sphereCollider->isTouchable = false;
 
-	entityStorage->SaveEntityToFile(player, "Player");
+	entityStorage->SaveEntityToFile(player, "Player");*/
+
+	Entity* player = entityStorage->LoadEntityFromFile("Player");
 
 	return player;
 }

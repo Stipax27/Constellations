@@ -202,4 +202,107 @@ void deserializer::Initialize() {
         *c = data.get<PhysicBody>();
         };
 
+    components[typeid(RotatingBody).name()] = [](Entity* entity, const json& data) {
+        RotatingBody* c = entity->AddComponent<RotatingBody>();
+        *c = data.get<RotatingBody>();
+        };
+
+    components[typeid(SphereCollider).name()] = [](Entity* entity, const json& data) {
+        SphereCollider* c = entity->AddComponent<SphereCollider>();
+        *c = data.get<SphereCollider>();
+        };
+
+    components[typeid(PlaneCollider).name()] = [](Entity* entity, const json& data) {
+        PlaneCollider* c = entity->AddComponent<PlaneCollider>();
+        *c = data.get<PlaneCollider>();
+        };
+
+    components[typeid(GravityPoint).name()] = [](Entity* entity, const json& data) {
+        GravityPoint* c = entity->AddComponent<GravityPoint>();
+        *c = data.get<GravityPoint>();
+        };
+
+    // DELAYED DESTROY
+
+    components[typeid(DelayedDestroy).name()] = [](Entity* entity, const json& data) {
+        DelayedDestroy* c = entity->AddComponent<DelayedDestroy>();
+        *c = data.get<DelayedDestroy>();
+        };
+
+    // COMBAT
+
+    components[typeid(Health).name()] = [](Entity* entity, const json& data) {
+        Health* c = entity->AddComponent<Health>();
+        *c = data.get<Health>();
+        };
+
+    components[typeid(SingleDamager).name()] = [](Entity* entity, const json& data) {
+        SingleDamager* c = entity->AddComponent<SingleDamager>();
+        *c = data.get<SingleDamager>();
+        };
+
+    components[typeid(MultiDamager).name()] = [](Entity* entity, const json& data) {
+        MultiDamager* c = entity->AddComponent<MultiDamager>();
+        *c = data.get<MultiDamager>();
+        };
+
+    components[typeid(RayDamager).name()] = [](Entity* entity, const json& data) {
+        RayDamager* c = entity->AddComponent<RayDamager>();
+        *c = data.get<RayDamager>();
+        };
+
+    components[typeid(DamageBlocker).name()] = [](Entity* entity, const json& data) {
+        DamageBlocker* c = entity->AddComponent<DamageBlocker>();
+        *c = data.get<DamageBlocker>();
+        };
+    
+    // SOUND
+
+    components[typeid(SoundPlayer).name()] = [](Entity* entity, const json& data) {
+        SoundPlayer* c = entity->AddComponent<SoundPlayer>();
+        *c = data.get<SoundPlayer>();
+        };
+
+    // RENDER
+
+    components[typeid(Star).name()] = [](Entity* entity, const json& data) {
+        Star* c = entity->AddComponent<Star>();
+        *c = data.get<Star>();
+        };
+
+    components[typeid(SpriteCluster).name()] = [](Entity* entity, const json& data) {
+        SpriteCluster* c = entity->AddComponent<SpriteCluster>();
+        *c = data.get<SpriteCluster>();
+        };
+
+    components[typeid(PointCloud).name()] = [](Entity* entity, const json& data) {
+        PointCloud* c = entity->AddComponent<PointCloud>();
+        *c = data.get<PointCloud>();
+        };
+
+    components[typeid(Constellation).name()] = [](Entity* entity, const json& data) {
+        Constellation* c = entity->AddComponent<Constellation>();
+        *c = data.get<Constellation>();
+        };
+
+    components[typeid(Beam).name()] = [](Entity* entity, const json& data) {
+        Beam* c = entity->AddComponent<Beam>();
+        *c = data.get<Beam>();
+        };
+
+    components[typeid(StarClay).name()] = [](Entity* entity, const json& data) {
+        StarClay* c = entity->AddComponent<StarClay>();
+        *c = data.get<StarClay>();
+        };
+
+    components[typeid(ParticleEmitter).name()] = [](Entity* entity, const json& data) {
+        ParticleEmitter* c = entity->AddComponent<ParticleEmitter>();
+        *c = data.get<ParticleEmitter>();
+        };
+
+    components[typeid(Nebula).name()] = [](Entity* entity, const json& data) {
+        Nebula* c = entity->AddComponent<Nebula>();
+        *c = data.get<Nebula>();
+        };
+
 }

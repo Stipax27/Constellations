@@ -7,6 +7,8 @@ struct DamageUnit {
 	DamageType damageType;
 	float damage;
 
+	DamageUnit() : damageType(DamageType::Physic), damage(0.0f) {}
+
 	DamageUnit(DamageType onDamageType, float onDamage)
 		: damageType(onDamageType), damage(onDamage)
 	{
