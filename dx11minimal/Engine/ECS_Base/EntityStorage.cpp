@@ -118,7 +118,24 @@ static void DeserializeEntity(Entity* entity, const json& j, EntityStorage* stor
         const auto& componentsArray = j["components"];
 
         for (const json& compObj : componentsArray) {
+            if (!(j.contains("type") && j["type"].is_string())) {
+                Log("Error while reading component of entity with name ");
+                Log(entity->name.c_str());
+                Log(": missing type name\n");
+                continue;
+            }
 
+            const std::string& typeName = j["type"].get<string>();
+            auto it = deserializer::components.find(typeName);
+
+            if (it != deserializer::components.end()) {
+                it->second(entity, compObj);
+            }
+            else {
+                Log("Missing component deserializer in fabrica. Name: ");
+                Log(typeName.c_str());
+                Log("\n");
+            }
         }
     }
 
@@ -155,6 +172,7 @@ EntityStorage::~EntityStorage()
 void EntityStorage::Initialize()
 {
     serializer::Initialize();
+    deserializer::Initialize();
 }
 
 

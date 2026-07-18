@@ -21,4 +21,15 @@ struct Constellation : Component
 	std::vector<std::pair<int, int>> links = std::vector<std::pair<int, int>>();
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Constellation,
+	active,
+	starSize,
+	linkSize,
+	crownRadius,
+	starColor1,
+	starColor2,
+	crownColor,
+	stars,
+	links)
+
 #endif

@@ -43,4 +43,15 @@ struct StarClay : Component
 	std::vector<Blob> out_blobs;
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(StarClay,
+	active,
+	vShader,
+	pShader,
+	rate,
+	lifetime,
+	coreRadius,
+	blobsRadius,
+	out_blobsRate,
+	out_blobsRadius)
+
 #endif

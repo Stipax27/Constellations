@@ -23,4 +23,16 @@ struct Beam : Component
 	int pShader = 4;
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Beam,
+	active,
+	point1,
+	point2,
+	size1,
+	size2,
+	color1,
+	color2,
+	opacity1,
+	opacity2,
+	pShader)
+
 #endif

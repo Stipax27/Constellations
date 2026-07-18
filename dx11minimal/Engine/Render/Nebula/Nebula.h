@@ -29,4 +29,19 @@ struct Nebula : Component
 	bool isInteractive = false;
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Nebula,
+	active,
+	vShader,
+	gShader,
+	topology,
+	count,
+	skipper,
+	mode,
+	color,
+	scale,
+	frustumRadius,
+	compress,
+	isOnBackground,
+	isInteractive)
+
 #endif

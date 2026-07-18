@@ -4,6 +4,8 @@
 using namespace std;
 using json = nlohmann::json;
 
+//////////////////////////////////////////////////////////////////////////////////
+
 unordered_map<string, function<json(Component*)>> serializer::components;
 
 void serializer::Initialize() {
@@ -117,4 +119,75 @@ void serializer::Initialize() {
         };
 
     // RENDER
+
+    components[typeid(Star).name()] = [](Component* comp) {
+        auto* c = static_cast<Star*>(comp);
+        json j = *c;
+        j["type"] = typeid(Star).name();
+        return j;
+        };
+
+    components[typeid(SpriteCluster).name()] = [](Component* comp) {
+        auto* c = static_cast<SpriteCluster*>(comp);
+        json j = *c;
+        j["type"] = typeid(SpriteCluster).name();
+        return j;
+        };
+
+    components[typeid(PointCloud).name()] = [](Component* comp) {
+        auto* c = static_cast<PointCloud*>(comp);
+        json j = *c;
+        j["type"] = typeid(PointCloud).name();
+        return j;
+        };
+
+    components[typeid(Constellation).name()] = [](Component* comp) {
+        auto* c = static_cast<Constellation*>(comp);
+        json j = *c;
+        j["type"] = typeid(Constellation).name();
+        return j;
+        };
+
+    components[typeid(Beam).name()] = [](Component* comp) {
+        auto* c = static_cast<Beam*>(comp);
+        json j = *c;
+        j["type"] = typeid(Beam).name();
+        return j;
+        };
+
+    components[typeid(StarClay).name()] = [](Component* comp) {
+        auto* c = static_cast<StarClay*>(comp);
+        json j = *c;
+        j["type"] = typeid(StarClay).name();
+        return j;
+        };
+
+    components[typeid(ParticleEmitter).name()] = [](Component* comp) {
+        auto* c = static_cast<ParticleEmitter*>(comp);
+        json j = *c;
+        j["type"] = typeid(ParticleEmitter).name();
+        return j;
+        };
+
+    components[typeid(Nebula).name()] = [](Component* comp) {
+        auto* c = static_cast<Nebula*>(comp);
+        json j = *c;
+        j["type"] = typeid(Nebula).name();
+        return j;
+        };
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+
+unordered_map<string, function<void(Entity*, const json&)>> deserializer::components;
+
+void deserializer::Initialize() {
+
+    //BASIC COMPONENTS
+
+    components[typeid(Transform).name()] = [](Entity* entity, const json& data) {
+        Transform* c = entity->AddComponent<Transform>();
+        *c = data.get<Transform>();
+        };
+
 }

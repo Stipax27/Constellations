@@ -140,36 +140,6 @@ void PlayerAbilities::Update()
 
 
 	if (starEntity && !starEntity->IsDeleting()) {
-		Star* star = starEntity->GetComponent<Star>();
-		if (star) {
-			
-			if (isBlowingGas) {
-				float blowTime = (float)(timer::currentTime - blowGasStartTime) / 1000.0f;
-				float sizeReduction = blowGasRate * blowTime;
-
-				float newSize = star->baseRadius - sizeReduction;
-
-				// Проверяем минимальный размер
-				if (newSize <= starMinSize) {
-					starEntity->Destroy();
-					starEntity = nullptr;
-					canBlowGas = false;
-					isBlowingGas = false;
-					return;
-				}
-
-				
-				star->baseRadius = newSize;
-				star->baseCrownRadius = newSize * 1.5f;
-			}
-
-			
-			float pulse = 1.0f + 0.2f * sin(timer::currentTime * 0.005f);
-			star->radius = star->baseRadius * pulse;
-			star->crownRadius = star->baseCrownRadius * pulse;
-		}
-
-		
 		Transform* starTransform = starEntity->GetComponent<Transform>();
 		if (starTransform) {
 			starTransform->mRotation = starTransform->mRotation *
@@ -552,9 +522,6 @@ void PlayerAbilities::CreateBlueStar(float size) {
 	if (!star) {
 		return;
 	}
-
-	star->baseRadius = size;
-	star->baseCrownRadius = size * 1.5f;
 
 	star->radius = size;
 	star->crownRadius = size * 1.5f;

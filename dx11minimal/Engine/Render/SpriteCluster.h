@@ -22,4 +22,15 @@ struct SpriteCluster : Component
 	RenderCompress compress = RenderCompress::none;
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SpriteCluster,
+	active,
+	vShader,
+	gShader,
+	pShader,
+	topology,
+	pointsNum,
+	vertexNum,
+	frustumRadius,
+	compress)
+
 #endif

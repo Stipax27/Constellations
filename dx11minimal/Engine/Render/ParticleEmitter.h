@@ -43,9 +43,31 @@ struct ParticleEmitter : Component
 
 	RenderCompress compress = RenderCompress::none;
 
+	// Technical fields //
+
 	double lastEmitTime = timer::currentTime;
 	int heapCount = 0;
 	std::vector<XMFLOAT4X4> particles;
 };
+
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ParticleEmitter,
+	active,
+	vShader,
+	gShader,
+	pShader,
+	size,
+	color,
+	opacity,
+	emitDirection,
+	spread,
+	speed,
+	rate,
+	lifetime,
+	isHeapEmit,
+	heapEmitRepeats,
+	heapEmitInterval,
+	isReverse,
+	useWorldSpace,
+	compress)
 
 #endif
