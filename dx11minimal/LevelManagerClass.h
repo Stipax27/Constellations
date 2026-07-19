@@ -19,6 +19,7 @@
 
 #ifdef _EDITOR
 #include "EditorTools/editorclass.h"
+#include "EditorTools/EditorUI.h"
 #else
 #include "Gameplay/Player/PlayerController.h"
 #endif
@@ -64,6 +65,7 @@ private:
 
 #ifdef _EDITOR
 	EditorClass* editor;
+	EditorUI* editorUI;
 #else
 	PlayerController* playerController;
 #endif

@@ -30,9 +30,6 @@ public:
 
 private:
 	MouseClass* mouse;
-
-private:
-	void DrawUiObject(Transform2D, int);
 };
 
 #endif

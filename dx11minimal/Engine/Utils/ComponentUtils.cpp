@@ -115,3 +115,38 @@ void DrawDebugString(std::wstring text, point3d screenPos) {
     DelayedDestroy* delayedDestroy = entity->AddComponent<DelayedDestroy>();
     delayedDestroy->lifeTime = 1;
 }
+
+
+void DrawUiObject(const Transform2D& transform2D, int vShader) {
+    Shaders::vShader(vShader);
+
+    ConstBuf::global[0] = XMFLOAT4(transform2D.position.x, transform2D.position.y, transform2D.position.z, ConstBuf::global[0].w);
+    ConstBuf::global[1] = XMFLOAT4(transform2D.scale.x, transform2D.scale.y, 0, 0);
+    ConstBuf::global[2] = XMFLOAT4(transform2D.anchorPoint.x, transform2D.anchorPoint.y, transform2D.rotation, 0);
+
+    switch (transform2D.ratio)
+    {
+    case ScreenAspectRatio::XY:
+        ConstBuf::global[1].z = 1;
+        ConstBuf::global[1].w = 1;
+        break;
+    case ScreenAspectRatio::YX:
+        ConstBuf::global[1].z = ConstBuf::frame.aspect.x;
+        ConstBuf::global[1].w = ConstBuf::frame.aspect.y;
+        break;
+    case ScreenAspectRatio::XX:
+        ConstBuf::global[1].z = 1;
+        ConstBuf::global[1].w = ConstBuf::frame.aspect.y;
+        break;
+    case ScreenAspectRatio::YY:
+        ConstBuf::global[1].z = ConstBuf::frame.aspect.x;
+        ConstBuf::global[1].w = 1;
+        break;
+    }
+
+    ConstBuf::Update(5, ConstBuf::global);
+    ConstBuf::ConstToVertex(5);
+    ConstBuf::ConstToPixel(5);
+
+    Draw::Drawer(1);
+}

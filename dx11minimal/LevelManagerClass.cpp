@@ -170,6 +170,7 @@ bool LevelManagerClass::Initialize()
 
 #ifdef _EDITOR
 	editor = Singleton::GetInstance<EditorClass>();
+	editorUI = Singleton::GetInstance<EditorUI>();
 #else
 	playerController = new PlayerController();
 	playerController->Initialize(player);
@@ -254,6 +255,12 @@ void LevelManagerClass::Shutdown()
 		editor->Shutdown();
 		delete editor;
 		editor = 0;
+	}
+	if (editorUI)
+	{
+		editorUI->Shutdown();
+		delete editorUI;
+		editorUI = 0;
 	}
 #else
 	if (playerController)
@@ -395,6 +402,11 @@ void LevelManagerClass::Frame()
 #endif
 
 	m_World->UpdateRender();
+
+#ifdef _EDITOR
+	editorUI->Update();
+#endif
+
 
 	mouse->RenderCursor();
 	Draw::Present();

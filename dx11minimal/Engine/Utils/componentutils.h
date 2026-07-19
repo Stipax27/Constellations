@@ -57,5 +57,7 @@ CollisionInfo GetProjectileCollisionInfo(EntityStorage* entityStorage, Entity* p
 
 void DrawDebugString(std::wstring text, point3d screenPos = point3d(0.75f, 0.75f, 0));
 
+void DrawUiObject(const Transform2D& transform2D, int vShader);
+
 
 #endif
