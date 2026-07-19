@@ -1,6 +1,9 @@
 #include "utils.h"
+
 #include <random>
 #include <cctype>
+#include <locale>
+#include <codecvt>
 
 using namespace std;
 using namespace DirectX;
@@ -528,4 +531,11 @@ bool isFirstStringHigher(const string& str1, const string& str2) {
 
     // If all characters match, the shorter string is considered "higher"
     return str1.length() < str2.length();
+}
+
+wstring string_to_wstring(const string& str) {
+    int size_needed = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), (int)str.length(), NULL, 0);
+    std::wstring wstr(size_needed, 0);
+    MultiByteToWideChar(CP_UTF8, 0, str.c_str(), (int)str.length(), &wstr[0], size_needed);
+    return wstr;
 }

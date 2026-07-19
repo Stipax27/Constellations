@@ -28,8 +28,6 @@ void EditorUI::Update()
 
 void EditorUI::InitExplorer()
 {
-	UpdateEntityList();
-
 	explorerWindow = entityStorage->CreateEntity("Explorer");
 
 	Transform2D* transform2D = explorerWindow->AddComponent<Transform2D>();
@@ -40,6 +38,8 @@ void EditorUI::InitExplorer()
 	Rect* rect = explorerWindow->AddComponent<Rect>();
 	rect->color = point3d(0.25f, 0.25f, 0.25f);
 	rect->opacity = 0.75f;
+
+	UpdateEntityList();
 }
 
 
@@ -54,20 +54,51 @@ void EditorUI::UpdateEntityList()
 		}
 	}
 
-	for (ExplorerItem& item : list) {
-		CreateItemButton(item);
+	int size = list.size();
+	for (int i = 0; i < size; i++) {
+		ExplorerItem& item = list[i];
+		CreateItemButton(item, i);
 	}
 }
 
 
-void EditorUI::CreateItemButton(const ExplorerItem& item)
+void EditorUI::CreateItemButton(const ExplorerItem& item, int pos)
 {
-	Entity* itemEntity = entityStorage->CreateEntity("Explorer", explorerWindow);
+	// Button
 
-	Transform2D* transform2D = explorerWindow->AddComponent<Transform2D>();
+	Entity* itemEntity = entityStorage->CreateEntity("Item", explorerWindow);
+
+	Transform2D* transform2D = itemEntity->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(0, 1, 0);
+	transform2D->position = point3d(0, 1.0f - EXPLORER_ITEM_HEIGHT * 3 * pos, 0);
+	transform2D->scale = point3d(0.95f, EXPLORER_ITEM_HEIGHT, 0);
+
+	Button* button = itemEntity->AddComponent<Button>();
+	button->color = point3d(0.4f, 0.4f, 0.4f);
+	button->clickColor = point3d(0.5f, 0.5f, 0.5f);
+
+	TextLabel* textLabel = itemEntity->AddComponent<TextLabel>();
+	textLabel->textW = string_to_wstring(item.entity->name);
+	textLabel->fontFamilyW = L"Impact";
+	textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
+	textLabel->fontWeight = 500;
+	textLabel->fontSizePx = 40;
+	textLabel->fontScale = 0.6f;
+	textLabel->letterSpacingPx = 1.0f;
+	textLabel->centered = true;
+
+	// Arrow
+
+	Entity* arrowEntity = entityStorage->CreateEntity("Arrow", itemEntity);
+
+	transform2D = arrowEntity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(-1, 0, 0);
 	transform2D->position = point3d(-1, 0, 0);
-	transform2D->scale = point3d(EXPLORER_WIDTH, 1, 0);
+	transform2D->scale = point3d(1.0f, 1.0f, 0);
+	transform2D->ratio = ScreenAspectRatio::YY;
+
+	ImageLabel* imageLabel = arrowEntity->AddComponent<ImageLabel>();
+	imageLabel->textureName = "aperture";
 }
 
 

@@ -67,5 +67,6 @@ point3d GetUpVectorFromMatrix(const DirectX::XMMATRIX& matrix);
 point3d GetRightVectorFromMatrix(const DirectX::XMMATRIX& matrix);
 
 bool isFirstStringHigher(const std::string& str1, const std::string& str2);
+std::wstring string_to_wstring(const std::string& str); // string should be UTF-8
 
 #endif

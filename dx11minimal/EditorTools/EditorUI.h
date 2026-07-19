@@ -5,6 +5,7 @@
 
 
 #define EXPLORER_WIDTH 0.2f
+#define EXPLORER_ITEM_HEIGHT 0.03f
 
 
 struct ExplorerItem
@@ -37,7 +38,7 @@ private:
 private:
 	void InitExplorer();
 	void UpdateEntityList();
-	void CreateItemButton(const ExplorerItem&);
+	void CreateItemButton(const ExplorerItem&, int pos);
 	ExplorerItem NewItem(Entity*);
 	void SortItemsAlphabetically(std::vector<ExplorerItem>&);
 };
