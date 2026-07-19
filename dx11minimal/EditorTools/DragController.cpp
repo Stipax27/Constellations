@@ -87,7 +87,7 @@ void DragController::DragByPivot()
 
 void DragController::ProcessSave()
 {
-	if (input::IsKeyDown(VK_LCONTROL) && input::IsKeyPressed('S')) {
+	if (input::IsKeyDown(VK_LCONTROL) && input::IsKeyDown(VK_LSHIFT) && input::IsKeyPressed('S')) {
 		for (Entity* entity : entityStorage->entities) {
 			if (entity->GetParent() == nullptr) {
 				entityStorage->SaveEntityToFile(entity, entity->name);
