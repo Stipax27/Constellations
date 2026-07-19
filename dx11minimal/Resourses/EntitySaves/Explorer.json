@@ -1,0 +1,34 @@
+{
+    "active": true,
+    "children": [],
+    "components": [
+        {
+            "active": true,
+            "anchorPoint": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "parentAnchor": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "position": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "ratio": 0,
+            "rotation": 0.0,
+            "scale": {
+                "x": 0.20000000298023224,
+                "y": 1.0,
+                "z": 0.0
+            },
+            "type": "struct Transform2D"
+        }
+    ],
+    "name": "Explorer",
+    "timeScale": 1.0
+}

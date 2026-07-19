@@ -42,16 +42,6 @@
                         },
                         {
                             "active": true,
-                            "axis": {
-                                "x": 0.0,
-                                "y": 1.0,
-                                "z": 0.0
-                            },
-                            "rotateSpeed": -6.0,
-                            "type": "struct RotatingBody"
-                        },
-                        {
-                            "active": true,
                             "color1": {
                                 "x": 1.0,
                                 "y": 0.949999988079071,
@@ -70,6 +60,16 @@
                             "crownRadius": 0.8999999761581421,
                             "radius": 2.0,
                             "type": "struct Star"
+                        },
+                        {
+                            "active": true,
+                            "axis": {
+                                "x": 0.0,
+                                "y": 1.0,
+                                "z": 0.0
+                            },
+                            "rotateSpeed": -6.0,
+                            "type": "struct RotatingBody"
                         },
                         {
                             "active": true,
@@ -175,16 +175,6 @@
                         },
                         {
                             "active": true,
-                            "axis": {
-                                "x": 1.0,
-                                "y": 0.0,
-                                "z": 0.0
-                            },
-                            "rotateSpeed": -10.0,
-                            "type": "struct RotatingBody"
-                        },
-                        {
-                            "active": true,
                             "color1": {
                                 "x": 1.0,
                                 "y": 0.949999988079071,
@@ -203,6 +193,16 @@
                             "crownRadius": 0.8999999761581421,
                             "radius": 2.0,
                             "type": "struct Star"
+                        },
+                        {
+                            "active": true,
+                            "axis": {
+                                "x": 1.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "rotateSpeed": -10.0,
+                            "type": "struct RotatingBody"
                         },
                         {
                             "active": true,
@@ -308,16 +308,6 @@
                         },
                         {
                             "active": true,
-                            "axis": {
-                                "x": 1.0,
-                                "y": 0.0,
-                                "z": 0.0
-                            },
-                            "rotateSpeed": -2.0,
-                            "type": "struct RotatingBody"
-                        },
-                        {
-                            "active": true,
                             "color1": {
                                 "x": 1.0,
                                 "y": 0.949999988079071,
@@ -336,6 +326,16 @@
                             "crownRadius": 0.8999999761581421,
                             "radius": 2.0,
                             "type": "struct Star"
+                        },
+                        {
+                            "active": true,
+                            "axis": {
+                                "x": 1.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "rotateSpeed": -2.0,
+                            "type": "struct RotatingBody"
                         },
                         {
                             "active": true,
@@ -441,16 +441,6 @@
                         },
                         {
                             "active": true,
-                            "axis": {
-                                "x": 1.0,
-                                "y": 0.0,
-                                "z": 0.0
-                            },
-                            "rotateSpeed": -12.0,
-                            "type": "struct RotatingBody"
-                        },
-                        {
-                            "active": true,
                             "color1": {
                                 "x": 1.0,
                                 "y": 0.949999988079071,
@@ -469,6 +459,16 @@
                             "crownRadius": 0.8999999761581421,
                             "radius": 2.0,
                             "type": "struct Star"
+                        },
+                        {
+                            "active": true,
+                            "axis": {
+                                "x": 1.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "rotateSpeed": -12.0,
+                            "type": "struct RotatingBody"
                         },
                         {
                             "active": true,
@@ -574,16 +574,6 @@
                         },
                         {
                             "active": true,
-                            "axis": {
-                                "x": 1.0,
-                                "y": 0.0,
-                                "z": 0.0
-                            },
-                            "rotateSpeed": -4.0,
-                            "type": "struct RotatingBody"
-                        },
-                        {
-                            "active": true,
                             "color1": {
                                 "x": 1.0,
                                 "y": 0.949999988079071,
@@ -602,6 +592,16 @@
                             "crownRadius": 0.8999999761581421,
                             "radius": 2.0,
                             "type": "struct Star"
+                        },
+                        {
+                            "active": true,
+                            "axis": {
+                                "x": 1.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "rotateSpeed": -4.0,
+                            "type": "struct RotatingBody"
                         },
                         {
                             "active": true,
@@ -707,16 +707,6 @@
                         },
                         {
                             "active": true,
-                            "axis": {
-                                "x": 1.0,
-                                "y": 0.0,
-                                "z": 0.0
-                            },
-                            "rotateSpeed": -0.0,
-                            "type": "struct RotatingBody"
-                        },
-                        {
-                            "active": true,
                             "color1": {
                                 "x": 1.0,
                                 "y": 0.949999988079071,
@@ -735,6 +725,16 @@
                             "crownRadius": 0.8999999761581421,
                             "radius": 2.0,
                             "type": "struct Star"
+                        },
+                        {
+                            "active": true,
+                            "axis": {
+                                "x": 1.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "rotateSpeed": -0.0,
+                            "type": "struct RotatingBody"
                         },
                         {
                             "active": true,
