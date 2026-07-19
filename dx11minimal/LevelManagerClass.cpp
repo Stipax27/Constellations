@@ -97,7 +97,7 @@ bool LevelManagerClass::Initialize()
 	SingleDamager* singleDamager;
 
 
-	worldFolder = entityStorage->CreateEntity("World");
+	//worldFolder = entityStorage->CreateEntity("World"); // COMMENTED RECENTLY
 
 	Entity* player = CreatePlayer();
 
@@ -500,6 +500,8 @@ void LevelManagerClass::LoadTextures()
 	Textures::LoadDDSTexture("gta", L"..\\dx11minimal\\Resourses\\Textures\\gta.dds");
 	Textures::LoadDDSTexture("aperture", L"..\\dx11minimal\\Resourses\\Textures\\aperture.dds");
 	Textures::LoadPNGTexture("comicsSpot", L"..\\dx11minimal\\Resourses\\Textures\\comicsSpot.png");
+
+	Textures::LoadPNGTexture("itemArrow", L"..\\dx11minimal\\Resourses\\Textures\\Editor\\itemArrow.png");
 }
 
 void LevelManagerClass::LoadSounds()

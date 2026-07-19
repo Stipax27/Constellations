@@ -22,7 +22,16 @@ void EditorUI::Shutdown()
 
 void EditorUI::Update()
 {
+	for (ExplorerItem& item : itemList) {
+		Button* button = item.button->GetComponent<Button>();
+		if (button->isClicked) {
 
+			item.opened = !item.opened;
+
+			Entity* arrow = item.button->GetChildByName("Arrow", true);
+			arrow->GetComponent<Transform2D>()->rotation = item.opened ? -PI / 2 : 0;
+		}
+	}
 }
 
 
@@ -45,24 +54,23 @@ void EditorUI::InitExplorer()
 
 void EditorUI::UpdateEntityList()
 {
-	vector<ExplorerItem> list;
-
 	for (Entity* entity : entityStorage->entities) {
 		if (entity->GetParent() == nullptr) {
 			ExplorerItem item = NewItem(entity);
-			list.push_back(item);
+			itemList.push_back(item);
 		}
 	}
+	SortItemsAlphabetically(itemList);
 
-	int size = list.size();
+	int size = itemList.size();
 	for (int i = 0; i < size; i++) {
-		ExplorerItem& item = list[i];
+		ExplorerItem& item = itemList[i];
 		CreateItemButton(item, i);
 	}
 }
 
 
-void EditorUI::CreateItemButton(const ExplorerItem& item, int pos)
+void EditorUI::CreateItemButton(ExplorerItem& item, int pos)
 {
 	// Button
 
@@ -70,7 +78,7 @@ void EditorUI::CreateItemButton(const ExplorerItem& item, int pos)
 
 	Transform2D* transform2D = itemEntity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(0, 1, 0);
-	transform2D->position = point3d(0, 1.0f - EXPLORER_ITEM_HEIGHT * 3 * pos, 0);
+	transform2D->position = point3d(0, 1.0f - (EXPLORER_ITEM_HEIGHT * 2 * pos + EXPLORER_ITEM_OFFSET * (pos + 1)), 0);
 	transform2D->scale = point3d(0.95f, EXPLORER_ITEM_HEIGHT, 0);
 
 	Button* button = itemEntity->AddComponent<Button>();
@@ -87,18 +95,26 @@ void EditorUI::CreateItemButton(const ExplorerItem& item, int pos)
 	textLabel->letterSpacingPx = 1.0f;
 	textLabel->centered = true;
 
-	// Arrow
+	// Arrow holder
 
-	Entity* arrowEntity = entityStorage->CreateEntity("Arrow", itemEntity);
+	Entity* arrowHolderEntity = entityStorage->CreateEntity("ArrowHolder", itemEntity);
 
-	transform2D = arrowEntity->AddComponent<Transform2D>();
+	transform2D = arrowHolderEntity->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(-1, 0, 0);
-	transform2D->position = point3d(-1, 0, 0);
-	transform2D->scale = point3d(1.0f, 1.0f, 0);
+	transform2D->position = point3d(-0.98f, 0, 0);
+	transform2D->scale = point3d(0.9f, 0.9f, 0);
 	transform2D->ratio = ScreenAspectRatio::YY;
 
+	// Arrow
+
+	Entity* arrowEntity = entityStorage->CreateEntity("Arrow", arrowHolderEntity);
+
+	transform2D = arrowEntity->AddComponent<Transform2D>();
+
 	ImageLabel* imageLabel = arrowEntity->AddComponent<ImageLabel>();
-	imageLabel->textureName = "aperture";
+	imageLabel->textureName = "itemArrow";
+
+	item.button = itemEntity;
 }
 
 
@@ -119,11 +135,11 @@ void EditorUI::SortItemsAlphabetically(vector<ExplorerItem>& list)
 {
 	int size = list.size();
 	for (int i = 1; i < size; i++) {
-		ExplorerItem& item = list[i];
+		ExplorerItem item = list[i];
 		string& itemName = item.entity->name;
 
 		int j = i - 1;
-		while (j >= 0 && isFirstStringHigher(list[j].entity->name, itemName)) {
+		while (j >= 0 && isFirstStringHigher(itemName, list[j].entity->name)) {
 			list[j + 1] = list[j];
 			j--;
 		}
