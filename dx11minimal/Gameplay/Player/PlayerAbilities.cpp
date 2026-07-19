@@ -1,5 +1,7 @@
 #include "PlayerAbilities.h"
 
+#include "../../GlobalConfigs.h"
+
 #include "../../Engine/Lib/timer.h"
 #include "../../Engine/Lib/interp.h"
 

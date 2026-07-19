@@ -1,6 +1,11 @@
 #pragma once
 
+// MOUSE
 #define MOUSE_SENSIVITY 3.5f
+
+// CAMERA
+#define DEFAULT_CAMERA_DISTANCE 8
+#define DEFAULT_FOV 80
 
 // GAMEPLAY
 #define STAR_LINKING_RADIUS 75.0f

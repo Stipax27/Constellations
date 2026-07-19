@@ -1,4 +1,5 @@
 #include "cameraclass.h"
+#include "../../GlobalConfigs.h"
 
 CameraClass::CameraClass()
 {
