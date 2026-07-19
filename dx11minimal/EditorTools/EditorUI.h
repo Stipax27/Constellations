@@ -7,6 +7,20 @@
 #define EXPLORER_WIDTH 0.2f
 
 
+struct ExplorerItem
+{
+	Entity* entity;
+	std::vector<ExplorerItem> children;
+
+	ExplorerItem() = default;
+
+	ExplorerItem(Entity* entity)
+		: entity(entity)
+	{
+	};
+};
+
+
 class EditorUI : public ISingleton
 {
 public:
@@ -20,6 +34,9 @@ private:
 
 private:
 	void InitExplorer();
+	void UpdateEntityList();
+	ExplorerItem CreateExplorerItem(Entity*);
+	void SortItemsAlphabetically(std::vector<ExplorerItem>&);
 };
 
 #endif

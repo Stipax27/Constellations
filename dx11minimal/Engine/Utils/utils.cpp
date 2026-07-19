@@ -1,5 +1,6 @@
 #include "utils.h"
 #include <random>
+#include <cctype>
 
 using namespace std;
 using namespace DirectX;
@@ -510,4 +511,21 @@ point3d GetUpVectorFromMatrix(const DirectX::XMMATRIX& matrix) {
 
 point3d GetRightVectorFromMatrix(const DirectX::XMMATRIX& matrix) {
     return point3d(matrix.r[0].m128_f32[0], matrix.r[0].m128_f32[1], matrix.r[0].m128_f32[2]).normalized();
+}
+
+
+bool isFirstStringHigher(const string& str1, const string& str2) {
+    size_t i = 0;
+    while (i < str1.length() && i < str2.length()) {
+        char c1 = tolower(static_cast<unsigned char>(str1[i]));
+        char c2 = tolower(static_cast<unsigned char>(str2[i]));
+
+        if (c1 != c2) {
+            return c1 < c2;
+        }
+        i++;
+    }
+
+    // If all characters match, the shorter string is considered "higher"
+    return str1.length() < str2.length();
 }

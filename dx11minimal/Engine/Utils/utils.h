@@ -66,4 +66,6 @@ point3d GetLookVectorFromMatrix(const DirectX::XMMATRIX& matrix);
 point3d GetUpVectorFromMatrix(const DirectX::XMMATRIX& matrix);
 point3d GetRightVectorFromMatrix(const DirectX::XMMATRIX& matrix);
 
+bool isFirstStringHigher(const std::string& str1, const std::string& str2);
+
 #endif
