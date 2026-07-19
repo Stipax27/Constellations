@@ -32,10 +32,13 @@ private:
 	DragController* dragController;
 	EntityStorage* entityStorage;
 
+	Entity* explorerWindow;
+
 private:
 	void InitExplorer();
 	void UpdateEntityList();
-	ExplorerItem CreateExplorerItem(Entity*);
+	void CreateItemButton(const ExplorerItem&);
+	ExplorerItem NewItem(Entity*);
 	void SortItemsAlphabetically(std::vector<ExplorerItem>&);
 };
 

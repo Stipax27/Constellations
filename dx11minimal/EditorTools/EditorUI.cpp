@@ -30,7 +30,7 @@ void EditorUI::InitExplorer()
 {
 	UpdateEntityList();
 
-	Entity* explorerWindow = entityStorage->CreateEntity("Explorer");
+	explorerWindow = entityStorage->CreateEntity("Explorer");
 
 	Transform2D* transform2D = explorerWindow->AddComponent<Transform2D>();
 	transform2D->anchorPoint = point3d(-1, 0, 0);
@@ -49,23 +49,34 @@ void EditorUI::UpdateEntityList()
 
 	for (Entity* entity : entityStorage->entities) {
 		if (entity->GetParent() == nullptr) {
-			ExplorerItem item = CreateExplorerItem(entity);
+			ExplorerItem item = NewItem(entity);
 			list.push_back(item);
 		}
 	}
 
 	for (ExplorerItem& item : list) {
-
+		CreateItemButton(item);
 	}
 }
 
 
-ExplorerItem EditorUI::CreateExplorerItem(Entity* entity)
+void EditorUI::CreateItemButton(const ExplorerItem& item)
+{
+	Entity* itemEntity = entityStorage->CreateEntity("Explorer", explorerWindow);
+
+	Transform2D* transform2D = explorerWindow->AddComponent<Transform2D>();
+	transform2D->anchorPoint = point3d(-1, 0, 0);
+	transform2D->position = point3d(-1, 0, 0);
+	transform2D->scale = point3d(EXPLORER_WIDTH, 1, 0);
+}
+
+
+ExplorerItem EditorUI::NewItem(Entity* entity)
 {
 	ExplorerItem item = ExplorerItem(entity);
 
 	for (Entity* child : entity->GetChildren()) {
-		item.children.push_back(CreateExplorerItem(child));
+		item.children.push_back(NewItem(child));
 	}
 	SortItemsAlphabetically(item.children);
 
