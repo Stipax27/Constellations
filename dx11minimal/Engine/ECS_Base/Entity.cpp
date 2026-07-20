@@ -170,6 +170,7 @@ void Entity::ClearChildren() {
 	for (Entity* child : children) {
 		child->Destroy();
 	}
+	children.clear();
 }
 
 
