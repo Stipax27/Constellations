@@ -12,7 +12,6 @@
 struct ExplorerItem
 {
 	Entity* entity = nullptr;
-	Entity* button = nullptr;
 	std::vector<ExplorerItem> children;
 
 	bool opened = false;
@@ -40,6 +39,7 @@ private:
 	Entity* explorerWindow;
 
 	std::vector<ExplorerItem> itemList;
+	std::vector<std::pair<Entity*, ExplorerItem&>> itemButtons;
 
 private:
 	void InitExplorer();

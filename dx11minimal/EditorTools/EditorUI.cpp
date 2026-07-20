@@ -22,17 +22,17 @@ void EditorUI::Shutdown()
 
 void EditorUI::Update()
 {
-	for (ExplorerItem& item : itemList) {
-		if (!IsEntityValid(item.button))
+	for (pair<Entity*, ExplorerItem&> p : itemButtons) {
+		if (!IsEntityValid(p.first))
 			continue;
 
-		Button* button = item.button->GetComponent<Button>();
+		Button* button = p.first->GetComponent<Button>();
 		if (button->isReleased) {
 
-			item.opened = !item.opened;
+			p.second.opened = !p.second.opened;
 
-			Entity* arrow = item.button->GetChildByName("Arrow", true);
-			arrow->GetComponent<Transform2D>()->rotation = item.opened ? -PI / 2 : 0;
+			Entity* arrow = p.first->GetChildByName("Arrow", true);
+			arrow->GetComponent<Transform2D>()->rotation = p.second.opened ? -PI / 2 : 0;
 
 			UpdateItems();
 		}
@@ -78,9 +78,10 @@ void EditorUI::UpdateEntityList()
 void EditorUI::UpdateItems()
 {
 	explorerWindow->ClearChildren();
+	itemButtons.clear();
 
 	int count = 0;
-	//ItemsOfList(itemList, count);
+	ItemsOfList(itemList, count);
 }
 
 
@@ -141,7 +142,7 @@ void EditorUI::CreateItemButton(ExplorerItem& item, int pos)
 	ImageLabel* imageLabel = arrowEntity->AddComponent<ImageLabel>();
 	imageLabel->textureName = "itemArrow";
 
-	item.button = itemEntity;
+	itemButtons.push_back({itemEntity, item});
 }
 
 
