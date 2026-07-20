@@ -6,8 +6,6 @@
 
 struct Button : Component
 {
-	bool isClicked = false;
-
 	point3d color = point3d(1, 1, 1);
 	point3d clickColor = point3d(1, 0, 0);
 	float opacity = 1.0f;
@@ -17,6 +15,10 @@ struct Button : Component
 
 	int vShader = 13;
 	int pShader = 13;
+
+	bool isDown = false;
+	bool isClicked = false;
+	bool isReleased = false;
 };
 
 #endif

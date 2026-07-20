@@ -49,6 +49,7 @@ void UISystem::Update(EntityStorage& entityStorage, float deltaTime)
 
 			Button* button = entity->GetComponent<Button>();
 			if (button != nullptr && button->active) {
+				bool wasDown = button->isDown;
 
 				if (mouse->IsLButtonDown()) {
 					point3d aspectCorrection = point3d();
@@ -85,20 +86,37 @@ void UISystem::Update(EntityStorage& entityStorage, float deltaTime)
 						projY = delta.dot(upVector);
 
 						if (abs(projX) <= realScale.x && abs(projY) <= realScale.y) {
-							button->isClicked = true;
+							button->isDown = true;
 						}
 						else {
-							button->isClicked = false;
+							button->isDown = false;
 						}
 					}
 				}
 				else {
-					button->isClicked = false;
+					button->isDown = false;
 				}
 
-				point3d color = button->isClicked ? button->clickColor : button->color;
+				if (button->isDown) {
+					if (wasDown) {
+						button->isClicked = false;
+					}
+					else {
+						button->isClicked = true;
+					}
+				}
+				else {
+					if (wasDown) {
+						button->isReleased = true;
+					}
+					else {
+						button->isReleased = false;
+					}
+				}
 
-				//if (button->isClicked) {
+				point3d color = button->isDown ? button->clickColor : button->color;
+
+				//if (button->isDown) {
 				//	button->color = point3d(1, 0, 0);
 
 				//	/*Entity* _entity = entityStorage->CreateEntity();

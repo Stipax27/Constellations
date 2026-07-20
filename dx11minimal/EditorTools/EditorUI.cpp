@@ -23,13 +23,18 @@ void EditorUI::Shutdown()
 void EditorUI::Update()
 {
 	for (ExplorerItem& item : itemList) {
+		if (!IsEntityValid(item.button))
+			continue;
+
 		Button* button = item.button->GetComponent<Button>();
-		if (button->isClicked) {
+		if (button->isReleased) {
 
 			item.opened = !item.opened;
 
 			Entity* arrow = item.button->GetChildByName("Arrow", true);
 			arrow->GetComponent<Transform2D>()->rotation = item.opened ? -PI / 2 : 0;
+
+			UpdateItems();
 		}
 	}
 }
@@ -66,6 +71,28 @@ void EditorUI::UpdateEntityList()
 	for (int i = 0; i < size; i++) {
 		ExplorerItem& item = itemList[i];
 		CreateItemButton(item, i);
+	}
+}
+
+
+void EditorUI::UpdateItems()
+{
+	explorerWindow->ClearChildren();
+
+	int count = 0;
+	//ItemsOfList(itemList, count);
+}
+
+
+void EditorUI::ItemsOfList(vector<ExplorerItem>& list, int& count)
+{
+	for (ExplorerItem& item : list) {
+		CreateItemButton(item, count);
+		count++;
+
+		if (item.opened) {
+			ItemsOfList(item.children, count);
+		}
 	}
 }
 

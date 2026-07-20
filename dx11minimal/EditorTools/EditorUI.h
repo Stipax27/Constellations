@@ -44,6 +44,8 @@ private:
 private:
 	void InitExplorer();
 	void UpdateEntityList();
+	void UpdateItems();
+	void ItemsOfList(std::vector<ExplorerItem>& list, int& count);
 	void CreateItemButton(ExplorerItem&, int pos);
 	ExplorerItem NewItem(Entity*);
 	void SortItemsAlphabetically(std::vector<ExplorerItem>&);
