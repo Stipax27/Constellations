@@ -65,7 +65,7 @@ void EditorUI::UpdateEntityList()
 			itemList.push_back(item);
 		}
 	}
-	SortItemsAlphabetically(itemList);
+	//SortItemsAlphabetically(itemList);
 
 	int size = itemList.size();
 	for (int i = 0; i < size; i++) {
@@ -153,7 +153,7 @@ ExplorerItem EditorUI::NewItem(Entity* entity)
 	for (Entity* child : entity->GetChildren()) {
 		item.children.push_back(NewItem(child));
 	}
-	SortItemsAlphabetically(item.children);
+	//SortItemsAlphabetically(item.children);
 
 	return item;
 }
