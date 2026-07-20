@@ -4,7 +4,13 @@
 
 using namespace std;
 
-
+bool LevelManagerClass::IsMenuVisible() const
+{
+	if (m_MenuSystem) {
+		return m_MenuSystem->IsMenuVisible();
+	}
+	return false;
+}
 
 LevelManagerClass::LevelManagerClass()
 {
@@ -166,6 +172,11 @@ bool LevelManagerClass::Initialize()
 
 	InitSystems();
 
+	//
+	m_MenuSystem = new MenuSystem();
+	m_MenuSystem->Initialize();
+	
+
 #ifdef _EDITOR
 	editCameraController = new EditCameraController();
 	editCameraController->Initialize();
@@ -247,6 +258,14 @@ bool LevelManagerClass::Initialize()
 
 void LevelManagerClass::Shutdown()
 {
+	
+	if (m_MenuSystem) {
+		m_MenuSystem->Shutdown();
+		delete m_MenuSystem;
+		m_MenuSystem = nullptr;
+	}
+	
+
 #ifdef _EDITOR
 	if (editCameraController)
 	{
@@ -309,6 +328,25 @@ void LevelManagerClass::Frame()
 	if (!window->IsActive())
 		return;
 
+	//
+	if (input::IsKeyPressed('P')) {
+		if (m_MenuSystem) {
+			if (m_MenuSystem->IsMenuVisible()) {
+				m_MenuSystem->HideAllMenus();
+				if (worldFolder) {
+					worldFolder->SetTimeScale(1.0f);
+				}
+			}
+			else {
+				m_MenuSystem->ShowPauseMenu();
+				if (worldFolder) {
+					worldFolder->SetTimeScale(0.0f);
+				}
+			}
+		}
+	}
+	//
+
 	mouse->Update();
 
 	UpdateTestAnimationToggle();
@@ -324,6 +362,12 @@ void LevelManagerClass::Frame()
 	playerController->ProcessMouse();
 	playerController->abilities->Update();
 	playerController->ProcessUI();
+
+	
+	if (m_MenuSystem) {
+		m_MenuSystem->Update(*entityStorage, 1.0f / 60.0f);
+	}
+	
 
 	questManager->UpdateQuests();
 
@@ -593,7 +637,6 @@ Entity* LevelManagerClass::CreatePlayer(Entity* folder)
 
 	return player;
 }
-
 
 void LevelManagerClass::CreateUI()
 {

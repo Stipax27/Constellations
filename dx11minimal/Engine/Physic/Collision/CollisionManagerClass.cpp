@@ -95,7 +95,7 @@ bool CollisionManagerClass::raycast_sphere(const RayInfo& ray, const Transform t
         hit.hit = false;
         return false;
     }
-
+    
     float sqrtDiscriminant = sqrt(discriminant);
     float t1 = (-b - sqrtDiscriminant) / (2 * a);
     float t2 = (-b + sqrtDiscriminant) / (2 * a);

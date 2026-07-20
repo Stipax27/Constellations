@@ -14,6 +14,7 @@
 
 #include "Engine/Window/windowclass.h"
 #include "Engine/Mouse/mouseclass.h"
+#include "Gameplay/UI/MenuSystem.h" //меню
 
 #include "ecsHeaders.h"
 
@@ -58,9 +59,13 @@ public:
 
 	void Frame();
 
+	bool IsMenuVisible() const;
+
 private:
 	World* m_World;
 	EntityStorage* entityStorage;
+	///
+	MenuSystem* m_MenuSystem = nullptr;
 
 #ifdef _EDITOR
 	EditCameraController* editCameraController;

@@ -344,6 +344,8 @@
     <ClInclude Include="Engine\Compute\Quests\questmanager.h" />
     <ClInclude Include="Engine\Compute\Quests\Queststarcollection.h" />
     <ClInclude Include="Gameplay\MazeLinkSystem.h" />
+    <ClInclude Include="Gameplay\UI\MenuComponents.h" />
+    <ClInclude Include="Gameplay\UI\MenuSystem.h" />
     <ClInclude Include="Systems\Transform2DDebugUI.h" />
     <ClInclude Include="Unused\Font_OLD.h" />
     <ClInclude Include="Framework\framework.h" />
@@ -1297,6 +1299,7 @@
     <ClCompile Include="Engine\Compute\DelayedDestroy\DelayedDestroySystem.cpp" />
     <ClCompile Include="Engine\Camera\FrustumClass.cpp" />
     <ClCompile Include="Gameplay\MazeLinkSystem.cpp" />
+    <ClCompile Include="Gameplay\UI\MenuSystem.cpp" />
     <ClCompile Include="LevelManagerClass.cpp" />
     <ClCompile Include="Engine\Render\Mesh\MeshSystem.cpp" />
     <ClCompile Include="Engine\Physic\Collision\MethodOfClosest.cpp" />
