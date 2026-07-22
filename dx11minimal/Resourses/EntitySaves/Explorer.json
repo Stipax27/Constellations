@@ -1,6 +1,423 @@
 {
     "active": true,
-    "children": [],
+    "children": [
+        {
+            "active": true,
+            "children": [
+                {
+                    "active": true,
+                    "children": [
+                        {
+                            "active": true,
+                            "children": [],
+                            "components": [
+                                {
+                                    "active": true,
+                                    "anchorPoint": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "parentAnchor": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "position": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "ratio": 0,
+                                    "rotation": 0.0,
+                                    "scale": {
+                                        "x": 1.0,
+                                        "y": 1.0,
+                                        "z": 0.0
+                                    },
+                                    "type": "struct Transform2D"
+                                }
+                            ],
+                            "name": "Arrow",
+                            "timeScale": 1.0
+                        }
+                    ],
+                    "components": [
+                        {
+                            "active": true,
+                            "anchorPoint": {
+                                "x": -1.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "parentAnchor": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "position": {
+                                "x": -0.9800000190734863,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "ratio": 3,
+                            "rotation": 0.0,
+                            "scale": {
+                                "x": 0.8999999761581421,
+                                "y": 0.8999999761581421,
+                                "z": 0.0
+                            },
+                            "type": "struct Transform2D"
+                        }
+                    ],
+                    "name": "ArrowHolder",
+                    "timeScale": 1.0
+                }
+            ],
+            "components": [
+                {
+                    "active": true,
+                    "anchorPoint": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0
+                    },
+                    "parentAnchor": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.9900000095367432,
+                        "z": 0.0
+                    },
+                    "ratio": 0,
+                    "rotation": 0.0,
+                    "scale": {
+                        "x": 0.949999988079071,
+                        "y": 0.02500000037252903,
+                        "z": 0.0
+                    },
+                    "type": "struct Transform2D"
+                }
+            ],
+            "name": "Item",
+            "timeScale": 1.0
+        },
+        {
+            "active": true,
+            "children": [
+                {
+                    "active": true,
+                    "children": [
+                        {
+                            "active": true,
+                            "children": [],
+                            "components": [
+                                {
+                                    "active": true,
+                                    "anchorPoint": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "parentAnchor": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "position": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "ratio": 0,
+                                    "rotation": 0.0,
+                                    "scale": {
+                                        "x": 1.0,
+                                        "y": 1.0,
+                                        "z": 0.0
+                                    },
+                                    "type": "struct Transform2D"
+                                }
+                            ],
+                            "name": "Arrow",
+                            "timeScale": 1.0
+                        }
+                    ],
+                    "components": [
+                        {
+                            "active": true,
+                            "anchorPoint": {
+                                "x": -1.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "parentAnchor": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "position": {
+                                "x": -0.9800000190734863,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "ratio": 3,
+                            "rotation": 0.0,
+                            "scale": {
+                                "x": 0.8999999761581421,
+                                "y": 0.8999999761581421,
+                                "z": 0.0
+                            },
+                            "type": "struct Transform2D"
+                        }
+                    ],
+                    "name": "ArrowHolder",
+                    "timeScale": 1.0
+                }
+            ],
+            "components": [
+                {
+                    "active": true,
+                    "anchorPoint": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0
+                    },
+                    "parentAnchor": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.9300000071525574,
+                        "z": 0.0
+                    },
+                    "ratio": 0,
+                    "rotation": 0.0,
+                    "scale": {
+                        "x": 0.949999988079071,
+                        "y": 0.02500000037252903,
+                        "z": 0.0
+                    },
+                    "type": "struct Transform2D"
+                }
+            ],
+            "name": "Item",
+            "timeScale": 1.0
+        },
+        {
+            "active": true,
+            "children": [
+                {
+                    "active": true,
+                    "children": [
+                        {
+                            "active": true,
+                            "children": [],
+                            "components": [
+                                {
+                                    "active": true,
+                                    "anchorPoint": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "parentAnchor": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "position": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "ratio": 0,
+                                    "rotation": 0.0,
+                                    "scale": {
+                                        "x": 1.0,
+                                        "y": 1.0,
+                                        "z": 0.0
+                                    },
+                                    "type": "struct Transform2D"
+                                }
+                            ],
+                            "name": "Arrow",
+                            "timeScale": 1.0
+                        }
+                    ],
+                    "components": [
+                        {
+                            "active": true,
+                            "anchorPoint": {
+                                "x": -1.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "parentAnchor": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "position": {
+                                "x": -0.9800000190734863,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "ratio": 3,
+                            "rotation": 0.0,
+                            "scale": {
+                                "x": 0.8999999761581421,
+                                "y": 0.8999999761581421,
+                                "z": 0.0
+                            },
+                            "type": "struct Transform2D"
+                        }
+                    ],
+                    "name": "ArrowHolder",
+                    "timeScale": 1.0
+                }
+            ],
+            "components": [
+                {
+                    "active": true,
+                    "anchorPoint": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0
+                    },
+                    "parentAnchor": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.8700000047683716,
+                        "z": 0.0
+                    },
+                    "ratio": 0,
+                    "rotation": 0.0,
+                    "scale": {
+                        "x": 0.949999988079071,
+                        "y": 0.02500000037252903,
+                        "z": 0.0
+                    },
+                    "type": "struct Transform2D"
+                }
+            ],
+            "name": "Item",
+            "timeScale": 1.0
+        },
+        {
+            "active": true,
+            "children": [
+                {
+                    "active": true,
+                    "children": [
+                        {
+                            "active": true,
+                            "children": [],
+                            "components": [
+                                {
+                                    "active": true,
+                                    "anchorPoint": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "parentAnchor": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "position": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "ratio": 0,
+                                    "rotation": 0.0,
+                                    "scale": {
+                                        "x": 1.0,
+                                        "y": 1.0,
+                                        "z": 0.0
+                                    },
+                                    "type": "struct Transform2D"
+                                }
+                            ],
+                            "name": "Arrow",
+                            "timeScale": 1.0
+                        }
+                    ],
+                    "components": [
+                        {
+                            "active": true,
+                            "anchorPoint": {
+                                "x": -1.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "parentAnchor": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "position": {
+                                "x": -0.9800000190734863,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "ratio": 3,
+                            "rotation": 0.0,
+                            "scale": {
+                                "x": 0.8999999761581421,
+                                "y": 0.8999999761581421,
+                                "z": 0.0
+                            },
+                            "type": "struct Transform2D"
+                        }
+                    ],
+                    "name": "ArrowHolder",
+                    "timeScale": 1.0
+                }
+            ],
+            "components": [
+                {
+                    "active": true,
+                    "anchorPoint": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0
+                    },
+                    "parentAnchor": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.8100000023841858,
+                        "z": 0.0
+                    },
+                    "ratio": 0,
+                    "rotation": 0.0,
+                    "scale": {
+                        "x": 0.949999988079071,
+                        "y": 0.02500000037252903,
+                        "z": 0.0
+                    },
+                    "type": "struct Transform2D"
+                }
+            ],
+            "name": "Item",
+            "timeScale": 1.0
+        }
+    ],
     "components": [
         {
             "active": true,

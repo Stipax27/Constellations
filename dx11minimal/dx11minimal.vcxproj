@@ -287,6 +287,8 @@
     <ClInclude Include="EditorTools\editorclass.h" />
     <ClInclude Include="EditorTools\EditorUI.h" />
     <ClInclude Include="EditorTools\PivotDrawSystem.h" />
+    <ClInclude Include="EditorTools\UI\SceneExplorer.h" />
+    <ClInclude Include="EditorTools\UI\TreeViewModel.h" />
     <ClInclude Include="Engine\DebugTools\LinkRadiusDrawSystem.h" />
     <ClInclude Include="Engine\DebugTools\WayDrawSystem.h" />
     <ClInclude Include="Engine\DebugTools\PivotDrawSystem.h" />
@@ -1267,6 +1269,7 @@
     <ClCompile Include="EditorTools\EditCameraController.cpp" />
     <ClCompile Include="EditorTools\editorclass.cpp" />
     <ClCompile Include="EditorTools\EditorUI.cpp" />
+    <ClCompile Include="EditorTools\UI\TreeViewModel.cpp" />
     <ClCompile Include="Engine\DebugTools\LinkRadiusDrawSystem.cpp" />
     <ClCompile Include="Engine\DebugTools\WayDrawSystem.cpp" />
     <ClCompile Include="Engine\DebugTools\PivotDrawSystem.cpp" />
