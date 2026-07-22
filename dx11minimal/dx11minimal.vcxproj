@@ -1269,6 +1269,7 @@
     <ClCompile Include="EditorTools\EditCameraController.cpp" />
     <ClCompile Include="EditorTools\editorclass.cpp" />
     <ClCompile Include="EditorTools\EditorUI.cpp" />
+    <ClCompile Include="EditorTools\UI\SceneExplorer.cpp" />
     <ClCompile Include="EditorTools\UI\TreeViewModel.cpp" />
     <ClCompile Include="Engine\DebugTools\LinkRadiusDrawSystem.cpp" />
     <ClCompile Include="Engine\DebugTools\WayDrawSystem.cpp" />

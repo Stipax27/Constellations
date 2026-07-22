@@ -3,7 +3,8 @@
 #include "TreeViewModel.h"
 
 
-class SceneBrowserController {
+class SceneExplorer : public ISingleton
+{
 public:
     void init(const std::vector<std::shared_ptr<Entity>>& rootObjects) {
         model.Rebuild(rootObjects);
