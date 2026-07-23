@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _TREE_VIEW_MODEL_H_
+#define _TREE_VIEW_MODEL_H_
 
 #include "../../ecsHeaders.h"
 
@@ -37,3 +38,5 @@ private:
     // Эффективное обновление после переключения
     void RebuildFrom(size_t startIndex);
 };
+
+#endif
