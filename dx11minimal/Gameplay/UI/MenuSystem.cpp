@@ -3,6 +3,7 @@
 #include "../../Engine/BasicComponents/Transform2D.h"
 #include "../../Engine/UI/Rect.h"
 #include "../../Engine/UI/Button.h"
+#include "../../Engine/UI/Text/TextLabel.h" // <--- ДОБАВЛЕН INCLUDE ДЛЯ ТЕКСТА
 #include "../../Engine/Lib/timer.h"
 #include "../../Engine/dx11.h"
 #include "../../Engine/Lib/logging.h"
@@ -47,7 +48,7 @@ void MenuSystem::Update(EntityStorage& entityStorage, float deltaTime) {
     }
 }
 
-// ===== ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ (заглушки) =====
+// ===== ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ =====
 Entity* MenuSystem::CreateOverlay() {
     Entity* overlay = m_entityStorage->CreateEntity("MenuOverlay", nullptr);
     Transform2D* t = overlay->AddComponent<Transform2D>();
@@ -57,24 +58,33 @@ Entity* MenuSystem::CreateOverlay() {
     return overlay;
 }
 
-Entity* MenuSystem::CreateButton(const std::string& text, const point3d& pos, const point3d& scale, 
+Entity* MenuSystem::CreateButton(const std::string& text, const point3d& pos, const point3d& scale,
     std::function<void()> onClick) {
 
     Entity* e = m_entityStorage->CreateEntity("MenuButton", nullptr);
-    
-    Transform2D* t = e->AddComponent<Transform2D>();
 
-    t->position = pos; 
-    t->scale = scale; 
-    t->anchorPoint = point3d(0.0f, 0.0f, 0); 
+    Transform2D* t = e->AddComponent<Transform2D>();
+    t->position = pos;
+    t->scale = scale;
+    t->anchorPoint = point3d(0.0f, 0.0f, 0);
     t->ratio = ScreenAspectRatio::XY;
 
     Button* b = e->AddComponent<Button>();
-    b->color = point3d(1.0f, 0.0f, 0.0f); 
-    b->clickColor = point3d(0.0f, 1.0f, 0.0f); 
-    b->opacity = 1.0f; 
-    b->cornerRadius = 0.1f; 
+    // Стильные цвета: обычный - темно-синий, при клике - светло-серый/голубой
+    b->color = point3d(0.15f, 0.15f, 0.25f);
+    b->clickColor = point3d(0.3f, 0.4f, 0.6f);
+    b->opacity = 1.0f;
+    b->cornerRadius = 0.1f; // Включаем красивые скругленные углы
     b->cornerType = CornerType::Smooth;
+
+    // --- ДОБАВЛЯЕМ ТЕКСТ ---
+    TextLabel* txt = e->AddComponent<TextLabel>();
+    // Конвертируем std::string в std::wstring для твоего TextLabel
+    txt->textW = std::wstring(text.begin(), text.end());
+    txt->color = point3d(1.0f, 1.0f, 1.0f); // Белый текст
+    txt->fontSizePx = 24; // Размер шрифта (можешь покрутить, если мало/велико)
+    txt->centered = true; // Выравнивание по центру кнопки
+    txt->fontFamilyW = L"Arial"; // Можно оставить дефолтный, но так нагляднее
 
     MenuButton* mb = e->AddComponent<MenuButton>();
     mb->onClick = onClick;
@@ -82,29 +92,23 @@ Entity* MenuSystem::CreateButton(const std::string& text, const point3d& pos, co
 }
 
 Entity* MenuSystem::CreateMainMenu() {
-
     Entity* menu = m_entityStorage->CreateEntity("MainMenu", nullptr);
-
     menu->AddComponent<MenuElement>()->isMainMenu = true;
 
-    Entity* btnStart = CreateButton("Start", 
-        point3d(0.0f, 0.0f, 0),
-        point3d(0.2f, 0.08f, 0), 
+    // Y = 0.1 - это ВЕРХ (Первая кнопка)
+    Entity* btnStart = CreateButton("Start",
+        point3d(0.0f, 0.1f, 0),
+        point3d(0.2f, 0.08f, 0),
         [this]() { OnStartClicked(); });
+    if (btnStart) btnStart->SetParent(menu);
 
-    if (btnStart) {
-        btnStart->SetParent(menu);
-    }
-
-
-    Entity* btnExit = CreateButton("Exit", 
-        point3d(0.0f, 0.16f, 0),
-        point3d(0.2f, 0.08f, 0), 
+    // Y = -0.1 - это НИЗ (Вторая кнопка)
+    Entity* btnExit = CreateButton("Exit",
+        point3d(0.0f, -0.1f, 0),
+        point3d(0.2f, 0.08f, 0),
         [this]() { OnExitClicked(); });
+    if (btnExit) btnExit->SetParent(menu);
 
-    if (btnExit) {
-        btnExit->SetParent(menu);
-    }
     return menu;
 }
 
@@ -112,14 +116,16 @@ Entity* MenuSystem::CreatePauseMenu() {
     Entity* menu = m_entityStorage->CreateEntity("PauseMenu", nullptr);
     menu->AddComponent<MenuElement>()->isPauseMenu = true;
 
-    CreateButton("Resume", 
-        point3d(0.5f - 0.1f, 0.5f - 0.04f, 0),
-        point3d(0.2f, 0.08f, 0), 
+    // Y положительное - ВЕРХ (Продолжить)
+    CreateButton("Resume",
+        point3d(0.0f, 0.1f, 0),
+        point3d(0.2f, 0.08f, 0),
         [this]() { OnResumeClicked(); })->SetParent(menu);
 
-    CreateButton("Main Menu", 
-        point3d(0.5f - 0.1f, 0.5f + 0.04f, 0),
-        point3d(0.2f, 0.08f, 0), 
+    // Y отрицательное - НИЗ (В главное меню)
+    CreateButton("Main Menu",
+        point3d(0.0f, -0.1f, 0),
+        point3d(0.2f, 0.08f, 0),
         [this]() { OnMainMenuClicked(); })->SetParent(menu);
 
     return menu;
@@ -136,14 +142,18 @@ void MenuSystem::ShowMainMenu() {
     if (!menu) menu = CreateMainMenu();
     menu->SetActive(true);
     m_activeMenu = menu;
-    if (m_overlayEntity) m_overlayEntity->SetActive(true);
-    
-    Entity* WorldFolder = m_entityStorage->GetEntityByName("World");
-    WorldFolder->SetTimeScale(0);
-    Entity* Player = m_entityStorage->GetEntityByName("Player");
-    Player->SetTimeScale(0);
-    mouse->state = MouseState::Free;
 
+    if (m_overlayEntity) {
+        m_overlayEntity->SetActive(true);
+        Rect* overlayRect = m_overlayEntity->GetComponent<Rect>();
+        if (overlayRect) overlayRect->opacity = 1.0f; // <--- ГЛАВНОЕ МЕНЮ: 100% ЧЕРНЫЙ ФОН
+    }
+
+    Entity* WorldFolder = m_entityStorage->GetEntityByName("World");
+    if (WorldFolder) WorldFolder->SetTimeScale(0);
+    Entity* Player = m_entityStorage->GetEntityByName("Player");
+    if (Player) Player->SetTimeScale(0);
+    mouse->state = MouseState::Free;
 }
 
 void MenuSystem::ShowPauseMenu() {
@@ -152,12 +162,17 @@ void MenuSystem::ShowPauseMenu() {
     if (!menu) menu = CreatePauseMenu();
     menu->SetActive(true);
     m_activeMenu = menu;
-    if (m_overlayEntity) m_overlayEntity->SetActive(true);
+
+    if (m_overlayEntity) {
+        m_overlayEntity->SetActive(true);
+        Rect* overlayRect = m_overlayEntity->GetComponent<Rect>();
+        if (overlayRect) overlayRect->opacity = 0.7f; // <--- ПАУЗА: 70% ПОЛУПРОЗРАЧНЫЙ ФОН
+    }
 
     Entity* WorldFolder = m_entityStorage->GetEntityByName("World");
-    WorldFolder->SetTimeScale(0);
+    if (WorldFolder) WorldFolder->SetTimeScale(0);
     Entity* Player = m_entityStorage->GetEntityByName("Player");
-    Player->SetTimeScale(0);
+    if (Player) Player->SetTimeScale(0);
     mouse->state = MouseState::Free;
 }
 
@@ -165,16 +180,16 @@ void MenuSystem::HideAllMenus() {
     ClearAllMenus();
     if (m_overlayEntity) m_overlayEntity->SetActive(false);
     m_activeMenu = nullptr;
-    Entity* WorldFolder = m_entityStorage->GetEntityByName("World");
-    WorldFolder->SetTimeScale(1);
-    Entity* Player = m_entityStorage->GetEntityByName("Player");
-    Player->SetTimeScale(1);
-    mouse->state = MouseState::Locked;
 
+    Entity* WorldFolder = m_entityStorage->GetEntityByName("World");
+    if (WorldFolder) WorldFolder->SetTimeScale(1);
+    Entity* Player = m_entityStorage->GetEntityByName("Player");
+    if (Player) Player->SetTimeScale(1);
+    mouse->state = MouseState::Locked;
 }
 
 void MenuSystem::ClearAllMenus() {
     const std::vector<Entity*>& entities = m_entityStorage->GetEntitiesWithComponent<MenuElement>();
     for (Entity* e : entities) { if (IsEntityValid(e)) e->Destroy(); }
-    m_activeMenu = nullptr;
+    
 }
