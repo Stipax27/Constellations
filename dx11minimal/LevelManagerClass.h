@@ -93,7 +93,6 @@ private:
 	void UpdateTestAnimationToggle();
 	void ShowGameOverMessage(const wchar_t* message, const point3d& color);
 
-	ID3D11Buffer* m_BoneBuffer = nullptr;
 	SkinnedMesh m_FoxMesh;
 	Skeleton    m_FoxSkeleton;
 	std::vector<AnimationClip> m_FoxAnimations;

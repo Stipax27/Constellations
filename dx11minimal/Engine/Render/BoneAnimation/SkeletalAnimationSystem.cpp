@@ -203,11 +203,6 @@ namespace
 	}
 }
 
-SkeletalAnimationSystem::SkeletalAnimationSystem(ID3D11DeviceContext* ctx, ID3D11Buffer* boneBuf)
-	: context(ctx), boneBuffer(boneBuf)
-{
-}
-
 void SkeletalAnimationSystem::Initialize()
 {
 }

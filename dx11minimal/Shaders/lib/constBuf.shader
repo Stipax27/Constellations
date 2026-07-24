@@ -19,7 +19,6 @@ cbuffer drawMat : register(b2)
 
 cbuffer camera : register(b3)
 {
-    float4x4 world;
     float4x4 view;
     float4x4 proj;
     float4 cPos;
@@ -44,11 +43,6 @@ cbuffer factors : register(b6)
 cbuffer drawerInt : register(b7)
 {
     int drawInt[constCount];
-}
-
-cbuffer drawerMatrix : register(b8)
-{
-    float4x4 model[constCount];
 }
 
 cbuffer particlesDesc : register(b9)

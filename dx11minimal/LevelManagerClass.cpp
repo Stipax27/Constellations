@@ -50,13 +50,6 @@ bool LevelManagerClass::Initialize()
 	Dx11Init(window->hWnd, window->width, window->height);
 	std::thread modelsLoadingThread(&LevelManagerClass::LoadModels, this);
 
-	D3D11_BUFFER_DESC boneDesc = {};
-	boneDesc.Usage = D3D11_USAGE_DEFAULT;
-	boneDesc.ByteWidth = sizeof(XMMATRIX) * 128;
-	boneDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-
-	device->CreateBuffer(&boneDesc, nullptr, &m_BoneBuffer);
-
 	// window params into const buffer
 	ConstBuf::frame.aspect = XMFLOAT4(window->aspect, window->iaspect, float(window->width), float(window->height));
 
@@ -290,16 +283,12 @@ void LevelManagerClass::Shutdown()
 		mouse = 0;
 	}
 
+	StructBuf::Shutdown();
+
 	if (window)
 	{
 		delete window;
 		window = 0;
-	}
-
-	if (m_BoneBuffer)
-	{
-		m_BoneBuffer->Release();
-		m_BoneBuffer = nullptr;
 	}
 }
 
@@ -421,14 +410,14 @@ void LevelManagerClass::InitSystems()
 	m_World->AddPhysicSystem<PhysicSystem>();
 	m_World->AddPhysicSystem<CollisionSystem>();
 	m_World->AddPhysicSystem<CombatSystem>();
-	m_World->AddPhysicSystem<SkeletalAnimationSystem>(context, m_BoneBuffer);
+	m_World->AddPhysicSystem<SkeletalAnimationSystem>();
 #endif
 
 	m_World->AddAudioSystem<SoundSystem>();
 
 	m_World->AddRenderSystem<MeshSystem>();
 	m_World->AddRenderSystem<StarClaySystem>();
-	m_World->AddRenderSystem<SkinnedMeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera, m_BoneBuffer);
+	m_World->AddRenderSystem<SkinnedMeshSystem>(m_World->m_Camera->frustum, m_World->m_Camera);
 
 	if (SHOW_COLLIDERS) {
 		m_World->AddRenderSystem<CollisionDrawSystem>();
@@ -437,7 +426,7 @@ void LevelManagerClass::InitSystems()
 		m_World->AddRenderSystem<GravityDrawSystem>();
 	}
 
-	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum, m_BoneBuffer);
+	m_World->AddRenderSystem<SpriteSystem>(m_World->m_Camera->frustum);
 	m_World->AddRenderSystem<NebulaSystem>();
 
 #ifdef _EDITOR

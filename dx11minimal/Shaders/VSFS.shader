@@ -1,5 +1,6 @@
 #include <lib/constBuf.shader>
 #include <lib/constants.shader>
+#include <lib/structBuf.shader>
 
 float hash11(uint n) {
     n = (n << 13u) ^ n;
@@ -41,7 +42,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
     float3 starPos = normalize(randomPosition(iID) * range * 2 - range) * range;
     starPos.z = abs(starPos.z);
 
-    float4x4 v = world;
+    float4x4 v = modelMatrices[0];
     v._m30_m31_m32 = 0;
 
     //starPos = lerp(normalize(starPos)* 1400, starPos,.5);

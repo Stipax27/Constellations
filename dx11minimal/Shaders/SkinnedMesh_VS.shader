@@ -1,13 +1,9 @@
+#include <lib/structBuf.shader>
+
 cbuffer CameraBuffer : register(b3)
 {
-    float4x4 world;
     float4x4 view;
     float4x4 proj;
-};
-
-cbuffer BoneBuffer : register(b1)
-{
-    float4x4 gBones[128];
 };
 
 struct VS_INPUT
@@ -37,28 +33,28 @@ VS_OUTPUT VS(VS_INPUT input)
     // ----- Skin Position -----
 
     float4 skinnedPos =
-        mul(float4(input.position,1), gBones[ids.x]) * input.weights.x +
-        mul(float4(input.position,1), gBones[ids.y]) * input.weights.y +
-        mul(float4(input.position,1), gBones[ids.z]) * input.weights.z +
-        mul(float4(input.position,1), gBones[ids.w]) * input.weights.w;
+        mul(float4(input.position,1), boneMatrices[ids.x]) * input.weights.x +
+        mul(float4(input.position,1), boneMatrices[ids.y]) * input.weights.y +
+        mul(float4(input.position,1), boneMatrices[ids.z]) * input.weights.z +
+        mul(float4(input.position,1), boneMatrices[ids.w]) * input.weights.w;
 
     // ----- Skin Normal -----
 
     float3 skinnedNormal =
-        mul(input.normal, (float3x3)gBones[ids.x]) * input.weights.x +
-        mul(input.normal, (float3x3)gBones[ids.y]) * input.weights.y +
-        mul(input.normal, (float3x3)gBones[ids.z]) * input.weights.z +
-        mul(input.normal, (float3x3)gBones[ids.w]) * input.weights.w;
+        mul(input.normal, (float3x3)boneMatrices[ids.x]) * input.weights.x +
+        mul(input.normal, (float3x3)boneMatrices[ids.y]) * input.weights.y +
+        mul(input.normal, (float3x3)boneMatrices[ids.z]) * input.weights.z +
+        mul(input.normal, (float3x3)boneMatrices[ids.w]) * input.weights.w;
 
     skinnedNormal = normalize(skinnedNormal);
 
     // World -> View -> Projection.
 
-    float4 worldPos = mul(skinnedPos, world);
+    float4 worldPos = mul(skinnedPos, modelMatrices[0]);
     float4 viewPos  = mul(worldPos, view);
     o.pos           = mul(viewPos, proj);
 
-    o.normal = normalize(mul(skinnedNormal, (float3x3)world));
+    o.normal = normalize(mul(skinnedNormal, (float3x3)modelMatrices[0]));
     o.uv     = input.uv;
 
     return o;

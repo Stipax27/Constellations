@@ -1,6 +1,7 @@
 #include "dx11.h"
 
 #include <DirectXTex.h>
+#include <cstring>
 
 #include "GLTFLoader.h"
 #include "Mesh/AnimationRetarget.h"
@@ -2318,9 +2319,6 @@ ConstBuf::Factors ConstBuf::factors;
 //b7
 int ConstBuf::drawerInt[constCount];
 
-//b8
-XMMATRIX ConstBuf::drawerMatrix[constCount];
-
 //b9
 ConstBuf::ParticlesDesc ConstBuf::particlesInfo;
 
@@ -2389,7 +2387,6 @@ void ConstBuf::Init()
 	ConstBuf::Create(ConstBuf::buffer[5], sizeof(global));
 	ConstBuf::Create(ConstBuf::buffer[6], sizeof(factors));
 	ConstBuf::Create(ConstBuf::buffer[7], sizeof(drawerInt));
-	ConstBuf::Create(ConstBuf::buffer[8], sizeof(drawerMatrix));
 	ConstBuf::Create(ConstBuf::buffer[9], sizeof(particlesInfo));
 	ConstBuf::Create(ConstBuf::buffer[10], sizeof(drawerFloat4x4));
 	ConstBuf::Create(ConstBuf::buffer[11], sizeof(nebulaInfo));
@@ -2443,6 +2440,127 @@ void ConstBuf::ConstToPixel(int i)
 void ConstBuf::ConstToCompute(int i)
 {
 	context->CSSetConstantBuffers(i, 1, &ConstBuf::buffer[i]);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+
+StructBuf::Buffer StructBuf::modelMatrices;
+StructBuf::Buffer StructBuf::boneMatrices;
+XMMATRIX StructBuf::modelMatrixData[modelMatrixCapacity];
+
+bool StructBuf::Create(Buffer& output, unsigned int elementStride, unsigned int elementCapacity)
+{
+	D3D11_BUFFER_DESC bufferDesc = {};
+	bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	bufferDesc.ByteWidth = elementStride * elementCapacity;
+	bufferDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	bufferDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+	bufferDesc.StructureByteStride = elementStride;
+
+	HRESULT hr = device->CreateBuffer(&bufferDesc, nullptr, &output.resource);
+	if (FAILED(hr))
+	{
+		OutputDebugStringA("StructBuf::Create failed to create buffer\n");
+		return false;
+	}
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc = {};
+	viewDesc.Format = DXGI_FORMAT_UNKNOWN;
+	viewDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+	viewDesc.Buffer.FirstElement = 0;
+	viewDesc.Buffer.NumElements = elementCapacity;
+
+	hr = device->CreateShaderResourceView(output.resource, &viewDesc, &output.view);
+	if (FAILED(hr))
+	{
+		OutputDebugStringA("StructBuf::Create failed to create shader resource view\n");
+		output.resource->Release();
+		output.resource = nullptr;
+		return false;
+	}
+
+	output.elementStride = elementStride;
+	output.elementCapacity = elementCapacity;
+	return true;
+}
+
+bool StructBuf::Update(Buffer& target, const void* data, unsigned int elementCount)
+{
+	if (!target.resource || !data || elementCount == 0 || elementCount > target.elementCapacity)
+	{
+		OutputDebugStringA("StructBuf::Update received invalid data or element count\n");
+		return false;
+	}
+
+	D3D11_MAPPED_SUBRESOURCE mapped = {};
+	HRESULT hr = context->Map(target.resource, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+	if (FAILED(hr))
+	{
+		OutputDebugStringA("StructBuf::Update failed to map buffer\n");
+		return false;
+	}
+
+	std::memcpy(mapped.pData, data, target.elementStride * elementCount);
+	context->Unmap(target.resource, 0);
+	return true;
+}
+
+void StructBuf::BindToVertex(const Buffer& target, unsigned int slot)
+{
+	context->VSSetShaderResources(slot, 1, &target.view);
+}
+
+void StructBuf::Init()
+{
+	Create(modelMatrices, sizeof(XMMATRIX), modelMatrixCapacity);
+	Create(boneMatrices, sizeof(XMMATRIX), boneMatrixCapacity);
+}
+
+void StructBuf::Shutdown()
+{
+	ID3D11ShaderResourceView* nullView = nullptr;
+	context->VSSetShaderResources(modelMatrixSlot, 1, &nullView);
+	context->VSSetShaderResources(boneMatrixSlot, 1, &nullView);
+
+	Buffer* buffers[] = { &modelMatrices, &boneMatrices };
+	for (Buffer* buffer : buffers)
+	{
+		if (buffer->view)
+		{
+			buffer->view->Release();
+			buffer->view = nullptr;
+		}
+		if (buffer->resource)
+		{
+			buffer->resource->Release();
+			buffer->resource = nullptr;
+		}
+		buffer->elementStride = 0;
+		buffer->elementCapacity = 0;
+	}
+}
+
+bool StructBuf::UpdateModelMatrices(unsigned int elementCount)
+{
+	if (!Update(modelMatrices, modelMatrixData, elementCount))
+	{
+		return false;
+	}
+
+	BindToVertex(modelMatrices, modelMatrixSlot);
+	return true;
+}
+
+bool StructBuf::UpdateBoneMatrices(const XMMATRIX* matrices, unsigned int elementCount)
+{
+	if (!Update(boneMatrices, matrices, elementCount))
+	{
+		return false;
+	}
+
+	BindToVertex(boneMatrices, boneMatrixSlot);
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -2662,6 +2780,7 @@ void Dx11Init(HWND hwnd, int width, int height)
 	Depth::Init();
 	Blend::Init();
 	ConstBuf::Init();
+	StructBuf::Init();
 	Sampler::Init();
 	Shaders::Init();
 	Models::Init();

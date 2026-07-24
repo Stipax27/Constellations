@@ -13,15 +13,13 @@ class SkinnedMeshSystem : public System
 public:
     SkinnedMeshSystem(
     FrustumClass* f,
-    CameraClass* c,
-    ID3D11Buffer* boneBuf);
+    CameraClass* c);
 
     void Initialize() override;
     void Shutdown() override;
     void Update(EntityStorage& entityStorage, float deltaTime) override;
 
 private:
-    ID3D11Buffer* boneBuffer;
     FrustumClass* frustum;
     CameraClass* camera;
 

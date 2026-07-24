@@ -1,4 +1,5 @@
 #include <../lib/constBuf.shader>
+#include <../lib/structBuf.shader>
 
 struct VS_OUTPUT
 {
@@ -46,7 +47,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 
     output.vnorm = normalize(pos);
 
-    pos = mul(pos, model[iID]);
+    pos = mul(pos, modelMatrices[iID]);
 
     float4 vpos = mul(pos, view);
     float4 projPos = mul(vpos, proj);

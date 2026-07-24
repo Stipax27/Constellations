@@ -462,7 +462,6 @@ namespace ConstBuf
 	};
 
 	struct Camera {
-		XMMATRIX world;
 		XMMATRIX view;
 		XMMATRIX proj;
 		XMFLOAT4 cPos;
@@ -525,9 +524,6 @@ namespace ConstBuf
 	//b7
 	extern int drawerInt[constCount];
 
-	//b8
-	extern XMMATRIX drawerMatrix[constCount];
-
 	//b9
 	extern ParticlesDesc particlesInfo;
 
@@ -569,12 +565,40 @@ namespace ConstBuf
 			global,
 			factors,
 			drawerInt,
-			drawerMatrix,
+			reservedStructuredModelMatrices,
 			particlesInfo,
 			drawerFloat4x4,
 			nebulaInfo
 		};
 	}
+}
+
+namespace StructBuf
+{
+	constexpr unsigned int modelMatrixSlot = 8;
+	constexpr unsigned int boneMatrixSlot = 9;
+	constexpr unsigned int modelMatrixCapacity = constCount;
+	constexpr unsigned int boneMatrixCapacity = 128;
+
+	struct Buffer
+	{
+		ID3D11Buffer* resource = nullptr;
+		ID3D11ShaderResourceView* view = nullptr;
+		unsigned int elementStride = 0;
+		unsigned int elementCapacity = 0;
+	};
+
+	extern Buffer modelMatrices;
+	extern Buffer boneMatrices;
+	extern XMMATRIX modelMatrixData[modelMatrixCapacity];
+
+	bool Create(Buffer&, unsigned int elementStride, unsigned int elementCapacity);
+	bool Update(Buffer&, const void* data, unsigned int elementCount);
+	void BindToVertex(const Buffer&, unsigned int slot);
+	void Init();
+	void Shutdown();
+	bool UpdateModelMatrices(unsigned int elementCount);
+	bool UpdateBoneMatrices(const XMMATRIX* matrices, unsigned int elementCount);
 }
 
 

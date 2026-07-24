@@ -1,4 +1,5 @@
 #include <lib/constBuf.shader>
+#include <lib/structBuf.shader>
 
 struct VS_INPUT
 {
@@ -21,12 +22,12 @@ VS_OUTPUT VS(VS_INPUT input)
     VS_OUTPUT output = (VS_OUTPUT)0;
 
     float4 pos = float4(input.position.xyz, 1);
-    pos = mul(pos, world);
+    pos = mul(pos, modelMatrices[0]);
 
     output.pos = mul(pos, mul(view, proj));
     output.vpos = mul(float4(pos.xyz, 1), view);
     output.wpos = float4(pos.xyz, 0);
-    //output.vnorm = normalize(mul(input.normal, world));
+    //output.vnorm = normalize(mul(input.normal, modelMatrices[0]));
     output.vnorm = float4(normalize(input.normal), 1);
     output.uv = input.uv;
 

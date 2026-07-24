@@ -1,4 +1,5 @@
 #include <lib/constBuf.shader>
+#include <lib/structBuf.shader>
 
 struct VS_OUTPUT
 {
@@ -126,7 +127,7 @@ VS_OUTPUT VS(uint vID : SV_VertexID, uint iID : SV_InstanceID)
 	float height = abs(snoise(normalize(pos.xyz) * 3 + Animation * localTime * 0.02));
 	pos.xyz += normalize(pos.xyz) * height * 0.075 * sqrt(radius);
 
-    pos = mul(pos, model[iID]);
+    pos = mul(pos, modelMatrices[iID]);
 
     output.pos = mul(pos, mul(view, proj));
     output.wpos = float4(pos.xyz, 0);

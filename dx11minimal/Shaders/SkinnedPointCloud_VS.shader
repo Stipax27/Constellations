@@ -1,7 +1,4 @@
-cbuffer BoneBuffer : register(b1)
-{
-    float4x4 gBones[128];
-};
+#include <lib/structBuf.shader>
 
 cbuffer frame : register(b4)
 {
@@ -11,7 +8,6 @@ cbuffer frame : register(b4)
 
 cbuffer camera : register(b3)
 {
-    float4x4 world;
     float4x4 view;
     float4x4 proj;
     float4 cPos;
@@ -42,20 +38,20 @@ VS_OUTPUT VS(VS_INPUT input)
     uint4 ids = min(input.boneIds, 127);
 
     float4 skinnedPos =
-        mul(float4(input.position, 1), gBones[ids.x]) * input.weights.x +
-        mul(float4(input.position, 1), gBones[ids.y]) * input.weights.y +
-        mul(float4(input.position, 1), gBones[ids.z]) * input.weights.z +
-        mul(float4(input.position, 1), gBones[ids.w]) * input.weights.w;
+        mul(float4(input.position, 1), boneMatrices[ids.x]) * input.weights.x +
+        mul(float4(input.position, 1), boneMatrices[ids.y]) * input.weights.y +
+        mul(float4(input.position, 1), boneMatrices[ids.z]) * input.weights.z +
+        mul(float4(input.position, 1), boneMatrices[ids.w]) * input.weights.w;
 
     float3 skinnedNormal =
-        mul(input.normal, (float3x3)gBones[ids.x]) * input.weights.x +
-        mul(input.normal, (float3x3)gBones[ids.y]) * input.weights.y +
-        mul(input.normal, (float3x3)gBones[ids.z]) * input.weights.z +
-        mul(input.normal, (float3x3)gBones[ids.w]) * input.weights.w;
+        mul(input.normal, (float3x3)boneMatrices[ids.x]) * input.weights.x +
+        mul(input.normal, (float3x3)boneMatrices[ids.y]) * input.weights.y +
+        mul(input.normal, (float3x3)boneMatrices[ids.z]) * input.weights.z +
+        mul(input.normal, (float3x3)boneMatrices[ids.w]) * input.weights.w;
 
     skinnedNormal = normalize(skinnedNormal);
 
-    float4 pos = mul(skinnedPos, world);
+    float4 pos = mul(skinnedPos, modelMatrices[0]);
 
     output.pos = mul(pos, mul(view, proj));
     output.vpos = mul(float4(pos.xyz, 1), view);

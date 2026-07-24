@@ -1,4 +1,5 @@
 #include <lib/constBuf.shader>
+#include <lib/structBuf.shader>
 
 struct VS_INPUT
 {
@@ -36,7 +37,7 @@ VS_OUTPUT VS(VS_INPUT input)
     VS_OUTPUT output = (VS_OUTPUT)0;
 
     float4 pos = float4(input.position.xyz, 1);
-    pos = mul(pos, world);
+    pos = mul(pos, modelMatrices[0]);
 
     //if (input.instanceID > 0)
     //{

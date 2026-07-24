@@ -109,7 +109,7 @@ void MeshSystem::Update(EntityStorage& entityStorage, float deltaTime)
 						point3d star = transformedStars[a];
 						if (frustum->CheckSphere(star, constellation->starSize)) {
 							worldTransform.position = star;
-							ConstBuf::drawerMatrix[count] = GetWorldMatrix(worldTransform);
+							StructBuf::modelMatrixData[count] = GetWorldMatrix(worldTransform);
 							ConstBuf::global[count].w = constellation->starSize;
 							count++;
 						}
@@ -123,8 +123,7 @@ void MeshSystem::Update(EntityStorage& entityStorage, float deltaTime)
 
 						ConstBuf::Update(5, ConstBuf::global);
 						ConstBuf::ConstToVertex(5);
-						ConstBuf::Update(8, ConstBuf::drawerMatrix);
-						ConstBuf::ConstToVertex(8);
+						StructBuf::UpdateModelMatrices(count);
 
 						context->DrawInstanced(n * n * 6, min(count, constCount - 1), 0, 0);
 					}*/
@@ -160,9 +159,8 @@ void MeshSystem::Update(EntityStorage& entityStorage, float deltaTime)
 							ConstBuf::Update(5, ConstBuf::global);
 							ConstBuf::ConstToVertex(5);
 
-							ConstBuf::drawerMatrix[0] = GetWorldMatrix(worldTransform);
-							ConstBuf::Update(8, ConstBuf::drawerMatrix);
-							ConstBuf::ConstToVertex(8);
+							StructBuf::modelMatrixData[0] = GetWorldMatrix(worldTransform);
+							StructBuf::UpdateModelMatrices(1);
 
 							context->Draw(n * n * 6, 0);
 
@@ -174,9 +172,8 @@ void MeshSystem::Update(EntityStorage& entityStorage, float deltaTime)
 				Star* star = entity->GetComponent<Star>();
 				if (star != nullptr && star->active) {
 					if (frustum->CheckSphere(worldTransform.position, star->radius * scaler)) {
-						ConstBuf::drawerMatrix[0] = GetWorldMatrix(worldTransform);
-						ConstBuf::Update(8, ConstBuf::drawerMatrix);
-						ConstBuf::ConstToVertex(8);
+						StructBuf::modelMatrixData[0] = GetWorldMatrix(worldTransform);
+						StructBuf::UpdateModelMatrices(1);
 
 						ConstBuf::global[0] = XMFLOAT4(star->color1.x, star->color1.y, star->color1.z, 0);
 						ConstBuf::global[1] = XMFLOAT4(star->color2.x, star->color2.y, star->color2.z, 0);
@@ -214,8 +211,8 @@ void MeshSystem::Update(EntityStorage& entityStorage, float deltaTime)
 
 
 void MeshSystem::UpdateWorldMatrix(Transform worldTransform) {
-	ConstBuf::camera.world = GetWorldMatrix(worldTransform);
-	ConstBuf::UpdateCamera();
+	StructBuf::modelMatrixData[0] = GetWorldMatrix(worldTransform);
+	StructBuf::UpdateModelMatrices(1);
 	ConstBuf::ConstToVertex(3);
 	ConstBuf::ConstToPixel(3);
 }

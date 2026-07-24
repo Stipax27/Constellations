@@ -4,12 +4,10 @@ using namespace std;
 
 SkinnedMeshSystem::SkinnedMeshSystem(
 	FrustumClass* f,
-	CameraClass* c,
-	ID3D11Buffer* boneBuf)
+	CameraClass* c)
 {
 	frustum = f;
 	camera = c;
-	boneBuffer = boneBuf;
 }
 
 void SkinnedMeshSystem::Initialize() {}
@@ -61,14 +59,12 @@ void SkinnedMeshSystem::Update(EntityStorage& entityStorage, float deltaTime)
 		SkeletalAnimationComponent* animComp = entity->GetComponent<SkeletalAnimationComponent>();
 		if (animComp && !animComp->bonePalette.empty())
 		{
-			context->UpdateSubresource(boneBuffer, 0, nullptr, animComp->bonePalette.data(), 0, 0);
+			StructBuf::UpdateBoneMatrices(animComp->bonePalette.data(), static_cast<unsigned int>(animComp->bonePalette.size()));
 		}
 		else
 		{
-			context->UpdateSubresource(boneBuffer, 0, nullptr, identityPalette.data(), 0, 0);
+			StructBuf::UpdateBoneMatrices(identityPalette.data(), StructBuf::boneMatrixCapacity);
 		}
-
-		context->VSSetConstantBuffers(1, 1, &boneBuffer);
 
 		InputAssembler::IA(InputAssembler::topology::triList);
 		InputAssembler::vBuffer(skinned->gpuModelIndex);
@@ -82,8 +78,8 @@ void SkinnedMeshSystem::Update(EntityStorage& entityStorage, float deltaTime)
 
 void SkinnedMeshSystem::UpdateWorldMatrix(Transform worldTransform)
 {
-	ConstBuf::camera.world = GetWorldMatrix(worldTransform);
-	ConstBuf::UpdateCamera();
+	StructBuf::modelMatrixData[0] = GetWorldMatrix(worldTransform);
+	StructBuf::UpdateModelMatrices(1);
 	ConstBuf::ConstToVertex(3);
 	ConstBuf::ConstToPixel(3);
 }

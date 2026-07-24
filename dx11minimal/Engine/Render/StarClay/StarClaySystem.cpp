@@ -106,7 +106,7 @@ void StarClaySystem::EmitNewBlobs(Entity* entity, StarClay* starClay)
 void StarClaySystem::RenderBlobs(StarClay* starClay, Transform& worldTransform, const double& localTime)
 {
 	int n = GetVertexCount(worldTransform.position, 3, 15, 1);
-	int blobsSize = starClay->blobs.size();
+	int blobsSize = min(static_cast<int>(starClay->blobs.size()), static_cast<int>(StructBuf::modelMatrixCapacity));
 
 	if (blobsSize == 0)
 		return;
@@ -122,11 +122,10 @@ void StarClaySystem::RenderBlobs(StarClay* starClay, Transform& worldTransform, 
 
 		blobTransform.scale = point3d(blob.radius * timeMultiplier);
 
-		ConstBuf::drawerMatrix[a] = GetWorldMatrix(blobTransform);
+		StructBuf::modelMatrixData[a] = GetWorldMatrix(blobTransform);
 	}
 
-	ConstBuf::Update(8, ConstBuf::drawerMatrix);
-	ConstBuf::ConstToVertex(8);
+	StructBuf::UpdateModelMatrices(blobsSize);
 
 	ConstBuf::global[0] = XMFLOAT4(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z, 1.0f);
 	ConstBuf::global[1] = XMFLOAT4(0.04f, 0.0f, 0.19f, 1.0f);
@@ -172,8 +171,8 @@ void StarClaySystem::RenderStarBackground()
 	ConstBuf::Update(7, ConstBuf::drawerInt);
 	ConstBuf::ConstToPixel(7);
 
-	ConstBuf::camera.world = starsRotMatrix;
-	ConstBuf::UpdateCamera();
+	StructBuf::modelMatrixData[0] = starsRotMatrix;
+	StructBuf::UpdateModelMatrices(1);
 	ConstBuf::ConstToVertex(3);
 	ConstBuf::ConstToPixel(3);
 
@@ -190,8 +189,8 @@ void StarClaySystem::RenderStarBackground()
 //// Other functions ////
 
 void StarClaySystem::UpdateWorldMatrix(Transform worldTransform) {
-	ConstBuf::camera.world = GetWorldMatrix(worldTransform);
-	ConstBuf::UpdateCamera();
+	StructBuf::modelMatrixData[0] = GetWorldMatrix(worldTransform);
+	StructBuf::UpdateModelMatrices(1);
 	ConstBuf::ConstToVertex(3);
 	ConstBuf::ConstToPixel(3);
 }

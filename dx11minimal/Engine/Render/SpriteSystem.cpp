@@ -6,13 +6,11 @@ using namespace std;
 SpriteSystem::SpriteSystem()
 {
 	frustum = Singleton::GetInstance<FrustumClass>();
-	boneBuffer = nullptr;
 }
 
-SpriteSystem::SpriteSystem(FrustumClass* Frustum, ID3D11Buffer* boneBuf)
+SpriteSystem::SpriteSystem(FrustumClass* Frustum)
 {
 	frustum = Frustum ? Frustum : Singleton::GetInstance<FrustumClass>();
-	boneBuffer = boneBuf;
 }
 
 
@@ -290,18 +288,13 @@ void SpriteSystem::Update(EntityStorage& entityStorage, float deltaTime)
 
 						static std::vector<XMMATRIX> identityPalette(128, XMMatrixIdentity());
 						SkeletalAnimationComponent* animComp = entity->GetComponent<SkeletalAnimationComponent>();
-						if (boneBuffer)
+						if (animComp && !animComp->bonePalette.empty())
 						{
-							if (animComp && !animComp->bonePalette.empty())
-							{
-								context->UpdateSubresource(boneBuffer, 0, nullptr, animComp->bonePalette.data(), 0, 0);
-							}
-							else
-							{
-								context->UpdateSubresource(boneBuffer, 0, nullptr, identityPalette.data(), 0, 0);
-							}
-
-							context->VSSetConstantBuffers(1, 1, &boneBuffer);
+							StructBuf::UpdateBoneMatrices(animComp->bonePalette.data(), static_cast<unsigned int>(animComp->bonePalette.size()));
+						}
+						else
+						{
+							StructBuf::UpdateBoneMatrices(identityPalette.data(), StructBuf::boneMatrixCapacity);
 						}
 
 						Shaders::vShader(pointCloud->vShader);
@@ -329,18 +322,13 @@ void SpriteSystem::Update(EntityStorage& entityStorage, float deltaTime)
 					{
 						static std::vector<XMMATRIX> identityPalette(128, XMMatrixIdentity());
 						SkeletalAnimationComponent* animComp = entity->GetComponent<SkeletalAnimationComponent>();
-						if (boneBuffer)
+						if (animComp && !animComp->bonePalette.empty())
 						{
-							if (animComp && !animComp->bonePalette.empty())
-							{
-								context->UpdateSubresource(boneBuffer, 0, nullptr, animComp->bonePalette.data(), 0, 0);
-							}
-							else
-							{
-								context->UpdateSubresource(boneBuffer, 0, nullptr, identityPalette.data(), 0, 0);
-							}
-
-							context->VSSetConstantBuffers(1, 1, &boneBuffer);
+							StructBuf::UpdateBoneMatrices(animComp->bonePalette.data(), static_cast<unsigned int>(animComp->bonePalette.size()));
+						}
+						else
+						{
+							StructBuf::UpdateBoneMatrices(identityPalette.data(), StructBuf::boneMatrixCapacity);
 						}
 
 						Shaders::vShader(pointCloud->vShader);
@@ -435,8 +423,8 @@ void SpriteSystem::Update(EntityStorage& entityStorage, float deltaTime)
 
 void SpriteSystem::UpdateWorldMatrix(Transform worldTransform)
 {
-	ConstBuf::camera.world = GetWorldMatrix(worldTransform);
-	ConstBuf::UpdateCamera();
+	StructBuf::modelMatrixData[0] = GetWorldMatrix(worldTransform);
+	StructBuf::UpdateModelMatrices(1);
 	ConstBuf::ConstToVertex(3);
 	ConstBuf::ConstToPixel(3);
 }
