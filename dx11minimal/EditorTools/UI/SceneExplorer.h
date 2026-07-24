@@ -25,7 +25,9 @@ private:
     void UpdateUI();
 
     void CreateExplorerWindow();
+
     Entity* CreateButton(const TreeItem& item);
+    void RemoveButton(size_t index);
 };
 
 #endif

@@ -26,7 +26,7 @@ void SceneExplorer::Render() {
     uiButtons.clear();
     auto& items = model.GetFlatItems();
     for (size_t i = 0; i < items.size(); ++i) {
-        auto btn = createButton(items[i]);
+        auto btn = CreateButton(items[i]);
         btn->setPosition(calculatePosition(items[i].depth, i));
         uiButtons.push_back(btn);
     }
@@ -41,14 +41,14 @@ void SceneExplorer::UpdateUI() {
     if (newItemCount > currentItemCount) {
         // Добавляем новые кнопки
         for (size_t i = currentItemCount; i < newItemCount; ++i) {
-            auto btn = CreateButton(items[i]);
+            Entity* btn = CreateButton(items[i]);
             uiButtons.push_back(btn);
         }
     }
     else if (newItemCount < currentItemCount) {
         // Удаляем лишние кнопки
         for (size_t i = newItemCount; i < currentItemCount; ++i) {
-            removeButton(uiButtons[i]);
+            RemoveButton(i);
         }
         uiButtons.resize(newItemCount);
     }
@@ -59,6 +59,13 @@ void SceneExplorer::UpdateUI() {
         uiButtons[i]->updateText(items[i].object->name);
         uiButtons[i]->setExpandable(items[i].hasChildren);
     }
+}
+
+
+void SceneExplorer::RemoveButton(size_t index) {
+    Entity* button = uiButtons[index];
+    button->Destroy();
+    uiButtons.erase(uiButtons.begin() + index);
 }
 
 
@@ -77,7 +84,7 @@ Entity* SceneExplorer::CreateButton(const TreeItem& item) {
     button->clickColor = point3d(0.5f, 0.5f, 0.5f);
 
     TextLabel* textLabel = itemEntity->AddComponent<TextLabel>();
-    textLabel->textW = string_to_wstring(item.entity->name);
+    textLabel->textW = string_to_wstring(item.object->name);
     textLabel->fontFamilyW = L"Impact";
     textLabel->fontFilePathW = L"..\\dx11minimal\\Resourses\\Fonts\\Impact.ttf";
     textLabel->fontWeight = 500;
@@ -105,15 +112,7 @@ Entity* SceneExplorer::CreateButton(const TreeItem& item) {
     ImageLabel* imageLabel = arrowEntity->AddComponent<ImageLabel>();
     imageLabel->textureName = "itemArrow";
 
-    itemButtons.push_back({ itemEntity, item });
-
-    // Создаем кнопку с отступом в зависимости от глубины
-    auto btn = new UIButton();
-    btn->setIndent(item.depth * INDENT_SIZE);
-    btn->setText(item.object->name);
-    btn->setExpandable(item.hasChildren);
-    btn->setExpanded(item.isExpanded);
-    return btn;
+    return itemEntity;
 }
 
 
