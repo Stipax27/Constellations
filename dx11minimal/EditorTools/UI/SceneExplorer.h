@@ -33,6 +33,8 @@ private:
     void SetPosition(Entity* button, float position);
     void UpdateText(const TreeItem& item);
     void SetExpandable(const TreeItem& item);
+
+    std::vector<Entity*> GetRootEntities();
 };
 
 #endif

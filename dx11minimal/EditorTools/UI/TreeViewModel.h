@@ -21,7 +21,7 @@ class TreeViewModel
 {
 public:
     // Обновляет плоский список на основе корневых объектов
-    void Rebuild(const std::vector<std::shared_ptr<Entity>>& rootObjects);
+    void Rebuild(const std::vector<Entity*>& rootObjects);
 
     // Получить плоский список для отрисовки
     const std::vector<TreeItem>& GetFlatItems() const;

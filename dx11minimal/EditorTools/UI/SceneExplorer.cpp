@@ -1,5 +1,7 @@
 #include "SceneExplorer.h"
 
+using namespace std;
+
 
 void SceneExplorer::Initialize()
 {
@@ -7,7 +9,7 @@ void SceneExplorer::Initialize()
 
     CreateExplorerWindow();
 
-	model.Rebuild(rootObjects);
+	model.Rebuild(GetRootEntities());
 	Render();
 }
 
@@ -146,4 +148,18 @@ void SceneExplorer::UpdateText(const TreeItem& item) {
 void SceneExplorer::SetExpandable(const TreeItem& item) {
     Entity* arrowHolder = item.object->GetChildByName("ArrowHolder");
     arrowHolder->SetActive(item.hasChildren);
+}
+
+
+vector<Entity*> SceneExplorer::GetRootEntities() {
+    vector<Entity*> list;
+
+    EntityStorage* entityStorage = Singleton::GetInstance<EntityStorage>();
+    for (Entity* entity : entityStorage->entities) {
+        if (entity->GetParent() == nullptr) {
+            list.push_back(entity);
+        }
+    }
+
+    return list;
 }

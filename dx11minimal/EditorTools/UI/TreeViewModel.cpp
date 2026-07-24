@@ -3,10 +3,10 @@
 using namespace std;
 
 
-void TreeViewModel::Rebuild(const vector<shared_ptr<Entity>>& rootObjects) {
+void TreeViewModel::Rebuild(const vector<Entity*>& rootObjects) {
     flatItems.clear();
-    for (auto& root : rootObjects) {
-        Flatten(root.get(), 0);
+    for (Entity* root : rootObjects) {
+        Flatten(root, 0);
     }
 }
 
