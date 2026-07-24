@@ -27,7 +27,7 @@ void SceneExplorer::Render() {
     auto& items = model.GetFlatItems();
     for (size_t i = 0; i < items.size(); ++i) {
         auto btn = CreateButton(items[i]);
-        btn->setPosition(calculatePosition(items[i].depth, i));
+        SetPosition(btn, CalculatePosition(i, items[i].depth));
         uiButtons.push_back(btn);
     }
 }
@@ -55,9 +55,9 @@ void SceneExplorer::UpdateUI() {
 
     // Обновляем позиции всех кнопок (смещаем)
     for (size_t i = 0; i < uiButtons.size(); ++i) {
-        uiButtons[i]->setPosition(calculatePosition(items[i].depth, i));
-        uiButtons[i]->updateText(items[i].object->name);
-        uiButtons[i]->setExpandable(items[i].hasChildren);
+        SetPosition(uiButtons[i], CalculatePosition(i, items[i].depth));
+        UpdateText(items[i]);
+        SetExpandable(items[i]);
     }
 }
 
@@ -76,7 +76,7 @@ Entity* SceneExplorer::CreateButton(const TreeItem& item) {
 
     Transform2D* transform2D = itemEntity->AddComponent<Transform2D>();
     transform2D->anchorPoint = point3d(0, 1, 0);
-    transform2D->position = point3d(0, 1.0f - (EXPLORER_ITEM_HEIGHT * 2 * pos + EXPLORER_ITEM_OFFSET * (pos + 1)), 0);
+    //transform2D->position = CalculatePosition(i, item.depth);
     transform2D->scale = point3d(0.95f, EXPLORER_ITEM_HEIGHT, 0);
 
     Button* button = itemEntity->AddComponent<Button>();
@@ -128,4 +128,22 @@ void SceneExplorer::CreateExplorerWindow()
     Rect* rect = explorerWindow->AddComponent<Rect>();
     rect->color = point3d(0.25f, 0.25f, 0.25f);
     rect->opacity = 0.75f;
+}
+
+
+float SceneExplorer::CalculatePosition(size_t index, int depth) {
+    return 1.0f - (EXPLORER_ITEM_HEIGHT * 2 * index + EXPLORER_ITEM_OFFSET * (index + 1));
+}
+
+void SceneExplorer::SetPosition(Entity* button, float position) {
+    button->GetComponent<Transform2D>()->position = point3d(0, position, 0);
+}
+
+void SceneExplorer::UpdateText(const TreeItem& item) {
+    item.object->GetComponent<TextLabel>()->textW = string_to_wstring(item.object->name);
+}
+
+void SceneExplorer::SetExpandable(const TreeItem& item) {
+    Entity* arrowHolder = item.object->GetChildByName("ArrowHolder");
+    arrowHolder->SetActive(item.hasChildren);
 }

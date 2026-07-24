@@ -21,13 +21,18 @@ private:
 
 private:
     void Render();
-
     void UpdateUI();
 
     void CreateExplorerWindow();
 
     Entity* CreateButton(const TreeItem& item);
     void RemoveButton(size_t index);
+
+    float CalculatePosition(size_t index, int depth);
+
+    void SetPosition(Entity* button, float position);
+    void UpdateText(const TreeItem& item);
+    void SetExpandable(const TreeItem& item);
 };
 
 #endif
