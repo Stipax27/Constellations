@@ -101,6 +101,25 @@ bool LevelManagerClass::Initialize()
 
 	Entity* player = CreatePlayer();
 
+
+	// Добавляем плоскость
+	Entity* ground = entityStorage->CreateEntity("GroundPlane", worldFolder);
+	Transform* groundTransform = ground->AddComponent<Transform>();
+	groundTransform->position = point3d(0, -20, 0);
+
+	PlaneCollider* plane = ground->AddComponent<PlaneCollider>();
+	plane->normal = point3d(0, 1, 0);
+	plane->radius = 20.0f; // или больше
+
+	// Визуализация (опционально) – стрелка показывает нормаль
+	Entity* arrow = entityStorage->CreateEntity("PlaneNormalArrow", ground);
+	Transform* arrowTransform = arrow->AddComponent<Transform>();
+	arrowTransform->position = point3d(0, 0, 0);
+	arrowTransform->scale = point3d(2, 2, 2);
+	Mesh* arrowMesh = arrow->AddComponent<Mesh>();
+	arrowMesh->index = 9; // индекс модели стрелки
+
+
 	MapBuild::BuildMaze();
 
 

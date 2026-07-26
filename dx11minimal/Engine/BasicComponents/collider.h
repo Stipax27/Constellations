@@ -35,14 +35,21 @@ struct CollisionInfo {
 ////////////////////////////////////////////////////////////////////////////////
 struct Collider : Component
 {
-	float friction = 1.0f;
-	float softness = 0.0f;
-	bool isTouchable = true;
-	bool anti = false;
+    enum class Type { Sphere, Plane, Surface /* позже можно добавить другие */ };
 
-	CollisionFilter::Group collisionGroup = CollisionFilter::Group::Projectile;
+    Type type;   // <-- новое поле
 
-	std::vector<CollisionInfo> collisions;
+    float friction = 1.0f;
+    float softness = 0.0f;
+    bool isTouchable = true;
+    bool anti = false;
+
+    CollisionFilter::Group collisionGroup = CollisionFilter::Group::Projectile;
+
+    std::vector<CollisionInfo> collisions;
+
+    virtual ~Collider() = default;
 };
+
 
 #endif

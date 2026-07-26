@@ -11,6 +11,8 @@
 
 struct SurfaceCollider : Collider
 {
+    SurfaceCollider() { type = Type::Surface; }
+
     float friction = 1.0f;
     float AriesNebulaLerpFactor = 0.0f;
 

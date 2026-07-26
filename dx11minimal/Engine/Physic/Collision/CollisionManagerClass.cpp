@@ -2,6 +2,9 @@
 
 using namespace std;
 
+std::map<TypePair, CollisionFn> CollisionManagerClass::collisionMap;
+
+
 
 CollisionManagerClass::CollisionManagerClass(const CollisionManagerClass& other)
 {
@@ -10,8 +13,9 @@ CollisionManagerClass::CollisionManagerClass(const CollisionManagerClass& other)
 
 CollisionManagerClass::CollisionManagerClass()
 {
+    RegisterCollision(Collider::Type::Sphere, Collider::Type::Sphere, sphere_vs_sphere);
+    RegisterCollision(Collider::Type::Sphere, Collider::Type::Plane, sphere_vs_plane);
 }
-
 
 CollisionManagerClass::~CollisionManagerClass()
 {
@@ -32,25 +36,31 @@ void CollisionManagerClass::Shutdown()
 }
 
 
-CollisionResult CollisionManagerClass::sphere_vs_sphere(
-	const Transform t1, const SphereCollider* c1,
-	const Transform t2, const SphereCollider* c2)
-{
-	CollisionResult result = CollisionResult();
-
-	point3d vector = t1.position - t2.position;
-	float magnitude = vector.magnitude();
-
-	if (magnitude < c1->radius + c2->radius) {
-		result.collided = true;
-		result.normal = vector.normalized();
-        result.position = t2.position + result.normal * c2->radius;
-		result.distance = (c1->radius + c2->radius) - magnitude;
-	}
-
-	return result;
+void CollisionManagerClass::RegisterCollision(Collider::Type t1, Collider::Type t2, CollisionFn fn) {
+    if (t1 < t2)
+        collisionMap[TypePair{ t1, t2 }] = fn;
+    else
+        collisionMap[TypePair{ t2, t1 }] = fn;
 }
 
+
+CollisionResult CollisionManagerClass::ResolveCollision(const Transform& t1, const Collider* c1,
+    const Transform& t2, const Collider* c2)
+{
+    TypePair key{ c1->type, c2->type };
+    if (key.a > key.b) std::swap(key.a, key.b);
+    auto it = collisionMap.find(key);
+    if (it != collisionMap.end()) {
+        // Если исходный порядок не совпадает с упорядоченным, меняем аргументы
+        if (c1->type > c2->type) {
+            return it->second(t2, c2, t1, c1);
+        }
+        else {
+            return it->second(t1, c1, t2, c2);
+        }
+    }
+    return CollisionResult();
+}
 
 RaycastResult CollisionManagerClass::Raycast(const RayInfo& ray)
 {
@@ -79,6 +89,61 @@ RaycastResult CollisionManagerClass::Raycast(const RayInfo& ray)
 	return closestHit;
 }
 
+CollisionResult CollisionManagerClass::sphere_vs_sphere(
+    const Transform& t1, const Collider* c1,
+    const Transform& t2, const Collider* c2)
+{
+    const SphereCollider* s1 = static_cast<const SphereCollider*>(c1);
+    const SphereCollider* s2 = static_cast<const SphereCollider*>(c2);
+
+    CollisionResult result = CollisionResult();
+    point3d vector = t1.position - t2.position;
+    float magnitude = vector.magnitude();
+
+    if (magnitude < s1->radius + s2->radius) {
+        result.collided = true;
+        result.normal = vector.normalized();
+        result.position = t2.position + result.normal * s2->radius;
+        result.distance = (s1->radius + s2->radius) - magnitude;
+    }
+    return result;
+}
+
+CollisionResult CollisionManagerClass::sphere_vs_plane(
+    const Transform& t1, const Collider* c1,
+    const Transform& t2, const Collider* c2)
+{
+    const SphereCollider* sphere = static_cast<const SphereCollider*>(c1);
+    const PlaneCollider* plane = static_cast<const PlaneCollider*>(c2);
+
+    CollisionResult result;
+    point3d center = t1.position;
+    point3d planePos = t2.position;
+    point3d normal = plane->normal.normalized();
+
+    // Расстояние от центра сферы до плоскости (со знаком)
+    float dist = (center - planePos).dot(normal);
+
+    // Если сфера пересекает плоскость (или касается)
+    if (dist < sphere->radius) {
+        // Точка на плоскости, ближайшая к центру сферы
+        point3d contactPoint = center - normal * dist;
+
+        // Проверка попадания в диск (если радиус > 0)
+        if (plane->radius > 0.0f) {
+            float distToCenter = (contactPoint - planePos).magnitude();
+            if (distToCenter > plane->radius) {
+                return result; // вне диска 
+            }
+        }
+
+        result.collided = true;
+        result.normal = normal;
+        result.position = contactPoint;
+        result.distance = sphere->radius - dist;
+    }
+    return result;
+}
 
 bool CollisionManagerClass::raycast_sphere(const RayInfo& ray, const Transform transform, const SphereCollider* sphere, RaycastResult& hit)
 {

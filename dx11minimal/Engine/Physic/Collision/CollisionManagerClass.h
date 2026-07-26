@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////////
 // Filename: CollisionManagerClass.h
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef _COLLISIONMANAGERCLASS_H_
@@ -10,7 +10,6 @@
 //////////////
 #include <map>
 #include <unordered_map>
-#include <typeindex>
 #include <functional>
 #include <memory>
 #include <mutex>
@@ -60,12 +59,12 @@ struct RaycastResult {
 };
 
 using CollisionFn = CollisionResult(*)(
-	const Transform*, const Component*,
-	const Transform*, const Component*
+	const Transform&, const Collider*,
+	const Transform&, const Collider*
 	);
 
 struct TypePair {
-	std::type_index a, b;
+	Collider::Type a, b;
 	bool operator<(const TypePair& other) const {
 		if (a != other.a) return a < other.a;
 		return b < other.b;
@@ -89,11 +88,19 @@ public:
 	void Shutdown();
 
 	static CollisionResult sphere_vs_sphere(
-		const Transform t1, const SphereCollider* c1,
-		const Transform t2, const SphereCollider* c2);
+		const Transform& t1, const Collider* c1,
+		const Transform& t2, const Collider* c2);
+
+	static CollisionResult sphere_vs_plane(
+		const Transform& t1, const Collider* c1,
+		const Transform& t2, const Collider* c2);
+
+	static std::map<TypePair, CollisionFn> collisionMap;
+	static void RegisterCollision(Collider::Type t1, Collider::Type t2, CollisionFn fn);
+	static CollisionResult ResolveCollision(const Transform& t1, const Collider* c1,
+		const Transform& t2, const Collider* c2);
 
 	RaycastResult Raycast(const RayInfo& ray);
-	static std::map<TypePair, CollisionFn> collisionMap;
 
 private:
 	EntityStorage* entityStorage = nullptr;

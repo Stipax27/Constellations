@@ -5,7 +5,8 @@
 
 struct SphereCollider : Collider
 {
-	float radius = 1.0f;
+    SphereCollider() { type = Type::Sphere; }
+    float radius = 1.0f;
 };
 
 #endif
