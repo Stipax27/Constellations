@@ -31,6 +31,8 @@ struct TextLabel : Component
 	int maxCharacters = -1;
 
 	bool useTransformScale = false;
+
+	float verticalOffset = 0.0f;  // Сдвиг текста по Y в пикселях
 };
 
 #endif

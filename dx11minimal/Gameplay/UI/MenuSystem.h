@@ -28,6 +28,9 @@ private:
     Entity* m_overlayEntity = nullptr;
     bool m_isInitialized = false;
 
+    // Защита от ghost click при переключении меню
+    int m_ignoreInputFrames = 0;
+
     Entity* CreateOverlay();
     Entity* CreateMainMenu();
     Entity* CreatePauseMenu();
@@ -40,5 +43,9 @@ private:
     void OnResumeClicked();
     void OnMainMenuClicked();
     void OnExitClicked();
+    void OnSettingsClicked();
+    void OnSaveGameClicked();
+    void OnLoadGameClicked();
     void ClearAllMenus();
+    void ResetButtonStates();
 };

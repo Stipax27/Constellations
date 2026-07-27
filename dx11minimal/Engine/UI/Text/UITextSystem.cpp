@@ -532,7 +532,7 @@ void RenderTextLabel(const Transform2D& transform, const TextLabel& textLabel, c
 	const float lineSpacing = std::max(0.1f, textLabel.lineSpacing);
 	const float lineHeightPx = atlas.lineHeight * scale * lineSpacing;
 
-	float lineTopPx = 0.0f;
+	float lineTopPx = textLabel.verticalOffset;
 	int lineStart = 0;
 	const int textLength = (int)textToRender.size();
 
