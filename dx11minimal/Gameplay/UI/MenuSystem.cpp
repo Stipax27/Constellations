@@ -104,6 +104,18 @@ Entity* MenuSystem::CreateButton(const std::string& text, const point3d& pos, co
     return e;
 }
 
+bool MenuSystem::IsMainMenuActive() const {
+    if (!m_activeMenu) return false;
+    MenuElement* me = m_activeMenu->GetComponent<MenuElement>();
+    return me && me->isMainMenu;
+}
+
+bool MenuSystem::IsPauseMenuActive() const {
+    if (!m_activeMenu) return false;
+    MenuElement* me = m_activeMenu->GetComponent<MenuElement>();
+    return me && me->isPauseMenu;
+}
+
 Entity* MenuSystem::CreateMainMenu() {
     Entity* menu = m_entityStorage->CreateEntity("MainMenu", nullptr);
     menu->AddComponent<MenuElement>()->isMainMenu = true;

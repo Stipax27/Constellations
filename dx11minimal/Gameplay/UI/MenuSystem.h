@@ -16,6 +16,8 @@ public:
     void Shutdown() override;
     void Update(EntityStorage& entityStorage, float deltaTime) override;
 
+    bool IsMainMenuActive() const;
+    bool IsPauseMenuActive() const;
     void ShowMainMenu();
     void ShowPauseMenu();
     void HideAllMenus();

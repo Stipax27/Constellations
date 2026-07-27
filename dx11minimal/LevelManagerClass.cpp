@@ -1,5 +1,5 @@
 ﻿#include "LevelManagerClass.h"
-
+#include "Gameplay/UI/MenuSystem.h"
 #include "Constructors/MapBuild.h"
 
 using namespace std;
@@ -328,16 +328,22 @@ void LevelManagerClass::Frame()
 	if (!window->IsActive())
 		return;
 
-	//
 	if (input::IsKeyPressed('P')) {
 		if (m_MenuSystem) {
-			if (m_MenuSystem->IsMenuVisible()) {
+			// Если открыто главное меню — ничего не делаем
+			if (m_MenuSystem->IsMainMenuActive()) {
+				return; // или continue, если внутри цикла
+			}
+
+			// Если открыто меню паузы — закрываем его
+			if (m_MenuSystem->IsPauseMenuActive()) {
 				m_MenuSystem->HideAllMenus();
 				if (worldFolder) {
 					worldFolder->SetTimeScale(1.0f);
 				}
 			}
-			else {
+			// Если никакое меню не открыто — открываем паузу
+			else if (!m_MenuSystem->IsMenuVisible()) {
 				m_MenuSystem->ShowPauseMenu();
 				if (worldFolder) {
 					worldFolder->SetTimeScale(0.0f);
@@ -345,7 +351,6 @@ void LevelManagerClass::Frame()
 			}
 		}
 	}
-	//
 
 	mouse->Update();
 
