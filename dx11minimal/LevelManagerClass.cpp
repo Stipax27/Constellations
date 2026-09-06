@@ -126,7 +126,60 @@ bool LevelManagerClass::Initialize()
 	mesh = entity->AddComponent<Mesh>();
 	mesh->index = 9;
 
+	Entity* starEntity = entityStorage->CreateEntity("Star");
+	//Collider* starCollider = starEntity->AddComponent < Collider>();
+	//starCollider->isTouchable = true;
+	//starCollider->softness = 0.7;
+	sphereCollider = starEntity->AddComponent<SphereCollider>();
+	sphereCollider->softness = 0.7;
+	sphereCollider->isTouchable = true;
+	sphereCollider->radius = 30.0f;
+	//sphereCollider->collisionGroup = CollisionFilter::Group::Player;
+	transform = starEntity->AddComponent<Transform>();
+	star = starEntity->AddComponent<Star>();
+	star->color1 = point3d(1.0f, 0, 0);
+	star->color2 = point3d(0, 1.0f, 0);
+	star->crownColor = point3d(0, 0, 1.0f);
+	star->radius = 30.0f;
+	physicBody = starEntity->AddComponent<PhysicBody>();
+	physicBody->airFriction = 1;
+	GravityPoint* gravityPoint = starEntity->AddComponent<GravityPoint>();
+	gravityPoint->radius = 500.0f;
+	gravityPoint->mass = 100;
+	MultiDamager* multiDamager = starEntity->AddComponent<MultiDamager>();
+	multiDamager->interval = 2000;
+	multiDamager->repeats = -1;
+	multiDamager->target = Fraction::Player;
+	multiDamager->damage = 5.0f;
 
+	Entity* meshEntity = entityStorage->CreateEntity("Mesh");
+	transform = meshEntity->AddComponent<Transform>();
+	mesh = meshEntity->AddComponent<Mesh>();
+	mesh->index = 8;
+
+	Entity* constellationEntity = entityStorage->CreateEntity("Constellion");
+	transform = constellationEntity->AddComponent<Transform>();
+	transform->position = point3d(30,30,30);
+	constellation = constellationEntity->AddComponent<Constellation>();
+	constellation->starSize = 0.4f;
+	constellation->stars = {
+		point3d(0, 0, 0),
+		point3d(10.0f, -1.0f, 0),
+		point3d(12.0f, -5.0f, 0),
+		point3d(15.5f, -7.0f, 0),
+		point3d(15.8f, -12.0f, 0),
+		point3d(24.0f, -14.0f, 0),
+		point3d(26.0f, -8.0f, 0),
+	};
+	constellation->links = {
+		{0,1},
+		{1,2},
+		{2,3},
+		{3,4},
+		{4,5},
+		{5,6},
+		{6,3},
+	};
 	/////////////////////////
 
 	/*entity = entityStorage->CreateEntity("Ray", worldFolder);
@@ -478,9 +531,11 @@ void LevelManagerClass::LoadModels()
 
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesBody.obj");
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\AriesArmor.obj");
+	
 	Models::LoadSkinnedModel("..\\dx11minimal\\Resourses\\Models\\Fox.glb", m_FoxMesh, m_FoxSkeleton, m_FoxAnimations);
 	Models::LoadSkinnedModel("..\\dx11minimal\\Resourses\\Models\\CesiumMan.glb", m_CesiumMesh, m_CesiumSkeleton, m_CesiumAnimations);
 	Models::LoadSkinnedModel("..\\dx11minimal\\Resourses\\Models\\PunchComboNew.glb", m_PunchComboNewMesh, m_PunchComboNewSkeleton, m_PunchComboNewAnimations);
+
 
 	if (Models::LoadSkinnedModel("..\\dx11minimal\\Resourses\\Models\\TestAnims\\1.glb", m_TestAnimMesh, m_TestAnimSkeleton, m_TestAnimAnimations))
 	{
@@ -492,6 +547,7 @@ void LevelManagerClass::LoadModels()
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\SnakeModel.obj");
 
 	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\drag_arrow.obj");
+	Models::LoadObjModel("..\\dx11minimal\\Resourses\\Models\\SkibidiToilet.obj");
 }
 
 void LevelManagerClass::LoadTextures()
