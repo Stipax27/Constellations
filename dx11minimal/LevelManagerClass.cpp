@@ -126,33 +126,33 @@ bool LevelManagerClass::Initialize()
 	mesh = entity->AddComponent<Mesh>();
 	mesh->index = 9;
 
-	Entity* starEntity = entityStorage->CreateEntity("Star");
-	//Collider* starCollider = starEntity->AddComponent < Collider>();
-	//starCollider->isTouchable = true;
-	//starCollider->softness = 0.7;
-	sphereCollider = starEntity->AddComponent<SphereCollider>();
-	sphereCollider->softness = 0.7;
-	sphereCollider->isTouchable = true;
-	sphereCollider->radius = 30.0f;
-	//sphereCollider->collisionGroup = CollisionFilter::Group::Player;
-	transform = starEntity->AddComponent<Transform>();
-	star = starEntity->AddComponent<Star>();
-	star->color1 = point3d(1.0f, 0, 0);
-	star->color2 = point3d(0, 1.0f, 0);
-	star->crownColor = point3d(0, 0, 1.0f);
-	star->radius = 30.0f;
-	physicBody = starEntity->AddComponent<PhysicBody>();
-	physicBody->airFriction = 1;
-	GravityPoint* gravityPoint = starEntity->AddComponent<GravityPoint>();
-	gravityPoint->radius = 500.0f;
-	gravityPoint->mass = 100;
-	MultiDamager* multiDamager = starEntity->AddComponent<MultiDamager>();
-	multiDamager->interval = 2000;
-	multiDamager->repeats = -1;
-	multiDamager->target = Fraction::Player;
-	multiDamager->damage = 5.0f;
+	//Entity* starEntity = entityStorage->CreateEntity("Star");
+	////Collider* starCollider = starEntity->AddComponent < Collider>();
+	////starCollider->isTouchable = true;
+	////starCollider->softness = 0.7;
+	//sphereCollider = starEntity->AddComponent<SphereCollider>();
+	//sphereCollider->softness = 0.7;
+	//sphereCollider->isTouchable = true;
+	//sphereCollider->radius = 30.0f;
+	////sphereCollider->collisionGroup = CollisionFilter::Group::Player;
+	//transform = starEntity->AddComponent<Transform>();
+	//star = starEntity->AddComponent<Star>();
+	//star->color1 = point3d(1.0f, 0, 0);
+	//star->color2 = point3d(0, 1.0f, 0);
+	//star->crownColor = point3d(0, 0, 1.0f);
+	//star->radius = 30.0f;
+	//physicBody = starEntity->AddComponent<PhysicBody>();
+	//physicBody->airFriction = 1;
+	//GravityPoint* gravityPoint = starEntity->AddComponent<GravityPoint>();
+	//gravityPoint->radius = 500.0f;
+	//gravityPoint->mass = 100;
+	//MultiDamager* multiDamager = starEntity->AddComponent<MultiDamager>();
+	//multiDamager->interval = 2000;
+	//multiDamager->repeats = -1;
+	//multiDamager->target = Fraction::Player;
+	//multiDamager->damage = 5.0f;
 
-	Entity* meshEntity = entityStorage->CreateEntity("Mesh");
+	/*Entity* meshEntity = entityStorage->CreateEntity("Mesh");
 	transform = meshEntity->AddComponent<Transform>();
 	mesh = meshEntity->AddComponent<Mesh>();
 	mesh->index = 8;
@@ -179,7 +179,51 @@ bool LevelManagerClass::Initialize()
 		{4,5},
 		{5,6},
 		{6,3},
-	};
+	};*/
+
+	Entity* beamEntity = entityStorage->CreateEntity("Beam");
+	transform = beamEntity->AddComponent<Transform>();
+	Beam* newBeam = beamEntity->AddComponent<Beam>();
+	transform->position = point3d(100.0f, 20.0f, 20.0f);
+	newBeam->point1 = point3d(0, 0, 0);
+	newBeam->point2 = point3d(30.0f, 20.0f, 10.0f);
+	RayDamager* beamDamage = beamEntity->AddComponent<RayDamager>();
+	beamDamage->direction = point3d(30.0f, 20.0f, 10.0f);
+	beamDamage->target = Fraction::Player;
+	beamDamage->damage = 5.0f;
+	beamDamage->repeats = -1;
+	beamDamage->interval = 2000;
+
+	Entity* particleOneEntity = entityStorage->CreateEntity("particleOneEntity");
+	transform = particleOneEntity->AddComponent<Transform>();
+	ParticleEmitter* particleOne = particleOneEntity->AddComponent<ParticleEmitter>();
+	transform->position = point3d(100.0f, 100.0f, 100.0f);
+	particleOne->rate = 200;
+	particleOne->speed = { 20.0f, 0.0f };
+	//particleOne->lifetime = 100;
+	particleOne->emitDirection = EmitDirection::Front;
+	particleOne->heapEmitInterval = 2000;
+	particleOne->heapEmitRepeats = -1;
+	particleOne->color = point3d(25, 0, 0);
+	particleOne->spread = { PI, PI };
+
+	Entity* particleTwoEntity = entityStorage->CreateEntity("ParticleTwoEntity");
+	transform = particleTwoEntity->AddComponent<Transform>();
+	ParticleEmitter* particleTwo = particleTwoEntity->AddComponent<ParticleEmitter>();
+	transform->position = point3d(100.0f, 200.0f, 100.0f);
+	particleTwo->rate = 20;
+	particleTwo->speed = { 20.0f, 0.0f };
+	//particleOne->lifetime = 100;
+	particleTwo->emitDirection = EmitDirection::Up;
+	particleTwo->isHeapEmit = true;
+	particleTwo->heapEmitInterval = 10;
+	particleTwo->heapEmitRepeats = -1;
+	particleTwo->color = point3d(25, 0, 0);
+	particleTwo->spread = { 2000.0f, -2000.0f };
+	Entity* particleThreeEntity = entityStorage->CreateEntity("ParticleThreeEntity");
+	Entity* particleFourEntity = entityStorage->CreateEntity("ParticleFourEntity");
+
+
 	/////////////////////////
 
 	/*entity = entityStorage->CreateEntity("Ray", worldFolder);
